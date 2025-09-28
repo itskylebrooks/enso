@@ -31,3 +31,9 @@ export const SearchIcon = (props: SVGProps<SVGSVGElement>): JSX.Element => (
     <circle cx="11" cy="11" r="8" />
   </svg>
 );
+
+export const CheckIcon = (props: SVGProps<SVGSVGElement>): JSX.Element => (
+  <svg {...baseProps} {...props} className={['lucide lucide-check-icon', props.className].filter(Boolean).join(' ')}>
+    <path d="M20 6 9 17l-5-5" />
+  </svg>
+);
