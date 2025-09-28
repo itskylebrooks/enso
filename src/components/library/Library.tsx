@@ -1,6 +1,7 @@
 import type { Locale, Progress, Technique } from '../../types';
 import type { Copy } from '../../constants/i18n';
 import { EmphasizedName, LevelBadge } from '../common';
+import { StarIcon } from '../common/icons';
 
 const buildProgressMap = (entries: Progress[]): Record<string, Progress> =>
   Object.fromEntries(entries.map((entry) => [entry.techniqueId, entry]));
@@ -60,7 +61,11 @@ export const Library = ({ copy, locale, techniques, progress, onOpen }: LibraryP
                 {technique.jp && <div className="text-xs text-subtle truncate">{technique.jp}</div>}
               </div>
               <div className="flex items-center gap-2 text-base">
-                {entry?.focus && <span title={copy.focus}>⭐</span>}
+                {entry?.focus && (
+                  <span title={copy.focus} className="text-[0px] inline-flex">
+                    <StarIcon className="w-4 h-4" />
+                  </span>
+                )}
                 {entry?.notNow && <span title={copy.notNow}>⏸</span>}
                 {entry?.confident && <span title={copy.confident}>✔︎</span>}
               </div>

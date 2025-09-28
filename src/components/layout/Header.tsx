@@ -2,6 +2,7 @@ import type { PropsWithChildren } from 'react';
 import { classNames } from '../../utils/classNames';
 import type { AppTab } from '../../types';
 import type { Copy } from '../../constants/i18n';
+import { SearchIcon, SettingsIcon } from '../common/icons';
 
 type HeaderProps = {
   copy: Copy;
@@ -21,7 +22,12 @@ export const Header = ({ copy, tab, onChangeTab, onSearch, onSettings }: HeaderP
         <div className="font-semibold tracking-tight">{copy.app}</div>
       </div>
       <nav className="flex items-center gap-2">
-        <TextButton onClick={onSearch}>{copy.searchBtn}</TextButton>
+        <TextButton onClick={onSearch}>
+          <span className="flex items-center gap-1">
+            <SearchIcon className="w-4 h-4" />
+            <span>{copy.searchBtn}</span>
+          </span>
+        </TextButton>
         <TabButton active={tab === 'library'} onClick={() => onChangeTab('library')}>
           {copy.library}
         </TabButton>
@@ -30,7 +36,7 @@ export const Header = ({ copy, tab, onChangeTab, onSearch, onSettings }: HeaderP
         </TabButton>
         <div className="w-px h-6 nav-divider mx-1" />
         <IconButton label={copy.settings} onClick={onSettings}>
-          ⚙️
+          <SettingsIcon className="w-5 h-5" />
         </IconButton>
       </nav>
     </div>

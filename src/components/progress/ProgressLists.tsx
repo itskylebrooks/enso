@@ -1,6 +1,7 @@
 import type { Locale, Progress, Technique } from '../../types';
 import type { Copy } from '../../constants/i18n';
 import { EmphasizedName, LevelBadge, SectionTitle } from '../common';
+import { StarIcon } from '../common/icons';
 
 type ProgressListsProps = {
   copy: Copy;
@@ -92,7 +93,11 @@ const TechniqueList = ({ items, locale, copy, progressById, onOpen }: TechniqueL
             </div>
             <div className="flex items-center gap-2">
               <LevelBadge locale={locale} level={technique.level} />
-              {entry?.focus && <span title={copy.focus}>⭐</span>}
+                {entry?.focus && (
+                  <span title={copy.focus} className="text-[0px] inline-flex">
+                    <StarIcon className="w-3.5 h-3.5" />
+                  </span>
+                )}
               {entry?.notNow && <span title={copy.notNow}>⏸</span>}
               {entry?.confident && <span title={copy.confident}>✔︎</span>}
               <button type="button" onClick={() => onOpen(technique.id)} className="text-xs underline">
