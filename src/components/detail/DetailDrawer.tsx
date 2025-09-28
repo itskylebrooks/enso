@@ -3,6 +3,7 @@ import type { Copy } from '../../constants/i18n';
 import type { Locale, Progress, Technique } from '../../types';
 import { gradeLabel } from '../../utils/grades';
 import { EmphasizedName, LevelBadge, SectionTitle } from '../common';
+import { CheckIcon, StarIcon } from '../common/icons';
 
 const noop = (): void => undefined;
 
@@ -13,7 +14,6 @@ type DetailDrawerProps = {
   progress: Progress;
   onClose: () => void;
   onToggleFocus?: () => void;
-  onToggleNotNow?: () => void;
   onToggleConfident?: () => void;
   onSetNote?: (note: string) => void;
 };
@@ -25,7 +25,6 @@ export const DetailDrawer = ({
   progress,
   onClose,
   onToggleFocus = noop,
-  onToggleNotNow = noop,
   onToggleConfident = noop,
   onSetNote = noop,
 }: DetailDrawerProps): JSX.Element => {
@@ -63,16 +62,51 @@ export const DetailDrawer = ({
           <div className="space-y-4">
             <div>
               <SectionTitle>{copy.status}</SectionTitle>
-              <div className="mt-2 flex flex-wrap items-center gap-2">
-                <label className="flex items-center gap-1 text-sm cursor-pointer">
-                  <input type="checkbox" checked={Boolean(progress.focus)} onChange={onToggleFocus} /> {copy.focus}
-                </label>
-                <label className="flex items-center gap-1 text-sm cursor-pointer">
-                  <input type="checkbox" checked={Boolean(progress.notNow)} onChange={onToggleNotNow} /> {copy.notNow}
-                </label>
-                <label className="flex items-center gap-1 text-sm cursor-pointer">
-                  <input type="checkbox" checked={Boolean(progress.confident)} onChange={onToggleConfident} /> {copy.confident}
-                </label>
+              <div className="mt-2 inline-flex rounded-lg border surface-border overflow-hidden">
+                <button
+                  type="button"
+                  aria-pressed={Boolean(progress.focus)}
+                  onClick={() => {
+                    if (progress.focus) {
+                      onToggleFocus();
+                    } else {
+                      if (progress.confident) onToggleConfident();
+                      onToggleFocus();
+                    }
+                  }}
+                  className={
+                    `px-3 py-1.5 text-sm flex items-center gap-1 transition border-r ${
+                      progress.focus
+                        ? 'bg-[var(--color-text)] text-[var(--color-bg)]'
+                        : 'bg-[var(--color-surface)] text-[var(--color-text)] hover:bg-[var(--color-surface-hover)]'
+                    }`
+                  }
+                >
+                  <StarIcon className="w-4 h-4" />
+                  <span>{copy.focus}</span>
+                </button>
+                <button
+                  type="button"
+                  aria-pressed={Boolean(progress.confident)}
+                  onClick={() => {
+                    if (progress.confident) {
+                      onToggleConfident();
+                    } else {
+                      if (progress.focus) onToggleFocus();
+                      onToggleConfident();
+                    }
+                  }}
+                  className={
+                    `px-3 py-1.5 text-sm flex items-center gap-1 transition ${
+                      progress.confident
+                        ? 'bg-[var(--color-text)] text-[var(--color-bg)]'
+                        : 'bg-[var(--color-surface)] text-[var(--color-text)] hover:bg-[var(--color-surface-hover)]'
+                    }`
+                  }
+                >
+                  <CheckIcon className="w-4 h-4" />
+                  <span>{copy.confident}</span>
+                </button>
               </div>
             </div>
             <div>

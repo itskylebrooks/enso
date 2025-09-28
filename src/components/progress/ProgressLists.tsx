@@ -1,7 +1,7 @@
 import type { Locale, Progress, Technique } from '../../types';
 import type { Copy } from '../../constants/i18n';
 import { EmphasizedName, LevelBadge, SectionTitle } from '../common';
-import { StarIcon } from '../common/icons';
+import { StarIcon, CheckIcon } from '../common/icons';
 
 type ProgressListsProps = {
   copy: Copy;
@@ -13,7 +13,6 @@ type ProgressListsProps = {
 
 const partitionByStatus = (techniques: Technique[], progressMap: Record<string, Progress>) => ({
   focus: techniques.filter((technique) => progressMap[technique.id]?.focus),
-  notNow: techniques.filter((technique) => progressMap[technique.id]?.notNow),
   confident: techniques.filter((technique) => progressMap[technique.id]?.confident),
 });
 
@@ -26,15 +25,6 @@ export const ProgressLists = ({ copy, locale, techniques, progress, onOpen }: Pr
       <ProgressSection title={`${copy.focus} (${buckets.focus.length})`}>
         <TechniqueList
           items={buckets.focus}
-          locale={locale}
-          copy={copy}
-          progressById={progressById}
-          onOpen={onOpen}
-        />
-      </ProgressSection>
-      <ProgressSection title={`${copy.notNow} (${buckets.notNow.length})`}>
-        <TechniqueList
-          items={buckets.notNow}
           locale={locale}
           copy={copy}
           progressById={progressById}
@@ -98,8 +88,11 @@ const TechniqueList = ({ items, locale, copy, progressById, onOpen }: TechniqueL
                     <StarIcon className="w-3.5 h-3.5" />
                   </span>
                 )}
-              {entry?.notNow && <span title={copy.notNow}>⏸</span>}
-              {entry?.confident && <span title={copy.confident}>✔︎</span>}
+                {entry?.confident && (
+                  <span title={copy.confident} className="text-[0px] inline-flex">
+                    <CheckIcon className="w-3.5 h-3.5" />
+                  </span>
+                )}
               <button type="button" onClick={() => onOpen(technique.id)} className="text-xs underline">
                 Open
               </button>
