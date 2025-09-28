@@ -1,8 +1,8 @@
-import { forwardRef, type PropsWithChildren, type ReactElement, type RefObject } from 'react';
+import { forwardRef, useState, type PropsWithChildren, type ReactElement, type RefObject } from 'react';
 import { classNames } from '../../utils/classNames';
 import type { AppRoute } from '../../types';
 import type { Copy } from '../../constants/i18n';
-import { SearchIcon, SettingsIcon } from '../common/icons';
+import { SearchIcon, SettingsIcon, MenuIcon } from '../common/icons';
 import { Logo } from '../common';
 
 type HeaderProps = {
@@ -23,42 +23,116 @@ export const Header = ({
   onSettings,
   searchButtonRef,
   settingsButtonRef,
-}: HeaderProps): ReactElement => (
-  <header className="surface border-b surface-border sticky top-0 z-20 backdrop-blur">
-    <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-      <a
-        href="/"
-        onClick={(event) => {
-          event.preventDefault();
-          onNavigate('home');
-        }}
-        className="flex items-center gap-3 rounded-lg px-1 py-1 -m-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] transition-colors hover:opacity-90"
-        aria-label={copy.app}
-      >
-        <Logo className="shrink-0" />
-        <div className="font-semibold tracking-tight">{copy.app}</div>
-      </a>
-      <nav className="flex items-center gap-2">
-        <TextButton ref={searchButtonRef} onClick={onSearch}>
-          <span className="flex items-center gap-1">
-            <SearchIcon className="w-4 h-4" />
-            <span>{copy.searchBtn}</span>
-          </span>
-        </TextButton>
-        <TabButton active={route === 'library'} onClick={() => onNavigate('library')}>
-          {copy.library}
-        </TabButton>
-        <TabButton active={route === 'progress'} onClick={() => onNavigate('progress')}>
-          {copy.progress}
-        </TabButton>
-        <div className="w-px h-6 nav-divider mx-1" />
-        <IconButton ref={settingsButtonRef} label={copy.settings} onClick={onSettings}>
-          <SettingsIcon className="w-5 h-5" />
-        </IconButton>
-      </nav>
-    </div>
-  </header>
-);
+}: HeaderProps): ReactElement => {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  return (
+    <header className="surface border-b surface-border sticky top-0 z-20 backdrop-blur">
+      <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+        <a
+          href="/"
+          onClick={(event) => {
+            event.preventDefault();
+            onNavigate('home');
+          }}
+          className="flex items-center gap-3 rounded-lg px-1 py-1 -m-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] transition-colors hover:opacity-90"
+          aria-label={copy.app}
+        >
+          <Logo className="shrink-0" />
+          <div className="font-semibold tracking-tight">{copy.app}</div>
+        </a>
+        <nav className="flex items-center gap-2">
+          <div className="hidden md:flex items-center gap-2">
+            <TextButton ref={searchButtonRef} onClick={onSearch}>
+              <span className="flex items-center gap-1">
+                <SearchIcon className="w-4 h-4" />
+                <span>{copy.searchBtn}</span>
+              </span>
+            </TextButton>
+            <TabButton active={route === 'library'} onClick={() => onNavigate('library')}>
+              {copy.library}
+            </TabButton>
+            <TabButton active={route === 'progress'} onClick={() => onNavigate('progress')}>
+              {copy.progress}
+            </TabButton>
+            <div className="w-px h-6 nav-divider mx-1" />
+            <IconButton ref={settingsButtonRef} label={copy.settings} onClick={onSettings}>
+              <SettingsIcon className="w-5 h-5" />
+            </IconButton>
+          </div>
+
+          {/* Mobile: menu button */}
+          <div className="md:hidden relative">
+            <button
+              type="button"
+              onClick={() => setMenuOpen((v) => !v)}
+              className="px-2 py-1.5 rounded-lg border btn-tonal surface-hover text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+              aria-expanded={menuOpen}
+              aria-label="Open menu"
+            >
+              <MenuIcon className="w-5 h-5" />
+            </button>
+
+            {menuOpen && (
+              <div className="absolute right-0 mt-2 w-48 rounded-lg border surface border-[var(--color-border)] bg-[var(--color-surface)] shadow-lg z-30">
+                <ul className="p-2">
+                  <li>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMenuOpen(false);
+                        onSearch();
+                      }}
+                      className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
+                    >
+                      <span className="flex items-center gap-2"><SearchIcon className="w-4 h-4" />{copy.searchBtn}</span>
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMenuOpen(false);
+                        onNavigate('library');
+                      }}
+                      className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
+                    >
+                      {copy.library}
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMenuOpen(false);
+                        onNavigate('progress');
+                      }}
+                      className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
+                    >
+                      {copy.progress}
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMenuOpen(false);
+                        onSettings();
+                      }}
+                      className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
+                    >
+                      <span className="flex items-center gap-2"><SettingsIcon className="w-4 h-4" />{copy.settings}</span>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            )}
+          </div>
+        </nav>
+      </div>
+    </header>
+  );
+};
 
 type ButtonProps = PropsWithChildren<{ active?: boolean; label?: string; onClick: () => void }>;
 
