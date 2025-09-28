@@ -3,13 +3,14 @@ import type { Copy } from '../../constants/i18n';
 import type { Locale, Technique } from '../../types';
 import { gradeLabel } from '../../utils/grades';
 import { EmphasizedName } from '../common';
+import { SearchIcon } from '../common/icons';
 
 type SearchOverlayProps = {
   copy: Copy;
   locale: Locale;
   techniques: Technique[];
   onClose: () => void;
-  onOpen: (id: string) => void;
+  onOpen: (slug: string) => void;
 };
 
 export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen }: SearchOverlayProps): JSX.Element => {
@@ -53,7 +54,7 @@ export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen }: Sea
       >
         <div className="p-3 border-b surface-border flex items-center gap-2">
           <span className="text-muted" aria-hidden>
-            🔍
+            <SearchIcon className="w-4 h-4" />
           </span>
           <input
             ref={inputRef}
@@ -69,7 +70,7 @@ export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen }: Sea
               <button
                 type="button"
                 onClick={() => {
-                  onOpen(technique.id);
+                  onOpen(technique.slug);
                 }}
                 className="w-full text-left px-3 py-2 transition-colors surface-hover"
               >

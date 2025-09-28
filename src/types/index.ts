@@ -18,6 +18,7 @@ export type Technique = {
   level: Grade;
   description: { en: string; de: string };
   steps: { en: string[]; de: string[] };
+  stepImages?: string[];
   media: { type: MediaType; url: string; title?: string }[];
   tags?: string[];
 };

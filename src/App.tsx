@@ -3,9 +3,9 @@ import { Header } from './components/layout/Header';
 import { FilterPanel } from './components/filters/FilterPanel';
 import { Library } from './components/library/Library';
 import { ProgressLists } from './components/progress/ProgressLists';
-import { DetailDrawer } from './components/detail/DetailDrawer';
 import { SearchOverlay } from './components/overlay/SearchOverlay';
 import { SettingsModal } from './components/settings/SettingsModal';
+import { TechniquePage } from './components/technique/TechniquePage';
 import { getCopy } from './constants/i18n';
 import {
   clearThemePreference,
@@ -22,6 +22,11 @@ import { gradeOrder } from './utils/grades';
 import { unique, upsert } from './utils/array';
 
 const defaultFilters: Filters = {};
+
+const getSlugFromPath = (pathname: string): string | null => {
+  const match = /^\/technique\/([^/?#]+)/.exec(pathname);
+  return match ? decodeURIComponent(match[1]) : null;
+};
 
 const isEditableElement = (element: EventTarget | null): boolean => {
   if (!(element instanceof HTMLElement)) {
@@ -113,7 +118,9 @@ export default function App(): JSX.Element {
   const [db, setDB] = useState<DB>(() => loadDB());
   const [tab, setTab] = useState<AppTab>('library');
   const [filters, setFilters] = useState<Filters>(defaultFilters);
-  const [currentId, setCurrentId] = useState<string | null>(null);
+  const [activeSlug, setActiveSlug] = useState<string | null>(
+    () => (typeof window === 'undefined' ? null : getSlugFromPath(window.location.pathname))
+  );
   const [searchOpen, setSearchOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
 
@@ -143,6 +150,15 @@ export default function App(): JSX.Element {
   useEffect(() => {
     saveDB(db);
   }, [db]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const syncFromLocation = () => {
+      setActiveSlug(getSlugFromPath(window.location.pathname));
+    };
+    window.addEventListener('popstate', syncFromLocation);
+    return () => window.removeEventListener('popstate', syncFromLocation);
+  }, []);
 
   useKeyboardShortcuts(() => setSearchOpen(true));
 
@@ -184,8 +200,8 @@ export default function App(): JSX.Element {
   );
 
   const currentTechnique = useMemo(
-    () => (currentId ? db.techniques.find((technique) => technique.id === currentId) ?? null : null),
-    [db.techniques, currentId],
+    () => (activeSlug ? db.techniques.find((technique) => technique.slug === activeSlug) ?? null : null),
+    [db.techniques, activeSlug],
   );
 
   const currentProgress = useMemo(
@@ -219,6 +235,46 @@ export default function App(): JSX.Element {
     setDB(next);
   };
 
+  const openTechnique = (slug: string): void => {
+    if (!db.techniques.some((technique) => technique.slug === slug)) {
+      return;
+    }
+
+    if (typeof window !== 'undefined') {
+      const currentPath = window.location.pathname;
+      if (getSlugFromPath(currentPath) !== slug) {
+        window.history.pushState({ slug }, '', `/technique/${encodeURIComponent(slug)}`);
+      }
+    }
+
+    setActiveSlug(slug);
+  };
+
+  const closeTechnique = (): void => {
+    if (typeof window !== 'undefined') {
+      window.history.replaceState({}, '', '/');
+    }
+    setActiveSlug(null);
+  };
+
+  const toggleFocus = (technique: Technique, entry: Progress | null): void => {
+    const nextFocus = !entry?.focus;
+    updateProgress(technique.id, {
+      focus: nextFocus,
+      confident: nextFocus ? false : entry?.confident ?? false,
+    });
+  };
+
+  const toggleConfident = (technique: Technique, entry: Progress | null): void => {
+    const nextConfident = !entry?.confident;
+    updateProgress(technique.id, {
+      confident: nextConfident,
+      focus: nextConfident ? false : entry?.focus ?? false,
+    });
+  };
+
+  const techniqueNotFound = Boolean(activeSlug) && !currentTechnique;
+
   return (
     <div className="min-h-screen app-bg">
       <Header
@@ -229,56 +285,65 @@ export default function App(): JSX.Element {
         onSettings={() => setSettingsOpen(true)}
       />
 
-      <div className="max-w-6xl mx-auto px-4 py-4">
-        <div className="grid md:grid-cols-[16rem,1fr] gap-6">
-          <aside className="surface border surface-border rounded-2xl p-3 h-max sticky top-20">
-            <FilterPanel
-              copy={copy}
-              locale={locale}
-              filters={filters}
-              categories={categories}
-              attacks={attacks}
-              stances={stances}
-              weapons={weapons}
-              levels={gradeOrder}
-              onChange={setFilters}
-            />
-          </aside>
-          <main>
-            {tab === 'library' && (
-              <Library
-                copy={copy}
-                locale={locale}
-                techniques={filteredTechniques}
-                progress={db.progress}
-                onOpen={setCurrentId}
-              />
-            )}
-            {tab === 'progress' && (
-              <ProgressLists
-                copy={copy}
-                locale={locale}
-                techniques={filteredTechniques}
-                progress={db.progress}
-                onOpen={setCurrentId}
-              />
-            )}
-          </main>
-        </div>
-      </div>
-
-      {currentTechnique && currentProgress && (
-        <DetailDrawer
+      {currentTechnique ? (
+        <TechniquePage
+          technique={currentTechnique}
+          progress={currentProgress ?? null}
           copy={copy}
           locale={locale}
-          technique={currentTechnique}
-          progress={currentProgress}
-          onClose={() => setCurrentId(null)}
-          onToggleFocus={() => updateProgress(currentTechnique.id, { focus: !currentProgress.focus })}
-          onToggleNotNow={() => updateProgress(currentTechnique.id, { notNow: !currentProgress.notNow })}
-          onToggleConfident={() => updateProgress(currentTechnique.id, { confident: !currentProgress.confident })}
-          onSetNote={(note) => updateProgress(currentTechnique.id, { personalNote: note })}
+          onBack={closeTechnique}
+          onToggleFocus={() => toggleFocus(currentTechnique, currentProgress ?? null)}
+          onToggleConfident={() => toggleConfident(currentTechnique, currentProgress ?? null)}
         />
+      ) : techniqueNotFound ? (
+        <div className="max-w-5xl mx-auto px-6 py-10 space-y-4 text-center">
+          <p className="text-lg font-semibold">Technique not found.</p>
+          <button
+            type="button"
+            onClick={closeTechnique}
+            className="text-sm underline"
+          >
+            Back to Library
+          </button>
+        </div>
+      ) : (
+        <div className="max-w-6xl mx-auto px-4 py-4">
+          <div className="grid md:grid-cols-[16rem,1fr] gap-6">
+            <aside className="surface border surface-border rounded-2xl p-3 h-max sticky top-20">
+              <FilterPanel
+                copy={copy}
+                locale={locale}
+                filters={filters}
+                categories={categories}
+                attacks={attacks}
+                stances={stances}
+                weapons={weapons}
+                levels={gradeOrder}
+                onChange={setFilters}
+              />
+            </aside>
+            <main>
+              {tab === 'library' && (
+                <Library
+                  copy={copy}
+                  locale={locale}
+                  techniques={filteredTechniques}
+                  progress={db.progress}
+                  onOpen={openTechnique}
+                />
+              )}
+              {tab === 'progress' && (
+                <ProgressLists
+                  copy={copy}
+                  locale={locale}
+                  techniques={filteredTechniques}
+                  progress={db.progress}
+                  onOpen={openTechnique}
+                />
+              )}
+            </main>
+          </div>
+        </div>
       )}
 
       {searchOpen && (
@@ -287,8 +352,8 @@ export default function App(): JSX.Element {
           locale={locale}
           techniques={db.techniques}
           onClose={() => setSearchOpen(false)}
-          onOpen={(id) => {
-            setCurrentId(id);
+          onOpen={(slug) => {
+            openTechnique(slug);
             setSearchOpen(false);
           }}
         />

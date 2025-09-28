@@ -2,37 +2,17 @@ import type { Locale, Progress, Technique } from '../../types';
 import type { Copy } from '../../constants/i18n';
 import { EmphasizedName, LevelBadge } from '../common';
 import { StarIcon, CheckIcon } from '../common/icons';
+import { formatDetailLabel, formatWeaponLabel } from '../../utils/format';
 
 const buildProgressMap = (entries: Progress[]): Record<string, Progress> =>
   Object.fromEntries(entries.map((entry) => [entry.techniqueId, entry]));
-
-const formatDetailLabel = (value?: string | null): string | null => {
-  if (!value) return null;
-  return value
-    .split(/[-_]/)
-    .filter(Boolean)
-    .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1))
-    .join(' ');
-};
-
-const weaponLabels: Record<string, string> = {
-  'empty-hand': 'Empty hand',
-  tanto: 'Tantō',
-  jo: 'Jō',
-  bokken: 'Bokken',
-};
-
-const formatWeaponLabel = (value?: string | null): string | null => {
-  if (!value) return null;
-  return weaponLabels[value] ?? formatDetailLabel(value);
-};
 
 type LibraryProps = {
   copy: Copy;
   locale: Locale;
   techniques: Technique[];
   progress: Progress[];
-  onOpen: (id: string) => void;
+  onOpen: (slug: string) => void;
 };
 
 export const Library = ({ copy, locale, techniques, progress, onOpen }: LibraryProps): JSX.Element => {
@@ -50,7 +30,7 @@ export const Library = ({ copy, locale, techniques, progress, onOpen }: LibraryP
           <button
             type="button"
             key={technique.id}
-            onClick={() => onOpen(technique.id)}
+            onClick={() => onOpen(technique.slug)}
             className="surface border surface-border rounded-2xl p-4 flex flex-col gap-3 cursor-pointer transition hover:shadow-md hover-border-contrast text-left"
           >
             <div className="flex items-start justify-between gap-3">
@@ -66,7 +46,6 @@ export const Library = ({ copy, locale, techniques, progress, onOpen }: LibraryP
                     <StarIcon className="w-4 h-4" />
                   </span>
                 )}
-                {entry?.notNow && <span title={copy.notNow}>⏸</span>}
                 {entry?.confident && (
                   <span title={copy.confident} className="text-[0px] inline-flex">
                     <CheckIcon className="w-4 h-4" />

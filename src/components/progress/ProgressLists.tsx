@@ -8,7 +8,7 @@ type ProgressListsProps = {
   locale: Locale;
   techniques: Technique[];
   progress: Progress[];
-  onOpen: (id: string) => void;
+  onOpen: (slug: string) => void;
 };
 
 const partitionByStatus = (techniques: Technique[], progressMap: Record<string, Progress>) => ({
@@ -61,7 +61,7 @@ type TechniqueListProps = {
   locale: Locale;
   copy: Copy;
   progressById: Record<string, Progress>;
-  onOpen: (id: string) => void;
+  onOpen: (slug: string) => void;
 };
 
 const TechniqueList = ({ items, locale, copy, progressById, onOpen }: TechniqueListProps): JSX.Element => {
@@ -83,17 +83,17 @@ const TechniqueList = ({ items, locale, copy, progressById, onOpen }: TechniqueL
             </div>
             <div className="flex items-center gap-2">
               <LevelBadge locale={locale} level={technique.level} />
-                {entry?.focus && (
-                  <span title={copy.focus} className="text-[0px] inline-flex">
-                    <StarIcon className="w-3.5 h-3.5" />
-                  </span>
-                )}
-                {entry?.confident && (
-                  <span title={copy.confident} className="text-[0px] inline-flex">
-                    <CheckIcon className="w-3.5 h-3.5" />
-                  </span>
-                )}
-              <button type="button" onClick={() => onOpen(technique.id)} className="text-xs underline">
+              {entry?.focus && (
+                <span title={copy.focus} className="text-[0px] inline-flex">
+                  <StarIcon className="w-3.5 h-3.5" />
+                </span>
+              )}
+              {entry?.confident && (
+                <span title={copy.confident} className="text-[0px] inline-flex">
+                  <CheckIcon className="w-3.5 h-3.5" />
+                </span>
+              )}
+              <button type="button" onClick={() => onOpen(technique.slug)} className="text-xs underline">
                 Open
               </button>
             </div>
