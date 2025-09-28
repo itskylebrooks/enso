@@ -69,7 +69,7 @@ export const TechniquePage = ({
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-6 space-y-10">
-  <header className="sticky top-16 z-10 border-b surface-border pb-4 bg-transparent">
+  <header className="z-10 border-b surface-border pb-4 bg-transparent">
         <div className="flex flex-wrap items-start justify-between gap-6">
           <div className="min-w-0 space-y-3">
             <a
