@@ -185,9 +185,7 @@ export const TechniquePage = ({
         </section>
       </main>
 
-      <footer className="flex flex-wrap items-center justify-end gap-3 text-xs text-subtle border-t surface-border pt-3">
-        <div>Keys: ⌘K or Ctrl+K</div>
-      </footer>
+      {/* footer removed per UX request */}
     </div>
   );
 };
