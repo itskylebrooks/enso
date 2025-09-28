@@ -7,7 +7,7 @@ export type TaxonomyType = 'category' | 'attack' | 'stance' | 'weapon';
 
 type TaxonomyMap = Record<TaxonomyType, Record<string, string>>;
 
-type TaxonomyLabels = Record<Locale, TaxonomyMap>;
+type TaxonomyLabels = Record<Locale, Partial<TaxonomyMap>>;
 
 const fallbackTitle = (value: string): string =>
   value
@@ -25,35 +25,6 @@ export const taxonomyLabels: TaxonomyLabels = {
       weapon: 'Weapons (Buki-waza)',
       ukemi: 'Ukemi',
     },
-    attack: {
-      'katate-dori': 'Katate-dori (Single-hand grab)',
-      'ryote-dori': 'Ryōte-dori (Two-hand grab)',
-      'katate-ryote-dori': 'Katate-ryōte-dori',
-      'morote-dori': 'Morote-dori (Two-on-one)',
-      'mune-dori': 'Mune-dori (Chest grab)',
-      'yokomen-uchi': 'Yokomen-uchi (Diagonal strike)',
-      'shomen-uchi': 'Shōmen-uchi (Frontal strike)',
-      'shomen-tsuki': 'Shōmen-tsuki (Frontal thrust)',
-      'yoko-tsuki-soto': 'Yoko-tsuki (Outer thrust)',
-      tsuki: 'Tsuki (Thrust)',
-      'yoko-kubi-shime': 'Yoko-kubi-shime (Side choke)',
-      'ushiro-ryote-dori': 'Ushiro-ryōte-dori (Rear two-hand grab)',
-      'ushiro-ryokata-dori': 'Ushiro-ryōkata-dori (Rear shoulder grab)',
-      'ushiro-eri-dori': 'Ushiro-eri-dori (Rear collar grab)',
-      'ushiro-kakae-dori': 'Ushiro-kakae-dori (Bear hug)',
-      'ushiro-katate-dori-kubi-shime': 'Ushiro-katate-dori kubi-shime',
-      'ushiro-kubi-shime': 'Ushiro-kubi-shime (Rear choke)',
-    },
-    stance: {
-      omote: 'Omote (Front entry)',
-      ura: 'Ura (Turning entry)',
-    },
-    weapon: {
-      'empty-hand': 'Empty hand',
-      tanto: 'Tantō',
-      jo: 'Jō',
-      bokken: 'Bokken',
-    },
   },
   de: {
     category: {
@@ -62,35 +33,6 @@ export const taxonomyLabels: TaxonomyLabels = {
       immobilization: 'Immobilisationen (Katame-waza)',
       weapon: 'Waffen (Buki-waza)',
       ukemi: 'Ukemi',
-    },
-    attack: {
-      'katate-dori': 'Katate-dori (Einhandgriff)',
-      'ryote-dori': 'Ryōte-dori (Zweihandgriff)',
-      'katate-ryote-dori': 'Katate-ryōte-dori',
-      'morote-dori': 'Morote-dori (Zwei-zu-eins-Griff)',
-      'mune-dori': 'Mune-dori (Brustgriff)',
-      'yokomen-uchi': 'Yokomen-uchi (Seitschlag)',
-      'shomen-uchi': 'Shōmen-uchi (Frontalschlag)',
-      'shomen-tsuki': 'Shōmen-tsuki (Frontstoß)',
-      'yoko-tsuki-soto': 'Yoko-tsuki (äußerer Stoß)',
-      tsuki: 'Tsuki (Stoß)',
-      'yoko-kubi-shime': 'Yoko-kubi-shime (Seitlicher Würgegriff)',
-      'ushiro-ryote-dori': 'Ushiro-ryōte-dori (Griff von hinten, beide Hände)',
-      'ushiro-ryokata-dori': 'Ushiro-ryōkata-dori (Griff von hinten, Schultern)',
-      'ushiro-eri-dori': 'Ushiro-eri-dori (Kragengriff von hinten)',
-      'ushiro-kakae-dori': 'Ushiro-kakae-dori (Umklammerung)',
-      'ushiro-katate-dori-kubi-shime': 'Ushiro-katate-dori kubi-shime',
-      'ushiro-kubi-shime': 'Ushiro-kubi-shime (Würgegriff von hinten)',
-    },
-    stance: {
-      omote: 'Omote (Vorderseite)',
-      ura: 'Ura (Rückseite)',
-    },
-    weapon: {
-      'empty-hand': 'Ohne Waffe',
-      tanto: 'Tantō',
-      jo: 'Jō',
-      bokken: 'Bokken',
     },
   },
 };
