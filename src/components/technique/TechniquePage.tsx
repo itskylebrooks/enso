@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { ReactNode, ReactElement } from 'react';
 import type { Copy } from '../../constants/i18n';
 import type { Locale, Progress, Technique } from '../../types';
 import { EmphasizedName, LevelBadge } from '../common';
@@ -53,7 +53,7 @@ export const TechniquePage = ({
   onBack,
   onToggleFocus,
   onToggleConfident,
-}: TechniquePageProps): JSX.Element => {
+}: TechniquePageProps): ReactElement => {
   const tags = buildTags(technique, locale);
   const steps = technique.steps[locale];
 
@@ -158,7 +158,7 @@ type ToggleButtonProps = {
   onClick: () => void;
 };
 
-const ToggleButton = ({ label, icon, active, onClick }: ToggleButtonProps): JSX.Element => (
+const ToggleButton = ({ label, icon, active, onClick }: ToggleButtonProps): ReactElement => (
   <button
     type="button"
     onClick={onClick}
