@@ -26,6 +26,23 @@ const normalizeTechnique = (technique: Technique): Technique => {
   };
 };
 
+const stanceCriticalAttacks = new Set([
+  'shomen-uchi',
+  'yokomen-uchi',
+  'shomen-tsuki',
+  'tsuki',
+  'katate-dori',
+  'katate-ryote-dori',
+  'morote-dori',
+  'ryote-dori',
+  'ushiro-ryote-dori',
+  'ushiro-ryokata-dori',
+  'ushiro-eri-dori',
+  'ushiro-kakae-dori',
+  'ushiro-katate-dori-kubi-shime',
+  'yoko-kubi-shime',
+]);
+
 async function build(): Promise<void> {
   const entries = await fs.readdir(contentDir);
   const techniques: Technique[] = [];
@@ -61,6 +78,10 @@ async function build(): Promise<void> {
           console.warn(`Warning: ${entry} tag list duplicates ${label} value "${value}".`);
         }
       }
+    }
+
+    if (!technique.stance && technique.attack && stanceCriticalAttacks.has(technique.attack)) {
+      console.warn(`Warning: ${entry} is missing a stance for attack "${technique.attack}".`);
     }
 
     techniques.push(technique);

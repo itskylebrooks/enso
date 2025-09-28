@@ -3,7 +3,8 @@ import type { ReactNode } from 'react';
 import type { Copy } from '../../constants/i18n';
 import type { Filters, Grade, Locale } from '../../types';
 import { classNames } from '../../utils/classNames';
-import { gradeColor, gradeLabel } from '../../utils/grades';
+import { gradePalette } from '../../styles/belts';
+import { getLevelLabel, getOrderedTaxonomyValues, getTaxonomyLabel, type TaxonomyType } from '../../i18n/taxonomy';
 import { SectionTitle } from '../common';
 
 type FilterPanelProps = {
@@ -24,84 +25,16 @@ type Option = {
   trailing?: ReactNode;
 };
 
-const CATEGORY_LABELS: Record<Locale, Record<string, string>> = {
-  en: {
-    throw: 'Throws (Nage-waza)',
-    control: 'Controls / Pins (Osae-waza)',
-    immobilization: 'Immobilizations (Katame-waza)',
-    weapon: 'Weapons (Buki-waza)',
-    ukemi: 'Ukemi',
-  },
-  de: {
-    throw: 'Würfe (Nage-waza)',
-    control: 'Kontrollen / Haltegriffe (Osae-waza)',
-    immobilization: 'Immobilisationen (Katame-waza)',
-    weapon: 'Waffen (Buki-waza)',
-    ukemi: 'Ukemi',
-  },
-};
-
-const CATEGORY_BASE_OPTIONS: Option[] = [
-  { value: 'throw', label: 'Throws (Nage-waza)' },
-  { value: 'control', label: 'Controls / Pins (Osae-waza)' },
-  { value: 'immobilization', label: 'Immobilizations (Katame-waza)' },
-  { value: 'weapon', label: 'Weapons (Buki-waza)' },
-  { value: 'ukemi', label: 'Ukemi' },
-];
-
-const ATTACK_BASE_OPTIONS: Option[] = [
-  // Standardized list (user-specified order + spelling)
-  { value: 'katate-dori', label: 'Katate-dori' },
-  { value: 'ryote-dori', label: 'Ryote-dori' },
-  { value: 'katate-ryote-dori', label: 'Katate-ryote-dori' },
-  { value: 'mune-dori', label: 'Mune-dori' },
-  { value: 'yoko-kubi-shime', label: 'Yoko-kubi-shime' },
-  { value: 'ushiro-ryokata-dori', label: 'Ushiro-ryokata-dori' },
-  { value: 'ushiro-kakae-dori', label: 'Ushiro-kakae-dori' },
-  { value: 'ushiro-ryote-dori', label: 'Ushiro-ryote-dori' },
-  { value: 'ushiro-eri-dori', label: 'Ushiro-eri-dori' },
-  { value: 'ushiro-katate-dori-kubi-shime', label: 'Ushiro-katate-dori-kubi-shime' },
-  { value: 'ushiro-kubi-shime', label: 'Ushiro-kubi-shime' },
-  { value: 'yokomen-uchi', label: 'Yokomen-uchi' },
-  { value: 'shomen-uchi', label: 'Shōmen-uchi' },
-  { value: 'shomen-tsuki', label: 'Shōmen-tsuki' },
-  { value: 'yoko-tsuki-soto', label: 'Yoko-tsuki (soto)' },
-
-  // Compatibility with existing dataset values
-  { value: 'katate-dori', label: 'Katate-dori' },
-  { value: 'morote-dori', label: 'Morote-dori' },
-  { value: 'ryote-dori', label: 'Ryōte-dori' },
-  { value: 'ushiro-eri-dori', label: 'Ushiro-eri-dori' },
-  { value: 'ushiro-ryo-kata-dori', label: 'Ushiro-ryō-kata-dori' },
-  { value: 'ushiro-katate-dori-kubishime', label: 'Ushiro-katate-dori Kubishime' },
-  { value: 'tsuki', label: 'Tsuki' },
-];
-
-const STANCE_OPTIONS: Option[] = [
-  { value: 'omote', label: 'Omote (Irimi)' },
-  { value: 'ura', label: 'Ura (Tenkan)' },
-];
-
-const WEAPON_OPTIONS: Option[] = [
-  { value: 'empty-hand', label: 'Empty hand' },
-  { value: 'tanto', label: 'Tantō' },
-  { value: 'jo', label: 'Jō' },
-  { value: 'bokken', label: 'Bokken' },
-];
-
-const formatFallbackLabel = (value: string): string =>
-  value
-    .split(/[-_]/)
-    .filter(Boolean)
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join(' ');
-
-const mergeOptions = (base: Option[], available: string[]): Option[] => {
-  const known = new Set(base.map((option) => option.value));
-  const extras = available
-    .filter((value) => value && !known.has(value))
-    .map<Option>((value) => ({ value, label: formatFallbackLabel(value) }));
-  return [...base, ...extras];
+const buildTaxonomyOptions = (
+  locale: Locale,
+  type: TaxonomyType,
+  values: string[],
+): Option[] => {
+  const ordered = getOrderedTaxonomyValues(type);
+  const known = new Set(ordered);
+  const extras = values.filter((value) => value && !known.has(value));
+  const entries = [...ordered, ...extras];
+  return entries.map((value) => ({ value, label: getTaxonomyLabel(locale, type, value) }));
 };
 
 export const FilterPanel = ({
@@ -128,30 +61,30 @@ export const FilterPanel = ({
 
   const toggleOpen = (key: SectionKey): void => setOpen((prev) => ({ ...prev, [key]: !prev[key] }));
 
-  const availableCategorySet = useMemo(() => new Set(categories), [categories]);
-  const availableAttackSet = useMemo(() => new Set(attacks), [attacks]);
-  const availableStanceSet = useMemo(() => new Set(stances), [stances]);
-  const availableWeaponSet = useMemo(() => new Set(weapons), [weapons]);
+  const availableCategorySet = useMemo(() => new Set(categories.filter(Boolean)), [categories]);
+  const availableAttackSet = useMemo(() => new Set(attacks.filter(Boolean)), [attacks]);
+  const normalizedStances = useMemo(() => (stances.length > 0 ? stances : ['omote', 'ura']), [stances]);
+  const availableStanceSet = useMemo(() => new Set(normalizedStances.filter(Boolean)), [normalizedStances]);
+  const availableWeaponSet = useMemo(() => new Set(weapons.filter(Boolean)), [weapons]);
 
-  const categoryOptions = useMemo(() => {
-    const merged = mergeOptions(CATEGORY_BASE_OPTIONS, categories);
-    return merged.map((opt) => ({ ...opt, label: CATEGORY_LABELS[locale]?.[opt.value] ?? opt.label }));
-  }, [categories, locale]);
-  const attackOptions = useMemo(() => mergeOptions(ATTACK_BASE_OPTIONS, attacks), [attacks]);
-  const stanceOptions = STANCE_OPTIONS;
-  const weaponOptions = useMemo(() => mergeOptions(WEAPON_OPTIONS, weapons), [weapons]);
+  const categoryOptions = useMemo(() => buildTaxonomyOptions(locale, 'category', categories), [categories, locale]);
+  const attackOptions = useMemo(() => buildTaxonomyOptions(locale, 'attack', attacks), [attacks, locale]);
+  const stanceOptions = useMemo(() => buildTaxonomyOptions(locale, 'stance', normalizedStances), [normalizedStances, locale]);
+  const weaponOptions = useMemo(() => buildTaxonomyOptions(locale, 'weapon', weapons), [weapons, locale]);
   const levelOptions = useMemo<Option[]>(
     () =>
       levels.map((grade) => ({
         value: grade,
-        label: gradeLabel(grade, locale),
+        label: getLevelLabel(locale, grade),
         trailing: (
           <span
             aria-hidden
-            className={classNames(
-              'inline-flex h-3 w-10 flex-shrink-0 items-center justify-center rounded-sm border border-black/10 text-[0.625rem] font-semibold uppercase tracking-wide dark:border-white/20',
-              gradeColor[grade],
-            )}
+            className="inline-flex h-3 w-10 flex-shrink-0 items-center justify-center rounded-sm border"
+            style={{
+              backgroundColor: gradePalette[grade].bg,
+              color: gradePalette[grade].fg,
+              borderColor: gradePalette[grade].fg === '#FFFFFF' ? 'rgba(255, 255, 255, 0.28)' : 'rgba(0, 0, 0, 0.18)',
+            }}
           />
         ),
       })),
@@ -279,7 +212,7 @@ const OptionList = ({ options, selected, available, onSelect }: OptionListProps)
           aria-pressed={isActive}
           onClick={() => onSelect(isActive ? undefined : value)}
           className={classNames(
-            'flex w-full items-center justify-between rounded-md border px-3 py-2 text-sm transition-colors duration-150 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] hover:border-[var(--color-text)] hover:bg-[var(--color-surface-hover)]',
+            'flex w-full items-center justify-between rounded-md border px-3 py-2 text-sm transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] hover:border-[var(--color-text)] hover:bg-[var(--color-surface-hover)]',
             isActive
               ? 'bg-[var(--color-text)] text-[var(--color-bg)] border-[var(--color-text)] font-semibold shadow-sm hover:bg-[var(--color-text)]'
               : 'surface surface-border',

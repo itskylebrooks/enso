@@ -1,4 +1,5 @@
 import { useRef, type ReactElement, type RefObject } from 'react';
+import { motion } from 'motion/react';
 import type { ChangeEvent } from 'react';
 import type { Copy } from '../../constants/i18n';
 import type { DB, Locale, Theme } from '../../types';
@@ -6,6 +7,7 @@ import { classNames } from '../../utils/classNames';
 import { exportDB, parseIncomingDB } from '../../services/storageService';
 import { SectionTitle } from '../common';
 import { useFocusTrap } from '../../utils/useFocusTrap';
+import { useMotionPreferences } from '../ui/motion';
 
 type SettingsModalProps = {
   copy: Copy;
@@ -38,6 +40,7 @@ export const SettingsModal = ({
 }: SettingsModalProps): ReactElement => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
+  const { overlayMotion, toggleTransition } = useMotionPreferences();
 
   useFocusTrap(trapEnabled, dialogRef, onClose);
 
@@ -68,10 +71,25 @@ export const SettingsModal = ({
   };
 
   return (
-    <div className="fixed inset-0 z-40 bg-black/40 flex items-center justify-center" onClick={onClose}>
-      <div
+    <motion.div
+      className="fixed inset-0 z-40 flex items-center justify-center px-4 sm:px-0"
+      variants={overlayMotion.backdrop}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      transition={overlayMotion.transition}
+      onClick={onClose}
+    >
+      <div className="absolute inset-0 bg-black/40 pointer-events-none" />
+      <div className="absolute inset-0 backdrop-blur-sm md:backdrop-blur pointer-events-none" />
+      <motion.div
         ref={dialogRef}
-        className="w-full max-w-lg surface rounded-2xl border surface-border shadow-xl overflow-hidden"
+        className="relative w-full max-w-lg surface rounded-2xl border surface-border shadow-xl overflow-hidden"
+        variants={overlayMotion.panel}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        transition={overlayMotion.transition}
         onClick={(event) => event.stopPropagation()}
         role="dialog"
         aria-modal="true"
@@ -81,14 +99,19 @@ export const SettingsModal = ({
           <h2 id="settings-title" className="font-semibold">
             {copy.settings}
           </h2>
-          <button
+          <motion.button
             type="button"
             onClick={onClose}
             className="px-2 py-1 rounded-lg border btn-tonal surface-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+            variants={overlayMotion.closeButton}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={toggleTransition}
             aria-label="Close"
           >
             Close
-          </button>
+          </motion.button>
         </div>
         <div className="p-4 space-y-4">
           <div>
@@ -98,7 +121,7 @@ export const SettingsModal = ({
                 type="button"
                 onClick={() => onChangeLocale('en')}
                 className={classNames(
-                  'px-3 py-1.5 rounded-lg border text-sm',
+                  'px-3 py-1.5 rounded-lg border text-sm transition-soft motion-ease',
                   locale === 'en' ? 'btn-contrast' : 'btn-tonal surface-hover',
                 )}
               >
@@ -108,7 +131,7 @@ export const SettingsModal = ({
                 type="button"
                 onClick={() => onChangeLocale('de')}
                 className={classNames(
-                  'px-3 py-1.5 rounded-lg border text-sm',
+                  'px-3 py-1.5 rounded-lg border text-sm transition-soft motion-ease',
                   locale === 'de' ? 'btn-contrast' : 'btn-tonal surface-hover',
                 )}
               >
@@ -123,7 +146,7 @@ export const SettingsModal = ({
                 type="button"
                 onClick={() => onChangeTheme('system')}
                 className={classNames(
-                  'px-3 py-1.5 rounded-lg border text-sm',
+                  'px-3 py-1.5 rounded-lg border text-sm transition-soft motion-ease',
                   isSystemTheme ? 'btn-contrast' : 'btn-tonal surface-hover',
                 )}
               >
@@ -133,7 +156,7 @@ export const SettingsModal = ({
                 type="button"
                 onClick={() => onChangeTheme('light')}
                 className={classNames(
-                  'px-3 py-1.5 rounded-lg border text-sm',
+                  'px-3 py-1.5 rounded-lg border text-sm transition-soft motion-ease',
                   !isSystemTheme && theme === 'light' ? 'btn-contrast' : 'btn-tonal surface-hover',
                 )}
               >
@@ -143,7 +166,7 @@ export const SettingsModal = ({
                 type="button"
                 onClick={() => onChangeTheme('dark')}
                 className={classNames(
-                  'px-3 py-1.5 rounded-lg border text-sm',
+                  'px-3 py-1.5 rounded-lg border text-sm transition-soft motion-ease',
                   !isSystemTheme && theme === 'dark' ? 'btn-contrast' : 'btn-tonal surface-hover',
                 )}
               >
@@ -157,14 +180,14 @@ export const SettingsModal = ({
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="px-3 py-2 rounded-xl border btn-tonal surface-hover"
+                className="px-3 py-2 rounded-xl border btn-tonal surface-hover transition-soft motion-ease"
               >
                 {copy.import}
               </button>
               <button
                 type="button"
                 onClick={handleExport}
-                className="px-3 py-2 rounded-xl border btn-tonal surface-hover"
+                className="px-3 py-2 rounded-xl border btn-tonal surface-hover transition-soft motion-ease"
               >
                 {copy.export}
               </button>
@@ -172,15 +195,15 @@ export const SettingsModal = ({
                 type="button"
                 ref={clearButtonRef}
                 onClick={onRequestClear}
-                className="px-3 py-2 rounded-xl border btn-tonal surface-hover"
+                className="px-3 py-2 rounded-xl border btn-tonal surface-hover transition-soft motion-ease"
               >
                 {copy.clear}
               </button>
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
       <input ref={fileInputRef} type="file" accept="application/json" className="hidden" onChange={handleFileChange} />
-    </div>
+    </motion.div>
   );
 };

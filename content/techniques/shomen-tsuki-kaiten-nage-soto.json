@@ -8,7 +8,7 @@
   "jp": "回転投げ（外）",
   "category": "throw",
   "attack": "shomen-tsuki",
-  "stance": "",
+  "stance": "ura",
   "weapon": "empty-hand",
   "level": "kyu3",
   "description": {

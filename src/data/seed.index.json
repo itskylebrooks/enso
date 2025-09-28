@@ -9,6 +9,7 @@
     "jp": "回転投げ（外）",
     "category": "throw",
     "attack": "katate-dori",
+    "stance": "ura",
     "weapon": "empty-hand",
     "level": "kyu3",
     "description": {
@@ -61,6 +62,7 @@
     "jp": "小手回し（二教）",
     "category": "control",
     "attack": "katate-dori",
+    "stance": "ura",
     "weapon": "empty-hand",
     "level": "kyu3",
     "description": {
@@ -107,6 +109,7 @@
     "jp": "小手回し（二教）",
     "category": "control",
     "attack": "katate-ryote-dori",
+    "stance": "ura",
     "weapon": "empty-hand",
     "level": "kyu3",
     "description": {
@@ -147,6 +150,7 @@
     "jp": "小手回し（二教）",
     "category": "control",
     "attack": "mune-dori",
+    "stance": "ura",
     "weapon": "empty-hand",
     "level": "kyu3",
     "description": {
@@ -187,6 +191,7 @@
     "jp": "小手回し（二教）",
     "category": "control",
     "attack": "ryote-dori",
+    "stance": "ura",
     "weapon": "empty-hand",
     "level": "kyu3",
     "description": {
@@ -229,6 +234,7 @@
     "jp": "入身投げ",
     "category": "throw",
     "attack": "shomen-tsuki",
+    "stance": "omote",
     "weapon": "empty-hand",
     "level": "kyu3",
     "description": {
@@ -270,6 +276,7 @@
     "jp": "回転投げ（外）",
     "category": "throw",
     "attack": "shomen-tsuki",
+    "stance": "ura",
     "weapon": "empty-hand",
     "level": "kyu3",
     "description": {
@@ -314,6 +321,7 @@
     "jp": "小手回し（二教）",
     "category": "control",
     "attack": "shomen-tsuki",
+    "stance": "ura",
     "weapon": "empty-hand",
     "level": "kyu3",
     "description": {
@@ -352,6 +360,7 @@
     "jp": "入身投げ",
     "category": "throw",
     "attack": "shomen-uchi",
+    "stance": "omote",
     "weapon": "empty-hand",
     "level": "kyu3",
     "description": {
@@ -393,6 +402,7 @@
     "jp": "回転投げ（外）",
     "category": "throw",
     "attack": "shomen-uchi",
+    "stance": "ura",
     "weapon": "empty-hand",
     "level": "kyu3",
     "description": {
@@ -437,6 +447,7 @@
     "jp": "小手回し（二教）",
     "category": "control",
     "attack": "shomen-uchi",
+    "stance": "ura",
     "weapon": "empty-hand",
     "level": "kyu3",
     "description": {
@@ -475,6 +486,7 @@
     "jp": "小手回し（二教）",
     "category": "control",
     "attack": "ushiro-eri-dori",
+    "stance": "ura",
     "weapon": "empty-hand",
     "level": "kyu3",
     "description": {
@@ -513,6 +525,7 @@
     "jp": "小手回し（二教）",
     "category": "control",
     "attack": "ushiro-katate-dori-kubi-shime",
+    "stance": "ura",
     "weapon": "empty-hand",
     "level": "kyu3",
     "description": {
@@ -551,6 +564,7 @@
     "jp": "小手回し（二教）",
     "category": "control",
     "attack": "ushiro-ryokata-dori",
+    "stance": "ura",
     "weapon": "empty-hand",
     "level": "kyu3",
     "description": {
@@ -589,6 +603,7 @@
     "jp": "入身投げ",
     "category": "throw",
     "attack": "ushiro-ryote-dori",
+    "stance": "ura",
     "weapon": "empty-hand",
     "level": "kyu3",
     "description": {
@@ -634,6 +649,7 @@
     "jp": "小手回し（二教）",
     "category": "control",
     "attack": "ushiro-ryote-dori",
+    "stance": "ura",
     "weapon": "empty-hand",
     "level": "kyu3",
     "description": {
@@ -672,6 +688,7 @@
     "jp": "入身投げ",
     "category": "throw",
     "attack": "yokomen-uchi",
+    "stance": "omote",
     "weapon": "empty-hand",
     "level": "kyu3",
     "description": {
@@ -713,6 +730,7 @@
     "jp": "小手回し（二教）",
     "category": "control",
     "attack": "yokomen-uchi",
+    "stance": "ura",
     "weapon": "empty-hand",
     "level": "kyu3",
     "description": {

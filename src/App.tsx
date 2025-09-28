@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactElement } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Header } from './components/layout/Header';
 import { FilterPanel } from './components/filters/FilterPanel';
 import { Library } from './components/library/Library';
@@ -11,6 +12,7 @@ import { Toast } from './components/ui/Toast';
 import { HomePage } from './components/home/HomePage';
 import { AboutPage } from './components/home/AboutPage';
 import { ConfirmClearModal } from './components/dialogs/ConfirmClearModal';
+import { useMotionPreferences } from './components/ui/motion';
 import { getCopy } from './constants/i18n';
 import {
   clearDB,
@@ -184,6 +186,7 @@ export default function App(): ReactElement {
   const [toast, setToast] = useState<string | null>(null);
 
   const copy = getCopy(locale);
+  const { pageMotion } = useMotionPreferences();
   const searchTriggerRef = useRef<HTMLButtonElement | null>(null);
   const settingsTriggerRef = useRef<HTMLButtonElement | null>(null);
   const settingsClearButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -547,47 +550,64 @@ export default function App(): ReactElement {
         settingsButtonRef={settingsTriggerRef}
       />
 
-      <main className="flex-1">{mainContent}</main>
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.main
+          key={currentTechnique ? `technique-${currentTechnique.id}` : route}
+          variants={pageMotion.variants}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          transition={pageMotion.transition}
+          className="flex-1"
+        >
+          {mainContent}
+        </motion.main>
+      </AnimatePresence>
 
       <Footer copy={copy} onNavigate={navigateTo} />
 
-      {searchOpen && (
-        <SearchOverlay
-          copy={copy}
-          locale={locale}
-          techniques={db.techniques}
-          onClose={closeSearch}
-          onOpen={(slug) => {
-            openTechnique(slug);
-            closeSearch();
-          }}
-        />
-      )}
+      <AnimatePresence>
+        {searchOpen && (
+          <SearchOverlay
+            key="search-overlay"
+            copy={copy}
+            locale={locale}
+            techniques={db.techniques}
+            onClose={closeSearch}
+            onOpen={(slug) => {
+              openTechnique(slug);
+              closeSearch();
+            }}
+          />
+        )}
 
-      {settingsOpen && (
-        <SettingsModal
-          copy={copy}
-          locale={locale}
-          theme={theme}
-          isSystemTheme={!hasManualTheme}
-          db={db}
-          onClose={closeSettings}
-          onRequestClear={handleRequestClear}
-          onChangeLocale={handleLocaleChange}
-          onChangeTheme={handleThemeChange}
-          onChangeDB={handleDBChange}
-          clearButtonRef={settingsClearButtonRef}
-          trapEnabled={!confirmClearOpen}
-        />
-      )}
+        {settingsOpen && (
+          <SettingsModal
+            key="settings-modal"
+            copy={copy}
+            locale={locale}
+            theme={theme}
+            isSystemTheme={!hasManualTheme}
+            db={db}
+            onClose={closeSettings}
+            onRequestClear={handleRequestClear}
+            onChangeLocale={handleLocaleChange}
+            onChangeTheme={handleThemeChange}
+            onChangeDB={handleDBChange}
+            clearButtonRef={settingsClearButtonRef}
+            trapEnabled={!confirmClearOpen}
+          />
+        )}
 
-      {confirmClearOpen && (
-        <ConfirmClearModal
-          copy={copy}
-          onCancel={handleCancelClear}
-          onConfirm={handleConfirmClear}
-        />
-      )}
+        {confirmClearOpen && (
+          <ConfirmClearModal
+            key="confirm-clear"
+            copy={copy}
+            onCancel={handleCancelClear}
+            onConfirm={handleConfirmClear}
+          />
+        )}
+      </AnimatePresence>
 
       {toast && <Toast>{toast}</Toast>}
     </div>

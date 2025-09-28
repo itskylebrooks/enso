@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState, type ReactElement } from 'react';
+import { motion } from 'motion/react';
 import type { Copy } from '../../constants/i18n';
 import { useFocusTrap } from '../../utils/useFocusTrap';
+import { useMotionPreferences } from '../ui/motion';
 
 type ConfirmClearModalProps = {
   copy: Copy;
@@ -12,6 +14,11 @@ export const ConfirmClearModal = ({ copy, onCancel, onConfirm }: ConfirmClearMod
   const [value, setValue] = useState('');
   const dialogRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const {
+    overlayMotion,
+    toggleTransition,
+    prefersReducedMotion,
+  } = useMotionPreferences();
 
   useFocusTrap(true, dialogRef, onCancel);
 
@@ -22,10 +29,25 @@ export const ConfirmClearModal = ({ copy, onCancel, onConfirm }: ConfirmClearMod
   const canConfirm = value === 'CLEAR';
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center px-4" onClick={onCancel}>
-      <div
+    <motion.div
+      className="fixed inset-0 z-50 flex items-center justify-center px-4"
+      variants={overlayMotion.backdrop}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+      transition={overlayMotion.transition}
+      onClick={onCancel}
+    >
+      <div className="absolute inset-0 bg-black/50 pointer-events-none" />
+      <div className="absolute inset-0 backdrop-blur-sm md:backdrop-blur pointer-events-none" />
+      <motion.div
         ref={dialogRef}
-        className="w-full max-w-sm surface rounded-xl border surface-border shadow-xl p-5 space-y-4"
+        className="relative w-full max-w-sm surface rounded-xl border surface-border shadow-xl p-5 space-y-4"
+        variants={overlayMotion.panel}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        transition={overlayMotion.transition}
         onClick={(event) => event.stopPropagation()}
         role="dialog"
         aria-modal="true"
@@ -49,17 +71,19 @@ export const ConfirmClearModal = ({ copy, onCancel, onConfirm }: ConfirmClearMod
           />
         </label>
         <div className="flex justify-end gap-2 pt-2">
-          <button
+          <motion.button
             type="button"
             onClick={() => {
               setValue('');
               onCancel();
             }}
             className="px-4 py-2 rounded-lg border btn-tonal surface-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+            whileTap={prefersReducedMotion ? undefined : { scale: 0.97 }}
+            transition={toggleTransition}
           >
             {copy.confirmClearCancel}
-          </button>
-          <button
+          </motion.button>
+          <motion.button
             type="button"
             onClick={() => {
               if (canConfirm) {
@@ -68,12 +92,14 @@ export const ConfirmClearModal = ({ copy, onCancel, onConfirm }: ConfirmClearMod
               }
             }}
             className="px-4 py-2 rounded-lg border btn-contrast focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] disabled:opacity-60 disabled:cursor-not-allowed"
+            whileTap={prefersReducedMotion ? undefined : { scale: 0.97 }}
+            transition={toggleTransition}
             disabled={!canConfirm}
           >
             {copy.confirmClearAction}
-          </button>
+          </motion.button>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };

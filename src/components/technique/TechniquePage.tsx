@@ -1,35 +1,38 @@
 import type { ReactNode, ReactElement } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 import type { Copy } from '../../constants/i18n';
 import type { Locale, Progress, Technique } from '../../types';
 import { EmphasizedName, LevelBadge } from '../common';
 import { CheckIcon, StarIcon } from '../common/icons';
 import { MediaEmbed } from '../media/MediaEmbed';
 import { classNames } from '../../utils/classNames';
-import { formatDetailLabel, formatWeaponLabel } from '../../utils/format';
-
-const removeDiacritics = (value: string): string =>
-  value.normalize('NFD').replace(/\p{Diacritic}/gu, '');
+import { getTaxonomyLabel } from '../../i18n/taxonomy';
+import { stripDiacritics } from '../../utils/text';
+import { useMotionPreferences, defaultEase } from '../ui/motion';
 
 const buildTags = (technique: Technique, locale: Locale): string[] => {
   const title = technique.name[locale]?.toLowerCase?.() ?? '';
-  const normalizedTitle = removeDiacritics(title);
-  const candidates = [
-    formatDetailLabel(technique.stance),
-    technique.weapon && technique.weapon !== 'empty-hand' ? formatWeaponLabel(technique.weapon) : null,
-    formatDetailLabel(technique.category),
-    formatDetailLabel(technique.attack),
-  ].filter((value): value is string => Boolean(value && value.trim().length > 0));
+  const normalizedTitle = stripDiacritics(title);
+
+  const candidates: Array<{ type: 'category' | 'attack' | 'stance' | 'weapon'; value?: string | null }> = [
+    { type: 'stance', value: technique.stance },
+    { type: 'weapon', value: technique.weapon && technique.weapon !== 'empty-hand' ? technique.weapon : undefined },
+    { type: 'category', value: technique.category },
+    { type: 'attack', value: technique.attack },
+  ];
 
   const unique: string[] = [];
-  candidates.forEach((value) => {
-    const lower = value.toLowerCase();
-    const normalizedValue = removeDiacritics(lower);
-    if (title.includes(lower) || normalizedTitle.includes(normalizedValue)) {
-      return;
-    }
-    if (!unique.some((entry) => removeDiacritics(entry.toLowerCase()) === normalizedValue)) {
-      unique.push(value);
-    }
+  const seen = new Set<string>();
+
+  candidates.forEach(({ type, value }) => {
+    if (!value) return;
+    const label = getTaxonomyLabel(locale, type, value);
+    const normalizedValue = stripDiacritics(label.toLowerCase());
+    if (normalizedValue.length === 0) return;
+    if (normalizedTitle.includes(normalizedValue)) return;
+    if (seen.has(normalizedValue)) return;
+    seen.add(normalizedValue);
+    unique.push(label);
   });
 
   return unique;
@@ -58,6 +61,7 @@ export const TechniquePage = ({
 }: TechniquePageProps): ReactElement => {
   const tags = buildTags(technique, locale);
   const steps = technique.steps[locale];
+  const { mediaMotion } = useMotionPreferences();
 
   const focusActive = Boolean(progress?.focus);
   const confidentActive = Boolean(progress?.confident);
@@ -137,12 +141,18 @@ export const TechniquePage = ({
 
         <section>
           <h2 className="uppercase tracking-[0.3em] text-xs text-subtle mb-6">{copy.media}</h2>
-          <div className="space-y-3">
+          <motion.div
+            className="space-y-3"
+            variants={mediaMotion.variants}
+            initial="hidden"
+            animate="show"
+            transition={mediaMotion.transition}
+          >
             {technique.media.length === 0 && <div className="text-sm text-muted">No media yet.</div>}
             {technique.media.map((item, index) => (
               <MediaEmbed key={`${item.url}-${index}`} media={item} />
             ))}
-          </div>
+          </motion.div>
         </section>
       </main>
 
@@ -160,21 +170,37 @@ type ToggleButtonProps = {
   onClick: () => void;
 };
 
-const ToggleButton = ({ label, icon, active, onClick }: ToggleButtonProps): ReactElement => (
-  <button
-    type="button"
-    onClick={onClick}
-    aria-pressed={active}
-    className={classNames(
-      'px-3 py-1.5 text-sm flex items-center gap-1 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
-      active
-        ? 'bg-[var(--color-text)] text-[var(--color-bg)]'
-        : 'bg-[var(--color-surface)] text-[var(--color-text)] hover:bg-[var(--color-surface-hover)]',
-    )}
-  >
-    <span className="inline-flex items-center" aria-hidden>
-      {icon}
-    </span>
-    <span>{label}</span>
-  </button>
-);
+const ToggleButton = ({ label, icon, active, onClick }: ToggleButtonProps): ReactElement => {
+  const prefersReducedMotion = useReducedMotion();
+
+  return (
+    <motion.button
+      type="button"
+      onClick={onClick}
+      aria-pressed={active}
+      className={classNames(
+        'px-3 py-1.5 text-sm flex items-center gap-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+        active
+          ? 'bg-[var(--color-text)] text-[var(--color-bg)]'
+          : 'bg-[var(--color-surface)] text-[var(--color-text)] hover:bg-[var(--color-surface-hover)]',
+      )}
+      variants={prefersReducedMotion
+        ? {
+            inactive: { scale: 1, opacity: 1 },
+            active: { scale: 1, opacity: 1 },
+          }
+        : {
+            inactive: { scale: 1, opacity: 1 },
+            active: { scale: [1, 0.96, 1], opacity: [1, 0.85, 1] },
+          }}
+      animate={active ? 'active' : 'inactive'}
+      transition={prefersReducedMotion ? { duration: 0.05 } : { duration: 0.12, ease: defaultEase }}
+      whileTap={prefersReducedMotion ? undefined : { scale: 0.95 }}
+    >
+      <span className="inline-flex items-center" aria-hidden>
+        {icon}
+      </span>
+      <span>{label}</span>
+    </motion.button>
+  );
+};

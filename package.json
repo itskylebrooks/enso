@@ -11,6 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "motion": "^12.23.22",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "zod": "^3.23.8"

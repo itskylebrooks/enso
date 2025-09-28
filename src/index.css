@@ -127,3 +127,44 @@ a {
 button {
   font: inherit;
 }
+
+:root {
+  --motion-duration-short: 160ms;
+  --motion-duration-medium: 200ms;
+  --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-duration-short: 1ms;
+    --motion-duration-medium: 1ms;
+  }
+}
+
+.transition-soft {
+  transition-property: color, background-color, border-color, box-shadow, transform, opacity;
+  transition-duration: var(--motion-duration-short);
+  transition-timing-function: var(--motion-ease);
+}
+
+.motion-ease {
+  transition-timing-function: var(--motion-ease);
+}
+
+.motion-lift {
+  transition-property: transform, box-shadow, border-color, background-color, color;
+  transition-duration: var(--motion-duration-short);
+  transition-timing-function: var(--motion-ease);
+}
+
+.motion-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 30px -22px rgba(15, 23, 42, 0.45);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-lift:hover {
+    transform: none;
+    box-shadow: none;
+  }
+}
