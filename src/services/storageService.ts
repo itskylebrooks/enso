@@ -1,6 +1,8 @@
-import { seedTechniques } from '../data/seedTechniques';
+import seedIndex from '../data/seed.index.json';
 import { DB_VERSION, LOCALE_KEY, STORAGE_KEY, THEME_KEY } from '../constants/storage';
-import type { DB, Locale, Progress, Theme } from '../types';
+import type { DB, Locale, Progress, Technique, Theme } from '../types';
+
+const seedTechniques = seedIndex as Technique[];
 
 const isBrowser = typeof window !== 'undefined' && typeof window.localStorage !== 'undefined';
 

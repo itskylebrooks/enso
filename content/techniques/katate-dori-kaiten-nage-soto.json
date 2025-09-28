@@ -1,0 +1,53 @@
+{
+  "id": "t1",
+  "slug": "katate-dori-kaiten-nage-soto",
+  "name": {
+    "en": "Katate-dori Kaiten-nage (Soto)",
+    "de": "Katate-dori Kaiten-nage (Soto)"
+  },
+  "jp": "回転投げ（外）",
+  "category": "throw",
+  "attack": "katate-dori",
+  "stance": "",
+  "weapon": "empty-hand",
+  "level": "kyu3",
+  "description": {
+    "en": "Outside turning throw from a single-hand grab. Blend, guide the elbow, pivot under the arm and cut a circular arc to project.",
+    "de": "Außenrotationswurf aus Einhandgriff. Führen, Ellbogen leiten, under dem Arm drehen und mit kreisförmigem Schnitt werfen."
+  },
+  "steps": {
+    "en": [
+      "Start in hanmi. Uke grabs your wrist (katate-dori). Keep shoulders soft and center aligned.",
+      "Extend forward and slightly outward to blend on the outside line (soto). Turn your palm upward to avoid tension.",
+      "Step your front foot forward to the outside, drawing uke’s hand in a gentle circle.",
+      "Bring your free hand to guide uke’s elbow; lead their shoulder past their heels by rotating from your hips.",
+      "Pivot under the captured arm, keeping uke’s elbow near your chest; maintain connection at their triceps.",
+      "Step through behind uke. Your inside hand checks at uke’s jaw/neck line to keep posture upright.",
+      "Lower your center and cut a broad arc forward with the guiding arm, aligning uke’s head and shoulder to the circle.",
+      "Project in a spiral path and release with safe spacing and zanshin."
+    ],
+    "de": [
+      "Beginne in Hanmi. Uke fasst dein Handgelenk (Katate-dori). Schultern entspannt, Zentrum ausgerichtet.",
+      "Strecke nach vorn und leicht nach außen, um auf der Außenlinie (soto) zu führen. Drehe die Handfläche nach oben, um Spannung zu vermeiden.",
+      "Setze den vorderen Fuß nach außen und zeichne mit Ukes Hand einen sanften Kreis.",
+      "Führe die freie Hand an Ukes Ellbogen; drehe aus der Hüfte, sodass seine Schulter an der Ferse vorbeikommt.",
+      "Drehe under dem gefassten Arm hindurch und halte Ukes Ellbogen nah an der Brust; Verbindung am Trizeps behalten.",
+      "Tritt hinter Uke. Die innere Hand sichert am Kiefer/Hals, Haltung bleibt aufrecht.",
+      "Senke dein Zentrum und schneide mit dem führenden Arm einen weiten Bogen nach vorn; richte Kopf und Schulter am Kreis aus.",
+      "Projiziere spiralförmig und löse mit sicherem Abstand (Zanshin)."
+    ]
+  },
+  "media": [
+    {
+      "type": "youtube",
+      "url": "https://www.youtube-nocookie.com/embed/lM83-VAld-Y?si=PgoyOSsKQs-Zk-Gi",
+      "title": "Katate-dori Gyaku-hanmi Kaiten-nage (soto)"
+    }
+  ],
+  "tags": [
+    "kaiten-nage",
+    "soto",
+    "throw",
+    "katate-dori"
+  ]
+}

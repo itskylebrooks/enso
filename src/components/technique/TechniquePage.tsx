@@ -56,7 +56,6 @@ export const TechniquePage = ({
 }: TechniquePageProps): JSX.Element => {
   const tags = buildTags(technique, locale);
   const steps = technique.steps[locale];
-  const images = technique.stepImages ?? [];
 
   const focusActive = Boolean(progress?.focus);
   const confidentActive = Boolean(progress?.confident);
@@ -121,26 +120,16 @@ export const TechniquePage = ({
         <section>
           <h2 className="uppercase tracking-[0.3em] text-xs text-subtle mb-6">{copy.steps}</h2>
           <div>
-            {steps.map((step, index) => {
-              const image = images[index];
-              return (
-                <div key={index} className="grid grid-cols-[auto,1fr] gap-3 mb-6">
-                  <span className="w-7 h-7 rounded-full border surface-border flex items-center justify-center text-xs font-semibold">
-                    {index + 1}
-                  </span>
-                  <div>
-                    <p className="text-sm leading-relaxed">
-                      {step}
-                    </p>
-                    {image && (
-                      <div className="mt-2 rounded-xl border surface-border overflow-hidden bg-black/5 aspect-[4/3]">
-                        <img src={image} alt={step} className="h-full w-full object-cover" />
-                      </div>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
+            {steps.map((step, index) => (
+              <div key={index} className="grid grid-cols-[auto,1fr] gap-3 mb-6">
+                <span className="w-7 h-7 rounded-full border surface-border flex items-center justify-center text-xs font-semibold">
+                  {index + 1}
+                </span>
+                <p className="text-sm leading-relaxed">
+                  {step}
+                </p>
+              </div>
+            ))}
           </div>
         </section>
 

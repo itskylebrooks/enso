@@ -1,0 +1,46 @@
+{
+  "id": "t4",
+  "slug": "ushiro-ryote-dori-irimi-nage",
+  "name": {
+    "en": "Ushiro-ryōte-dori Irimi-nage",
+    "de": "Ushiro-ryōte-dori Irimi-nage"
+  },
+  "jp": "入身投げ",
+  "category": "throw",
+  "attack": "ushiro-ryote-dori",
+  "stance": "",
+  "weapon": "empty-hand",
+  "level": "kyu3",
+  "description": {
+    "en": "Entering throw from a rear two-hand grab. Free the arms with body turn, strike line, enter behind and cut through the center.",
+    "de": "Eingehender Wurf aus rückwärtigem Zwei-Hand-Griff. Arme mit Körpereinsatz befreien, Linie schließen, hinter Uke eintreten und durch das Zentrum schneiden."
+  },
+  "steps": {
+    "en": [
+      "Uke grabs both wrists from behind. Sink your weight and stabilize your center.",
+      "Turn your hips to one side, spiraling both forearms upward to free the grip (tenkan-like).",
+      "Slide one hand to atemi line (face/neck) to break posture.",
+      "Step deeply behind uke (irimi) so your shoulder is near theirs; align your spine with their back.",
+      "Wrap the entering arm across uke’s jaw/neck; the other hand controls the shoulder.",
+      "Step through with your rear foot, drawing a straight entering line.",
+      "Cut forward and slightly down with your whole body, projecting uke along your line.",
+      "Settle with zanshin and safe spacing."
+    ],
+    "de": [
+      "Uke greift beide Handgelenke von hinten. Senke dein Gewicht und stabilisiere das Zentrum.",
+      "Drehe die Hüften zur Seite und spiralisiere beide Unterarme nach oben, um den Griff zu lösen (tenkan-artig).",
+      "Führe eine Hand zur Atemi-Linie (Gesicht/Hals), um die Haltung zu brechen.",
+      "Tritt tief hinter Uke ein (irimi), sodass deine Schulter nahe an seiner liegt; Wirbelsäulen ausrichten.",
+      "Lege den einleitenden Arm über Ukes Kiefer/Hals; die andere Hand kontrolliert die Schulter.",
+      "Schreite mit dem hinteren Fuß durch und zeichne eine gerade Eintrittslinie.",
+      "Schneide vorwärts und leicht nach unten mit dem ganzen Körper und projiziere Uke auf deiner Linie.",
+      "Beruhige dich mit Zanshin und sicherem Abstand."
+    ]
+  },
+  "media": [],
+  "tags": [
+    "irimi-nage",
+    "ushiro-ryote-dori",
+    "throw"
+  ]
+}

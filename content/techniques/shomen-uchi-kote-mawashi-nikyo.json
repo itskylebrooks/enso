@@ -1,0 +1,39 @@
+{
+  "id": "t17",
+  "slug": "shomen-uchi-kote-mawashi-nikyo",
+  "name": {
+    "en": "Shōmen-uchi Kote-mawashi (Nikyō)",
+    "de": "Shōmen-uchi Kote-mawashi (Nikyō)"
+  },
+  "jp": "小手回し（二教）",
+  "category": "control",
+  "attack": "shomen-uchi",
+  "stance": "",
+  "weapon": "empty-hand",
+  "level": "kyu3",
+  "description": {
+    "en": "Nikyō from frontal strike. Blend, catch the wrist and fold inward to the classic second control.",
+    "de": "Nikyō aus Frontalangriff. Führen, Handgelenk fassen und nach innen zur klassischen zweiten Kontrolle falten."
+  },
+  "steps": {
+    "en": [
+      "Receive shōmen-uchi with slight inside step; capture the wrist as you align your center.",
+      "Take nikyō grip and turn the hips to pronate.",
+      "Lead uke off balance and down; keep wrists close to your body.",
+      "Set the nikyō pin safely."
+    ],
+    "de": [
+      "Nimm Shōmen-uchi mit kleinem Innenschritt auf; greife das Handgelenk und richte dein Zentrum aus.",
+      "Nimm den Nikyō-Griff und drehe aus der Hüfte zur Pronation.",
+      "Führe Uke aus dem Gleichgewicht und nach unten; Handgelenke körpernah.",
+      "Setze die Nikyō-Fixierung sicher."
+    ]
+  },
+  "media": [],
+  "tags": [
+    "nikyo",
+    "kote-mawashi",
+    "control",
+    "shomen-uchi"
+  ]
+}

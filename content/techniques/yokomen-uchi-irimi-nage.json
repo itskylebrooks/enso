@@ -1,0 +1,42 @@
+{
+  "id": "t5",
+  "slug": "yokomen-uchi-irimi-nage",
+  "name": {
+    "en": "Yokomen-uchi Irimi-nage",
+    "de": "Yokomen-uchi Irimi-nage"
+  },
+  "jp": "入身投げ",
+  "category": "throw",
+  "attack": "yokomen-uchi",
+  "stance": "",
+  "weapon": "empty-hand",
+  "level": "kyu3",
+  "description": {
+    "en": "Entering throw against a diagonal strike. Step inside, close the line, wrap the neck and drive through.",
+    "de": "Eingehender Wurf gegen diagonalen Schlag. Auf die Innenseite treten, die Linie schließen, den Nacken fassen und durchziehen."
+  },
+  "steps": {
+    "en": [
+      "As uke strikes yokomen, enter on the inside line with the front foot and cover with your forearm.",
+      "Your rear hand checks at the elbow; align your center forward.",
+      "Slide the entering arm across uke’s jaw/neck to break posture.",
+      "Step deeply past uke’s outside foot, positioning your hip near their hip.",
+      "Draw a straight irimi line and keep your spine tall.",
+      "Cut forward with the whole body, allowing uke to fall along your path."
+    ],
+    "de": [
+      "Wenn Uke Yokomen schlägt, trittst du auf die Innenseite mit dem vorderen Fuß und deckst mit dem Unterarm.",
+      "Die hintere Hand kontrolliert am Ellbogen; richte dein Zentrum nach vorn aus.",
+      "Führe den einleitenden Arm über Ukes Kiefer/Hals, um die Haltung zu brechen.",
+      "Tritt tief am äußeren Fuß vorbei, Hüfte nahe an Ukes Hüfte.",
+      "Ziehe eine gerade Irimi-Linie und halte die Wirbelsäule aufrecht.",
+      "Schneide mit dem ganzen Körper nach vorn, sodass Uke entlang deiner Bahn fällt."
+    ]
+  },
+  "media": [],
+  "tags": [
+    "irimi-nage",
+    "yokomen-uchi",
+    "throw"
+  ]
+}

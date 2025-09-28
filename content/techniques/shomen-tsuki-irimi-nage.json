@@ -1,0 +1,42 @@
+{
+  "id": "t7",
+  "slug": "shomen-tsuki-irimi-nage",
+  "name": {
+    "en": "Shōmen-tsuki Irimi-nage",
+    "de": "Shōmen-tsuki Irimi-nage"
+  },
+  "jp": "入身投げ",
+  "category": "throw",
+  "attack": "shomen-tsuki",
+  "stance": "",
+  "weapon": "empty-hand",
+  "level": "kyu3",
+  "description": {
+    "en": "Entering throw against a straight punch. Slip inside, capture the neck line and drive through with whole-body power.",
+    "de": "Eingehender Wurf gegen geraden Stoß. Innen vorbeigleiten, Nackenlinie aufnehmen und mit Ganzkörpereinsatz durchziehen."
+  },
+  "steps": {
+    "en": [
+      "Slip to the inside as uke punches; cover with your lead forearm.",
+      "Catch the elbow with your rear hand; align your center to theirs.",
+      "Enter close so your chest brushes uke’s shoulder line.",
+      "Wrap forearm across the jaw/neck; keep your head upright and close.",
+      "Step through strongly, hips leading.",
+      "Cut forward/down to project; maintain control of the head line for safety."
+    ],
+    "de": [
+      "Gleite nach innen, wenn Uke stößt; decke mit der vorderen Unterarmseite.",
+      "Fasse mit der hinteren Hand am Ellbogen; richte dein Zentrum an seinem aus.",
+      "Tritt eng ein, sodass deine Brust an Ukes Schulterlinie vorbeistreift.",
+      "Lege den Unterarm über Kiefer/Hals; Kopf aufrecht und nah.",
+      "Schreite kraftvoll durch, die Hüfte führt.",
+      "Schneide vorwärts/abwärts zum Wurf; Kopfkontrolle für Sicherheit beibehalten."
+    ]
+  },
+  "media": [],
+  "tags": [
+    "irimi-nage",
+    "shomen-tsuki",
+    "throw"
+  ]
+}
