@@ -39,7 +39,7 @@ export type DB = {
   progress: Progress[];
 };
 
-export type AppTab = 'library' | 'progress';
+export type AppRoute = 'home' | 'library' | 'progress' | 'about';
 
 export type Filters = {
   category?: string;

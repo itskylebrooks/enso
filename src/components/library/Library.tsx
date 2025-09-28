@@ -1,3 +1,4 @@
+import type { ReactElement } from 'react';
 import type { Locale, Progress, Technique } from '../../types';
 import type { Copy } from '../../constants/i18n';
 import { EmphasizedName, LevelBadge } from '../common';
@@ -15,7 +16,7 @@ type LibraryProps = {
   onOpen: (slug: string) => void;
 };
 
-export const Library = ({ copy, locale, techniques, progress, onOpen }: LibraryProps): JSX.Element => {
+export const Library = ({ copy, locale, techniques, progress, onOpen }: LibraryProps): ReactElement => {
   const progressById = buildProgressMap(progress);
 
   return (

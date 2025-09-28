@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactElement } from 'react';
 import { Header } from './components/layout/Header';
 import { FilterPanel } from './components/filters/FilterPanel';
 import { Library } from './components/library/Library';
@@ -6,8 +6,14 @@ import { ProgressLists } from './components/progress/ProgressLists';
 import { SearchOverlay } from './components/overlay/SearchOverlay';
 import { SettingsModal } from './components/settings/SettingsModal';
 import { TechniquePage } from './components/technique/TechniquePage';
+import { Footer } from './components/ui/Footer';
+import { Toast } from './components/ui/Toast';
+import { HomePage } from './components/home/HomePage';
+import { AboutPage } from './components/home/AboutPage';
+import { ConfirmClearModal } from './components/dialogs/ConfirmClearModal';
 import { getCopy } from './constants/i18n';
 import {
+  clearDB,
   clearThemePreference,
   hasStoredTheme,
   loadDB,
@@ -17,15 +23,68 @@ import {
   saveLocale,
   saveTheme,
 } from './services/storageService';
-import type { AppTab, DB, Filters, Locale, Progress, Technique, Theme } from './types';
+import type { AppRoute, DB, Filters, Locale, Progress, Technique, Theme } from './types';
 import { gradeOrder } from './utils/grades';
 import { unique, upsert } from './utils/array';
 
 const defaultFilters: Filters = {};
 
+type HistoryState = {
+  route?: AppRoute;
+  slug?: string;
+};
+
+const routeToPath = (route: AppRoute): string => {
+  switch (route) {
+    case 'home':
+      return '/';
+    case 'about':
+      return '/about';
+    case 'library':
+    case 'progress':
+      return `/${route}`;
+    default:
+      return '/';
+  }
+};
+
 const getSlugFromPath = (pathname: string): string | null => {
   const match = /^\/technique\/([^/?#]+)/.exec(pathname);
   return match ? decodeURIComponent(match[1]) : null;
+};
+
+const parseLocation = (
+  pathname: string,
+  state?: HistoryState,
+): { route: AppRoute; slug: string | null } => {
+  if (pathname.startsWith('/technique/')) {
+    const slug = getSlugFromPath(pathname);
+    const fallbackRoute = state?.route ?? 'library';
+    return { route: fallbackRoute, slug };
+  }
+
+  if (pathname === '/progress') {
+    return { route: 'progress', slug: null };
+  }
+
+  if (pathname === '/library') {
+    return { route: 'library', slug: null };
+  }
+
+  if (pathname === '/about') {
+    return { route: 'about', slug: null };
+  }
+
+  return { route: 'home', slug: null };
+};
+
+const getInitialLocation = (): { route: AppRoute; slug: string | null } => {
+  if (typeof window === 'undefined') {
+    return { route: 'home', slug: null };
+  }
+
+  const state = window.history.state as HistoryState | undefined;
+  return parseLocation(window.location.pathname, state);
 };
 
 const isEditableElement = (element: EventTarget | null): boolean => {
@@ -111,20 +170,125 @@ function useKeyboardShortcuts(onSearch: () => void): void {
   }, [onSearch]);
 }
 
-export default function App(): JSX.Element {
+export default function App(): ReactElement {
   const [locale, setLocale] = useState<Locale>(() => loadLocale());
   const [theme, setTheme] = useState<Theme>(() => loadTheme());
   const [hasManualTheme, setHasManualTheme] = useState<boolean>(() => hasStoredTheme());
   const [db, setDB] = useState<DB>(() => loadDB());
-  const [tab, setTab] = useState<AppTab>('library');
   const [filters, setFilters] = useState<Filters>(defaultFilters);
-  const [activeSlug, setActiveSlug] = useState<string | null>(
-    () => (typeof window === 'undefined' ? null : getSlugFromPath(window.location.pathname))
-  );
+  const [route, setRoute] = useState<AppRoute>(() => getInitialLocation().route);
+  const [activeSlug, setActiveSlug] = useState<string | null>(() => getInitialLocation().slug);
   const [searchOpen, setSearchOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
+  const [confirmClearOpen, setConfirmClearOpen] = useState(false);
+  const [toast, setToast] = useState<string | null>(null);
 
   const copy = getCopy(locale);
+  const searchTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const settingsTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const settingsClearButtonRef = useRef<HTMLButtonElement | null>(null);
+  const toastTimeoutRef = useRef<number | null>(null);
+
+  const navigateTo = useCallback(
+    (next: AppRoute, options: { replace?: boolean } = {}) => {
+      const path = typeof window !== 'undefined' ? routeToPath(next) : '';
+      const shouldSkip =
+        !options.replace &&
+        route === next &&
+        !activeSlug &&
+        (typeof window === 'undefined' || window.location.pathname === path);
+
+      if (shouldSkip) {
+        return;
+      }
+
+      setRoute(next);
+      setActiveSlug(null);
+
+      if (typeof window !== 'undefined') {
+        const state: HistoryState = { route: next };
+        if (options.replace) {
+          window.history.replaceState(state, '', path);
+        } else if (window.location.pathname !== path) {
+          window.history.pushState(state, '', path);
+        } else {
+          window.history.replaceState(state, '', path);
+        }
+      }
+    },
+    [activeSlug, route],
+  );
+
+  const showToast = useCallback(
+    (message: string) => {
+      setToast(message);
+      if (typeof window !== 'undefined') {
+        if (toastTimeoutRef.current) {
+          window.clearTimeout(toastTimeoutRef.current);
+        }
+        toastTimeoutRef.current = window.setTimeout(() => {
+          setToast(null);
+          toastTimeoutRef.current = null;
+        }, 2400);
+      }
+    },
+    [],
+  );
+
+  useEffect(
+    () => () => {
+      if (toastTimeoutRef.current && typeof window !== 'undefined') {
+        window.clearTimeout(toastTimeoutRef.current);
+      }
+    },
+    [],
+  );
+
+  const openSearch = useCallback(() => {
+    setSearchOpen(true);
+  }, []);
+
+  const closeSearch = useCallback(() => {
+    setSearchOpen(false);
+    if (typeof window !== 'undefined') {
+      window.setTimeout(() => {
+        searchTriggerRef.current?.focus();
+      }, 0);
+    }
+  }, []);
+
+  const openSettings = useCallback(() => {
+    setSettingsOpen(true);
+  }, []);
+
+  const closeSettings = useCallback(() => {
+    setSettingsOpen(false);
+    setConfirmClearOpen(false);
+    if (typeof window !== 'undefined') {
+      window.setTimeout(() => {
+        settingsTriggerRef.current?.focus();
+      }, 0);
+    }
+  }, []);
+
+  const handleRequestClear = useCallback(() => {
+    setConfirmClearOpen(true);
+  }, []);
+
+  const handleCancelClear = useCallback(() => {
+    setConfirmClearOpen(false);
+    if (typeof window !== 'undefined') {
+      window.setTimeout(() => {
+        settingsClearButtonRef.current?.focus();
+      }, 0);
+    }
+  }, []);
+
+  const handleConfirmClear = useCallback(() => {
+    setDB(clearDB());
+    handleCancelClear();
+    showToast(copy.toastDataCleared);
+  }, [copy.toastDataCleared, handleCancelClear, setDB, showToast]);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -153,14 +317,19 @@ export default function App(): JSX.Element {
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    const syncFromLocation = () => {
-      setActiveSlug(getSlugFromPath(window.location.pathname));
+
+    const syncFromLocation = (event?: PopStateEvent) => {
+      const state = (event?.state as HistoryState | undefined) ?? (window.history.state as HistoryState | undefined);
+      const { route: nextRoute, slug } = parseLocation(window.location.pathname, state);
+      setRoute(nextRoute);
+      setActiveSlug(slug);
     };
+
     window.addEventListener('popstate', syncFromLocation);
     return () => window.removeEventListener('popstate', syncFromLocation);
   }, []);
 
-  useKeyboardShortcuts(() => setSearchOpen(true));
+  useKeyboardShortcuts(openSearch);
 
   useEffect(() => {
     if (hasManualTheme || typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
@@ -241,9 +410,14 @@ export default function App(): JSX.Element {
     }
 
     if (typeof window !== 'undefined') {
-      const currentPath = window.location.pathname;
-      if (getSlugFromPath(currentPath) !== slug) {
-        window.history.pushState({ slug }, '', `/technique/${encodeURIComponent(slug)}`);
+      const encodedSlug = encodeURIComponent(slug);
+      const techniquePath = `/technique/${encodedSlug}`;
+      const state: HistoryState = { route, slug };
+
+      if (window.location.pathname !== techniquePath) {
+        window.history.pushState(state, '', techniquePath);
+      } else {
+        window.history.replaceState(state, '', techniquePath);
       }
     }
 
@@ -251,10 +425,7 @@ export default function App(): JSX.Element {
   };
 
   const closeTechnique = (): void => {
-    if (typeof window !== 'undefined') {
-      window.history.replaceState({}, '', '/');
-    }
-    setActiveSlug(null);
+    navigateTo(route, { replace: true });
   };
 
   const toggleFocus = (technique: Technique, entry: Progress | null): void => {
@@ -275,86 +446,120 @@ export default function App(): JSX.Element {
 
   const techniqueNotFound = Boolean(activeSlug) && !currentTechnique;
 
-  return (
-    <div className="min-h-screen app-bg">
-      <Header
-        copy={copy}
-        tab={tab}
-        onChangeTab={setTab}
-        onSearch={() => setSearchOpen(true)}
-        onSettings={() => setSettingsOpen(true)}
-      />
+  const techniqueBackLabel =
+    route === 'progress'
+      ? copy.backToProgress
+      : route === 'home'
+      ? copy.backToHome
+      : route === 'about'
+      ? copy.backToAbout
+      : copy.backToLibrary;
 
-      {currentTechnique ? (
-        <TechniquePage
-          technique={currentTechnique}
-          progress={currentProgress ?? null}
-          copy={copy}
-          locale={locale}
-          onBack={closeTechnique}
-          onToggleFocus={() => toggleFocus(currentTechnique, currentProgress ?? null)}
-          onToggleConfident={() => toggleConfident(currentTechnique, currentProgress ?? null)}
-        />
-      ) : techniqueNotFound ? (
-        <div className="max-w-5xl mx-auto px-6 py-10 space-y-4 text-center">
-          <p className="text-lg font-semibold">Technique not found.</p>
-          <button
-            type="button"
-            onClick={closeTechnique}
-            className="text-sm underline"
-          >
-            Back to Library
-          </button>
-        </div>
-      ) : (
-        <div className="max-w-6xl mx-auto px-4 py-4">
-          <div className="grid md:grid-cols-[16rem,1fr] gap-6">
-            <aside className="surface border surface-border rounded-2xl p-3 h-max sticky top-20">
-              <FilterPanel
+  let mainContent: ReactElement;
+
+  if (currentTechnique) {
+    mainContent = (
+      <TechniquePage
+        technique={currentTechnique}
+        progress={currentProgress ?? null}
+        copy={copy}
+        locale={locale}
+        backLabel={techniqueBackLabel}
+        onBack={() => closeTechnique()}
+        onToggleFocus={() => toggleFocus(currentTechnique, currentProgress ?? null)}
+        onToggleConfident={() => toggleConfident(currentTechnique, currentProgress ?? null)}
+      />
+    );
+  } else if (techniqueNotFound) {
+    mainContent = (
+      <div className="max-w-5xl mx-auto px-6 py-10 space-y-4 text-center">
+        <p className="text-lg font-semibold">Technique not found.</p>
+        <button
+          type="button"
+          onClick={() => navigateTo('library', { replace: true })}
+          className="text-sm underline"
+        >
+          {copy.backToLibrary}
+        </button>
+      </div>
+    );
+  } else if (route === 'home') {
+    mainContent = (
+      <HomePage
+        copy={copy}
+        onOpenLibrary={() => navigateTo('library')}
+        onViewProgress={() => navigateTo('progress')}
+      />
+    );
+  } else if (route === 'about') {
+    mainContent = <AboutPage copy={copy} />;
+  } else {
+    mainContent = (
+      <div className="max-w-6xl mx-auto px-4 py-4">
+        <div className="grid md:grid-cols-[16rem,1fr] gap-6">
+          <aside className="surface border surface-border rounded-2xl p-3 h-max sticky top-20">
+            <FilterPanel
+              copy={copy}
+              locale={locale}
+              filters={filters}
+              categories={categories}
+              attacks={attacks}
+              stances={stances}
+              weapons={weapons}
+              levels={gradeOrder}
+              onChange={setFilters}
+            />
+          </aside>
+          <section>
+            {route === 'library' && (
+              <Library
                 copy={copy}
                 locale={locale}
-                filters={filters}
-                categories={categories}
-                attacks={attacks}
-                stances={stances}
-                weapons={weapons}
-                levels={gradeOrder}
-                onChange={setFilters}
+                techniques={filteredTechniques}
+                progress={db.progress}
+                onOpen={openTechnique}
               />
-            </aside>
-            <main>
-              {tab === 'library' && (
-                <Library
-                  copy={copy}
-                  locale={locale}
-                  techniques={filteredTechniques}
-                  progress={db.progress}
-                  onOpen={openTechnique}
-                />
-              )}
-              {tab === 'progress' && (
-                <ProgressLists
-                  copy={copy}
-                  locale={locale}
-                  techniques={filteredTechniques}
-                  progress={db.progress}
-                  onOpen={openTechnique}
-                />
-              )}
-            </main>
-          </div>
+            )}
+            {route === 'progress' && (
+              <ProgressLists
+                copy={copy}
+                locale={locale}
+                techniques={filteredTechniques}
+                progress={db.progress}
+                onOpen={openTechnique}
+              />
+            )}
+          </section>
         </div>
-      )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen flex flex-col app-bg">
+      <Header
+        copy={copy}
+        route={route}
+        onNavigate={navigateTo}
+        onSearch={openSearch}
+        onSettings={openSettings}
+        searchButtonRef={searchTriggerRef}
+        settingsButtonRef={settingsTriggerRef}
+      />
+
+      <main className="flex-1">{mainContent}</main>
+
+      <Footer copy={copy} onNavigate={navigateTo} />
 
       {searchOpen && (
         <SearchOverlay
           copy={copy}
           locale={locale}
           techniques={db.techniques}
-          onClose={() => setSearchOpen(false)}
+          onClose={closeSearch}
           onOpen={(slug) => {
             openTechnique(slug);
-            setSearchOpen(false);
+            closeSearch();
           }}
         />
       )}
@@ -366,12 +571,25 @@ export default function App(): JSX.Element {
           theme={theme}
           isSystemTheme={!hasManualTheme}
           db={db}
-          onClose={() => setSettingsOpen(false)}
+          onClose={closeSettings}
+          onRequestClear={handleRequestClear}
           onChangeLocale={handleLocaleChange}
           onChangeTheme={handleThemeChange}
           onChangeDB={handleDBChange}
+          clearButtonRef={settingsClearButtonRef}
+          trapEnabled={!confirmClearOpen}
         />
       )}
+
+      {confirmClearOpen && (
+        <ConfirmClearModal
+          copy={copy}
+          onCancel={handleCancelClear}
+          onConfirm={handleConfirmClear}
+        />
+      )}
+
+      {toast && <Toast>{toast}</Toast>}
     </div>
   );
 }

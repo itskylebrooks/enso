@@ -1,4 +1,6 @@
-export const EmphasizedName = ({ name }: { name: string }): JSX.Element => {
+import type { ReactElement } from 'react';
+
+export const EmphasizedName = ({ name }: { name: string }): ReactElement => {
   const splitIndex = name.indexOf(' ');
   if (splitIndex === -1) {
     return <strong className="font-semibold">{name}</strong>;

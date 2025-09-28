@@ -1,10 +1,11 @@
+import type { ReactElement } from 'react';
 import type { Technique } from '../../types';
 
 type MediaEmbedProps = {
   media: Technique['media'][number];
 };
 
-export const MediaEmbed = ({ media }: MediaEmbedProps): JSX.Element => {
+export const MediaEmbed = ({ media }: MediaEmbedProps): ReactElement => {
   if (media.type === 'youtube') {
     return (
       <div className="aspect-video w-full overflow-hidden rounded-xl border surface-border surface">

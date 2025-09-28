@@ -1,10 +1,11 @@
-import { useRef } from 'react';
+import { useRef, type ReactElement, type RefObject } from 'react';
 import type { ChangeEvent } from 'react';
 import type { Copy } from '../../constants/i18n';
 import type { DB, Locale, Theme } from '../../types';
 import { classNames } from '../../utils/classNames';
-import { clearDB, exportDB, parseIncomingDB } from '../../services/storageService';
+import { exportDB, parseIncomingDB } from '../../services/storageService';
 import { SectionTitle } from '../common';
+import { useFocusTrap } from '../../utils/useFocusTrap';
 
 type SettingsModalProps = {
   copy: Copy;
@@ -13,9 +14,12 @@ type SettingsModalProps = {
   isSystemTheme: boolean;
   db: DB;
   onClose: () => void;
+  onRequestClear: () => void;
   onChangeLocale: (locale: Locale) => void;
   onChangeTheme: (theme: Theme | 'system') => void;
   onChangeDB: (db: DB) => void;
+  clearButtonRef?: RefObject<HTMLButtonElement | null>;
+  trapEnabled?: boolean;
 };
 
 export const SettingsModal = ({
@@ -25,11 +29,17 @@ export const SettingsModal = ({
   isSystemTheme,
   db,
   onClose,
+  onRequestClear,
   onChangeLocale,
   onChangeTheme,
   onChangeDB,
-}: SettingsModalProps): JSX.Element => {
+  clearButtonRef,
+  trapEnabled = true,
+}: SettingsModalProps): ReactElement => {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+
+  useFocusTrap(trapEnabled, dialogRef, onClose);
 
   const handleExport = (): void => {
     const blob = new Blob([exportDB(db)], { type: 'application/json' });
@@ -57,25 +67,25 @@ export const SettingsModal = ({
     reader.readAsText(file);
   };
 
-  const handleClear = (): void => {
-    const confirmation = window.prompt('Type CLEAR to delete all local data');
-    if (confirmation === 'CLEAR') {
-      onChangeDB(clearDB());
-    }
-  };
-
   return (
     <div className="fixed inset-0 z-40 bg-black/40 flex items-center justify-center" onClick={onClose}>
       <div
+        ref={dialogRef}
         className="w-full max-w-lg surface rounded-2xl border surface-border shadow-xl overflow-hidden"
         onClick={(event) => event.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="settings-title"
       >
         <div className="p-4 border-b surface-border flex items-center justify-between">
-          <h2 className="font-semibold">{copy.settings}</h2>
+          <h2 id="settings-title" className="font-semibold">
+            {copy.settings}
+          </h2>
           <button
             type="button"
             onClick={onClose}
-            className="px-2 py-1 rounded-lg border btn-tonal surface-hover"
+            className="px-2 py-1 rounded-lg border btn-tonal surface-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+            aria-label="Close"
           >
             Close
           </button>
@@ -160,7 +170,8 @@ export const SettingsModal = ({
               </button>
               <button
                 type="button"
-                onClick={handleClear}
+                ref={clearButtonRef}
+                onClick={onRequestClear}
                 className="px-3 py-2 rounded-xl border btn-tonal surface-hover"
               >
                 {copy.clear}

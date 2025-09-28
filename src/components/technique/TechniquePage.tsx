@@ -40,6 +40,7 @@ type TechniquePageProps = {
   progress: Progress | null;
   copy: Copy;
   locale: Locale;
+  backLabel: string;
   onBack: () => void;
   onToggleFocus: () => void;
   onToggleConfident: () => void;
@@ -50,6 +51,7 @@ export const TechniquePage = ({
   progress,
   copy,
   locale,
+  backLabel,
   onBack,
   onToggleFocus,
   onToggleConfident,
@@ -67,7 +69,7 @@ export const TechniquePage = ({
           <div className="min-w-0 space-y-3">
             <a
               href="/"
-              aria-label="Back to Library"
+              aria-label={backLabel}
               onClick={(event) => {
                 event.preventDefault();
                 onBack();
@@ -75,7 +77,7 @@ export const TechniquePage = ({
               className="text-sm text-subtle hover:text-[var(--color-text)] transition flex items-center gap-2"
             >
               <span aria-hidden>←</span>
-              <span>Back to Library</span>
+              <span>{backLabel}</span>
             </a>
             <div className="space-y-1">
               <h1 className="text-2xl font-semibold leading-tight truncate" title={technique.name[locale]}>

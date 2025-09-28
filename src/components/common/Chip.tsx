@@ -1,4 +1,4 @@
-import type { ButtonHTMLAttributes } from 'react';
+import type { ButtonHTMLAttributes, ReactElement } from 'react';
 import { classNames } from '../../utils/classNames';
 
 type ChipProps = {
@@ -6,7 +6,7 @@ type ChipProps = {
   active?: boolean;
 } & ButtonHTMLAttributes<HTMLButtonElement>;
 
-export const Chip = ({ label, active = false, className, disabled, ...buttonProps }: ChipProps): JSX.Element => (
+export const Chip = ({ label, active = false, className, disabled, ...buttonProps }: ChipProps): ReactElement => (
   <button
     type="button"
     disabled={disabled}
