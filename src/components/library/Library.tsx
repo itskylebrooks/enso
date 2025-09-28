@@ -1,9 +1,30 @@
 import type { Locale, Progress, Technique } from '../../types';
 import type { Copy } from '../../constants/i18n';
-import { Chip, EmphasizedName, LevelBadge } from '../common';
+import { EmphasizedName, LevelBadge } from '../common';
 
 const buildProgressMap = (entries: Progress[]): Record<string, Progress> =>
   Object.fromEntries(entries.map((entry) => [entry.techniqueId, entry]));
+
+const formatDetailLabel = (value?: string | null): string | null => {
+  if (!value) return null;
+  return value
+    .split(/[-_]/)
+    .filter(Boolean)
+    .map((segment) => segment.charAt(0).toUpperCase() + segment.slice(1))
+    .join(' ');
+};
+
+const weaponLabels: Record<string, string> = {
+  'empty-hand': 'Empty hand',
+  tanto: 'Tantō',
+  jo: 'Jō',
+  bokken: 'Bokken',
+};
+
+const formatWeaponLabel = (value?: string | null): string | null => {
+  if (!value) return null;
+  return weaponLabels[value] ?? formatDetailLabel(value);
+};
 
 type LibraryProps = {
   copy: Copy;
@@ -21,6 +42,9 @@ export const Library = ({ copy, locale, techniques, progress, onOpen }: LibraryP
       {techniques.map((technique) => {
         const entry = progressById[technique.id];
 
+        const stanceLabel = formatDetailLabel(technique.stance);
+        const weaponLabel = technique.weapon && technique.weapon !== 'empty-hand' ? formatWeaponLabel(technique.weapon) : null;
+
         return (
           <button
             type="button"
@@ -29,27 +53,33 @@ export const Library = ({ copy, locale, techniques, progress, onOpen }: LibraryP
             className="surface border surface-border rounded-2xl p-4 flex flex-col gap-3 cursor-pointer transition hover:shadow-md hover-border-contrast text-left"
           >
             <div className="flex items-start justify-between gap-3">
-              <div className="min-w-0">
-                <div className="truncate" title={technique.name[locale]}>
+              <div className="min-w-0 space-y-1">
+                <div className="truncate text-base font-medium leading-snug" title={technique.name[locale]}>
                   <EmphasizedName name={technique.name[locale]} />
                 </div>
-                <div className="text-xs text-subtle truncate">{technique.jp}</div>
+                {technique.jp && <div className="text-xs text-subtle truncate">{technique.jp}</div>}
               </div>
-              <div className="flex items-center gap-2">
-                <LevelBadge locale={locale} level={technique.level} />
+              <div className="flex items-center gap-2 text-base">
                 {entry?.focus && <span title={copy.focus}>⭐</span>}
                 {entry?.notNow && <span title={copy.notNow}>⏸</span>}
                 {entry?.confident && <span title={copy.confident}>✔︎</span>}
               </div>
             </div>
-            <div className="text-sm text-muted line-clamp-2 min-h-[2.5rem]">
+
+            <p className="text-sm text-muted leading-relaxed line-clamp-2 min-h-[2.5rem]">
               {technique.description[locale]}
-            </div>
-            <div className="flex flex-wrap gap-1">
-              {technique.attack && <Chip label={technique.attack} disabled />}
-              {technique.stance && <Chip label={technique.stance} disabled />}
-              {technique.weapon && <Chip label={technique.weapon} disabled />}
-              {technique.category && <Chip label={technique.category} disabled />}
+            </p>
+
+            <div className="mt-auto flex items-end justify-between gap-4 pt-1">
+              <div className="flex flex-wrap items-center gap-2 text-xs font-medium uppercase tracking-wide text-subtle">
+                {stanceLabel && <span className="rounded-sm bg-black/5 px-2 py-0.5 dark:bg-white/10">{stanceLabel}</span>}
+                {weaponLabel && (
+                  <span className="rounded-sm bg-black/5 px-2 py-0.5 dark:bg-white/10">{weaponLabel}</span>
+                )}
+              </div>
+              <div className="ml-auto">
+                <LevelBadge locale={locale} level={technique.level} />
+              </div>
             </div>
           </button>
         );
