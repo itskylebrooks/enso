@@ -17,12 +17,23 @@ const normalizeOptional = (value: string | undefined | null): string | undefined
 };
 
 const normalizeTechnique = (technique: Technique): Technique => {
+  const notes = technique.ukeNotes
+    ? {
+        en: technique.ukeNotes.en.trim(),
+        de: technique.ukeNotes.de.trim(),
+      }
+    : null;
+
+  const variations = Array.from(new Set(technique.variations.map((entry) => entry.trim()).filter(Boolean)));
+
   return {
     ...technique,
     jp: normalizeOptional(technique.jp ?? undefined),
     attack: normalizeOptional(technique.attack ?? undefined),
     stance: normalizeOptional(technique.stance ?? undefined),
     weapon: normalizeOptional(technique.weapon ?? undefined),
+    ukeNotes: notes && (notes.en.length > 0 || notes.de.length > 0) ? notes : null,
+    variations,
   };
 };
 

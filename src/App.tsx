@@ -9,8 +9,10 @@ import { SettingsModal } from './components/settings/SettingsModal';
 import { TechniquePage } from './components/technique/TechniquePage';
 import { Footer } from './components/ui/Footer';
 import { Toast } from './components/ui/Toast';
+import { MobileFilters } from './components/ui/MobileFilters';
 import { HomePage } from './components/home/HomePage';
 import { AboutPage } from './components/home/AboutPage';
+import { BasicsPage } from './components/home/BasicsPage';
 import { ConfirmClearModal } from './components/dialogs/ConfirmClearModal';
 import { useMotionPreferences } from './components/ui/motion';
 import { getCopy } from './constants/i18n';
@@ -42,6 +44,8 @@ const routeToPath = (route: AppRoute): string => {
       return '/';
     case 'about':
       return '/about';
+    case 'basics':
+      return '/basics';
     case 'library':
     case 'progress':
       return `/${route}`;
@@ -75,6 +79,10 @@ const parseLocation = (
 
   if (pathname === '/about') {
     return { route: 'about', slug: null };
+  }
+
+  if (pathname === '/basics') {
+    return { route: 'basics', slug: null };
   }
 
   return { route: 'home', slug: null };
@@ -456,6 +464,8 @@ export default function App(): ReactElement {
       ? copy.backToHome
       : route === 'about'
       ? copy.backToAbout
+      : route === 'basics'
+      ? copy.backToBasics
       : copy.backToLibrary;
 
   let mainContent: ReactElement;
@@ -492,15 +502,31 @@ export default function App(): ReactElement {
         copy={copy}
         onOpenLibrary={() => navigateTo('library')}
         onViewProgress={() => navigateTo('progress')}
+        onViewBasics={() => navigateTo('basics')}
       />
     );
   } else if (route === 'about') {
     mainContent = <AboutPage copy={copy} />;
+  } else if (route === 'basics') {
+    mainContent = <BasicsPage locale={locale} />;
   } else {
     mainContent = (
-      <div className="max-w-6xl mx-auto px-4 py-4">
+      <div className="max-w-6xl mx-auto px-4 py-4 space-y-4">
+        <div className="md:hidden">
+          <MobileFilters
+            copy={copy}
+            locale={locale}
+            filters={filters}
+            categories={categories}
+            attacks={attacks}
+            stances={stances}
+            weapons={weapons}
+            levels={gradeOrder}
+            onChange={setFilters}
+          />
+        </div>
         <div className="grid md:grid-cols-[16rem,1fr] gap-6">
-          <aside className="surface border surface-border rounded-2xl p-3 h-max sticky top-20">
+          <aside className="hidden md:block surface border surface-border rounded-2xl p-3 h-max sticky top-20">
             <FilterPanel
               copy={copy}
               locale={locale}

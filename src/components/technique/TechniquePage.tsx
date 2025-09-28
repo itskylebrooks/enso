@@ -61,7 +61,8 @@ export const TechniquePage = ({
 }: TechniquePageProps): ReactElement => {
   const tags = buildTags(technique, locale);
   const steps = technique.steps[locale];
-  const { mediaMotion } = useMotionPreferences();
+  const ukeNotes = technique.ukeNotes ? technique.ukeNotes[locale] : null;
+  const { mediaMotion, prefersReducedMotion } = useMotionPreferences();
 
   const focusActive = Boolean(progress?.focus);
   const confidentActive = Boolean(progress?.confident);
@@ -137,6 +138,20 @@ export const TechniquePage = ({
               </div>
             ))}
           </div>
+          {ukeNotes && (
+            <motion.section
+              className="mt-10 rounded-2xl border surface-border bg-[var(--color-surface)]/80 p-4"
+              initial={prefersReducedMotion ? undefined : { opacity: 0, y: 12 }}
+              animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
+              transition={prefersReducedMotion ? { duration: 0.05 } : { duration: 0.2, ease: defaultEase }}
+            >
+              <h3 className="flex items-center gap-2 text-xs font-semibold tracking-[0.3em] uppercase text-subtle">
+                <span aria-hidden className="text-base leading-none">🤝</span>
+                <span>{copy.ukeNotes}</span>
+              </h3>
+              <p className="mt-3 text-sm leading-relaxed text-muted">{ukeNotes}</p>
+            </motion.section>
+          )}
         </section>
 
         <section>

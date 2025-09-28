@@ -70,6 +70,11 @@ export const buildSearchIndex = (techniques: Technique[]): SearchEntry[] =>
       addSynonymTokens(tokens, tag);
     });
 
+    if (technique.ukeNotes) {
+      pushToken(tokens, technique.ukeNotes.en);
+      pushToken(tokens, technique.ukeNotes.de);
+    }
+
     const haystack = Array.from(tokens).join(' ');
     return { technique, haystack };
   });

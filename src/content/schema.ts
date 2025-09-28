@@ -20,6 +20,11 @@ const mediaSchema = z.object({
   title: z.string().optional(),
 });
 
+const localizedNotesSchema = z.object({
+  en: z.string().min(1, 'ukeNotes.en must not be empty'),
+  de: z.string().min(1, 'ukeNotes.de must not be empty'),
+});
+
 export const techniqueZ = z
   .object({
     id: z.string().min(1, 'id is required'),
@@ -42,8 +47,10 @@ export const techniqueZ = z
       en: z.array(z.string().min(1)),
       de: z.array(z.string().min(1)),
     }),
+    ukeNotes: localizedNotesSchema.nullable().optional().default(null),
     media: z.array(mediaSchema),
     tags: z.array(z.string().min(1)).optional(),
+    variations: z.array(z.string().min(1)).optional().default([]),
   })
   .superRefine((value, ctx) => {
     if (value.steps.en.length !== value.steps.de.length) {

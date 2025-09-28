@@ -6,9 +6,10 @@ type HomePageProps = {
   copy: Copy;
   onOpenLibrary: () => void;
   onViewProgress: () => void;
+  onViewBasics: () => void;
 };
 
-export const HomePage = ({ copy, onOpenLibrary, onViewProgress }: HomePageProps): ReactElement => (
+export const HomePage = ({ copy, onOpenLibrary, onViewProgress, onViewBasics }: HomePageProps): ReactElement => (
   <section className="py-16 px-6">
     <div className="max-w-4xl mx-auto text-center space-y-10">
       <div className="flex flex-col items-center gap-4">
@@ -30,6 +31,13 @@ export const HomePage = ({ copy, onOpenLibrary, onViewProgress }: HomePageProps)
           className="px-5 py-2.5 rounded-xl border btn-tonal surface-hover transition focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
         >
           {copy.viewProgressCta}
+        </button>
+        <button
+          type="button"
+          onClick={onViewBasics}
+          className="px-5 py-2.5 rounded-xl border btn-tonal surface-hover transition focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+        >
+          {copy.viewBasicsCta}
         </button>
       </div>
     </div>

@@ -18,8 +18,10 @@ export type Technique = {
   level: Grade;
   description: { en: string; de: string };
   steps: { en: string[]; de: string[] };
+  ukeNotes: { en: string; de: string } | null;
   media: { type: MediaType; url: string; title?: string }[];
   tags?: string[];
+  variations: string[];
 };
 
 export type Progress = {
@@ -39,7 +41,7 @@ export type DB = {
   progress: Progress[];
 };
 
-export type AppRoute = 'home' | 'library' | 'progress' | 'about';
+export type AppRoute = 'home' | 'library' | 'progress' | 'about' | 'basics';
 
 export type Filters = {
   category?: string;
