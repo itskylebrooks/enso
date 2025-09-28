@@ -2,7 +2,7 @@ import { forwardRef, useState, type PropsWithChildren, type ReactElement, type R
 import { classNames } from '../../utils/classNames';
 import type { AppRoute } from '../../types';
 import type { Copy } from '../../constants/i18n';
-import { SearchIcon, SettingsIcon, MenuIcon } from '../common/icons';
+import { SearchIcon, SettingsIcon, MenuIcon, InfoIcon, BookmarkIcon, PersonStandingIcon, BookOpenTextIcon } from '../common/icons';
 import { Logo } from '../common';
 
 type HeaderProps = {
@@ -49,16 +49,36 @@ export const Header = ({
                 <span>{copy.searchBtn}</span>
               </span>
             </TextButton>
+            <TabButton active={route === 'basics'} onClick={() => onNavigate('basics')}>
+              <span className="flex items-center gap-1">
+                <BookOpenTextIcon className="w-4 h-4" />
+                <span>{copy.basicsLink}</span>
+              </span>
+            </TabButton>
             <TabButton active={route === 'library'} onClick={() => onNavigate('library')}>
-              {copy.library}
+              <span className="flex items-center gap-1">
+                <PersonStandingIcon className="w-4 h-4" />
+                <span>{copy.library}</span>
+              </span>
             </TabButton>
             <TabButton active={route === 'progress'} onClick={() => onNavigate('progress')}>
-              {copy.progress}
+              <span className="flex items-center gap-1">
+                <BookmarkIcon className="w-4 h-4" />
+                <span>{copy.progress}</span>
+              </span>
             </TabButton>
-            <div className="w-px h-6 nav-divider mx-1" />
-            <IconButton ref={settingsButtonRef} label={copy.settings} onClick={onSettings}>
-              <SettingsIcon className="w-5 h-5" />
-            </IconButton>
+            <TabButton active={route === 'about'} onClick={() => onNavigate('about')}>
+              <span className="flex items-center gap-1">
+                <InfoIcon className="w-4 h-4" />
+                <span>{copy.aboutLink}</span>
+              </span>
+            </TabButton>
+            <TextButton ref={settingsButtonRef} onClick={onSettings}>
+              <span className="flex items-center gap-1">
+                <SettingsIcon className="w-5 h-5" />
+                <span>{copy.settings}</span>
+              </span>
+            </TextButton>
           </div>
 
           {/* Mobile: menu button */}
@@ -93,11 +113,23 @@ export const Header = ({
                       type="button"
                       onClick={() => {
                         setMenuOpen(false);
+                        onNavigate('basics');
+                      }}
+                      className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
+                    >
+                      <span className="flex items-center gap-2"><BookOpenTextIcon className="w-4 h-4" />{copy.basicsLink}</span>
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMenuOpen(false);
                         onNavigate('library');
                       }}
                       className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
                     >
-                      {copy.library}
+                      <span className="flex items-center gap-2"><PersonStandingIcon className="w-4 h-4" />{copy.library}</span>
                     </button>
                   </li>
                   <li>
@@ -109,7 +141,19 @@ export const Header = ({
                       }}
                       className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
                     >
-                      {copy.progress}
+                      <span className="flex items-center gap-2"><BookmarkIcon className="w-4 h-4" />{copy.progress}</span>
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMenuOpen(false);
+                        onNavigate('about');
+                      }}
+                      className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
+                    >
+                      <span className="flex items-center gap-2"><InfoIcon className="w-4 h-4" />{copy.aboutLink}</span>
                     </button>
                   </li>
                   <li>

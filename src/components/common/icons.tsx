@@ -40,6 +40,40 @@ export const MenuIcon = (props: SVGProps<SVGSVGElement>): ReactElement => (
   </svg>
 );
 
+export const InfoIcon = (props: SVGProps<SVGSVGElement>): ReactElement => (
+  <svg {...baseProps} {...props} className={['lucide lucide-info-icon', props.className].filter(Boolean).join(' ')}>
+    <circle cx="12" cy="12" r="10" />
+    <path d="M12 16v-4" />
+    <path d="M12 8h.01" />
+  </svg>
+);
+
+export const BookmarkIcon = (props: SVGProps<SVGSVGElement>): ReactElement => (
+  <svg {...baseProps} {...props} className={['lucide lucide-bookmark-icon', props.className].filter(Boolean).join(' ')}>
+    <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
+  </svg>
+);
+
+export const PersonStandingIcon = (props: SVGProps<SVGSVGElement>): ReactElement => (
+  <svg {...baseProps} {...props} className={['lucide lucide-person-standing-icon', props.className].filter(Boolean).join(' ')}>
+    <circle cx="12" cy="5" r="1" />
+    <path d="m9 20 3-6 3 6" />
+    <path d="m6 8 6 2 6-2" />
+    <path d="M12 10v4" />
+  </svg>
+);
+
+export const BookOpenTextIcon = (props: SVGProps<SVGSVGElement>): ReactElement => (
+  <svg {...baseProps} {...props} className={['lucide lucide-book-open-text-icon', props.className].filter(Boolean).join(' ')}>
+    <path d="M12 7v14" />
+    <path d="M16 12h2" />
+    <path d="M16 8h2" />
+    <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z" />
+    <path d="M6 12h2" />
+    <path d="M6 8h2" />
+  </svg>
+);
+
 export const CheckIcon = (props: SVGProps<SVGSVGElement>): ReactElement => (
   <svg {...baseProps} {...props} className={['lucide lucide-check-icon', props.className].filter(Boolean).join(' ')}>
     <path d="M20 6 9 17l-5-5" />
