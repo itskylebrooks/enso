@@ -29,6 +29,7 @@ export type Progress = {
   focus?: boolean;
   notNow?: boolean;
   confident?: boolean;
+  bookmarked?: boolean;
   personalNote?: string;
   updatedAt: number;
 };

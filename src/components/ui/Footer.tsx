@@ -17,13 +17,6 @@ export const Footer = ({ copy, onNavigate }: FooterProps): ReactElement => {
         <div className="flex items-center gap-3">
           <button
             type="button"
-            onClick={() => onNavigate('basics')}
-            className="underline decoration-dotted hover:decoration-solid focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] rounded px-1"
-          >
-            {copy.basicsLink}
-          </button>
-          <button
-            type="button"
             onClick={() => onNavigate('about')}
             className="underline decoration-dotted hover:decoration-solid focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] rounded px-1"
           >

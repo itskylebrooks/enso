@@ -2,7 +2,9 @@ import { forwardRef, useState, type PropsWithChildren, type ReactElement, type R
 import { classNames } from '../../utils/classNames';
 import type { AppRoute } from '../../types';
 import type { Copy } from '../../constants/i18n';
-import { SearchIcon, SettingsIcon, MenuIcon, InfoIcon, BookmarkIcon, PersonStandingIcon, BookOpenTextIcon } from '../common/icons';
+import { SearchIcon, SettingsIcon, MenuIcon, BookmarkIcon, PersonStandingIcon, BookOpenTextIcon } from '../common/icons';
+import { motion } from 'motion/react';
+import { useMotionPreferences } from '../ui/motion';
 import { Logo } from '../common';
 
 type HeaderProps = {
@@ -25,6 +27,7 @@ export const Header = ({
   settingsButtonRef,
 }: HeaderProps): ReactElement => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { overlayMotion, prefersReducedMotion, toggleTransition } = useMotionPreferences();
 
   return (
     <header className="surface border-b surface-border sticky top-0 z-20 backdrop-blur">
@@ -67,12 +70,6 @@ export const Header = ({
                 <span>{copy.progress}</span>
               </span>
             </TabButton>
-            <TabButton active={route === 'about'} onClick={() => onNavigate('about')}>
-              <span className="flex items-center gap-1">
-                <InfoIcon className="w-4 h-4" />
-                <span>{copy.aboutLink}</span>
-              </span>
-            </TabButton>
             <TextButton ref={settingsButtonRef} onClick={onSettings}>
               <span className="flex items-center gap-1">
                 <SettingsIcon className="w-5 h-5" />
@@ -81,33 +78,33 @@ export const Header = ({
             </TextButton>
           </div>
 
-          {/* Mobile: menu button */}
+          {/* Mobile: hamburger + animated dropdown */}
           <div className="md:hidden relative">
-            <button
-              type="button"
-              onClick={() => setMenuOpen((v) => !v)}
-              className="px-2 py-1.5 rounded-lg border btn-tonal surface-hover text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
-              aria-expanded={menuOpen}
-              aria-label="Open menu"
-            >
-              <MenuIcon className="w-5 h-5" />
-            </button>
+            <div className="flex items-center gap-2">
+              <IconButton ref={searchButtonRef} onClick={onSearch} label={copy.searchBtn}>
+                <SearchIcon className="w-5 h-5" />
+              </IconButton>
+              <button
+                type="button"
+                onClick={() => setMenuOpen((v) => !v)}
+                className="px-2 py-1.5 rounded-lg border btn-tonal surface-hover text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+                aria-expanded={menuOpen}
+                aria-label="Open menu"
+              >
+                <MenuIcon className="w-5 h-5" />
+              </button>
+            </div>
 
             {menuOpen && (
-              <div className="absolute right-0 mt-2 w-48 rounded-lg border surface border-[var(--color-border)] bg-[var(--color-surface)] shadow-lg z-30">
+              <motion.div
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                variants={overlayMotion.panel}
+                transition={prefersReducedMotion ? { duration: 0.05 } : toggleTransition}
+                className="absolute right-0 mt-2 w-56 rounded-lg border surface border-[var(--color-border)] bg-[var(--color-surface)] shadow-lg z-30"
+              >
                 <ul className="p-2">
-                  <li>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setMenuOpen(false);
-                        onSearch();
-                      }}
-                      className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
-                    >
-                      <span className="flex items-center gap-2"><SearchIcon className="w-4 h-4" />{copy.searchBtn}</span>
-                    </button>
-                  </li>
                   <li>
                     <button
                       type="button"
@@ -149,18 +146,6 @@ export const Header = ({
                       type="button"
                       onClick={() => {
                         setMenuOpen(false);
-                        onNavigate('about');
-                      }}
-                      className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
-                    >
-                      <span className="flex items-center gap-2"><InfoIcon className="w-4 h-4" />{copy.aboutLink}</span>
-                    </button>
-                  </li>
-                  <li>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setMenuOpen(false);
                         onSettings();
                       }}
                       className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
@@ -169,7 +154,7 @@ export const Header = ({
                     </button>
                   </li>
                 </ul>
-              </div>
+              </motion.div>
             )}
           </div>
         </nav>

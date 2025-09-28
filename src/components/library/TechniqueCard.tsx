@@ -3,7 +3,6 @@ import { motion, type Variants, type Transition } from 'motion/react';
 import type { Copy } from '../../constants/i18n';
 import type { Locale, Progress, Technique } from '../../types';
 import { LevelBadge, EmphasizedName } from '../common';
-import { StarIcon, CheckIcon } from '../common/icons';
 import { getTaxonomyLabel } from '../../i18n/taxonomy';
 
 type MotionProps = {
@@ -24,8 +23,7 @@ export type TechniqueCardProps = {
 export const TechniqueCard = ({
   technique,
   locale,
-  progress,
-  copy,
+  // progress and copy intentionally unused after removing focus/confident indicators
   onSelect,
   motionIndex,
   variants,
@@ -57,16 +55,7 @@ export const TechniqueCard = ({
           {technique.jp && <div className="text-xs text-subtle truncate">{technique.jp}</div>}
         </div>
         <div className="flex items-center gap-2 text-base transition-soft motion-ease">
-          {progress?.focus && (
-            <span title={copy.focus} className="inline-flex text-[0px]">
-              <StarIcon className="w-4 h-4" />
-            </span>
-          )}
-          {progress?.confident && (
-            <span title={copy.confident} className="inline-flex text-[0px]">
-              <CheckIcon className="w-4 h-4" />
-            </span>
-          )}
+          {/* progress badges removed (focus/confident) */}
         </div>
       </div>
 

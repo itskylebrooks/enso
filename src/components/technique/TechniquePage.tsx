@@ -1,9 +1,9 @@
-import type { ReactNode, ReactElement } from 'react';
+import type { ReactElement } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import type { Copy } from '../../constants/i18n';
 import type { Locale, Progress, Technique } from '../../types';
 import { EmphasizedName, LevelBadge } from '../common';
-import { CheckIcon, StarIcon } from '../common/icons';
+import { BookmarkIcon, BookmarkCheckIcon } from '../common/icons';
 import { MediaEmbed } from '../media/MediaEmbed';
 import { classNames } from '../../utils/classNames';
 import { getTaxonomyLabel } from '../../i18n/taxonomy';
@@ -45,8 +45,7 @@ type TechniquePageProps = {
   locale: Locale;
   backLabel: string;
   onBack: () => void;
-  onToggleFocus: () => void;
-  onToggleConfident: () => void;
+  onToggleBookmark: () => void;
 };
 
 export const TechniquePage = ({
@@ -56,16 +55,14 @@ export const TechniquePage = ({
   locale,
   backLabel,
   onBack,
-  onToggleFocus,
-  onToggleConfident,
+  onToggleBookmark,
 }: TechniquePageProps): ReactElement => {
   const tags = buildTags(technique, locale);
   const steps = technique.steps[locale];
   const ukeNotes = technique.ukeNotes ? technique.ukeNotes[locale] : null;
-  const { mediaMotion, prefersReducedMotion } = useMotionPreferences();
+  const { mediaMotion, prefersReducedMotion, toggleTransition } = useMotionPreferences();
 
-  const focusActive = Boolean(progress?.focus);
-  const confidentActive = Boolean(progress?.confident);
+  const bookmarkedActive = Boolean(progress?.bookmarked);
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-6 space-y-10">
@@ -105,19 +102,36 @@ export const TechniquePage = ({
           </div>
           <div className="flex flex-col items-end gap-3">
             <LevelBadge locale={locale} level={technique.level} />
-            <div className="inline-flex rounded-lg border surface-border overflow-hidden divide-x divide-[var(--color-border)]">
-              <ToggleButton
-                label={copy.focus}
-                icon={<StarIcon className="w-4 h-4" />}
-                active={focusActive}
-                onClick={onToggleFocus}
-              />
-              <ToggleButton
-                label={copy.confident}
-                icon={<CheckIcon className="w-4 h-4" />}
-                active={confidentActive}
-                onClick={onToggleConfident}
-              />
+            <div className="inline-flex rounded-lg border surface-border overflow-hidden">
+              <motion.button
+                type="button"
+                onClick={onToggleBookmark}
+                aria-pressed={bookmarkedActive}
+                transition={toggleTransition}
+                whileTap={prefersReducedMotion ? undefined : { scale: 0.96 }}
+                className={classNames(
+                  'px-3 py-1.5 text-sm flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] transition-colors duration-150',
+                  bookmarkedActive
+                    ? 'bg-[var(--color-text)] text-[var(--color-bg)]'
+                    : 'bg-[var(--color-surface)] text-[var(--color-text)] hover:bg-[var(--color-surface-hover)]',
+                )}
+              >
+                <motion.span
+                  aria-hidden
+                  className="w-4 h-4 flex items-center justify-center"
+                  animate={bookmarkedActive ? { scale: 1, opacity: 1 } : { scale: 0.86, opacity: 0.85 }}
+                  transition={toggleTransition}
+                >
+                  {bookmarkedActive ? <BookmarkCheckIcon className="w-4 h-4" /> : <BookmarkIcon className="w-4 h-4" />}
+                </motion.span>
+                <motion.span
+                  className="overflow-hidden"
+                  animate={bookmarkedActive ? { x: 0, opacity: 1 } : { x: 0, opacity: 1 }}
+                  transition={toggleTransition}
+                >
+                  {copy.bookmark}
+                </motion.span>
+              </motion.button>
             </div>
           </div>
         </div>
@@ -178,44 +192,4 @@ export const TechniquePage = ({
   );
 };
 
-type ToggleButtonProps = {
-  label: string;
-  icon: ReactNode;
-  active: boolean;
-  onClick: () => void;
-};
-
-const ToggleButton = ({ label, icon, active, onClick }: ToggleButtonProps): ReactElement => {
-  const prefersReducedMotion = useReducedMotion();
-
-  return (
-    <motion.button
-      type="button"
-      onClick={onClick}
-      aria-pressed={active}
-      className={classNames(
-        'px-3 py-1.5 text-sm flex items-center gap-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
-        active
-          ? 'bg-[var(--color-text)] text-[var(--color-bg)]'
-          : 'bg-[var(--color-surface)] text-[var(--color-text)] hover:bg-[var(--color-surface-hover)]',
-      )}
-      variants={prefersReducedMotion
-        ? {
-            inactive: { scale: 1, opacity: 1 },
-            active: { scale: 1, opacity: 1 },
-          }
-        : {
-            inactive: { scale: 1, opacity: 1 },
-            active: { scale: [1, 0.96, 1], opacity: [1, 0.85, 1] },
-          }}
-      animate={active ? 'active' : 'inactive'}
-      transition={prefersReducedMotion ? { duration: 0.05 } : { duration: 0.12, ease: defaultEase }}
-      whileTap={prefersReducedMotion ? undefined : { scale: 0.95 }}
-    >
-      <span className="inline-flex items-center" aria-hidden>
-        {icon}
-      </span>
-      <span>{label}</span>
-    </motion.button>
-  );
-};
+// Bookmark toggle is rendered inline in the header.

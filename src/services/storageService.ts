@@ -59,6 +59,7 @@ const buildDefaultProgress = (techniqueId: string): Progress => ({
   focus: false,
   notNow: false,
   confident: false,
+  bookmarked: false,
   personalNote: '',
   updatedAt: Date.now(),
 });

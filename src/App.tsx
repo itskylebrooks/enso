@@ -439,19 +439,12 @@ export default function App(): ReactElement {
     navigateTo(route, { replace: true });
   };
 
-  const toggleFocus = (technique: Technique, entry: Progress | null): void => {
-    const nextFocus = !entry?.focus;
-    updateProgress(technique.id, {
-      focus: nextFocus,
-      confident: nextFocus ? false : entry?.confident ?? false,
-    });
-  };
+  // focus/confident toggles removed — using bookmark only now
 
-  const toggleConfident = (technique: Technique, entry: Progress | null): void => {
-    const nextConfident = !entry?.confident;
+  const toggleBookmark = (technique: Technique, entry: Progress | null): void => {
+    const nextBookmarked = !entry?.bookmarked;
     updateProgress(technique.id, {
-      confident: nextConfident,
-      focus: nextConfident ? false : entry?.focus ?? false,
+      bookmarked: nextBookmarked,
     });
   };
 
@@ -479,8 +472,7 @@ export default function App(): ReactElement {
         locale={locale}
         backLabel={techniqueBackLabel}
         onBack={() => closeTechnique()}
-        onToggleFocus={() => toggleFocus(currentTechnique, currentProgress ?? null)}
-        onToggleConfident={() => toggleConfident(currentTechnique, currentProgress ?? null)}
+        onToggleBookmark={() => toggleBookmark(currentTechnique, currentProgress ?? null)}
       />
     );
   } else if (techniqueNotFound) {
@@ -553,7 +545,7 @@ export default function App(): ReactElement {
               <ProgressLists
                 copy={copy}
                 locale={locale}
-                techniques={filteredTechniques}
+                techniques={db.techniques}
                 progress={db.progress}
                 onOpen={openTechnique}
               />

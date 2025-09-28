@@ -1,8 +1,9 @@
-import type { ReactElement, ReactNode } from 'react';
+import type { ReactElement } from 'react';
+import { motion } from 'motion/react';
 import type { Locale, Progress, Technique } from '../../types';
 import type { Copy } from '../../constants/i18n';
-import { SectionTitle } from '../common';
-import { ProgressList } from './ProgressList';
+import { TechniqueCard } from '../library/TechniqueCard';
+import { useMotionPreferences } from '../ui/motion';
 
 type ProgressListsProps = {
   copy: Copy;
@@ -12,41 +13,36 @@ type ProgressListsProps = {
   onOpen: (slug: string) => void;
 };
 
-const partitionByStatus = (techniques: Technique[], progressMap: Record<string, Progress>) => ({
-  focus: techniques.filter((technique) => progressMap[technique.id]?.focus),
-  confident: techniques.filter((technique) => progressMap[technique.id]?.confident),
-});
-
 export const ProgressLists = ({ copy, locale, techniques, progress, onOpen }: ProgressListsProps): ReactElement => {
   const progressById = Object.fromEntries(progress.map((entry) => [entry.techniqueId, entry]));
-  const buckets = partitionByStatus(techniques, progressById);
+  const bookmarked = techniques.filter((technique) => progressById[technique.id]?.bookmarked);
+  const { listMotion, getItemTransition, prefersReducedMotion } = useMotionPreferences();
 
   return (
-    <div className="flex flex-col gap-6">
-      <ProgressSection title={`${copy.focus} (${buckets.focus.length})`}>
-        <ProgressList items={buckets.focus} locale={locale} copy={copy} progressById={progressById} onOpen={onOpen} />
-      </ProgressSection>
-      <ProgressSection title={`${copy.confident} (${buckets.confident.length})`}>
-        <ProgressList
-          items={buckets.confident}
-          locale={locale}
-          copy={copy}
-          progressById={progressById}
-          onOpen={onOpen}
-        />
-      </ProgressSection>
+    <div>
+      <h2 className="text-sm font-semibold mb-4">{copy.progress}</h2>
+      <motion.div
+        className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+        variants={listMotion.container}
+        initial="hidden"
+        animate="show"
+        layout
+      >
+        {bookmarked.map((technique, index) => (
+          <TechniqueCard
+            key={technique.id}
+            technique={technique}
+            locale={locale}
+            copy={copy}
+            onSelect={onOpen}
+            motionIndex={index}
+            variants={listMotion.item}
+            getTransition={getItemTransition}
+            prefersReducedMotion={prefersReducedMotion}
+          />
+        ))}
+        {bookmarked.length === 0 && <div className="col-span-full text-sm text-muted">No bookmarks yet.</div>}
+      </motion.div>
     </div>
   );
 };
-
-type SectionProps = {
-  title: string;
-  children: ReactNode;
-};
-
-const ProgressSection = ({ title, children }: SectionProps): ReactElement => (
-  <section className="surface border surface-border rounded-2xl p-3">
-    <SectionTitle>{title}</SectionTitle>
-    <div className="mt-2">{children}</div>
-  </section>
-);

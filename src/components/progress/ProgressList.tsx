@@ -1,20 +1,18 @@
 import type { ReactElement } from 'react';
 import { motion } from 'motion/react';
 import type { Copy } from '../../constants/i18n';
-import type { Locale, Progress, Technique } from '../../types';
+import type { Locale, Technique } from '../../types';
 import { EmphasizedName, LevelBadge } from '../common';
-import { StarIcon, CheckIcon } from '../common/icons';
 import { useMotionPreferences } from '../ui/motion';
 
 export type ProgressListProps = {
   items: Technique[];
   locale: Locale;
   copy: Copy;
-  progressById: Record<string, Progress>;
   onOpen: (slug: string) => void;
 };
 
-export const ProgressList = ({ items, locale, copy, progressById, onOpen }: ProgressListProps): ReactElement => {
+export const ProgressList = ({ items, locale, copy, onOpen }: ProgressListProps): ReactElement => {
   const { listMotion, getItemTransition, prefersReducedMotion } = useMotionPreferences();
 
   if (items.length === 0) {
@@ -30,7 +28,6 @@ export const ProgressList = ({ items, locale, copy, progressById, onOpen }: Prog
       layout
     >
       {items.map((technique, index) => {
-        const entry = progressById[technique.id];
         const label = technique.name[locale];
 
         return (
@@ -54,16 +51,6 @@ export const ProgressList = ({ items, locale, copy, progressById, onOpen }: Prog
               </div>
               <div className="flex items-center gap-2 shrink-0">
                 <LevelBadge locale={locale} level={technique.level} />
-                {entry?.focus && (
-                  <span title={copy.focus} className="inline-flex text-[0px]">
-                    <StarIcon className="w-3.5 h-3.5" />
-                  </span>
-                )}
-                {entry?.confident && (
-                  <span title={copy.confident} className="inline-flex text-[0px]">
-                    <CheckIcon className="w-3.5 h-3.5" />
-                  </span>
-                )}
               </div>
             </motion.button>
           </li>
