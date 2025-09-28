@@ -1,8 +1,53 @@
-import seedIndex from '../data/seed.index.json';
+import { parseTechnique } from '../content/schema';
 import { DB_VERSION, LOCALE_KEY, STORAGE_KEY, THEME_KEY } from '../constants/storage';
 import type { DB, Locale, Progress, Technique, Theme } from '../types';
 
-const seedTechniques = seedIndex as Technique[];
+// Load technique files directly from the content/techniques folder.
+// Vite's import.meta.glob with { eager: true } returns the parsed JSON modules at build time.
+// We handle both module.default and module cases for robustness.
+const techniqueModules = import.meta.glob('/content/techniques/*.json', { eager: true }) as Record<
+  string,
+  unknown
+>;
+
+const normalizeOptional = (value: string | undefined | null): string | undefined => {
+  if (value == null) return undefined;
+  const trimmed = value.trim();
+  return trimmed.length > 0 ? trimmed : undefined;
+};
+
+const normalizeTechnique = (technique: Technique): Technique => {
+  const notes = technique.ukeNotes
+    ? {
+        en: technique.ukeNotes.en.trim(),
+        de: technique.ukeNotes.de.trim(),
+      }
+    : null;
+
+  const variations = Array.from(new Set(technique.variations.map((entry) => entry.trim()).filter(Boolean)));
+
+  return {
+    ...technique,
+    jp: normalizeOptional(technique.jp ?? undefined),
+    attack: normalizeOptional(technique.attack ?? undefined),
+    stance: normalizeOptional(technique.stance ?? undefined),
+    weapon: normalizeOptional(technique.weapon ?? undefined),
+    ukeNotes: notes && (notes.en.length > 0 || notes.de.length > 0) ? notes : null,
+    variations,
+  };
+};
+
+const seedTechniques: Technique[] = Object.keys(techniqueModules)
+  .map((filePath) => {
+    const mod = techniqueModules[filePath] as any;
+    const raw = mod && typeof mod === 'object' && 'default' in mod ? mod.default : mod;
+    const filename = filePath.split('/').pop() ?? '';
+    const slug = filename.replace(/\.json$/i, '');
+    // parse/validate technique using schema
+    const parsed = parseTechnique(raw, slug);
+    return normalizeTechnique(parsed);
+  })
+  .sort((a, b) => a.name.en.localeCompare(b.name.en));
 
 const isBrowser = typeof window !== 'undefined' && typeof window.localStorage !== 'undefined';
 

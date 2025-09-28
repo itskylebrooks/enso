@@ -70,7 +70,7 @@ export const TechniqueCard = ({
         </div>
       </div>
 
-      <p className="text-sm text-muted leading-relaxed line-clamp-2 min-h-[2.5rem]">
+      <p className="text-sm text-muted leading-relaxed">
         {technique.description[locale]}
       </p>
 
