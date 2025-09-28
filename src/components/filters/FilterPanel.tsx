@@ -114,7 +114,7 @@ export const FilterPanel = ({
   weapons,
   levels,
   onChange,
-}: FilterPanelProps): JSX.Element => {
+}: FilterPanelProps): ReactNode => {
   const hasActiveFilters = useMemo(() => Object.values(filters).some(Boolean), [filters]);
 
   type SectionKey = 'category' | 'attack' | 'stance' | 'weapon' | 'level';
@@ -242,7 +242,7 @@ type FilterSectionProps = {
   onToggle?: () => void;
 };
 
-const FilterSection = ({ title, options, selected, onSelect, available, isOpen = false, onToggle }: FilterSectionProps): JSX.Element => (
+const FilterSection = ({ title, options, selected, onSelect, available, isOpen = false, onToggle }: FilterSectionProps): ReactNode => (
   <section className="space-y-3">
     <button
       type="button"
@@ -266,7 +266,7 @@ type OptionListProps = {
   onSelect: (value: string | undefined) => void;
 };
 
-const OptionList = ({ options, selected, available, onSelect }: OptionListProps): JSX.Element => (
+const OptionList = ({ options, selected, available, onSelect }: OptionListProps): ReactNode => (
   <div className="space-y-2">
     {options.map(({ value, label, trailing }) => {
       const isActive = selected === value;
