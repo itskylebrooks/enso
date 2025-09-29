@@ -17,10 +17,20 @@ const normalizeOptional = (value: string | undefined | null): string | undefined
 };
 
 const normalizeTechnique = (technique: Technique): Technique => {
-  const notes = technique.ukeNotes
+  const uke = technique.uke
     ? {
-        en: technique.ukeNotes.en.trim(),
-        de: technique.ukeNotes.de.trim(),
+        role: technique.uke.role
+          ? {
+              en: technique.uke.role.en.trim(),
+              de: technique.uke.role.de.trim(),
+            }
+          : undefined,
+        notes: technique.uke.notes
+          ? {
+              en: technique.uke.notes.en.map(note => note.trim()).filter(note => note.length > 0),
+              de: technique.uke.notes.de.map(note => note.trim()).filter(note => note.length > 0),
+            }
+          : undefined,
       }
     : null;
 
@@ -32,7 +42,7 @@ const normalizeTechnique = (technique: Technique): Technique => {
     attack: normalizeOptional(technique.attack ?? undefined),
     stance: normalizeOptional(technique.stance ?? undefined),
     weapon: normalizeOptional(technique.weapon ?? undefined),
-    ukeNotes: notes && (notes.en.length > 0 || notes.de.length > 0) ? notes : null,
+    uke: uke && ((uke.role?.en && uke.role.en.length > 0) || (uke.notes?.en && uke.notes.en.length > 0)) ? uke : null,
     variations,
   };
 };

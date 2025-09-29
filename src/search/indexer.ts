@@ -70,9 +70,15 @@ export const buildSearchIndex = (techniques: Technique[]): SearchEntry[] =>
       addSynonymTokens(tokens, tag);
     });
 
-    if (technique.ukeNotes) {
-      pushToken(tokens, technique.ukeNotes.en);
-      pushToken(tokens, technique.ukeNotes.de);
+    if (technique.uke) {
+      if (technique.uke.role) {
+        pushToken(tokens, technique.uke.role.en);
+        pushToken(tokens, technique.uke.role.de);
+      }
+      if (technique.uke.notes) {
+        technique.uke.notes.en.forEach(note => pushToken(tokens, note));
+        technique.uke.notes.de.forEach(note => pushToken(tokens, note));
+      }
     }
 
     const haystack = Array.from(tokens).join(' ');

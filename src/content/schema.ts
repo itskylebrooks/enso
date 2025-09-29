@@ -20,9 +20,15 @@ const mediaSchema = z.object({
   title: z.string().optional(),
 });
 
-const localizedNotesSchema = z.object({
-  en: z.string().min(1, 'ukeNotes.en must not be empty'),
-  de: z.string().min(1, 'ukeNotes.de must not be empty'),
+const ukeSchema = z.object({
+  role: z.object({
+    en: z.string().min(1, 'uke.role.en must not be empty'),
+    de: z.string().min(1, 'uke.role.de must not be empty'),
+  }).optional(),
+  notes: z.object({
+    en: z.array(z.string().min(1, 'uke.notes.en items must not be empty')),
+    de: z.array(z.string().min(1, 'uke.notes.de items must not be empty')),
+  }).optional(),
 });
 
 export const techniqueZ = z
@@ -47,7 +53,7 @@ export const techniqueZ = z
       en: z.array(z.string().min(1)),
       de: z.array(z.string().min(1)),
     }),
-    ukeNotes: localizedNotesSchema.nullable().optional().default(null),
+    uke: ukeSchema.nullable().optional().default(null),
     media: z.array(mediaSchema),
     tags: z.array(z.string().min(1)).optional(),
     variations: z.array(z.string().min(1)).optional().default([]),

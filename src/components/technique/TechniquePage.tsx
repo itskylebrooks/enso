@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import type { Copy } from '../../constants/i18n';
 import type { Locale, Progress, Technique, Collection, BookmarkCollection } from '../../types';
 import { EmphasizedName, LevelBadge } from '../common';
-import { BookmarkIcon, BookmarkCheckIcon } from '../common/icons';
+import { BookmarkIcon, BookmarkCheckIcon, HandshakeIcon } from '../common/icons';
 import { MediaEmbed } from '../media/MediaEmbed';
 import { classNames } from '../../utils/classNames';
 import { getTaxonomyLabel } from '../../i18n/taxonomy';
@@ -68,7 +68,7 @@ export const TechniquePage = ({
 }: TechniquePageProps): ReactElement => {
   const tags = buildTags(technique, locale);
   const steps = technique.steps[locale];
-  const ukeNotes = technique.ukeNotes ? technique.ukeNotes[locale] : null;
+  const uke = technique.uke;
   const { mediaMotion, prefersReducedMotion, toggleTransition } = useMotionPreferences();
 
   const bookmarkedActive = Boolean(progress?.bookmarked);
@@ -191,7 +191,7 @@ export const TechniquePage = ({
               </div>
             ))}
           </div>
-          {ukeNotes && (
+          {uke && (uke.role?.[locale] || uke.notes?.[locale]) && (
             <motion.section
               className="mt-10 rounded-2xl border surface-border bg-[var(--color-surface)]/80 p-4"
               initial={prefersReducedMotion ? undefined : { opacity: 0, y: 12 }}
@@ -199,10 +199,22 @@ export const TechniquePage = ({
               transition={prefersReducedMotion ? { duration: 0.05 } : { duration: 0.2, ease: defaultEase }}
             >
               <h3 className="flex items-center gap-2 text-xs font-semibold tracking-[0.3em] uppercase text-subtle">
-                <span aria-hidden className="text-base leading-none">🤝</span>
+                <HandshakeIcon className="w-4 h-4" />
                 <span>{copy.ukeNotes}</span>
               </h3>
-              <p className="mt-3 text-sm leading-relaxed text-muted">{ukeNotes}</p>
+              {uke.role?.[locale] && (
+                <p className="mt-3 text-sm leading-relaxed text-muted">{uke.role[locale]}</p>
+              )}
+              {uke.notes?.[locale] && uke.notes[locale].length > 0 && (
+                <ul className="mt-3 space-y-2">
+                  {uke.notes[locale].map((note, index) => (
+                    <li key={index} className="text-sm leading-relaxed text-muted flex gap-2">
+                      <span className="text-subtle shrink-0">•</span>
+                      <span>{note}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </motion.section>
           )}
         </section>

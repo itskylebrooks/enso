@@ -18,7 +18,10 @@ export type Technique = {
   level: Grade;
   description: { en: string; de: string };
   steps: { en: string[]; de: string[] };
-  ukeNotes: { en: string; de: string } | null;
+  uke: {
+    role?: { en: string; de: string };
+    notes?: { en: string[]; de: string[] };
+  } | null;
   media: { type: MediaType; url: string; title?: string }[];
   tags?: string[];
   variations: string[];
