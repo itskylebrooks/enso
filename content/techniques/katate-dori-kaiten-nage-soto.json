@@ -16,27 +16,59 @@
     "de": "Außenrotationswurf aus Einhandgriff. Führen, Ellbogen leiten, under dem Arm drehen und mit kreisförmigem Schnitt werfen."
   },
   "steps": {
+  "en": [
+    "Begin in hanmi. Uke takes katate-dori on your lead wrist. Keep shoulders soft, elbow heavy, center aligned.",
+    "Blend on the outside line (soto): slightly shift off-line and turn your captured palm upward to soften the grip (no tugging).",
+    "Step the front foot outward (~30°) to uke’s open side; draw a small outward circle with the captured hand to start kuzushi.",
+    "Place your free hand to the outside of uke’s elbow/triceps, creating two-point control (wrist + elbow).",
+    "Rotate hips and shoulders together, guiding uke’s shoulder past their toes (forward-down kuzushi).",
+    "Pivot under the captured arm (ura/tenkan). Keep uke’s elbow close to your chest—do not let your arm straighten away.",
+    "As you pivot, slide your guiding hand along uke’s upper arm; forearm upright, light contact at triceps/shoulder line.",
+    "Step through behind uke to their rear line; align your center with their spine. Inside hand lightly checks the jaw/neck to keep posture upright (not a strike).",
+    "Settle your weight with a tall spine; maintain the elbow slightly lifted and close to your body.",
+    "Cut a broad circular arc forward and slightly down with the guiding arm, uniting uke’s head and shoulder along the same circle.",
+    "As uke rotates, release the wrist and guide the spiral path so there’s clear space for ukemi. Regain distance and zanshin."
+  ],
+  "de": [
+    "Beginne in Hanmi. Uke greift dein Handgelenk (Katate-dori). Schultern weich, Ellbogen schwer, Zentrum ausgerichtet.",
+    "Führe auf die Außenlinie (soto): leicht von der Linie, gefasste Handfläche nach oben drehen, ohne zu ziehen.",
+    "Setze den vorderen Fuß nach außen (~30°) auf Ukes offene Seite; zeichne mit der gefassten Hand einen kleinen Kreis für das erste Kuzushi.",
+    "Lege die freie Hand außen an Ukes Ellbogen/Trizeps und erzeuge Zweipunkt-Kontrolle (Handgelenk + Ellbogen).",
+    "Drehe Hüfte und Schultern als Einheit, sodass Ukes Schulter über seine Zehen geführt wird (Kuzushi vorwärts/abwärts).",
+    "Drehe (Ura/Tenkan) unter dem gefassten Arm hindurch. Halte Ukes Ellbogen nah an deiner Brust—den Arm nicht wegstrecken.",
+    "Während der Drehung gleitet die führende Hand an Ukes Oberarm; Unterarm aufrecht, sanfter Kontakt an Trizeps/Schulterlinie.",
+    "Schreite hinter Uke durch auf seine Rücklinie; richte dein Zentrum auf seine Wirbelsäule. Die innere Hand kontrolliert leicht an Kiefer/Hals (kein Schlag).",
+    "Setze dein Gewicht, Wirbelsäule aufrecht; Ellbogen leicht angehoben und körpernah.",
+    "Schneide mit dem führenden Arm einen weiten Bogen nach vorn und leicht abwärts; führe Kopf und Schulter als Einheit entlang des Kreises.",
+    "Wenn Uke rotiert, löse das Handgelenk und leite die Spiralbahn, sodass Platz für Ukemi bleibt. Abstand herstellen und Zanshin halten."
+  ]
+},
+"uke": {
+  "role": {
+    "en": "Uke offers a natural katate-dori (no clamping), maintains upright posture, follows the outside lead and turns with nage into the projection, finishing with safe ukemi.",
+    "de": "Uke greift mit natürlichem Druck (ohne Klemmen), bleibt aufrecht, folgt der Außenführung und dreht mit Nage in die Projektion, Abschluss mit sicherem Ukemi."
+  },
+  "notes": {
     "en": [
-      "Start in hanmi. Uke grabs your wrist (katate-dori). Keep shoulders soft and center aligned.",
-      "Extend forward and slightly outward to blend on the outside line (soto). Turn your palm upward to avoid tension.",
-      "Step your front foot forward to the outside, drawing uke’s hand in a gentle circle.",
-      "Bring your free hand to guide uke’s elbow; lead their shoulder past their heels by rotating from your hips.",
-      "Pivot under the captured arm, keeping uke’s elbow near your chest; maintain connection at their triceps.",
-      "Step through behind uke. Your inside hand checks at uke’s jaw/neck line to keep posture upright.",
-      "Lower your center and cut a broad arc forward with the guiding arm, aligning uke’s head and shoulder to the circle.",
-      "Project in a spiral path and release with safe spacing and zanshin."
+      "Grip with contact but not a vise; allow the captured wrist to rotate palm-up.",
+      "Keep elbows slightly bent, shoulders relaxed; don’t lock the grabbing arm.",
+      "When led to the outside (soto), step—don’t pull back against the line.",
+      "During the ura/tenkan pivot, rotate your torso and keep the arm relaxed rather than resisting.",
+      "As the head/shoulder is guided, turn your axis and prepare for kaiten-ukemi or side fall.",
+      "Protect the neck by tucking the chin; keep a hand ready to support the fall.",
+      "Release the grab as balance breaks and the projection begins; fall along the circular path and recover with zanshin."
     ],
     "de": [
-      "Beginne in Hanmi. Uke fasst dein Handgelenk (Katate-dori). Schultern entspannt, Zentrum ausgerichtet.",
-      "Strecke nach vorn und leicht nach außen, um auf der Außenlinie (soto) zu führen. Drehe die Handfläche nach oben, um Spannung zu vermeiden.",
-      "Setze den vorderen Fuß nach außen und zeichne mit Ukes Hand einen sanften Kreis.",
-      "Führe die freie Hand an Ukes Ellbogen; drehe aus der Hüfte, sodass seine Schulter an der Ferse vorbeikommt.",
-      "Drehe under dem gefassten Arm hindurch und halte Ukes Ellbogen nah an der Brust; Verbindung am Trizeps behalten.",
-      "Tritt hinter Uke. Die innere Hand sichert am Kiefer/Hals, Haltung bleibt aufrecht.",
-      "Senke dein Zentrum und schneide mit dem führenden Arm einen weiten Bogen nach vorn; richte Kopf und Schulter am Kreis aus.",
-      "Projiziere spiralförmig und löse mit sicherem Abstand (Zanshin)."
+      "Mit Kontakt greifen, aber nicht einklemmen; erlaube der gefassten Hand, sich mit der Handfläche nach oben zu drehen.",
+      "Ellbogen leicht gebeugt, Schultern entspannt; den Greifarm nicht verriegeln.",
+      "Bei der Außenführung (soto) mitgehen statt gegen die Linie zurückzuziehen.",
+      "Während der Ura/Tenkan-Drehung den Rumpf mitdrehen und den Arm entspannt lassen statt zu blockieren.",
+      "Wenn Kopf/Schulter geführt werden, um die eigene Achse drehen und Kaiten-Ukemi oder Seitfall vorbereiten.",
+      "Nacken durch Kinn einziehen schützen; eine Hand für die Abstützung bereithalten.",
+      "Den Griff lösen, sobald das Gleichgewicht gebrochen ist und die Projektion einsetzt; entlang der Kreisbahn fallen und mit Zanshin aufstehen."
     ]
-  },
+  }
+},
   "media": [
     {
       "type": "youtube",
