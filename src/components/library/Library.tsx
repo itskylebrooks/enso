@@ -20,8 +20,12 @@ export const Library = ({ copy, locale, techniques, progress, onOpen }: LibraryP
   const progressById = buildProgressMap(progress);
   const { listMotion, getItemTransition, prefersReducedMotion } = useMotionPreferences();
 
+  // Create a stable key that changes when technique IDs change to force remount on filter changes
+  const techniqueKey = techniques.map(t => t.id).join(',');
+
   return (
     <motion.div
+      key={techniqueKey}
       className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
       variants={listMotion.container}
       initial="hidden"
@@ -43,7 +47,13 @@ export const Library = ({ copy, locale, techniques, progress, onOpen }: LibraryP
         />
       ))}
       {techniques.length === 0 && (
-        <div className="col-span-full text-sm text-muted">No techniques found for the selected filters.</div>
+        <motion.div 
+          className="col-span-full text-sm text-muted"
+          variants={listMotion.item}
+          transition={getItemTransition(0)}
+        >
+          No techniques found for the selected filters.
+        </motion.div>
       )}
     </motion.div>
   );
