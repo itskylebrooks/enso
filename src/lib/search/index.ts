@@ -1,5 +1,6 @@
 import type Fuse from 'fuse.js';
-import type { TechniqueV2, Locale } from '../../types';
+
+import type { TechniqueV2, Locale } from '@/types';
 
 export type SearchDoc = {
   id: string;

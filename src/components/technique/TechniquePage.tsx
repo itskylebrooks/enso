@@ -1,6 +1,22 @@
-import { useEffect, useMemo, useState, type ReactElement } from 'react';
-import { AnimatePresence, motion } from 'motion/react';
-import type { Copy } from '../../constants/i18n';
+import { useEffect, useMemo, useState, type ReactElement } from 'react'
+import { AnimatePresence, motion } from 'motion/react'
+
+import {
+  TechniqueHeader,
+  type CollectionOption,
+} from './TechniqueHeader'
+import { MediaPanel } from './MediaPanel'
+import { NotesPanel } from './NotesPanel'
+import { StepsList } from './StepsList'
+import { UkePanel } from './UkePanel'
+import { VersionTabs } from './VersionTabs'
+import { useMotionPreferences } from '@/hooks/useMotionPreferences'
+import { defaultEase } from '@/lib/motion'
+import { classNames } from '@/lib/classNames'
+import { getTaxonomyLabel } from '@/lib/i18n/taxonomy'
+import type { Copy } from '@/lib/i18n/copy'
+import { stripDiacritics } from '@/lib/text'
+import { useTechniqueViewStore } from '@/store/techniqueViewStore'
 import type {
   BookmarkCollection,
   Collection,
@@ -8,18 +24,7 @@ import type {
   Progress,
   Technique,
   TechniqueVersion,
-} from '../../types';
-import { classNames } from '../../utils/classNames';
-import { getTaxonomyLabel } from '../../i18n/taxonomy';
-import { stripDiacritics } from '../../utils/text';
-import { useMotionPreferences, defaultEase } from '../ui/motion';
-import { TechniqueHeader, type CollectionOption } from './TechniqueHeader';
-import { VersionTabs } from './VersionTabs';
-import { StepsList } from './StepsList';
-import { UkePanel } from './UkePanel';
-import { MediaPanel } from './MediaPanel';
-import { NotesPanel } from './NotesPanel';
-import { useTechniqueViewStore } from '../../store/techniqueViewStore';
+} from '@/types'
 
 const buildTags = (technique: Technique, locale: Locale): string[] => {
   const title = technique.name[locale]?.toLowerCase?.() ?? '';

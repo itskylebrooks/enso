@@ -1,9 +1,11 @@
-import { motion } from 'motion/react';
-import type { ReactElement } from 'react';
-import type { Grade, Locale } from '../../types';
-import { gradeOrder } from '../../utils/grades';
-import { gradeLabel, gradePalette } from '../../styles/belts';
-import { useMotionPreferences, defaultEase } from '../ui/motion';
+import { motion } from 'motion/react'
+import type { ReactElement } from 'react'
+
+import { useMotionPreferences } from '@/hooks/useMotionPreferences'
+import { defaultEase } from '@/lib/motion'
+import { gradeLabel, gradePalette } from '@/lib/belts'
+import { gradeOrder } from '@/lib/grades'
+import type { Grade, Locale } from '@/types'
 
 type BasicsPageProps = {
   locale: Locale;

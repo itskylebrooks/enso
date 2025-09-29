@@ -1,12 +1,14 @@
-import type { ReactElement } from 'react';
-import { motion } from 'motion/react';
-import type { Copy } from '../../constants/i18n';
-import type { Locale, Technique } from '../../types';
-import { EmphasizedName, LevelBadge } from '../common';
-import { AddToCollectionMenu } from '../bookmarks/AddToCollectionMenu';
-import { BookmarkIcon, BookmarkCheckIcon } from '../common/icons';
-import { useMotionPreferences } from '../ui/motion';
-import { classNames } from '../../utils/classNames';
+import type { ReactElement } from 'react'
+import { motion } from 'motion/react'
+
+import { AddToCollectionMenu } from '@/components/bookmarks/AddToCollectionMenu'
+import { EmphasizedName } from '@/components/ui/EmphasizedName'
+import { LevelBadge } from '@/components/ui/LevelBadge'
+import { BookmarkCheckIcon, BookmarkIcon } from '@/components/ui/icons'
+import { useMotionPreferences } from '@/hooks/useMotionPreferences'
+import { classNames } from '@/lib/classNames'
+import type { Copy } from '@/lib/i18n/copy'
+import type { Locale, Technique } from '@/types'
 
 export type CollectionOption = {
   id: string;

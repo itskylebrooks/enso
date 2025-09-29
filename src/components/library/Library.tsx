@@ -1,9 +1,10 @@
-import type { ReactElement } from 'react';
-import { motion } from 'motion/react';
-import type { Locale, Progress, Technique } from '../../types';
-import type { Copy } from '../../constants/i18n';
-import { TechniqueCard } from './TechniqueCard';
-import { useMotionPreferences } from '../ui/motion';
+import type { ReactElement } from 'react'
+import { motion } from 'motion/react'
+
+import { TechniqueCard } from './TechniqueCard'
+import { useMotionPreferences } from '@/hooks/useMotionPreferences'
+import type { Copy } from '@/lib/i18n/copy'
+import type { Locale, Progress, Technique } from '@/types'
 
 const buildProgressMap = (entries: Progress[]): Record<string, Progress> =>
   Object.fromEntries(entries.map((entry) => [entry.techniqueId, entry]));

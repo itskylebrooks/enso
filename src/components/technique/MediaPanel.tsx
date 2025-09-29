@@ -1,9 +1,10 @@
-import type { ReactElement } from 'react';
-import { motion } from 'motion/react';
-import type { Copy } from '../../constants/i18n';
-import type { TechniqueVersion } from '../../types';
-import { MediaEmbed } from '../media/MediaEmbed';
-import { useMotionPreferences } from '../ui/motion';
+import type { ReactElement } from 'react'
+import { motion } from 'motion/react'
+
+import { MediaEmbed } from '@/components/technique/MediaEmbed'
+import { useMotionPreferences } from '@/hooks/useMotionPreferences'
+import type { Copy } from '@/lib/i18n/copy'
+import type { TechniqueVersion } from '@/types'
 
 export type MediaPanelProps = {
   media: TechniqueVersion['media'];

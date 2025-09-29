@@ -1,5 +1,6 @@
-import { useMemo, useRef, type KeyboardEvent, type ReactElement } from 'react';
-import type { TechniqueVersion } from '../../types';
+import { useMemo, useRef, type KeyboardEvent, type ReactElement } from 'react'
+
+import type { TechniqueVersion } from '@/types'
 
 export type VersionTabsProps = {
   versions: TechniqueVersion[];

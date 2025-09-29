@@ -1,10 +1,11 @@
-import { useEffect, useMemo, useRef, useState, type ReactElement } from 'react';
-import { createPortal } from 'react-dom';
-import { AnimatePresence, motion } from 'motion/react';
-import type { Copy } from '../../constants/i18n';
-import { CheckIcon, FolderPlusIcon, FolderCheckIcon, PlusIcon } from '../common/icons';
-import { useMotionPreferences } from '../ui/motion';
-import useLockBodyScroll from '../../utils/useLockBodyScroll';
+import { useEffect, useMemo, useRef, useState, type ReactElement } from 'react'
+import { createPortal } from 'react-dom'
+import { AnimatePresence, motion } from 'motion/react'
+
+import type { Copy } from '@/lib/i18n/copy'
+import { CheckIcon, FolderPlusIcon, FolderCheckIcon, PlusIcon } from '@/components/ui/icons'
+import { useMotionPreferences } from '@/hooks/useMotionPreferences'
+import { useLockBodyScroll } from '@/hooks/useLockBodyScroll'
 
 type CollectionOption = {
   id: string;

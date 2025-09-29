@@ -7,8 +7,16 @@
     "build:content": "tsx scripts/build-content.ts",
     "dev": "pnpm run build:content && vite",
     "build": "pnpm run build:content && tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . --ext .ts,.tsx",
+    "format": "prettier --write .",
+    "analyze": "ANALYZE=true vite build",
+    "knip": "knip",
+    "depcheck": "depcheck",
+    "tsprune": "ts-prune",
+    "test:e2e": "playwright test",
+    "preview": "vite preview",
+    "prepare": "husky"
   },
   "dependencies": {
     "fuse.js": "^7.1.0",
@@ -22,21 +30,42 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",
+    "@playwright/test": "^1.55.1",
     "@tailwindcss/line-clamp": "^0.4.4",
     "@types/react": "^19.1.13",
     "@types/react-dom": "^19.1.9",
     "@types/react-virtualized-auto-sizer": "^1.0.8",
     "@vitejs/plugin-react": "^5.0.3",
     "autoprefixer": "^10.4.21",
+    "depcheck": "^1.4.7",
     "eslint": "^9.36.0",
+    "eslint-import-resolver-typescript": "^4.4.4",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",
+    "eslint-plugin-tailwindcss": "^3.18.2",
     "globals": "^16.4.0",
+    "husky": "^9.1.7",
+    "knip": "^5.64.1",
+    "lint-staged": "^16.2.3",
     "postcss": "^8.5.6",
+    "prettier": "^3.6.2",
+    "prettier-plugin-tailwindcss": "^0.6.14",
+    "rollup-plugin-visualizer": "^6.0.3",
     "tailwindcss": "3.4.17",
+    "ts-prune": "^0.10.3",
     "tsx": "^4.7.2",
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.44.0",
     "vite": "^7.1.7"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,css,md}": "prettier --write"
   }
 }

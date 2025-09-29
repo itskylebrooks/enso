@@ -1,6 +1,7 @@
-import type { ReactElement } from 'react';
-import type { Copy } from '../../constants/i18n';
-import { Logo } from '../common';
+import type { ReactElement } from 'react'
+
+import { Logo } from '@/components/ui/Logo'
+import type { Copy } from '@/lib/i18n/copy'
 
 type HomePageProps = {
   copy: Copy;

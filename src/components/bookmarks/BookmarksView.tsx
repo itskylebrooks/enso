@@ -1,20 +1,21 @@
-import { useMemo, useState, type ReactElement } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import type { Copy } from '../../constants/i18n';
+import { useMemo, useState, type ReactElement } from 'react'
+import { AnimatePresence, motion } from 'motion/react'
+
+import type { Copy } from '@/lib/i18n/copy'
 import type {
   BookmarkCollection,
   Collection,
   Locale,
   Progress,
   Technique,
-} from '../../types';
-import { TechniqueCard } from '../library/TechniqueCard';
-import { useMotionPreferences } from '../ui/motion';
-import { CollectionsSidebar } from './CollectionsSidebar';
-import { AddToCollectionMenu } from './AddToCollectionMenu';
-import { NameModal } from '../ui/modals/NameModal';
-import { ConfirmModal } from '../ui/modals/ConfirmModal';
-import { MobileCollections } from '../ui/MobileCollections';
+} from '@/types'
+import { TechniqueCard } from '@/components/library/TechniqueCard'
+import { useMotionPreferences } from '@/hooks/useMotionPreferences'
+import { MobileCollections } from '@/components/bookmarks/MobileCollections'
+import { NameModal } from '@/components/ui/modals/NameModal'
+import { ConfirmModal } from '@/components/ui/modals/ConfirmModal'
+import { CollectionsSidebar } from './CollectionsSidebar'
+import { AddToCollectionMenu } from './AddToCollectionMenu'
 
 type SelectedCollectionId = 'all' | 'ungrouped' | string;
 

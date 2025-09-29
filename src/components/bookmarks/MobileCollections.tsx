@@ -2,23 +2,27 @@ import type { ReactElement } from 'react'
 import { AnimatePresence, LayoutGroup, motion } from 'motion/react'
 
 import { EditIcon, PencilIcon, PlusIcon, TrashIcon } from '@/components/ui/icons'
-import type { Copy } from '@/lib/i18n/copy'
 import { useMotionPreferences } from '@/hooks/useMotionPreferences'
+import type { Copy } from '@/lib/i18n/copy'
 
-type SidebarCollection = {
+type SelectedCollectionId = 'all' | 'ungrouped' | string;
+
+type CollectionOption = {
   id: string;
   name: string;
   icon: string | null;
   count: number;
 };
 
-type CollectionsSidebarProps = {
+
+
+type MobileCollectionsProps = {
   copy: Copy;
-  collections: SidebarCollection[];
-  selectedId: 'all' | 'ungrouped' | string;
+  collections: CollectionOption[];
+  selectedId: SelectedCollectionId;
   allCount: number;
   ungroupedCount: number;
-  onSelect: (id: 'all' | 'ungrouped' | string) => void;
+  onSelect: (id: SelectedCollectionId) => void;
   onCreate: () => void;
   onRename: (id: string) => void;
   onDelete: (id: string) => void;
@@ -26,7 +30,7 @@ type CollectionsSidebarProps = {
   onToggleEdit: () => void;
 };
 
-export const CollectionsSidebar = ({
+export const MobileCollections = ({
   copy,
   collections,
   selectedId,
@@ -38,11 +42,11 @@ export const CollectionsSidebar = ({
   onDelete,
   isEditing,
   onToggleEdit,
-}: CollectionsSidebarProps): ReactElement => {
+}: MobileCollectionsProps): ReactElement => {
   const { listMotion, prefersReducedMotion } = useMotionPreferences();
 
   return (
-    <div className="space-y-4" aria-label={copy.collectionsTitle}>
+    <div className="rounded-2xl border surface-border bg-[var(--color-surface)] p-4 space-y-4" aria-label={copy.collectionsTitle}>
       <div className="flex items-center justify-between gap-2">
         <h2 className="text-sm font-semibold tracking-wide uppercase text-subtle">{copy.collectionsTitle}</h2>
         <div className="flex items-center gap-2">

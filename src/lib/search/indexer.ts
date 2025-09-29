@@ -1,0 +1,119 @@
+import { expandWithSynonyms, getTaxonomyLabel } from '@/lib/i18n/taxonomy';
+import type { TaxonomyType } from '@/lib/i18n/taxonomy';
+import type { Technique } from '@/types';
+import { gradeLabel } from '@/lib/belts';
+import { stripDiacritics } from '@/lib/text';
+
+const TAXONOMY_FIELDS: TaxonomyType[] = ['category', 'attack', 'stance', 'weapon'];
+
+type SearchEntry = {
+  technique: Technique;
+  haystack: string;
+};
+
+const pushToken = (set: Set<string>, raw: string | undefined | null): void => {
+  if (!raw) return;
+  const lower = raw.toLowerCase();
+  if (!lower) return;
+
+  const queue = new Set<string>();
+  queue.add(lower);
+  queue.add(stripDiacritics(lower));
+  queue.add(lower.replace(/[-_\s]/g, ''));
+
+  const accentless = stripDiacritics(lower).replace(/[-_\s]/g, '');
+  queue.add(accentless);
+
+  for (const segment of lower.split(/[-_\s/]+/)) {
+    if (segment) {
+      queue.add(segment);
+      queue.add(stripDiacritics(segment));
+    }
+  }
+
+  for (const token of queue) {
+    if (token.trim().length > 0) {
+      set.add(token);
+    }
+  }
+};
+
+const addSynonymTokens = (set: Set<string>, value: string): void => {
+  for (const synonym of expandWithSynonyms(value)) {
+    pushToken(set, synonym);
+  }
+};
+
+export const buildSearchIndex = (techniques: Technique[]): SearchEntry[] =>
+  techniques.map((technique) => {
+    const tokens = new Set<string>();
+
+    pushToken(tokens, technique.name.en);
+    pushToken(tokens, technique.name.de);
+    pushToken(tokens, technique.jp);
+    pushToken(tokens, technique.slug);
+    pushToken(tokens, technique.summary.en);
+    pushToken(tokens, technique.summary.de);
+
+    TAXONOMY_FIELDS.forEach((field) => {
+      const value = technique[field];
+      if (!value) return;
+      pushToken(tokens, value);
+      pushToken(tokens, getTaxonomyLabel('en', field, value));
+      pushToken(tokens, getTaxonomyLabel('de', field, value));
+      addSynonymTokens(tokens, value);
+    });
+
+    pushToken(tokens, gradeLabel(technique.level, 'en'));
+    pushToken(tokens, gradeLabel(technique.level, 'de'));
+
+    technique.tags.forEach((tag) => {
+      pushToken(tokens, tag);
+      addSynonymTokens(tokens, tag);
+    });
+
+    technique.versions.forEach((version) => {
+      pushToken(tokens, version.label);
+      pushToken(tokens, version.sensei);
+      pushToken(tokens, version.dojo);
+      pushToken(tokens, version.lineage);
+      pushToken(tokens, version.sourceUrl);
+
+      version.steps.en.forEach((step) => pushToken(tokens, step));
+      version.steps.de.forEach((step) => pushToken(tokens, step));
+
+      pushToken(tokens, version.uke.role.en);
+      pushToken(tokens, version.uke.role.de);
+      version.uke.notes.en.forEach((note) => pushToken(tokens, note));
+      version.uke.notes.de.forEach((note) => pushToken(tokens, note));
+
+      version.media.forEach((media) => {
+        pushToken(tokens, media.title);
+        pushToken(tokens, media.url);
+      });
+
+      version.keyPoints?.en.forEach((item) => pushToken(tokens, item));
+      version.keyPoints?.de.forEach((item) => pushToken(tokens, item));
+      version.commonMistakes?.en.forEach((item) => pushToken(tokens, item));
+      version.commonMistakes?.de.forEach((item) => pushToken(tokens, item));
+      if (version.context) {
+        pushToken(tokens, version.context.en);
+        pushToken(tokens, version.context.de);
+      }
+    });
+
+    const haystack = Array.from(tokens).join(' ');
+    return { technique, haystack };
+  });
+
+export const normalizeSearchQuery = (value: string): string[] => {
+  const compact = value.trim().toLowerCase();
+  if (!compact) return [];
+  const normalized = stripDiacritics(compact);
+  return normalized.split(/\s+/).filter(Boolean);
+};
+
+export const matchSearch = (haystack: string, queries: string[]): boolean =>
+  queries.every((query) => haystack.includes(query));
+
+export type { SearchEntry };

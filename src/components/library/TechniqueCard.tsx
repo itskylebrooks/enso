@@ -1,9 +1,11 @@
-import type { KeyboardEvent, ReactElement, ReactNode } from 'react';
-import { motion, type Variants, type Transition } from 'motion/react';
-import type { Copy } from '../../constants/i18n';
-import type { Locale, Progress, Technique } from '../../types';
-import { LevelBadge, EmphasizedName } from '../common';
-import { getTaxonomyLabel } from '../../i18n/taxonomy';
+import type { KeyboardEvent, ReactElement, ReactNode } from 'react'
+import { motion, type Transition, type Variants } from 'motion/react'
+
+import { EmphasizedName } from '@/components/ui/EmphasizedName'
+import { LevelBadge } from '@/components/ui/LevelBadge'
+import { getTaxonomyLabel } from '@/lib/i18n/taxonomy'
+import type { Copy } from '@/lib/i18n/copy'
+import type { Locale, Progress, Technique } from '@/types'
 
 type MotionProps = {
   variants: Variants;

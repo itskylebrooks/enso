@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState, type ReactElement } from 'react';
-import { motion } from 'motion/react';
-import type { Copy } from '../../constants/i18n';
-import { useFocusTrap } from '../../utils/useFocusTrap';
-import { useMotionPreferences } from '../ui/motion';
+import { useEffect, useRef, useState, type ReactElement } from 'react'
+import { motion } from 'motion/react'
+
+import { Modal } from '@/components/ui/Modal'
+import { useMotionPreferences } from '@/hooks/useMotionPreferences'
+import type { Copy } from '@/lib/i18n/copy'
 
 type ConfirmClearModalProps = {
   copy: Copy;
@@ -11,60 +12,35 @@ type ConfirmClearModalProps = {
 };
 
 export const ConfirmClearModal = ({ copy, onCancel, onConfirm }: ConfirmClearModalProps): ReactElement => {
-  const [value, setValue] = useState('');
-  const dialogRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const {
-    overlayMotion,
-    toggleTransition,
-    prefersReducedMotion,
-  } = useMotionPreferences();
-
-  useFocusTrap(true, dialogRef, onCancel);
+  const [value, setValue] = useState('')
+  const inputRef = useRef<HTMLInputElement>(null)
+  const { overlayMotion, toggleTransition, prefersReducedMotion } = useMotionPreferences()
 
   useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
+    inputRef.current?.focus()
+  }, [])
 
   const canConfirm = value === 'CLEAR';
 
   return (
-    <motion.div
-      className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/45"
-      variants={overlayMotion.backdrop}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-      transition={overlayMotion.transition}
-      onClick={onCancel}
-      style={{ backdropFilter: prefersReducedMotion ? 'blur(8px)' : undefined }}
+    <Modal
+      isOpen
+      onClose={onCancel}
+      labelledBy="confirm-clear-title"
+      panelClassName="w-full max-w-xs sm:max-w-sm"
     >
-      <motion.div
-        ref={dialogRef}
-        className="relative w-full max-w-sm surface rounded-xl border surface-border shadow-xl p-5 space-y-4"
-        variants={overlayMotion.panel}
-        initial="initial"
-        animate="animate"
-        exit="exit"
-        transition={overlayMotion.panelTransition}
-        onClick={(event) => event.stopPropagation()}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="confirm-clear-title"
-      >
+      <div className="surface rounded-xl border surface-border p-5 shadow-xl space-y-4">
         <h2 id="confirm-clear-title" className="text-lg font-semibold">
           {copy.confirmClearTitle}
         </h2>
-        <p className="text-sm text-subtle leading-relaxed">
-          {copy.confirmClearBody}
-        </p>
-        <label className="text-sm text-left space-y-2">
+        <p className="text-sm text-subtle leading-relaxed">{copy.confirmClearBody}</p>
+        <label className="text-left text-sm space-y-2">
           <span>{copy.confirmClearLabel}</span>
           <input
             ref={inputRef}
             value={value}
             onChange={(event) => setValue(event.target.value.toUpperCase())}
-            className="w-full px-3 py-2 rounded-lg border surface surface-border focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] uppercase tracking-[0.3em]"
+            className="w-full rounded-lg border surface surface-border px-3 py-2 uppercase tracking-[0.3em] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
             autoComplete="off"
             aria-required="true"
           />
@@ -73,10 +49,10 @@ export const ConfirmClearModal = ({ copy, onCancel, onConfirm }: ConfirmClearMod
           <motion.button
             type="button"
             onClick={() => {
-              setValue('');
-              onCancel();
+              setValue('')
+              onCancel()
             }}
-            className="px-4 py-2 rounded-lg border btn-tonal surface-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+            className="rounded-lg border px-4 py-2 btn-tonal surface-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
             whileTap={prefersReducedMotion ? undefined : { scale: 0.97 }}
             transition={toggleTransition}
           >
@@ -86,11 +62,11 @@ export const ConfirmClearModal = ({ copy, onCancel, onConfirm }: ConfirmClearMod
             type="button"
             onClick={() => {
               if (canConfirm) {
-                onConfirm();
-                setValue('');
+                onConfirm()
+                setValue('')
               }
             }}
-            className="px-4 py-2 rounded-lg border btn-contrast focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] disabled:opacity-60 disabled:cursor-not-allowed"
+            className="rounded-lg border px-4 py-2 btn-contrast focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] disabled:cursor-not-allowed disabled:opacity-60"
             whileTap={prefersReducedMotion ? undefined : { scale: 0.97 }}
             transition={toggleTransition}
             disabled={!canConfirm}
@@ -98,7 +74,7 @@ export const ConfirmClearModal = ({ copy, onCancel, onConfirm }: ConfirmClearMod
             {copy.confirmClearAction}
           </motion.button>
         </div>
-      </motion.div>
-    </motion.div>
-  );
+      </div>
+    </Modal>
+  )
 };
