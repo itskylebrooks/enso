@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type ReactElement } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import type { Copy } from '../../constants/i18n';
-import { CheckIcon, FolderPlusIcon, PlusIcon } from '../common/icons';
+import { CheckIcon, FolderPlusIcon, FolderCheckIcon, PlusIcon } from '../common/icons';
 import { useMotionPreferences } from '../ui/motion';
 
 type CollectionOption = {
@@ -25,6 +25,7 @@ export const AddToCollectionMenu = ({ copy, collections, onToggle, onCreate }: A
   const { prefersReducedMotion } = useMotionPreferences();
 
   const hasCollections = collections.length > 0;
+  const hasCheckedCollections = collections.some(collection => collection.checked);
 
   useEffect(() => {
     if (!open) return;
@@ -82,12 +83,19 @@ export const AddToCollectionMenu = ({ copy, collections, onToggle, onCreate }: A
           event.stopPropagation();
           setOpen((value) => !value);
         }}
-        className="p-2 rounded-lg border btn-tonal surface-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+        className={hasCheckedCollections 
+          ? "p-2 rounded-lg border bg-[var(--color-text)] text-[var(--color-bg)] border-[var(--color-text)] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-bg)]"
+          : "p-2 rounded-lg border btn-tonal surface-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+        }
         aria-haspopup="true"
         aria-expanded={open}
         aria-label={copy.collectionsAddTo}
       >
-        <FolderPlusIcon className="w-4 h-4" />
+        {hasCheckedCollections ? (
+          <FolderCheckIcon className="w-4 h-4" />
+        ) : (
+          <FolderPlusIcon className="w-4 h-4" />
+        )}
       </button>
       <AnimatePresence>
         {open && (

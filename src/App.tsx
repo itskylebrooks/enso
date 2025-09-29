@@ -494,18 +494,34 @@ export default function App(): ReactElement {
 
   const assignToCollection = (techniqueId: string, collectionId: string): void => {
     setDB((prev) => {
-      if (!prev.progress.some((entry) => entry.techniqueId === techniqueId && entry.bookmarked)) {
-        return prev;
+      // Automatically bookmark if not already bookmarked
+      const progressEntry = prev.progress.find((entry) => entry.techniqueId === techniqueId);
+      const isBookmarked = progressEntry?.bookmarked;
+
+      let nextProgress = prev.progress;
+      if (!isBookmarked) {
+        const now = Date.now();
+        if (progressEntry) {
+          nextProgress = prev.progress.map((p) =>
+            p.techniqueId === techniqueId ? { ...p, bookmarked: true, updatedAt: now } : p,
+          );
+        } else {
+          nextProgress = [
+            ...prev.progress,
+            { techniqueId, bookmarked: true, updatedAt: now },
+          ];
+        }
       }
 
       if (prev.bookmarkCollections.some((entry) => entry.techniqueId === techniqueId && entry.collectionId === collectionId)) {
-        return prev;
+        return { ...prev, progress: nextProgress };
       }
 
       const now = Date.now();
 
       return {
         ...prev,
+        progress: nextProgress,
         bookmarkCollections: [
           ...prev.bookmarkCollections,
           {
@@ -605,6 +621,10 @@ export default function App(): ReactElement {
         backLabel={techniqueBackLabel}
         onBack={() => closeTechnique()}
         onToggleBookmark={() => toggleBookmark(currentTechnique, currentProgress ?? null)}
+        collections={db.collections}
+        bookmarkCollections={db.bookmarkCollections}
+        onAssignToCollection={(collectionId) => assignToCollection(currentTechnique.id, collectionId)}
+        onRemoveFromCollection={(collectionId) => removeFromCollection(currentTechnique.id, collectionId)}
       />
     );
   } else if (techniqueNotFound) {

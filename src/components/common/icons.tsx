@@ -139,11 +139,17 @@ export const EditIcon = (props: SVGProps<SVGSVGElement>): ReactElement => (
 );
 
 export const FolderPlusIcon = (props: SVGProps<SVGSVGElement>): ReactElement => (
-  <svg {...baseProps} {...props} className={['lucide lucide-folder-plus-icon', props.className].filter(Boolean).join(' ')}>
-    <path d="m22 19-.001-11a2 2 0 0 0-2-2h-7.172a2 2 0 0 1-1.414-.586L9.172 4.172A2 2 0 0 0 7.758 3.586H4a2 2 0 0 0-2 2v14" />
-    <path d="M2 19a2 2 0 0 0 2 2h16" />
-    <path d="M12 11v6" />
-    <path d="M9 14h6" />
+  <svg {...baseProps} {...props} className={['lucide lucide-folder-plus-icon lucide-folder-plus', props.className].filter(Boolean).join(' ')}>
+    <path d="M12 10v6" />
+    <path d="M9 13h6" />
+    <path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z" />
+  </svg>
+);
+
+export const FolderCheckIcon = (props: SVGProps<SVGSVGElement>): ReactElement => (
+  <svg {...baseProps} {...props} className={['lucide lucide-folder-check-icon lucide-folder-check', props.className].filter(Boolean).join(' ')}>
+    <path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z" />
+    <path d="m9 13 2 2 4-4" />
   </svg>
 );
 
@@ -151,5 +157,25 @@ export const PencilIcon = (props: SVGProps<SVGSVGElement>): ReactElement => (
   <svg {...baseProps} {...props} className={['lucide lucide-pencil-icon', props.className].filter(Boolean).join(' ')}>
     <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" />
     <path d="m15 5 4 4" />
+  </svg>
+);
+
+export const ListIcon = (props: SVGProps<SVGSVGElement>): ReactElement => (
+  <svg {...baseProps} {...props} className={['lucide lucide-list-icon lucide-list', props.className].filter(Boolean).join(' ')}>
+    <path d="M3 5h.01" />
+    <path d="M3 12h.01" />
+    <path d="M3 19h.01" />
+    <path d="M8 5h13" />
+    <path d="M8 12h13" />
+    <path d="M8 19h13" />
+  </svg>
+);
+
+export const ListCheckIcon = (props: SVGProps<SVGSVGElement>): ReactElement => (
+  <svg {...baseProps} {...props} className={['lucide lucide-list-check-icon lucide-list-check', props.className].filter(Boolean).join(' ')}>
+    <path d="M16 5H3" />
+    <path d="M16 12H3" />
+    <path d="M11 19H3" />
+    <path d="m15 18 2 2 4-4" />
   </svg>
 );

@@ -1,7 +1,7 @@
 import type { ReactElement } from 'react';
 import { motion } from 'motion/react';
 import type { Copy } from '../../constants/i18n';
-import type { Locale, Progress, Technique } from '../../types';
+import type { Locale, Progress, Technique, Collection, BookmarkCollection } from '../../types';
 import { EmphasizedName, LevelBadge } from '../common';
 import { BookmarkIcon, BookmarkCheckIcon } from '../common/icons';
 import { MediaEmbed } from '../media/MediaEmbed';
@@ -9,6 +9,7 @@ import { classNames } from '../../utils/classNames';
 import { getTaxonomyLabel } from '../../i18n/taxonomy';
 import { stripDiacritics } from '../../utils/text';
 import { useMotionPreferences, defaultEase } from '../ui/motion';
+import { AddToCollectionMenu } from '../bookmarks/AddToCollectionMenu';
 
 const buildTags = (technique: Technique, locale: Locale): string[] => {
   const title = technique.name[locale]?.toLowerCase?.() ?? '';
@@ -46,6 +47,10 @@ type TechniquePageProps = {
   backLabel: string;
   onBack: () => void;
   onToggleBookmark: () => void;
+  collections: Collection[];
+  bookmarkCollections: BookmarkCollection[];
+  onAssignToCollection: (collectionId: string) => void;
+  onRemoveFromCollection: (collectionId: string) => void;
 };
 
 export const TechniquePage = ({
@@ -56,6 +61,10 @@ export const TechniquePage = ({
   backLabel,
   onBack,
   onToggleBookmark,
+  collections,
+  bookmarkCollections,
+  onAssignToCollection,
+  onRemoveFromCollection,
 }: TechniquePageProps): ReactElement => {
   const tags = buildTags(technique, locale);
   const steps = technique.steps[locale];
@@ -63,6 +72,28 @@ export const TechniquePage = ({
   const { mediaMotion, prefersReducedMotion, toggleTransition } = useMotionPreferences();
 
   const bookmarkedActive = Boolean(progress?.bookmarked);
+  
+  // Collection logic
+  const techniqueCollectionIds = new Set(
+    bookmarkCollections
+      .filter((entry) => entry.techniqueId === technique.id)
+      .map((entry) => entry.collectionId)
+  );
+  
+  const collectionOptions = collections.map((collection) => ({
+    id: collection.id,
+    name: collection.name,
+    icon: collection.icon ?? null,
+    checked: techniqueCollectionIds.has(collection.id),
+  }));
+  
+  const handleCollectionToggle = (collectionId: string, nextChecked: boolean) => {
+    if (nextChecked) {
+      onAssignToCollection(collectionId);
+    } else {
+      onRemoveFromCollection(collectionId);
+    }
+  };
 
   return (
     <div className="max-w-5xl mx-auto px-6 py-6 space-y-10">
@@ -102,36 +133,43 @@ export const TechniquePage = ({
           </div>
           <div className="flex flex-col items-end gap-3">
             <LevelBadge locale={locale} level={technique.level} />
-            <div className="inline-flex rounded-lg border surface-border overflow-hidden">
-              <motion.button
-                type="button"
-                onClick={onToggleBookmark}
-                aria-pressed={bookmarkedActive}
-                transition={toggleTransition}
-                whileTap={prefersReducedMotion ? undefined : { scale: 0.96 }}
-                className={classNames(
-                  'px-3 py-1.5 text-sm flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] transition-colors duration-150',
-                  bookmarkedActive
-                    ? 'bg-[var(--color-text)] text-[var(--color-bg)]'
-                    : 'bg-[var(--color-surface)] text-[var(--color-text)] hover:bg-[var(--color-surface-hover)]',
-                )}
-              >
-                <motion.span
-                  aria-hidden
-                  className="w-4 h-4 flex items-center justify-center"
-                  animate={bookmarkedActive ? { scale: 1, opacity: 1 } : { scale: 0.86, opacity: 0.85 }}
+            <div className="flex gap-2">
+              <AddToCollectionMenu
+                copy={copy}
+                collections={collectionOptions}
+                onToggle={handleCollectionToggle}
+              />
+              <div className="inline-flex rounded-lg border surface-border overflow-hidden">
+                <motion.button
+                  type="button"
+                  onClick={onToggleBookmark}
+                  aria-pressed={bookmarkedActive}
                   transition={toggleTransition}
+                  whileTap={prefersReducedMotion ? undefined : { scale: 0.96 }}
+                  className={classNames(
+                    'px-3 py-1.5 text-sm flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] transition-colors duration-150',
+                    bookmarkedActive
+                      ? 'bg-[var(--color-text)] text-[var(--color-bg)]'
+                      : 'bg-[var(--color-surface)] text-[var(--color-text)] hover:bg-[var(--color-surface-hover)]',
+                  )}
                 >
-                  {bookmarkedActive ? <BookmarkCheckIcon className="w-4 h-4" /> : <BookmarkIcon className="w-4 h-4" />}
-                </motion.span>
-                <motion.span
-                  className="overflow-hidden"
-                  animate={bookmarkedActive ? { x: 0, opacity: 1 } : { x: 0, opacity: 1 }}
-                  transition={toggleTransition}
-                >
-                  {copy.bookmark}
-                </motion.span>
-              </motion.button>
+                  <motion.span
+                    aria-hidden
+                    className="w-4 h-4 flex items-center justify-center"
+                    animate={bookmarkedActive ? { scale: 1, opacity: 1 } : { scale: 0.86, opacity: 0.85 }}
+                    transition={toggleTransition}
+                  >
+                    {bookmarkedActive ? <BookmarkCheckIcon className="w-4 h-4" /> : <BookmarkIcon className="w-4 h-4" />}
+                  </motion.span>
+                  <motion.span
+                    className="overflow-hidden"
+                    animate={bookmarkedActive ? { x: 0, opacity: 1 } : { x: 0, opacity: 1 }}
+                    transition={toggleTransition}
+                  >
+                    {copy.bookmark}
+                  </motion.span>
+                </motion.button>
+              </div>
             </div>
           </div>
         </div>
