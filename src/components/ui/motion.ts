@@ -78,6 +78,24 @@ export const reducedListItemVariants: Variants = {
   show: { opacity: 1 },
 };
 
+export const collapseVariants: Variants = {
+  open: {
+    opacity: 1,
+    height: 'auto',
+    overflow: 'hidden',
+  },
+  closed: {
+    opacity: 0,
+    height: 0,
+    overflow: 'hidden',
+  },
+};
+
+export const reducedCollapseVariants: Variants = {
+  open: { opacity: 1, height: 'auto' },
+  closed: { opacity: 0, height: 0 },
+};
+
 export const closeButtonVariants: Variants = {
   initial: { opacity: 0, y: 4 },
   animate: { opacity: 1, y: 0 },
@@ -136,6 +154,14 @@ export const useMotionPreferences = () => {
     [prefersReducedMotion],
   );
 
+  const collapseMotion = useMemo(
+    () => ({
+      variants: prefersReducedMotion ? reducedCollapseVariants : collapseVariants,
+      transition: prefersReducedMotion ? reducedPageTransition : { duration: 0.25, ease: defaultEase },
+    }),
+    [prefersReducedMotion],
+  );
+
   const getItemTransition = useCallback(
     (index: number): Transition =>
       prefersReducedMotion
@@ -157,6 +183,7 @@ export const useMotionPreferences = () => {
     overlayMotion,
     listMotion,
     mediaMotion,
+    collapseMotion,
     getItemTransition,
     toggleTransition,
     chipTransition,

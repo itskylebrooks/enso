@@ -1,11 +1,13 @@
 import { useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
 import type { Copy } from '../../constants/i18n';
 import type { Filters, Grade, Locale } from '../../types';
 import { classNames } from '../../utils/classNames';
 import { gradePalette } from '../../styles/belts';
 import { getLevelLabel, getOrderedTaxonomyValues, getTaxonomyLabel, type TaxonomyType } from '../../i18n/taxonomy';
 import { SectionTitle } from '../common';
+import { useMotionPreferences } from '../ui/motion';
 
 type FilterPanelProps = {
   copy: Copy;
@@ -189,22 +191,41 @@ type FilterSectionProps = {
   onToggle?: () => void;
 };
 
-const FilterSection = ({ title, options, selected, onSelect, available, isOpen = false, onToggle }: FilterSectionProps): ReactNode => (
-  <section className="space-y-3">
-    <button
-      type="button"
-      aria-expanded={isOpen}
-      onClick={onToggle}
-      className="flex w-full items-center justify-between text-left"
-    >
-      <SectionTitle>{title}</SectionTitle>
-      <span aria-hidden className="text-xs text-subtle">{isOpen ? '▾' : '▸'}</span>
-    </button>
-    {isOpen && (
-      <OptionList options={options} selected={selected} onSelect={onSelect} available={available} />
-    )}
-  </section>
-);
+const FilterSection = ({ title, options, selected, onSelect, available, isOpen = false, onToggle }: FilterSectionProps): ReactNode => {
+  const { collapseMotion } = useMotionPreferences();
+
+  return (
+    <section>
+      <button
+        type="button"
+        aria-expanded={isOpen}
+        onClick={onToggle}
+        className="flex w-full items-center justify-between text-left"
+      >
+        <SectionTitle>{title}</SectionTitle>
+        <motion.span
+          aria-hidden
+          className="text-xs text-subtle"
+          animate={{ rotate: isOpen ? 0 : -90 }}
+          transition={{ duration: 0.2, ease: 'easeInOut' }}
+        >
+          ▾
+        </motion.span>
+      </button>
+      <motion.div
+        className="overflow-hidden"
+        initial={false}
+        animate={isOpen ? 'open' : 'closed'}
+        variants={collapseMotion.variants}
+        transition={collapseMotion.transition}
+      >
+        <div className="pt-3">
+          <OptionList options={options} selected={selected} onSelect={onSelect} available={available} />
+        </div>
+      </motion.div>
+    </section>
+  );
+};
 
 type OptionListProps = {
   options: Option[];
