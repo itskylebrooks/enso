@@ -1,5 +1,5 @@
 import { parseTechnique } from '../content/schema';
-import { DB_VERSION, LOCALE_KEY, STORAGE_KEY, THEME_KEY } from '../constants/storage';
+import { APP_NAME, DB_VERSION, LOCALE_KEY, STORAGE_KEY, THEME_KEY } from '../constants/storage';
 import type { BookmarkCollection, Collection, DB, Locale, Progress, Technique, Theme } from '../types';
 
 // Load technique files directly from the content/techniques folder.
@@ -279,6 +279,7 @@ export const saveLocale = (locale: Locale): void => {
 export const exportDB = (db: DB): string =>
   JSON.stringify(
     {
+      appName: APP_NAME,
       ...db,
       version: DB_VERSION,
     },
@@ -287,9 +288,13 @@ export const exportDB = (db: DB): string =>
   );
 
 export const parseIncomingDB = (raw: string): DB => {
-  const parsed = JSON.parse(raw) as Partial<DB>;
+  const parsed = JSON.parse(raw) as Partial<DB> & { appName?: string };
   if (!parsed || typeof parsed !== 'object') {
     throw new Error('Invalid JSON payload');
+  }
+
+  if (parsed.appName !== APP_NAME) {
+    throw new Error('Not an Enso export file');
   }
 
   return migrateDB(parsed);
