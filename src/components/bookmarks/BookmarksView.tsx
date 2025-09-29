@@ -14,6 +14,7 @@ import { CollectionsSidebar } from './CollectionsSidebar';
 import { AddToCollectionMenu } from './AddToCollectionMenu';
 import { NameModal } from '../ui/modals/NameModal';
 import { ConfirmModal } from '../ui/modals/ConfirmModal';
+import { MobileCollections } from '../ui/MobileCollections';
 
 type SelectedCollectionId = 'all' | 'ungrouped' | string;
 
@@ -208,9 +209,9 @@ export const BookmarksView = ({
   };
 
   return (
-    <div className="grid md:grid-cols-[16rem,1fr] gap-6">
-      <aside className="surface border surface-border rounded-2xl p-3 h-max sticky top-20">
-        <CollectionsSidebar
+    <>
+      <div className="md:hidden">
+        <MobileCollections
           copy={copy}
           collections={orderedCollections.map((collection) => ({
             id: collection.id,
@@ -228,9 +229,30 @@ export const BookmarksView = ({
           isEditing={editing}
           onToggleEdit={() => setEditing((value) => !value)}
         />
-      </aside>
+      </div>
+      <div className="grid md:grid-cols-[16rem,1fr] gap-6">
+        <aside className="hidden md:block surface border surface-border rounded-2xl p-3 h-max sticky top-20">
+          <CollectionsSidebar
+            copy={copy}
+            collections={orderedCollections.map((collection) => ({
+              id: collection.id,
+              name: collection.name,
+              icon: collection.icon ?? null,
+              count: collectionCounts.get(collection.id) ?? 0,
+            }))}
+            selectedId={selectedCollectionId}
+            allCount={allCount}
+            ungroupedCount={ungroupedCount}
+            onSelect={handleCollectionSelect}
+            onCreate={openCreateModal}
+            onRename={openRenameModal}
+            onDelete={openDeleteModal}
+            isEditing={editing}
+            onToggleEdit={() => setEditing((value) => !value)}
+          />
+        </aside>
 
-      <section>
+        <section>
         <AnimatePresence mode="wait">
           <motion.div
             key={selectedCollectionId}
@@ -292,7 +314,8 @@ export const BookmarksView = ({
           )}
         </motion.div>
         </AnimatePresence>
-      </section>
+        </section>
+      </div>
 
       <AnimatePresence>
         {dialog?.type === 'create' && (
@@ -338,6 +361,6 @@ export const BookmarksView = ({
           />
         )}
       </AnimatePresence>
-    </div>
+    </>
   );
 };
