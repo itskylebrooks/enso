@@ -1,10 +1,10 @@
-import { forwardRef, useState, type PropsWithChildren, type ReactElement, type RefObject } from 'react';
+import { forwardRef, useState, useEffect, useRef, type PropsWithChildren, type ReactElement, type RefObject } from 'react';
 import { classNames } from '../../utils/classNames';
 import type { AppRoute } from '../../types';
 import type { Copy } from '../../constants/i18n';
 import { SearchIcon, SettingsIcon, MenuIcon, BookmarkIcon, PersonStandingIcon, BookOpenTextIcon } from '../common/icons';
-import { motion } from 'motion/react';
-import { useMotionPreferences } from '../ui/motion';
+import { motion, AnimatePresence } from 'motion/react';
+import { useMotionPreferences, defaultEase } from '../ui/motion';
 import { Logo } from '../common';
 
 type HeaderProps = {
@@ -27,7 +27,72 @@ export const Header = ({
   settingsButtonRef,
 }: HeaderProps): ReactElement => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { overlayMotion, prefersReducedMotion, toggleTransition } = useMotionPreferences();
+  const { overlayMotion, prefersReducedMotion } = useMotionPreferences();
+  const menuRef = useRef<HTMLDivElement>(null);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+
+  // Smoother mobile menu animation with slower exit
+  const menuVariants = prefersReducedMotion
+    ? {
+        initial: { opacity: 0 },
+        animate: { opacity: 1, transition: { duration: 0.05 } },
+        exit: { opacity: 0, transition: { duration: 0.05 } },
+      }
+    : {
+        initial: { opacity: 0, y: 12, scale: 0.98 },
+        animate: {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          // Keep snappy spring on enter
+          transition: overlayMotion.panelTransition,
+        },
+        exit: {
+          opacity: 0,
+          y: -8,
+          scale: 0.98,
+          // Make exit smoother and a bit longer so it reads
+          transition: { duration: 0.28, ease: defaultEase },
+        },
+      } as const;
+
+  // Auto-close menu on outside click or scroll
+  useEffect(() => {
+    if (!menuOpen) return;
+
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      const target = event.target as Node | null;
+      if (!target) return;
+      if (menuRef.current?.contains(target) || menuButtonRef.current?.contains(target)) {
+        return;
+      }
+      setMenuOpen(false);
+    };
+
+    const handleScroll = () => {
+      setMenuOpen(false);
+    };
+
+    const handleKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        setMenuOpen(false);
+        menuButtonRef.current?.focus();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+    window.addEventListener('scroll', handleScroll, true);
+    window.addEventListener('keydown', handleKey);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+      window.removeEventListener('scroll', handleScroll, true);
+      window.removeEventListener('keydown', handleKey);
+    };
+  }, [menuOpen]);
 
   return (
     <header className="surface border-b surface-border sticky top-0 z-20 backdrop-blur">
@@ -85,6 +150,7 @@ export const Header = ({
                 <SearchIcon className="w-5 h-5" />
               </IconButton>
               <button
+                ref={menuButtonRef}
                 type="button"
                 onClick={() => setMenuOpen((v) => !v)}
                 className="px-2 py-1.5 rounded-lg border btn-tonal surface-hover text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
@@ -95,15 +161,16 @@ export const Header = ({
               </button>
             </div>
 
-            {menuOpen && (
-              <motion.div
-                initial="initial"
-                animate="animate"
-                exit="exit"
-                variants={overlayMotion.panel}
-                transition={prefersReducedMotion ? { duration: 0.05 } : toggleTransition}
-                className="absolute right-0 mt-2 w-56 rounded-lg border surface border-[var(--color-border)] bg-[var(--color-surface)] shadow-lg z-30"
-              >
+            <AnimatePresence>
+              {menuOpen && (
+                <motion.div
+                  ref={menuRef}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                  variants={menuVariants}
+                  className="absolute -right-4 mt-4 w-48 rounded-lg border-2 border-[var(--color-text)]/20 bg-[var(--color-surface)] shadow-xl ring-1 ring-black/5 z-30"
+                >
                 <ul className="p-2">
                   <li>
                     <button
@@ -154,8 +221,9 @@ export const Header = ({
                     </button>
                   </li>
                 </ul>
-              </motion.div>
-            )}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </nav>
       </div>
