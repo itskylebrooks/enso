@@ -45,16 +45,15 @@ export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen }: Sea
 
   return (
     <motion.div
-      className="fixed inset-0 z-40 flex items-start justify-center pt-[10vh]"
+      className="fixed inset-0 z-40 flex items-start justify-center pt-[10vh] bg-black/45"
       variants={overlayMotion.backdrop}
       initial="initial"
       animate="animate"
       exit="exit"
       transition={overlayMotion.transition}
       onClick={onClose}
+      style={{ backdropFilter: prefersReducedMotion ? 'blur(8px)' : undefined }}
     >
-      <div className="absolute inset-0 bg-black/40 pointer-events-none" />
-      <div className="absolute inset-0 backdrop-blur-sm md:backdrop-blur pointer-events-none" />
       <motion.div
         ref={dialogRef}
         className="relative w-full max-w-xl surface rounded-2xl border surface-border shadow-xl overflow-hidden"
@@ -62,7 +61,7 @@ export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen }: Sea
         initial="initial"
         animate="animate"
         exit="exit"
-        transition={overlayMotion.transition}
+        transition={overlayMotion.panelTransition}
         onClick={(event) => event.stopPropagation()}
         role="dialog"
         aria-modal="true"
@@ -79,7 +78,7 @@ export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen }: Sea
           initial="initial"
           animate="animate"
           exit="exit"
-          transition={prefersReducedMotion ? { duration: 0.05 } : { duration: 0.12, ease: defaultEase }}
+          transition={prefersReducedMotion ? { duration: 0.05 } : { duration: 0.15, ease: defaultEase }}
           aria-label="Close"
         >
           <span aria-hidden>&times;</span>
@@ -107,7 +106,7 @@ export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen }: Sea
                 }}
                 className="w-full text-left px-3 py-2 surface-hover focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
                 whileHover={prefersReducedMotion ? undefined : { y: -1 }}
-                transition={prefersReducedMotion ? { duration: 0.05 } : { duration: 0.18, ease: defaultEase }}
+                transition={prefersReducedMotion ? { duration: 0.05 } : { duration: 0.2, ease: defaultEase }}
                 title={technique.name[locale]}
               >
                 <div className="font-medium">

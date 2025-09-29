@@ -30,16 +30,15 @@ export const ConfirmClearModal = ({ copy, onCancel, onConfirm }: ConfirmClearMod
 
   return (
     <motion.div
-      className="fixed inset-0 z-50 flex items-center justify-center px-4"
+      className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/45"
       variants={overlayMotion.backdrop}
       initial="initial"
       animate="animate"
       exit="exit"
       transition={overlayMotion.transition}
       onClick={onCancel}
+      style={{ backdropFilter: prefersReducedMotion ? 'blur(8px)' : undefined }}
     >
-      <div className="absolute inset-0 bg-black/50 pointer-events-none" />
-      <div className="absolute inset-0 backdrop-blur-sm md:backdrop-blur pointer-events-none" />
       <motion.div
         ref={dialogRef}
         className="relative w-full max-w-sm surface rounded-xl border surface-border shadow-xl p-5 space-y-4"
@@ -47,7 +46,7 @@ export const ConfirmClearModal = ({ copy, onCancel, onConfirm }: ConfirmClearMod
         initial="initial"
         animate="animate"
         exit="exit"
-        transition={overlayMotion.transition}
+        transition={overlayMotion.panelTransition}
         onClick={(event) => event.stopPropagation()}
         role="dialog"
         aria-modal="true"

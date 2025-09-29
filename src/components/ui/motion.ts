@@ -1,7 +1,8 @@
 import { useMemo, useCallback } from 'react';
 import { useReducedMotion, type Transition, type Variants } from 'motion/react';
 
-export const defaultEase = 'easeOut' as const;
+export const defaultEase = [0.16, 1, 0.3, 1] as const; // Custom cubic-bezier for smoother motion
+export const springEase = { type: 'spring', damping: 20, stiffness: 300 } as const;
 
 export const pageVariants: Variants = {
   initial: { opacity: 0, y: 8 },
@@ -15,21 +16,36 @@ export const reducedPageVariants: Variants = {
   exit: { opacity: 0 },
 };
 
-export const pageTransition: Transition = { duration: 0.18, ease: defaultEase };
+export const pageTransition: Transition = { duration: 0.25, ease: defaultEase };
 export const reducedPageTransition: Transition = { duration: 0.05 };
 
+// Enhanced backdrop with synchronized blur animation
 export const backdropVariants: Variants = {
+  initial: { 
+    opacity: 0,
+    backdropFilter: 'blur(0px)',
+  },
+  animate: { 
+    opacity: 1,
+    backdropFilter: 'blur(8px)',
+  },
+  exit: { 
+    opacity: 0,
+    backdropFilter: 'blur(0px)',
+  },
+};
+
+export const reducedBackdropVariants: Variants = {
   initial: { opacity: 0 },
   animate: { opacity: 1 },
   exit: { opacity: 0 },
 };
 
-export const reducedBackdropVariants = backdropVariants;
-
+// Improved panel animation with spring physics for smoothness
 export const panelVariants: Variants = {
-  initial: { opacity: 0, y: 6, scale: 0.98 },
+  initial: { opacity: 0, y: 20, scale: 0.95 },
   animate: { opacity: 1, y: 0, scale: 1 },
-  exit: { opacity: 0, y: -4, scale: 0.98 },
+  exit: { opacity: 0, y: -10, scale: 0.98 },
 };
 
 export const reducedPanelVariants: Variants = {
@@ -98,6 +114,7 @@ export const useMotionPreferences = () => {
       backdrop: prefersReducedMotion ? reducedBackdropVariants : backdropVariants,
       panel: prefersReducedMotion ? reducedPanelVariants : panelVariants,
       transition: prefersReducedMotion ? reducedPageTransition : pageTransition,
+      panelTransition: prefersReducedMotion ? reducedPageTransition : springEase,
       closeButton: prefersReducedMotion ? reducedCloseButtonVariants : closeButtonVariants,
     }),
     [prefersReducedMotion],
@@ -129,10 +146,10 @@ export const useMotionPreferences = () => {
 
   const toggleTransition: Transition = prefersReducedMotion
     ? { duration: 0.05 }
-    : { duration: 0.12, ease: defaultEase };
+    : { duration: 0.15, ease: defaultEase };
   const chipTransition: Transition = prefersReducedMotion
     ? { duration: 0.05 }
-    : { duration: 0.1, ease: defaultEase };
+    : { duration: 0.12, ease: defaultEase };
 
   return {
     prefersReducedMotion,

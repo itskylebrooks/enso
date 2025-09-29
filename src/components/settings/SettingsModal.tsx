@@ -40,7 +40,7 @@ export const SettingsModal = ({
 }: SettingsModalProps): ReactElement => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
-  const { overlayMotion, toggleTransition } = useMotionPreferences();
+  const { overlayMotion, toggleTransition, prefersReducedMotion } = useMotionPreferences();
 
   useFocusTrap(trapEnabled, dialogRef, onClose);
 
@@ -72,16 +72,15 @@ export const SettingsModal = ({
 
   return (
     <motion.div
-      className="fixed inset-0 z-40 flex items-center justify-center px-4 sm:px-0"
+      className="fixed inset-0 z-40 flex items-center justify-center px-4 sm:px-0 bg-black/45"
       variants={overlayMotion.backdrop}
       initial="initial"
       animate="animate"
       exit="exit"
       transition={overlayMotion.transition}
       onClick={onClose}
+      style={{ backdropFilter: prefersReducedMotion ? 'blur(8px)' : undefined }}
     >
-      <div className="absolute inset-0 bg-black/40 pointer-events-none" />
-      <div className="absolute inset-0 backdrop-blur-sm md:backdrop-blur pointer-events-none" />
       <motion.div
         ref={dialogRef}
         className="relative w-full max-w-lg surface rounded-2xl border surface-border shadow-xl overflow-hidden"
@@ -89,7 +88,7 @@ export const SettingsModal = ({
         initial="initial"
         animate="animate"
         exit="exit"
-        transition={overlayMotion.transition}
+        transition={overlayMotion.panelTransition}
         onClick={(event) => event.stopPropagation()}
         role="dialog"
         aria-modal="true"
