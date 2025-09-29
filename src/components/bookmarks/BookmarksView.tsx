@@ -1,5 +1,5 @@
 import { useMemo, useState, type ReactElement } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import type { Copy } from '../../constants/i18n';
 import type {
   BookmarkCollection,
@@ -249,14 +249,17 @@ export const BookmarksView = ({
           </div>
         </header>
 
-        <motion.div
-          className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
-          variants={listMotion.container}
-          initial="hidden"
-          animate="show"
-          layout
-        >
-          {visibleTechniques.map((technique, index) => {
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={selectedCollectionId}
+            className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 min-h-[280px]"
+            variants={listMotion.container}
+            initial="hidden"
+            animate="show"
+            exit="hidden"
+            layout
+          >
+            {visibleTechniques.map((technique, index) => {
             const assignedCollections = membershipByTechnique.get(technique.id) ?? new Set<string>();
             return (
               <TechniqueCard
@@ -292,13 +295,18 @@ export const BookmarksView = ({
               />
             );
           })}
-        </motion.div>
 
-        {visibleTechniques.length === 0 && (
-          <div className="py-10 text-sm text-subtle text-center border border-dashed border-[var(--color-border)] rounded-2xl">
-            {emptyStateMessage}
-          </div>
-        )}
+          {visibleTechniques.length === 0 && (
+            <motion.div
+              className="col-span-full flex items-center justify-center py-6 text-sm text-subtle text-center border border-dashed border-[var(--color-border)] rounded-2xl"
+              variants={listMotion.item}
+              transition={getItemTransition(0)}
+            >
+              <div className="max-w-lg px-4">{emptyStateMessage}</div>
+            </motion.div>
+          )}
+        </motion.div>
+        </AnimatePresence>
       </section>
 
       {dialog?.type === 'create' && (
