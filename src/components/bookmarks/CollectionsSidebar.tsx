@@ -41,7 +41,7 @@ export const CollectionsSidebar = ({
   const { listMotion, prefersReducedMotion } = useMotionPreferences();
 
   return (
-    <aside className="surface border surface-border rounded-2xl p-4 space-y-4 h-max md:sticky md:top-20" aria-label={copy.collectionsTitle}>
+    <div className="space-y-4" aria-label={copy.collectionsTitle}>
       <div className="flex items-center justify-between gap-2">
         <h2 className="text-sm font-semibold tracking-wide uppercase text-subtle">{copy.collectionsTitle}</h2>
         <div className="flex items-center gap-2">
@@ -149,7 +149,7 @@ export const CollectionsSidebar = ({
           </AnimatePresence>
         </LayoutGroup>
       </nav>
-    </aside>
+    </div>
   );
 };
 

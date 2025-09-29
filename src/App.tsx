@@ -702,22 +702,24 @@ export default function App(): ReactElement {
         )}
 
         {route === 'bookmarks' && (
-          <BookmarksView
-            copy={copy}
-            locale={locale}
-            techniques={db.techniques}
-            progress={db.progress}
-            collections={db.collections}
-            bookmarkCollections={db.bookmarkCollections}
-            selectedCollectionId={selectedCollectionId}
-            onSelectCollection={(id) => setSelectedCollectionId(id)}
-            onCreateCollection={createCollection}
-            onRenameCollection={renameCollection}
-            onDeleteCollection={deleteCollection}
-            onAssign={assignToCollection}
-            onUnassign={removeFromCollection}
-            onOpenTechnique={openTechnique}
-          />
+          <div className="max-w-6xl mx-auto px-4 py-4">
+            <BookmarksView
+              copy={copy}
+              locale={locale}
+              techniques={db.techniques}
+              progress={db.progress}
+              collections={db.collections}
+              bookmarkCollections={db.bookmarkCollections}
+              selectedCollectionId={selectedCollectionId}
+              onSelectCollection={(id) => setSelectedCollectionId(id)}
+              onCreateCollection={createCollection}
+              onRenameCollection={renameCollection}
+              onDeleteCollection={deleteCollection}
+              onAssign={assignToCollection}
+              onUnassign={removeFromCollection}
+              onOpenTechnique={openTechnique}
+            />
+          </div>
         )}
       </div>
     );

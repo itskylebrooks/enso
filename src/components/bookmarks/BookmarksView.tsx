@@ -124,10 +124,7 @@ export const BookmarksView = ({
     [techniques, bookmarkedIds],
   );
 
-  const selectedCollection = useMemo(
-    () => orderedCollections.find((collection) => collection.id === selectedCollectionId) ?? null,
-    [orderedCollections, selectedCollectionId],
-  );
+
 
   const visibleTechniqueIds = useMemo(() => {
     if (selectedCollectionId === 'all') {
@@ -157,18 +154,7 @@ export const BookmarksView = ({
   const allCount = bookmarkedIds.size;
   const ungroupedCount = ungroupedIds.size;
 
-  const viewTitle = useMemo(() => {
-    if (selectedCollectionId === 'all') {
-      return copy.progress;
-    }
-    if (selectedCollectionId === 'ungrouped') {
-      return `${copy.progress} · ${copy.collectionsUngrouped}`;
-    }
-    if (selectedCollection) {
-      return `${copy.progress} · ${selectedCollection.name}`;
-    }
-    return copy.progress;
-  }, [copy, selectedCollectionId, selectedCollection]);
+
 
   const emptyStateMessage = useMemo(() => {
     if (selectedCollectionId === 'all') {
@@ -223,33 +209,28 @@ export const BookmarksView = ({
 
   return (
     <div className="grid md:grid-cols-[16rem,1fr] gap-6">
-      <CollectionsSidebar
-        copy={copy}
-        collections={orderedCollections.map((collection) => ({
-          id: collection.id,
-          name: collection.name,
-          icon: collection.icon ?? null,
-          count: collectionCounts.get(collection.id) ?? 0,
-        }))}
-        selectedId={selectedCollectionId}
-        allCount={allCount}
-        ungroupedCount={ungroupedCount}
-        onSelect={handleCollectionSelect}
-        onCreate={openCreateModal}
-        onRename={openRenameModal}
-        onDelete={openDeleteModal}
-        isEditing={editing}
-        onToggleEdit={() => setEditing((value) => !value)}
-      />
+      <aside className="surface border surface-border rounded-2xl p-3 h-max sticky top-20">
+        <CollectionsSidebar
+          copy={copy}
+          collections={orderedCollections.map((collection) => ({
+            id: collection.id,
+            name: collection.name,
+            icon: collection.icon ?? null,
+            count: collectionCounts.get(collection.id) ?? 0,
+          }))}
+          selectedId={selectedCollectionId}
+          allCount={allCount}
+          ungroupedCount={ungroupedCount}
+          onSelect={handleCollectionSelect}
+          onCreate={openCreateModal}
+          onRename={openRenameModal}
+          onDelete={openDeleteModal}
+          isEditing={editing}
+          onToggleEdit={() => setEditing((value) => !value)}
+        />
+      </aside>
 
-      <section className="space-y-4">
-        <header className="flex items-center justify-between gap-3">
-          <h1 className="text-lg font-semibold tracking-tight">{viewTitle}</h1>
-          <div className="text-sm text-subtle">
-            {visibleTechniques.length} / {allCount}
-          </div>
-        </header>
-
+      <section>
         <AnimatePresence mode="wait">
           <motion.div
             key={selectedCollectionId}
