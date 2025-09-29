@@ -8,6 +8,8 @@ import { exportDB, parseIncomingDB } from '../../services/storageService';
 import { SectionTitle } from '../common';
 import { useFocusTrap } from '../../utils/useFocusTrap';
 import { useMotionPreferences } from '../ui/motion';
+// import version from package.json
+import pkg from '../../../package.json';
 
 type SettingsModalProps = {
   copy: Copy;
@@ -83,7 +85,7 @@ export const SettingsModal = ({
     >
       <motion.div
         ref={dialogRef}
-        className="relative w-full max-w-lg surface rounded-2xl border surface-border shadow-xl overflow-hidden"
+        className="relative w-full max-w-md surface rounded-2xl border surface-border shadow-xl overflow-hidden"
         variants={overlayMotion.panel}
         initial="initial"
         animate="animate"
@@ -101,7 +103,7 @@ export const SettingsModal = ({
           <motion.button
             type="button"
             onClick={onClose}
-            className="px-2 py-1 rounded-lg border btn-tonal surface-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+            className="px-2 py-1 text-sm rounded-lg border btn-tonal surface-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
             variants={overlayMotion.closeButton}
             initial="initial"
             animate="animate"
@@ -109,7 +111,10 @@ export const SettingsModal = ({
             transition={toggleTransition}
             aria-label="Close"
           >
-            Close
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x-icon lucide-x" aria-hidden>
+              <path d="M18 6 6 18" />
+              <path d="m6 6 12 12" />
+            </svg>
           </motion.button>
         </div>
         <div className="p-4 space-y-4">
@@ -174,19 +179,19 @@ export const SettingsModal = ({
             </div>
           </div>
           <div>
-            <SectionTitle>Data</SectionTitle>
+            <SectionTitle>{copy.bookmarks}</SectionTitle>
             <div className="mt-2 flex flex-wrap gap-2 items-center">
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="px-3 py-2 rounded-xl border btn-tonal surface-hover transition-soft motion-ease"
+                className="px-3 py-2 text-sm rounded-xl border btn-tonal surface-hover transition-soft motion-ease"
               >
                 {copy.import}
               </button>
               <button
                 type="button"
                 onClick={handleExport}
-                className="px-3 py-2 rounded-xl border btn-tonal surface-hover transition-soft motion-ease"
+                className="px-3 py-2 text-sm rounded-xl border btn-tonal surface-hover transition-soft motion-ease"
               >
                 {copy.export}
               </button>
@@ -194,10 +199,49 @@ export const SettingsModal = ({
                 type="button"
                 ref={clearButtonRef}
                 onClick={onRequestClear}
-                className="px-3 py-2 rounded-xl border btn-tonal surface-hover transition-soft motion-ease"
+                className="px-3 py-2 text-sm rounded-xl border btn-tonal surface-hover transition-soft motion-ease"
               >
                 {copy.clear}
               </button>
+            </div>
+          </div>
+          {/* Footer: full-width divider and centered content */}
+          <div className="-mx-4 mt-4">
+            <div className="pt-4 border-t surface-border text-center text-xs text-muted px-4">
+              <div>Enso {pkg.version}</div>
+              <div className="relative flex items-center justify-center py-1">
+                {/* left icon container, vertically centered with this row */}
+                <div className="absolute left-4 inset-y-0 flex items-center">
+                  <a href="/about" className="text-current" aria-label="About">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-info" aria-hidden>
+                      <circle cx="12" cy="12" r="10" />
+                      <path d="M12 16v-4" />
+                      <path d="M12 8h.01" />
+                    </svg>
+                  </a>
+                </div>
+
+                <div>© {new Date().getFullYear()} Kyle Brooks. All rights reserved.</div>
+
+                {/* right icon container, vertically centered with this row */}
+                <div className="absolute right-4 inset-y-0 flex items-center">
+                  <a href="https://itskylebrooks.vercel.app/" target="_blank" rel="noreferrer" className="text-current" aria-label="Kyle Brooks website">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-square-arrow-out-up-right" aria-hidden>
+                      <path d="M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6" />
+                      <path d="m21 3-9 9" />
+                      <path d="M15 3h6v6" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+
+              <div>
+                Icons by{' '}
+                <a href="https://lucide.dev/" target="_blank" rel="noreferrer" className="underline">
+                  Lucide
+                </a>
+                .
+              </div>
             </div>
           </div>
         </div>
