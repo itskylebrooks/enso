@@ -144,10 +144,11 @@ export const TechniquePage = ({
                   type="button"
                   onClick={onToggleBookmark}
                   aria-pressed={bookmarkedActive}
+                  aria-label={copy.bookmark}
                   transition={toggleTransition}
                   whileTap={prefersReducedMotion ? undefined : { scale: 0.96 }}
                   className={classNames(
-                    'px-3 py-1.5 text-sm flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] transition-colors duration-150',
+                    'p-2 text-sm flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] transition-colors duration-150',
                     bookmarkedActive
                       ? 'bg-[var(--color-text)] text-[var(--color-bg)]'
                       : 'bg-[var(--color-surface)] text-[var(--color-text)] hover:bg-[var(--color-surface-hover)]',
@@ -160,13 +161,6 @@ export const TechniquePage = ({
                     transition={toggleTransition}
                   >
                     {bookmarkedActive ? <BookmarkCheckIcon className="w-4 h-4" /> : <BookmarkIcon className="w-4 h-4" />}
-                  </motion.span>
-                  <motion.span
-                    className="overflow-hidden"
-                    animate={bookmarkedActive ? { x: 0, opacity: 1 } : { x: 0, opacity: 1 }}
-                    transition={toggleTransition}
-                  >
-                    {copy.bookmark}
                   </motion.span>
                 </motion.button>
               </div>
