@@ -100,15 +100,29 @@ export const FilterPanel = ({
 
   return (
     <div className="space-y-6">
-      <div className="flex items-baseline justify-between">
+      <div className="flex items-center justify-between">
         <SectionTitle>{copy.filters}</SectionTitle>
         {hasActiveFilters && (
           <button
             type="button"
             onClick={handleReset}
-            className="text-xs font-medium tracking-[0.2em] uppercase text-subtle transition-colors duration-150 hover:text-[var(--color-text)]"
+            aria-label={copy.resetFilters}
+            className="text-subtle transition-colors duration-150 hover:text-[var(--color-text)]"
           >
-            {copy.resetFilters}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M9 14 4 9l5-5" />
+              <path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11" />
+            </svg>
           </button>
         )}
       </div>
@@ -199,11 +213,10 @@ type OptionListProps = {
   onSelect: (value: string | undefined) => void;
 };
 
-const OptionList = ({ options, selected, available, onSelect }: OptionListProps): ReactNode => (
+const OptionList = ({ options, selected, onSelect }: OptionListProps): ReactNode => (
   <div className="space-y-2">
     {options.map(({ value, label, trailing }) => {
       const isActive = selected === value;
-      const isAvailable = available ? available.has(value) : true;
 
       return (
         <button
@@ -214,9 +227,8 @@ const OptionList = ({ options, selected, available, onSelect }: OptionListProps)
           className={classNames(
             'flex w-full items-center justify-between rounded-md border px-3 py-2 text-sm transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] hover:border-[var(--color-text)] hover:bg-[var(--color-surface-hover)]',
             isActive
-              ? 'bg-[var(--color-text)] text-[var(--color-bg)] border-[var(--color-text)] font-semibold shadow-sm hover:bg-[var(--color-text)]'
+              ? 'bg-[var(--color-text)] text-[var(--color-bg)] border-[var(--color-text)] shadow-sm hover:bg-[var(--color-text)]'
               : 'surface surface-border',
-            !isAvailable && !isActive && 'opacity-60',
           )}
         >
           <span className="truncate">{label}</span>
