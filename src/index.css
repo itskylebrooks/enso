@@ -168,3 +168,10 @@ button {
     box-shadow: none;
   }
 }
+
+/* When a card should be visually de-emphasized while an inline menu is open */
+.blur-card {
+  filter: blur(2px);
+  -webkit-filter: blur(2px);
+  opacity: 0.88;
+}

@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type ReactElement } from 'react';
+import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'motion/react';
 import type { Copy } from '../../constants/i18n';
 import { CheckIcon, FolderPlusIcon, FolderCheckIcon, PlusIcon } from '../common/icons';
@@ -16,16 +17,28 @@ type AddToCollectionMenuProps = {
   collections: CollectionOption[];
   onToggle: (collectionId: string, nextChecked: boolean) => void;
   onCreate?: () => void;
+  onOpen?: () => void;
+  onClose?: () => void;
 };
 
-export const AddToCollectionMenu = ({ copy, collections, onToggle, onCreate }: AddToCollectionMenuProps): ReactElement => {
+export const AddToCollectionMenu = ({ copy, collections, onToggle, onCreate, onOpen, onClose }: AddToCollectionMenuProps): ReactElement => {
   const [open, setOpen] = useState(false);
+  const [position, setPosition] = useState({ top: 0, left: 0 });
   const triggerRef = useRef<HTMLButtonElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const { prefersReducedMotion } = useMotionPreferences();
 
   const hasCollections = collections.length > 0;
   const hasCheckedCollections = collections.some(collection => collection.checked);
+
+  const updatePosition = () => {
+    if (!triggerRef.current) return;
+    const rect = triggerRef.current.getBoundingClientRect();
+    setPosition({
+      top: rect.bottom + window.scrollY + 4,
+      left: rect.right + window.scrollX - 224 // 224px = w-56
+    });
+  };
 
   useEffect(() => {
     if (!open) return;
@@ -58,6 +71,17 @@ export const AddToCollectionMenu = ({ copy, collections, onToggle, onCreate }: A
     };
   }, [open]);
 
+  // notify parent when open state changes
+  useEffect(() => {
+    if (open) {
+      onOpen?.();
+    } else {
+      onClose?.();
+    }
+    // only want to run when open changes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
+
   useEffect(() => {
     if (!open) return;
     const firstFocusable = menuRef.current?.querySelector<HTMLButtonElement>('button');
@@ -81,6 +105,9 @@ export const AddToCollectionMenu = ({ copy, collections, onToggle, onCreate }: A
         onClick={(event) => {
           event.preventDefault();
           event.stopPropagation();
+          if (!open) {
+            updatePosition();
+          }
           setOpen((value) => !value);
         }}
         className={hasCheckedCollections 
@@ -97,8 +124,8 @@ export const AddToCollectionMenu = ({ copy, collections, onToggle, onCreate }: A
           <FolderPlusIcon className="w-4 h-4" />
         )}
       </button>
-      <AnimatePresence>
-        {open && (
+      {open && createPortal(
+        <AnimatePresence>
           <motion.div
             ref={menuRef}
             role="menu"
@@ -107,11 +134,12 @@ export const AddToCollectionMenu = ({ copy, collections, onToggle, onCreate }: A
             initial="initial"
             animate="animate"
             exit="exit"
-            className="absolute right-0 mt-1 w-56 rounded-lg border surface surface-border shadow-lg z-30 overflow-hidden"
+            className="fixed w-56 rounded-lg border surface surface-border shadow-lg z-50 overflow-hidden"
+            style={{ top: position.top, left: position.left }}
             onClick={(event) => event.stopPropagation()}
           >
             {hasCollections ? (
-              <ul className="max-h-64 overflow-y-auto py-1">
+              <ul className="max-h-[176px] overflow-y-auto py-1">
                 {collections.map((collection) => (
                   <li key={collection.id}>
                     <button
@@ -123,6 +151,7 @@ export const AddToCollectionMenu = ({ copy, collections, onToggle, onCreate }: A
                         event.preventDefault();
                         event.stopPropagation();
                         onToggle(collection.id, !collection.checked);
+                        setOpen(false);
                       }}
                     >
                       <span className="flex items-center gap-2 min-w-0">
@@ -155,8 +184,9 @@ export const AddToCollectionMenu = ({ copy, collections, onToggle, onCreate }: A
               </div>
             )}
           </motion.div>
-        )}
-      </AnimatePresence>
+        </AnimatePresence>,
+        document.body
+      )}
     </div>
   );
 };

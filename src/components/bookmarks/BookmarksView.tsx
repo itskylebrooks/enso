@@ -59,6 +59,7 @@ export const BookmarksView = ({
   const { listMotion, getItemTransition, prefersReducedMotion } = useMotionPreferences();
   const [dialog, setDialog] = useState<DialogState>(null);
   const [editing, setEditing] = useState(false);
+  const [activeCardId, setActiveCardId] = useState<string | null>(null);
 
   const progressById = useMemo(
     () => Object.fromEntries(progress.map((entry) => [entry.techniqueId, entry])),
@@ -273,6 +274,7 @@ export const BookmarksView = ({
                 variants={listMotion.item}
                 getTransition={getItemTransition}
                 prefersReducedMotion={prefersReducedMotion}
+                isDimmed={activeCardId === technique.id}
                 actionSlot={
                   <AddToCollectionMenu
                     copy={copy}
@@ -290,6 +292,8 @@ export const BookmarksView = ({
                       }
                     }}
                     onCreate={openCreateModal}
+                    onOpen={() => setActiveCardId(technique.id)}
+                    onClose={() => setActiveCardId((cur) => (cur === technique.id ? null : cur))}
                   />
                 }
               />

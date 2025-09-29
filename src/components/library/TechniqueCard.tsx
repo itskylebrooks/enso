@@ -19,6 +19,7 @@ export type TechniqueCardProps = {
   onSelect: (slug: string) => void;
   motionIndex: number;
   actionSlot?: ReactNode;
+  isDimmed?: boolean;
 } & MotionProps;
 
 export const TechniqueCard = ({
@@ -31,6 +32,7 @@ export const TechniqueCard = ({
   getTransition,
   prefersReducedMotion,
   actionSlot,
+  isDimmed,
 }: TechniqueCardProps): ReactElement => {
   const stanceLabel = technique.stance ? getTaxonomyLabel(locale, 'stance', technique.stance) : null;
   const weaponLabel =
@@ -55,11 +57,15 @@ export const TechniqueCard = ({
       tabIndex={0}
       onClick={handleActivate}
       onKeyDown={handleKeyDown}
-      className="surface border surface-border rounded-2xl p-4 flex flex-col gap-3 text-left"
+      className={
+        `surface border surface-border rounded-2xl p-4 flex flex-col gap-3 text-left` +
+        (isDimmed ? ' pointer-events-none opacity-70 blur-card' : '')
+      }
       variants={variants}
       transition={getTransition(motionIndex)}
       whileHover={prefersReducedMotion ? undefined : { y: -2, boxShadow: '0 16px 30px -22px rgba(15,23,42,0.35)' }}
       whileTap={prefersReducedMotion ? undefined : { scale: 0.99 }}
+      animate={isDimmed && !prefersReducedMotion ? { y: -2, boxShadow: '0 16px 30px -22px rgba(15,23,42,0.35)' } : {}}
       title={technique.name[locale]}
     >
       <div className="flex items-start justify-between gap-3">
