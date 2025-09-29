@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'motion/react';
 import type { Copy } from '../../constants/i18n';
 import { CheckIcon, FolderPlusIcon, FolderCheckIcon, PlusIcon } from '../common/icons';
 import { useMotionPreferences } from '../ui/motion';
+import useLockBodyScroll from '../../utils/useLockBodyScroll';
 
 type CollectionOption = {
   id: string;
@@ -28,15 +29,35 @@ export const AddToCollectionMenu = ({ copy, collections, onToggle, onCreate, onO
   const menuRef = useRef<HTMLDivElement>(null);
   const { prefersReducedMotion } = useMotionPreferences();
 
+  // Lock body scroll on mobile when menu is open
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+  useLockBodyScroll(open && isMobile);
+
   const hasCollections = collections.length > 0;
   const hasCheckedCollections = collections.some(collection => collection.checked);
 
   const updatePosition = () => {
     if (!triggerRef.current) return;
     const rect = triggerRef.current.getBoundingClientRect();
+    const menuWidth = 224; // 224px = w-56
+    const viewportWidth = window.innerWidth;
+    
+    // For mobile, center the menu on the card/button
+    // For desktop, position to the right of the button
+    let left;
+    if (viewportWidth <= 768) { // Mobile breakpoint
+      // Center the menu horizontally on the trigger
+      left = rect.left + (rect.width / 2) - (menuWidth / 2);
+      // Ensure it doesn't go off-screen
+      left = Math.max(8, Math.min(left, viewportWidth - menuWidth - 8));
+    } else {
+      // Desktop: position to the right
+      left = rect.right - menuWidth;
+    }
+    
     setPosition({
-      top: rect.bottom + window.scrollY + 4,
-      left: rect.right + window.scrollX - 224 // 224px = w-56
+      top: rect.bottom + 4,
+      left: left
     });
   };
 
@@ -60,14 +81,26 @@ export const AddToCollectionMenu = ({ copy, collections, onToggle, onCreate, onO
       }
     };
 
+    const handleScroll = () => {
+      updatePosition();
+    };
+
+    const handleResize = () => {
+      updatePosition();
+    };
+
     document.addEventListener('mousedown', handleClickOutside);
     document.addEventListener('touchstart', handleClickOutside);
     window.addEventListener('keydown', handleKey);
+    window.addEventListener('scroll', handleScroll, true); // Use capture to catch all scroll events
+    window.addEventListener('resize', handleResize);
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('touchstart', handleClickOutside);
       window.removeEventListener('keydown', handleKey);
+      window.removeEventListener('scroll', handleScroll, true);
+      window.removeEventListener('resize', handleResize);
     };
   }, [open]);
 
@@ -135,11 +168,14 @@ export const AddToCollectionMenu = ({ copy, collections, onToggle, onCreate, onO
             animate="animate"
             exit="exit"
             className="fixed w-56 rounded-lg border surface surface-border shadow-lg z-50 overflow-hidden"
-            style={{ top: position.top, left: position.left }}
+            style={{ 
+              top: position.top, 
+              left: position.left
+            }}
             onClick={(event) => event.stopPropagation()}
           >
             {hasCollections ? (
-              <ul className="max-h-[176px] overflow-y-auto py-1">
+              <ul className="py-1 max-h-32 overflow-y-auto">
                 {collections.map((collection) => (
                   <li key={collection.id}>
                     <button
