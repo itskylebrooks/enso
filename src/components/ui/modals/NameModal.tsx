@@ -79,22 +79,25 @@ export const NameModal = ({ strings, initialName = '', onCancel, onConfirm }: Na
         aria-labelledby="collection-name-title"
         onClick={(event) => event.stopPropagation()}
       >
-        <form className="space-y-4" onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}>
           <h2 id="collection-name-title" className="text-lg font-semibold">
             {strings.title}
           </h2>
-          <label className="text-sm space-y-2">
-            <span>{strings.nameLabel}</span>
-            <input
-              ref={nameInputRef}
-              value={name}
-              onChange={(event) => setName(event.target.value.slice(0, maxNameLength))}
-              className="w-full px-3 py-2 rounded-lg border surface surface-border focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
-              maxLength={maxNameLength}
-              required
-            />
-          </label>
-          <div className="flex justify-end gap-2 pt-1">
+          <div className={initialName ? 'mt-3' : 'mt-4'}>
+            <label className="text-sm space-y-2">
+              {/* Hide the explicit 'Name' label when renaming (initialName provided) */}
+              {!initialName && <span>{strings.nameLabel}</span>}
+              <input
+                ref={nameInputRef}
+                value={name}
+                onChange={(event) => setName(event.target.value.slice(0, maxNameLength))}
+                className="w-full px-3 py-2 rounded-lg border surface surface-border focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[color:var(--color-text)/0.12]"
+                maxLength={maxNameLength}
+                required
+              />
+            </label>
+          </div>
+          <div className="flex justify-end gap-2 mt-4">
             <motion.button
               type="button"
               onClick={onCancel}
