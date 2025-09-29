@@ -45,7 +45,7 @@ export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen }: Sea
 
   return (
     <motion.div
-      className="fixed inset-0 z-40 flex items-start justify-center pt-[10vh] bg-black/45"
+      className="fixed inset-0 z-40 flex items-start justify-center pt-[15vh] px-4 bg-black/45"
       variants={overlayMotion.backdrop}
       initial="initial"
       animate="animate"
@@ -56,7 +56,7 @@ export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen }: Sea
     >
       <motion.div
         ref={dialogRef}
-        className="relative w-full max-w-xl surface rounded-2xl border surface-border shadow-xl overflow-hidden"
+        className="relative w-full max-w-xl"
         variants={overlayMotion.panel}
         initial="initial"
         animate="animate"
@@ -70,33 +70,35 @@ export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen }: Sea
         <h2 id="search-title" className="sr-only">
           {copy.searchBtn}
         </h2>
-        <motion.button
-          type="button"
-          onClick={onClose}
-          className="absolute right-6 top-4 text-lg text-subtle hover:text-[var(--color-text)] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
-          variants={overlayMotion.closeButton}
-          initial="initial"
-          animate="animate"
-          exit="exit"
-          transition={prefersReducedMotion ? { duration: 0.05 } : { duration: 0.15, ease: defaultEase }}
-          aria-label="Close"
-        >
-          <span aria-hidden>&times;</span>
-          <span className="sr-only">Close</span>
-        </motion.button>
-        <div className="p-3 border-b surface-border flex items-center gap-2">
-          <span className="text-muted" aria-hidden>
-            <SearchIcon className="w-4 h-4" />
-          </span>
-          <input
-            ref={inputRef}
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder={copy.search}
-            className="w-full px-2 py-1.5 rounded-lg border surface surface-border focus:outline-none"
-          />
+        <div className="relative">
+          <div className="p-3 flex items-center gap-2 surface rounded-2xl border surface-border shadow-xl">
+            <span className="text-muted" aria-hidden>
+              <SearchIcon className="w-4 h-4" />
+            </span>
+            <input
+              ref={inputRef}
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder={copy.search}
+              className="w-full bg-transparent focus:outline-none"
+            />
+          </div>
+          <motion.button
+            type="button"
+            onClick={onClose}
+            className="absolute right-3 top-1.5 p-2 text-lg text-subtle hover:text-[var(--color-text)] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] rounded-lg"
+            variants={overlayMotion.closeButton}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={prefersReducedMotion ? { duration: 0.05 } : { duration: 0.15, ease: defaultEase }}
+            aria-label="Close"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            <span className="sr-only">Close</span>
+          </motion.button>
         </div>
-        <ul className="max-h-80 overflow-auto">
+        <ul className="mt-2 max-h-80 overflow-auto surface rounded-2xl border surface-border shadow-xl">
           {results.map((technique) => (
             <li key={technique.id}>
               <motion.button
