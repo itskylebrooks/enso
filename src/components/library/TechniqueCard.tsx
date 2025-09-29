@@ -81,7 +81,7 @@ export const TechniqueCard = ({
       </div>
 
       <p className="text-sm text-muted leading-relaxed">
-        {technique.description[locale]}
+        {technique.summary[locale] ?? technique.summary.en}
       </p>
 
       <div className="mt-auto flex items-end justify-between gap-4 pt-1">

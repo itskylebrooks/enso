@@ -1,38 +1,36 @@
 import type { ReactElement } from 'react';
-import type { Technique } from '../../types';
+import type { TechniqueVersion } from '../../types';
 
 type MediaEmbedProps = {
-  media: Technique['media'][number];
+  media: TechniqueVersion['media'][number];
 };
 
 export const MediaEmbed = ({ media }: MediaEmbedProps): ReactElement => {
-  if (media.type === 'youtube') {
+  if (media.type === 'youtube' || media.type === 'vimeo') {
+    const title = media.title ?? (media.type === 'youtube' ? 'YouTube' : 'Vimeo');
     return (
       <div className="aspect-video w-full overflow-hidden rounded-xl border surface-border surface">
         <iframe
-          className="w-full h-full"
+          className="h-full w-full"
           src={media.url}
-          title={media.title ?? 'YouTube'}
+          title={title}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
+          loading="lazy"
         />
       </div>
     );
   }
 
-  if (media.type === 'image') {
-    return (
-      <img
-        src={media.url}
-        alt={media.title ?? 'Image'}
-        className="w-full rounded-xl border surface-border object-cover"
-      />
-    );
-  }
-
   return (
-    <a href={media.url} target="_blank" rel="noreferrer" className="text-blue-600 underline text-sm">
-      {media.title ?? media.url}
+    <a
+      href={media.url}
+      target="_blank"
+      rel="noreferrer"
+      className="inline-flex items-center gap-2 rounded-lg border border-white/10 px-3 py-2 text-sm text-[var(--color-text)] underline-offset-4 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+    >
+      <span>{media.title ?? media.url}</span>
+      <span aria-hidden>↗</span>
     </a>
   );
 };

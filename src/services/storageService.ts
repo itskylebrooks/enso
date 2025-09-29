@@ -1,6 +1,6 @@
 import { parseTechnique } from '../content/schema';
 import { APP_NAME, DB_VERSION, LOCALE_KEY, STORAGE_KEY, THEME_KEY } from '../constants/storage';
-import type { BookmarkCollection, Collection, DB, Locale, Progress, Technique, Theme } from '../types';
+import type { BookmarkCollection, Collection, DB, Locale, Progress, Technique, TechniqueVersion, Theme } from '../types';
 
 // Load technique files directly from the content/techniques folder.
 // Vite's import.meta.glob with { eager: true } returns the parsed JSON modules at build time.
@@ -16,36 +16,63 @@ const normalizeOptional = (value: string | undefined | null): string | undefined
   return trimmed.length > 0 ? trimmed : undefined;
 };
 
-const normalizeTechnique = (technique: Technique): Technique => {
-  const uke = technique.uke
-    ? {
-        role: technique.uke.role
-          ? {
-              en: technique.uke.role.en.trim(),
-              de: technique.uke.role.de.trim(),
-            }
-          : undefined,
-        notes: technique.uke.notes
-          ? {
-              en: technique.uke.notes.en.map(note => note.trim()).filter(note => note.length > 0),
-              de: technique.uke.notes.de.map(note => note.trim()).filter(note => note.length > 0),
-            }
-          : undefined,
-      }
-    : null;
+const normalizeLocalizedString = (value: { en: string; de: string }) => ({
+  en: value.en.trim(),
+  de: value.de.trim(),
+});
 
-  const variations = Array.from(new Set(technique.variations.map((entry) => entry.trim()).filter(Boolean)));
+const normalizeLocalizedArray = (value: { en: string[]; de: string[] }) => {
+  const entries: Array<{ en: string; de: string }> = [];
+  for (let index = 0; index < value.en.length; index += 1) {
+    const en = (value.en[index] ?? '').trim();
+    const de = (value.de[index] ?? '').trim();
+    if (en.length === 0 && de.length === 0) continue;
+    entries.push({ en, de });
+  }
 
   return {
-    ...technique,
-    jp: normalizeOptional(technique.jp ?? undefined),
-    attack: normalizeOptional(technique.attack ?? undefined),
-    stance: normalizeOptional(technique.stance ?? undefined),
-    weapon: normalizeOptional(technique.weapon ?? undefined),
-    uke: uke && ((uke.role?.en && uke.role.en.length > 0) || (uke.notes?.en && uke.notes.en.length > 0)) ? uke : null,
-    variations,
+    en: entries.map((entry) => entry.en),
+    de: entries.map((entry) => entry.de),
   };
 };
+
+const normalizeVersion = (version: TechniqueVersion): TechniqueVersion => {
+  const normalized: TechniqueVersion = {
+    ...version,
+    label: version.label.trim(),
+    sensei: normalizeOptional(version.sensei),
+    dojo: normalizeOptional(version.dojo),
+    lineage: normalizeOptional(version.lineage),
+    sourceUrl: normalizeOptional(version.sourceUrl),
+    lastUpdated: normalizeOptional(version.lastUpdated),
+    steps: normalizeLocalizedArray(version.steps),
+    uke: {
+      role: normalizeLocalizedString(version.uke.role),
+      notes: normalizeLocalizedArray(version.uke.notes),
+    },
+    media: version.media.map((item) => ({
+      type: item.type,
+      url: item.url.trim(),
+      title: item.title ? item.title.trim() : undefined,
+    })),
+    keyPoints: version.keyPoints ? normalizeLocalizedArray(version.keyPoints) : undefined,
+    commonMistakes: version.commonMistakes ? normalizeLocalizedArray(version.commonMistakes) : undefined,
+    context: version.context ? normalizeLocalizedString(version.context) : undefined,
+  };
+
+  return normalized;
+};
+
+const normalizeTechnique = (technique: Technique): Technique => ({
+  ...technique,
+  jp: normalizeOptional(technique.jp ?? undefined),
+  attack: normalizeOptional(technique.attack ?? undefined),
+  stance: normalizeOptional(technique.stance ?? undefined),
+  weapon: normalizeOptional(technique.weapon ?? undefined),
+  summary: normalizeLocalizedString(technique.summary),
+  tags: Array.from(new Set(technique.tags.map((tag) => tag.trim()).filter((tag) => tag.length > 0))),
+  versions: technique.versions.map(normalizeVersion),
+});
 
 const seedTechniques: Technique[] = Object.keys(techniqueModules)
   .map((filePath) => {
@@ -135,27 +162,28 @@ const ensureCollections = (rawCollections: Collection[]): Collection[] => {
   if (!Array.isArray(rawCollections)) return [];
 
   const now = Date.now();
-  const sanitized = rawCollections
-    .map((entry) => {
-      if (!entry || typeof entry !== 'object') return null;
-      const { id, name, icon, sortOrder, createdAt, updatedAt } = entry as Partial<Collection>;
-      if (typeof id !== 'string' || id.trim().length === 0) return null;
-      if (typeof name !== 'string' || name.trim().length === 0) return null;
-      const cleanedIcon = typeof icon === 'string' && icon.trim().length > 0 ? icon.trim() : null;
-      const created = typeof createdAt === 'number' ? createdAt : now;
-      const updated = typeof updatedAt === 'number' ? updatedAt : created;
-      const order = Number.isFinite(sortOrder) ? Number(sortOrder) : now;
+  const sanitized: Collection[] = [];
 
-      return {
-        id,
-        name: name.trim().slice(0, 40),
-        icon: cleanedIcon,
-        sortOrder: order,
-        createdAt: created,
-        updatedAt: updated,
-      } satisfies Collection;
-    })
-    .filter((entry): entry is Collection => Boolean(entry));
+  rawCollections.forEach((entry) => {
+    if (!entry || typeof entry !== 'object') return;
+    const { id, name, icon, sortOrder, createdAt, updatedAt } = entry as Partial<Collection>;
+    if (typeof id !== 'string' || id.trim().length === 0) return;
+    if (typeof name !== 'string' || name.trim().length === 0) return;
+
+    const cleanedIcon = typeof icon === 'string' && icon.trim().length > 0 ? icon.trim() : null;
+    const created = typeof createdAt === 'number' ? createdAt : now;
+    const updated = typeof updatedAt === 'number' ? updatedAt : created;
+    const order = Number.isFinite(sortOrder) ? Number(sortOrder) : now;
+
+    sanitized.push({
+      id,
+      name: name.trim().slice(0, 40),
+      icon: cleanedIcon,
+      sortOrder: order,
+      createdAt: created,
+      updatedAt: updated,
+    });
+  });
 
   return sanitized
     .sort((a, b) => a.sortOrder - b.sortOrder)

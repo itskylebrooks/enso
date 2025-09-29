@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { Technique } from '../types';
+import type { Technique, TechniqueVersion } from '../types';
 
 const gradeValues = [
   'kyu5',
@@ -15,48 +15,39 @@ const gradeValues = [
 ] as const;
 
 const mediaSchema = z.object({
-  type: z.enum(['youtube', 'image', 'file']),
+  type: z.enum(['youtube', 'vimeo', 'link']),
   url: z.string().min(1, 'media url must not be empty'),
   title: z.string().optional(),
 });
 
-const ukeSchema = z.object({
-  role: z.object({
-    en: z.string().min(1, 'uke.role.en must not be empty'),
-    de: z.string().min(1, 'uke.role.de must not be empty'),
-  }).optional(),
-  notes: z.object({
-    en: z.array(z.string().min(1, 'uke.notes.en items must not be empty')),
-    de: z.array(z.string().min(1, 'uke.notes.de items must not be empty')),
-  }).optional(),
+const localizedString = z.object({
+  en: z.string().min(1),
+  de: z.string().min(1),
 });
 
-export const techniqueZ = z
+const localizedStringArray = z.object({
+  en: z.array(z.string().min(1)),
+  de: z.array(z.string().min(1)),
+});
+
+const versionSchema = z
   .object({
-    id: z.string().min(1, 'id is required'),
-    slug: z.string().min(1, 'slug is required'),
-    name: z.object({
-      en: z.string().min(1, 'name.en is required'),
-      de: z.string().min(1, 'name.de is required'),
+    id: z.string().min(1, 'version id is required'),
+    label: z.string().min(1, 'version label is required'),
+    sensei: z.string().optional(),
+    dojo: z.string().optional(),
+    lineage: z.string().optional(),
+    sourceUrl: z.string().url('sourceUrl must be a valid url').optional(),
+    lastUpdated: z.string().datetime().optional(),
+    steps: localizedStringArray,
+    uke: z.object({
+      role: localizedString,
+      notes: localizedStringArray,
     }),
-    jp: z.string().optional(),
-    category: z.string().min(1, 'category is required'),
-    attack: z.string().optional(),
-    stance: z.string().optional(),
-    weapon: z.string().optional(),
-    level: z.enum(gradeValues),
-    description: z.object({
-      en: z.string().min(1, 'description.en is required'),
-      de: z.string().min(1, 'description.de is required'),
-    }),
-    steps: z.object({
-      en: z.array(z.string().min(1)),
-      de: z.array(z.string().min(1)),
-    }),
-    uke: ukeSchema.nullable().optional().default(null),
     media: z.array(mediaSchema),
-    tags: z.array(z.string().min(1)).optional(),
-    variations: z.array(z.string().min(1)).optional().default([]),
+    keyPoints: localizedStringArray.optional(),
+    commonMistakes: localizedStringArray.optional(),
+    context: localizedString.optional(),
   })
   .superRefine((value, ctx) => {
     if (value.steps.en.length !== value.steps.de.length) {
@@ -66,7 +57,48 @@ export const techniqueZ = z
         path: ['steps'],
       });
     }
+
+    if (value.uke.notes.en.length !== value.uke.notes.de.length) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'uke.notes.en and uke.notes.de must contain the same number of entries',
+        path: ['uke', 'notes'],
+      });
+    }
+
+    const checkArrayLength = (
+      field: keyof Pick<TechniqueVersion, 'keyPoints' | 'commonMistakes'>,
+      path: string[],
+    ) => {
+      const valueAtField = value[field];
+      if (!valueAtField) return;
+      if (valueAtField.en.length !== valueAtField.de.length) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: `${path.join('.')} entries must be in both locales`,
+          path,
+        });
+      }
+    };
+
+    checkArrayLength('keyPoints', ['keyPoints']);
+    checkArrayLength('commonMistakes', ['commonMistakes']);
   });
+
+export const techniqueZ = z.object({
+  id: z.string().min(1, 'id is required'),
+  slug: z.string().min(1, 'slug is required'),
+  name: localizedString,
+  jp: z.string().optional(),
+  category: z.string().min(1, 'category is required'),
+  attack: z.string().optional(),
+  stance: z.string().optional(),
+  weapon: z.string().optional(),
+  level: z.enum(gradeValues),
+  summary: localizedString,
+  versions: z.array(versionSchema).min(1, 'at least one version is required'),
+  tags: z.array(z.string().min(1)),
+});
 
 export type TechniqueContent = Technique;
 

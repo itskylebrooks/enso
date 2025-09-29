@@ -11,25 +11,41 @@
   "stance": "ura",
   "weapon": "empty-hand",
   "level": "kyu3",
-  "description": {
+  "summary": {
     "en": "Nikyō from diagonal strike. Blend inside, catch the wrist and rotate inward to fold uke down.",
     "de": "Nikyō aus diagonalen Schlag. Innen führen, Handgelenk fassen und nach innen rotieren, um Uke nach unten zu falten."
   },
-  "steps": {
-    "en": [
-      "Enter inside as uke strikes; cover the line and capture the wrist.",
-      "Slide to the nikyō grip and rotate hips to pronate the forearm.",
-      "Lead uke’s elbow to their center and spiral downward.",
-      "Finish with the nikyō pin."
-    ],
-    "de": [
-      "Tritt innen ein, wenn Uke schlägt; decke die Linie und fasse das Handgelenk.",
-      "Rutsche in den Nikyō-Griff und drehe die Hüfte, um den Unterarm zu pronieren.",
-      "Führe Ukes Ellbogen zu seinem Zentrum und spiraliere nach unten.",
-      "Beende mit der Nikyō-Fixierung."
-    ]
-  },
-  "media": [],
+  "versions": [
+    {
+      "id": "v-official",
+      "label": "Official",
+      "steps": {
+        "en": [
+          "Enter inside as uke strikes; cover the line and capture the wrist.",
+          "Slide to the nikyō grip and rotate hips to pronate the forearm.",
+          "Lead uke’s elbow to their center and spiral downward.",
+          "Finish with the nikyō pin."
+        ],
+        "de": [
+          "Tritt innen ein, wenn Uke schlägt; decke die Linie und fasse das Handgelenk.",
+          "Rutsche in den Nikyō-Griff und drehe die Hüfte, um den Unterarm zu pronieren.",
+          "Führe Ukes Ellbogen zu seinem Zentrum und spiraliere nach unten.",
+          "Beende mit der Nikyō-Fixierung."
+        ]
+      },
+      "uke": {
+        "role": {
+          "en": "Provide a committed attack, stay relaxed through the lead, and finish with attentive ukemi.",
+          "de": "Greife engagiert an, bleib entspannt in der Führung und beende mit aufmerksamer Ukemi."
+        },
+        "notes": {
+          "en": [],
+          "de": []
+        }
+      },
+      "media": []
+    }
+  ],
   "tags": [
     "nikyo",
     "kote-mawashi",

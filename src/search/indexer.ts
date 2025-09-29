@@ -52,6 +52,8 @@ export const buildSearchIndex = (techniques: Technique[]): SearchEntry[] =>
     pushToken(tokens, technique.name.de);
     pushToken(tokens, technique.jp);
     pushToken(tokens, technique.slug);
+    pushToken(tokens, technique.summary.en);
+    pushToken(tokens, technique.summary.de);
 
     TAXONOMY_FIELDS.forEach((field) => {
       const value = technique[field];
@@ -65,21 +67,40 @@ export const buildSearchIndex = (techniques: Technique[]): SearchEntry[] =>
     pushToken(tokens, gradeLabel(technique.level, 'en'));
     pushToken(tokens, gradeLabel(technique.level, 'de'));
 
-    technique.tags?.forEach((tag) => {
+    technique.tags.forEach((tag) => {
       pushToken(tokens, tag);
       addSynonymTokens(tokens, tag);
     });
 
-    if (technique.uke) {
-      if (technique.uke.role) {
-        pushToken(tokens, technique.uke.role.en);
-        pushToken(tokens, technique.uke.role.de);
+    technique.versions.forEach((version) => {
+      pushToken(tokens, version.label);
+      pushToken(tokens, version.sensei);
+      pushToken(tokens, version.dojo);
+      pushToken(tokens, version.lineage);
+      pushToken(tokens, version.sourceUrl);
+
+      version.steps.en.forEach((step) => pushToken(tokens, step));
+      version.steps.de.forEach((step) => pushToken(tokens, step));
+
+      pushToken(tokens, version.uke.role.en);
+      pushToken(tokens, version.uke.role.de);
+      version.uke.notes.en.forEach((note) => pushToken(tokens, note));
+      version.uke.notes.de.forEach((note) => pushToken(tokens, note));
+
+      version.media.forEach((media) => {
+        pushToken(tokens, media.title);
+        pushToken(tokens, media.url);
+      });
+
+      version.keyPoints?.en.forEach((item) => pushToken(tokens, item));
+      version.keyPoints?.de.forEach((item) => pushToken(tokens, item));
+      version.commonMistakes?.en.forEach((item) => pushToken(tokens, item));
+      version.commonMistakes?.de.forEach((item) => pushToken(tokens, item));
+      if (version.context) {
+        pushToken(tokens, version.context.en);
+        pushToken(tokens, version.context.de);
       }
-      if (technique.uke.notes) {
-        technique.uke.notes.en.forEach(note => pushToken(tokens, note));
-        technique.uke.notes.de.forEach(note => pushToken(tokens, note));
-      }
-    }
+    });
 
     const haystack = Array.from(tokens).join(' ');
     return { technique, haystack };

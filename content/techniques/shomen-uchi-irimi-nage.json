@@ -11,29 +11,45 @@
   "stance": "omote",
   "weapon": "empty-hand",
   "level": "kyu3",
-  "description": {
+  "summary": {
     "en": "Entering throw against a frontal strike. Step inside decisively, capture the neck line and drive through the center.",
     "de": "Eingehender Wurf gegen Frontalangriff. Entschlossen einsteigen, Nackenlinie aufnehmen und durch das Zentrum führen."
   },
-  "steps": {
-    "en": [
-      "Receive shōmen-uchi with a small inward step and forearm cover.",
-      "Establish contact at the elbow with your rear hand to prevent retraction.",
-      "Enter deeply (irimi) so your shoulder is against uke’s chest line.",
-      "Slide your forearm across the jaw/neck; head turns as the posture breaks.",
-      "Step through with the rear foot, keeping the head/neck connection.",
-      "Cut forward/down with your whole frame to project."
-    ],
-    "de": [
-      "Nimm Shōmen-uchi mit kleinem Innenschritt und Unterarmdeckung auf.",
-      "Baue Kontakt am Ellbogen mit der hinteren Hand auf, um ein Zurückziehen zu verhindern.",
-      "Tritt tief ein (irimi), sodass deine Schulter an Ukes Brustlinie liegt.",
-      "Schiebe deinen Unterarm über Kiefer/Hals; der Kopf dreht, die Haltung bricht.",
-      "Schreite mit dem hinteren Fuß durch und halte die Kopf-/Nackenkontrolle.",
-      "Schneide mit dem ganzen Körper vorwärts/abwärts und wirf."
-    ]
-  },
-  "media": [],
+  "versions": [
+    {
+      "id": "v-official",
+      "label": "Official",
+      "steps": {
+        "en": [
+          "Receive shōmen-uchi with a small inward step and forearm cover.",
+          "Establish contact at the elbow with your rear hand to prevent retraction.",
+          "Enter deeply (irimi) so your shoulder is against uke’s chest line.",
+          "Slide your forearm across the jaw/neck; head turns as the posture breaks.",
+          "Step through with the rear foot, keeping the head/neck connection.",
+          "Cut forward/down with your whole frame to project."
+        ],
+        "de": [
+          "Nimm Shōmen-uchi mit kleinem Innenschritt und Unterarmdeckung auf.",
+          "Baue Kontakt am Ellbogen mit der hinteren Hand auf, um ein Zurückziehen zu verhindern.",
+          "Tritt tief ein (irimi), sodass deine Schulter an Ukes Brustlinie liegt.",
+          "Schiebe deinen Unterarm über Kiefer/Hals; der Kopf dreht, die Haltung bricht.",
+          "Schreite mit dem hinteren Fuß durch und halte die Kopf-/Nackenkontrolle.",
+          "Schneide mit dem ganzen Körper vorwärts/abwärts und wirf."
+        ]
+      },
+      "uke": {
+        "role": {
+          "en": "Provide a committed attack, stay relaxed through the lead, and finish with attentive ukemi.",
+          "de": "Greife engagiert an, bleib entspannt in der Führung und beende mit aufmerksamer Ukemi."
+        },
+        "notes": {
+          "en": [],
+          "de": []
+        }
+      },
+      "media": []
+    }
+  ],
   "tags": [
     "irimi-nage",
     "shomen-uchi",

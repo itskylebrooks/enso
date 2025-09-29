@@ -11,25 +11,41 @@
   "stance": "ura",
   "weapon": "empty-hand",
   "level": "kyu3",
-  "description": {
+  "summary": {
     "en": "Nikyō from rear collar grab. Catch the hand, rotate inward and take uke to the ground in a tight spiral.",
     "de": "Nikyō aus rückwärtigem Kragengriff. Hand fassen, nach innen drehen und Uke in einer engen Spirale zu Boden führen."
   },
-  "steps": {
-    "en": [
-      "Stabilize as uke grabs your collar from behind.",
-      "Catch the grabbing hand, take the nikyō grip and turn the forearm inward.",
-      "Step off the line and direct the elbow toward uke’s center.",
-      "Spiral down to a controlled pin."
-    ],
-    "de": [
-      "Stabilisiere, wenn Uke deinen Kragen von hinten greift.",
-      "Fasse die Greifhand, nimm den Nikyō-Griff und drehe den Unterarm nach innen.",
-      "Geh von der Linie und führe den Ellbogen zu Ukes Zentrum.",
-      "Spirale nach unten in eine kontrollierte Fixierung."
-    ]
-  },
-  "media": [],
+  "versions": [
+    {
+      "id": "v-official",
+      "label": "Official",
+      "steps": {
+        "en": [
+          "Stabilize as uke grabs your collar from behind.",
+          "Catch the grabbing hand, take the nikyō grip and turn the forearm inward.",
+          "Step off the line and direct the elbow toward uke’s center.",
+          "Spiral down to a controlled pin."
+        ],
+        "de": [
+          "Stabilisiere, wenn Uke deinen Kragen von hinten greift.",
+          "Fasse die Greifhand, nimm den Nikyō-Griff und drehe den Unterarm nach innen.",
+          "Geh von der Linie und führe den Ellbogen zu Ukes Zentrum.",
+          "Spirale nach unten in eine kontrollierte Fixierung."
+        ]
+      },
+      "uke": {
+        "role": {
+          "en": "Provide a committed attack, stay relaxed through the lead, and finish with attentive ukemi.",
+          "de": "Greife engagiert an, bleib entspannt in der Führung und beende mit aufmerksamer Ukemi."
+        },
+        "notes": {
+          "en": [],
+          "de": []
+        }
+      },
+      "media": []
+    }
+  ],
   "tags": [
     "nikyo",
     "kote-mawashi",

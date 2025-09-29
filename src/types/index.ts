@@ -1,12 +1,31 @@
 export type Locale = 'en' | 'de';
 
-export type MediaType = 'youtube' | 'image' | 'file';
+export type MediaType = 'youtube' | 'vimeo' | 'link';
 
 export type Grade =
   | 'kyu5' | 'kyu4' | 'kyu3' | 'kyu2' | 'kyu1'
   | 'dan1' | 'dan2' | 'dan3' | 'dan4' | 'dan5';
 
-export type Technique = {
+export type TechniqueVersion = {
+  id: string;
+  label: string;
+  sensei?: string;
+  dojo?: string;
+  lineage?: string;
+  sourceUrl?: string;
+  lastUpdated?: string;
+  steps: { en: string[]; de: string[] };
+  uke: {
+    role: { en: string; de: string };
+    notes: { en: string[]; de: string[] };
+  };
+  media: Array<{ type: MediaType; url: string; title?: string }>;
+  keyPoints?: { en: string[]; de: string[] };
+  commonMistakes?: { en: string[]; de: string[] };
+  context?: { en: string; de: string };
+};
+
+export type TechniqueV2 = {
   id: string;
   slug: string;
   name: { en: string; de: string };
@@ -16,16 +35,12 @@ export type Technique = {
   stance?: string;
   weapon?: string;
   level: Grade;
-  description: { en: string; de: string };
-  steps: { en: string[]; de: string[] };
-  uke: {
-    role?: { en: string; de: string };
-    notes?: { en: string[]; de: string[] };
-  } | null;
-  media: { type: MediaType; url: string; title?: string }[];
-  tags?: string[];
-  variations: string[];
+  summary: { en: string; de: string };
+  versions: TechniqueVersion[];
+  tags: string[];
 };
+
+export type Technique = TechniqueV2;
 
 export type Progress = {
   techniqueId: string;

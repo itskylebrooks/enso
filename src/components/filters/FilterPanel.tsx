@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
-import { AnimatePresence, motion } from 'motion/react';
+import { motion } from 'motion/react';
 import type { Copy } from '../../constants/i18n';
 import type { Filters, Grade, Locale } from '../../types';
 import { classNames } from '../../utils/classNames';

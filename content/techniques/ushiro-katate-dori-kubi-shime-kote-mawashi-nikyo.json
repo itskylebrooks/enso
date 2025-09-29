@@ -11,25 +11,41 @@
   "stance": "ura",
   "weapon": "empty-hand",
   "level": "kyu3",
-  "description": {
+  "summary": {
     "en": "Nikyō from rear one-hand grab with neck choke. Free the airway, capture the hand and fold uke down decisively.",
     "de": "Nikyō aus rückwärtigem Einhandgriff mit Würgen. Atemweg sichern, Hand erfassen und Uke entschlossen nach unten falten."
   },
-  "steps": {
-    "en": [
-      "Protect the neck by tucking chin and placing your hand between arm and throat.",
-      "Step off-line, free space at the captured wrist and cover to take the nikyō grip.",
-      "Turn the hips to pronate and unbalance; keep your airway safe.",
-      "Guide uke down and pin firmly."
-    ],
-    "de": [
-      "Schütze den Hals, indem du das Kinn senkst und die Hand zwischen Arm und Kehle bringst.",
-      "Geh von der Linie, schaffe Raum am gefassten Handgelenk und decke, um den Nikyō-Griff zu nehmen.",
-      "Drehe aus der Hüfte zum Pronieren und zum Aus-dem-Gleichgewicht-Bringen; Atemweg geschützt halten.",
-      "Führe Uke nach unten und fixiere stabil."
-    ]
-  },
-  "media": [],
+  "versions": [
+    {
+      "id": "v-official",
+      "label": "Official",
+      "steps": {
+        "en": [
+          "Protect the neck by tucking chin and placing your hand between arm and throat.",
+          "Step off-line, free space at the captured wrist and cover to take the nikyō grip.",
+          "Turn the hips to pronate and unbalance; keep your airway safe.",
+          "Guide uke down and pin firmly."
+        ],
+        "de": [
+          "Schütze den Hals, indem du das Kinn senkst und die Hand zwischen Arm und Kehle bringst.",
+          "Geh von der Linie, schaffe Raum am gefassten Handgelenk und decke, um den Nikyō-Griff zu nehmen.",
+          "Drehe aus der Hüfte zum Pronieren und zum Aus-dem-Gleichgewicht-Bringen; Atemweg geschützt halten.",
+          "Führe Uke nach unten und fixiere stabil."
+        ]
+      },
+      "uke": {
+        "role": {
+          "en": "Provide a committed attack, stay relaxed through the lead, and finish with attentive ukemi.",
+          "de": "Greife engagiert an, bleib entspannt in der Führung und beende mit aufmerksamer Ukemi."
+        },
+        "notes": {
+          "en": [],
+          "de": []
+        }
+      },
+      "media": []
+    }
+  ],
   "tags": [
     "nikyo",
     "kote-mawashi",

@@ -1,0 +1,128 @@
+import type { ReactElement } from 'react';
+import { motion } from 'motion/react';
+import type { Copy } from '../../constants/i18n';
+import type { Locale, Technique } from '../../types';
+import { EmphasizedName, LevelBadge } from '../common';
+import { AddToCollectionMenu } from '../bookmarks/AddToCollectionMenu';
+import { BookmarkIcon, BookmarkCheckIcon } from '../common/icons';
+import { useMotionPreferences } from '../ui/motion';
+import { classNames } from '../../utils/classNames';
+
+export type CollectionOption = {
+  id: string;
+  name: string;
+  icon: string | null;
+  checked: boolean;
+};
+
+export type TechniqueHeaderProps = {
+  technique: Technique;
+  locale: Locale;
+  copy: Copy;
+  backLabel: string;
+  onBack: () => void;
+  summary: string;
+  tags: string[];
+  isBookmarked: boolean;
+  onToggleBookmark: () => void;
+  collections: CollectionOption[];
+  onToggleCollection: (collectionId: string, nextChecked: boolean) => void;
+};
+
+export const TechniqueHeader = ({
+  technique,
+  locale,
+  copy,
+  backLabel,
+  onBack,
+  summary,
+  tags,
+  isBookmarked,
+  onToggleBookmark,
+  collections,
+  onToggleCollection,
+}: TechniqueHeaderProps): ReactElement => {
+  const { toggleTransition, prefersReducedMotion } = useMotionPreferences();
+
+  return (
+    <header className="z-10 border-b surface-border pb-4 bg-transparent space-y-6">
+      <div className="flex flex-wrap items-stretch justify-between gap-x-6 gap-y-4">
+        <div className="min-w-0 space-y-3 flex-grow">
+          <a
+            href="/"
+            aria-label={backLabel}
+            onClick={(event) => {
+              event.preventDefault();
+              onBack();
+            }}
+            className="text-sm text-subtle hover:text-[var(--color-text)] transition flex items-center gap-2"
+          >
+            <span aria-hidden>←</span>
+            <span>{backLabel}</span>
+          </a>
+          <div className="space-y-1">
+            <h1 className="text-3xl font-semibold leading-tight" title={technique.name[locale]}>
+              <EmphasizedName name={technique.name[locale]} />
+            </h1>
+            {technique.jp && <div className="text-sm text-subtle">{technique.jp}</div>}
+            {tags.length > 0 && (
+              <div className="flex flex-wrap gap-2 pt-1">
+                {tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="rounded-lg border surface-border bg-[var(--color-surface)] px-2 py-1 text-xs uppercase tracking-wide text-subtle"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+        <div className="flex flex-col sm:flex-col items-end justify-between w-full sm:w-auto">
+          <div className="hidden sm:block">
+            <LevelBadge locale={locale} level={technique.level} />
+          </div>
+          <div className="flex justify-between w-full items-center mt-2 sm:mt-0 sm:justify-end gap-2">
+            <div className="sm:hidden">
+              <LevelBadge locale={locale} level={technique.level} />
+            </div>
+            <div className="flex gap-2">
+              <AddToCollectionMenu
+                copy={copy}
+                collections={collections}
+                onToggle={(collectionId, nextChecked) => onToggleCollection(collectionId, nextChecked)}
+              />
+              <div className="inline-flex rounded-lg border surface-border overflow-hidden">
+                <motion.button
+                  type="button"
+                  onClick={onToggleBookmark}
+                  aria-pressed={isBookmarked}
+                  aria-label={copy.bookmark}
+                  transition={toggleTransition}
+                  whileTap={prefersReducedMotion ? undefined : { scale: 0.96 }}
+                  className={classNames(
+                    'p-2 text-sm flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] transition-colors duration-150',
+                    isBookmarked
+                      ? 'bg-[var(--color-text)] text-[var(--color-bg)]'
+                      : 'bg-[var(--color-surface)] text-[var(--color-text)] hover:bg-[var(--color-surface-hover)]',
+                  )}
+                >
+                  <motion.span
+                    aria-hidden
+                    className="w-4 h-4 flex items-center justify-center"
+                    animate={isBookmarked ? { scale: 1, opacity: 1 } : { scale: 0.86, opacity: 0.85 }}
+                    transition={toggleTransition}
+                  >
+                    {isBookmarked ? <BookmarkCheckIcon className="w-4 h-4" /> : <BookmarkIcon className="w-4 h-4" />}
+                  </motion.span>
+                </motion.button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p className="text-base text-muted leading-relaxed max-w-3xl">{summary}</p>
+    </header>
+  );
+};
