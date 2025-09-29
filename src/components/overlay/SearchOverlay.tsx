@@ -73,7 +73,7 @@ export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen }: Sea
         <motion.button
           type="button"
           onClick={onClose}
-          className="absolute right-4 top-4 text-lg text-subtle hover:text-[var(--color-text)] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+          className="absolute right-6 top-4 text-lg text-subtle hover:text-[var(--color-text)] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
           variants={overlayMotion.closeButton}
           initial="initial"
           animate="animate"
@@ -93,7 +93,7 @@ export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen }: Sea
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder={copy.search}
-            className="w-full px-2 py-1.5 rounded-lg border surface surface-border focus:outline-none focus:ring-2 focus:ring-[var(--color-text)]"
+            className="w-full px-2 py-1.5 rounded-lg border surface surface-border focus:outline-none"
           />
         </div>
         <ul className="max-h-80 overflow-auto">
