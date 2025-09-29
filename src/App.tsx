@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Header } from './components/layout/Header';
 import { FilterPanel } from './components/filters/FilterPanel';
 import { Library } from './components/library/Library';
-import { ProgressLists } from './components/progress/ProgressLists';
+import { BookmarksView } from './components/bookmarks/BookmarksView';
 import { SearchOverlay } from './components/overlay/SearchOverlay';
 import { SettingsModal } from './components/settings/SettingsModal';
 import { TechniquePage } from './components/technique/TechniquePage';
@@ -27,11 +27,20 @@ import {
   saveLocale,
   saveTheme,
 } from './services/storageService';
-import type { AppRoute, DB, Filters, Locale, Progress, Technique, Theme } from './types';
+import type { AppRoute, Collection, DB, Filters, Locale, Progress, Technique, Theme } from './types';
 import { gradeOrder } from './utils/grades';
 import { unique, upsert } from './utils/array';
 
 const defaultFilters: Filters = {};
+
+type SelectedCollectionId = 'all' | 'ungrouped' | string;
+
+const generateId = (): string => {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+  return Math.random().toString(36).slice(2, 11);
+};
 
 type HistoryState = {
   route?: AppRoute;
@@ -47,7 +56,7 @@ const routeToPath = (route: AppRoute): string => {
     case 'basics':
       return '/basics';
     case 'library':
-    case 'progress':
+    case 'bookmarks':
       return `/${route}`;
     default:
       return '/';
@@ -69,8 +78,8 @@ const parseLocation = (
     return { route: fallbackRoute, slug };
   }
 
-  if (pathname === '/progress') {
-    return { route: 'progress', slug: null };
+  if (pathname === '/bookmarks') {
+    return { route: 'bookmarks', slug: null };
   }
 
   if (pathname === '/library') {
@@ -186,6 +195,7 @@ export default function App(): ReactElement {
   const [hasManualTheme, setHasManualTheme] = useState<boolean>(() => hasStoredTheme());
   const [db, setDB] = useState<DB>(() => loadDB());
   const [filters, setFilters] = useState<Filters>(defaultFilters);
+  const [selectedCollectionId, setSelectedCollectionId] = useState<SelectedCollectionId>('all');
   const [route, setRoute] = useState<AppRoute>(() => getInitialLocation().route);
   const [activeSlug, setActiveSlug] = useState<string | null>(() => getInitialLocation().slug);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -327,6 +337,16 @@ export default function App(): ReactElement {
   }, [db]);
 
   useEffect(() => {
+    if (selectedCollectionId === 'all' || selectedCollectionId === 'ungrouped') {
+      return;
+    }
+
+    if (!db.collections.some((collection) => collection.id === selectedCollectionId)) {
+      setSelectedCollectionId('all');
+    }
+  }, [db.collections, selectedCollectionId]);
+
+  useEffect(() => {
     if (typeof window === 'undefined') return;
 
     const syncFromLocation = (event?: PopStateEvent) => {
@@ -390,9 +410,121 @@ export default function App(): ReactElement {
   );
 
   const updateProgress = (id: string, patch: Partial<Progress>): void => {
+    setDB((prev) => {
+      const nextProgress = updateProgressEntry(prev.progress, id, patch);
+      const shouldRemoveAssignments = patch.bookmarked === false;
+      const nextBookmarkCollections = shouldRemoveAssignments
+        ? prev.bookmarkCollections.filter((entry) => entry.techniqueId !== id)
+        : prev.bookmarkCollections;
+      return {
+        ...prev,
+        progress: nextProgress,
+        bookmarkCollections: nextBookmarkCollections,
+      };
+    });
+  };
+
+  const sanitizeCollectionName = (name: string): string => name.trim().slice(0, 40);
+
+  const sortCollectionsByName = (collections: Collection[]): Collection[] =>
+    [...collections]
+      .sort((a, b) =>
+        a.name.localeCompare(b.name, locale, {
+          sensitivity: 'accent',
+          caseFirst: 'upper',
+        }),
+      )
+      .map((collection, index) => ({
+        ...collection,
+        sortOrder: index,
+      }));
+
+  const createCollection = (name: string): string | null => {
+    const trimmed = name.trim();
+    if (!trimmed) return null;
+    const now = Date.now();
+    const id = generateId();
+
     setDB((prev) => ({
       ...prev,
-      progress: updateProgressEntry(prev.progress, id, patch),
+      collections: sortCollectionsByName([
+        ...prev.collections,
+        {
+          id,
+          name: sanitizeCollectionName(trimmed),
+          icon: null,
+          sortOrder: prev.collections.length,
+          createdAt: now,
+          updatedAt: now,
+        },
+      ]),
+    }));
+
+    return id;
+  };
+
+  const renameCollection = (id: string, name: string): void => {
+    const trimmed = name.trim();
+    if (!trimmed) return;
+    const now = Date.now();
+
+    setDB((prev) => ({
+      ...prev,
+      collections: sortCollectionsByName(
+        prev.collections.map((collection) =>
+          collection.id === id
+            ? {
+                ...collection,
+                name: sanitizeCollectionName(trimmed),
+                updatedAt: now,
+              }
+            : collection,
+        ),
+      ),
+    }));
+  };
+
+  const deleteCollection = (id: string): void => {
+    setDB((prev) => ({
+      ...prev,
+      collections: sortCollectionsByName(prev.collections.filter((collection) => collection.id !== id)),
+      bookmarkCollections: prev.bookmarkCollections.filter((entry) => entry.collectionId !== id),
+    }));
+  };
+
+  const assignToCollection = (techniqueId: string, collectionId: string): void => {
+    setDB((prev) => {
+      if (!prev.progress.some((entry) => entry.techniqueId === techniqueId && entry.bookmarked)) {
+        return prev;
+      }
+
+      if (prev.bookmarkCollections.some((entry) => entry.techniqueId === techniqueId && entry.collectionId === collectionId)) {
+        return prev;
+      }
+
+      const now = Date.now();
+
+      return {
+        ...prev,
+        bookmarkCollections: [
+          ...prev.bookmarkCollections,
+          {
+            id: generateId(),
+            techniqueId,
+            collectionId,
+            createdAt: now,
+          },
+        ],
+      };
+    });
+  };
+
+  const removeFromCollection = (techniqueId: string, collectionId: string): void => {
+    setDB((prev) => ({
+      ...prev,
+      bookmarkCollections: prev.bookmarkCollections.filter(
+        (entry) => !(entry.techniqueId === techniqueId && entry.collectionId === collectionId),
+      ),
     }));
   };
 
@@ -451,8 +583,8 @@ export default function App(): ReactElement {
   const techniqueNotFound = Boolean(activeSlug) && !currentTechnique;
 
   const techniqueBackLabel =
-    route === 'progress'
-      ? copy.backToProgress
+    route === 'bookmarks'
+      ? copy.backToBookmarks
       : route === 'home'
       ? copy.backToHome
       : route === 'about'
@@ -493,7 +625,7 @@ export default function App(): ReactElement {
       <HomePage
         copy={copy}
         onOpenLibrary={() => navigateTo('library')}
-        onViewProgress={() => navigateTo('progress')}
+        onViewBookmarks={() => navigateTo('bookmarks')}
         onViewBasics={() => navigateTo('basics')}
       />
     );
@@ -504,54 +636,66 @@ export default function App(): ReactElement {
   } else {
     mainContent = (
       <div className="max-w-6xl mx-auto px-4 py-4 space-y-4">
-        <div className="md:hidden">
-          <MobileFilters
+        {route === 'library' && (
+          <>
+            <div className="md:hidden">
+              <MobileFilters
+                copy={copy}
+                locale={locale}
+                filters={filters}
+                categories={categories}
+                attacks={attacks}
+                stances={stances}
+                weapons={weapons}
+                levels={gradeOrder}
+                onChange={setFilters}
+              />
+            </div>
+            <div className="grid md:grid-cols-[16rem,1fr] gap-6">
+              <aside className="hidden md:block surface border surface-border rounded-2xl p-3 h-max sticky top-20">
+                <FilterPanel
+                  copy={copy}
+                  locale={locale}
+                  filters={filters}
+                  categories={categories}
+                  attacks={attacks}
+                  stances={stances}
+                  weapons={weapons}
+                  levels={gradeOrder}
+                  onChange={setFilters}
+                />
+              </aside>
+              <section>
+                <Library
+                  copy={copy}
+                  locale={locale}
+                  techniques={filteredTechniques}
+                  progress={db.progress}
+                  onOpen={openTechnique}
+                />
+              </section>
+            </div>
+          </>
+        )}
+
+        {route === 'bookmarks' && (
+          <BookmarksView
             copy={copy}
             locale={locale}
-            filters={filters}
-            categories={categories}
-            attacks={attacks}
-            stances={stances}
-            weapons={weapons}
-            levels={gradeOrder}
-            onChange={setFilters}
+            techniques={db.techniques}
+            progress={db.progress}
+            collections={db.collections}
+            bookmarkCollections={db.bookmarkCollections}
+            selectedCollectionId={selectedCollectionId}
+            onSelectCollection={(id) => setSelectedCollectionId(id)}
+            onCreateCollection={createCollection}
+            onRenameCollection={renameCollection}
+            onDeleteCollection={deleteCollection}
+            onAssign={assignToCollection}
+            onUnassign={removeFromCollection}
+            onOpenTechnique={openTechnique}
           />
-        </div>
-        <div className="grid md:grid-cols-[16rem,1fr] gap-6">
-          <aside className="hidden md:block surface border surface-border rounded-2xl p-3 h-max sticky top-20">
-            <FilterPanel
-              copy={copy}
-              locale={locale}
-              filters={filters}
-              categories={categories}
-              attacks={attacks}
-              stances={stances}
-              weapons={weapons}
-              levels={gradeOrder}
-              onChange={setFilters}
-            />
-          </aside>
-          <section>
-            {route === 'library' && (
-              <Library
-                copy={copy}
-                locale={locale}
-                techniques={filteredTechniques}
-                progress={db.progress}
-                onOpen={openTechnique}
-              />
-            )}
-            {route === 'progress' && (
-              <ProgressLists
-                copy={copy}
-                locale={locale}
-                techniques={db.techniques}
-                progress={db.progress}
-                onOpen={openTechnique}
-              />
-            )}
-          </section>
-        </div>
+        )}
       </div>
     );
   }

@@ -1,4 +1,4 @@
-import type { ReactElement } from 'react';
+import type { KeyboardEvent, ReactElement, ReactNode } from 'react';
 import { motion, type Variants, type Transition } from 'motion/react';
 import type { Copy } from '../../constants/i18n';
 import type { Locale, Progress, Technique } from '../../types';
@@ -18,6 +18,7 @@ export type TechniqueCardProps = {
   copy: Copy;
   onSelect: (slug: string) => void;
   motionIndex: number;
+  actionSlot?: ReactNode;
 } & MotionProps;
 
 export const TechniqueCard = ({
@@ -29,6 +30,7 @@ export const TechniqueCard = ({
   variants,
   getTransition,
   prefersReducedMotion,
+  actionSlot,
 }: TechniqueCardProps): ReactElement => {
   const stanceLabel = technique.stance ? getTaxonomyLabel(locale, 'stance', technique.stance) : null;
   const weaponLabel =
@@ -36,10 +38,23 @@ export const TechniqueCard = ({
       ? getTaxonomyLabel(locale, 'weapon', technique.weapon)
       : null;
 
+  const handleActivate = () => {
+    onSelect(technique.slug);
+  };
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      handleActivate();
+    }
+  };
+
   return (
-    <motion.button
-      type="button"
-      onClick={() => onSelect(technique.slug)}
+    <motion.div
+      role="button"
+      tabIndex={0}
+      onClick={handleActivate}
+      onKeyDown={handleKeyDown}
       className="surface border surface-border rounded-2xl p-4 flex flex-col gap-3 text-left"
       variants={variants}
       transition={getTransition(motionIndex)}
@@ -54,8 +69,8 @@ export const TechniqueCard = ({
           </div>
           {technique.jp && <div className="text-xs text-subtle truncate">{technique.jp}</div>}
         </div>
-        <div className="flex items-center gap-2 text-base transition-soft motion-ease">
-          {/* progress badges removed (focus/confident) */}
+        <div className="flex items-center gap-2">
+          {actionSlot}
         </div>
       </div>
 
@@ -70,6 +85,6 @@ export const TechniqueCard = ({
         </div>
         <LevelBadge locale={locale} level={technique.level} />
       </div>
-    </motion.button>
+    </motion.div>
   );
 };

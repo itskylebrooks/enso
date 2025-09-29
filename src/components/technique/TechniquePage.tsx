@@ -1,5 +1,5 @@
 import type { ReactElement } from 'react';
-import { motion, useReducedMotion } from 'motion/react';
+import { motion } from 'motion/react';
 import type { Copy } from '../../constants/i18n';
 import type { Locale, Progress, Technique } from '../../types';
 import { EmphasizedName, LevelBadge } from '../common';

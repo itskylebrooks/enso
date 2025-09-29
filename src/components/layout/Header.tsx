@@ -64,7 +64,7 @@ export const Header = ({
                 <span>{copy.library}</span>
               </span>
             </TabButton>
-            <TabButton active={route === 'progress'} onClick={() => onNavigate('progress')}>
+            <TabButton active={route === 'bookmarks'} onClick={() => onNavigate('bookmarks')}>
               <span className="flex items-center gap-1">
                 <BookmarkIcon className="w-4 h-4" />
                 <span>{copy.progress}</span>
@@ -134,7 +134,7 @@ export const Header = ({
                       type="button"
                       onClick={() => {
                         setMenuOpen(false);
-                        onNavigate('progress');
+                        onNavigate('bookmarks');
                       }}
                       className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
                     >

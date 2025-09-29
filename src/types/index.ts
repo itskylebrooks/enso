@@ -34,15 +34,33 @@ export type Progress = {
   updatedAt: number;
 };
 
+export type Collection = {
+  id: string;
+  name: string;
+  icon?: string | null;
+  sortOrder: number;
+  createdAt: number;
+  updatedAt: number;
+};
+
+export type BookmarkCollection = {
+  id: string;
+  techniqueId: string;
+  collectionId: string;
+  createdAt: number;
+};
+
 export type Theme = 'light' | 'dark';
 
 export type DB = {
   version: number;
   techniques: Technique[];
   progress: Progress[];
+  collections: Collection[];
+  bookmarkCollections: BookmarkCollection[];
 };
 
-export type AppRoute = 'home' | 'library' | 'progress' | 'about' | 'basics';
+export type AppRoute = 'home' | 'library' | 'bookmarks' | 'about' | 'basics';
 
 export type Filters = {
   category?: string;

@@ -86,3 +86,70 @@ export const CheckIcon = (props: SVGProps<SVGSVGElement>): ReactElement => (
     <path d="M20 6 9 17l-5-5" />
   </svg>
 );
+
+export const PlusIcon = (props: SVGProps<SVGSVGElement>): ReactElement => (
+  <svg {...baseProps} {...props} className={['lucide lucide-plus-icon', props.className].filter(Boolean).join(' ')}>
+    <path d="M12 5v14" />
+    <path d="M5 12h14" />
+  </svg>
+);
+
+export const DotsVerticalIcon = (props: SVGProps<SVGSVGElement>): ReactElement => (
+  <svg {...baseProps} {...props} className={['lucide lucide-dots-vertical-icon', props.className].filter(Boolean).join(' ')}>
+    <circle cx="12" cy="5" r="1" />
+    <circle cx="12" cy="12" r="1" />
+    <circle cx="12" cy="19" r="1" />
+  </svg>
+);
+
+export const ChevronUpIcon = (props: SVGProps<SVGSVGElement>): ReactElement => (
+  <svg {...baseProps} {...props} className={['lucide lucide-chevron-up-icon', props.className].filter(Boolean).join(' ')}>
+    <path d="m18 15-6-6-6 6" />
+  </svg>
+);
+
+export const ChevronDownIcon = (props: SVGProps<SVGSVGElement>): ReactElement => (
+  <svg {...baseProps} {...props} className={['lucide lucide-chevron-down-icon', props.className].filter(Boolean).join(' ')}>
+    <path d="m6 9 6 6 6-6" />
+  </svg>
+);
+
+export const TrashIcon = (props: SVGProps<SVGSVGElement>): ReactElement => (
+  <svg {...baseProps} width={24} height={24} {...props} className={['lucide lucide-trash-icon lucide-trash', props.className].filter(Boolean).join(' ')}>
+    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" />
+    <path d="M3 6h18" />
+    <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+  </svg>
+);
+
+export const EditIcon = (props: SVGProps<SVGSVGElement>): ReactElement => (
+  <svg
+    {...baseProps}
+    width={24}
+    height={24}
+    {...props}
+    className={['lucide lucide-text-cursor-input-icon lucide-text-cursor-input', props.className].filter(Boolean).join(' ')}
+  >
+    <path d="M12 20h-1a2 2 0 0 1-2-2 2 2 0 0 1-2 2H6" />
+    <path d="M13 8h7a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2h-7" />
+    <path d="M5 16H4a2 2 0 0 1-2-2v-4a2 2 0 0 1 2-2h1" />
+    <path d="M6 4h1a2 2 0 0 1 2 2 2 2 0 0 1 2-2h1" />
+    <path d="M9 6v12" />
+  </svg>
+);
+
+export const FolderPlusIcon = (props: SVGProps<SVGSVGElement>): ReactElement => (
+  <svg {...baseProps} {...props} className={['lucide lucide-folder-plus-icon', props.className].filter(Boolean).join(' ')}>
+    <path d="m22 19-.001-11a2 2 0 0 0-2-2h-7.172a2 2 0 0 1-1.414-.586L9.172 4.172A2 2 0 0 0 7.758 3.586H4a2 2 0 0 0-2 2v14" />
+    <path d="M2 19a2 2 0 0 0 2 2h16" />
+    <path d="M12 11v6" />
+    <path d="M9 14h6" />
+  </svg>
+);
+
+export const PencilIcon = (props: SVGProps<SVGSVGElement>): ReactElement => (
+  <svg {...baseProps} {...props} className={['lucide lucide-pencil-icon', props.className].filter(Boolean).join(' ')}>
+    <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" />
+    <path d="m15 5 4 4" />
+  </svg>
+);
