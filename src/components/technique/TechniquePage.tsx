@@ -98,8 +98,8 @@ export const TechniquePage = ({
   return (
     <div className="max-w-5xl mx-auto px-6 py-6 space-y-10">
   <header className="z-10 border-b surface-border pb-4 bg-transparent">
-        <div className="flex flex-wrap items-stretch justify-between gap-6">
-          <div className="min-w-0 space-y-3">
+        <div className="flex flex-wrap items-stretch justify-between gap-x-6 gap-y-4">
+          <div className="min-w-0 space-y-3 flex-grow">
             <a
               href="/"
               aria-label={backLabel}
@@ -113,10 +113,10 @@ export const TechniquePage = ({
               <span>{backLabel}</span>
             </a>
             <div className="space-y-1">
-              <h1 className="text-2xl font-semibold leading-tight truncate" title={technique.name[locale]}>
+              <h1 className="text-2xl font-semibold leading-tight" title={technique.name[locale]}>
                 <EmphasizedName name={technique.name[locale]} />
               </h1>
-              {technique.jp && <div className="text-sm text-subtle truncate">{technique.jp}</div>}
+              {technique.jp && <div className="text-sm text-subtle">{technique.jp}</div>}
               {tags.length > 0 && (
                 <div className="flex flex-wrap gap-2 pt-1">
                   {tags.map((tag) => (
@@ -131,38 +131,45 @@ export const TechniquePage = ({
               )}
             </div>
           </div>
-          <div className="flex flex-col items-end justify-between">
-            <LevelBadge locale={locale} level={technique.level} />
-            <div className="flex gap-2">
-              <AddToCollectionMenu
-                copy={copy}
-                collections={collectionOptions}
-                onToggle={handleCollectionToggle}
-              />
-              <div className="inline-flex rounded-lg border surface-border overflow-hidden">
-                <motion.button
-                  type="button"
-                  onClick={onToggleBookmark}
-                  aria-pressed={bookmarkedActive}
-                  aria-label={copy.bookmark}
-                  transition={toggleTransition}
-                  whileTap={prefersReducedMotion ? undefined : { scale: 0.96 }}
-                  className={classNames(
-                    'p-2 text-sm flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] transition-colors duration-150',
-                    bookmarkedActive
-                      ? 'bg-[var(--color-text)] text-[var(--color-bg)]'
-                      : 'bg-[var(--color-surface)] text-[var(--color-text)] hover:bg-[var(--color-surface-hover)]',
-                  )}
-                >
-                  <motion.span
-                    aria-hidden
-                    className="w-4 h-4 flex items-center justify-center"
-                    animate={bookmarkedActive ? { scale: 1, opacity: 1 } : { scale: 0.86, opacity: 0.85 }}
+          <div className="flex flex-col sm:flex-col items-end justify-between w-full sm:w-auto">
+            <div className="hidden sm:block">
+              <LevelBadge locale={locale} level={technique.level} />
+            </div>
+            <div className="flex justify-between w-full items-center mt-2 sm:mt-0 sm:justify-end gap-2">
+              <div className="sm:hidden">
+                <LevelBadge locale={locale} level={technique.level} />
+              </div>
+              <div className="flex gap-2">
+                <AddToCollectionMenu
+                  copy={copy}
+                  collections={collectionOptions}
+                  onToggle={handleCollectionToggle}
+                />
+                <div className="inline-flex rounded-lg border surface-border overflow-hidden">
+                  <motion.button
+                    type="button"
+                    onClick={onToggleBookmark}
+                    aria-pressed={bookmarkedActive}
+                    aria-label={copy.bookmark}
                     transition={toggleTransition}
+                    whileTap={prefersReducedMotion ? undefined : { scale: 0.96 }}
+                    className={classNames(
+                      'p-2 text-sm flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] transition-colors duration-150',
+                      bookmarkedActive
+                        ? 'bg-[var(--color-text)] text-[var(--color-bg)]'
+                        : 'bg-[var(--color-surface)] text-[var(--color-text)] hover:bg-[var(--color-surface-hover)]',
+                    )}
                   >
-                    {bookmarkedActive ? <BookmarkCheckIcon className="w-4 h-4" /> : <BookmarkIcon className="w-4 h-4" />}
-                  </motion.span>
-                </motion.button>
+                    <motion.span
+                      aria-hidden
+                      className="w-4 h-4 flex items-center justify-center"
+                      animate={bookmarkedActive ? { scale: 1, opacity: 1 } : { scale: 0.86, opacity: 0.85 }}
+                      transition={toggleTransition}
+                    >
+                      {bookmarkedActive ? <BookmarkCheckIcon className="w-4 h-4" /> : <BookmarkIcon className="w-4 h-4" />}
+                    </motion.span>
+                  </motion.button>
+                </div>
               </div>
             </div>
           </div>
