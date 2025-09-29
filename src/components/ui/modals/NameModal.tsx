@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type FormEvent, type ReactElement } from '
 import { motion } from 'motion/react';
 import { useFocusTrap } from '../../../utils/useFocusTrap';
 import { useMotionPreferences } from '../motion';
+import useLockBodyScroll from '../../../../src/utils/useLockBodyScroll';
 
 export type NameModalStrings = {
   title: string;
@@ -26,6 +27,9 @@ export const NameModal = ({ strings, initialName = '', onCancel, onConfirm }: Na
   const [name, setName] = useState(initialName);
 
   useFocusTrap(true, dialogRef, onCancel);
+
+  // Lock body scroll while this modal is open
+  useLockBodyScroll(true);
 
   useEffect(() => {
     nameInputRef.current?.focus();

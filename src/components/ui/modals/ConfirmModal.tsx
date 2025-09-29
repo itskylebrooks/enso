@@ -2,6 +2,7 @@ import { useEffect, useRef, type ReactElement } from 'react';
 import { motion } from 'motion/react';
 import { useFocusTrap } from '../../../utils/useFocusTrap';
 import { useMotionPreferences } from '../motion';
+import useLockBodyScroll from '../../../../src/utils/useLockBodyScroll';
 
 type ConfirmStrings = {
   title: string;
@@ -21,6 +22,9 @@ export const ConfirmModal = ({ strings, onCancel, onConfirm }: ConfirmModalProps
   const { overlayMotion, toggleTransition, prefersReducedMotion } = useMotionPreferences();
 
   useFocusTrap(true, dialogRef, onCancel);
+
+  // Lock body scroll while confirmation modal is open
+  useLockBodyScroll(true);
 
   useEffect(() => {
     const handleKey = (event: KeyboardEvent) => {

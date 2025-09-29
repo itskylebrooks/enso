@@ -7,7 +7,6 @@ import { BookmarksView } from './components/bookmarks/BookmarksView';
 import { SearchOverlay } from './components/overlay/SearchOverlay';
 import { SettingsModal } from './components/settings/SettingsModal';
 import { TechniquePage } from './components/technique/TechniquePage';
-import { Footer } from './components/ui/Footer';
 import { Toast } from './components/ui/Toast';
 import { MobileFilters } from './components/ui/MobileFilters';
 import { HomePage } from './components/home/HomePage';
@@ -16,6 +15,7 @@ import { BasicsPage } from './components/home/BasicsPage';
 import { ConfirmClearModal } from './components/dialogs/ConfirmClearModal';
 import { useMotionPreferences } from './components/ui/motion';
 import { getCopy } from './constants/i18n';
+import useLockBodyScroll from './utils/useLockBodyScroll';
 import {
   clearDB,
   clearThemePreference,
@@ -264,6 +264,9 @@ export default function App(): ReactElement {
     },
     [],
   );
+
+  // Prevent page scroll while overlays/modals are open
+  useLockBodyScroll(searchOpen || settingsOpen || confirmClearOpen);
 
   const openSearch = useCallback(() => {
     setSearchOpen(true);
@@ -746,7 +749,7 @@ export default function App(): ReactElement {
         </motion.main>
       </AnimatePresence>
 
-      <Footer copy={copy} onNavigate={navigateTo} />
+  {/* Footer removed per request */}
 
       <AnimatePresence>
         {searchOpen && (
