@@ -313,45 +313,50 @@ export const BookmarksView = ({
         </AnimatePresence>
       </section>
 
-      {dialog?.type === 'create' && (
-        <NameModal
-          strings={{
-            title: copy.collectionsNew,
-            nameLabel: copy.collectionsNameLabel,
-            confirmLabel: copy.collectionsCreateAction,
-            cancelLabel: copy.collectionsCancel,
-          }}
-          onCancel={closeDialog}
-          onConfirm={(name) => handleCreate(name)}
-        />
-      )}
+      <AnimatePresence>
+        {dialog?.type === 'create' && (
+          <NameModal
+            key="modal-create"
+            strings={{
+              title: copy.collectionsNew,
+              nameLabel: copy.collectionsNameLabel,
+              confirmLabel: copy.collectionsCreateAction,
+              cancelLabel: copy.collectionsCancel,
+            }}
+            onCancel={closeDialog}
+            onConfirm={(name) => handleCreate(name)}
+          />
+        )}
 
-      {dialog?.type === 'rename' && (
-        <NameModal
-          strings={{
-            title: copy.collectionsRename,
-            nameLabel: copy.collectionsNameLabel,
-            confirmLabel: copy.collectionsRenameAction,
-            cancelLabel: copy.collectionsCancel,
-          }}
-          initialName={dialog.collection.name}
-          onCancel={closeDialog}
-          onConfirm={(name) => handleRename(dialog.collection.id, name)}
-        />
-      )}
+        {dialog?.type === 'rename' && (
+          <NameModal
+            key="modal-rename"
+            strings={{
+              title: copy.collectionsRename,
+              nameLabel: copy.collectionsNameLabel,
+              confirmLabel: copy.collectionsRenameAction,
+              cancelLabel: copy.collectionsCancel,
+            }}
+            initialName={dialog.collection.name}
+            onCancel={closeDialog}
+            onConfirm={(name) => handleRename(dialog.collection.id, name)}
+          />
+        )}
 
-      {dialog?.type === 'delete' && (
-        <ConfirmModal
-          strings={{
-            title: copy.collectionsConfirmDeleteTitle,
-            body: copy.collectionsConfirmDeleteBody,
-            confirmLabel: copy.collectionsDelete,
-            cancelLabel: copy.collectionsCancel,
-          }}
-          onCancel={closeDialog}
-          onConfirm={() => handleDelete(dialog.collection.id)}
-        />
-      )}
+        {dialog?.type === 'delete' && (
+          <ConfirmModal
+            key="modal-delete"
+            strings={{
+              title: copy.collectionsConfirmDeleteTitle,
+              body: copy.collectionsConfirmDeleteBody,
+              confirmLabel: copy.collectionsDelete,
+              cancelLabel: copy.collectionsCancel,
+            }}
+            onCancel={closeDialog}
+            onConfirm={() => handleDelete(dialog.collection.id)}
+          />
+        )}
+      </AnimatePresence>
     </div>
   );
 };
