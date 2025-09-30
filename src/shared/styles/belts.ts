@@ -18,11 +18,11 @@ const ordinal = (value: string, locale: Locale): string => {
 };
 
 const palette: Record<Grade, { bg: string; fg: string }> = {
-  kyu5: { bg: '#EAB308', fg: '#1A1A1A' },
-  kyu4: { bg: '#F97316', fg: '#1A1A1A' },
-  kyu3: { bg: '#10B981', fg: '#06241B' },
+  kyu5: { bg: '#f7d80e', fg: '#1A1A1A' },
+  kyu4: { bg: '#f2571a', fg: '#FFFFFF' },
+  kyu3: { bg: '#0aad28', fg: '#FFFFFF' },
   kyu2: { bg: '#2563EB', fg: '#E6F0FF' },
-  kyu1: { bg: '#8B5E34', fg: '#FFF7ED' },
+  kyu1: { bg: '#8c4b0b', fg: '#FFFFFF' },
   dan1: { bg: '#0B0B0B', fg: '#FFFFFF' },
   dan2: { bg: '#0B0B0B', fg: '#FFFFFF' },
   dan3: { bg: '#0B0B0B', fg: '#FFFFFF' },
