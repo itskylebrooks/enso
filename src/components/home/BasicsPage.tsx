@@ -16,45 +16,79 @@ type TermEntry = {
 
 type BasicsContent = {
   headings: {
-    naming: string;
-    terms: string;
+    glossary: string;
+    movements: string;
+    philosophy: string;
     belts: string;
     etiquette: string;
   };
-  namingLead: string;
-  namingPoints: string[];
-  terms: TermEntry[];
-  termsLead: string;
+  glossaryLead: string;
+  glossaryCtaLabel: string;
+
+  movementsLead: string;
+  movementHighlights: TermEntry[];
+  movementsCtaLabel: string;
+
+  philosophyLead: string;
+  philosophyPoints: string[];
+  virtuesTitle: string;
+  virtues: TermEntry[];
+
   beltsLead: string;
+  beltNote: string;
   beltNames: Record<Grade, string>;
+
+  etiquetteLead: string;
   etiquettePoints: string[];
 };
 
 const content: Record<Locale, BasicsContent> = {
   en: {
     headings: {
-      naming: 'Naming system',
-      terms: 'Common Japanese terms',
+      glossary: 'Key terms & translations',
+      movements: 'Basic movements & stances',
+      philosophy: 'Aikidō principles & virtues',
       belts: 'Belt grades & colors',
-      etiquette: 'Dojo etiquette & safety notes',
+      etiquette: 'Dōjō etiquette & safety',
     },
-    namingLead: 'Technique names combine the attack from uke, your response, and any direction or variation.',
-    namingPoints: [
-      'Attack — the initial grab or strike from uke (e.g., “katate-dori”, “shōmen-uchi”).',
-      'Technique — the core response from tori (e.g., “ikkyo”, “irimi-nage”).',
-      'Direction or variation — clarifies the entry or path (e.g., “omote”, “ura”, “uchi”, “soto”).',
+    glossaryLead:
+      'A short glossary of words you will hear on the mat. Learning these early makes the rest of training smoother.',
+    glossaryCtaLabel: 'View Glossary',
+
+    movementsLead:
+      'These are the movement tools you will use constantly. Practice them slowly, then smoothly.',
+    movementHighlights: [
+      { term: 'kamae (hanmi)', detail: 'ready posture: relaxed shoulders, soft knees, centered' },
+      { term: 'irimi', detail: 'decisive entering step that closes distance' },
+      { term: 'tenkan', detail: 'pivot/turn that leads uke past your center' },
+      { term: 'ukemi', detail: 'safe falling/rolling; protect neck, move with the throw' },
     ],
-    terms: [
-      { term: 'omote', detail: 'front entry; tori advances past uke’s front edge.' },
-      { term: 'ura', detail: 'rear entry; tori turns behind uke’s line.' },
-      { term: 'irimi', detail: 'entering step that closes distance decisively.' },
-      { term: 'tenkan', detail: 'pivoting turn that leads uke past your center.' },
-      { term: 'ukemi', detail: 'receiving the technique safely through rolling or falling.' },
-      { term: 'ma-ai', detail: 'dynamic distance and timing between partners.' },
-      { term: 'kamae', detail: 'ready posture or stance that keeps balance and intent.' },
+    movementsCtaLabel: 'See all movement terms',
+
+    philosophyLead:
+      'Aikidō favors blending over collision. You cultivate center, timing, and compassion while maintaining effectiveness.',
+    philosophyPoints: [
+      'Blend with the line of force—move the person by moving their balance.',
+      'Maintain center (hara) and upright spine; power radiates from good posture.',
+      'Create kuzushi (unbalance) rather than using muscle.',
+      'Triangle–Circle–Square: establish stance, move in circles, finish with stable control.',
+      'Zanshin: remain aware before, during, and after technique.',
     ],
-    termsLead: 'These vocabulary pieces appear across the curriculum. Learn them early to follow instructions smoothly.',
-    beltsLead: 'Gradings follow the kyū → dan structure. Colors vary by dojo; this sequence is a common reference:',
+    virtuesTitle: 'Seven virtues (bushidō)',
+    virtues: [
+      { term: 'Gi (義)', detail: 'rectitude / righteousness' },
+      { term: 'Rei (礼)', detail: 'respect / courtesy' },
+      { term: 'Yū (勇)', detail: 'courage' },
+      { term: 'Meiyo (名誉)', detail: 'honor' },
+      { term: 'Jin (仁)', detail: 'benevolence / compassion' },
+      { term: 'Makoto (誠)', detail: 'truthfulness / sincerity' },
+      { term: 'Chū (忠)', detail: 'loyalty' },
+    ],
+
+    beltsLead:
+      'Gradings follow the kyū → dan structure. Colors vary by school; the list below is a common reference.',
+    beltNote:
+      'Note: our club (WSV Walddörfer Sportverein) uses this sequence. Other dojos may differ.',
     beltNames: {
       kyu5: 'Yellow',
       kyu4: 'Orange',
@@ -67,37 +101,69 @@ const content: Record<Locale, BasicsContent> = {
       dan4: 'Black',
       dan5: 'Black',
     },
+
+    etiquetteLead:
+      'Etiquette keeps everyone safe and training pleasant. The following points reflect common dōjō practice.',
     etiquettePoints: [
-      'Bow when stepping on or off the mat; acknowledge your partner before and after training.',
-      'Keep nails trimmed, remove jewelry, and secure long hair for safety.',
-      'Communicate early about injuries or limits; tap clearly if a lock or pin is uncomfortable.',
-      'Maintain awareness of nearby pairs and keep a safe mat space when throwing.',
+      // Dōjōkun-inspired
+      'Bow when entering/leaving the mat; greet your partner before and after training.',
+      'Be punctual; keep the training area in order and clean.',
+      'Respect teachers and students; each partner is the best teacher of the moment.',
+      'Be honest, polite, and modest; stay open-minded toward the taught forms.',
+      'Train with concentration and discipline; develop body and mind—avoid idle talk.',
+      'Always create space for ukemi when projecting; mind surrounding pairs.',
+      // Safety
+      'Trim nails, remove jewelry, and tie back long hair.',
+      'Communicate about injuries or limits before practice; tap early and clearly.',
     ],
   },
+
   de: {
     headings: {
-      naming: 'Benennungssystem',
-      terms: 'Häufige japanische Begriffe',
+      glossary: 'Wichtige Begriffe & Übersetzungen',
+      movements: 'Grundbewegungen & Stände',
+      philosophy: 'Aikidō‑Prinzipien & Tugenden',
       belts: 'Gürtelgrade & Farben',
-      etiquette: 'Dōjō-Etikette & Sicherheitshinweise',
+      etiquette: 'Dōjō‑Etikette & Sicherheit',
     },
-    namingLead: 'Techniknamen kombinieren den Angriff des Uke, deine Antwort und eine mögliche Richtung oder Variation.',
-    namingPoints: [
-      'Angriff – der erste Griff oder Schlag von Uke (z. B. „katate-dori“, „shōmen-uchi“).',
-      'Technik – die zentrale Antwort von Tori (z. B. „ikkyo“, „irimi-nage“).',
-      'Richtung oder Variation – präzisiert den Einstieg oder die Linie (z. B. „omote“, „ura“, „uchi“, „soto“).',
+    glossaryLead:
+      'Ein kurzes Glossar der Begriffe, die du auf der Matte häufig hörst. Wer sie früh lernt, trainiert flüssiger.',
+    glossaryCtaLabel: 'Glossar ansehen',
+
+    movementsLead:
+      'Diese Bewegungen nutzt du ständig. Übe sie ruhig und präzise, dann fließend.',
+    movementHighlights: [
+      { term: 'kamae (hanmi)', detail: 'Bereitschaftshaltung: Schultern weich, Knie locker, Zentrum stabil' },
+      { term: 'irimi', detail: 'entschlossenes Eintreten, das Distanz schließt' },
+      { term: 'tenkan', detail: 'Drehung, die Uke an deinem Zentrum vorbeiführt' },
+      { term: 'ukemi', detail: 'sicheres Fallen/Rollen; Nacken schützen, mit der Technik gehen' },
     ],
-    terms: [
-      { term: 'omote', detail: 'vorderer Einstieg; Tori geht vor Uke vorbei.' },
-      { term: 'ura', detail: 'hinterer Einstieg; Tori dreht sich hinter Ukes Linie.' },
-      { term: 'irimi', detail: 'Eintreten, das die Distanz entschlossen schließt.' },
-      { term: 'tenkan', detail: 'Drehung, die Uke an deinem Zentrum vorbeileitet.' },
-      { term: 'ukemi', detail: 'das sichere Aufnehmen einer Technik durch Rollen oder Fallen.' },
-      { term: 'ma-ai', detail: 'dynamische Distanz und das Timing zwischen den Partnern.' },
-      { term: 'kamae', detail: 'bereitstehende Haltung, die Balance und Intention bewahrt.' },
+    movementsCtaLabel: 'Alle Bewegungen im Glossar',
+
+    philosophyLead:
+      'Aikidō bevorzugt das Führen statt das Kollisionen. Entwickle Zentrum, Timing und Mitgefühl – bei voller Wirksamkeit.',
+    philosophyPoints: [
+      'Mit der Kraftlinie verbinden – das Gleichgewicht bewegen statt zu kämpfen.',
+      'Zentrum (hara) und aufrechte Wirbelsäule halten; Kraft entsteht aus guter Haltung.',
+      'Kuzushi: Gleichgewicht brechen statt Muskelkraft einsetzen.',
+      'Dreieck–Kreis–Quadrat: Stand finden, kreisförmig führen, stabil abschließen.',
+      'Zanshin: vor, während und nach der Technik aufmerksam bleiben.',
     ],
-    termsLead: 'Diese Vokabeln tauchen im gesamten Curriculum auf. Lerne sie früh, um Anweisungen flüssig zu folgen.',
-    beltsLead: 'Graduierungen folgen der Reihenfolge Kyū → Dan. Farben variieren je nach Dōjō; diese Abfolge dient als Orientierung:',
+    virtuesTitle: 'Die sieben Tugenden (Bushidō)',
+    virtues: [
+      { term: 'Gi (義)', detail: 'Aufrichtigkeit, Rechtschaffenheit' },
+      { term: 'Rei (礼)', detail: 'Höflichkeit, Respekt' },
+      { term: 'Yū (勇)', detail: 'Mut' },
+      { term: 'Meiyo (名誉)', detail: 'Ehre' },
+      { term: 'Jin (仁)', detail: 'Mitgefühl, Menschlichkeit' },
+      { term: 'Makoto (誠)', detail: 'Wahrhaftigkeit, Aufrichtigkeit' },
+      { term: 'Chū (忠)', detail: 'Loyalität' },
+    ],
+
+    beltsLead:
+      'Graduierungen folgen der Reihenfolge Kyū → Dan. Die Farben unterscheiden sich je nach Schule.',
+    beltNote:
+      'Hinweis: In unserem Verein (WSV Walddörfer Sportverein) gilt diese Reihenfolge. Andere Dōjōs weichen ggf. ab.',
     beltNames: {
       kyu5: 'Gelb',
       kyu4: 'Orange',
@@ -110,11 +176,18 @@ const content: Record<Locale, BasicsContent> = {
       dan4: 'Schwarz',
       dan5: 'Schwarz',
     },
+
+    etiquetteLead:
+      'Etikette schafft Sicherheit und eine gute Trainingsatmosphäre. Die folgenden Punkte sind weit verbreitet.',
     etiquettePoints: [
-      'Verbeuge dich beim Betreten und Verlassen der Matte; grüße deinen Partner vor und nach dem Üben.',
-      'Halte Nägel kurz, lege Schmuck ab und binde lange Haare zusammen.',
-      'Sprich Verletzungen oder Grenzen früh an; klopfe deutlich ab, wenn ein Hebel oder Haltegriff unangenehm wird.',
-      'Achte auf umliegende Paare und halte beim Werfen genügend Sicherheitsabstand.',
+      'Beim Betreten/Verlassen der Matte verbeugen; den Partner vor und nach dem Üben grüßen.',
+      'Pünktlich erscheinen; Ordnung und Sauberkeit wahren.',
+      'Meister und Schüler achten; jeder Partner ist gerade „der Beste“ für dich.',
+      'Ehrlich, höflich, bescheiden üben; den gelehrten Formen unvoreingenommen begegnen.',
+      'Konzentriert und diszipliniert trainieren; Körper und Geist bilden – nicht den Mund.',
+      'Beim Werfen stets Raum für Ukemi schaffen; auf umliegende Paare achten.',
+      'Nägel kurz halten, Schmuck ablegen, lange Haare binden.',
+      'Verletzungen/ Grenzen vorher mitteilen; früh und deutlich abklopfen.',
     ],
   },
 };
@@ -139,46 +212,83 @@ export const BasicsPage = ({ locale }: BasicsPageProps): ReactElement => {
   return (
     <section className="py-12 px-5 md:px-8">
       <div className="max-w-4xl mx-auto space-y-10">
+
+        {/* Glossary */}
         <motion.article className="space-y-4" {...animationProps}>
           <header className="space-y-2">
-            <h1 className="text-2xl font-semibold leading-tight">{copy.headings.naming}</h1>
-            <p className="text-sm text-subtle leading-relaxed">{copy.namingLead}</p>
+            <h1 className="text-2xl font-semibold leading-tight">{copy.headings.glossary}</h1>
+            <p className="text-sm text-subtle leading-relaxed">{copy.glossaryLead}</p>
           </header>
-          <ul className="space-y-3 text-sm leading-relaxed">
-            {copy.namingPoints.map((point) => (
-              <li key={point} className="flex gap-2">
-                <span aria-hidden className="mt-1 text-base">•</span>
-                <span>{point}</span>
-              </li>
-            ))}
-          </ul>
+          <div>
+            <a href="/glossary" className="inline-flex items-center rounded-xl border surface-border bg-[var(--color-surface)]/70 px-4 py-2 text-sm font-medium hover:bg-[var(--color-surface)]">
+              {copy.glossaryCtaLabel} →
+            </a>
+          </div>
         </motion.article>
 
+        {/* Movements & Stances */}
         <motion.article className="space-y-4" {...animationProps}>
           <header className="space-y-2">
-            <h2 className="text-xl font-semibold leading-tight">{copy.headings.terms}</h2>
-            <p className="text-sm text-subtle leading-relaxed">{copy.termsLead}</p>
+            <h2 className="text-xl font-semibold leading-tight">{copy.headings.movements}</h2>
+            <p className="text-sm text-subtle leading-relaxed">{copy.movementsLead}</p>
           </header>
           <dl className="space-y-3">
-            {copy.terms.map(({ term, detail }) => (
+            {copy.movementHighlights.map(({ term, detail }) => (
               <div key={term} className="rounded-xl border surface-border bg-[var(--color-surface)]/70 px-4 py-3">
                 <dt className="text-sm font-semibold uppercase tracking-[0.2em] text-subtle">{term}</dt>
                 <dd className="mt-1 text-sm leading-relaxed">{detail}</dd>
               </div>
             ))}
           </dl>
+          <div>
+            <a href="/glossary" className="inline-flex items-center rounded-xl border surface-border bg-[var(--color-surface)]/70 px-4 py-2 text-sm font-medium hover:bg-[var(--color-surface)]">
+              {copy.movementsCtaLabel} →
+            </a>
+          </div>
         </motion.article>
 
+        {/* Philosophy */}
+        <motion.article className="space-y-4" {...animationProps}>
+          <header className="space-y-2">
+            <h2 className="text-xl font-semibold leading-tight">{copy.headings.philosophy}</h2>
+            <p className="text-sm text-subtle leading-relaxed">{copy.philosophyLead}</p>
+          </header>
+          <ul className="space-y-3 text-sm leading-relaxed">
+            {copy.philosophyPoints.map((point) => (
+              <li key={point} className="flex gap-2">
+                <span aria-hidden className="mt-1 text-base">•</span>
+                <span>{point}</span>
+              </li>
+            ))}
+          </ul>
+          <div className="space-y-2">
+            <h3 className="text-sm font-semibold tracking-wide uppercase text-subtle">{copy.virtuesTitle}</h3>
+            <dl className="space-y-3">
+              {copy.virtues.map(({ term, detail }) => (
+                <div key={term} className="rounded-xl border surface-border bg-[var(--color-surface)]/70 px-4 py-3">
+                  <dt className="text-sm font-semibold uppercase tracking-[0.2em] text-subtle">{term}</dt>
+                  <dd className="mt-1 text-sm leading-relaxed">{detail}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </motion.article>
+
+        {/* Belts */}
         <motion.article className="space-y-4" {...animationProps}>
           <header className="space-y-2">
             <h2 className="text-xl font-semibold leading-tight">{copy.headings.belts}</h2>
             <p className="text-sm text-subtle leading-relaxed">{copy.beltsLead}</p>
+            <p className="text-xs text-subtle">{copy.beltNote}</p>
           </header>
           <ul className="grid gap-3 sm:grid-cols-2">
             {gradeOrder.map((grade) => {
               const palette = gradePalette[grade];
               return (
-                <li key={grade} className="rounded-xl border surface-border bg-[var(--color-surface)]/70 px-4 py-3 flex items-center justify-between gap-3">
+                <li
+                  key={grade}
+                  className="rounded-xl border surface-border bg-[var(--color-surface)]/70 px-4 py-3 flex items-center justify-between gap-3"
+                >
                   <span className="text-sm font-medium">{gradeLabel(grade, locale)}</span>
                   <span
                     aria-hidden
@@ -197,9 +307,11 @@ export const BasicsPage = ({ locale }: BasicsPageProps): ReactElement => {
           </ul>
         </motion.article>
 
+        {/* Etiquette */}
         <motion.article className="space-y-3" {...animationProps}>
           <header className="space-y-2">
             <h2 className="text-xl font-semibold leading-tight">{copy.headings.etiquette}</h2>
+            <p className="text-sm text-subtle leading-relaxed">{copy.etiquetteLead}</p>
           </header>
           <ul className="space-y-3 text-sm leading-relaxed">
             {copy.etiquettePoints.map((point) => (
