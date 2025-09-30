@@ -175,7 +175,7 @@ export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen }: Sea
             )}
           </div>
           </div>
-          <div className="mt-2 px-3 pb-1 pt-2 text-xs text-subtle">
+          <div className="mt-2 px-3 pb-1 pt-2 text-xs text-subtle text-center">
             Use ↑↓ to navigate • Enter to select • Esc to close
           </div>
         </div>

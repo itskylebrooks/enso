@@ -4,7 +4,7 @@ import { Header } from './components/layout/Header';
 import { FilterPanel } from './components/filters/FilterPanel';
 import { Library } from './components/library/Library';
 import { BookmarksView } from './components/bookmarks/BookmarksView';
-import { SearchOverlay } from './components/overlay/SearchOverlay';
+import { SearchOverlay } from './components/search/SearchOverlay';
 import { SettingsModal } from './components/settings/SettingsModal';
 import { TechniquePage } from './components/technique/TechniquePage';
 import { Toast } from './components/ui/Toast';
