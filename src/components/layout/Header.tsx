@@ -169,7 +169,7 @@ export const Header = ({
                   animate="animate"
                   exit="exit"
                   variants={menuVariants}
-                  className="absolute -right-4 mt-4 w-48 rounded-lg border-2 border-[var(--color-text)]/20 bg-[var(--color-surface)] shadow-xl ring-1 ring-black/5 z-30"
+                  className="absolute -right-3 mt-4 w-48 rounded-lg border-2 border-[var(--color-text)]/20 bg-[var(--color-surface)] shadow-xl ring-1 ring-black/5 z-30"
                 >
                 <ul className="p-2">
                   <li>
