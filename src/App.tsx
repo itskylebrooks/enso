@@ -694,7 +694,15 @@ export default function App(): ReactElement {
   } else if (route === 'about') {
     mainContent = <AboutPage copy={copy} />;
   } else if (route === 'basics') {
-    mainContent = <BasicsPage locale={locale} />;
+    mainContent = (
+      <BasicsPage
+        locale={locale}
+        onNavigateToGlossaryWithMovementFilter={() => {
+          setGlossaryFilters({ category: 'movement' });
+          navigateTo('glossary');
+        }}
+      />
+    );
   } else {
     mainContent = (
       <div className="max-w-6xl mx-auto px-4 py-4 space-y-4">

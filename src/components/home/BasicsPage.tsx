@@ -7,6 +7,7 @@ import { useMotionPreferences, defaultEase } from '../ui/motion';
 
 type BasicsPageProps = {
   locale: Locale;
+  onNavigateToGlossaryWithMovementFilter: () => void;
 };
 
 type TermEntry = {
@@ -16,14 +17,11 @@ type TermEntry = {
 
 type BasicsContent = {
   headings: {
-    glossary: string;
     movements: string;
     philosophy: string;
     belts: string;
     etiquette: string;
   };
-  glossaryLead: string;
-  glossaryCtaLabel: string;
 
   movementsLead: string;
   movementHighlights: TermEntry[];
@@ -45,15 +43,11 @@ type BasicsContent = {
 const content: Record<Locale, BasicsContent> = {
   en: {
     headings: {
-      glossary: 'Key terms & translations',
       movements: 'Basic movements & stances',
       philosophy: 'Aikidō principles & virtues',
       belts: 'Belt grades & colors',
       etiquette: 'Dōjō etiquette & safety',
     },
-    glossaryLead:
-      'A short glossary of words you will hear on the mat. Learning these early makes the rest of training smoother.',
-    glossaryCtaLabel: 'View Glossary',
 
     movementsLead:
       'These are the movement tools you will use constantly. Practice them slowly, then smoothly.',
@@ -120,15 +114,11 @@ const content: Record<Locale, BasicsContent> = {
 
   de: {
     headings: {
-      glossary: 'Wichtige Begriffe & Übersetzungen',
       movements: 'Grundbewegungen & Stände',
       philosophy: 'Aikidō‑Prinzipien & Tugenden',
       belts: 'Gürtelgrade & Farben',
       etiquette: 'Dōjō‑Etikette & Sicherheit',
     },
-    glossaryLead:
-      'Ein kurzes Glossar der Begriffe, die du auf der Matte häufig hörst. Wer sie früh lernt, trainiert flüssiger.',
-    glossaryCtaLabel: 'Glossar ansehen',
 
     movementsLead:
       'Diese Bewegungen nutzt du ständig. Übe sie ruhig und präzise, dann fließend.',
@@ -197,7 +187,7 @@ const sectionVariants = {
   show: { opacity: 1, y: 0 },
 };
 
-export const BasicsPage = ({ locale }: BasicsPageProps): ReactElement => {
+export const BasicsPage = ({ locale, onNavigateToGlossaryWithMovementFilter }: BasicsPageProps): ReactElement => {
   const copy = content[locale];
   const { prefersReducedMotion } = useMotionPreferences();
   const animationProps = prefersReducedMotion
@@ -212,19 +202,6 @@ export const BasicsPage = ({ locale }: BasicsPageProps): ReactElement => {
   return (
     <section className="py-12 px-5 md:px-8">
       <div className="max-w-4xl mx-auto space-y-10">
-
-        {/* Glossary */}
-        <motion.article className="space-y-4" {...animationProps}>
-          <header className="space-y-2">
-            <h1 className="text-2xl font-semibold leading-tight">{copy.headings.glossary}</h1>
-            <p className="text-sm text-subtle leading-relaxed">{copy.glossaryLead}</p>
-          </header>
-          <div>
-            <a href="/glossary" className="inline-flex items-center rounded-xl border surface-border bg-[var(--color-surface)]/70 px-4 py-2 text-sm font-medium hover:bg-[var(--color-surface)]">
-              {copy.glossaryCtaLabel} →
-            </a>
-          </div>
-        </motion.article>
 
         {/* Movements & Stances */}
         <motion.article className="space-y-4" {...animationProps}>
@@ -241,9 +218,13 @@ export const BasicsPage = ({ locale }: BasicsPageProps): ReactElement => {
             ))}
           </dl>
           <div>
-            <a href="/glossary" className="inline-flex items-center rounded-xl border surface-border bg-[var(--color-surface)]/70 px-4 py-2 text-sm font-medium hover:bg-[var(--color-surface)]">
+            <button
+              type="button"
+              onClick={onNavigateToGlossaryWithMovementFilter}
+              className="inline-flex items-center rounded-xl border surface-border bg-[var(--color-surface)]/70 px-4 py-2 text-sm font-medium hover:bg-[var(--color-surface)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+            >
               {copy.movementsCtaLabel} →
-            </a>
+            </button>
           </div>
         </motion.article>
 
