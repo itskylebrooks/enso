@@ -75,31 +75,26 @@ export const GlossaryFilterPanel = ({
         )}
       </div>
 
-      <div className="space-y-4">
-        <div className="space-y-3">
-          <SectionTitle>{copy.category}</SectionTitle>
-          <div className="space-y-2">
-            {categories.map((category) => {
-              const isActive = filters.category === category;
-              return (
-                <button
-                  key={category}
-                  type="button"
-                  aria-pressed={isActive}
-                  onClick={() => handleCategoryChange(isActive ? undefined : category)}
-                  className={classNames(
-                    'flex w-full items-center justify-between rounded-md border px-3 py-2 text-sm transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] hover:border-[var(--color-text)] hover:bg-[var(--color-surface-hover)]',
-                    isActive
-                      ? 'bg-[var(--color-text)] text-[var(--color-bg)] border-[var(--color-text)] shadow-sm hover:bg-[var(--color-text)]'
-                      : 'surface surface-border',
-                  )}
-                >
-                                            <span className="truncate">{getCategoryLabel(category, copy)}</span>
-                </button>
-              );
-            })}
-          </div>
-        </div>
+      <div className="space-y-2">
+        {categories.map((category) => {
+          const isActive = filters.category === category;
+          return (
+            <button
+              key={category}
+              type="button"
+              aria-pressed={isActive}
+              onClick={() => handleCategoryChange(isActive ? undefined : category)}
+              className={classNames(
+                'flex w-full items-center justify-between rounded-md border px-3 py-2 text-sm transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] hover:border-[var(--color-text)] hover:bg-[var(--color-surface-hover)]',
+                isActive
+                  ? 'bg-[var(--color-text)] text-[var(--color-bg)] border-[var(--color-text)] shadow-sm hover:bg-[var(--color-text)]'
+                  : 'surface surface-border',
+              )}
+            >
+              <span className="truncate">{getCategoryLabel(category, copy)}</span>
+            </button>
+          );
+        })}
       </div>
     </div>
   );
