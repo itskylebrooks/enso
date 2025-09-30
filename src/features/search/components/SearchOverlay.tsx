@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type ReactElement, type KeyboardEvent } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactElement, type KeyboardEvent } from 'react';
 import { motion } from 'motion/react';
 import type { Copy } from '../../../shared/constants/i18n';
 import type { Locale, Technique, GlossaryTerm } from '../../../shared/types';
@@ -26,8 +26,11 @@ export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen, onOpe
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [glossaryTerms, setGlossaryTerms] = useState<GlossaryTerm[]>([]);
+  const [highlightPosition, setHighlightPosition] = useState({ y: 0, height: 0 });
   const inputRef = useRef<HTMLInputElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
+  const resultsContainerRef = useRef<HTMLDivElement>(null);
+  const resultRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const {
     overlayMotion,
     prefersReducedMotion,
@@ -111,12 +114,31 @@ export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen, onOpe
 
   // Reset selection when results change
   useEffect(() => {
+    // Clear refs when results change
+    resultRefs.current = [];
+    
     if (results.length === 0) {
       setSelectedIndex(-1);
     } else if (selectedIndex >= results.length || selectedIndex === -1) {
       setSelectedIndex(0);
     }
   }, [results, selectedIndex]);
+
+  // Update highlight position when selection changes
+  useLayoutEffect(() => {
+    if (selectedIndex >= 0 && resultRefs.current[selectedIndex]) {
+      const selectedElement = resultRefs.current[selectedIndex];
+      
+      if (selectedElement) {
+        const elementRect = selectedElement.getBoundingClientRect();
+        
+        setHighlightPosition({
+          y: selectedElement.offsetTop,
+          height: elementRect.height,
+        });
+      }
+    }
+  }, [selectedIndex, results]);
 
   // Keyboard navigation handlers
   const handleInputKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -203,11 +225,39 @@ export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen, onOpe
             </motion.button>
           </div>
           <div className="border-t surface-border mt-2 pt-3">
-          <div className="max-h-[60vh] overflow-y-auto">
+          <div ref={resultsContainerRef} className="max-h-[60vh] overflow-y-auto relative">
+            {/* Animated background highlight */}
+            {results.length > 0 && selectedIndex >= 0 && (
+              <motion.div
+                className="absolute bg-black/5 dark:bg-white/5 rounded-xl pointer-events-none z-0"
+                animate={{
+                  y: highlightPosition.y,
+                  opacity: 1,
+                }}
+                initial={{
+                  y: 0,
+                  opacity: 0,
+                }}
+                transition={{
+                  type: "spring",
+                  stiffness: 400,
+                  damping: 40,
+                  mass: 0.8,
+                }}
+                style={{
+                  width: 'calc(100% - 0px)',
+                  height: highlightPosition.height || 64,
+                  left: 0,
+                  top: 0,
+                }}
+              />
+            )}
+            
             {results.length > 0 ? (
               results.map((result, index) => (
                 <button
                   key={result.type === 'technique' ? result.item.id : result.item.id}
+                  ref={(el) => { resultRefs.current[index] = el; }}
                   type="button"
                   onClick={(event) => {
                     const openInNewTab = event.metaKey || event.ctrlKey;
@@ -221,11 +271,7 @@ export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen, onOpe
                     }
                   }}
                   onMouseEnter={() => setSelectedIndex(index)}
-                  className={`relative flex w-full items-center justify-between gap-4 rounded-xl px-3 py-3 text-left transition-soft ${
-                    index === selectedIndex 
-                      ? 'bg-black/5 dark:bg-white/5' 
-                      : 'hover:bg-black/5 dark:hover:bg-white/5'
-                  } focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--color-text)]`}
+                  className="relative flex w-full items-center justify-between gap-4 rounded-xl px-3 py-3 text-left transition-colors z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--color-text)]"
                   title={result.type === 'technique' ? result.item.name[locale] : result.item.romaji}
                 >
                   <div className="min-w-0 flex-1">
