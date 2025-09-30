@@ -6,12 +6,26 @@ import { useMotionPreferences } from '../../../components/ui/motion';
 import type { GlossaryTerm } from '../../../shared/types';
 import type { Locale } from '../../../shared/types';
 import type { Copy } from '../../../shared/constants/i18n';
+import { AddToCollectionMenu } from '../../../features/bookmarks/components/AddToCollectionMenu';
+import { BookmarkIcon, BookmarkCheckIcon } from '../../../shared/components/ui/icons';
+import { classNames } from '../../../shared/utils/classNames';
+
+export type CollectionOption = {
+  id: string;
+  name: string;
+  icon: string | null;
+  checked: boolean;
+};
 
 type GlossaryDetailPageProps = {
   slug: string;
   copy: Copy;
   locale: Locale;
   onBack: () => void;
+  isBookmarked: boolean;
+  onToggleBookmark: () => void;
+  collections: CollectionOption[];
+  onToggleCollection: (collectionId: string, nextChecked: boolean) => void;
 };
 
 const getCategoryLabel = (category: GlossaryTerm['category'], copy: Copy): string => {
@@ -40,7 +54,16 @@ const getCategoryColor = (category: GlossaryTerm['category']): string => {
 
 
 
-export const GlossaryDetailPage = ({ slug, copy, locale, onBack }: GlossaryDetailPageProps): ReactElement => {
+export const GlossaryDetailPage = ({ 
+  slug, 
+  copy, 
+  locale, 
+  onBack, 
+  isBookmarked, 
+  onToggleBookmark, 
+  collections, 
+  onToggleCollection 
+}: GlossaryDetailPageProps): ReactElement => {
   const [term, setTerm] = useState<GlossaryTerm | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -138,6 +161,37 @@ export const GlossaryDetailPage = ({ slug, copy, locale, onBack }: GlossaryDetai
             <span className={`text-xs font-medium px-2 py-1 rounded-full ${categoryStyle}`}>
               {categoryLabel}
             </span>
+          </div>
+        </div>
+        
+        {/* Bookmark controls */}
+        <div className="flex justify-center gap-2">
+          <AddToCollectionMenu
+            copy={copy}
+            collections={collections}
+            onToggle={(collectionId, nextChecked) => onToggleCollection(collectionId, nextChecked)}
+          />
+          <div className="inline-flex rounded-lg border surface-border overflow-hidden">
+            <motion.button
+              type="button"
+              onClick={onToggleBookmark}
+              aria-pressed={isBookmarked}
+              aria-label={copy.bookmark}
+              transition={{ duration: 0.15 }}
+              whileTap={{ scale: 0.96 }}
+              className={classNames(
+                'p-2 text-sm flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] transition-colors duration-150',
+                isBookmarked
+                  ? 'bg-[var(--color-text)] text-[var(--color-bg)]'
+                  : 'surface hover:surface-hover',
+              )}
+            >
+              {isBookmarked ? (
+                <BookmarkCheckIcon className="w-4 h-4" />
+              ) : (
+                <BookmarkIcon className="w-4 h-4" />
+              )}
+            </motion.button>
           </div>
         </div>
       </header>

@@ -48,6 +48,12 @@ export type Progress = {
   updatedAt: number;
 };
 
+export type GlossaryProgress = {
+  termId: string;
+  bookmarked: boolean;
+  updatedAt: number;
+};
+
 export type Collection = {
   id: string;
   name: string;
@@ -64,14 +70,23 @@ export type BookmarkCollection = {
   createdAt: number;
 };
 
+export type GlossaryBookmarkCollection = {
+  id: string;
+  termId: string;
+  collectionId: string;
+  createdAt: number;
+};
+
 export type Theme = 'light' | 'dark';
 
 export type DB = {
   version: number;
   techniques: Technique[];
   progress: Progress[];
+  glossaryProgress: GlossaryProgress[];
   collections: Collection[];
   bookmarkCollections: BookmarkCollection[];
+  glossaryBookmarkCollections: GlossaryBookmarkCollection[];
 };
 
 export type AppRoute = 'home' | 'library' | 'bookmarks' | 'about' | 'basics' | 'glossary';

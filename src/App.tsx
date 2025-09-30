@@ -7,12 +7,13 @@ import { BookmarksView } from './features/bookmarks/components/BookmarksView';
 import { SearchOverlay } from './features/search/components/SearchOverlay';
 import { SettingsModal } from './components/settings/SettingsModal';
 import { TechniquePage } from './components/technique/TechniquePage';
+import { type CollectionOption } from './components/technique/TechniqueHeader';
 import { Toast } from './components/ui/Toast';
 import { MobileFilters } from './components/ui/MobileFilters';
 import { HomePage } from './components/home/HomePage';
 import { AboutPage } from './components/home/AboutPage';
 import { BasicsPage } from './components/home/BasicsPage';
-import { GlossaryPage, GlossaryDetailPage, GlossaryFilterPanel, MobileGlossaryFilters } from './features/glossary';
+import { GlossaryPage, GlossaryDetailPage, GlossaryFilterPanel, MobileGlossaryFilters, loadAllTerms } from './features/glossary';
 import { ConfirmClearModal } from './shared/components/dialogs/ConfirmClearDialog';
 import { useMotionPreferences } from './components/ui/motion';
 import { getCopy } from './shared/constants/i18n';
@@ -28,7 +29,7 @@ import {
   saveLocale,
   saveTheme,
 } from './shared/services/storageService';
-import type { AppRoute, Collection, DB, Filters, Locale, Progress, Technique, Theme } from './shared/types';
+import type { AppRoute, Collection, DB, Filters, GlossaryBookmarkCollection, GlossaryProgress, GlossaryTerm, Locale, Progress, Technique, Theme } from './shared/types';
 import { gradeOrder } from './shared/utils/grades';
 import { unique, upsert } from './shared/utils/array';
 
@@ -157,6 +158,44 @@ function updateProgressEntry(progress: Progress[], id: string, patch: Partial<Pr
   return upsert(progress, (entry) => entry.techniqueId === id, nextEntry);
 }
 
+function updateGlossaryProgressEntry(glossaryProgress: GlossaryProgress[], termId: string, patch: Partial<GlossaryProgress>): GlossaryProgress[] {
+  const existing = glossaryProgress.find((entry) => entry.termId === termId);
+  const timestamp = Date.now();
+  const baseline: GlossaryProgress = existing ?? {
+    termId,
+    bookmarked: false,
+    updatedAt: timestamp,
+  };
+
+  const nextEntry: GlossaryProgress = {
+    ...baseline,
+    ...patch,
+    termId,
+    updatedAt: timestamp,
+  };
+
+  return upsert(glossaryProgress, (entry) => entry.termId === termId, nextEntry);
+}
+
+const getGlossaryCollectionOptions = (
+  collections: Collection[],
+  glossaryBookmarkCollections: GlossaryBookmarkCollection[],
+  termId: string,
+): CollectionOption[] => {
+  const termCollectionIds = new Set(
+    glossaryBookmarkCollections
+      .filter((entry) => entry.termId === termId)
+      .map((entry) => entry.collectionId),
+  );
+
+  return collections.map((collection) => ({
+    id: collection.id,
+    name: collection.name,
+    icon: collection.icon ?? null,
+    checked: termCollectionIds.has(collection.id),
+  }));
+};
+
 const getSelectableValues = (techniques: Technique[], selector: (technique: Technique) => string | undefined): string[] =>
   unique(
     techniques
@@ -216,6 +255,7 @@ export default function App(): ReactElement {
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [confirmClearOpen, setConfirmClearOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+  const [glossaryTerms, setGlossaryTerms] = useState<GlossaryTerm[]>([]);
 
   const copy = getCopy(locale);
   const { pageMotion } = useMotionPreferences();
@@ -281,6 +321,20 @@ export default function App(): ReactElement {
 
   // Prevent page scroll while overlays/modals are open
   useLockBodyScroll(searchOpen || settingsOpen || confirmClearOpen);
+
+  // Load glossary terms on component mount
+  useEffect(() => {
+    const loadGlossaryTerms = async () => {
+      try {
+        const terms = await loadAllTerms();
+        setGlossaryTerms(terms);
+      } catch (error) {
+        console.error('Failed to load glossary terms:', error);
+      }
+    };
+
+    loadGlossaryTerms();
+  }, []);
 
   const openSearch = useCallback(() => {
     setSearchOpen(true);
@@ -431,6 +485,17 @@ export default function App(): ReactElement {
     [db.progress, currentTechnique],
   );
 
+  const currentGlossaryProgress = useMemo(() => {
+    if (!activeSlug || route !== 'glossary') return null;
+    // For glossary, activeSlug represents the glossary term slug/id
+    return db.glossaryProgress.find((entry) => entry.termId === activeSlug) ?? null;
+  }, [db.glossaryProgress, activeSlug, route]);
+
+  const glossaryCollectionOptions = useMemo(() => {
+    if (!activeSlug || route !== 'glossary') return [];
+    return getGlossaryCollectionOptions(db.collections, db.glossaryBookmarkCollections, activeSlug);
+  }, [db.collections, db.glossaryBookmarkCollections, activeSlug, route]);
+
   const updateProgress = (id: string, patch: Partial<Progress>): void => {
     setDB((prev) => {
       const nextProgress = updateProgressEntry(prev.progress, id, patch);
@@ -442,6 +507,21 @@ export default function App(): ReactElement {
         ...prev,
         progress: nextProgress,
         bookmarkCollections: nextBookmarkCollections,
+      };
+    });
+  };
+
+  const updateGlossaryProgress = (termId: string, patch: Partial<GlossaryProgress>): void => {
+    setDB((prev) => {
+      const nextGlossaryProgress = updateGlossaryProgressEntry(prev.glossaryProgress, termId, patch);
+      const shouldRemoveAssignments = patch.bookmarked === false;
+      const nextGlossaryBookmarkCollections = shouldRemoveAssignments
+        ? prev.glossaryBookmarkCollections.filter((entry) => entry.termId !== termId)
+        : prev.glossaryBookmarkCollections;
+      return {
+        ...prev,
+        glossaryProgress: nextGlossaryProgress,
+        glossaryBookmarkCollections: nextGlossaryBookmarkCollections,
       };
     });
   };
@@ -562,6 +642,58 @@ export default function App(): ReactElement {
       ...prev,
       bookmarkCollections: prev.bookmarkCollections.filter(
         (entry) => !(entry.techniqueId === techniqueId && entry.collectionId === collectionId),
+      ),
+    }));
+  };
+
+  const assignGlossaryToCollection = (termId: string, collectionId: string): void => {
+    setDB((prev) => {
+      // Automatically bookmark if not already bookmarked
+      const progressEntry = prev.glossaryProgress.find((entry) => entry.termId === termId);
+      const isBookmarked = progressEntry?.bookmarked;
+
+      let nextGlossaryProgress = prev.glossaryProgress;
+      if (!isBookmarked) {
+        const now = Date.now();
+        if (progressEntry) {
+          nextGlossaryProgress = prev.glossaryProgress.map((p) =>
+            p.termId === termId ? { ...p, bookmarked: true, updatedAt: now } : p,
+          );
+        } else {
+          nextGlossaryProgress = [
+            ...prev.glossaryProgress,
+            { termId, bookmarked: true, updatedAt: now },
+          ];
+        }
+      }
+
+      if (prev.glossaryBookmarkCollections.some((entry) => entry.termId === termId && entry.collectionId === collectionId)) {
+        return { ...prev, glossaryProgress: nextGlossaryProgress };
+      }
+
+      const now = Date.now();
+
+      return {
+        ...prev,
+        glossaryProgress: nextGlossaryProgress,
+        glossaryBookmarkCollections: [
+          ...prev.glossaryBookmarkCollections,
+          {
+            id: generateId(),
+            termId,
+            collectionId,
+            createdAt: now,
+          },
+        ],
+      };
+    });
+  };
+
+  const removeGlossaryFromCollection = (termId: string, collectionId: string): void => {
+    setDB((prev) => ({
+      ...prev,
+      glossaryBookmarkCollections: prev.glossaryBookmarkCollections.filter(
+        (entry) => !(entry.termId === termId && entry.collectionId === collectionId),
       ),
     }));
   };
@@ -753,9 +885,12 @@ export default function App(): ReactElement {
             copy={copy}
             locale={locale}
             techniques={db.techniques}
+            glossaryTerms={glossaryTerms}
             progress={db.progress}
+            glossaryProgress={db.glossaryProgress}
             collections={db.collections}
             bookmarkCollections={db.bookmarkCollections}
+            glossaryBookmarkCollections={db.glossaryBookmarkCollections}
             selectedCollectionId={selectedCollectionId}
             onSelectCollection={(id) => setSelectedCollectionId(id)}
             onCreateCollection={createCollection}
@@ -763,7 +898,10 @@ export default function App(): ReactElement {
             onDeleteCollection={deleteCollection}
             onAssign={assignToCollection}
             onUnassign={removeFromCollection}
+            onAssignGlossary={assignGlossaryToCollection}
+            onUnassignGlossary={removeGlossaryFromCollection}
             onOpenTechnique={openTechnique}
+            onOpenGlossaryTerm={(slug) => openGlossaryTerm(slug)}
           />
         )}
 
@@ -775,6 +913,16 @@ export default function App(): ReactElement {
                 copy={copy}
                 locale={locale}
                 onBack={() => navigateTo('glossary', { replace: true })}
+                isBookmarked={Boolean(currentGlossaryProgress?.bookmarked)}
+                onToggleBookmark={() => updateGlossaryProgress(activeSlug, { bookmarked: !currentGlossaryProgress?.bookmarked })}
+                collections={glossaryCollectionOptions}
+                onToggleCollection={(collectionId, nextChecked) => {
+                  if (nextChecked) {
+                    assignGlossaryToCollection(activeSlug, collectionId);
+                  } else {
+                    removeGlossaryFromCollection(activeSlug, collectionId);
+                  }
+                }}
               />
             ) : (
               <>

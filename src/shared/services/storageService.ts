@@ -1,6 +1,6 @@
 import { parseTechnique } from '../../content/schema';
 import { APP_NAME, DB_VERSION, LOCALE_KEY, STORAGE_KEY, THEME_KEY } from '../constants/storage';
-import type { BookmarkCollection, Collection, DB, Locale, Progress, Technique, TechniqueVersion, Theme } from '../types';
+import type { BookmarkCollection, Collection, DB, GlossaryBookmarkCollection, GlossaryProgress, Locale, Progress, Technique, TechniqueVersion, Theme } from '../types';
 
 // Load technique files directly from the content/techniques folder.
 // Vite's import.meta.glob with { eager: true } returns the parsed JSON modules at build time.
@@ -101,12 +101,20 @@ const buildDefaultProgress = (techniqueId: string): Progress => ({
   updatedAt: Date.now(),
 });
 
+const buildDefaultGlossaryProgress = (termId: string): GlossaryProgress => ({
+  termId,
+  bookmarked: false,
+  updatedAt: Date.now(),
+});
+
 const buildDefaultDB = (): DB => ({
   version: DB_VERSION,
   techniques: seedTechniques,
   progress: seedTechniques.map((technique) => buildDefaultProgress(technique.id)),
+  glossaryProgress: [],
   collections: [],
   bookmarkCollections: [],
+  glossaryBookmarkCollections: [],
 });
 
 const readLocalStorage = (key: string): string | null => {
@@ -145,6 +153,39 @@ const ensureProgressCoverage = (db: DB): Progress[] => {
     const existing = progressMap.get(technique.id);
     return existing ? { ...existing } : buildDefaultProgress(technique.id);
   });
+};
+
+const stripUnknownGlossaryProgress = (progress: GlossaryProgress[]): GlossaryProgress[] =>
+  progress.filter((entry): entry is GlossaryProgress => Boolean(entry && entry.termId));
+
+const ensureGlossaryProgress = (rawGlossaryProgress: GlossaryProgress[]): GlossaryProgress[] => {
+  return stripUnknownGlossaryProgress(Array.isArray(rawGlossaryProgress) ? rawGlossaryProgress : []);
+};
+
+const ensureGlossaryBookmarkCollections = (
+  raw: GlossaryBookmarkCollection[],
+  validCollectionIds: Set<string>,
+): GlossaryBookmarkCollection[] => {
+  if (!Array.isArray(raw)) return [];
+
+  const sanitized = raw
+    .map((entry) => {
+      if (!entry || typeof entry !== 'object') return null;
+      const { id, termId, collectionId, createdAt } = entry as Partial<GlossaryBookmarkCollection>;
+      if (typeof id !== 'string' || id.trim().length === 0) return null;
+      if (typeof termId !== 'string' || termId.trim().length === 0) return null;
+      if (typeof collectionId !== 'string' || collectionId.trim().length === 0) return null;
+      if (!validCollectionIds.has(collectionId)) return null;
+      return {
+        id,
+        termId,
+        collectionId,
+        createdAt: typeof createdAt === 'number' ? createdAt : Date.now(),
+      } satisfies GlossaryBookmarkCollection;
+    })
+    .filter((entry): entry is GlossaryBookmarkCollection => entry !== null);
+
+  return sanitized;
 };
 
 const detectSystemTheme = (): Theme => {
@@ -250,12 +291,16 @@ export const loadDB = (): DB => {
       progress: ensureProgressCoverage({
         techniques: seedTechniques,
         progress: Array.isArray(parsed.progress) ? (parsed.progress as Progress[]) : [],
+        glossaryProgress: [],
         collections,
         bookmarkCollections: [],
+        glossaryBookmarkCollections: [],
         version: DB_VERSION,
       }),
+      glossaryProgress: ensureGlossaryProgress(parsed.glossaryProgress ?? []),
       collections,
       bookmarkCollections: ensureBookmarkCollections(parsed.bookmarkCollections ?? [], seedTechniques, collectionIds),
+      glossaryBookmarkCollections: ensureGlossaryBookmarkCollections(parsed.glossaryBookmarkCollections ?? [], collectionIds),
     };
 
     return db;
@@ -304,6 +349,11 @@ export const exportDB = (db: DB): string => {
     .filter(p => p.bookmarked)
     .map(p => p.techniqueId);
 
+  // Extract bookmarked glossary term IDs from glossary progress
+  const bookmarkedGlossaryTermIds = db.glossaryProgress
+    .filter(p => p.bookmarked)
+    .map(p => p.termId);
+
   // Create collection name mapping
   const collectionIdToName = new Map(db.collections.map(c => [c.id, c.name]));
 
@@ -325,12 +375,26 @@ export const exportDB = (db: DB): string => {
     })
     .filter((entry): entry is { techniqueId: string; collectionName: string } => Boolean(entry));
 
+  // Export glossary bookmark collections using collection names instead of IDs
+  const exportGlossaryBookmarkCollections = db.glossaryBookmarkCollections
+    .map(({ termId, collectionId }) => {
+      const collectionName = collectionIdToName.get(collectionId);
+      if (!collectionName) return null; // Skip if collection not found
+      return {
+        termId,
+        collectionName,
+      };
+    })
+    .filter((entry): entry is { termId: string; collectionName: string } => Boolean(entry));
+
   return JSON.stringify(
     {
       appName: APP_NAME,
       bookmarks: bookmarkedTechniqueIds,
+      glossaryBookmarks: bookmarkedGlossaryTermIds,
       collections: exportCollections,
       bookmarkCollections: exportBookmarkCollections,
+      glossaryBookmarkCollections: exportGlossaryBookmarkCollections,
     },
     null,
     2,
@@ -339,14 +403,18 @@ export const exportDB = (db: DB): string => {
 
 export const parseIncomingDB = (raw: string): {
   bookmarks?: string[];
+  glossaryBookmarks?: string[];
   collections?: Array<{ name: string; icon?: string | null }>;
   bookmarkCollections?: Array<{ techniqueId: string; collectionName: string }>;
+  glossaryBookmarkCollections?: Array<{ termId: string; collectionName: string }>;
 } => {
   const parsed = JSON.parse(raw) as {
     appName?: string;
     bookmarks?: string[];
+    glossaryBookmarks?: string[];
     collections?: Array<{ name: string; icon?: string | null }>;
     bookmarkCollections?: Array<{ techniqueId: string; collectionName: string }>;
+    glossaryBookmarkCollections?: Array<{ termId: string; collectionName: string }>;
   };
   
   if (!parsed || typeof parsed !== 'object') {
@@ -359,8 +427,10 @@ export const parseIncomingDB = (raw: string): {
 
   return {
     bookmarks: Array.isArray(parsed.bookmarks) ? parsed.bookmarks : [],
+    glossaryBookmarks: Array.isArray(parsed.glossaryBookmarks) ? parsed.glossaryBookmarks : [],
     collections: Array.isArray(parsed.collections) ? parsed.collections : [],
     bookmarkCollections: Array.isArray(parsed.bookmarkCollections) ? parsed.bookmarkCollections : [],
+    glossaryBookmarkCollections: Array.isArray(parsed.glossaryBookmarkCollections) ? parsed.glossaryBookmarkCollections : [],
   };
 };
 
