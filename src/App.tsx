@@ -815,7 +815,7 @@ export default function App(): ReactElement {
 
       <AnimatePresence mode="wait" initial={false}>
         <motion.main
-          key={currentTechnique ? `technique-${currentTechnique.id}` : route}
+          key={currentTechnique ? `technique-${currentTechnique.id}` : activeSlug ? `glossary-${activeSlug}` : route}
           variants={pageMotion.variants}
           initial="initial"
           animate="animate"

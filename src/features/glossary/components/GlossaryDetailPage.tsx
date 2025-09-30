@@ -150,12 +150,7 @@ export const GlossaryDetailPage = ({ slug, copy, locale, onBack }: GlossaryDetai
       </header>
 
       {/* Content section - matches TechniquePage content structure */}
-      <motion.section
-        variants={pageMotion.variants}
-        initial="initial"
-        animate="animate"
-        transition={pageMotion.transition}
-      >
+      <section>
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-[2fr,1fr]">
           {/* Main content column */}
           <div className="space-y-8">
@@ -181,7 +176,7 @@ export const GlossaryDetailPage = ({ slug, copy, locale, onBack }: GlossaryDetai
             {/* Future: Techniques using this term */}
           </div>
         </div>
-      </motion.section>
+      </section>
     </motion.main>
   );
 };
