@@ -1,6 +1,6 @@
 import { expandWithSynonyms, getTaxonomyLabel } from '../../shared/i18n/taxonomy';
 import type { TaxonomyType } from '../../shared/i18n/taxonomy';
-import type { Technique } from '../../shared/types';
+import type { Technique, GlossaryTerm } from '../../shared/types';
 import { gradeLabel } from '../../shared/styles/belts';
 import { stripDiacritics } from '../../shared/utils/text';
 
@@ -116,4 +116,45 @@ export const normalizeSearchQuery = (value: string): string[] => {
 export const matchSearch = (haystack: string, queries: string[]): boolean =>
   queries.every((query) => haystack.includes(query));
 
-export type { SearchEntry };
+// Glossary search functionality
+type GlossarySearchEntry = {
+  term: GlossaryTerm;
+  haystack: string;
+};
+
+export const buildGlossarySearchIndex = (terms: GlossaryTerm[]): GlossarySearchEntry[] =>
+  terms.map((term) => {
+    const tokens = new Set<string>();
+
+    // Index romaji (main term name)
+    pushToken(tokens, term.romaji);
+    
+    // Index Japanese text if available
+    if (term.jp) {
+      pushToken(tokens, term.jp);
+    }
+
+    // Index category
+    pushToken(tokens, term.category);
+    addSynonymTokens(tokens, term.category);
+
+    // Index definitions in both languages
+    pushToken(tokens, term.def.en);
+    pushToken(tokens, term.def.de);
+
+    // Index notes in both languages if available
+    if (term.notes?.en) {
+      pushToken(tokens, term.notes.en);
+    }
+    if (term.notes?.de) {
+      pushToken(tokens, term.notes.de);
+    }
+
+    // Index slug for direct matching
+    pushToken(tokens, term.slug);
+
+    const haystack = Array.from(tokens).join(' ');
+    return { term, haystack };
+  });
+
+export type { SearchEntry, GlossarySearchEntry };

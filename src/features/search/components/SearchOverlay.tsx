@@ -1,12 +1,17 @@
 import { useEffect, useMemo, useRef, useState, type ReactElement, type KeyboardEvent } from 'react';
 import { motion } from 'motion/react';
 import type { Copy } from '../../../shared/constants/i18n';
-import type { Locale, Technique } from '../../../shared/types';
+import type { Locale, Technique, GlossaryTerm } from '../../../shared/types';
 import { EmphasizedName } from '../../../shared/components';
 import { SearchIcon } from '../../../shared/components/ui/icons';
 import { useFocusTrap } from '../../../shared/hooks/useFocusTrap';
-import { buildSearchIndex, matchSearch, normalizeSearchQuery } from '../indexer';
+import { buildSearchIndex, buildGlossarySearchIndex, matchSearch, normalizeSearchQuery } from '../indexer';
 import { useMotionPreferences } from '../../../components/ui/motion';
+import { loadAllTerms } from '../../glossary/loader';
+
+type SearchResult = 
+  | { type: 'technique'; item: Technique }
+  | { type: 'glossary'; item: GlossaryTerm };
 
 type SearchOverlayProps = {
   copy: Copy;
@@ -14,11 +19,13 @@ type SearchOverlayProps = {
   techniques: Technique[];
   onClose: () => void;
   onOpen: (slug: string) => void;
+  onOpenGlossary: (slug: string) => void;
 };
 
-export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen }: SearchOverlayProps): ReactElement => {
+export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen, onOpenGlossary }: SearchOverlayProps): ReactElement => {
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [glossaryTerms, setGlossaryTerms] = useState<GlossaryTerm[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
   const {
@@ -30,19 +37,38 @@ export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen }: Sea
     inputRef.current?.focus();
   }, []);
 
+  useEffect(() => {
+    // Load glossary terms when overlay opens
+    loadAllTerms().then(setGlossaryTerms);
+  }, []);
+
   useFocusTrap(true, dialogRef, onClose);
 
-  const index = useMemo(() => buildSearchIndex(techniques), [techniques]);
+  const techniqueIndex = useMemo(() => buildSearchIndex(techniques), [techniques]);
+  const glossaryIndex = useMemo(() => buildGlossarySearchIndex(glossaryTerms), [glossaryTerms]);
 
   const normalizedQuery = useMemo(() => normalizeSearchQuery(query), [query]);
 
-  const results = useMemo(() => {
+  const results = useMemo((): SearchResult[] => {
     if (normalizedQuery.length === 0) {
-      return techniques.slice(0, 25);
+      // Show mixed results when no query: recent techniques + some glossary terms
+      const recentTechniques: SearchResult[] = techniques.slice(0, 15).map(item => ({ type: 'technique', item }));
+      const someGlossaryTerms: SearchResult[] = glossaryTerms.slice(0, 10).map(item => ({ type: 'glossary', item }));
+      return [...recentTechniques, ...someGlossaryTerms];
     }
 
-    return index.filter((entry) => matchSearch(entry.haystack, normalizedQuery)).map((entry) => entry.technique);
-  }, [index, normalizedQuery, techniques]);
+    // Search both techniques and glossary terms
+    const techniqueResults: SearchResult[] = techniqueIndex
+      .filter((entry) => matchSearch(entry.haystack, normalizedQuery))
+      .map((entry) => ({ type: 'technique', item: entry.technique }));
+    
+    const glossaryResults: SearchResult[] = glossaryIndex
+      .filter((entry) => matchSearch(entry.haystack, normalizedQuery))
+      .map((entry) => ({ type: 'glossary', item: entry.term }));
+
+    // Combine and limit results, prioritizing techniques
+    return [...techniqueResults.slice(0, 20), ...glossaryResults.slice(0, 10)];
+  }, [techniqueIndex, glossaryIndex, normalizedQuery, techniques, glossaryTerms]);
 
   // Reset selection when results change
   useEffect(() => {
@@ -68,7 +94,12 @@ export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen }: Sea
     } else if (event.key === 'Enter') {
       event.preventDefault();
       if (selectedIndex >= 0 && results[selectedIndex]) {
-        onOpen(results[selectedIndex].slug);
+        const result = results[selectedIndex];
+        if (result.type === 'technique') {
+          onOpen(result.item.slug);
+        } else {
+          onOpenGlossary(result.item.slug);
+        }
       }
     } else if (event.key === 'Escape') {
       event.preventDefault();
@@ -135,13 +166,17 @@ export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen }: Sea
           <div className="border-t surface-border mt-2 pt-3">
           <div className="max-h-[60vh] overflow-y-auto">
             {results.length > 0 ? (
-              results.map((technique, index) => (
+              results.map((result, index) => (
                 <button
-                  key={technique.id}
+                  key={result.type === 'technique' ? result.item.id : result.item.id}
                   type="button"
                   onClick={(event) => {
                     const openInNewTab = event.metaKey || event.ctrlKey;
-                    onOpen(technique.slug);
+                    if (result.type === 'technique') {
+                      onOpen(result.item.slug);
+                    } else {
+                      onOpenGlossary(result.item.slug);
+                    }
                     if (!openInNewTab) {
                       onClose();
                     }
@@ -152,17 +187,37 @@ export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen }: Sea
                       ? 'bg-black/5 dark:bg-white/5' 
                       : 'hover:bg-black/5 dark:hover:bg-white/5'
                   } focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--color-text)]`}
-                  title={technique.name[locale]}
+                  title={result.type === 'technique' ? result.item.name[locale] : result.item.romaji}
                 >
                   <div className="min-w-0 flex-1">
                     <div className="truncate text-sm font-semibold text-[color:var(--color-text)]">
-                      <EmphasizedName name={technique.name[locale]} />
+                      {result.type === 'technique' ? (
+                        <EmphasizedName name={result.item.name[locale]} />
+                      ) : (
+                        result.item.romaji
+                      )}
                     </div>
                     <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-subtle">
-                      {technique.jp && (
-                        <span className="font-medium uppercase tracking-wide text-[0.65rem]">
-                          {technique.jp}
-                        </span>
+                      {result.type === 'technique' ? (
+                        result.item.jp && (
+                          <span className="font-medium uppercase tracking-wide text-[0.65rem]">
+                            {result.item.jp}
+                          </span>
+                        )
+                      ) : (
+                        <>
+                          {result.item.jp && (
+                            <span className="font-medium uppercase tracking-wide text-[0.65rem]">
+                              {result.item.jp}
+                            </span>
+                          )}
+                          <span className="text-[0.65rem] font-medium text-white bg-blue-600 px-2 py-0.5 rounded-full">
+                            GLOSSARY
+                          </span>
+                          <span className="text-[0.65rem] font-medium text-subtle truncate">
+                            {result.item.def[locale] || result.item.def.en}
+                          </span>
+                        </>
                       )}
                     </div>
                   </div>

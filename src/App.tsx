@@ -842,6 +842,10 @@ export default function App(): ReactElement {
               openTechnique(slug);
               closeSearch();
             }}
+            onOpenGlossary={(slug) => {
+              openGlossaryTerm(slug);
+              closeSearch();
+            }}
           />
         )}
 
