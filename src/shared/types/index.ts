@@ -44,11 +44,7 @@ export type Technique = TechniqueV2;
 
 export type Progress = {
   techniqueId: string;
-  focus?: boolean;
-  notNow?: boolean;
-  confident?: boolean;
-  bookmarked?: boolean;
-  personalNote?: string;
+  bookmarked: boolean;
   updatedAt: number;
 };
 

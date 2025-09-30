@@ -97,11 +97,7 @@ const fallbackTheme: Theme = 'light';
 
 const buildDefaultProgress = (techniqueId: string): Progress => ({
   techniqueId,
-  focus: false,
-  notNow: false,
-  confident: false,
   bookmarked: false,
-  personalNote: '',
   updatedAt: Date.now(),
 });
 
@@ -229,32 +225,9 @@ const ensureBookmarkCollections = (
   });
 };
 
-const normalizeDB = (db: DB): DB => {
-  const collections = ensureCollections(db.collections ?? []);
-  const collectionIds = new Set(collections.map((collection) => collection.id));
 
-  return {
-    version: DB_VERSION,
-    techniques: seedTechniques,
-    progress: ensureProgressCoverage(db),
-    collections,
-    bookmarkCollections: ensureBookmarkCollections(db.bookmarkCollections ?? [], seedTechniques, collectionIds),
-  };
-};
 
-const migrateDB = (db: DB | (Partial<DB> & { version?: number })): DB => {
-  const base: DB = {
-    version: typeof db.version === 'number' ? db.version : DB_VERSION,
-    techniques: Array.isArray(db.techniques) ? seedTechniques : seedTechniques,
-    progress: Array.isArray(db.progress) ? (db.progress as Progress[]) : [],
-    collections: Array.isArray(db.collections) ? (db.collections as Collection[]) : [],
-    bookmarkCollections: Array.isArray(db.bookmarkCollections)
-      ? (db.bookmarkCollections as BookmarkCollection[])
-      : [],
-  };
 
-  return normalizeDB(base);
-};
 
 export const loadDB = (): DB => {
   const raw = readLocalStorage(STORAGE_KEY);
@@ -268,20 +241,31 @@ export const loadDB = (): DB => {
       throw new Error('invalid db');
     }
 
-    return migrateDB(parsed);
+    const collections = ensureCollections(parsed.collections ?? []);
+    const collectionIds = new Set(collections.map((collection) => collection.id));
+
+    const db: DB = {
+      version: DB_VERSION,
+      techniques: seedTechniques,
+      progress: ensureProgressCoverage({
+        techniques: seedTechniques,
+        progress: Array.isArray(parsed.progress) ? (parsed.progress as Progress[]) : [],
+        collections,
+        bookmarkCollections: [],
+        version: DB_VERSION,
+      }),
+      collections,
+      bookmarkCollections: ensureBookmarkCollections(parsed.bookmarkCollections ?? [], seedTechniques, collectionIds),
+    };
+
+    return db;
   } catch {
     return buildDefaultDB();
   }
 };
 
 export const saveDB = (db: DB): void => {
-  writeLocalStorage(
-    STORAGE_KEY,
-    JSON.stringify({
-      ...db,
-      version: DB_VERSION,
-    }),
-  );
+  writeLocalStorage(STORAGE_KEY, JSON.stringify(db));
 };
 
 export const hasStoredTheme = (): boolean => {
@@ -314,19 +298,57 @@ export const saveLocale = (locale: Locale): void => {
   writeLocalStorage(LOCALE_KEY, locale);
 };
 
-export const exportDB = (db: DB): string =>
-  JSON.stringify(
+export const exportDB = (db: DB): string => {
+  // Extract bookmarked technique IDs from progress
+  const bookmarkedTechniqueIds = db.progress
+    .filter(p => p.bookmarked)
+    .map(p => p.techniqueId);
+
+  // Create collection name mapping
+  const collectionIdToName = new Map(db.collections.map(c => [c.id, c.name]));
+
+  // Export collections by name only
+  const exportCollections = db.collections.map(({ name, icon }) => ({
+    name,
+    icon,
+  }));
+
+  // Export bookmark collections using collection names instead of IDs
+  const exportBookmarkCollections = db.bookmarkCollections
+    .map(({ techniqueId, collectionId }) => {
+      const collectionName = collectionIdToName.get(collectionId);
+      if (!collectionName) return null; // Skip if collection not found
+      return {
+        techniqueId,
+        collectionName,
+      };
+    })
+    .filter((entry): entry is { techniqueId: string; collectionName: string } => Boolean(entry));
+
+  return JSON.stringify(
     {
       appName: APP_NAME,
-      ...db,
-      version: DB_VERSION,
+      bookmarks: bookmarkedTechniqueIds,
+      collections: exportCollections,
+      bookmarkCollections: exportBookmarkCollections,
     },
     null,
     2,
   );
+};
 
-export const parseIncomingDB = (raw: string): DB => {
-  const parsed = JSON.parse(raw) as Partial<DB> & { appName?: string };
+export const parseIncomingDB = (raw: string): {
+  bookmarks?: string[];
+  collections?: Array<{ name: string; icon?: string | null }>;
+  bookmarkCollections?: Array<{ techniqueId: string; collectionName: string }>;
+} => {
+  const parsed = JSON.parse(raw) as {
+    appName?: string;
+    bookmarks?: string[];
+    collections?: Array<{ name: string; icon?: string | null }>;
+    bookmarkCollections?: Array<{ techniqueId: string; collectionName: string }>;
+  };
+  
   if (!parsed || typeof parsed !== 'object') {
     throw new Error('Invalid JSON payload');
   }
@@ -335,7 +357,74 @@ export const parseIncomingDB = (raw: string): DB => {
     throw new Error('Not an Enso export file');
   }
 
-  return migrateDB(parsed);
+  return {
+    bookmarks: Array.isArray(parsed.bookmarks) ? parsed.bookmarks : [],
+    collections: Array.isArray(parsed.collections) ? parsed.collections : [],
+    bookmarkCollections: Array.isArray(parsed.bookmarkCollections) ? parsed.bookmarkCollections : [],
+  };
+};
+
+const generateId = (): string => {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
+  return Math.random().toString(36).slice(2, 11);
+};
+
+export const importData = (currentDB: DB, importedData: ReturnType<typeof parseIncomingDB>): DB => {
+  // Update progress with imported bookmarks
+  const updatedProgress = currentDB.progress.map(progress => {
+    const isBookmarked = importedData.bookmarks?.includes(progress.techniqueId) || false;
+    return {
+      ...progress,
+      bookmarked: isBookmarked,
+      updatedAt: isBookmarked ? Date.now() : progress.updatedAt,
+    };
+  });
+
+  // Import collections and regenerate IDs and timestamps
+  const now = Date.now();
+  const collectionNameToId = new Map<string, string>();
+  
+  const importedCollections = ensureCollections(
+    (importedData.collections || []).map((collection, index) => {
+      const id = generateId();
+      collectionNameToId.set(collection.name, id);
+      return {
+        id,
+        name: collection.name,
+        icon: collection.icon || null,
+        sortOrder: index,
+        createdAt: now,
+        updatedAt: now,
+      };
+    })
+  );
+  
+  // Import bookmark collections using collection name mapping
+  const validTechniqueIds = new Set(currentDB.techniques.map(t => t.id));
+  
+  const importedBookmarkCollections: BookmarkCollection[] = (importedData.bookmarkCollections || [])
+    .map(({ techniqueId, collectionName }) => {
+      const collectionId = collectionNameToId.get(collectionName);
+      if (!collectionId || !validTechniqueIds.has(techniqueId)) {
+        return null; // Skip invalid entries
+      }
+      return {
+        id: generateId(),
+        techniqueId,
+        collectionId,
+        createdAt: now,
+      };
+    })
+    .filter((entry): entry is BookmarkCollection => Boolean(entry));
+
+  return {
+    ...currentDB,
+    progress: updatedProgress,
+    collections: importedCollections,
+    bookmarkCollections: importedBookmarkCollections,
+  };
 };
 
 export const clearDB = (): DB => {

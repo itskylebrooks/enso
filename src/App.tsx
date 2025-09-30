@@ -127,10 +127,7 @@ function updateProgressEntry(progress: Progress[], id: string, patch: Partial<Pr
   const timestamp = Date.now();
   const baseline: Progress = existing ?? {
     techniqueId: id,
-    focus: false,
-    notNow: false,
-    confident: false,
-    personalNote: '',
+    bookmarked: false,
     updatedAt: timestamp,
   };
 

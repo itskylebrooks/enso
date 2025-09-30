@@ -255,7 +255,7 @@ export const BookmarksView = ({
         <section>
         <AnimatePresence mode="wait">
           <motion.div
-            key={selectedCollectionId}
+            key={`${selectedCollectionId}-${visibleTechniques.map(t => t.id).join(',')}`}
             className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 min-h-[280px]"
             variants={listMotion.container}
             initial="hidden"

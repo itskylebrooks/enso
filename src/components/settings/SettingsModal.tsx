@@ -4,7 +4,7 @@ import type { ChangeEvent } from 'react';
 import type { Copy } from '../../shared/constants/i18n';
 import type { DB, Locale, Theme } from '../../shared/types';
 import { classNames } from '../../shared/utils/classNames';
-import { exportDB, parseIncomingDB } from '../../shared/services/storageService';
+import { exportDB, parseIncomingDB, importData } from '../../shared/services/storageService';
 import { SectionTitle } from '../../shared/components';
 import { useFocusTrap } from '../../shared/hooks/useFocusTrap';
 import { useMotionPreferences } from '../ui/motion';
@@ -40,7 +40,6 @@ export const SettingsModal = ({
   clearButtonRef,
   trapEnabled = true,
 }: SettingsModalProps): ReactElement => {
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
   const { overlayMotion, toggleTransition, prefersReducedMotion } = useMotionPreferences();
 
@@ -55,22 +54,7 @@ export const SettingsModal = ({
     URL.revokeObjectURL(anchor.href);
   };
 
-  const handleFileChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    const [file] = event.target.files ?? [];
-    if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      try {
-        const next = parseIncomingDB(String(reader.result));
-        onChangeDB(next);
-      } catch (error) {
-        const reason = error instanceof Error ? error.message : 'Unknown error';
-        window.alert(`Import failed: ${reason}`);
-      }
-    };
-    reader.readAsText(file);
-  };
 
   return (
     <motion.div
@@ -181,13 +165,37 @@ export const SettingsModal = ({
           <div>
             <SectionTitle>{copy.bookmarks}</SectionTitle>
             <div className="mt-2 flex flex-wrap gap-2 items-center">
-              <button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                className="px-3 py-2 text-sm rounded-xl border btn-tonal surface-hover transition-soft motion-ease"
-              >
+
+              <label className="px-3 py-2 text-sm rounded-xl border btn-tonal surface-hover transition-soft motion-ease cursor-pointer">
                 {copy.import}
-              </button>
+                <input 
+                  type="file" 
+                  accept="application/json,.json"
+                  className="hidden" 
+                  onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                    const [file] = event.target.files ?? [];
+                    if (!file) return;
+
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                      try {
+                        const importedData = parseIncomingDB(String(reader.result));
+                        const mergedDB = importData(db, importedData);
+                        onChangeDB(mergedDB);
+                        // Close settings modal and show success
+                        onClose();
+                      } catch (error) {
+                        const reason = error instanceof Error ? error.message : 'Unknown error';
+                        window.alert(`Import failed: ${reason}`);
+                      } finally {
+                        // Clear the input so same file can be selected again
+                        event.target.value = '';
+                      }
+                    };
+                    reader.readAsText(file);
+                  }}
+                />
+              </label>
               <button
                 type="button"
                 onClick={handleExport}
@@ -246,7 +254,7 @@ export const SettingsModal = ({
           </div>
         </div>
       </motion.div>
-      <input ref={fileInputRef} type="file" accept="application/json" className="hidden" onChange={handleFileChange} />
+
     </motion.div>
   );
 };
