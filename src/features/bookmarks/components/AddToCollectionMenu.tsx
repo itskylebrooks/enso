@@ -38,25 +38,43 @@ export const AddToCollectionMenu = ({ copy, collections, onToggle, onCreate, onO
 
   const updatePosition = () => {
     if (!triggerRef.current) return;
-    const rect = triggerRef.current.getBoundingClientRect();
+    
+    // Find the card container (technique card)
+    const cardElement = triggerRef.current.closest('[role="button"]');
+    const cardRect = cardElement?.getBoundingClientRect();
+    const buttonRect = triggerRef.current.getBoundingClientRect();
     const menuWidth = 224; // 224px = w-56
     const viewportWidth = window.innerWidth;
+    const isMobile = viewportWidth <= 768;
     
-    // For mobile, center the menu on the card/button
-    // For desktop, position to the right of the button
+    // Always center the menu horizontally on the card for both mobile and desktop
     let left;
-    if (viewportWidth <= 768) { // Mobile breakpoint
-      // Center the menu horizontally on the trigger
-      left = rect.left + (rect.width / 2) - (menuWidth / 2);
+    if (cardRect) {
+      // Center the menu horizontally on the card
+      left = cardRect.left + (cardRect.width / 2) - (menuWidth / 2);
       // Ensure it doesn't go off-screen
       left = Math.max(8, Math.min(left, viewportWidth - menuWidth - 8));
     } else {
-      // Desktop: position to the right
-      left = rect.right - menuWidth;
+      // Fallback to button positioning if card not found
+      left = buttonRect.left + (buttonRect.width / 2) - (menuWidth / 2);
+      left = Math.max(8, Math.min(left, viewportWidth - menuWidth - 8));
+    }
+    
+    // Adjust vertical positioning - higher on mobile for better centering on card
+    let top;
+    if (isMobile && cardRect) {
+      // Position the menu more towards the center of the card on mobile
+      const menuHeight = 128; // Approximate height based on max-h-32 (128px)
+      top = cardRect.top + (cardRect.height / 2) - (menuHeight / 2);
+      // Ensure it doesn't go off-screen
+      top = Math.max(8, Math.min(top, window.innerHeight - menuHeight - 8));
+    } else {
+      // Default positioning below the button for desktop
+      top = buttonRect.bottom + 4;
     }
     
     setPosition({
-      top: rect.bottom + 4,
+      top: top,
       left: left
     });
   };
