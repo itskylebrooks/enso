@@ -2,6 +2,7 @@ import type { KeyboardEvent, ReactElement } from 'react';
 import { motion, type Variants, type Transition } from 'motion/react';
 import type { GlossaryTerm } from '../../../shared/types';
 import type { Locale } from '../../../shared/types';
+import type { Copy } from '../../../shared/constants/i18n';
 
 type MotionProps = {
   variants: Variants;
@@ -12,18 +13,19 @@ type MotionProps = {
 type GlossaryCardProps = {
   term: GlossaryTerm;
   locale: Locale;
+  copy: Copy;
   onSelect: (slug: string) => void;
   motionIndex: number;
 } & MotionProps;
 
-const getCategoryLabel = (category: GlossaryTerm['category']): string => {
+const getCategoryLabel = (category: GlossaryTerm['category'], copy: Copy): string => {
   const labels: Record<GlossaryTerm['category'], string> = {
-    movement: 'Movement',
-    stance: 'Stance',
-    attack: 'Attack',
-    etiquette: 'Etiquette',
-    philosophy: 'Philosophy',
-    other: 'Other',
+    movement: copy.categoryMovement,
+    stance: copy.categoryStance,
+    attack: copy.categoryAttack,
+    etiquette: copy.categoryEtiquette,
+    philosophy: copy.categoryPhilosophy,
+    other: copy.categoryOther,
   };
   return labels[category];
 };
@@ -50,6 +52,7 @@ const truncateDefinition = (text: string, maxLength: number = 120): string => {
 export const GlossaryCard = ({
   term,
   locale,
+  copy,
   onSelect,
   motionIndex,
   variants,
@@ -57,7 +60,7 @@ export const GlossaryCard = ({
   prefersReducedMotion,
 }: GlossaryCardProps): ReactElement => {
   const definition = term.def[locale] || term.def.en;
-  const categoryLabel = getCategoryLabel(term.category);
+  const categoryLabel = getCategoryLabel(term.category, copy);
   const categoryStyle = getCategoryColor(term.category);
   
   const handleActivate = () => {
@@ -90,18 +93,7 @@ export const GlossaryCard = ({
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 space-y-1">
           <h3 className="text-base font-semibold leading-tight">{term.romaji}</h3>
-          <div className="flex items-center gap-2 flex-wrap">
-            {term.jp && (
-              <span className="text-sm font-medium text-muted bg-black/5 px-2 py-0.5 rounded-sm dark:bg-white/10">
-                {term.jp}
-              </span>
-            )}
-            {term.kana && (
-              <span className="text-xs text-muted bg-black/5 px-2 py-0.5 rounded-sm dark:bg-white/10">
-                {term.kana}
-              </span>
-            )}
-          </div>
+          {term.jp && <div className="text-xs text-subtle truncate">{term.jp}</div>}
         </div>
         <span className={`text-xs font-medium px-2 py-1 rounded-full shrink-0 ${categoryStyle}`}>
           {categoryLabel}

@@ -87,6 +87,13 @@ export const messages = {
     basicsLink: 'Basics',
     viewBasicsCta: 'Study Basics',
     openAriaPrefix: 'Open',
+    // Glossary categories
+    categoryMovement: 'Movement',
+    categoryStance: 'Stance',
+    categoryAttack: 'Attack',
+    categoryEtiquette: 'Etiquette',
+    categoryPhilosophy: 'Philosophy',
+    categoryOther: 'Other',
   },
   de: {
     app: 'Enso',
@@ -174,6 +181,13 @@ export const messages = {
     basicsLink: 'Grundlagen',
     viewBasicsCta: 'Grundlagen ansehen',
     openAriaPrefix: 'Öffne',
+    // Glossary categories
+    categoryMovement: 'Bewegung',
+    categoryStance: 'Haltung',
+    categoryAttack: 'Angriff',
+    categoryEtiquette: 'Etikette',
+    categoryPhilosophy: 'Philosophie',
+    categoryOther: 'Andere',
   },
 } as const satisfies Record<Locale, Record<string, string>>;
 

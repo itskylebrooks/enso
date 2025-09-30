@@ -788,6 +788,7 @@ export default function App(): ReactElement {
                   <section>
                     <GlossaryPage
                       locale={locale}
+                      copy={copy}
                       filters={glossaryFilters}
                       onOpenTerm={openGlossaryTerm}
                     />

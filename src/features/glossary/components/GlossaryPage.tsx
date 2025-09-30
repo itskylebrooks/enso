@@ -6,6 +6,7 @@ import { useGlossaryStore } from '../store';
 import { useMotionPreferences } from '../../../components/ui/motion';
 import { GlossaryCard } from './GlossaryCard.tsx';
 import type { Locale } from '../../../shared/types';
+import type { Copy } from '../../../shared/constants/i18n';
 
 type GlossaryFilters = {
   category?: 'movement' | 'stance' | 'attack' | 'etiquette' | 'philosophy' | 'other';
@@ -13,11 +14,12 @@ type GlossaryFilters = {
 
 type GlossaryPageProps = {
   locale: Locale;
+  copy: Copy;
   filters?: GlossaryFilters;
   onOpenTerm: (slug: string) => void;
 };
 
-export const GlossaryPage = ({ locale, filters = {}, onOpenTerm }: GlossaryPageProps): ReactElement => {
+export const GlossaryPage = ({ locale, copy, filters = {}, onOpenTerm }: GlossaryPageProps): ReactElement => {
   const { terms, loading, error, setTerms, setLoading, setError } = useGlossaryStore();
   const { listMotion, getItemTransition, prefersReducedMotion } = useMotionPreferences();
   const [mounted, setMounted] = useState(false);
@@ -120,6 +122,7 @@ export const GlossaryPage = ({ locale, filters = {}, onOpenTerm }: GlossaryPageP
                   key={term.id}
                   term={term}
                   locale={locale}
+                  copy={copy}
                   onSelect={onOpenTerm}
                   motionIndex={globalIndex}
                   variants={listMotion.item}

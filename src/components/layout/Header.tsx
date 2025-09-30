@@ -2,7 +2,7 @@ import { forwardRef, useState, useEffect, useRef, type PropsWithChildren, type R
 import { classNames } from '../../shared/utils/classNames';
 import type { AppRoute } from '../../shared/types';
 import type { Copy } from '../../shared/constants/i18n';
-import { SearchIcon, SettingsIcon, MenuIcon, BookmarkIcon, PersonStandingIcon, BookOpenTextIcon, ListIcon } from '../../shared/components/ui/icons';
+import { SearchIcon, SettingsIcon, MenuIcon, BookmarkIcon, PersonStandingIcon, BookOpenTextIcon, BoxesIcon } from '../../shared/components/ui/icons';
 import { motion, AnimatePresence } from 'motion/react';
 import { useMotionPreferences, defaultEase } from '../ui/motion';
 import { Logo } from '../../shared/components';
@@ -119,7 +119,7 @@ export const Header = ({
             </TextButton>
             <TabButton active={route === 'basics'} onClick={() => onNavigate('basics')}>
               <span className="flex items-center gap-1">
-                <BookOpenTextIcon className="w-4 h-4" />
+                <BoxesIcon className="w-4 h-4" />
                 <span>{copy.basicsLink}</span>
               </span>
             </TabButton>
@@ -131,7 +131,7 @@ export const Header = ({
             </TabButton>
             <TabButton active={route === 'glossary'} onClick={() => onNavigate('glossary')}>
               <span className="flex items-center gap-1">
-                <ListIcon className="w-4 h-4" />
+                <BookOpenTextIcon className="w-4 h-4" />
                 <span>{copy.glossary}</span>
               </span>
             </TabButton>
@@ -187,7 +187,7 @@ export const Header = ({
                       }}
                       className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
                     >
-                      <span className="flex items-center gap-2"><BookOpenTextIcon className="w-4 h-4" />{copy.basicsLink}</span>
+                      <span className="flex items-center gap-2"><BoxesIcon className="w-4 h-4" />{copy.basicsLink}</span>
                     </button>
                   </li>
                   <li>
@@ -211,7 +211,7 @@ export const Header = ({
                       }}
                       className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
                     >
-                      <span className="flex items-center gap-2"><ListIcon className="w-4 h-4" />{copy.glossary}</span>
+                      <span className="flex items-center gap-2"><BookOpenTextIcon className="w-4 h-4" />{copy.glossary}</span>
                     </button>
                   </li>
                   <li>

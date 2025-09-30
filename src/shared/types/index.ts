@@ -89,7 +89,6 @@ export type GlossaryTerm = {
   slug: string;      // url-safe slug (unique)
   romaji: string;    // e.g., "tenkan"
   jp?: string;       // kanji, e.g., "転換"
-  kana?: string;     // kana reading (optional)
   category: 'movement' | 'stance' | 'attack' | 'etiquette' | 'philosophy' | 'other';
   def: { en: string; de: string };       // short definition (1–2 lines)
   notes?: { en: string; de: string };    // longer text (optional)

@@ -14,16 +14,28 @@ type GlossaryDetailPageProps = {
   onBack: () => void;
 };
 
-const getCategoryLabel = (category: GlossaryTerm['category']): string => {
+const getCategoryLabel = (category: GlossaryTerm['category'], copy: Copy): string => {
   const labels: Record<GlossaryTerm['category'], string> = {
-    movement: 'Movement',
-    stance: 'Stance',
-    attack: 'Attack',
-    etiquette: 'Etiquette',
-    philosophy: 'Philosophy',
-    other: 'Other',
+    movement: copy.categoryMovement,
+    stance: copy.categoryStance,
+    attack: copy.categoryAttack,
+    etiquette: copy.categoryEtiquette,
+    philosophy: copy.categoryPhilosophy,
+    other: copy.categoryOther,
   };
   return labels[category];
+};
+
+const getCategoryColor = (category: GlossaryTerm['category']): string => {
+  const colors: Record<GlossaryTerm['category'], string> = {
+    movement: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300',
+    stance: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300',
+    attack: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300',
+    etiquette: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300',
+    philosophy: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300',
+    other: 'bg-gray-100 text-gray-700 dark:bg-gray-800/50 dark:text-gray-300',
+  };
+  return colors[category];
 };
 
 
@@ -102,81 +114,77 @@ export const GlossaryDetailPage = ({ slug, copy, locale, onBack }: GlossaryDetai
 
   const definition = term.def[locale] || term.def.en;
   const notes = term.notes?.[locale] || term.notes?.en;
-  const categoryLabel = getCategoryLabel(term.category);
+  const categoryLabel = getCategoryLabel(term.category, copy);
+  const categoryStyle = getCategoryColor(term.category);
 
   return (
     <motion.main
-      className="mx-auto max-w-6xl px-4 sm:px-6 py-6 space-y-6"
+      className="mx-auto max-w-3xl px-4 sm:px-6 py-8 space-y-8"
       variants={pageMotion.variants}
       initial="initial"
       animate="animate"
       transition={pageMotion.transition}
     >
-      {/* Header section - matches TechniqueHeader structure */}
-      <header className="z-10 border-b surface-border pb-4 bg-transparent space-y-6">
-        <div className="flex flex-wrap items-stretch justify-between gap-x-6 gap-y-4">
-          <div className="min-w-0 space-y-3 flex-grow">
-            <a
-              href="/"
-              aria-label={copy.backToGlossary}
-              onClick={(event) => {
-                event.preventDefault();
-                onBack();
-              }}
-              className="text-sm text-subtle hover:text-[var(--color-text)] transition flex items-center gap-2"
-            >
-              <span aria-hidden>←</span>
-              <span>{copy.backToGlossary}</span>
-            </a>
-            <div className="space-y-1">
-              <h1 className="text-3xl font-semibold leading-tight" title={term.romaji}>
-                {term.romaji}
-              </h1>
-              {term.jp && <div className="text-sm text-subtle">{term.jp}</div>}
-              <div className="flex flex-wrap gap-2 pt-1">
-                {term.kana && (
-                  <span className="rounded-lg border surface-border bg-[var(--color-surface)] px-2 py-1 text-xs uppercase tracking-wide text-subtle">
-                    {term.kana}
-                  </span>
-                )}
-                <span className="rounded-lg border surface-border bg-[var(--color-surface)] px-2 py-1 text-xs uppercase tracking-wide text-subtle">
-                  {categoryLabel}
-                </span>
-              </div>
+      {/* Back navigation */}
+      <div className="flex items-center">
+        <a
+          href="/"
+          aria-label={copy.backToGlossary}
+          onClick={(event) => {
+            event.preventDefault();
+            onBack();
+          }}
+          className="text-sm text-subtle hover:text-[var(--color-text)] transition flex items-center gap-2"
+        >
+          <span aria-hidden>←</span>
+          <span>{copy.backToGlossary}</span>
+        </a>
+      </div>
+
+      {/* Term header - centered and focused */}
+      <header className="text-center space-y-4 pb-6 border-b surface-border">
+        <div className="space-y-3">
+          <h1 className="text-3xl font-semibold leading-tight" title={term.romaji}>
+            {term.romaji}
+          </h1>
+          {term.jp && (
+            <div className="text-sm text-subtle">
+              {term.jp}
             </div>
+          )}
+          <div className="flex justify-center">
+            <span className={`text-xs font-medium px-2 py-1 rounded-full ${categoryStyle}`}>
+              {categoryLabel}
+            </span>
           </div>
         </div>
-        <p className="text-base text-muted leading-relaxed max-w-3xl">{definition}</p>
       </header>
 
-      {/* Content section - matches TechniquePage content structure */}
-      <section>
-        <div className="grid grid-cols-1 gap-10 lg:grid-cols-[2fr,1fr]">
-          {/* Main content column */}
-          <div className="space-y-8">
-            {notes && (
-              <section className="space-y-4">
-                <header className="text-xs uppercase tracking-[0.3em] text-subtle">Notes</header>
-                <div className="space-y-3">
-                  {notes.split('\n').map((paragraph, index) => (
-                    paragraph.trim() && (
-                      <p key={index} className="text-base leading-relaxed">
-                        {paragraph.trim()}
-                      </p>
-                    )
-                  ))}
-                </div>
-              </section>
-            )}
-          </div>
-          
-          {/* Sidebar column - reserved for future features */}
-          <div className="space-y-8">
-            {/* Future: Related terms */}
-            {/* Future: Techniques using this term */}
-          </div>
+      {/* Definition section */}
+      <section className="prose prose-sm max-w-none dark:prose-invert">
+        <div className="text-center space-y-4">
+          <h2 className="text-xs uppercase tracking-[0.3em] text-subtle">Definition</h2>
+          <p className="text-base leading-relaxed">{definition}</p>
         </div>
       </section>
+
+      {/* Notes section */}
+      {notes && (
+        <section className="prose prose-sm max-w-none dark:prose-invert">
+          <div className="space-y-4">
+            <h2 className="text-xs uppercase tracking-[0.3em] text-subtle text-center">Notes</h2>
+            <div className="space-y-3">
+              {notes.split('\n').map((paragraph, index) => (
+                paragraph.trim() && (
+                  <p key={index} className="text-base leading-relaxed">
+                    {paragraph.trim()}
+                  </p>
+                )
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
     </motion.main>
   );
 };
