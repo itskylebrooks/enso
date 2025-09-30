@@ -1,0 +1,16 @@
+{
+  "id": "rei",
+  "slug": "rei",
+  "romaji": "Rei",
+  "jp": "礼",
+  "kana": "れい",
+  "category": "etiquette",
+  "def": {
+    "en": "Bow; expression of respect and gratitude.",
+    "de": "Verbeugung; Ausdruck von Respekt und Dankbarkeit."
+  },
+  "notes": {
+    "en": "Fundamental aspect of dojo etiquette. Shows respect for partners, teachers, and the practice space. Performed at beginning and end of practice.",
+    "de": "Grundlegender Aspekt der Dojo-Etikette. Zeigt Respekt für Partner, Lehrer und den Übungsraum. Wird zu Beginn und Ende der Praxis ausgeführt."
+  }
+}

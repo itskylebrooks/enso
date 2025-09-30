@@ -1,0 +1,16 @@
+{
+  "id": "shomen-uchi",
+  "slug": "shomen-uchi",
+  "romaji": "Shomen-uchi",
+  "jp": "正面打ち",
+  "kana": "しょうめんうち",
+  "category": "attack",
+  "def": {
+    "en": "Direct frontal strike to the head or forehead.",
+    "de": "Direkter frontaler Schlag zum Kopf oder zur Stirn."
+  },
+  "notes": {
+    "en": "Classic aikidō attack form used in training. Represents committed downward strike with proper timing and distance.",
+    "de": "Klassische Aikidō-Angriffsform im Training. Stellt einen entschlossenen Schlag nach unten mit richtigem Timing und Distanz dar."
+  }
+}

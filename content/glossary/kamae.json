@@ -1,0 +1,16 @@
+{
+  "id": "kamae",
+  "slug": "kamae",
+  "romaji": "Kamae",
+  "jp": "構え",
+  "kana": "かまえ",
+  "category": "stance",
+  "def": {
+    "en": "Ready stance or posture; proper positioning of body and mind.",
+    "de": "Bereite Haltung oder Position; richtige Ausrichtung von Körper und Geist."
+  },
+  "notes": {
+    "en": "More than just physical position - includes mental readiness and centered state. Foundation for all techniques.",
+    "de": "Mehr als nur körperliche Position - beinhaltet geistige Bereitschaft und zentrierten Zustand. Grundlage für alle Techniken."
+  }
+}

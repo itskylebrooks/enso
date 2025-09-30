@@ -2,7 +2,7 @@ import { forwardRef, useState, useEffect, useRef, type PropsWithChildren, type R
 import { classNames } from '../../shared/utils/classNames';
 import type { AppRoute } from '../../shared/types';
 import type { Copy } from '../../shared/constants/i18n';
-import { SearchIcon, SettingsIcon, MenuIcon, BookmarkIcon, PersonStandingIcon, BookOpenTextIcon } from '../../shared/components/ui/icons';
+import { SearchIcon, SettingsIcon, MenuIcon, BookmarkIcon, PersonStandingIcon, BookOpenTextIcon, ListIcon } from '../../shared/components/ui/icons';
 import { motion, AnimatePresence } from 'motion/react';
 import { useMotionPreferences, defaultEase } from '../ui/motion';
 import { Logo } from '../../shared/components';
@@ -129,6 +129,12 @@ export const Header = ({
                 <span>{copy.library}</span>
               </span>
             </TabButton>
+            <TabButton active={route === 'glossary'} onClick={() => onNavigate('glossary')}>
+              <span className="flex items-center gap-1">
+                <ListIcon className="w-4 h-4" />
+                <span>{copy.glossary}</span>
+              </span>
+            </TabButton>
             <TabButton active={route === 'bookmarks'} onClick={() => onNavigate('bookmarks')}>
               <span className="flex items-center gap-1">
                 <BookmarkIcon className="w-4 h-4" />
@@ -194,6 +200,18 @@ export const Header = ({
                       className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
                     >
                       <span className="flex items-center gap-2"><PersonStandingIcon className="w-4 h-4" />{copy.library}</span>
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMenuOpen(false);
+                        onNavigate('glossary');
+                      }}
+                      className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
+                    >
+                      <span className="flex items-center gap-2"><ListIcon className="w-4 h-4" />{copy.glossary}</span>
                     </button>
                   </li>
                   <li>

@@ -12,6 +12,7 @@ import { MobileFilters } from './components/ui/MobileFilters';
 import { HomePage } from './components/home/HomePage';
 import { AboutPage } from './components/home/AboutPage';
 import { BasicsPage } from './components/home/BasicsPage';
+import { GlossaryPage, GlossaryDetailPage, GlossaryFilterPanel, MobileGlossaryFilters } from './features/glossary';
 import { ConfirmClearModal } from './shared/components/dialogs/ConfirmClearDialog';
 import { useMotionPreferences } from './components/ui/motion';
 import { getCopy } from './shared/constants/i18n';
@@ -57,6 +58,7 @@ const routeToPath = (route: AppRoute): string => {
       return '/basics';
     case 'library':
     case 'bookmarks':
+    case 'glossary':
       return `/${route}`;
     default:
       return '/';
@@ -65,6 +67,11 @@ const routeToPath = (route: AppRoute): string => {
 
 const getSlugFromPath = (pathname: string): string | null => {
   const match = /^\/technique\/([^/?#]+)/.exec(pathname);
+  return match ? decodeURIComponent(match[1]) : null;
+};
+
+const getGlossarySlugFromPath = (pathname: string): string | null => {
+  const match = /^\/glossary\/([^/?#]+)/.exec(pathname);
   return match ? decodeURIComponent(match[1]) : null;
 };
 
@@ -78,12 +85,21 @@ const parseLocation = (
     return { route: fallbackRoute, slug };
   }
 
+  if (pathname.startsWith('/glossary/')) {
+    const slug = getGlossarySlugFromPath(pathname);
+    return { route: 'glossary', slug };
+  }
+
   if (pathname === '/bookmarks') {
     return { route: 'bookmarks', slug: null };
   }
 
   if (pathname === '/library') {
     return { route: 'library', slug: null };
+  }
+
+  if (pathname === '/glossary') {
+    return { route: 'glossary', slug: null };
   }
 
   if (pathname === '/about') {
@@ -192,6 +208,7 @@ export default function App(): ReactElement {
   const [hasManualTheme, setHasManualTheme] = useState<boolean>(() => hasStoredTheme());
   const [db, setDB] = useState<DB>(() => loadDB());
   const [filters, setFilters] = useState<Filters>(defaultFilters);
+  const [glossaryFilters, setGlossaryFilters] = useState<{ category?: 'movement' | 'stance' | 'attack' | 'etiquette' | 'philosophy' | 'other' }>({});
   const [selectedCollectionId, setSelectedCollectionId] = useState<SelectedCollectionId>('all');
   const [route, setRoute] = useState<AppRoute>(() => getInitialLocation().route);
   const [activeSlug, setActiveSlug] = useState<string | null>(() => getInitialLocation().slug);
@@ -394,6 +411,11 @@ export default function App(): ReactElement {
     [db.techniques],
   );
 
+  // Glossary categories - all possible categories
+  const glossaryCategories: ('movement' | 'stance' | 'attack' | 'etiquette' | 'philosophy' | 'other')[] = [
+    'movement', 'stance', 'attack', 'etiquette', 'philosophy', 'other'
+  ];
+
   const filteredTechniques = useMemo(
     () => applyFilters(db.techniques, filters),
     [db.techniques, filters],
@@ -583,6 +605,22 @@ export default function App(): ReactElement {
     setActiveSlug(slug);
   };
 
+  const openGlossaryTerm = (slug: string): void => {
+    if (typeof window !== 'undefined') {
+      const encodedSlug = encodeURIComponent(slug);
+      const glossaryPath = `/glossary/${encodedSlug}`;
+      const state: HistoryState = { route: 'glossary', slug };
+
+      if (window.location.pathname !== glossaryPath) {
+        window.history.pushState(state, '', glossaryPath);
+      } else {
+        window.history.replaceState(state, '', glossaryPath);
+      }
+    }
+
+    setActiveSlug(slug);
+  };
+
   const closeTechnique = (): void => {
     navigateTo(route, { replace: true });
   };
@@ -596,7 +634,7 @@ export default function App(): ReactElement {
     });
   };
 
-  const techniqueNotFound = Boolean(activeSlug) && !currentTechnique;
+  const techniqueNotFound = Boolean(activeSlug) && !currentTechnique && route !== 'glossary';
 
   const techniqueBackLabel =
     route === 'bookmarks'
@@ -607,6 +645,8 @@ export default function App(): ReactElement {
       ? copy.backToAbout
       : route === 'basics'
       ? copy.backToBasics
+      : route === 'glossary'
+      ? copy.backToGlossary
       : copy.backToLibrary;
 
   let mainContent: ReactElement;
@@ -715,6 +755,47 @@ export default function App(): ReactElement {
             onUnassign={removeFromCollection}
             onOpenTechnique={openTechnique}
           />
+        )}
+
+        {route === 'glossary' && (
+          <>
+            {activeSlug ? (
+              <GlossaryDetailPage
+                slug={activeSlug}
+                copy={copy}
+                locale={locale}
+                onBack={() => navigateTo('glossary', { replace: true })}
+              />
+            ) : (
+              <>
+                <div className="md:hidden">
+                  <MobileGlossaryFilters
+                    copy={copy}
+                    filters={glossaryFilters}
+                    categories={glossaryCategories}
+                    onChange={setGlossaryFilters}
+                  />
+                </div>
+                <div className="grid md:grid-cols-[16rem,1fr] gap-6">
+                  <aside className="hidden md:block surface border surface-border rounded-2xl p-3 h-max sticky top-20">
+                    <GlossaryFilterPanel
+                      copy={copy}
+                      filters={glossaryFilters}
+                      categories={glossaryCategories}
+                      onChange={setGlossaryFilters}
+                    />
+                  </aside>
+                  <section>
+                    <GlossaryPage
+                      locale={locale}
+                      filters={glossaryFilters}
+                      onOpenTerm={openGlossaryTerm}
+                    />
+                  </section>
+                </div>
+              </>
+            )}
+          </>
         )}
       </div>
     );

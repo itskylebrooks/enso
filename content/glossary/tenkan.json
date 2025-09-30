@@ -1,0 +1,16 @@
+{
+  "id": "tenkan",
+  "slug": "tenkan",
+  "romaji": "Tenkan",
+  "jp": "転換",
+  "kana": "てんかん",
+  "category": "movement",
+  "def": {
+    "en": "Pivot/turn that leads uke past your center.",
+    "de": "Drehung, die Uke an deinem Zentrum vorbeiführt."
+  },
+  "notes": {
+    "en": "Common entry from katate-dori; keep posture and move from the hips.",
+    "de": "Häufiger Einstieg aus Katate-dori; Haltung wahren und aus der Hüfte führen."
+  }
+}

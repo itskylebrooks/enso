@@ -1,0 +1,16 @@
+{
+  "id": "tai-sabaki",
+  "slug": "tai-sabaki",
+  "romaji": "Tai-sabaki",
+  "jp": "体捌き",
+  "kana": "たいさばき",
+  "category": "movement",
+  "def": {
+    "en": "Body movement; evasive stepping and positioning.",
+    "de": "Körperbewegung; ausweichende Schritte und Positionierung."
+  },
+  "notes": {
+    "en": "Essential footwork for creating openings and avoiding direct confrontation. Includes various stepping patterns.",
+    "de": "Wesentliche Fußarbeit zum Schaffen von Öffnungen und Vermeiden direkter Konfrontation. Umfasst verschiedene Schrittmuster."
+  }
+}

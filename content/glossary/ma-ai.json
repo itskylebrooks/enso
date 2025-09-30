@@ -1,0 +1,16 @@
+{
+  "id": "ma-ai",
+  "slug": "ma-ai",
+  "romaji": "Ma-ai",
+  "jp": "間合い",
+  "kana": "まあい",
+  "category": "philosophy",
+  "def": {
+    "en": "Proper distance and timing between partners.",
+    "de": "Richtige Distanz und Timing zwischen Partnern."
+  },
+  "notes": {
+    "en": "Critical concept encompassing physical distance, timing, and spatial awareness. Changes dynamically during technique.",
+    "de": "Kritisches Konzept, das physische Distanz, Timing und räumliches Bewusstsein umfasst. Ändert sich dynamisch während der Technik."
+  }
+}
