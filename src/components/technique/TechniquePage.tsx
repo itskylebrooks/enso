@@ -61,6 +61,7 @@ type TechniquePageProps = {
   bookmarkCollections: BookmarkCollection[];
   onAssignToCollection: (collectionId: string) => void;
   onRemoveFromCollection: (collectionId: string) => void;
+  onOpenGlossary?: (slug: string) => void;
 };
 
 const getCollectionOptions = (
@@ -90,6 +91,85 @@ const ensureVersion = (versions: TechniqueVersion[], versionId: string | null | 
   return versions[0];
 };
 
+// Map tag labels to glossary slugs
+const mapTagToGlossarySlug = (tagLabel: string): string | null => {
+  // Create a comprehensive map of localized labels to glossary slugs
+  const labelToSlugMap: Record<string, string> = {
+    // Attack patterns (English labels)
+    'shomen-uchi': 'shomen-uchi',
+    'shomen uchi': 'shomen-uchi',
+    'shōmen-uchi': 'shomen-uchi',
+    '正面打ち': 'shomen-uchi',
+    'shomen': 'shomen-uchi',
+    
+    // Movement patterns  
+    'irimi': 'irimi',
+    'entering': 'irimi',
+    '入身': 'irimi',
+    
+    'tenkan': 'tenkan', 
+    'turning': 'tenkan',
+    '転換': 'tenkan',
+    
+    // Concepts
+    'ukemi': 'ukemi',
+    '受身': 'ukemi',
+    'breakfalls': 'ukemi',
+    'rolling': 'ukemi',
+    
+    'rei': 'rei',
+    '礼': 'rei',
+    'bow': 'rei',
+    'bowing': 'rei',
+    
+    'ma-ai': 'ma-ai',
+    'ma ai': 'ma-ai',
+    '間合い': 'ma-ai',
+    'distance': 'ma-ai',
+    'timing': 'ma-ai',
+    
+    'kamae': 'kamae',
+    '構え': 'kamae',
+    'stance': 'kamae',
+    'ready position': 'kamae',
+    
+    'tai-sabaki': 'tai-sabaki',
+    'tai sabaki': 'tai-sabaki',
+    '体捌き': 'tai-sabaki',
+    'body movement': 'tai-sabaki',
+    'evasion': 'tai-sabaki',
+  };
+
+  // Normalize the tag label for lookup
+  const normalizedTag = tagLabel.toLowerCase()
+    .replace(/\s+/g, ' ')
+    .replace(/[()]/g, '')
+    .replace(/[・]/g, '')  // Remove Japanese separator
+    .trim();
+
+  // Direct lookup
+  if (labelToSlugMap[normalizedTag]) {
+    return labelToSlugMap[normalizedTag];
+  }
+
+  // Try without spaces/hyphens/punctuation
+  const withoutPunctuation = normalizedTag.replace(/[\s\-_.]/g, '');
+  for (const [key, slug] of Object.entries(labelToSlugMap)) {
+    if (key.replace(/[\s\-_.]/g, '') === withoutPunctuation) {
+      return slug;
+    }
+  }
+
+  // Check if the normalized tag contains any known terms (substring matching)
+  for (const [key, slug] of Object.entries(labelToSlugMap)) {
+    if (normalizedTag.includes(key) || key.includes(normalizedTag)) {
+      return slug;
+    }
+  }
+
+  return null;
+};
+
 export const TechniquePage = ({
   technique,
   progress,
@@ -102,6 +182,7 @@ export const TechniquePage = ({
   bookmarkCollections,
   onAssignToCollection,
   onRemoveFromCollection,
+  onOpenGlossary,
 }: TechniquePageProps): ReactElement => {
   const tags = useMemo(() => buildTags(technique, locale), [technique, locale]);
   const summary = technique.summary[locale] || technique.summary.en;
@@ -142,6 +223,27 @@ export const TechniquePage = ({
     }
   };
 
+  const handleTagClick = (tagLabel: string) => {
+    if (!onOpenGlossary) return;
+    
+    const glossarySlug = mapTagToGlossarySlug(tagLabel);
+    if (glossarySlug) {
+      onOpenGlossary(glossarySlug);
+    } else {
+      // For tags that don't have glossary entries, we can still try to open them
+      // The GlossaryDetailPage will handle showing "not found" message
+      const fallbackSlug = tagLabel.toLowerCase()
+        .replace(/[()]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/[^a-z0-9\-]/g, '')
+        .trim();
+      
+      if (fallbackSlug) {
+        onOpenGlossary(fallbackSlug);
+      }
+    }
+  };
+
   const motionInitial = prefersReducedMotion ? undefined : { opacity: 0, y: 18 };
   const motionAnimate = prefersReducedMotion ? undefined : { opacity: 1, y: 0 };
   const motionExit = prefersReducedMotion ? undefined : { opacity: 0, y: -18 };
@@ -171,6 +273,7 @@ export const TechniquePage = ({
         onToggleBookmark={onToggleBookmark}
         collections={collectionOptions}
         onToggleCollection={handleCollectionToggle}
+        onTagClick={onOpenGlossary ? handleTagClick : undefined}
       />
 
       <div

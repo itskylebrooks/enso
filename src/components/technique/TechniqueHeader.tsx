@@ -28,6 +28,7 @@ export type TechniqueHeaderProps = {
   onToggleBookmark: () => void;
   collections: CollectionOption[];
   onToggleCollection: (collectionId: string, nextChecked: boolean) => void;
+  onTagClick?: (tag: string) => void;
 };
 
 export const TechniqueHeader = ({
@@ -42,6 +43,7 @@ export const TechniqueHeader = ({
   onToggleBookmark,
   collections,
   onToggleCollection,
+  onTagClick,
 }: TechniqueHeaderProps): ReactElement => {
   const { toggleTransition, prefersReducedMotion } = useMotionPreferences();
 
@@ -69,12 +71,23 @@ export const TechniqueHeader = ({
             {tags.length > 0 && (
               <div className="flex flex-wrap gap-2 pt-1">
                 {tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="rounded-lg border surface-border bg-[var(--color-surface)] px-2 py-1 text-xs uppercase tracking-wide text-subtle"
-                  >
-                    {tag}
-                  </span>
+                  onTagClick ? (
+                    <button
+                      key={tag}
+                      type="button"
+                      onClick={() => onTagClick(tag)}
+                      className="rounded-lg border surface-border bg-[var(--color-surface)] px-2 py-1 text-xs uppercase tracking-wide text-subtle hover:bg-[var(--color-surface-hover)] hover:text-[var(--color-text)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+                    >
+                      {tag}
+                    </button>
+                  ) : (
+                    <span
+                      key={tag}
+                      className="rounded-lg border surface-border bg-[var(--color-surface)] px-2 py-1 text-xs uppercase tracking-wide text-subtle"
+                    >
+                      {tag}
+                    </span>
+                  )
                 ))}
               </div>
             )}

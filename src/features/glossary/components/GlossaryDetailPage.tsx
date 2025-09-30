@@ -81,33 +81,15 @@ export const GlossaryDetailPage = ({ slug, copy, locale, onBack }: GlossaryDetai
 
   if (error || !term) {
     return (
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 py-6 space-y-6">
-        <a
-          href="/"
-          aria-label={copy.backToGlossary}
-          onClick={(event) => {
-            event.preventDefault();
-            onBack();
-          }}
-          className="text-sm text-subtle hover:text-[var(--color-text)] transition flex items-center gap-2"
+      <div className="max-w-5xl mx-auto px-6 py-10 space-y-4 text-center">
+        <p className="text-lg font-semibold">Term not found.</p>
+        <button
+          type="button"
+          onClick={onBack}
+          className="text-sm underline"
         >
-          <span aria-hidden>←</span>
-          <span>{copy.backToGlossary}</span>
-        </a>
-        
-        <div className="text-center py-12">
-          <h1 className="text-3xl font-semibold leading-tight mb-4">Term Not Found</h1>
-          <p className="text-base text-muted leading-relaxed max-w-3xl mx-auto mb-6">
-            The glossary term "{slug}" could not be found.
-          </p>
-          <button
-            type="button"
-            onClick={onBack}
-            className="btn-primary px-4 py-2 rounded-lg"
-          >
-            Back to Glossary
-          </button>
-        </div>
+          {copy.backToGlossary}
+        </button>
       </div>
     );
   }

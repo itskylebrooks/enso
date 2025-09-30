@@ -618,6 +618,7 @@ export default function App(): ReactElement {
       }
     }
 
+    setRoute('glossary');
     setActiveSlug(slug);
   };
 
@@ -665,6 +666,7 @@ export default function App(): ReactElement {
         bookmarkCollections={db.bookmarkCollections}
         onAssignToCollection={(collectionId) => assignToCollection(currentTechnique.id, collectionId)}
         onRemoveFromCollection={(collectionId) => removeFromCollection(currentTechnique.id, collectionId)}
+        onOpenGlossary={openGlossaryTerm}
       />
     );
   } else if (techniqueNotFound) {
