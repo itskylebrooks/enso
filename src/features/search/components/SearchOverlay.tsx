@@ -51,24 +51,63 @@ export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen, onOpe
 
   const results = useMemo((): SearchResult[] => {
     if (normalizedQuery.length === 0) {
-      // Show mixed results when no query: recent techniques + some glossary terms
-      const recentTechniques: SearchResult[] = techniques.slice(0, 15).map(item => ({ type: 'technique', item }));
-      const someGlossaryTerms: SearchResult[] = glossaryTerms.slice(0, 10).map(item => ({ type: 'glossary', item }));
+      // Show just a few results when no query: 3 techniques + 3 glossary terms
+      const recentTechniques: SearchResult[] = techniques.slice(0, 3).map(item => ({ type: 'technique', item }));
+      const someGlossaryTerms: SearchResult[] = glossaryTerms.slice(0, 3).map(item => ({ type: 'glossary', item }));
       return [...recentTechniques, ...someGlossaryTerms];
     }
 
-    // Search both techniques and glossary terms
-    const techniqueResults: SearchResult[] = techniqueIndex
+    // Check for exact glossary term matches first (highest priority)
+    const queryText = normalizedQuery.join(' ').toLowerCase();
+    const exactGlossaryMatches: SearchResult[] = glossaryTerms
+      .filter(term => 
+        term.romaji.toLowerCase() === queryText ||
+        term.slug.toLowerCase() === queryText ||
+        (term.jp && term.jp.toLowerCase() === queryText)
+      )
+      .map(term => ({ type: 'glossary', item: term }));
+
+    // Search techniques and glossary terms normally
+    const allTechniqueResults: SearchResult[] = techniqueIndex
       .filter((entry) => matchSearch(entry.haystack, normalizedQuery))
       .map((entry) => ({ type: 'technique', item: entry.technique }));
     
-    const glossaryResults: SearchResult[] = glossaryIndex
+    const allGlossaryResults: SearchResult[] = glossaryIndex
       .filter((entry) => matchSearch(entry.haystack, normalizedQuery))
       .map((entry) => ({ type: 'glossary', item: entry.term }));
 
-    // Combine and limit results, prioritizing techniques
-    return [...techniqueResults.slice(0, 20), ...glossaryResults.slice(0, 10)];
-  }, [techniqueIndex, glossaryIndex, normalizedQuery, techniques, glossaryTerms]);
+    // Separate techniques into exact name matches vs partial matches
+    const exactTechniqueMatches: SearchResult[] = [];
+    const partialTechniqueMatches: SearchResult[] = [];
+    
+    allTechniqueResults.forEach(result => {
+      if (result.type === 'technique') {
+        const technique = result.item;
+        const nameEn = technique.name.en.toLowerCase();
+        const nameDe = technique.name.de.toLowerCase();
+        const jp = technique.jp?.toLowerCase() || '';
+        
+        if (nameEn.startsWith(queryText) || nameDe.startsWith(queryText) || 
+            jp === queryText || technique.slug.toLowerCase() === queryText) {
+          exactTechniqueMatches.push(result);
+        } else {
+          partialTechniqueMatches.push(result);
+        }
+      }
+    });
+
+    // Remove exact matches from regular glossary results to avoid duplicates
+    const exactMatchIds = new Set(exactGlossaryMatches.map(r => r.item.id));
+    const otherGlossaryResults = allGlossaryResults.filter(r => !exactMatchIds.has(r.item.id));
+
+    // Prioritize: exact glossary matches first, then exact technique matches, then partial matches
+    return [
+      ...exactGlossaryMatches,
+      ...exactTechniqueMatches.slice(0, 10),
+      ...partialTechniqueMatches.slice(0, 15),
+      ...otherGlossaryResults.slice(0, 8)
+    ];
+  }, [techniqueIndex, glossaryIndex, normalizedQuery, techniques, glossaryTerms, query]);
 
   // Reset selection when results change
   useEffect(() => {
@@ -190,36 +229,41 @@ export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen, onOpe
                   title={result.type === 'technique' ? result.item.name[locale] : result.item.romaji}
                 >
                   <div className="min-w-0 flex-1">
-                    <div className="truncate text-sm font-semibold text-[color:var(--color-text)]">
-                      {result.type === 'technique' ? (
-                        <EmphasizedName name={result.item.name[locale]} />
-                      ) : (
-                        result.item.romaji
-                      )}
-                    </div>
-                    <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-subtle">
-                      {result.type === 'technique' ? (
-                        result.item.jp && (
-                          <span className="font-medium uppercase tracking-wide text-[0.65rem]">
-                            {result.item.jp}
-                          </span>
-                        )
-                      ) : (
-                        <>
+                    {result.type === 'technique' ? (
+                      <>
+                        <div className="truncate text-sm font-semibold text-[color:var(--color-text)]">
+                          <EmphasizedName name={result.item.name[locale]} />
+                        </div>
+                        <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-subtle">
                           {result.item.jp && (
                             <span className="font-medium uppercase tracking-wide text-[0.65rem]">
                               {result.item.jp}
                             </span>
                           )}
-                          <span className="text-[0.65rem] font-medium text-white bg-blue-600 px-2 py-0.5 rounded-full">
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="flex items-center gap-2 mb-1">
+                          <div className="truncate text-sm font-semibold text-[color:var(--color-text)]">
+                            {result.item.romaji}
+                          </div>
+                          <span className="text-[0.65rem] font-medium text-white bg-blue-600 px-2 py-0.5 rounded-full flex-shrink-0">
                             GLOSSARY
                           </span>
-                          <span className="text-[0.65rem] font-medium text-subtle truncate">
-                            {result.item.def[locale] || result.item.def.en}
-                          </span>
-                        </>
-                      )}
-                    </div>
+                        </div>
+                        <div className="text-xs font-medium text-subtle truncate mb-1">
+                          {result.item.def[locale] || result.item.def.en}
+                        </div>
+                        {result.item.jp && (
+                          <div className="text-xs text-subtle">
+                            <span className="font-medium uppercase tracking-wide text-[0.65rem]">
+                              {result.item.jp}
+                            </span>
+                          </div>
+                        )}
+                      </>
+                    )}
                   </div>
                 </button>
               ))

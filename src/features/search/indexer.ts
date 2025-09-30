@@ -110,7 +110,19 @@ export const normalizeSearchQuery = (value: string): string[] => {
   const compact = value.trim().toLowerCase();
   if (!compact) return [];
   const normalized = stripDiacritics(compact);
-  return normalized.split(/\s+/).filter(Boolean);
+  
+  // Split on whitespace to get individual terms
+  const terms = normalized.split(/\s+/).filter(Boolean);
+  
+  // Also add a combined version without spaces/hyphens for compound terms like "ma ai" -> "maai"
+  if (terms.length > 1) {
+    const combined = terms.join('').replace(/[-_]/g, '');
+    if (combined && !terms.includes(combined)) {
+      terms.push(combined);
+    }
+  }
+  
+  return terms;
 };
 
 export const matchSearch = (haystack: string, queries: string[]): boolean =>
