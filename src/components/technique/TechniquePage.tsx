@@ -154,7 +154,7 @@ export const TechniquePage = ({
 
   return (
     <motion.main
-      className="mx-auto max-w-6xl px-4 sm:px-6 py-6 space-y-10"
+      className="mx-auto max-w-6xl px-4 sm:px-6 py-6 space-y-6"
       initial={motionInitial}
       animate={motionAnimate}
       transition={versionMotionTransition}
@@ -175,7 +175,7 @@ export const TechniquePage = ({
 
       <div
         className={classNames(
-          'flex flex-col gap-4 md:flex-row md:items-center',
+          'flex flex-col gap-4 md:flex-row md:items-center -mb-2',
           technique.versions.length > 1 ? 'md:justify-between' : 'md:justify-start',
         )}
       >
