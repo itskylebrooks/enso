@@ -1,5 +1,5 @@
 import type { HTMLAttributes, ReactElement } from 'react';
-import { classNames } from '../../utils/classNames';
+import { classNames } from '../utils/classNames';
 
 export const Logo = ({ className, ...props }: HTMLAttributes<HTMLDivElement>): ReactElement => (
   <div

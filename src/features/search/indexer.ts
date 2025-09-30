@@ -1,8 +1,8 @@
-import { expandWithSynonyms, getTaxonomyLabel } from '../i18n/taxonomy';
-import type { TaxonomyType } from '../i18n/taxonomy';
-import type { Technique } from '../types';
-import { gradeLabel } from '../styles/belts';
-import { stripDiacritics } from '../utils/text';
+import { expandWithSynonyms, getTaxonomyLabel } from '../../shared/i18n/taxonomy';
+import type { TaxonomyType } from '../../shared/i18n/taxonomy';
+import type { Technique } from '../../shared/types';
+import { gradeLabel } from '../../shared/styles/belts';
+import { stripDiacritics } from '../../shared/utils/text';
 
 const TAXONOMY_FIELDS: TaxonomyType[] = ['category', 'attack', 'stance', 'weapon'];
 

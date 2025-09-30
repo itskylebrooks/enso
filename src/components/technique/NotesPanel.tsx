@@ -1,5 +1,5 @@
 import type { ReactElement } from 'react';
-import type { Copy } from '../../constants/i18n';
+import type { Copy } from '../../shared/constants/i18n';
 
 export type NotesPanelProps = {
   keyPoints?: string[];

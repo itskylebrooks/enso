@@ -1,8 +1,8 @@
 import { motion } from 'motion/react';
 import type { ReactElement } from 'react';
-import type { Grade, Locale } from '../../types';
-import { gradeOrder } from '../../utils/grades';
-import { gradeLabel, gradePalette } from '../../styles/belts';
+import type { Grade, Locale } from '../../shared/types';
+import { gradeOrder } from '../../shared/utils/grades';
+import { gradeLabel, gradePalette } from '../../shared/styles/belts';
 import { useMotionPreferences, defaultEase } from '../ui/motion';
 
 type BasicsPageProps = {

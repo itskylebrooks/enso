@@ -1,7 +1,7 @@
 import type { ReactElement } from 'react';
 import { AnimatePresence, motion, LayoutGroup } from 'motion/react';
-import type { Copy } from '../../constants/i18n';
-import { EditIcon, PencilIcon, PlusIcon, TrashIcon } from '../common/icons';
+import type { Copy } from '../../shared/constants/i18n';
+import { EditIcon, PencilIcon, PlusIcon, TrashIcon } from '../../shared/components/ui/icons';
 import { useMotionPreferences } from './motion';
 
 type SelectedCollectionId = 'all' | 'ungrouped' | string;

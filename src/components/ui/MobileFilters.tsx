@@ -1,10 +1,10 @@
 import { useMemo, useState } from 'react';
 import type { ReactElement } from 'react';
-import type { Copy } from '../../constants/i18n';
-import type { Filters, Grade, Locale } from '../../types';
-import { gradePalette } from '../../styles/belts';
-import { classNames } from '../../utils/classNames';
-import { getLevelLabel, getOrderedTaxonomyValues, getTaxonomyLabel, type TaxonomyType } from '../../i18n/taxonomy';
+import type { Copy } from '../../shared/constants/i18n';
+import type { Filters, Grade, Locale } from '../../shared/types';
+import { gradePalette } from '../../shared/styles/belts';
+import { classNames } from '../../shared/utils/classNames';
+import { getLevelLabel, getOrderedTaxonomyValues, getTaxonomyLabel, type TaxonomyType } from '../../shared/i18n/taxonomy';
 
 const buildTaxonomyOptions = (locale: Locale, type: TaxonomyType, values: string[]) => {
   const ordered = getOrderedTaxonomyValues(type);

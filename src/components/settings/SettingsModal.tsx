@@ -1,12 +1,12 @@
 import { useRef, type ReactElement, type RefObject } from 'react';
 import { motion } from 'motion/react';
 import type { ChangeEvent } from 'react';
-import type { Copy } from '../../constants/i18n';
-import type { DB, Locale, Theme } from '../../types';
-import { classNames } from '../../utils/classNames';
-import { exportDB, parseIncomingDB } from '../../services/storageService';
-import { SectionTitle } from '../common';
-import { useFocusTrap } from '../../utils/useFocusTrap';
+import type { Copy } from '../../shared/constants/i18n';
+import type { DB, Locale, Theme } from '../../shared/types';
+import { classNames } from '../../shared/utils/classNames';
+import { exportDB, parseIncomingDB } from '../../shared/services/storageService';
+import { SectionTitle } from '../../shared/components';
+import { useFocusTrap } from '../../shared/hooks/useFocusTrap';
 import { useMotionPreferences } from '../ui/motion';
 // import version from package.json
 import pkg from '../../../package.json';

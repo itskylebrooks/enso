@@ -1,11 +1,11 @@
 import { forwardRef, useState, useEffect, useRef, type PropsWithChildren, type ReactElement, type RefObject } from 'react';
-import { classNames } from '../../utils/classNames';
-import type { AppRoute } from '../../types';
-import type { Copy } from '../../constants/i18n';
-import { SearchIcon, SettingsIcon, MenuIcon, BookmarkIcon, PersonStandingIcon, BookOpenTextIcon } from '../common/icons';
+import { classNames } from '../../shared/utils/classNames';
+import type { AppRoute } from '../../shared/types';
+import type { Copy } from '../../shared/constants/i18n';
+import { SearchIcon, SettingsIcon, MenuIcon, BookmarkIcon, PersonStandingIcon, BookOpenTextIcon } from '../../shared/components/ui/icons';
 import { motion, AnimatePresence } from 'motion/react';
 import { useMotionPreferences, defaultEase } from '../ui/motion';
-import { Logo } from '../common';
+import { Logo } from '../../shared/components';
 
 type HeaderProps = {
   copy: Copy;

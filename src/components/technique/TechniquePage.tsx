@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type ReactElement } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
-import type { Copy } from '../../constants/i18n';
+import type { Copy } from '../../shared/constants/i18n';
 import type {
   BookmarkCollection,
   Collection,
@@ -8,10 +8,10 @@ import type {
   Progress,
   Technique,
   TechniqueVersion,
-} from '../../types';
-import { classNames } from '../../utils/classNames';
-import { getTaxonomyLabel } from '../../i18n/taxonomy';
-import { stripDiacritics } from '../../utils/text';
+} from '../../shared/types';
+import { classNames } from '../../shared/utils/classNames';
+import { getTaxonomyLabel } from '../../shared/i18n/taxonomy';
+import { stripDiacritics } from '../../shared/utils/text';
 import { useMotionPreferences, defaultEase } from '../ui/motion';
 import { TechniqueHeader, type CollectionOption } from './TechniqueHeader';
 import { VersionTabs } from './VersionTabs';
@@ -19,7 +19,7 @@ import { StepsList } from './StepsList';
 import { UkePanel } from './UkePanel';
 import { MediaPanel } from './MediaPanel';
 import { NotesPanel } from './NotesPanel';
-import { useTechniqueViewStore } from '../../store/techniqueViewStore';
+import { useTechniqueViewStore } from '../../features/technique';
 
 const buildTags = (technique: Technique, locale: Locale): string[] => {
   const title = technique.name[locale]?.toLowerCase?.() ?? '';

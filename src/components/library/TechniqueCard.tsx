@@ -1,9 +1,10 @@
 import type { KeyboardEvent, ReactElement, ReactNode } from 'react';
 import { motion, type Variants, type Transition } from 'motion/react';
-import type { Copy } from '../../constants/i18n';
-import type { Locale, Progress, Technique } from '../../types';
-import { LevelBadge, EmphasizedName } from '../common';
-import { getTaxonomyLabel } from '../../i18n/taxonomy';
+import type { Copy } from '../../shared/constants/i18n';
+import type { Locale, Progress, Technique } from '../../shared/types';
+import { LevelBadge } from '../common';
+import { EmphasizedName } from '../../shared/components';
+import { getTaxonomyLabel } from '../../shared/i18n/taxonomy';
 
 type MotionProps = {
   variants: Variants;

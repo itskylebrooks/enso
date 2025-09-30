@@ -1,6 +1,6 @@
 import type { ReactElement } from 'react';
-import type { Copy } from '../../constants/i18n';
-import { HandshakeIcon } from '../common/icons';
+import type { Copy } from '../../shared/constants/i18n';
+import { HandshakeIcon } from '../../shared/components/ui/icons';
 
 export type UkePanelProps = {
   role: string;

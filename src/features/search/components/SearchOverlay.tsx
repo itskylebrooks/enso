@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useRef, useState, type ReactElement, type KeyboardEvent } from 'react';
 import { motion } from 'motion/react';
-import type { Copy } from '../../constants/i18n';
-import type { Locale, Technique } from '../../types';
-import { EmphasizedName } from '../common';
-import { SearchIcon } from '../common/icons';
-import { useFocusTrap } from '../../utils/useFocusTrap';
-import { buildSearchIndex, matchSearch, normalizeSearchQuery } from '../../search/indexer';
-import { useMotionPreferences } from '../ui/motion';
+import type { Copy } from '../../../shared/constants/i18n';
+import type { Locale, Technique } from '../../../shared/types';
+import { EmphasizedName } from '../../../shared/components';
+import { SearchIcon } from '../../../shared/components/ui/icons';
+import { useFocusTrap } from '../../../shared/hooks/useFocusTrap';
+import { buildSearchIndex, matchSearch, normalizeSearchQuery } from '../indexer';
+import { useMotionPreferences } from '../../../components/ui/motion';
 
 type SearchOverlayProps = {
   copy: Copy;

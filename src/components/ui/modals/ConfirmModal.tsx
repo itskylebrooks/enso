@@ -1,8 +1,8 @@
 import { useEffect, useRef, type ReactElement } from 'react';
 import { motion } from 'motion/react';
-import { useFocusTrap } from '../../../utils/useFocusTrap';
+import { useFocusTrap } from '../../../shared/hooks/useFocusTrap';
 import { useMotionPreferences } from '../motion';
-import useLockBodyScroll from '../../../../src/utils/useLockBodyScroll';
+import useLockBodyScroll from '../../../shared/hooks/useLockBodyScroll';
 
 type ConfirmStrings = {
   title: string;

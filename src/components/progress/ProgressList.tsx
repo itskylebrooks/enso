@@ -1,8 +1,9 @@
 import type { ReactElement } from 'react';
 import { motion } from 'motion/react';
-import type { Copy } from '../../constants/i18n';
-import type { Locale, Technique } from '../../types';
-import { EmphasizedName, LevelBadge } from '../common';
+import type { Copy } from '../../shared/constants/i18n';
+import type { Locale, Technique } from '../../shared/types';
+import { LevelBadge } from '../common';
+import { EmphasizedName } from '../../shared/components';
 import { useMotionPreferences } from '../ui/motion';
 
 export type ProgressListProps = {

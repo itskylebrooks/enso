@@ -1,7 +1,7 @@
 import type { ReactElement } from 'react';
 import { motion } from 'motion/react';
-import type { Copy } from '../../constants/i18n';
-import type { TechniqueVersion } from '../../types';
+import type { Copy } from '../../shared/constants/i18n';
+import type { TechniqueVersion } from '../../shared/types';
 import { MediaEmbed } from '../media/MediaEmbed';
 import { useMotionPreferences } from '../ui/motion';
 

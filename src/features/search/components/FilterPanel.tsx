@@ -1,13 +1,13 @@
 import { useMemo, useState } from 'react';
 import type { ReactNode } from 'react';
 import { motion } from 'motion/react';
-import type { Copy } from '../../constants/i18n';
-import type { Filters, Grade, Locale } from '../../types';
-import { classNames } from '../../utils/classNames';
-import { gradePalette } from '../../styles/belts';
-import { getLevelLabel, getOrderedTaxonomyValues, getTaxonomyLabel, type TaxonomyType } from '../../i18n/taxonomy';
-import { SectionTitle } from '../common';
-import { useMotionPreferences } from '../ui/motion';
+import type { Copy } from '../../../shared/constants/i18n';
+import type { Filters, Grade, Locale } from '../../../shared/types';
+import { classNames } from '../../../shared/utils/classNames';
+import { gradePalette } from '../../../shared/styles/belts';
+import { getLevelLabel, getOrderedTaxonomyValues, getTaxonomyLabel, type TaxonomyType } from '../../../shared/i18n/taxonomy';
+import { SectionTitle } from '../../../shared/components';
+import { useMotionPreferences } from '../../../components/ui/motion';
 
 type FilterPanelProps = {
   copy: Copy;

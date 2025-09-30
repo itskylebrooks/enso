@@ -1,5 +1,5 @@
 import { useMemo, useRef, type KeyboardEvent, type ReactElement } from 'react';
-import type { TechniqueVersion } from '../../types';
+import type { TechniqueVersion } from '../../shared/types';
 
 export type VersionTabsProps = {
   versions: TechniqueVersion[];

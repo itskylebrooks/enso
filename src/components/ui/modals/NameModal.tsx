@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState, type FormEvent, type ReactElement } from 'react';
 import { motion } from 'motion/react';
-import { useFocusTrap } from '../../../utils/useFocusTrap';
+import { useFocusTrap } from '../../../shared/hooks/useFocusTrap';
 import { useMotionPreferences } from '../motion';
-import useLockBodyScroll from '../../../../src/utils/useLockBodyScroll';
+import useLockBodyScroll from '../../../shared/hooks/useLockBodyScroll';
 
 export type NameModalStrings = {
   title: string;

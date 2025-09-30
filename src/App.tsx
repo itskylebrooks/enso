@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactElement } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Header } from './components/layout/Header';
-import { FilterPanel } from './components/filters/FilterPanel';
+import { FilterPanel } from './features/search/components/FilterPanel';
 import { Library } from './components/library/Library';
-import { BookmarksView } from './components/bookmarks/BookmarksView';
-import { SearchOverlay } from './components/search/SearchOverlay';
+import { BookmarksView } from './features/bookmarks/components/BookmarksView';
+import { SearchOverlay } from './features/search/components/SearchOverlay';
 import { SettingsModal } from './components/settings/SettingsModal';
 import { TechniquePage } from './components/technique/TechniquePage';
 import { Toast } from './components/ui/Toast';
@@ -12,10 +12,10 @@ import { MobileFilters } from './components/ui/MobileFilters';
 import { HomePage } from './components/home/HomePage';
 import { AboutPage } from './components/home/AboutPage';
 import { BasicsPage } from './components/home/BasicsPage';
-import { ConfirmClearModal } from './components/dialogs/ConfirmClearModal';
+import { ConfirmClearModal } from './shared/components/dialogs/ConfirmClearDialog';
 import { useMotionPreferences } from './components/ui/motion';
-import { getCopy } from './constants/i18n';
-import useLockBodyScroll from './utils/useLockBodyScroll';
+import { getCopy } from './shared/constants/i18n';
+import useLockBodyScroll from './shared/hooks/useLockBodyScroll';
 import {
   clearDB,
   clearThemePreference,
@@ -26,10 +26,10 @@ import {
   saveDB,
   saveLocale,
   saveTheme,
-} from './services/storageService';
-import type { AppRoute, Collection, DB, Filters, Locale, Progress, Technique, Theme } from './types';
-import { gradeOrder } from './utils/grades';
-import { unique, upsert } from './utils/array';
+} from './shared/services/storageService';
+import type { AppRoute, Collection, DB, Filters, Locale, Progress, Technique, Theme } from './shared/types';
+import { gradeOrder } from './shared/utils/grades';
+import { unique, upsert } from './shared/utils/array';
 
 const defaultFilters: Filters = {};
 

@@ -1,7 +1,7 @@
 import type { ReactElement } from 'react';
-import type { Grade, Locale } from '../../types';
-import { gradeLabel } from '../../styles/belts';
-import { getGradeStyle } from '../../utils/grades';
+import type { Grade, Locale } from '../../shared/types';
+import { gradeLabel } from '../../shared/styles/belts';
+import { getGradeStyle } from '../../shared/utils/grades';
 
 type LevelBadgeProps = {
   level: Grade;

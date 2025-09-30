@@ -1,7 +1,7 @@
 import type { ReactElement } from 'react';
 import { motion } from 'motion/react';
-import type { Locale, Progress, Technique } from '../../types';
-import type { Copy } from '../../constants/i18n';
+import type { Locale, Progress, Technique } from '../../shared/types';
+import type { Copy } from '../../shared/constants/i18n';
 import { TechniqueCard } from './TechniqueCard';
 import { useMotionPreferences } from '../ui/motion';
 

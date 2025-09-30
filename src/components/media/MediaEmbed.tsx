@@ -1,5 +1,5 @@
 import type { ReactElement } from 'react';
-import type { TechniqueVersion } from '../../types';
+import type { TechniqueVersion } from '../../shared/types';
 
 type MediaEmbedProps = {
   media: TechniqueVersion['media'][number];
