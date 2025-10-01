@@ -60,7 +60,7 @@ export const HomePage = ({
 
       <div className="container max-w-4xl mx-auto px-4 md:px-6 space-y-8 md:space-y-12 pb-16 md:pb-24">
         {/* Quick Guide Card */}
-        <section className="rounded-2xl border surface-border surface surface-hover transition-colors p-6 md:p-8 shake-on-hover">
+        <section className="rounded-2xl border surface-border surface surface-hover transition-colors p-6 md:p-8">
           <div className="space-y-6">
             <div className="text-center space-y-2">
               <div className="text-xs uppercase tracking-widest text-subtle">
@@ -92,7 +92,7 @@ export const HomePage = ({
               <button
                 type="button"
                 onClick={onOpenLibrary}
-                className="h-12 px-5 rounded-xl border btn-contrast transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] focus:outline-none"
+                className="h-12 px-5 rounded-xl border-2 btn-tonal surface-hover transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] focus:outline-none"
               >
                 {copy.library}
               </button>
@@ -131,7 +131,7 @@ export const HomePage = ({
         {/* Two Column Cards: Quote & Historical Note */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Random Quote Card */}
-          <section className="rounded-2xl border surface-border surface surface-hover transition-all p-6 md:p-8 jump-on-hover">
+          <section className="rounded-2xl border surface-border surface surface-hover transition-colors p-6 md:p-8">
             <div className="space-y-4">
               <h2 className="text-lg md:text-xl font-semibold">
                 {copy.homeQuoteOfMomentTitle}
@@ -141,7 +141,7 @@ export const HomePage = ({
           </section>
 
           {/* Historical Note Card */}
-          <section className="rounded-2xl border surface-border surface surface-hover transition-all p-6 md:p-8 jump-on-hover">
+          <section className="rounded-2xl border surface-border surface surface-hover transition-colors p-6 md:p-8">
             <div className="space-y-4">
               <h2 className="text-lg md:text-xl font-semibold">
                 {copy.homeHistoricalNoteTitle}
