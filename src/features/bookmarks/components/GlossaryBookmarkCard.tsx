@@ -45,13 +45,6 @@ const getCategoryColor = (category: GlossaryTerm['category']): string => {
   return colors[category];
 };
 
-const truncateDefinition = (text: string, maxLength: number = 120): string => {
-  if (text.length <= maxLength) return text;
-  const truncated = text.slice(0, maxLength);
-  const lastSpace = truncated.lastIndexOf(' ');
-  return lastSpace > 0 ? `${truncated.slice(0, lastSpace)}...` : `${truncated}...`;
-};
-
 export const GlossaryBookmarkCard = ({
   term,
   locale,
@@ -86,37 +79,34 @@ export const GlossaryBookmarkCard = ({
       onClick={handleActivate}
       onKeyDown={handleKeyDown}
       className={
-        `group relative surface border surface-border rounded-2xl p-4 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] flex flex-col gap-3 text-left h-[160px]` +
+        `group relative surface border surface-border rounded-2xl p-4 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] flex flex-col gap-3 text-left` +
         (isDimmed ? ' pointer-events-none opacity-70 blur-card' : '')
       }
       variants={variants}
       transition={getTransition(motionIndex)}
-      whileHover={prefersReducedMotion ? undefined : { y: -2, boxShadow: '0 8px 20px -12px rgba(15,23,42,0.25)' }}
+      whileHover={prefersReducedMotion ? undefined : { y: -2, boxShadow: '0 16px 30px -22px rgba(15,23,42,0.35)' }}
       whileTap={prefersReducedMotion ? undefined : { scale: 0.99 }}
-      animate={isDimmed && !prefersReducedMotion ? { y: -2, boxShadow: '0 8px 20px -12px rgba(15,23,42,0.25)' } : {}}
-    >
-      {/* Action slot in top-right corner */}
-      {actionSlot && (
-        <div className="absolute top-3 right-3 z-10">
+      animate={isDimmed && !prefersReducedMotion ? { y: -2, boxShadow: '0 16px 30px -22px rgba(15,23,42,0.35)' } : {}}
+    >      
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0 space-y-1">
+          <h3 className="text-base font-medium leading-snug line-clamp-2" title={term.romaji}>
+            {term.romaji}
+          </h3>
+          {term.jp && <div className="text-xs text-subtle truncate">{term.jp}</div>}
+        </div>
+        <div className="flex items-center gap-2">
           {actionSlot}
         </div>
-      )}
-      
-      {/* Header with term name only */}
-      <div className="min-w-0 space-y-1">
-        <h3 className="text-base font-semibold leading-tight" title={term.romaji}>
-          {term.romaji}
-        </h3>
-        {term.jp && <div className="text-xs text-subtle truncate">{term.jp}</div>}
       </div>
 
       {/* Definition */}
-      <p className="text-sm text-muted leading-relaxed flex-1">
-        {truncateDefinition(definition, 140)}
+      <p className="text-sm text-muted leading-relaxed">
+        {definition}
       </p>
 
-      {/* Category label positioned higher */}
-      <div className="flex justify-end -mt-1">
+      {/* Category label at bottom */}
+      <div className="mt-auto flex justify-end pt-1">
         <span className={`text-xs font-medium px-2 py-1 rounded-full ${categoryStyle}`}>
           {categoryLabel}
         </span>
