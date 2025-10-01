@@ -33,7 +33,6 @@ export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen, onOpe
   const resultRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const {
     overlayMotion,
-    prefersReducedMotion,
   } = useMotionPreferences();
 
   useEffect(() => {
@@ -177,7 +176,6 @@ export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen, onOpe
       exit="exit"
       transition={overlayMotion.transition}
       onClick={onClose}
-      style={{ backdropFilter: prefersReducedMotion ? 'blur(8px)' : undefined }}
     >
       <motion.div
         ref={dialogRef}

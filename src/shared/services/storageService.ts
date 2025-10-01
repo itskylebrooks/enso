@@ -452,6 +452,30 @@ export const importData = (currentDB: DB, importedData: ReturnType<typeof parseI
     };
   });
 
+  // Update glossary progress with imported bookmarks
+  const importedGlossaryBookmarkIds = new Set(importedData.glossaryBookmarks || []);
+  const updatedGlossaryProgress = currentDB.glossaryProgress.map(progress => {
+    const isBookmarked = importedGlossaryBookmarkIds.has(progress.termId);
+    return {
+      ...progress,
+      bookmarked: isBookmarked,
+      updatedAt: isBookmarked ? Date.now() : progress.updatedAt,
+    };
+  });
+
+  // Add new glossary progress entries for newly bookmarked terms that don't exist
+  const existingGlossaryTermIds = new Set(currentDB.glossaryProgress.map(p => p.termId));
+  const newGlossaryProgressEntries: GlossaryProgress[] = (importedData.glossaryBookmarks || [])
+    .filter(termId => !existingGlossaryTermIds.has(termId))
+    .map(termId => buildDefaultGlossaryProgress(termId))
+    .map(progress => ({
+      ...progress,
+      bookmarked: true,
+      updatedAt: Date.now(),
+    }));
+
+  const finalGlossaryProgress = [...updatedGlossaryProgress, ...newGlossaryProgressEntries];
+
   // Import collections and regenerate IDs and timestamps
   const now = Date.now();
   const collectionNameToId = new Map<string, string>();
@@ -489,11 +513,29 @@ export const importData = (currentDB: DB, importedData: ReturnType<typeof parseI
     })
     .filter((entry): entry is BookmarkCollection => Boolean(entry));
 
+  // Import glossary bookmark collections using collection name mapping
+  const importedGlossaryBookmarkCollections: GlossaryBookmarkCollection[] = (importedData.glossaryBookmarkCollections || [])
+    .map(({ termId, collectionName }) => {
+      const collectionId = collectionNameToId.get(collectionName);
+      if (!collectionId) {
+        return null; // Skip invalid entries - note: we don't validate termId since glossary terms are loaded separately
+      }
+      return {
+        id: generateId(),
+        termId,
+        collectionId,
+        createdAt: now,
+      };
+    })
+    .filter((entry): entry is GlossaryBookmarkCollection => Boolean(entry));
+
   return {
     ...currentDB,
     progress: updatedProgress,
+    glossaryProgress: finalGlossaryProgress,
     collections: importedCollections,
     bookmarkCollections: importedBookmarkCollections,
+    glossaryBookmarkCollections: importedGlossaryBookmarkCollections,
   };
 };
 
