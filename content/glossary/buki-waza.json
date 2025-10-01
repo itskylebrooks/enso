@@ -1,0 +1,16 @@
+{
+  "id": "buki-waza",
+  "slug": "buki-waza",
+  "romaji": "Buki-waza",
+  "jp": "武器技",
+  "category": "other",
+  "def": {
+    "en": "Weapon techniques; training with traditional implements.",
+    "de": "Waffentechniken; Training mit traditionellen Geräten."
+  },
+  "literal": { "en": "weapon + technique", "de": "Waffe + Technik" },
+  "notes": {
+    "en": "Includes sword (bokken), staff (jō), and knife (tantō) practice.",
+    "de": "Umfasst Schwert- (Bokken), Stab- (Jō) und Messertraining (Tantō)."
+  }
+}

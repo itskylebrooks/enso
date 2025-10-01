@@ -95,6 +95,56 @@ const ensureVersion = (versions: TechniqueVersion[], versionId: string | null | 
 const mapTagToGlossarySlug = (tagLabel: string): string | null => {
   // Create a comprehensive map of localized labels to glossary slugs
   const labelToSlugMap: Record<string, string> = {
+    // Category mappings (English)
+    'throws (nage-waza)': 'nage-waza',
+    'throws': 'nage-waza',
+    'nage-waza': 'nage-waza',
+    'nage waza': 'nage-waza',
+    'throw': 'nage-waza',
+    'throwing techniques': 'nage-waza',
+    
+    'controls / pins (osae-waza)': 'osae-waza',
+    'controls / pins': 'osae-waza',
+    'controls': 'osae-waza',
+    'pins': 'osae-waza',
+    'osae-waza': 'osae-waza',
+    'osae waza': 'osae-waza',
+    'control': 'osae-waza',
+    'pinning techniques': 'osae-waza',
+    
+    'immobilizations (katame-waza)': 'katame-waza',
+    'immobilizations': 'katame-waza',
+    'katame-waza': 'katame-waza',
+    'katame waza': 'katame-waza',
+    'immobilization': 'katame-waza',
+    'holding techniques': 'katame-waza',
+    
+    'weapons (buki-waza)': 'buki-waza',
+    'weapons': 'buki-waza',
+    'buki-waza': 'buki-waza',
+    'buki waza': 'buki-waza',
+    'weapon': 'buki-waza',
+    'weapon techniques': 'buki-waza',
+    
+    // Category mappings (German)
+    'würfe (nage-waza)': 'nage-waza',
+    'würfe': 'nage-waza',
+    'wurf': 'nage-waza',
+    
+    'kontrollen / haltegriffe (osae-waza)': 'osae-waza',
+    'kontrollen / haltegriffe': 'osae-waza',
+    'kontrollen': 'osae-waza',
+    'haltegriffe': 'osae-waza',
+    'kontrolle': 'osae-waza',
+    
+    'immobilisationen (katame-waza)': 'katame-waza',
+    'immobilisationen': 'katame-waza',
+    'immobilisation': 'katame-waza',
+    
+    'waffen (buki-waza)': 'buki-waza',
+    'waffen': 'buki-waza',
+    'waffe': 'buki-waza',
+    
     // Attack patterns (English labels)
     'shomen-uchi': 'shomen-uchi',
     'shomen uchi': 'shomen-uchi',

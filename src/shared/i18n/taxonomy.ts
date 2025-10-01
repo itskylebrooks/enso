@@ -38,7 +38,7 @@ export const taxonomyLabels: TaxonomyLabels = {
 };
 
 const taxonomyOrder: Record<TaxonomyType, string[]> = {
-  category: ['throw', 'control', 'immobilization', 'weapon', 'ukemi'],
+  category: ['throw', 'control', 'immobilization', 'weapon'],
   attack: [
     'katate-dori',
     'ryote-dori',
