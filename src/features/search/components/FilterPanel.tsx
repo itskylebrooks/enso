@@ -36,7 +36,13 @@ const buildTaxonomyOptions = (
   const known = new Set(ordered);
   const extras = values.filter((value) => value && !known.has(value));
   const entries = [...ordered, ...extras];
-  return entries.map((value) => ({ value, label: getTaxonomyLabel(locale, type, value) }));
+  const options = entries.map((value) => ({ value, label: getTaxonomyLabel(locale, type, value) }));
+  
+  // Sort all taxonomy types alphabetically by label (requested by user)
+  return options.sort((a, b) => a.label.localeCompare(b.label, locale, {
+    sensitivity: 'accent',
+    caseFirst: 'upper'
+  }));
 };
 
 export const FilterPanel = ({

@@ -470,10 +470,32 @@ export default function App(): ReactElement {
     [db.techniques],
   );
 
-  // Glossary categories - all possible categories
-  const glossaryCategories: ('movement' | 'stance' | 'attack' | 'etiquette' | 'philosophy' | 'other')[] = [
-    'movement', 'stance', 'attack', 'etiquette', 'philosophy', 'other'
-  ];
+  // Glossary categories - all possible categories sorted alphabetically by localized label
+  const glossaryCategories: ('movement' | 'stance' | 'attack' | 'etiquette' | 'philosophy' | 'other')[] = useMemo(() => {
+    const allCategories: ('movement' | 'stance' | 'attack' | 'etiquette' | 'philosophy' | 'other')[] = [
+      'movement', 'stance', 'attack', 'etiquette', 'philosophy', 'other'
+    ];
+    
+    const copy = getCopy(locale);
+    const getCategoryLabel = (category: 'movement' | 'stance' | 'attack' | 'etiquette' | 'philosophy' | 'other'): string => {
+      const labels = {
+        movement: copy.categoryMovement,
+        stance: copy.categoryStance,
+        attack: copy.categoryAttack,
+        etiquette: copy.categoryEtiquette,
+        philosophy: copy.categoryPhilosophy,
+        other: copy.categoryOther,
+      };
+      return labels[category];
+    };
+    
+    return allCategories.sort((a, b) => 
+      getCategoryLabel(a).localeCompare(getCategoryLabel(b), locale, {
+        sensitivity: 'accent',
+        caseFirst: 'upper'
+      })
+    );
+  }, [locale]);
 
   const filteredTechniques = useMemo(
     () => applyFilters(db.techniques, filters),
