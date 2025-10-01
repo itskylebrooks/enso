@@ -1,0 +1,16 @@
+{
+  "id": "aikido",
+  "slug": "aikido",
+  "romaji": "Aikidō",
+  "jp": "合気道",
+  "category": "philosophy",
+  "def": {
+    "en": "The way of harmonizing energy: blend, redirect, resolve.",
+    "de": "Der Weg, Energie zu harmonisieren: führen, umlenken, lösen."
+  },
+  "literal": { "en": "harmonize + energy + way", "de": "harmonisieren + Energie + Weg" },
+  "notes": {
+    "en": "Technique follows principle; protect both partners.",
+    "de": "Technik folgt Prinzip; beide Partner schützen."
+  }
+}

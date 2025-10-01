@@ -1,0 +1,16 @@
+{
+  "id": "zanshin",
+  "slug": "zanshin",
+  "romaji": "Zanshin",
+  "jp": "残心",
+  "category": "philosophy",
+  "def": {
+    "en": "Remaining awareness—before, during, and after technique.",
+    "de": "Verbleibende Achtsamkeit – vor, während und nach der Technik."
+  },
+  "literal": { "en": "remain + mind/heart", "de": "verbleiben + Geist/Herz" },
+  "notes": {
+    "en": "Keep posture, distance, and attention after release.",
+    "de": "Haltung, Abstand und Aufmerksamkeit auch nach dem Lösen halten."
+  }
+}

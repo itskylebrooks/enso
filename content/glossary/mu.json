@@ -1,0 +1,16 @@
+{
+  "id": "mu",
+  "slug": "mu",
+  "romaji": "Mu",
+  "jp": "無",
+  "category": "philosophy",
+  "def": {
+    "en": "Nothingness—absence of grasping; clear availability.",
+    "de": "Nichts/Leere – frei von Festhalten; klare Bereitschaft."
+  },
+  "literal": { "en": "nothing/without", "de": "nichts/ohne" },
+  "notes": {
+    "en": "Practical cue: drop excess tension; respond, don't pre-load.",
+    "de": "Praktischer Hinweis: Überspannung lösen; reagieren statt vorladen."
+  }
+}

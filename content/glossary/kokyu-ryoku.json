@@ -1,0 +1,16 @@
+{
+  "id": "kokyu-ryoku",
+  "slug": "kokyu-ryoku",
+  "romaji": "Kokyū-ryoku",
+  "jp": "呼吸力",
+  "category": "philosophy",
+  "def": {
+    "en": "Breath-generated power integrated through the body.",
+    "de": "Durch den Atem integrierte Kraft im ganzen Körper."
+  },
+  "literal": { "en": "breath + power", "de": "Atem + Kraft" },
+  "notes": {
+    "en": "Elastic whole-body pressure, not arm strength.",
+    "de": "Elastischer Ganzkörperdruck, nicht Armkraft."
+  }
+}

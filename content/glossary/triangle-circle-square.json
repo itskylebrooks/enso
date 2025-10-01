@@ -1,0 +1,16 @@
+{
+  "id": "triangle-circle-square",
+  "slug": "triangle-circle-square",
+  "romaji": "Sankaku–En–Shikaku",
+  "jp": "三角・円・四角",
+  "category": "philosophy",
+  "def": {
+    "en": "Triangle–Circle–Square: stance, movement, and stable finish.",
+    "de": "Dreieck–Kreis–Quadrat: Stand, Bewegung und stabiler Abschluss."
+  },
+  "literal": { "en": "triangle • circle • square", "de": "Dreieck • Kreis • Quadrat" },
+  "notes": {
+    "en": "Find angle (triangle), move in arcs (circle), settle structure (square).",
+    "de": "Winkel finden (Dreieck), bogenförmig führen (Kreis), Struktur setzen (Quadrat)."
+  }
+}

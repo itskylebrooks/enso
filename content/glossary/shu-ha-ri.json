@@ -1,0 +1,16 @@
+{
+  "id": "shu-ha-ri",
+  "slug": "shu-ha-ri",
+  "romaji": "Shu–Ha–Ri",
+  "jp": "守破離",
+  "category": "philosophy",
+  "def": {
+    "en": "Stages of learning: obey the form, break the form, transcend the form.",
+    "de": "Lernstufen: Form bewahren, Form brechen, Form überschreiten."
+  },
+  "literal": { "en": "protect + break + depart", "de": "bewahren + brechen + verlassen" },
+  "notes": {
+    "en": "Master basics first; freedom grows from precision.",
+    "de": "Zuerst Grundlagen meistern; Freiheit entsteht aus Präzision."
+  }
+}

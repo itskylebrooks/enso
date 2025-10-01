@@ -1,0 +1,16 @@
+{
+  "id": "shin-gi-tai",
+  "slug": "shin-gi-tai",
+  "romaji": "Shin–Gi–Tai",
+  "jp": "心技体",
+  "category": "philosophy",
+  "def": {
+    "en": "Unity of mind, technique, and body.",
+    "de": "Einheit von Geist, Technik und Körper."
+  },
+  "literal": { "en": "mind/heart + skill + body", "de": "Geist/Herz + Technik + Körper" },
+  "notes": {
+    "en": "Balance focus: awareness, method, and physical base.",
+    "de": "Gleichgewicht: Aufmerksamkeit, Methode und körperliche Basis."
+  }
+}

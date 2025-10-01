@@ -1,0 +1,16 @@
+{
+  "id": "do",
+  "slug": "do",
+  "romaji": "Dō",
+  "jp": "道",
+  "category": "philosophy",
+  "def": {
+    "en": "The way; a lifelong practice path.",
+    "de": "Der Weg; lebenslanger Übungspfad."
+  },
+  "literal": { "en": "road/path", "de": "Straße/Pfad" },
+  "notes": {
+    "en": "Focus on steady refinement rather than endpoints.",
+    "de": "Schwerpunkt auf stetiger Verfeinerung statt Endzielen."
+  }
+}

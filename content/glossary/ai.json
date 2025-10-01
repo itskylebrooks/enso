@@ -1,0 +1,16 @@
+{
+  "id": "ai",
+  "slug": "ai",
+  "romaji": "Ai",
+  "jp": "合",
+  "category": "philosophy",
+  "def": {
+    "en": "Harmony; joining without collision.",
+    "de": "Harmonie; Verbinden ohne Kollision."
+  },
+  "literal": { "en": "to fit/join", "de": "passen/fügen" },
+  "notes": {
+    "en": "Guides blending (awase) and intent to unify lines.",
+    "de": "Leitet das Führen/Blenden (awase) und vereint Linien."
+  }
+}

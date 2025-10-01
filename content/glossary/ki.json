@@ -1,0 +1,16 @@
+{
+  "id": "ki",
+  "slug": "ki",
+  "romaji": "Ki",
+  "jp": "気",
+  "category": "philosophy",
+  "def": {
+    "en": "Vital energy; intent that organizes movement.",
+    "de": "Lebensenergie; Intention, die Bewegung ordnet."
+  },
+  "literal": { "en": "breath/energy/spirit", "de": "Atem/Energie/Geist" },
+  "notes": {
+    "en": "Expressed through posture, timing, and attention.",
+    "de": "Zeigt sich in Haltung, Timing und Aufmerksamkeit."
+  }
+}

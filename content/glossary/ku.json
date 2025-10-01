@@ -1,0 +1,16 @@
+{
+  "id": "ku",
+  "slug": "ku",
+  "romaji": "Ku",
+  "jp": "空",
+  "category": "philosophy",
+  "def": {
+    "en": "Emptiness/void; open space where timing appears.",
+    "de": "Leere/Void; offener Raum, in dem Timing entsteht."
+  },
+  "literal": { "en": "empty/sky", "de": "leer/Himmel" },
+  "notes": {
+    "en": "Create space (kūkan) so movement can resolve without clash.",
+    "de": "Raum (Kūkan) schaffen, damit Bewegung ohne Zusammenstoß löst."
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "id": "heijoshin",
+  "slug": "heijoshin",
+  "romaji": "Heijōshin",
+  "jp": "平常心",
+  "category": "philosophy",
+  "def": {
+    "en": "Calm, ordinary mind under pressure.",
+    "de": "Ruhiger, \"gewöhnlicher\" Geist unter Druck."
+  },
+  "literal": { "en": "even/constant + mind/heart", "de": "gleichmäßig/konstant + Geist/Herz" },
+  "notes": {
+    "en": "Train to stay level whether winning or losing balance.",
+    "de": "Üben, gleichmäßig zu bleiben – ob im Vorteil oder Nachteil."
+  }
+}
