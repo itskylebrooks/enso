@@ -8,30 +8,36 @@
   "jp": "小手回し（二教）",
   "category": "control",
   "attack": "ushiro-ryote-dori",
-  "stance": "ura",
   "weapon": "empty-hand",
   "level": "kyu3",
   "summary": {
     "en": "Nikyō from rear two-hand grab. Spiral the arms to free, capture a hand and fold uke into the pin.",
     "de": "Nikyō aus rückwärtigem Zwei-Hand-Griff. Arme spiralisieren, Hand erfassen und Uke in die Fixierung falten."
   },
+  "tags": [
+    "nikyo",
+    "kote-mawashi",
+    "control",
+    "ushiro-ryote-dori"
+  ],
   "versions": [
     {
-      "id": "v-official",
-      "label": "Standard",
-      "steps": {
-        "en": [
-          "Sink, extend both arms slightly forward to soften the grip.",
-          "Turn your hips and spiral the forearms up to free one side.",
-          "Take nikyō grip on the freed hand and pronate the forearm.",
-          "Guide uke down and finish with the pin."
-        ],
-        "de": [
-          "Senke dich, strecke beide Arme leicht nach vorn, um den Griff zu lockern.",
-          "Drehe aus der Hüfte und spiralisiere die Unterarme nach oben, um eine Seite zu lösen.",
-          "Nimm den Nikyō-Griff an der gelösten Hand und pronier den Unterarm.",
-          "Führe Uke nach unten und beende mit der Fixierung."
-        ]
+      "id": "v-standard",
+      "stepsByEntry": {
+        "tenkan": {
+          "en": [
+            "Sink, extend both arms slightly forward to soften the grip.",
+            "Turn your hips and spiral the forearms up to free one side.",
+            "Take nikyō grip on the freed hand and pronate the forearm.",
+            "Guide uke down and finish with the pin."
+          ],
+          "de": [
+            "Senke dich, strecke beide Arme leicht nach vorn, um den Griff zu lockern.",
+            "Drehe aus der Hüfte und spiralisiere die Unterarme nach oben, um eine Seite zu lösen.",
+            "Nimm den Nikyō-Griff an der gelösten Hand und pronier den Unterarm.",
+            "Führe Uke nach unten und beende mit der Fixierung."
+          ]
+        }
       },
       "uke": {
         "role": {
@@ -43,13 +49,19 @@
           "de": []
         }
       },
-      "media": []
+      "media": [],
+      "keyPoints": {
+        "en": [],
+        "de": []
+      },
+      "commonMistakes": {
+        "en": [],
+        "de": []
+      },
+      "context": {
+        "en": "",
+        "de": ""
+      }
     }
-  ],
-  "tags": [
-    "nikyo",
-    "kote-mawashi",
-    "control",
-    "ushiro-ryote-dori"
   ]
 }

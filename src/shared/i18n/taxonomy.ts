@@ -3,7 +3,7 @@ import { gradeLabel } from '../styles/belts';
 import { gradeOrder } from '../utils/grades';
 import { stripDiacritics } from '../utils/text';
 
-export type TaxonomyType = 'category' | 'attack' | 'stance' | 'weapon';
+export type TaxonomyType = 'category' | 'attack' | 'weapon';
 
 type TaxonomyMap = Record<TaxonomyType, Record<string, string>>;
 
@@ -25,10 +25,6 @@ export const taxonomyLabels: TaxonomyLabels = {
       weapon: 'Weapons (Buki-waza)',
       ukemi: 'Ukemi',
     },
-    stance: {
-      omote: 'Omote (Irimi)',
-      ura: 'Ura (Tenkan)',
-    },
   },
   de: {
     category: {
@@ -37,10 +33,6 @@ export const taxonomyLabels: TaxonomyLabels = {
       immobilization: 'Immobilisationen (Katame-waza)',
       weapon: 'Waffen (Buki-waza)',
       ukemi: 'Ukemi',
-    },
-    stance: {
-      omote: 'Omote (Irimi)',
-      ura: 'Ura (Tenkan)',
     },
   },
 };
@@ -66,7 +58,6 @@ const taxonomyOrder: Record<TaxonomyType, string[]> = {
     'ushiro-kubi-shime',
     'yoko-kubi-shime',
   ],
-  stance: ['omote', 'ura'],
   weapon: ['empty-hand', 'tanto', 'jo', 'bokken'],
 };
 
@@ -112,8 +103,8 @@ export const searchSynonyms: Record<string, string[]> = Object.fromEntries([
   addSynonyms('ushiro-ryokata-dori', ['ushiro ryokata dori', '後ろ両肩取り', 'ushiro-ryōkata-dori']),
   addSynonyms('ushiro-eri-dori', ['ushiro eri dori', '後ろ襟取り']),
   addSynonyms('ushiro-katate-dori-kubi-shime', ['ushiro katate dori kubishime', '後ろ片手取り首絞め']),
-  addSynonyms('omote', ['表', 'front stance', 'omote waza']),
-  addSynonyms('ura', ['裏', 'rear stance', 'ura waza', 'turning']),
+  addSynonyms('irimi', ['入身', 'omote', '表', 'front stance', 'omote waza', 'irimi waza']),
+  addSynonyms('tenkan', ['転換', 'ura', '裏', 'rear stance', 'ura waza', 'turning', 'tenkan waza']),
   addSynonyms('empty-hand', ['empty hand', 'taijutsu', '体術']),
 ]);
 

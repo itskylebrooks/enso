@@ -45,6 +45,18 @@ const buildTaxonomyOptions = (
   }));
 };
 
+const buildEntryModeOptions = (locale: Locale, values: string[]): Option[] => {
+  const entryModeLabels: Record<string, string> = {
+    'irimi': locale === 'de' ? 'Irimi (Omote)' : 'Irimi (Omote)',
+    'tenkan': locale === 'de' ? 'Tenkan (Ura)' : 'Tenkan (Ura)'
+  };
+  
+  return values.map((value) => ({
+    value,
+    label: entryModeLabels[value] || value,
+  }));
+};
+
 export const FilterPanel = ({
   copy,
   locale,
@@ -71,13 +83,13 @@ export const FilterPanel = ({
 
   const availableCategorySet = useMemo(() => new Set(categories.filter(Boolean)), [categories]);
   const availableAttackSet = useMemo(() => new Set(attacks.filter(Boolean)), [attacks]);
-  const normalizedStances = useMemo(() => (stances.length > 0 ? stances : ['omote', 'ura']), [stances]);
+  const normalizedStances = useMemo(() => (stances.length > 0 ? stances : ['irimi', 'tenkan']), [stances]);
   const availableStanceSet = useMemo(() => new Set(normalizedStances.filter(Boolean)), [normalizedStances]);
   const availableWeaponSet = useMemo(() => new Set(weapons.filter(Boolean)), [weapons]);
 
   const categoryOptions = useMemo(() => buildTaxonomyOptions(locale, 'category', categories), [categories, locale]);
   const attackOptions = useMemo(() => buildTaxonomyOptions(locale, 'attack', attacks), [attacks, locale]);
-  const stanceOptions = useMemo(() => buildTaxonomyOptions(locale, 'stance', normalizedStances), [normalizedStances, locale]);
+  const stanceOptions = useMemo(() => buildEntryModeOptions(locale, normalizedStances), [normalizedStances, locale]);
   const weaponOptions = useMemo(() => buildTaxonomyOptions(locale, 'weapon', weapons), [weapons, locale]);
   const levelOptions = useMemo<Option[]>(
     () =>

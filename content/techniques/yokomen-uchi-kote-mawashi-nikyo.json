@@ -8,30 +8,36 @@
   "jp": "小手回し（二教）",
   "category": "control",
   "attack": "yokomen-uchi",
-  "stance": "ura",
   "weapon": "empty-hand",
   "level": "kyu3",
   "summary": {
     "en": "Nikyō from diagonal strike. Blend inside, catch the wrist and rotate inward to fold uke down.",
     "de": "Nikyō aus diagonalen Schlag. Innen führen, Handgelenk fassen und nach innen rotieren, um Uke nach unten zu falten."
   },
+  "tags": [
+    "nikyo",
+    "kote-mawashi",
+    "control",
+    "yokomen-uchi"
+  ],
   "versions": [
     {
-      "id": "v-official",
-      "label": "Standard",
-      "steps": {
-        "en": [
-          "Enter inside as uke strikes; cover the line and capture the wrist.",
-          "Slide to the nikyō grip and rotate hips to pronate the forearm.",
-          "Lead uke’s elbow to their center and spiral downward.",
-          "Finish with the nikyō pin."
-        ],
-        "de": [
-          "Tritt innen ein, wenn Uke schlägt; decke die Linie und fasse das Handgelenk.",
-          "Rutsche in den Nikyō-Griff und drehe die Hüfte, um den Unterarm zu pronieren.",
-          "Führe Ukes Ellbogen zu seinem Zentrum und spiraliere nach unten.",
-          "Beende mit der Nikyō-Fixierung."
-        ]
+      "id": "v-standard",
+      "stepsByEntry": {
+        "tenkan": {
+          "en": [
+            "Enter inside as uke strikes; cover the line and capture the wrist.",
+            "Slide to the nikyō grip and rotate hips to pronate the forearm.",
+            "Lead uke’s elbow to their center and spiral downward.",
+            "Finish with the nikyō pin."
+          ],
+          "de": [
+            "Tritt innen ein, wenn Uke schlägt; decke die Linie und fasse das Handgelenk.",
+            "Rutsche in den Nikyō-Griff und drehe die Hüfte, um den Unterarm zu pronieren.",
+            "Führe Ukes Ellbogen zu seinem Zentrum und spiraliere nach unten.",
+            "Beende mit der Nikyō-Fixierung."
+          ]
+        }
       },
       "uke": {
         "role": {
@@ -43,13 +49,19 @@
           "de": []
         }
       },
-      "media": []
+      "media": [],
+      "keyPoints": {
+        "en": [],
+        "de": []
+      },
+      "commonMistakes": {
+        "en": [],
+        "de": []
+      },
+      "context": {
+        "en": "",
+        "de": ""
+      }
     }
-  ],
-  "tags": [
-    "nikyo",
-    "kote-mawashi",
-    "control",
-    "yokomen-uchi"
   ]
 }

@@ -8,30 +8,36 @@
   "jp": "小手回し（二教）",
   "category": "control",
   "attack": "shomen-tsuki",
-  "stance": "ura",
   "weapon": "empty-hand",
   "level": "kyu3",
   "summary": {
     "en": "Nikyō against a straight punch. Parry, capture the wrist and rotate inward to fold uke down to the pin.",
     "de": "Nikyō gegen geraden Stoß. Parieren, Handgelenk fassen und nach innen drehen, um Uke in die Fixierung zu führen."
   },
+  "tags": [
+    "nikyo",
+    "kote-mawashi",
+    "control",
+    "shomen-tsuki"
+  ],
   "versions": [
     {
-      "id": "v-official",
-      "label": "Standard",
-      "steps": {
-        "en": [
-          "Parry shōmen-tsuki to the inside and capture the wrist with your rear hand.",
-          "Form the nikyō grip and rotate your hips to pronate the forearm.",
-          "Lead uke’s elbow toward their center and spiral downward.",
-          "Finish with the standard nikyō pin."
-        ],
-        "de": [
-          "Pariere Shōmen-tsuki nach innen und fasse das Handgelenk mit der hinteren Hand.",
-          "Bilde den Nikyō-Griff und drehe aus der Hüfte, um den Unterarm zu pronieren.",
-          "Führe Ukes Ellbogen zu seinem Zentrum und spiraliere nach unten.",
-          "Beende mit der Standard-Nikyō-Fixierung."
-        ]
+      "id": "v-standard",
+      "stepsByEntry": {
+        "tenkan": {
+          "en": [
+            "Parry shōmen-tsuki to the inside and capture the wrist with your rear hand.",
+            "Form the nikyō grip and rotate your hips to pronate the forearm.",
+            "Lead uke’s elbow toward their center and spiral downward.",
+            "Finish with the standard nikyō pin."
+          ],
+          "de": [
+            "Pariere Shōmen-tsuki nach innen und fasse das Handgelenk mit der hinteren Hand.",
+            "Bilde den Nikyō-Griff und drehe aus der Hüfte, um den Unterarm zu pronieren.",
+            "Führe Ukes Ellbogen zu seinem Zentrum und spiraliere nach unten.",
+            "Beende mit der Standard-Nikyō-Fixierung."
+          ]
+        }
       },
       "uke": {
         "role": {
@@ -43,13 +49,19 @@
           "de": []
         }
       },
-      "media": []
+      "media": [],
+      "keyPoints": {
+        "en": [],
+        "de": []
+      },
+      "commonMistakes": {
+        "en": [],
+        "de": []
+      },
+      "context": {
+        "en": "",
+        "de": ""
+      }
     }
-  ],
-  "tags": [
-    "nikyo",
-    "kote-mawashi",
-    "control",
-    "shomen-tsuki"
   ]
 }

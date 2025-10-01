@@ -1,5 +1,5 @@
 import type Fuse from 'fuse.js';
-import type { TechniqueV2, Locale } from '../../types';
+import type { TechniqueV2, Locale } from '../../shared/types';
 
 export type SearchDoc = {
   id: string;
@@ -9,7 +9,6 @@ export type SearchDoc = {
   jp?: string;
   category?: string;
   attack?: string;
-  stance?: string;
   weapon?: string;
   level?: string;
   tags?: string[];
@@ -43,7 +42,7 @@ const createDocs = (techniques: TechniqueV2[]): SearchDoc[] =>
     jp: technique.jp,
     category: technique.category,
     attack: technique.attack,
-    stance: technique.stance,
+
     weapon: technique.weapon,
     level: technique.level,
     tags: technique.tags,
@@ -67,7 +66,6 @@ const buildOptions = (locale: Locale): Fuse.IFuseOptions<SearchDoc> => {
       { name: 'jp', weight: 1.5 },
       { name: 'category', weight: 1.2 },
       { name: 'attack', weight: 1.2 },
-      { name: 'stance', weight: 1.2 },
       { name: 'weapon', weight: 1.2 },
       { name: 'level', weight: 1 },
     ],

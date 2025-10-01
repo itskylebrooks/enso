@@ -1,8 +1,8 @@
 {
-  "id": "omote-irimi",
-  "slug": "omote-irimi",
-  "romaji": "Omote (Irimi)",
-  "jp": "表（入身）",
+  "id": "irimi-omote",
+  "slug": "irimi-omote", 
+  "romaji": "Irimi (Omote)",
+  "jp": "入身（表）",
   "category": "movement",
   "def": {
     "en": "Front/exterior entry line where nage moves directly toward uke's center, taking the inside track.",

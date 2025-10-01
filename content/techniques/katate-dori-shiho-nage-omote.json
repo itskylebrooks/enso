@@ -1,52 +1,74 @@
 {
   "id": "t-shn-katatedori-omote",
   "slug": "katate-dori-shiho-nage-omote",
-  "name": { "en": "Katate-dori Shiho-nage (Omote)", "de": "Katate-dori Shihō-nage (Omote)" },
+  "name": {
+    "en": "Katate-dori Shiho-nage (Omote)",
+    "de": "Katate-dori Shihō-nage (Omote)"
+  },
   "jp": "四方投げ",
   "category": "throw",
   "attack": "katate-dori",
-  "stance": "omote",
   "weapon": "empty-hand",
   "level": "kyu5",
   "summary": {
     "en": "Four-directions throw from a single-hand grab. Blend off-line, raise the arm on a diagonal, turn through and cut down along uke’s shoulder line.",
     "de": "Vier-Richtungen-Wurf aus Einhandgriff. Von der Linie führen, den Arm diagonal anheben, eindrehen und entlang der Schulterlinie schneiden."
   },
+  "tags": [
+    "shiho-nage",
+    "throw",
+    "katate-dori"
+  ],
   "versions": [
     {
       "id": "v-standard",
-      "label": "Standard",
-      "steps": {
-        "en": [
-          "Receive the katate-dori softly; align posture, elbow heavy to your center.",
-          "Step slightly off the line (irimi) and rotate your captured hand palm-up to soften the grip.",
-          "Lift uke’s hand diagonally toward their outside shoulder while your free hand supports at their elbow.",
-          "Enter past uke’s front foot, keeping their elbow near your chest; your forearm forms a wedge under their arm.",
-          "Turn your hips and shoulders together to bring uke’s arm above their center (their palm turns down).",
-          "Slide your inside foot forward, head and spine upright, and begin the cutting arc to the rear corner.",
-          "Cut down in a broad circle through the shoulder line; keep uke’s elbow slightly lifted and close to your body.",
-          "Guide to safe ukemi and recover with zanshin."
-        ],
-        "de": [
-          "Nimm Katate-dori weich an; Haltung ausrichten, Ellbogen schwer zum Zentrum.",
-          "Tritt leicht von der Linie (Irimi) und drehe die gefasste Hand mit der Handfläche nach oben, um den Griff zu entspannen.",
-          "Heb den Arm diagonal zu Ukes Außenschulter an, stütze mit der freien Hand am Ellbogen.",
-          "Geh am vorderen Fuß von Uke vorbei; halte Ukes Ellbogen nah an deiner Brust, Unterarm als Keil unter dem Arm.",
-          "Drehe Hüften und Schultern gemeinsam, sodass Ukes Arm über seinem Zentrum steht (Handfläche nach unten).",
-          "Setze den Innenfuß vor, Wirbelsäule aufrecht, beginne den Schnitt zum hinteren Eck.",
-          "Schneide in einem weiten Kreis durch die Schulterlinie; Ellbogen leicht angehoben und körpernah.",
-          "Führe in sicheres Ukemi und halte Zanshin."
-        ]
+      "stepsByEntry": {
+        "irimi": {
+          "en": [
+            "Receive the katate-dori softly; align posture, elbow heavy to your center.",
+            "Step slightly off the line (irimi) and rotate your captured hand palm-up to soften the grip.",
+            "Lift uke’s hand diagonally toward their outside shoulder while your free hand supports at their elbow.",
+            "Enter past uke’s front foot, keeping their elbow near your chest; your forearm forms a wedge under their arm.",
+            "Turn your hips and shoulders together to bring uke’s arm above their center (their palm turns down).",
+            "Slide your inside foot forward, head and spine upright, and begin the cutting arc to the rear corner.",
+            "Cut down in a broad circle through the shoulder line; keep uke’s elbow slightly lifted and close to your body.",
+            "Guide to safe ukemi and recover with zanshin."
+          ],
+          "de": [
+            "Nimm Katate-dori weich an; Haltung ausrichten, Ellbogen schwer zum Zentrum.",
+            "Tritt leicht von der Linie (Irimi) und drehe die gefasste Hand mit der Handfläche nach oben, um den Griff zu entspannen.",
+            "Heb den Arm diagonal zu Ukes Außenschulter an, stütze mit der freien Hand am Ellbogen.",
+            "Geh am vorderen Fuß von Uke vorbei; halte Ukes Ellbogen nah an deiner Brust, Unterarm als Keil unter dem Arm.",
+            "Drehe Hüften und Schultern gemeinsam, sodass Ukes Arm über seinem Zentrum steht (Handfläche nach unten).",
+            "Setze den Innenfuß vor, Wirbelsäule aufrecht, beginne den Schnitt zum hinteren Eck.",
+            "Schneide in einem weiten Kreis durch die Schulterlinie; Ellbogen leicht angehoben und körpernah.",
+            "Führe in sicheres Ukemi und halte Zanshin."
+          ]
+        }
       },
       "uke": {
         "role": {
           "en": "Provide a steady grab and follow the lead upward; turn the body with the cut and finish with safe ukemi.",
           "de": "Halte den Griff stabil und geh mit der Führung nach oben; drehe mit dem Schnitt und beende mit sicherem Ukemi."
         },
-        "notes": { "en": [], "de": [] }
+        "notes": {
+          "en": [],
+          "de": []
+        }
       },
-      "media": []
+      "media": [],
+      "keyPoints": {
+        "en": [],
+        "de": []
+      },
+      "commonMistakes": {
+        "en": [],
+        "de": []
+      },
+      "context": {
+        "en": "",
+        "de": ""
+      }
     }
-  ],
-  "tags": ["shiho-nage", "throw", "katate-dori"]
+  ]
 }

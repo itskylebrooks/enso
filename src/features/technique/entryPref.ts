@@ -6,18 +6,18 @@ const TECHNIQUE_ENTRY_PREFIX = 'enso:entryMode:';
 
 /**
  * Gets the global entry mode preference from localStorage.
- * @returns EntryMode - defaults to 'ura' if not found or invalid
+ * @returns EntryMode - defaults to 'irimi' if not found or invalid
  */
 export function getGlobalEntryPref(): EntryMode {
   try {
     const stored = localStorage.getItem(ENTRY_KEY);
-    if (stored === 'omote' || stored === 'ura') {
+    if (stored === 'irimi' || stored === 'tenkan') {
       return stored;
     }
   } catch (error) {
     console.warn('Failed to read global entry preference from localStorage:', error);
   }
-  return 'ura'; // Default fallback
+  return 'irimi'; // Default fallback - prefer irimi (omote)
 }
 
 /**
@@ -40,7 +40,7 @@ export function setGlobalEntryPref(mode: EntryMode): void {
 export function getTechniqueEntryPref(techniqueId: string): EntryMode | null {
   try {
     const stored = localStorage.getItem(TECHNIQUE_ENTRY_PREFIX + techniqueId);
-    if (stored === 'omote' || stored === 'ura') {
+    if (stored === 'irimi' || stored === 'tenkan') {
       return stored;
     }
   } catch (error) {
@@ -64,14 +64,14 @@ export function setTechniqueEntryPref(techniqueId: string, mode: EntryMode): voi
 
 /**
  * Parses the entry mode from URL search parameters.
- * @param search - The URL search string (e.g., "?entry=omote&other=value")
+ * @param search - The URL search string (e.g., "?entry=irimi&other=value")
  * @returns EntryMode | null - null if not found or invalid
  */
 export function parseEntryFromURL(search: string): EntryMode | null {
   try {
     const params = new URLSearchParams(search);
     const entry = params.get('entry');
-    if (entry === 'omote' || entry === 'ura') {
+    if (entry === 'irimi' || entry === 'tenkan') {
       return entry;
     }
   } catch (error) {
@@ -115,7 +115,7 @@ export function updateURLEntry(mode: EntryMode): void {
  * 1. URL parameter
  * 2. Per-technique preference
  * 3. Global preference
- * 4. Default 'ura'
+ * 4. Default 'irimi'
  * 
  * @param search - The URL search string
  * @param techniqueId - The ID of the technique

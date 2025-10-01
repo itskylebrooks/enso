@@ -23,6 +23,18 @@ const buildTaxonomyOptions = (locale: Locale, type: TaxonomyType, values: string
   }));
 };
 
+const buildEntryModeOptions = (locale: Locale, values: string[]) => {
+  const entryModeLabels: Record<string, string> = {
+    'irimi': locale === 'de' ? 'Irimi (Omote)' : 'Irimi (Omote)',
+    'tenkan': locale === 'de' ? 'Tenkan (Ura)' : 'Tenkan (Ura)'
+  };
+  
+  return values.map((value) => ({
+    value,
+    label: entryModeLabels[value] || value,
+  }));
+};
+
 type MobileFiltersProps = {
   copy: Copy;
   locale: Locale;
@@ -58,9 +70,9 @@ export const MobileFilters = ({
 
   const categoryOptions = useMemo(() => buildTaxonomyOptions(locale, 'category', categories), [categories, locale]);
   const attackOptions = useMemo(() => buildTaxonomyOptions(locale, 'attack', attacks), [attacks, locale]);
-  const normalizedStances = useMemo(() => (stances.length > 0 ? stances : ['omote', 'ura']), [stances]);
+  const normalizedStances = useMemo(() => (stances.length > 0 ? stances : ['irimi', 'tenkan']), [stances]);
   const stanceOptions = useMemo(
-    () => buildTaxonomyOptions(locale, 'stance', normalizedStances),
+    () => buildEntryModeOptions(locale, normalizedStances),
     [normalizedStances, locale],
   );
   const weaponOptions = useMemo(() => buildTaxonomyOptions(locale, 'weapon', weapons), [weapons, locale]);

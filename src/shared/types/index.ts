@@ -6,33 +6,27 @@ export type Grade =
   | 'kyu5' | 'kyu4' | 'kyu3' | 'kyu2' | 'kyu1'
   | 'dan1' | 'dan2' | 'dan3' | 'dan4' | 'dan5';
 
-export type EntryMode = 'omote' | 'ura';
+export type EntryMode = 'irimi' | 'tenkan';
 
 export type LocalizedSteps = { en: string[]; de: string[] };
 
 export type TechniqueVersion = {
   id: string;
-  label: string;
-  sensei?: string;
-  dojo?: string;
-  lineage?: string;
-  sourceUrl?: string;
-  lastUpdated?: string;
-  // New structure for entry-based steps
-  stepsByEntry?: {
-    omote?: LocalizedSteps;
-    ura?: LocalizedSteps;
+  trainerId?: string;
+  dojoId?: string;
+  label?: string; // Optional, can be generated dynamically
+  stepsByEntry: {
+    irimi?: LocalizedSteps;
+    tenkan?: LocalizedSteps;
   };
-  // Legacy structure for backward compatibility
-  steps?: { en: string[]; de: string[] };
   uke: {
     role: { en: string; de: string };
     notes: { en: string[]; de: string[] };
   };
-  media: Array<{ type: MediaType; url: string; title?: string }>;
-  keyPoints?: { en: string[]; de: string[] };
-  commonMistakes?: { en: string[]; de: string[] };
+  keyPoints: { en: string[]; de: string[] };
+  commonMistakes: { en: string[]; de: string[] };
   context?: { en: string; de: string };
+  media: Array<{ type: MediaType; url: string; title?: string }>;
 };
 
 // Alias for consistency with requirements
@@ -45,12 +39,12 @@ export type TechniqueV2 = {
   jp?: string;
   category: string;
   attack?: string;
-  stance?: string;
   weapon?: string;
   level: Grade;
+  aliases?: string[];
   summary: { en: string; de: string };
-  versions: TechniqueVersion[];
   tags: string[];
+  versions: TechniqueVersion[];
 };
 
 export type Technique = TechniqueV2;
@@ -121,4 +115,17 @@ export type GlossaryTerm = {
   def: { en: string; de: string };       // short definition (1–2 lines)
   literal?: { en: string; de: string };  // word-by-word translation (optional)
   notes?: { en: string; de: string };    // longer text (optional)
+};
+
+export type Trainer = {
+  id: string;
+  name: string;
+  dojoId: string;
+};
+
+export type Dojo = {
+  id: string;
+  name: string;
+  city: string;
+  country: string;
 };

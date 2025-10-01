@@ -1,5 +1,6 @@
 import { useMemo, useRef, type KeyboardEvent, type ReactElement } from 'react';
 import type { TechniqueVersion } from '../../shared/types';
+import { generateVersionLabel } from '../../utils/versionLabels';
 
 export type VersionTabsProps = {
   versions: TechniqueVersion[];
@@ -70,7 +71,7 @@ export const VersionTabs = ({ versions, activeVersionId, onChange, label }: Vers
                 : 'bg-[var(--color-surface)] text-subtle border-white/10 hover:text-[var(--color-text)]')
             }
           >
-            <span className="font-medium">{version.label}</span>
+            <span className="font-medium">{generateVersionLabel(version)}</span>
           </button>
         );
       })}

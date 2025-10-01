@@ -8,30 +8,36 @@
   "jp": "小手回し（二教）",
   "category": "control",
   "attack": "shomen-uchi",
-  "stance": "ura",
   "weapon": "empty-hand",
   "level": "kyu3",
   "summary": {
     "en": "Nikyō from frontal strike. Blend, catch the wrist and fold inward to the classic second control.",
     "de": "Nikyō aus Frontalangriff. Führen, Handgelenk fassen und nach innen zur klassischen zweiten Kontrolle falten."
   },
+  "tags": [
+    "nikyo",
+    "kote-mawashi",
+    "control",
+    "shomen-uchi"
+  ],
   "versions": [
     {
-      "id": "v-official",
-      "label": "Standard",
-      "steps": {
-        "en": [
-          "Receive shōmen-uchi with slight inside step; capture the wrist as you align your center.",
-          "Take nikyō grip and turn the hips to pronate.",
-          "Lead uke off balance and down; keep wrists close to your body.",
-          "Set the nikyō pin safely."
-        ],
-        "de": [
-          "Nimm Shōmen-uchi mit kleinem Innenschritt auf; greife das Handgelenk und richte dein Zentrum aus.",
-          "Nimm den Nikyō-Griff und drehe aus der Hüfte zur Pronation.",
-          "Führe Uke aus dem Gleichgewicht und nach unten; Handgelenke körpernah.",
-          "Setze die Nikyō-Fixierung sicher."
-        ]
+      "id": "v-standard",
+      "stepsByEntry": {
+        "tenkan": {
+          "en": [
+            "Receive shōmen-uchi with slight inside step; capture the wrist as you align your center.",
+            "Take nikyō grip and turn the hips to pronate.",
+            "Lead uke off balance and down; keep wrists close to your body.",
+            "Set the nikyō pin safely."
+          ],
+          "de": [
+            "Nimm Shōmen-uchi mit kleinem Innenschritt auf; greife das Handgelenk und richte dein Zentrum aus.",
+            "Nimm den Nikyō-Griff und drehe aus der Hüfte zur Pronation.",
+            "Führe Uke aus dem Gleichgewicht und nach unten; Handgelenke körpernah.",
+            "Setze die Nikyō-Fixierung sicher."
+          ]
+        }
       },
       "uke": {
         "role": {
@@ -43,13 +49,19 @@
           "de": []
         }
       },
-      "media": []
+      "media": [],
+      "keyPoints": {
+        "en": [],
+        "de": []
+      },
+      "commonMistakes": {
+        "en": [],
+        "de": []
+      },
+      "context": {
+        "en": "",
+        "de": ""
+      }
     }
-  ],
-  "tags": [
-    "nikyo",
-    "kote-mawashi",
-    "control",
-    "shomen-uchi"
   ]
 }

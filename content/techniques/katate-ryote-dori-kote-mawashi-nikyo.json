@@ -8,32 +8,38 @@
   "jp": "小手回し（二教）",
   "category": "control",
   "attack": "katate-ryote-dori",
-  "stance": "ura",
   "weapon": "empty-hand",
   "level": "kyu3",
   "summary": {
     "en": "Nikyō from one-hand held by both of uke’s hands. Use body drop to free, form the grip and fold uke down.",
     "de": "Nikyō, wenn eine Hand von beiden Händen Ukes gehalten wird. Mit Körpereinsatz befreien, Griff formen und Uke nach unten falten."
   },
+  "tags": [
+    "nikyo",
+    "kote-mawashi",
+    "control",
+    "katate-ryote-dori"
+  ],
   "versions": [
     {
-      "id": "v-official",
-      "label": "Standard",
-      "steps": {
-        "en": [
-          "Drop your weight and turn the captured hand palm up to create space.",
-          "Insert your free hand to cover and take the nikyō grip at the base of the index finger.",
-          "Rotate your hips to pronate uke’s forearm; keep elbows close.",
-          "Step diagonally off-line and lead uke’s elbow toward their center.",
-          "Spiral downward to a stable kneeling pin."
-        ],
-        "de": [
-          "Senke dein Gewicht und drehe die gefasste Hand mit der Handfläche nach oben, um Raum zu schaffen.",
-          "Führe die freie Hand ein, decke und nimm den Nikyō-Griff an der Basis des Zeigefingers.",
-          "Drehe aus der Hüfte, um Ukes Unterarm zu pronieren; Ellbogen körpernah.",
-          "Tritt schräg von der Linie und leite Ukes Ellbogen zu seinem Zentrum.",
-          "Spirale nach unten in eine stabile kniende Fixierung."
-        ]
+      "id": "v-standard",
+      "stepsByEntry": {
+        "tenkan": {
+          "en": [
+            "Drop your weight and turn the captured hand palm up to create space.",
+            "Insert your free hand to cover and take the nikyō grip at the base of the index finger.",
+            "Rotate your hips to pronate uke’s forearm; keep elbows close.",
+            "Step diagonally off-line and lead uke’s elbow toward their center.",
+            "Spiral downward to a stable kneeling pin."
+          ],
+          "de": [
+            "Senke dein Gewicht und drehe die gefasste Hand mit der Handfläche nach oben, um Raum zu schaffen.",
+            "Führe die freie Hand ein, decke und nimm den Nikyō-Griff an der Basis des Zeigefingers.",
+            "Drehe aus der Hüfte, um Ukes Unterarm zu pronieren; Ellbogen körpernah.",
+            "Tritt schräg von der Linie und leite Ukes Ellbogen zu seinem Zentrum.",
+            "Spirale nach unten in eine stabile kniende Fixierung."
+          ]
+        }
       },
       "uke": {
         "role": {
@@ -45,13 +51,19 @@
           "de": []
         }
       },
-      "media": []
+      "media": [],
+      "keyPoints": {
+        "en": [],
+        "de": []
+      },
+      "commonMistakes": {
+        "en": [],
+        "de": []
+      },
+      "context": {
+        "en": "",
+        "de": ""
+      }
     }
-  ],
-  "tags": [
-    "nikyo",
-    "kote-mawashi",
-    "control",
-    "katate-ryote-dori"
   ]
 }

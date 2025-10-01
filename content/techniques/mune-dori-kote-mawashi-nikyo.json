@@ -8,32 +8,38 @@
   "jp": "小手回し（二教）",
   "category": "control",
   "attack": "mune-dori",
-  "stance": "ura",
   "weapon": "empty-hand",
   "level": "kyu3",
   "summary": {
     "en": "Nikyō from a chest grab. Capture hand, rotate the forearm inward and fold uke down keeping their elbow controlled.",
     "de": "Nikyō aus Brustgriff. Hand fassen, Unterarm nach innen drehen und Uke mit kontrolliertem Ellbogen nach unten falten."
   },
+  "tags": [
+    "nikyo",
+    "kote-mawashi",
+    "control",
+    "mune-dori"
+  ],
   "versions": [
     {
-      "id": "v-official",
-      "label": "Standard",
-      "steps": {
-        "en": [
-          "Stabilize your posture as uke grabs your jacket/front (mune-dori).",
-          "Cover uke’s grabbing hand with your palm; slide to take the nikyō grip.",
-          "Turn your hips to pronate their forearm; keep the lock close to your center.",
-          "Step off-line and guide uke downward in a small spiral.",
-          "Finish with a kneeling nikyō pin, palm outward."
-        ],
-        "de": [
-          "Stabilisiere die Haltung, wenn Uke an der Brust greift (Mune-dori).",
-          "Decke Ukes Greifhand mit der Handfläche; rutsche zum Nikyō-Griff.",
-          "Drehe aus der Hüfte, um den Unterarm zu pronieren; den Hebel zentrumsnah halten.",
-          "Geh von der Linie und führe Uke in einer kleinen Spirale nach unten.",
-          "Beende mit einer knienden Nikyō-Fixierung, Handfläche nach außen."
-        ]
+      "id": "v-standard",
+      "stepsByEntry": {
+        "tenkan": {
+          "en": [
+            "Stabilize your posture as uke grabs your jacket/front (mune-dori).",
+            "Cover uke’s grabbing hand with your palm; slide to take the nikyō grip.",
+            "Turn your hips to pronate their forearm; keep the lock close to your center.",
+            "Step off-line and guide uke downward in a small spiral.",
+            "Finish with a kneeling nikyō pin, palm outward."
+          ],
+          "de": [
+            "Stabilisiere die Haltung, wenn Uke an der Brust greift (Mune-dori).",
+            "Decke Ukes Greifhand mit der Handfläche; rutsche zum Nikyō-Griff.",
+            "Drehe aus der Hüfte, um den Unterarm zu pronieren; den Hebel zentrumsnah halten.",
+            "Geh von der Linie und führe Uke in einer kleinen Spirale nach unten.",
+            "Beende mit einer knienden Nikyō-Fixierung, Handfläche nach außen."
+          ]
+        }
       },
       "uke": {
         "role": {
@@ -45,13 +51,19 @@
           "de": []
         }
       },
-      "media": []
+      "media": [],
+      "keyPoints": {
+        "en": [],
+        "de": []
+      },
+      "commonMistakes": {
+        "en": [],
+        "de": []
+      },
+      "context": {
+        "en": "",
+        "de": ""
+      }
     }
-  ],
-  "tags": [
-    "nikyo",
-    "kote-mawashi",
-    "control",
-    "mune-dori"
   ]
 }

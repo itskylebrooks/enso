@@ -1,8 +1,8 @@
 {
-  "id": "ura-tenkan",
-  "slug": "ura-tenkan",
-  "romaji": "Ura (Tenkan)",
-  "jp": "裏（転換）",
+  "id": "tenkan-ura",
+  "slug": "tenkan-ura",
+  "romaji": "Tenkan (Ura)",
+  "jp": "転換（裏）",
   "category": "movement",
   "def": {
     "en": "Rear/interior entry line where nage pivots and redirects uke's energy around to the back line.",

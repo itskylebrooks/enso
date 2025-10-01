@@ -33,12 +33,22 @@ const buildTags = (technique: Technique, locale: Locale): string[] => {
   const title = technique.name[locale]?.toLowerCase?.() ?? '';
   const normalizedTitle = stripDiacritics(title);
 
-  const candidates: Array<{ type: 'category' | 'attack' | 'stance' | 'weapon'; value?: string | null }> = [
-    { type: 'stance', value: technique.stance },
+  const candidates: Array<{ type: 'category' | 'attack' | 'weapon'; value?: string | null }> = [
     { type: 'weapon', value: technique.weapon && technique.weapon !== 'empty-hand' ? technique.weapon : undefined },
     { type: 'category', value: technique.category },
     { type: 'attack', value: technique.attack },
   ];
+
+  // Add entry mode tags based on available stepsByEntry
+  const availableEntries = technique.versions[0]?.stepsByEntry || {};
+  const entryModeTags: string[] = [];
+  
+  if (availableEntries.irimi) {
+    entryModeTags.push(locale === 'de' ? 'Irimi (Omote)' : 'Irimi (Omote)');
+  }
+  if (availableEntries.tenkan) {
+    entryModeTags.push(locale === 'de' ? 'Tenkan (Ura)' : 'Tenkan (Ura)');
+  }
 
   const unique: string[] = [];
   const seen = new Set<string>();
@@ -52,6 +62,15 @@ const buildTags = (technique: Technique, locale: Locale): string[] => {
     if (seen.has(normalizedValue)) return;
     seen.add(normalizedValue);
     unique.push(label);
+  });
+
+  // Add entry mode tags (these are always shown as they're important context)
+  entryModeTags.forEach(tag => {
+    const normalizedTag = stripDiacritics(tag.toLowerCase());
+    if (!seen.has(normalizedTag)) {
+      seen.add(normalizedTag);
+      unique.push(tag);
+    }
   });
 
   return unique;
@@ -161,21 +180,25 @@ const mapTagToGlossarySlug = (tagLabel: string): string | null => {
     'shomen': 'shomen-uchi',
     
     // Movement patterns - all terms now point to comprehensive entries
-    'omote (irimi)': 'omote-irimi',
-    'omote irimi': 'omote-irimi',
-    '表（入身）': 'omote-irimi',
-    'omote': 'omote-irimi',
-    'irimi': 'omote-irimi',
-    'entering': 'omote-irimi',
-    '入身': 'omote-irimi',
+    'irimi (omote)': 'irimi-omote',
+    'irimi omote': 'irimi-omote',
+    'omote (irimi)': 'irimi-omote',
+    'omote irimi': 'irimi-omote',
+    '表（入身）': 'irimi-omote',
+    'omote': 'irimi-omote',
+    'irimi': 'irimi-omote',
+    'entering': 'irimi-omote',
+    '入身': 'irimi-omote',
     
-    'ura (tenkan)': 'ura-tenkan',
-    'ura tenkan': 'ura-tenkan',
-    '裏（転換）': 'ura-tenkan',
-    'ura': 'ura-tenkan',
-    'tenkan': 'ura-tenkan', 
-    'turning': 'ura-tenkan',
-    '転換': 'ura-tenkan',
+    'tenkan (ura)': 'tenkan-ura',
+    'tenkan ura': 'tenkan-ura',
+    'ura (tenkan)': 'tenkan-ura',
+    'ura tenkan': 'tenkan-ura',
+    '裏（転換）': 'tenkan-ura',
+    'ura': 'tenkan-ura',
+    'tenkan': 'tenkan-ura',
+    'turning': 'tenkan-ura',
+    '転換': 'tenkan-ura',
     
     // Concepts
     'ukemi': 'ukemi',
@@ -257,13 +280,35 @@ export const TechniquePage = ({
   // Apply migration on runtime to support new stepsByEntry structure
   const migratedTechnique = useMemo(() => migrateTechniqueToStepsByEntry(technique), [technique]);
 
+  // Helper function to find the first available entry mode for a version
+  const getFirstAvailableEntryMode = (version: TechniqueVersion): EntryMode => {
+    // Prefer irimi first, then tenkan
+    if (version.stepsByEntry?.irimi) {
+      return 'irimi';
+    }
+    if (version.stepsByEntry?.tenkan) {
+      return 'tenkan';
+    }
+    // Fallback to 'irimi' if no stepsByEntry (should not happen with v2 schema)
+    return 'irimi';
+  };
+
   const storedLastViewed = useTechniqueViewStore((state) => state.lastViewedVersion[technique.id]);
   const setLastViewedVersion = useTechniqueViewStore((state) => state.setLastViewedVersion);
 
   // Entry mode state management
-  const [entryMode, setEntryMode] = useState<EntryMode>(() =>
-    deriveEntryMode(window.location.search, technique.id)
-  );
+  const [entryMode, setEntryMode] = useState<EntryMode>(() => {
+    const derivedMode = deriveEntryMode(window.location.search, technique.id);
+    const firstVersion = migratedTechnique.versions[0];
+    
+    // Check if the derived mode is available in the first version
+    if (firstVersion.stepsByEntry?.[derivedMode]) {
+      return derivedMode;
+    }
+    
+    // If not available, select the first available entry mode
+    return getFirstAvailableEntryMode(firstVersion);
+  });
 
   const [activeVersionId, setActiveVersionId] = useState(() =>
     ensureVersion(migratedTechnique.versions, storedLastViewed ?? migratedTechnique.versions[0].id).id,
@@ -277,6 +322,22 @@ export const TechniquePage = ({
   useEffect(() => {
     setLastViewedVersion(technique.id, activeVersionId);
   }, [technique.id, activeVersionId, setLastViewedVersion]);
+
+  // Auto-switch entry mode when version changes and current mode is not available
+  useEffect(() => {
+    const activeVersion = migratedTechnique.versions.find((version) => version.id === activeVersionId);
+    if (!activeVersion) return;
+
+    // Check if current entry mode is available in the active version
+    if (!activeVersion.stepsByEntry?.[entryMode]) {
+      // Switch to the first available entry mode
+      const newEntryMode = getFirstAvailableEntryMode(activeVersion);
+      setEntryMode(newEntryMode);
+      setTechniqueEntryPref(technique.id, newEntryMode);
+      setGlobalEntryPref(newEntryMode);
+      updateURLEntry(newEntryMode);
+    }
+  }, [activeVersionId, migratedTechnique.versions, entryMode, technique.id]);
 
   // Entry mode change handler
   const handleEntryModeChange = (newMode: EntryMode) => {
@@ -297,10 +358,10 @@ export const TechniquePage = ({
 
       if (event.key === 'o' || event.key === 'O') {
         event.preventDefault();
-        handleEntryModeChange('omote');
+        handleEntryModeChange('irimi');
       } else if (event.key === 'u' || event.key === 'U') {
         event.preventDefault();
-        handleEntryModeChange('ura');
+        handleEntryModeChange('tenkan');
       }
     };
 
@@ -316,16 +377,16 @@ export const TechniquePage = ({
   // Entry mode options with localized labels
   const entryOptions: SegmentedOption<EntryMode>[] = useMemo(() => [
     {
-      value: 'omote',
-      label: copy.entryOmote,
-      disabled: !activeVersion.stepsByEntry?.omote,
-      tooltip: !activeVersion.stepsByEntry?.omote ? copy.entryNotAvailable : undefined,
+      value: 'irimi',
+      label: copy.entryIrimi,
+      disabled: !activeVersion.stepsByEntry?.irimi,
+      tooltip: !activeVersion.stepsByEntry?.irimi ? copy.entryNotAvailable : undefined,
     },
     {
-      value: 'ura',
-      label: copy.entryUra,
-      disabled: !activeVersion.stepsByEntry?.ura,
-      tooltip: !activeVersion.stepsByEntry?.ura ? copy.entryNotAvailable : undefined,
+      value: 'tenkan',
+      label: copy.entryTenkan,
+      disabled: !activeVersion.stepsByEntry?.tenkan,
+      tooltip: !activeVersion.stepsByEntry?.tenkan ? copy.entryNotAvailable : undefined,
     },
   ], [activeVersion.stepsByEntry, copy]);
 
@@ -337,12 +398,7 @@ export const TechniquePage = ({
       return entrySteps[locale] ?? entrySteps.en;
     }
 
-    // Fallback to legacy steps if available
-    if (activeVersion.steps) {
-      return activeVersion.steps[locale] ?? activeVersion.steps.en;
-    }
-
-    // No steps available
+    // No steps available for this entry mode
     return null;
   }, [activeVersion, entryMode, locale]);
 

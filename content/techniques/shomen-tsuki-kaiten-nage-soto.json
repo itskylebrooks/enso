@@ -8,36 +8,42 @@
   "jp": "回転投げ（外）",
   "category": "throw",
   "attack": "shomen-tsuki",
-  "stance": "ura",
   "weapon": "empty-hand",
   "level": "kyu3",
   "summary": {
     "en": "Outside turning throw against a straight punch. Parry to the outside, wrap the arm and cut the circular line to throw.",
     "de": "Außenrotationswurf gegen geraden Stoß. Nach außen parieren, den Arm umwickeln und über die Kreislinie werfen."
   },
+  "tags": [
+    "kaiten-nage",
+    "soto",
+    "throw",
+    "shomen-tsuki"
+  ],
   "versions": [
     {
-      "id": "v-official",
-      "label": "Standard",
-      "steps": {
-        "en": [
-          "As uke thrusts shōmen-tsuki, step off-line to the outside and parry with your lead hand.",
-          "Catch the punching wrist and slide to the elbow with the rear hand to establish two-point control.",
-          "Rotate hips to draw uke forward; keep elbows close to your body to avoid overreaching.",
-          "Pivot under the arm, maintaining a wrap at the triceps/shoulder line.",
-          "Step behind uke and align your center with their spine.",
-          "Lower your weight and cut the arc forward; guide the head/shoulder as a unit.",
-          "Release with control; ensure uke has space to fall safely."
-        ],
-        "de": [
-          "Bei Ukes Shōmen-tsuki gehst du nach außen und parierst mit der Führhand.",
-          "Fasse das Schlaghandgelenk und rutsche mit der hinteren Hand bis zum Ellbogen für Zweipunktkontrolle.",
-          "Drehe die Hüfte, um Uke vorwärts zu ziehen; Ellbogen körpernah halten.",
-          "Drehe unter dem Arm hindurch und halte die Wickelverbindung am Trizeps/Schulter.",
-          "Tritt hinter Uke und richte dein Zentrum auf seine Wirbelsäule aus.",
-          "Senke das Gewicht und führe den Bogen nach vorn; Kopf/Schulter als Einheit leiten.",
-          "Löse kontrolliert, mit Raum für eine sichere Ukemi."
-        ]
+      "id": "v-standard",
+      "stepsByEntry": {
+        "tenkan": {
+          "en": [
+            "As uke thrusts shōmen-tsuki, step off-line to the outside and parry with your lead hand.",
+            "Catch the punching wrist and slide to the elbow with the rear hand to establish two-point control.",
+            "Rotate hips to draw uke forward; keep elbows close to your body to avoid overreaching.",
+            "Pivot under the arm, maintaining a wrap at the triceps/shoulder line.",
+            "Step behind uke and align your center with their spine.",
+            "Lower your weight and cut the arc forward; guide the head/shoulder as a unit.",
+            "Release with control; ensure uke has space to fall safely."
+          ],
+          "de": [
+            "Bei Ukes Shōmen-tsuki gehst du nach außen und parierst mit der Führhand.",
+            "Fasse das Schlaghandgelenk und rutsche mit der hinteren Hand bis zum Ellbogen für Zweipunktkontrolle.",
+            "Drehe die Hüfte, um Uke vorwärts zu ziehen; Ellbogen körpernah halten.",
+            "Drehe unter dem Arm hindurch und halte die Wickelverbindung am Trizeps/Schulter.",
+            "Tritt hinter Uke und richte dein Zentrum auf seine Wirbelsäule aus.",
+            "Senke das Gewicht und führe den Bogen nach vorn; Kopf/Schulter als Einheit leiten.",
+            "Löse kontrolliert, mit Raum für eine sichere Ukemi."
+          ]
+        }
       },
       "uke": {
         "role": {
@@ -49,13 +55,19 @@
           "de": []
         }
       },
-      "media": []
+      "media": [],
+      "keyPoints": {
+        "en": [],
+        "de": []
+      },
+      "commonMistakes": {
+        "en": [],
+        "de": []
+      },
+      "context": {
+        "en": "",
+        "de": ""
+      }
     }
-  ],
-  "tags": [
-    "kaiten-nage",
-    "soto",
-    "throw",
-    "shomen-tsuki"
   ]
 }

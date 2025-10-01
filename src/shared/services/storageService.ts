@@ -1,7 +1,6 @@
 import { parseTechnique } from '../../content/schema';
 import { APP_NAME, DB_VERSION, LOCALE_KEY, STORAGE_KEY, THEME_KEY } from '../constants/storage';
 import type { BookmarkCollection, Collection, DB, GlossaryBookmarkCollection, GlossaryProgress, Locale, Progress, Technique, TechniqueVersion, Theme } from '../types';
-import { migrateTechniqueToStepsByEntry } from '../../utils/migrations/to-stepsByEntry';
 
 // Load technique files directly from the content/techniques folder.
 // Vite's import.meta.glob with { eager: true } returns the parsed JSON modules at build time.
@@ -40,29 +39,25 @@ const normalizeLocalizedArray = (value: { en: string[]; de: string[] }) => {
 const normalizeVersion = (version: TechniqueVersion): TechniqueVersion => {
   const normalized: TechniqueVersion = {
     ...version,
-    label: version.label.trim(),
-    sensei: normalizeOptional(version.sensei),
-    dojo: normalizeOptional(version.dojo),
-    lineage: normalizeOptional(version.lineage),
-    sourceUrl: normalizeOptional(version.sourceUrl),
-    lastUpdated: normalizeOptional(version.lastUpdated),
-    steps: version.steps ? normalizeLocalizedArray(version.steps) : undefined,
-    stepsByEntry: version.stepsByEntry ? {
-      omote: version.stepsByEntry.omote ? normalizeLocalizedArray(version.stepsByEntry.omote) : undefined,
-      ura: version.stepsByEntry.ura ? normalizeLocalizedArray(version.stepsByEntry.ura) : undefined,
-    } : undefined,
+    trainerId: normalizeOptional(version.trainerId),
+    dojoId: normalizeOptional(version.dojoId),
+    label: version.label ? version.label.trim() : undefined,
+    stepsByEntry: {
+      irimi: version.stepsByEntry.irimi ? normalizeLocalizedArray(version.stepsByEntry.irimi) : undefined,
+      tenkan: version.stepsByEntry.tenkan ? normalizeLocalizedArray(version.stepsByEntry.tenkan) : undefined,
+    },
     uke: {
       role: normalizeLocalizedString(version.uke.role),
       notes: normalizeLocalizedArray(version.uke.notes),
     },
+    keyPoints: normalizeLocalizedArray(version.keyPoints),
+    commonMistakes: normalizeLocalizedArray(version.commonMistakes),
+    context: version.context ? normalizeLocalizedString(version.context) : undefined,
     media: version.media.map((item) => ({
       type: item.type,
       url: item.url.trim(),
       title: item.title ? item.title.trim() : undefined,
     })),
-    keyPoints: version.keyPoints ? normalizeLocalizedArray(version.keyPoints) : undefined,
-    commonMistakes: version.commonMistakes ? normalizeLocalizedArray(version.commonMistakes) : undefined,
-    context: version.context ? normalizeLocalizedString(version.context) : undefined,
   };
 
   return normalized;
@@ -72,8 +67,8 @@ const normalizeTechnique = (technique: Technique): Technique => ({
   ...technique,
   jp: normalizeOptional(technique.jp ?? undefined),
   attack: normalizeOptional(technique.attack ?? undefined),
-  stance: normalizeOptional(technique.stance ?? undefined),
   weapon: normalizeOptional(technique.weapon ?? undefined),
+  aliases: technique.aliases ? technique.aliases.filter(alias => alias.trim().length > 0) : undefined,
   summary: normalizeLocalizedString(technique.summary),
   tags: Array.from(new Set(technique.tags.map((tag) => tag.trim()).filter((tag) => tag.length > 0))),
   versions: technique.versions.map(normalizeVersion),
@@ -92,8 +87,7 @@ const seedTechniques: Technique[] = Object.keys(techniqueModules)
     // parse/validate technique using schema
     const parsed = parseTechnique(raw, slug);
     const normalized = normalizeTechnique(parsed);
-    // Apply migration to support stepsByEntry structure at runtime
-    return migrateTechniqueToStepsByEntry(normalized);
+    return normalized;
   })
   .sort((a, b) => a.name.en.localeCompare(b.name.en));
 

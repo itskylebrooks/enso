@@ -8,24 +8,24 @@
   "jp": "回転投げ（外）",
   "category": "throw",
   "attack": "katate-dori",
-  "stance": "ura",
   "weapon": "empty-hand",
   "level": "kyu3",
   "summary": {
     "en": "Outside turning throw: blend to the outside line, pivot under the arm, then cut a wide circle to project.",
     "de": "Außenrotationswurf: nach außen führen, unter dem Arm drehen und mit weitem Kreis projizieren."
   },
+  "tags": [
+    "kaiten-nage",
+    "soto",
+    "throw",
+    "katate-dori"
+  ],
   "versions": [
     {
-      "id": "v-official",
-      "label": "Standard",
-      "sensei": "—",
-      "dojo": "—",
-      "lineage": "DAB / common syllabus",
-      "sourceUrl": "https://www.youtube-nocookie.com/embed/lM83-VAld-Y?si=PgoyOSsKQs-Zk-Gi",
-      "lastUpdated": "2025-09-29T00:00:00.000Z",
-      "steps": {
-        "en": [
+      "id": "v-standard",
+      "stepsByEntry": {
+        "tenkan": {
+          "en": [
           "Stand in hanmi; uke grabs your lead wrist (katate-dori).",
           "Turn palm up and extend slightly forward to the outside (soto).",
           "Step forward to the outside; draw a small outward circle with the captured hand.",
@@ -44,7 +44,8 @@
           "Schreite auf Ukes Rücklinie; innere Hand kontrolliert sanft an Kiefer/Hals für aufrechte Haltung.",
           "Senke dein Zentrum und führe mit dem leitenden Arm einen weiten Kreis nach vorn.",
           "Löse und leite die Spiralbahn mit Platz für Ukemi; mit Zanshin abschließen."
-        ]
+          ]
+        }
       },
       "uke": {
         "role": {
@@ -72,7 +73,6 @@
           ]
         }
       },
-      "media": [],
       "keyPoints": {
         "en": [
           "Blend on the outside; move from hips, not arms.",
@@ -100,17 +100,15 @@
       "context": {
         "en": "Often framed as turning and leading by the arm/shoulder to break balance. Modern practice emphasizes spiral kuzushi, posture control, and safe ukemi.",
         "de": "Als Dreh- und Führtechnik über Arm/Schulter zum Gleichgewichtsbruch verstanden. In der modernen Praxis Fokus auf Spiral-Kuzushi, Haltungskontrolle und sicheres Ukemi."
-      }
+      },
+      "media": []
     },
     {
-      "id": "v-haase-bsv",
-      "label": "Alfred Haase (BSV)",
-      "sensei": "Alfred Haase",
-      "dojo": "BSV Hamburg-Bramfeld",
-      "lineage": "Aikido Verband Hamburg / DAB",
-      "sourceUrl": "https://www.youtube.com/watch?v=kY3P764c2eE",
-      "lastUpdated": "2025-09-29T00:00:00.000Z",
-      "steps": {
+      "id": "v-haase",
+      "trainerId": "alfred-haase",
+      "dojoId": "bsv",
+      "stepsByEntry": {
+        "irimi": {
         "en": [
           "Start in ai-hanmi; uke grabs your wrist (katate-dori).",
           "Enter with an irimi step, turning the captured hand palm-up to unbalance uke forward.",
@@ -120,8 +118,8 @@
           "After the pivot, step forward with your rear foot.",
           "Lower your center and cut down in a large circle with the captured arm to throw.",
           "Maintain connection to guide the throw, allowing for a safe forward roll (ukemi); recover with zanshin."
-        ],
-        "de": [
+          ],
+          "de": [
           "Beginne in Ai-Hanmi; Uke greift dein Handgelenk (Katate-dori).",
           "Trete mit einem Irimi-Schritt ein, drehe die gefasste Hand mit der Handfläche nach oben, um Uke nach vorn aus dem Gleichgewicht zu bringen.",
           "Bringe deine freie Hand zu Ukes Kopf-/Nackenbereich, um seine Haltung zu kontrollieren.",
@@ -130,7 +128,8 @@
           "Nach der Drehung, schreite mit deinem hinteren Fuß vor.",
           "Senke deinen Körperschwerpunkt und schneide mit dem gefassten Arm in einem großen Kreis nach unten, um zu werfen.",
           "Halte die Verbindung, um den Wurf zu führen und eine sichere Vorwärtsrolle (Ukemi) zu ermöglichen; mit Zanshin abschließen."
-        ]
+          ]
+        }
       },
       "uke": {
         "role": {
@@ -156,13 +155,7 @@
           ]
         }
       },
-      "media": [
-        {
-          "type": "youtube",
-          "url": "https://www.youtube-nocookie.com/embed/lM83-VAld-Y?si=PgoyOSsKQs-Zk-Gi",
-          "title": "Alfred Haase (4. Dan) - Kaiten Nage"
-        }
-      ],
+
       "keyPoints": {
         "en": [
           "Use a strong irimi-tenkan (entering and turning) movement.",
@@ -190,13 +183,14 @@
       "context": {
         "en": "This variation, performed from ai-hanmi, emphasizes a large, decisive irimi-tenkan movement to get behind the attacker. The control is shifted from the elbow to the head/neck, allowing for strong postural control before the final projection.",
         "de": "Diese Variante aus Ai-Hanmi betont eine große, entscheidende Irimi-Tenkan-Bewegung, um hinter den Angreifer zu gelangen. Die Kontrolle wird vom Ellbogen auf den Kopf/Nacken verlagert, was eine starke Haltungskontrolle vor der endgültigen Projektion ermöglicht."
-      }
+      },
+      "media": [
+        {
+          "type": "youtube",
+          "url": "https://www.youtube-nocookie.com/embed/lM83-VAld-Y?si=PgoyOSsKQs-Zk-Gi",
+          "title": "Alfred Haase (4. Dan) - Kaiten Nage"
+        }
+      ]
     }
-  ],
-  "tags": [
-    "kaiten-nage",
-    "soto",
-    "throw",
-    "katate-dori"
   ]
 }

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { Technique, TechniqueVersion } from '../types';
+import type { Technique } from '../shared/types';
 
 const gradeValues = [
   'kyu5',
@@ -25,37 +25,60 @@ const localizedString = z.object({
   de: z.string().min(1),
 });
 
+const localizedStringOptional = z.object({
+  en: z.string(),
+  de: z.string(),
+});
+
 const localizedStringArray = z.object({
   en: z.array(z.string().min(1)),
   de: z.array(z.string().min(1)),
 });
 
+const stepsByEntrySchema = z.object({
+  irimi: localizedStringArray.optional(),
+  tenkan: localizedStringArray.optional(),
+}).refine(
+  (data) => data.irimi || data.tenkan,
+  { message: 'At least one entry type (irimi or tenkan) must be provided' }
+);
+
 const versionSchema = z
   .object({
     id: z.string().min(1, 'version id is required'),
-    label: z.string().min(1, 'version label is required'),
-    sensei: z.string().optional(),
-    dojo: z.string().optional(),
-    lineage: z.string().optional(),
-    sourceUrl: z.string().url('sourceUrl must be a valid url').optional(),
-    lastUpdated: z.string().datetime().optional(),
-    steps: localizedStringArray,
+    trainerId: z.string().optional(),
+    dojoId: z.string().optional(),
+    label: z.string().optional(), // Now optional, can be generated dynamically
+    stepsByEntry: stepsByEntrySchema,
     uke: z.object({
       role: localizedString,
       notes: localizedStringArray,
     }),
+    keyPoints: localizedStringArray,
+    commonMistakes: localizedStringArray,
+    context: localizedStringOptional.optional(),
     media: z.array(mediaSchema),
-    keyPoints: localizedStringArray.optional(),
-    commonMistakes: localizedStringArray.optional(),
-    context: localizedString.optional(),
   })
   .superRefine((value, ctx) => {
-    if (value.steps.en.length !== value.steps.de.length) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: 'steps.en and steps.de must contain the same number of entries',
-        path: ['steps'],
-      });
+    // Validate stepsByEntry arrays have matching lengths
+    if (value.stepsByEntry.irimi) {
+      if (value.stepsByEntry.irimi.en.length !== value.stepsByEntry.irimi.de.length) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'stepsByEntry.irimi.en and stepsByEntry.irimi.de must contain the same number of entries',
+          path: ['stepsByEntry', 'irimi'],
+        });
+      }
+    }
+
+    if (value.stepsByEntry.tenkan) {
+      if (value.stepsByEntry.tenkan.en.length !== value.stepsByEntry.tenkan.de.length) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'stepsByEntry.tenkan.en and stepsByEntry.tenkan.de must contain the same number of entries',
+          path: ['stepsByEntry', 'tenkan'],
+        });
+      }
     }
 
     if (value.uke.notes.en.length !== value.uke.notes.de.length) {
@@ -67,7 +90,7 @@ const versionSchema = z
     }
 
     const checkArrayLength = (
-      field: keyof Pick<TechniqueVersion, 'keyPoints' | 'commonMistakes'>,
+      field: keyof Pick<typeof value, 'keyPoints' | 'commonMistakes'>,
       path: string[],
     ) => {
       const valueAtField = value[field];
@@ -92,12 +115,12 @@ export const techniqueZ = z.object({
   jp: z.string().optional(),
   category: z.string().min(1, 'category is required'),
   attack: z.string().optional(),
-  stance: z.string().optional(),
   weapon: z.string().optional(),
   level: z.enum(gradeValues),
+  aliases: z.array(z.string()).optional(),
   summary: localizedString,
-  versions: z.array(versionSchema).min(1, 'at least one version is required'),
   tags: z.array(z.string().min(1)),
+  versions: z.array(versionSchema).min(1, 'at least one version is required'),
 });
 
 export type TechniqueContent = Technique;

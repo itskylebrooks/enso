@@ -8,30 +8,36 @@
   "jp": "小手回し（二教）",
   "category": "control",
   "attack": "ushiro-ryokata-dori",
-  "stance": "ura",
   "weapon": "empty-hand",
   "level": "kyu3",
   "summary": {
     "en": "Nikyō from a rear double-shoulder grab. Turn, capture the hand and spiral uke down maintaining body connection.",
     "de": "Nikyō aus rückwärtigem Doppelschultergriff. Drehen, Hand erfassen und Uke mit Körperverbindung spiralförmig nach unten führen."
   },
+  "tags": [
+    "nikyo",
+    "kote-mawashi",
+    "control",
+    "ushiro-ryokata-dori"
+  ],
   "versions": [
     {
-      "id": "v-official",
-      "label": "Standard",
-      "steps": {
-        "en": [
-          "As uke grabs both shoulders from behind, step forward and turn to one side to break alignment.",
-          "Catch one of uke’s hands, form the nikyō grip, and bring their elbow toward their center.",
-          "Step off the line and rotate hips to pronate the forearm.",
-          "Guide down in a controlled spiral and finish with nikyō pin."
-        ],
-        "de": [
-          "Wenn Uke beide Schultern von hinten greift, tritt vor und drehe zur Seite, um die Ausrichtung zu brechen.",
-          "Erfasse eine von Ukes Händen, bilde den Nikyō-Griff und führe seinen Ellbogen zu seinem Zentrum.",
-          "Geh von der Linie und drehe die Hüfte, um den Unterarm zu pronieren.",
-          "Führe kontrolliert spiralförmig nach unten und beende mit Nikyō-Fixierung."
-        ]
+      "id": "v-standard",
+      "stepsByEntry": {
+        "tenkan": {
+          "en": [
+            "As uke grabs both shoulders from behind, step forward and turn to one side to break alignment.",
+            "Catch one of uke’s hands, form the nikyō grip, and bring their elbow toward their center.",
+            "Step off the line and rotate hips to pronate the forearm.",
+            "Guide down in a controlled spiral and finish with nikyō pin."
+          ],
+          "de": [
+            "Wenn Uke beide Schultern von hinten greift, tritt vor und drehe zur Seite, um die Ausrichtung zu brechen.",
+            "Erfasse eine von Ukes Händen, bilde den Nikyō-Griff und führe seinen Ellbogen zu seinem Zentrum.",
+            "Geh von der Linie und drehe die Hüfte, um den Unterarm zu pronieren.",
+            "Führe kontrolliert spiralförmig nach unten und beende mit Nikyō-Fixierung."
+          ]
+        }
       },
       "uke": {
         "role": {
@@ -43,13 +49,19 @@
           "de": []
         }
       },
-      "media": []
+      "media": [],
+      "keyPoints": {
+        "en": [],
+        "de": []
+      },
+      "commonMistakes": {
+        "en": [],
+        "de": []
+      },
+      "context": {
+        "en": "",
+        "de": ""
+      }
     }
-  ],
-  "tags": [
-    "nikyo",
-    "kote-mawashi",
-    "control",
-    "ushiro-ryokata-dori"
   ]
 }

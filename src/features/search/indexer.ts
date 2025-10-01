@@ -4,7 +4,7 @@ import type { Technique, GlossaryTerm } from '../../shared/types';
 import { gradeLabel } from '../../shared/styles/belts';
 import { stripDiacritics } from '../../shared/utils/text';
 
-const TAXONOMY_FIELDS: TaxonomyType[] = ['category', 'attack', 'stance', 'weapon'];
+const TAXONOMY_FIELDS: TaxonomyType[] = ['category', 'attack', 'weapon'];
 
 type SearchEntry = {
   technique: Technique;
@@ -74,13 +74,18 @@ export const buildSearchIndex = (techniques: Technique[]): SearchEntry[] =>
 
     technique.versions.forEach((version) => {
       pushToken(tokens, version.label);
-      pushToken(tokens, version.sensei);
-      pushToken(tokens, version.dojo);
-      pushToken(tokens, version.lineage);
-      pushToken(tokens, version.sourceUrl);
+      pushToken(tokens, version.trainerId);
+      pushToken(tokens, version.dojoId);
 
-      version.steps.en.forEach((step) => pushToken(tokens, step));
-      version.steps.de.forEach((step) => pushToken(tokens, step));
+      // Index steps from stepsByEntry structure
+      if (version.stepsByEntry.irimi) {
+        version.stepsByEntry.irimi.en.forEach((step) => pushToken(tokens, step));
+        version.stepsByEntry.irimi.de.forEach((step) => pushToken(tokens, step));
+      }
+      if (version.stepsByEntry.tenkan) {
+        version.stepsByEntry.tenkan.en.forEach((step) => pushToken(tokens, step));
+        version.stepsByEntry.tenkan.de.forEach((step) => pushToken(tokens, step));
+      }
 
       pushToken(tokens, version.uke.role.en);
       pushToken(tokens, version.uke.role.de);
@@ -92,10 +97,10 @@ export const buildSearchIndex = (techniques: Technique[]): SearchEntry[] =>
         pushToken(tokens, media.url);
       });
 
-      version.keyPoints?.en.forEach((item) => pushToken(tokens, item));
-      version.keyPoints?.de.forEach((item) => pushToken(tokens, item));
-      version.commonMistakes?.en.forEach((item) => pushToken(tokens, item));
-      version.commonMistakes?.de.forEach((item) => pushToken(tokens, item));
+      version.keyPoints.en.forEach((item) => pushToken(tokens, item));
+      version.keyPoints.de.forEach((item) => pushToken(tokens, item));
+      version.commonMistakes.en.forEach((item) => pushToken(tokens, item));
+      version.commonMistakes.de.forEach((item) => pushToken(tokens, item));
       if (version.context) {
         pushToken(tokens, version.context.en);
         pushToken(tokens, version.context.de);

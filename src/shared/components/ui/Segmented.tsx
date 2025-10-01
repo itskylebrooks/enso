@@ -80,6 +80,6 @@ export const Segmented = <T extends string = string>({
 };
 
 // Export a typed version for EntryMode specifically
-export type EntrySegmentedProps = Omit<SegmentedProps<'omote' | 'ura'>, 'options'> & {
-  options: SegmentedOption<'omote' | 'ura'>[];
+export type EntrySegmentedProps = Omit<SegmentedProps<'irimi' | 'tenkan'>, 'options'> & {
+  options: SegmentedOption<'irimi' | 'tenkan'>[];
 };

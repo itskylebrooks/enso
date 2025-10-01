@@ -8,34 +8,40 @@
   "jp": "小手回し（二教）",
   "category": "control",
   "attack": "ryote-dori",
-  "stance": "ura",
   "weapon": "empty-hand",
   "level": "kyu3",
   "summary": {
     "en": "Nikyō from a two-hand grab. Free one hand, take the nikyō grip and spiral down into a stable pin.",
     "de": "Nikyō aus beidseitigem Griff. Eine Hand befreien, Nikyō-Griff anlegen und spiralförmig in eine stabile Fixierung führen."
   },
+  "tags": [
+    "nikyo",
+    "kote-mawashi",
+    "control",
+    "ryote-dori"
+  ],
   "versions": [
     {
-      "id": "v-official",
-      "label": "Standard",
-      "steps": {
-        "en": [
-          "Sink and extend both hands to soften the grip.",
-          "Free one hand by rotating palm up and cutting down along your center.",
-          "Cover uke’s remaining grip hand and form the nikyō grip at the base of the index finger.",
-          "Turn the hips to roll uke’s forearm inward; step off the line to maintain balance.",
-          "Guide uke down in a spiral, keeping their elbow controlled.",
-          "Finish with the classic nikyō pin, knees stable and spine tall."
-        ],
-        "de": [
-          "Sinke und strecke beide Hände, um den Griff zu entspannen.",
-          "Befreie eine Hand, indem du die Handfläche nach oben drehst und entlang deines Zentrums nach unten schneidest.",
-          "Decke Ukes verbleibende Greifhand und bilde den Nikyō-Griff an der Basis des Zeigefingers.",
-          "Drehe aus der Hüfte, um Ukes Unterarm nach innen zu rollen; geh von der Linie, um das Gleichgewicht zu halten.",
-          "Führe Uke spiralförmig nach unten, Ellbogen unter Kontrolle.",
-          "Beende mit der klassischen Nikyō-Fixierung, Knie stabil, Wirbelsäule aufrecht."
-        ]
+      "id": "v-standard",
+      "stepsByEntry": {
+        "tenkan": {
+          "en": [
+            "Sink and extend both hands to soften the grip.",
+            "Free one hand by rotating palm up and cutting down along your center.",
+            "Cover uke’s remaining grip hand and form the nikyō grip at the base of the index finger.",
+            "Turn the hips to roll uke’s forearm inward; step off the line to maintain balance.",
+            "Guide uke down in a spiral, keeping their elbow controlled.",
+            "Finish with the classic nikyō pin, knees stable and spine tall."
+          ],
+          "de": [
+            "Sinke und strecke beide Hände, um den Griff zu entspannen.",
+            "Befreie eine Hand, indem du die Handfläche nach oben drehst und entlang deines Zentrums nach unten schneidest.",
+            "Decke Ukes verbleibende Greifhand und bilde den Nikyō-Griff an der Basis des Zeigefingers.",
+            "Drehe aus der Hüfte, um Ukes Unterarm nach innen zu rollen; geh von der Linie, um das Gleichgewicht zu halten.",
+            "Führe Uke spiralförmig nach unten, Ellbogen unter Kontrolle.",
+            "Beende mit der klassischen Nikyō-Fixierung, Knie stabil, Wirbelsäule aufrecht."
+          ]
+        }
       },
       "uke": {
         "role": {
@@ -47,13 +53,19 @@
           "de": []
         }
       },
-      "media": []
+      "media": [],
+      "keyPoints": {
+        "en": [],
+        "de": []
+      },
+      "commonMistakes": {
+        "en": [],
+        "de": []
+      },
+      "context": {
+        "en": "",
+        "de": ""
+      }
     }
-  ],
-  "tags": [
-    "nikyo",
-    "kote-mawashi",
-    "control",
-    "ryote-dori"
   ]
 }

@@ -35,7 +35,17 @@ export const TechniqueCard = ({
   actionSlot,
   isDimmed,
 }: TechniqueCardProps): ReactElement => {
-  const stanceLabel = technique.stance ? getTaxonomyLabel(locale, 'stance', technique.stance) : null;
+  // Get available entry modes from the first version (assume all versions have same entries)
+  const availableEntries = technique.versions[0]?.stepsByEntry || {};
+  const entryLabels: string[] = [];
+  
+  if (availableEntries.irimi) {
+    entryLabels.push(locale === 'de' ? 'Irimi (Omote)' : 'Irimi (Omote)');
+  }
+  if (availableEntries.tenkan) {
+    entryLabels.push(locale === 'de' ? 'Tenkan (Ura)' : 'Tenkan (Ura)');
+  }
+
   const weaponLabel =
     technique.weapon && technique.weapon !== 'empty-hand'
       ? getTaxonomyLabel(locale, 'weapon', technique.weapon)
@@ -87,7 +97,9 @@ export const TechniqueCard = ({
 
       <div className="mt-auto flex items-end justify-between gap-4 pt-1">
         <div className="flex flex-wrap items-center gap-2 text-xs font-medium uppercase tracking-wide text-subtle">
-          {stanceLabel && <span className="rounded-sm bg-black/5 px-2 py-0.5 dark:bg-white/10">{stanceLabel}</span>}
+          {entryLabels.map((label) => (
+            <span key={label} className="rounded-sm bg-black/5 px-2 py-0.5 dark:bg-white/10">{label}</span>
+          ))}
           {weaponLabel && <span className="rounded-sm bg-black/5 px-2 py-0.5 dark:bg-white/10">{weaponLabel}</span>}
         </div>
         <LevelBadge locale={locale} level={technique.level} />
