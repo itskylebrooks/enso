@@ -229,6 +229,32 @@ export const BookmarksView = ({
     [allBookmarkedGlossaryTerms, visibleGlossaryIds],
   );
 
+  // Combined and sorted list of both techniques and glossary terms
+  const sortedVisibleItems = useMemo(() => {
+    const techniqueItems = visibleTechniques.map(technique => ({
+      type: 'technique' as const,
+      item: technique,
+      name: technique.name[locale] || technique.name.en,
+      id: technique.id
+    }));
+    
+    const glossaryItems = visibleGlossaryTerms.map(term => ({
+      type: 'glossary' as const,
+      item: term,
+      name: term.romaji,
+      id: term.id
+    }));
+
+    const combined = [...techniqueItems, ...glossaryItems];
+    
+    return combined.sort((a, b) => 
+      a.name.localeCompare(b.name, locale, {
+        sensitivity: 'accent',
+        caseFirst: 'upper'
+      })
+    );
+  }, [visibleTechniques, visibleGlossaryTerms, locale]);
+
   const collectionCounts = useMemo(() => {
     const map = new Map<string, number>();
     orderedCollections.forEach((collection) => {
@@ -342,7 +368,7 @@ export const BookmarksView = ({
         <section>
         <AnimatePresence mode="wait">
           <motion.div
-            key={`${selectedCollectionId}-${visibleTechniques.map(t => t.id).join(',')}-${visibleGlossaryTerms.map(g => g.id).join(',')}`}
+            key={`${selectedCollectionId}-${sortedVisibleItems.map(item => `${item.type}-${item.id}`).join(',')}`}
             className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 min-h-[280px]"
             variants={listMotion.container}
             initial="hidden"
@@ -350,87 +376,89 @@ export const BookmarksView = ({
             exit="hidden"
             layout
           >
-            {visibleTechniques.map((technique, index) => {
-            const assignedCollections = membershipByTechnique.get(technique.id) ?? new Set<string>();
-            return (
-              <TechniqueCard
-                key={technique.id}
-                technique={technique}
-                locale={locale}
-                progress={progressById[technique.id]}
-                copy={copy}
-                onSelect={onOpenTechnique}
-                motionIndex={index}
-                variants={listMotion.item}
-                getTransition={getItemTransition}
-                prefersReducedMotion={prefersReducedMotion}
-                isDimmed={activeCardId === technique.id}
-                actionSlot={
-                  <AddToCollectionMenu
-                    copy={copy}
-                    collections={orderedCollections.map((collection) => ({
-                      id: collection.id,
-                      name: collection.name,
-                      icon: collection.icon ?? null,
-                      checked: assignedCollections.has(collection.id),
-                    }))}
-                    onToggle={(collectionId, nextChecked) => {
-                      if (nextChecked) {
-                        onAssign(technique.id, collectionId);
-                      } else {
-                        onUnassign(technique.id, collectionId);
-                      }
-                    }}
-                    onCreate={openCreateModal}
-                    onOpen={() => setActiveCardId(technique.id)}
-                    onClose={() => setActiveCardId((cur) => (cur === technique.id ? null : cur))}
-                  />
-                }
-              />
-            );
+            {sortedVisibleItems.map((item, index) => {
+            if (item.type === 'technique') {
+              const technique = item.item;
+              const assignedCollections = membershipByTechnique.get(technique.id) ?? new Set<string>();
+              return (
+                <TechniqueCard
+                  key={technique.id}
+                  technique={technique}
+                  locale={locale}
+                  progress={progressById[technique.id]}
+                  copy={copy}
+                  onSelect={onOpenTechnique}
+                  motionIndex={index}
+                  variants={listMotion.item}
+                  getTransition={getItemTransition}
+                  prefersReducedMotion={prefersReducedMotion}
+                  isDimmed={activeCardId === technique.id}
+                  actionSlot={
+                    <AddToCollectionMenu
+                      copy={copy}
+                      collections={orderedCollections.map((collection) => ({
+                        id: collection.id,
+                        name: collection.name,
+                        icon: collection.icon ?? null,
+                        checked: assignedCollections.has(collection.id),
+                      }))}
+                      onToggle={(collectionId, nextChecked) => {
+                        if (nextChecked) {
+                          onAssign(technique.id, collectionId);
+                        } else {
+                          onUnassign(technique.id, collectionId);
+                        }
+                      }}
+                      onCreate={openCreateModal}
+                      onOpen={() => setActiveCardId(technique.id)}
+                      onClose={() => setActiveCardId((cur) => (cur === technique.id ? null : cur))}
+                    />
+                  }
+                />
+              );
+            } else {
+              const term = item.item;
+              const assignedCollections = glossaryMembershipByTerm.get(term.id) ?? new Set<string>();
+              return (
+                <GlossaryBookmarkCard
+                  key={`glossary-${term.id}`}
+                  term={term}
+                  locale={locale}
+                  progress={glossaryProgressById[term.id]}
+                  copy={copy}
+                  onSelect={onOpenGlossaryTerm}
+                  motionIndex={index}
+                  variants={listMotion.item}
+                  getTransition={getItemTransition}
+                  prefersReducedMotion={prefersReducedMotion}
+                  isDimmed={activeCardId === `glossary-${term.id}`}
+                  actionSlot={
+                    <AddToCollectionMenu
+                      copy={copy}
+                      collections={orderedCollections.map((collection) => ({
+                        id: collection.id,
+                        name: collection.name,
+                        icon: collection.icon ?? null,
+                        checked: assignedCollections.has(collection.id),
+                      }))}
+                      onToggle={(collectionId, nextChecked) => {
+                        if (nextChecked) {
+                          onAssignGlossary(term.id, collectionId);
+                        } else {
+                          onUnassignGlossary(term.id, collectionId);
+                        }
+                      }}
+                      onCreate={openCreateModal}
+                      onOpen={() => setActiveCardId(`glossary-${term.id}`)}
+                      onClose={() => setActiveCardId((cur) => (cur === `glossary-${term.id}` ? null : cur))}
+                    />
+                  }
+                />
+              );
+            }
           })}
 
-          {visibleGlossaryTerms.map((term, index) => {
-            const assignedCollections = glossaryMembershipByTerm.get(term.id) ?? new Set<string>();
-            return (
-              <GlossaryBookmarkCard
-                key={`glossary-${term.id}`}
-                term={term}
-                locale={locale}
-                progress={glossaryProgressById[term.id]}
-                copy={copy}
-                onSelect={onOpenGlossaryTerm}
-                motionIndex={visibleTechniques.length + index}
-                variants={listMotion.item}
-                getTransition={getItemTransition}
-                prefersReducedMotion={prefersReducedMotion}
-                isDimmed={activeCardId === `glossary-${term.id}`}
-                actionSlot={
-                  <AddToCollectionMenu
-                    copy={copy}
-                    collections={orderedCollections.map((collection) => ({
-                      id: collection.id,
-                      name: collection.name,
-                      icon: collection.icon ?? null,
-                      checked: assignedCollections.has(collection.id),
-                    }))}
-                    onToggle={(collectionId, nextChecked) => {
-                      if (nextChecked) {
-                        onAssignGlossary(term.id, collectionId);
-                      } else {
-                        onUnassignGlossary(term.id, collectionId);
-                      }
-                    }}
-                    onCreate={openCreateModal}
-                    onOpen={() => setActiveCardId(`glossary-${term.id}`)}
-                    onClose={() => setActiveCardId((cur) => (cur === `glossary-${term.id}` ? null : cur))}
-                  />
-                }
-              />
-            );
-          })}
-
-          {visibleTechniques.length === 0 && visibleGlossaryTerms.length === 0 && (
+          {sortedVisibleItems.length === 0 && (
             <motion.div
               className="col-span-full flex items-center justify-center py-6 text-sm text-subtle text-center border border-dashed border-[var(--color-border)] rounded-2xl"
               variants={listMotion.item}
