@@ -1,0 +1,19 @@
+{
+  "id": "atemi",
+  "slug": "atemi",
+  "romaji": "Atemi",
+  "jp": "当身",
+  "category": "movement",
+  "def": {
+    "en": "Striking action to create openings or timing—not brawling.",
+    "de": "Schlag/Stoß, um Öffnungen oder Timing zu schaffen – kein Prügeln."
+  },
+  "literal": {
+    "en": "apply/strike + body",
+    "de": "treffen + Körper"
+  },
+  "notes": {
+    "en": "Light, precise, on the line; often implied rather than delivered.",
+    "de": "Leicht, präzise, auf der Linie; oft angedeutet statt ausgeführt."
+  }
+}

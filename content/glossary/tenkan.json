@@ -5,11 +5,15 @@
   "jp": "転換",
   "category": "movement",
   "def": {
-    "en": "Pivot/turn that leads uke past your center.",
-    "de": "Drehung, die Uke an deinem Zentrum vorbeiführt."
+    "en": "Pivot/turn that carries uke onto the rear line while you stay centered.",
+    "de": "Drehung, die Uke auf die Rücklinie führt, während du zentriert bleibst."
+  },
+  "literal": {
+    "en": "turn + change",
+    "de": "wenden + wechseln"
   },
   "notes": {
-    "en": "Common entry from katate-dori; keep posture and move from the hips.",
-    "de": "Häufiger Einstieg aus Katate-dori; Haltung wahren und aus der Hüfte führen."
+    "en": "Lead with hips; keep light contact at elbow/shoulder.",
+    "de": "Aus der Hüfte drehen; leichten Kontakt an Ellbogen/Schulter halten."
   }
 }

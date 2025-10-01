@@ -1,0 +1,19 @@
+{
+  "id": "shiho-nage",
+  "slug": "shiho-nage",
+  "romaji": "Shihō-nage",
+  "jp": "四方投げ",
+  "category": "movement",
+  "def": {
+    "en": "Four-direction throw using elbow control and a cutting line.",
+    "de": "Vier-Richtungen-Wurf über Ellbogenkontrolle und Schnittlinie."
+  },
+  "literal": {
+    "en": "four + directions + throw",
+    "de": "vier + Richtungen + Wurf"
+  },
+  "notes": {
+    "en": "Cut down the centerline; don't wrestle the wrist.",
+    "de": "Auf der Mittellinie schneiden; nicht am Handgelenk kämpfen."
+  }
+}

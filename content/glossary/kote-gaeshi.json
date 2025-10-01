@@ -1,0 +1,19 @@
+{
+  "id": "kote-gaeshi",
+  "slug": "kote-gaeshi",
+  "romaji": "Kote-gaeshi",
+  "jp": "小手返し",
+  "category": "movement",
+  "def": {
+    "en": "Wrist 'return' throw spiraling uke downward.",
+    "de": "Handgelenk-Rückdreh-Wurf, der Uke spiralig zu Boden führt."
+  },
+  "literal": {
+    "en": "forearm (small hand) + return",
+    "de": "Unterarm (kleine Hand) + Rückkehr"
+  },
+  "notes": {
+    "en": "Lead from elbow/shoulder; pronation completes the spiral.",
+    "de": "Über Ellbogen/Schulter führen; Pronation beendet die Spirale."
+  }
+}

@@ -5,11 +5,15 @@
   "jp": "体捌き",
   "category": "movement",
   "def": {
-    "en": "Body movement; evasive stepping and positioning.",
-    "de": "Körperbewegung; ausweichende Schritte und Positionierung."
+    "en": "Whole-body repositioning to gain angle and balance.",
+    "de": "Ganzkörper-Umsetzen, um Winkel und Gleichgewicht zu gewinnen."
+  },
+  "literal": {
+    "en": "body + handling",
+    "de": "Körper + Handhabung"
   },
   "notes": {
-    "en": "Essential footwork for creating openings and avoiding direct confrontation. Includes various stepping patterns.",
-    "de": "Wesentliche Fußarbeit zum Schaffen von Öffnungen und Vermeiden direkter Konfrontation. Umfasst verschiedene Schrittmuster."
+    "en": "Feet and hips arrive together; hands come last.",
+    "de": "Füße und Hüfte kommen zusammen; Hände zuletzt."
   }
 }

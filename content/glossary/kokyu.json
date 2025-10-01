@@ -1,0 +1,19 @@
+{
+  "id": "kokyu",
+  "slug": "kokyu",
+  "romaji": "Kokyū",
+  "jp": "呼吸",
+  "category": "movement",
+  "def": {
+    "en": "Breath coordination that powers posture and timing.",
+    "de": "Atemkoordination, die Haltung und Timing trägt."
+  },
+  "literal": {
+    "en": "breath + inhale/exhale",
+    "de": "Atem + Ein-/Ausatmen"
+  },
+  "notes": {
+    "en": "Think whole-body elasticity rather than lung force.",
+    "de": "Eher Ganzkörper-Elastizität als Lungenkraft."
+  }
+}

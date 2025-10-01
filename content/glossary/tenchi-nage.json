@@ -1,0 +1,19 @@
+{
+  "id": "tenchi-nage",
+  "slug": "tenchi-nage",
+  "romaji": "Tenchi-nage",
+  "jp": "天地投げ",
+  "category": "movement",
+  "def": {
+    "en": "'Heaven and earth' throw splitting lines up and down.",
+    "de": "\"Himmel-und-Erde\"-Wurf mit geteilten Linien nach oben und unten."
+  },
+  "literal": {
+    "en": "heaven + earth + throw",
+    "de": "Himmel + Erde + Wurf"
+  },
+  "notes": {
+    "en": "Hands diverge while hips stay centered.",
+    "de": "Hände trennen sich, Hüfte bleibt zentriert."
+  }
+}

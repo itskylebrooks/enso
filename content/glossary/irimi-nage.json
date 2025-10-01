@@ -1,0 +1,19 @@
+{
+  "id": "irimi-nage",
+  "slug": "irimi-nage",
+  "romaji": "Irimi-nage",
+  "jp": "入身投げ",
+  "category": "movement",
+  "def": {
+    "en": "Entering throw that takes center and drives along uke's line.",
+    "de": "Eindringender Wurf, der das Zentrum nimmt und Ukes Linie führt."
+  },
+  "literal": {
+    "en": "enter + body + throw",
+    "de": "hinein + Körper + Wurf"
+  },
+  "notes": {
+    "en": "Tall spine; head and shoulder travel together.",
+    "de": "Wirbelsäule lang; Kopf und Schulter zusammen führen."
+  }
+}

@@ -154,6 +154,14 @@ export const buildGlossarySearchIndex = (terms: GlossaryTerm[]): GlossarySearchE
     pushToken(tokens, term.def.en);
     pushToken(tokens, term.def.de);
 
+    // Index literal translations in both languages if available
+    if (term.literal?.en) {
+      pushToken(tokens, term.literal.en);
+    }
+    if (term.literal?.de) {
+      pushToken(tokens, term.literal.de);
+    }
+
     // Index notes in both languages if available
     if (term.notes?.en) {
       pushToken(tokens, term.notes.en);

@@ -106,5 +106,6 @@ export type GlossaryTerm = {
   jp?: string;       // kanji, e.g., "転換"
   category: 'movement' | 'stance' | 'attack' | 'etiquette' | 'philosophy' | 'other';
   def: { en: string; de: string };       // short definition (1–2 lines)
+  literal?: { en: string; de: string };  // word-by-word translation (optional)
   notes?: { en: string; de: string };    // longer text (optional)
 };

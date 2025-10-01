@@ -1,0 +1,19 @@
+{
+  "id": "kaiten-nage",
+  "slug": "kaiten-nage",
+  "romaji": "Kaiten-nage",
+  "jp": "回転投げ",
+  "category": "movement",
+  "def": {
+    "en": "Turning throw under/around the arm, projecting along a circle.",
+    "de": "Drehwurf unter/um den Arm mit Projektion entlang eines Kreises."
+  },
+  "literal": {
+    "en": "rotation + throw",
+    "de": "Rotation + Wurf"
+  },
+  "notes": {
+    "en": "Keep uke's elbow close to your chest; cut the circle with the body.",
+    "de": "Ukes Ellbogen körpernah halten; den Kreis mit dem Körper schneiden."
+  }
+}

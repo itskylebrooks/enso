@@ -1,0 +1,19 @@
+{
+  "id": "kuzushi",
+  "slug": "kuzushi",
+  "romaji": "Kuzushi",
+  "jp": "崩し",
+  "category": "movement",
+  "def": {
+    "en": "Breaking balance so technique becomes effortless.",
+    "de": "Gleichgewicht brechen, damit die Technik mühelos wird."
+  },
+  "literal": {
+    "en": "to crumble/collapse",
+    "de": "zum Einstürzen bringen"
+  },
+  "notes": {
+    "en": "Move the center; head and shoulder travel as one.",
+    "de": "Das Zentrum bewegen; Kopf und Schulter als Einheit führen."
+  }
+}

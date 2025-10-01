@@ -1,0 +1,19 @@
+{
+  "id": "irimi-tenkan",
+  "slug": "irimi-tenkan",
+  "romaji": "Irimi-tenkan",
+  "jp": "入身転換",
+  "category": "movement",
+  "def": {
+    "en": "Enter to take the line, then turn to redirect and unbalance.",
+    "de": "Eintreten, um die Linie zu nehmen, dann drehen und umlenken."
+  },
+  "literal": {
+    "en": "enter + body → turn + change",
+    "de": "hinein + Körper → wenden + wechseln"
+  },
+  "notes": {
+    "en": "Classic blending drill that moves you off the attack vector.",
+    "de": "Klassische Blendübung; bringt dich von der Angriffslinie."
+  }
+}

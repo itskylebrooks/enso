@@ -1,0 +1,19 @@
+{
+  "id": "ude-kime-nage",
+  "slug": "ude-kime-nage",
+  "romaji": "Ude-kime-nage",
+  "jp": "腕極め投げ",
+  "category": "movement",
+  "def": {
+    "en": "Arm-decision/fixation throw controlling the elbow while projecting.",
+    "de": "Arm-Fixationswurf mit Ellbogenkontrolle und Projektion."
+  },
+  "literal": {
+    "en": "arm + decide/fix + throw",
+    "de": "Arm + festlegen + Wurf"
+  },
+  "notes": {
+    "en": "Keep uke upright for control; avoid cranking the joint.",
+    "de": "Uke aufrecht halten; Gelenk nicht \"schrauben\"."
+  }
+}

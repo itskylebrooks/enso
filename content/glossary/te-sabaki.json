@@ -1,0 +1,19 @@
+{
+  "id": "te-sabaki",
+  "slug": "te-sabaki",
+  "romaji": "Te-sabaki",
+  "jp": "手捌き",
+  "category": "movement",
+  "def": {
+    "en": "Efficient hand/arm handling to keep connection and lines.",
+    "de": "Effiziente Hand-/Armarbeit, um Verbindung und Linie zu halten."
+  },
+  "literal": {
+    "en": "hand + handling",
+    "de": "Hand + Handhabung"
+  },
+  "notes": {
+    "en": "Rotate the forearm instead of tugging; keep elbows heavy.",
+    "de": "Unterarm rotieren statt ziehen; Ellbogen schwer halten."
+  }
+}

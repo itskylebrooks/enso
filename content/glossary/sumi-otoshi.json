@@ -1,0 +1,19 @@
+{
+  "id": "sumi-otoshi",
+  "slug": "sumi-otoshi",
+  "romaji": "Sumi-otoshi",
+  "jp": "隅落とし",
+  "category": "movement",
+  "def": {
+    "en": "Corner drop; guide uke diagonally into empty space.",
+    "de": "Eckensturz; Uke diagonal in den leeren Raum führen."
+  },
+  "literal": {
+    "en": "corner + drop",
+    "de": "Ecke + fallen lassen"
+  },
+  "notes": {
+    "en": "Don't pull—step and tilt the axis instead.",
+    "de": "Nicht ziehen – Schritt setzen und Achse kippen."
+  }
+}

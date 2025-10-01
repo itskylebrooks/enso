@@ -1,0 +1,19 @@
+{
+  "id": "kaiten",
+  "slug": "kaiten",
+  "romaji": "Kaiten",
+  "jp": "回転",
+  "category": "movement",
+  "def": {
+    "en": "Rotational action used to turn lines and generate spirals.",
+    "de": "Rotationsbewegung, um Linien zu wenden und Spiralen zu erzeugen."
+  },
+  "literal": {
+    "en": "turn + revolve",
+    "de": "drehen + rotieren"
+  },
+  "notes": {
+    "en": "Circles come from hips and steps, not just arms.",
+    "de": "Kreise entstehen aus Hüfte und Schritten, nicht nur aus den Armen."
+  }
+}

@@ -118,6 +118,7 @@ export const GlossaryDetailPage = ({
   }
 
   const definition = term.def[locale] || term.def.en;
+  const literal = term.literal?.[locale] || term.literal?.en;
   const notes = term.notes?.[locale] || term.notes?.en;
   const categoryLabel = getCategoryLabel(term.category, copy);
   const categoryStyle = getCategoryColor(term.category);
@@ -203,6 +204,16 @@ export const GlossaryDetailPage = ({
           <p className="text-base leading-relaxed">{definition}</p>
         </div>
       </section>
+
+      {/* Literal translation section */}
+      {literal && (
+        <section className="prose prose-sm max-w-none dark:prose-invert">
+          <div className="text-center space-y-4">
+            <h2 className="text-xs uppercase tracking-[0.3em] text-subtle">Literal Translation</h2>
+            <p className="text-sm italic text-subtle leading-relaxed">{literal}</p>
+          </div>
+        </section>
+      )}
 
       {/* Notes section */}
       {notes && (

@@ -1,0 +1,19 @@
+{
+  "id": "kokyu-nage",
+  "slug": "kokyu-nage",
+  "romaji": "Kokyū-nage",
+  "jp": "呼吸投げ",
+  "category": "movement",
+  "def": {
+    "en": "Throws using connection, timing, and breath-led power.",
+    "de": "Würfe über Verbindung, Timing und atemgeführte Kraft."
+  },
+  "literal": {
+    "en": "breath + throw",
+    "de": "Atem + Wurf"
+  },
+  "notes": {
+    "en": "Label for many flowing projections without a fixed lock.",
+    "de": "Bezeichnung für viele fließende Projektionen ohne festen Hebel."
+  }
+}

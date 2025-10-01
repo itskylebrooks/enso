@@ -1,0 +1,19 @@
+{
+  "id": "koshi-nage",
+  "slug": "koshi-nage",
+  "romaji": "Koshi-nage",
+  "jp": "腰投げ",
+  "category": "movement",
+  "def": {
+    "en": "Hip throw using body drop and rotation across your belt line.",
+    "de": "Hüftwurf über Körperschwerpunkt und Drehung auf Gürtelhöhe."
+  },
+  "literal": {
+    "en": "hip + throw",
+    "de": "Hüfte + Wurf"
+  },
+  "notes": {
+    "en": "Bring uke onto your hips before turning.",
+    "de": "Uke erst auf Hüfthöhe bringen, dann drehen."
+  }
+}
