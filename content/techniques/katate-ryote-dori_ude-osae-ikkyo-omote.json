@@ -1,0 +1,52 @@
+{
+  "id": "t-ikkyo-katateryotedori-omote",
+  "slug": "katate-ryote-dori-ude-osae-ikkyo-omote",
+  "name": { "en": "Katate-ryōte-dori Ude-osae (Ikkyo, Omote)", "de": "Katate-ryōte-dori Ude-osae (Ikkyo, Omote)" },
+  "jp": "腕押さえ（一教）",
+  "category": "control",
+  "attack": "katate-ryote-dori",
+  "stance": "omote",
+  "weapon": "empty-hand",
+  "level": "kyu5",
+  "summary": {
+    "en": "Ikkyo from one wrist held with both hands. Spiral the captured hand up along the thumb line, enter and finish with the arm pin.",
+    "de": "Ikkyo aus beid­händigem Griff an ein Handgelenk. Entlang der Daumenlinie aufspiralen, eintreten und mit Arm-Pin abschließen."
+  },
+  "versions": [
+    {
+      "id": "v-standard",
+      "label": "Standard",
+      "steps": {
+        "en": [
+          "Receive katate-ryōte-dori; keep the captured elbow heavy to your center.",
+          "Rotate the captured palm up and spiral along uke’s thumb line to create space.",
+          "Place your free hand at uke’s elbow on the captured side and build the wrist-to-elbow line.",
+          "Irimi past uke’s front foot (omote), maintaining their elbow near your chest.",
+          "Turn hips/shoulders together to align the arm; keep your forearms close to your body.",
+          "Guide a straight descent toward the mat with the elbow slightly higher than the wrist.",
+          "Kneel to pin: near hand controls the elbow, far hand the wrist; palm up, arm aligned to the shoulder.",
+          "Project through the pin with your center; release under control."
+        ],
+        "de": [
+          "Nimm Katate-ryōte-dori an; gefassten Ellbogen schwer zum Zentrum.",
+          "Drehe die gefasste Handfläche nach oben und spiraliere entlang der Daumenlinie, um Raum zu schaffen.",
+          "Fasse mit der freien Hand an Ukes Ellbogen der gefassten Seite und bilde die Handgelenk-Ellbogen-Linie.",
+          "Irimi am vorderen Fuß vorbei (Omote), Ellbogen an deiner Brust halten.",
+          "Drehe Hüften/Schultern gemeinsam, Arm ausrichten; Unterarme körpernah.",
+          "Führe die Gerade zur Matte, Ellbogen etwas höher als das Handgelenk.",
+          "Gehe in den Pin: nahe Hand am Ellbogen, ferne Hand am Handgelenk; Handfläche oben, Arm in Schulterlinie.",
+          "Über das Zentrum in den Pin projizieren; kontrolliert lösen."
+        ]
+      },
+      "uke": {
+        "role": {
+          "en": "Hold the wrist with both hands but avoid clamping; follow the spiral and accept the descent into ukemi.",
+          "de": "Handgelenk beid­händig halten ohne einzuklemmen; Spiralbewegung mitgehen und die Abwärtsführung ins Ukemi annehmen."
+        },
+        "notes": { "en": [], "de": [] }
+      },
+      "media": []
+    }
+  ],
+  "tags": ["ikkyo", "ude-osae", "control", "katate-ryote-dori"]
+}

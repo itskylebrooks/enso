@@ -1,0 +1,52 @@
+{
+  "id": "t-shn-yokokubishime-omote",
+  "slug": "yoko-kubi-shime-shiho-nage-omote",
+  "name": { "en": "Yoko-kubi-shime Shiho-nage (Omote)", "de": "Yoko-kubi-shime Shihō-nage (Omote)" },
+  "jp": "四方投げ",
+  "category": "throw",
+  "attack": "yoko-kubi-shime",
+  "stance": "omote",
+  "weapon": "empty-hand",
+  "level": "kyu5",
+  "summary": {
+    "en": "Four-directions throw from a side neck choke. Capture the choking arm, raise it on a diagonal to free the neck, enter and cut to the rear corner.",
+    "de": "Vier-Richtungen-Wurf aus seitlichem Würgegriff. Würgearm aufnehmen, diagonal anheben um den Hals zu befreien, eintreten und zum hinteren Eck schneiden."
+  },
+  "versions": [
+    {
+      "id": "v-standard",
+      "label": "Standard",
+      "steps": {
+        "en": [
+          "Protect the neck by tucking the chin; frame the choking forearm with both hands.",
+          "Shift off-line and lift uke’s choking arm diagonally upward, freeing your neck.",
+          "Place your near forearm under uke’s upper arm (wedge) and support at their elbow with the other hand.",
+          "Enter forward past uke’s front foot, keeping their elbow close to your chest.",
+          "Turn hips/shoulders together to bring their arm above their center; their palm turns down.",
+          "Slide your inside foot and begin the broad circular cut toward the rear corner.",
+          "Cut down through the shoulder line with continuous body rotation; keep the elbow slightly lifted.",
+          "Guide uke to safe ukemi and maintain awareness."
+        ],
+        "de": [
+          "Schütze den Nacken durch Kinn einziehen; umfasse den würgenden Unterarm mit beiden Händen als Rahmen.",
+          "Geh von der Linie und hebe Ukes Würgearm diagonal an, sodass der Hals frei wird.",
+          "Setze deinen nahen Unterarm als Keil unter Ukes Oberarm und stütze am Ellbogen mit der anderen Hand.",
+          "Tritt vor an Ukes vorderem Fuß vorbei, Ellbogen körpernah an deiner Brust.",
+          "Drehe Hüften/Schultern gemeinsam, sodass sein Arm über dem Zentrum steht; Handfläche dreht nach unten.",
+          "Setze den Innenfuß nach und beginne den weiten Kreis­schnitt zum hinteren Eck.",
+          "Schneide durch die Schulterlinie in fließender Körperdrehung; Ellbogen leicht angehoben.",
+          "Führe in sicheres Ukemi und bleibe aufmerksam."
+        ]
+      },
+      "uke": {
+        "role": {
+          "en": "Apply a realistic side choke without cranking; when the arm is raised, turn with the line and take ukemi.",
+          "de": "Seitlichen Würgegriff realistisch, ohne zu reißen; beim Anheben des Arms mit der Linie drehen und Ukemi nehmen."
+        },
+        "notes": { "en": [], "de": [] }
+      },
+      "media": []
+    }
+  ],
+  "tags": ["shiho-nage", "throw", "yoko-kubi-shime"]
+}

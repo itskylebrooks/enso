@@ -1,0 +1,52 @@
+{
+  "id": "t-shn-katateryotedori-omote",
+  "slug": "katate-ryote-dori-shiho-nage-omote",
+  "name": { "en": "Katate-ryōte-dori Shiho-nage (Omote)", "de": "Katate-ryōte-dori Shihō-nage (Omote)" },
+  "jp": "四方投げ",
+  "category": "throw",
+  "attack": "katate-ryote-dori",
+  "stance": "omote",
+  "weapon": "empty-hand",
+  "level": "kyu5",
+  "summary": {
+    "en": "Four-directions throw from one wrist held with both hands. Spiral the captured arm up, free the outside line, enter and cut.",
+    "de": "Vier-Richtungen-Wurf aus beid­händigem Griff an ein Handgelenk. Arm spiralig anheben, Außenlinie befreien, eintreten und schneiden."
+  },
+  "versions": [
+    {
+      "id": "v-standard",
+      "label": "Standard",
+      "steps": {
+        "en": [
+          "Receive katate-ryōte-dori with relaxed arms; keep the captured elbow heavy to your center.",
+          "Turn the captured hand palm-up and spiral it along uke’s thumb line to create space.",
+          "Use your free hand to support at uke’s nearer elbow; lift the line toward their outside shoulder.",
+          "Step in past uke’s front foot on that side, chest connected to their elbow.",
+          "Rotate your hips/shoulders to take uke’s arm above their center; their palm turns down.",
+          "Slide your inside foot and begin the broad circular cut to the rear corner.",
+          "Cut down through the shoulder line, keeping wrists close to your body.",
+          "Guide the fall and recover awareness."
+        ],
+        "de": [
+          "Nimm Katate-ryōte-dori mit entspannten Armen an; gefassten Ellbogen schwer zum Zentrum.",
+          "Drehe die gefasste Hand mit Handfläche nach oben und spiraliere entlang der Daumen­linie, um Raum zu schaffen.",
+          "Unterstütze mit der freien Hand am näheren Ellbogen; hebe die Linie zu Ukes Außenschulter an.",
+          "Tritt an Ukes vorderem Fuß dieser Seite vorbei, Brust am Ellbogen verbunden.",
+          "Drehe Hüften/Schultern, bringe Ukes Arm über sein Zentrum; Handfläche dreht nach unten.",
+          "Setze den Innenfuß, beginne den weiten Kreis­schnitt zum hinteren Eck.",
+          "Schneide durch die Schulterlinie, Handgelenke körpernah.",
+          "Fall führen und Aufmerksamkeit halten."
+        ]
+      },
+      "uke": {
+        "role": {
+          "en": "Hold with both hands but stay supple in the shoulders; follow the spiral and turn with the cut.",
+          "de": "Mit beiden Händen halten, Schultern locker; Spiralbewegung mitgehen und mit dem Schnitt drehen."
+        },
+        "notes": { "en": [], "de": [] }
+      },
+      "media": []
+    }
+  ],
+  "tags": ["shiho-nage", "throw", "katate-ryote-dori"]
+}

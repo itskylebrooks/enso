@@ -1,0 +1,52 @@
+{
+  "id": "t-shn-ryotedori-omote",
+  "slug": "ryote-dori-shiho-nage-omote",
+  "name": { "en": "Ryōte-dori Shiho-nage (Omote)", "de": "Ryōte-dori Shihō-nage (Omote)" },
+  "jp": "四方投げ",
+  "category": "throw",
+  "attack": "ryote-dori",
+  "stance": "omote",
+  "weapon": "empty-hand",
+  "level": "kyu5",
+  "summary": {
+    "en": "Four-directions throw from a two-hand grab. Lead both hands upward, free one line, turn through and cut down to the rear corner.",
+    "de": "Vier-Richtungen-Wurf aus beid­händigem Griff. Beide Hände anheben, eine Seite befreien, eindrehen und zum hinteren Eck schneiden."
+  },
+  "versions": [
+    {
+      "id": "v-standard",
+      "label": "Standard",
+      "steps": {
+        "en": [
+          "Accept ryōte-dori with relaxed shoulders; sink weight and connect elbows to your center.",
+          "Lift both hands on a diagonal; choose the easier side and slide that hand up to free the wrist.",
+          "Bring your free hand to uke’s elbow on the chosen side and create a strong arm line.",
+          "Enter past uke’s front foot on that side; keep their elbow close to your chest as you turn.",
+          "Rotate hips/shoulders to stack uke’s arm above their center, palm turning down.",
+          "Advance your inside foot and begin the large circular cut toward the rear corner.",
+          "Cut down through their shoulder line; maintain connection and keep the elbow slightly lifted.",
+          "Allow space for ukemi; regain distance and zanshin."
+        ],
+        "de": [
+          "Nimm Ryōte-dori mit entspannten Schultern an; Gewicht senken, Ellbogen ans Zentrum.",
+          "Hebe beide Hände diagonal; wähle die leichtere Seite und befreie dort das Handgelenk.",
+          "Fasse mit der freien Hand an Ukes Ellbogen dieser Seite und stelle eine stabile Arm­linie her.",
+          "Tritt an Ukes vorderem Fuß dieser Seite vorbei; halte den Ellbogen an deiner Brust beim Drehen.",
+          "Drehe Hüften/Schultern, sodass Ukes Arm über seinem Zentrum steht, Handfläche dreht nach unten.",
+          "Setze den Innenfuß vor und beginne den großen Kreis­schnitt zum hinteren Eck.",
+          "Schneide durch die Schulterlinie; Verbindung halten, Ellbogen leicht angehoben.",
+          "Platz für Ukemi lassen; Abstand und Zanshin herstellen."
+        ]
+      },
+      "uke": {
+        "role": {
+          "en": "Grip with both hands without locking the shoulders; follow the rise and turn with the cut.",
+          "de": "Beid­händig greifen ohne Schultern zu blockieren; Anheben mitgehen und mit dem Schnitt drehen."
+        },
+        "notes": { "en": [], "de": [] }
+      },
+      "media": []
+    }
+  ],
+  "tags": ["shiho-nage", "throw", "ryote-dori"]
+}

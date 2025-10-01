@@ -1,0 +1,52 @@
+{
+  "id": "t-ikkyo-ryotedori-omote",
+  "slug": "ryote-dori-ude-osae-ikkyo-omote",
+  "name": { "en": "Ryōte-dori Ude-osae (Ikkyo, Omote)", "de": "Ryōte-dori Ude-osae (Ikkyo, Omote)" },
+  "jp": "腕押さえ（一教）",
+  "category": "control",
+  "attack": "ryote-dori",
+  "stance": "omote",
+  "weapon": "empty-hand",
+  "level": "kyu5",
+  "summary": {
+    "en": "Ikkyo from a two-hand grab. Rise on a diagonal to free a side, enter past the front foot and guide down to the arm pin.",
+    "de": "Ikkyo aus beid­händigem Griff. Diagonal anheben, eine Seite befreien, am vorderen Fuß vorbeigehen und in den Arm-Pin führen."
+  },
+  "versions": [
+    {
+      "id": "v-standard",
+      "label": "Standard",
+      "steps": {
+        "en": [
+          "Accept ryōte-dori with relaxed shoulders; elbows connected to your center.",
+          "Lift both hands diagonally; choose the easier side and free that wrist by rotating palm up.",
+          "Place your free hand at uke’s elbow on that side and create the wrist-to-elbow line.",
+          "Step in past uke’s front foot (omote), chest connected to their elbow.",
+          "Rotate hips and shoulders together to align uke’s shoulder, elbow and wrist on a single plane.",
+          "Lead a straight path down toward the mat, keeping uke’s elbow slightly above their wrist.",
+          "Kneel and pin: near hand at the elbow, far hand at the wrist; uke’s palm up, arm along the shoulder line.",
+          "Extend through the pin with your spine; maintain control and release safely."
+        ],
+        "de": [
+          "Nimm Ryōte-dori mit entspannten Schultern an; Ellbogen mit dem Zentrum verbinden.",
+          "Heb beide Hände diagonal; wähle die leichtere Seite und befreie dort das Handgelenk durch Aufdrehen der Handfläche.",
+          "Fasse mit der freien Hand an Ukes Ellbogen dieser Seite und bilde die Handgelenk-Ellbogen-Linie.",
+          "Tritt am vorderen Fuß vorbei (Omote), Brust am Ellbogen verbunden.",
+          "Drehe Hüften und Schultern gemeinsam, sodass Schulter, Ellbogen und Handgelenk in einer Ebene stehen.",
+          "Führe die Linie gerade zur Matte, Ellbogen leicht über dem Handgelenk halten.",
+          "Gehe in den Pin: nahe Hand am Ellbogen, ferne Hand am Handgelenk; Ukes Handfläche oben, Arm in Schulterlinie.",
+          "Stabilisiere mit aufrechter Wirbelsäule; kontrolliert lösen."
+        ]
+      },
+      "uke": {
+        "role": {
+          "en": "Hold with both hands but keep shoulders supple; follow the lift and allow the downward line into ukemi.",
+          "de": "Mit beiden Händen halten, Schultern locker; Anheben mitgehen und die Abwärtslinie ins Ukemi zulassen."
+        },
+        "notes": { "en": [], "de": [] }
+      },
+      "media": []
+    }
+  ],
+  "tags": ["ikkyo", "ude-osae", "control", "ryote-dori"]
+}
