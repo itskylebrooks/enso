@@ -1,0 +1,16 @@
+{
+  "id": "ritsurei",
+  "slug": "ritsurei",
+  "romaji": "Ritsurei",
+  "jp": "立礼",
+  "category": "etiquette",
+  "def": {
+    "en": "Standing bow.",
+    "de": "Stehende Verbeugung."
+  },
+  "literal": { "en": "standing + bow", "de": "stehend + Verbeugung" },
+  "notes": {
+    "en": "Hinge from hips; neck neutral, eyes soft.",
+    "de": "Aus der Hüfte neigen; Nacken neutral, Blick weich."
+  }
+}

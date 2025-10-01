@@ -1,0 +1,16 @@
+{
+  "id": "yame",
+  "slug": "yame",
+  "romaji": "Yame",
+  "jp": "止め",
+  "category": "etiquette",
+  "def": {
+    "en": "Stop/end (command in class).",
+    "de": "Stopp/Ende (Kommando im Training)."
+  },
+  "literal": { "en": "to stop", "de": "anhalten/stoppen" },
+  "notes": {
+    "en": "Release safely, regain distance, and face forward.",
+    "de": "Sicher lösen, Abstand herstellen und nach vorn ausrichten."
+  }
+}

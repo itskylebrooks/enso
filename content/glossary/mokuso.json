@@ -1,0 +1,16 @@
+{
+  "id": "mokuso",
+  "slug": "mokuso",
+  "romaji": "Mokusō",
+  "jp": "黙想",
+  "category": "etiquette",
+  "def": {
+    "en": "Silent meditation at the start/end of class.",
+    "de": "Stilles Sammeln/\"Meditation\" zu Beginn/Ende des Trainings."
+  },
+  "literal": { "en": "silent + contemplation", "de": "schweigend + Betrachtung" },
+  "notes": {
+    "en": "Eyes soft, breath calm; settle attention before bowing.",
+    "de": "Blick weich, Atem ruhig; Aufmerksamkeit sammeln vor der Verbeugung."
+  }
+}

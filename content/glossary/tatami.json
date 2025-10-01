@@ -1,0 +1,16 @@
+{
+  "id": "tatami",
+  "slug": "tatami",
+  "romaji": "Tatami",
+  "jp": "畳",
+  "category": "etiquette",
+  "def": {
+    "en": "Mats used for training.",
+    "de": "Matten für das Training."
+  },
+  "literal": { "en": "fold/floor mat", "de": "Matte/Bodenmatte" },
+  "notes": {
+    "en": "No shoes on tatami; nails trimmed to protect the surface.",
+    "de": "Keine Schuhe auf den Tatami; Nägel kurz zum Schutz der Oberfläche."
+  }
+}

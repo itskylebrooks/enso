@@ -1,0 +1,16 @@
+{
+  "id": "zori",
+  "slug": "zori",
+  "romaji": "Zōri",
+  "jp": "草履",
+  "category": "etiquette",
+  "def": {
+    "en": "Straw/rubber sandals worn off the mats.",
+    "de": "Stroh-/Gummisandalen für den Mattenrand."
+  },
+  "literal": { "en": "straw + footwear", "de": "Stroh + Fußbekleidung" },
+  "notes": {
+    "en": "Protect feet and keep tatami clean; never step barefoot off-mat.",
+    "de": "Füße schützen und Tatami sauber halten; barfuß nicht abseits der Matte gehen."
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "id": "sensei",
+  "slug": "sensei",
+  "romaji": "Sensei",
+  "jp": "先生",
+  "category": "etiquette",
+  "def": {
+    "en": "Teacher/instructor.",
+    "de": "Lehrer/Lehrerin."
+  },
+  "literal": { "en": "one who was born before", "de": "der/die \"vorher Geborene\"" },
+  "notes": {
+    "en": "Used as a title; avoid first names on the mat.",
+    "de": "Als Titel verwendet; Vornamen auf der Matte vermeiden."
+  }
+}

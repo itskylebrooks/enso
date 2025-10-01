@@ -1,0 +1,16 @@
+{
+  "id": "seiretsu",
+  "slug": "seiretsu",
+  "romaji": "Seiretsu",
+  "jp": "整列",
+  "category": "etiquette",
+  "def": {
+    "en": "Line up/arrange in order.",
+    "de": "Aufstellen/ordnungsgemäß anreihen."
+  },
+  "literal": { "en": "to arrange + line", "de": "ordnen + Reihe" },
+  "notes": {
+    "en": "Line up by grade promptly at the start/end.",
+    "de": "Zu Beginn/Ende zügig der Graduierung nach aufstellen."
+  }
+}

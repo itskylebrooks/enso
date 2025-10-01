@@ -1,0 +1,16 @@
+{
+  "id": "shomen-ni-rei",
+  "slug": "shomen-ni-rei",
+  "romaji": "Shōmen ni rei",
+  "jp": "正面に礼",
+  "category": "etiquette",
+  "def": {
+    "en": "Bow to the front (shōmen/kamiza).",
+    "de": "Verbeugung zur Front (Shōmen/Kamiza)."
+  },
+  "literal": { "en": "to the front + bow", "de": "zur Vorderseite + Verbeugung" },
+  "notes": {
+    "en": "Part of opening/closing ceremony.",
+    "de": "Teil der Eröffnungs-/Abschlusszeremonie."
+  }
+}

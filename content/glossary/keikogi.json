@@ -1,0 +1,16 @@
+{
+  "id": "keikogi",
+  "slug": "keikogi",
+  "romaji": "Keikogi",
+  "jp": "稽古着",
+  "category": "etiquette",
+  "def": {
+    "en": "Training uniform (gi).",
+    "de": "Trainingsanzug (Gi)."
+  },
+  "literal": { "en": "practice + clothing", "de": "Üben + Kleidung" },
+  "notes": {
+    "en": "Clean, in good repair; sleeves may be rolled per dojo rules.",
+    "de": "Sauber, intakt; Ärmel ggf. nach Dojo-Regeln aufrollen."
+  }
+}

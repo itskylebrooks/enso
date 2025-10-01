@@ -1,0 +1,16 @@
+{
+  "id": "senpai",
+  "slug": "senpai",
+  "romaji": "Senpai",
+  "jp": "先輩",
+  "category": "etiquette",
+  "def": {
+    "en": "Senior student; guides juniors.",
+    "de": "Höherer Schüler; begleitet Jüngere."
+  },
+  "literal": { "en": "earlier + companion", "de": "früher + Gefährte" },
+  "notes": {
+    "en": "Model etiquette and help newcomers.",
+    "de": "Etikette vorleben und Neulinge unterstützen."
+  }
+}

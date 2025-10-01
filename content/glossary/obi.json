@@ -1,0 +1,16 @@
+{
+  "id": "obi",
+  "slug": "obi",
+  "romaji": "Obi",
+  "jp": "帯",
+  "category": "etiquette",
+  "def": {
+    "en": "Belt; indicates grade by color or black for dan.",
+    "de": "Gürtel; zeigt Grad an (Farbe) bzw. Schwarz für Dan."
+  },
+  "literal": { "en": "belt/sash", "de": "Gürtel/Schärpe" },
+  "notes": {
+    "en": "Tie securely; ends even, knot flat at center.",
+    "de": "Sicher binden; Enden gleich, Knoten flach in der Mitte."
+  }
+}

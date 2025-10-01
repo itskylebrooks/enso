@@ -1,0 +1,16 @@
+{
+  "id": "hajime",
+  "slug": "hajime",
+  "romaji": "Hajime",
+  "jp": "始め",
+  "category": "etiquette",
+  "def": {
+    "en": "Begin/start (command in class).",
+    "de": "Beginn (Kommando im Training)."
+  },
+  "literal": { "en": "to start", "de": "beginnen" },
+  "notes": {
+    "en": "Move promptly, with awareness of space.",
+    "de": "Zügig beginnen, Raumaufteilung beachten."
+  }
+}

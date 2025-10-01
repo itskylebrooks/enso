@@ -1,0 +1,16 @@
+{
+  "id": "kamiza",
+  "slug": "kamiza",
+  "romaji": "Kamiza",
+  "jp": "上座",
+  "category": "etiquette",
+  "def": {
+    "en": "Honor seat/front of the dōjō.",
+    "de": "Ehrenplatz/Vorderseite des Dōjō."
+  },
+  "literal": { "en": "upper + seat", "de": "oberer + Sitz" },
+  "notes": {
+    "en": "Face this side for bow-in; keep area clear and respectful.",
+    "de": "Zum Begrüßen dorthin ausrichten; Bereich frei und respektvoll halten."
+  }
+}

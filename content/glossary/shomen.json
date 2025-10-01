@@ -1,0 +1,16 @@
+{
+  "id": "shomen",
+  "slug": "shomen",
+  "romaji": "Shōmen",
+  "jp": "正面",
+  "category": "etiquette",
+  "def": {
+    "en": "Front/main side of the dōjō (often where a portrait/scroll sits).",
+    "de": "Front-/Hauptseite des Dōjō (oft mit Bild/Schriftrolle)."
+  },
+  "literal": { "en": "true/correct + face", "de": "richtig + Gesicht/Front" },
+  "notes": {
+    "en": "Often coincides with kamiza; used in opening/closing bows.",
+    "de": "Fällt oft mit Kamiza zusammen; für die Eröffnungs-/Schlussverbeugung."
+  }
+}

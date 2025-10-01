@@ -1,0 +1,16 @@
+{
+  "id": "kohai",
+  "slug": "kohai",
+  "romaji": "Kōhai",
+  "jp": "後輩",
+  "category": "etiquette",
+  "def": {
+    "en": "Junior student; learns from seniors.",
+    "de": "Jüngerer Schüler; lernt von Älteren."
+  },
+  "literal": { "en": "later + companion", "de": "später + Gefährte" },
+  "notes": {
+    "en": "Observe, listen, and ask respectfully.",
+    "de": "Beobachten, zuhören und respektvoll fragen."
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "id": "dojo",
+  "slug": "dojo",
+  "romaji": "Dōjō",
+  "jp": "道場",
+  "category": "etiquette",
+  "def": {
+    "en": "Training hall; place of practice.",
+    "de": "Trainingshalle; Ort der Praxis."
+  },
+  "literal": { "en": "way + place", "de": "Weg + Ort" },
+  "notes": {
+    "en": "Keep clean and orderly; bow on entry/exit.",
+    "de": "Sauber und ordentlich halten; beim Betreten/Verlassen verbeugen."
+  }
+}

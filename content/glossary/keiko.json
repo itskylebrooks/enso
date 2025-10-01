@@ -1,0 +1,16 @@
+{
+  "id": "keiko",
+  "slug": "keiko",
+  "romaji": "Keiko",
+  "jp": "稽古",
+  "category": "etiquette",
+  "def": {
+    "en": "Practice/training session.",
+    "de": "Übung/Training."
+  },
+  "literal": { "en": "to consider + old (reflective practice)", "de": "überdenken + alt (reflektierte Übung)" },
+  "notes": {
+    "en": "Arrive on time; line up before bow-in.",
+    "de": "Pünktlich erscheinen; vor dem Begrüßen aufstellen."
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "id": "zarei",
+  "slug": "zarei",
+  "romaji": "Zarei",
+  "jp": "座礼",
+  "category": "etiquette",
+  "def": {
+    "en": "Seated bow (from seiza).",
+    "de": "Sitzende Verbeugung (aus Seiza)."
+  },
+  "literal": { "en": "seated + bow", "de": "sitzend + Verbeugung" },
+  "notes": {
+    "en": "Hands slide forward, spine stays long.",
+    "de": "Hände gleiten vor, Wirbelsäule bleibt lang."
+  }
+}

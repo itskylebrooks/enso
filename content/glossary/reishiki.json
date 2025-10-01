@@ -1,0 +1,16 @@
+{
+  "id": "reishiki",
+  "slug": "reishiki",
+  "romaji": "Reishiki",
+  "jp": "礼式",
+  "category": "etiquette",
+  "def": {
+    "en": "Etiquette/formal manners in the dojo.",
+    "de": "Etikette/formale Umgangsformen im Dōjō."
+  },
+  "literal": { "en": "courtesy + form", "de": "Höflichkeit + Form" },
+  "notes": {
+    "en": "Consistent manners keep training safe and respectful.",
+    "de": "Konsequente Formen halten das Training sicher und respektvoll."
+  }
+}

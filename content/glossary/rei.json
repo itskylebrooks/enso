@@ -5,11 +5,12 @@
   "jp": "礼",
   "category": "etiquette",
   "def": {
-    "en": "Bow; expression of respect and gratitude.",
-    "de": "Verbeugung; Ausdruck von Respekt und Dankbarkeit."
+    "en": "Bow; the gesture of respect before/after practice.",
+    "de": "Verbeugung; Geste des Respekts vor/nach dem Üben."
   },
+  "literal": { "en": "courtesy/etiquette", "de": "Höflichkeit/Etikette" },
   "notes": {
-    "en": "Fundamental aspect of dojo etiquette. Shows respect for partners, teachers, and the practice space. Performed at beginning and end of practice.",
-    "de": "Grundlegender Aspekt der Dojo-Etikette. Zeigt Respekt für Partner, Lehrer und den Übungsraum. Wird zu Beginn und Ende der Praxis ausgeführt."
+    "en": "Bow when entering/leaving the mat and when greeting partners.",
+    "de": "Beim Betreten/Verlassen der Matte und beim Grüßen der Partner verbeugen."
   }
 }

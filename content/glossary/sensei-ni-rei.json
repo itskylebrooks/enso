@@ -1,0 +1,16 @@
+{
+  "id": "sensei-ni-rei",
+  "slug": "sensei-ni-rei",
+  "romaji": "Sensei ni rei",
+  "jp": "先生に礼",
+  "category": "etiquette",
+  "def": {
+    "en": "Bow to the teacher.",
+    "de": "Verbeugung zum Lehrer/zur Lehrerin."
+  },
+  "literal": { "en": "to teacher + bow", "de": "zum Lehrer + Verbeugung" },
+  "notes": {
+    "en": "Led by the senior student (senpai).",
+    "de": "Vom ranghöheren Schüler (Senpai) angeleitet."
+  }
+}

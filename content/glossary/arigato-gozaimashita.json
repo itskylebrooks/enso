@@ -1,0 +1,16 @@
+{
+  "id": "arigato-gozaimashita",
+  "slug": "arigato-gozaimashita",
+  "romaji": "Arigatō gozaimashita",
+  "jp": "ありがとうございました",
+  "category": "etiquette",
+  "def": {
+    "en": "\"Thank you (for what has been)\" — said after practice.",
+    "de": "\"Vielen Dank (für das Gewesene)\" – nach dem Training."
+  },
+  "literal": { "en": "thanks + polite past", "de": "Dank + höfliche Vergangenheitsform" },
+  "notes": {
+    "en": "Addressed to teacher and partners at class end.",
+    "de": "An Lehrer und Partner am Ende der Stunde gerichtet."
+  }
+}

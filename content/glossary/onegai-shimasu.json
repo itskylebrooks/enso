@@ -1,0 +1,16 @@
+{
+  "id": "onegai-shimasu",
+  "slug": "onegai-shimasu",
+  "romaji": "Onegai shimasu",
+  "jp": "お願いします",
+  "category": "etiquette",
+  "def": {
+    "en": "\"Please\" — said before practice to teacher/partner.",
+    "de": "\"Bitte\" – vor dem Üben an Lehrer/Partner gerichtet."
+  },
+  "literal": { "en": "I humbly request", "de": "Ich bitte höflich" },
+  "notes": {
+    "en": "Used at class start and when pairing up.",
+    "de": "Zu Beginn und beim Partnerwechsel verwendet."
+  }
+}

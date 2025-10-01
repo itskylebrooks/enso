@@ -1,0 +1,16 @@
+{
+  "id": "otagai-ni-rei",
+  "slug": "otagai-ni-rei",
+  "romaji": "Otagai ni rei",
+  "jp": "お互いに礼",
+  "category": "etiquette",
+  "def": {
+    "en": "Bow to each other (partners).",
+    "de": "Verbeugung zueinander (Partner)."
+  },
+  "literal": { "en": "to one another + bow", "de": "einander + Verbeugung" },
+  "notes": {
+    "en": "Express gratitude before/after pairing.",
+    "de": "Dank vor/nach der Partnerarbeit ausdrücken."
+  }
+}

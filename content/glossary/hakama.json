@@ -1,0 +1,16 @@
+{
+  "id": "hakama",
+  "slug": "hakama",
+  "romaji": "Hakama",
+  "jp": "袴",
+  "category": "etiquette",
+  "def": {
+    "en": "Pleated over-trousers worn over the gi.",
+    "de": "Gefaltete Überhose, über dem Gi getragen."
+  },
+  "literal": { "en": "pleated trousers", "de": "Faltenhose" },
+  "notes": {
+    "en": "Worn per dojo rank custom; pleats represent virtues in some schools.",
+    "de": "Tragen je nach Dojo-Brauch; Falten stehen teils für Tugenden."
+  }
+}

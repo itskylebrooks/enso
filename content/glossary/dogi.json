@@ -1,0 +1,16 @@
+{
+  "id": "dogi",
+  "slug": "dogi",
+  "romaji": "Dōgi",
+  "jp": "道着",
+  "category": "etiquette",
+  "def": {
+    "en": "Uniform for the 'way' — another term for gi.",
+    "de": "Anzug für den \"Weg\" – anderer Begriff für Gi."
+  },
+  "literal": { "en": "way + clothing", "de": "Weg + Kleidung" },
+  "notes": {
+    "en": "Used interchangeably with keikogi.",
+    "de": "Weitgehend austauschbar mit Keikogi."
+  }
+}
