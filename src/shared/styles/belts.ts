@@ -17,18 +17,36 @@ const ordinal = (value: string, locale: Locale): string => {
   return `${number}th`;
 };
 
-const palette: Record<Grade, { bg: string; fg: string }> = {
-  kyu5: { bg: '#f7d80e', fg: '#1A1A1A' },
+// Light mode palette - good contrast on light backgrounds
+const lightPalette: Record<Grade, { bg: string; fg: string }> = {
+  kyu5: { bg: '#f59e0b', fg: '#1A1A1A' },  // Darker yellow for better contrast
   kyu4: { bg: '#f2571a', fg: '#FFFFFF' },
   kyu3: { bg: '#0aad28', fg: '#FFFFFF' },
-  kyu2: { bg: '#2563EB', fg: '#E6F0FF' },
+  kyu2: { bg: '#2563EB', fg: '#FFFFFF' },
   kyu1: { bg: '#8c4b0b', fg: '#FFFFFF' },
-  dan1: { bg: '#0B0B0B', fg: '#FFFFFF' },
-  dan2: { bg: '#0B0B0B', fg: '#FFFFFF' },
-  dan3: { bg: '#0B0B0B', fg: '#FFFFFF' },
-  dan4: { bg: '#0B0B0B', fg: '#FFFFFF' },
-  dan5: { bg: '#0B0B0B', fg: '#FFFFFF' },
+  dan1: { bg: '#1F2937', fg: '#FFFFFF' },  // Dark gray instead of pure black
+  dan2: { bg: '#1F2937', fg: '#FFFFFF' },
+  dan3: { bg: '#1F2937', fg: '#FFFFFF' },
+  dan4: { bg: '#1F2937', fg: '#FFFFFF' },
+  dan5: { bg: '#1F2937', fg: '#FFFFFF' },
 };
+
+// Dark mode palette - good contrast on dark backgrounds  
+const darkPalette: Record<Grade, { bg: string; fg: string }> = {
+  kyu5: { bg: '#fbbf24', fg: '#1A1A1A' },  // Brighter yellow for dark backgrounds
+  kyu4: { bg: '#f97316', fg: '#FFFFFF' },
+  kyu3: { bg: '#22c55e', fg: '#000000' },  // Brighter green with dark text
+  kyu2: { bg: '#3b82f6', fg: '#FFFFFF' },
+  kyu1: { bg: '#a16207', fg: '#FFFFFF' },
+  dan1: { bg: '#374151', fg: '#FFFFFF' },  // Gray that's visible on dark backgrounds
+  dan2: { bg: '#374151', fg: '#FFFFFF' },
+  dan3: { bg: '#374151', fg: '#FFFFFF' },
+  dan4: { bg: '#374151', fg: '#FFFFFF' },
+  dan5: { bg: '#374151', fg: '#FFFFFF' },
+};
+
+// Legacy palette for compatibility
+const palette: Record<Grade, { bg: string; fg: string }> = lightPalette;
 
 export const gradePalette = palette;
 
@@ -51,7 +69,8 @@ export const gradeLabel = (grade: Grade, locale: Locale): string => {
   return `${ord} ${suffix}`;
 };
 
-export const getGradeStyle = (grade: Grade): { backgroundColor: string; color: string } => {
-  const entry = palette[grade];
+export const getGradeStyle = (grade: Grade, isDark?: boolean): { backgroundColor: string; color: string } => {
+  const selectedPalette = isDark ? darkPalette : lightPalette;
+  const entry = selectedPalette[grade];
   return { backgroundColor: entry.bg, color: entry.fg };
 };

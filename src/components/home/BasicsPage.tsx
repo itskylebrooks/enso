@@ -1,8 +1,9 @@
 import { motion } from 'motion/react';
 import type { ReactElement } from 'react';
+import { useEffect, useState } from 'react';
 import type { Grade, Locale } from '../../shared/types';
 import { gradeOrder } from '../../shared/utils/grades';
-import { gradeLabel, gradePalette } from '../../shared/styles/belts';
+import { gradeLabel, getGradeStyle } from '../../shared/styles/belts';
 import { useMotionPreferences, defaultEase } from '../ui/motion';
 
 type BasicsPageProps = {
@@ -190,6 +191,27 @@ const sectionVariants = {
 export const BasicsPage = ({ locale, onNavigateToGlossaryWithMovementFilter }: BasicsPageProps): ReactElement => {
   const copy = content[locale];
   const { prefersReducedMotion } = useMotionPreferences();
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    // Check if dark mode is active
+    const checkDarkMode = () => {
+      const html = document.documentElement;
+      setIsDark(html.classList.contains('dark'));
+    };
+
+    // Initial check
+    checkDarkMode();
+
+    // Watch for theme changes
+    const observer = new MutationObserver(checkDarkMode);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
+
+    return () => observer.disconnect();
+  }, []);
   const animationProps = prefersReducedMotion
     ? {}
     : {
@@ -264,7 +286,8 @@ export const BasicsPage = ({ locale, onNavigateToGlossaryWithMovementFilter }: B
           </header>
           <ul className="grid gap-3 sm:grid-cols-2">
             {gradeOrder.map((grade) => {
-              const palette = gradePalette[grade];
+              const style = getGradeStyle(grade, isDark);
+              const borderColor = style.color === '#FFFFFF' ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.08)';
               return (
                 <li
                   key={grade}
@@ -275,9 +298,9 @@ export const BasicsPage = ({ locale, onNavigateToGlossaryWithMovementFilter }: B
                     aria-hidden
                     className="inline-flex items-center justify-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide"
                     style={{
-                      backgroundColor: palette.bg,
-                      color: palette.fg,
-                      boxShadow: 'inset 0 0 0 1px rgba(0,0,0,0.08)',
+                      backgroundColor: style.backgroundColor,
+                      color: style.color,
+                      boxShadow: `inset 0 0 0 1px ${borderColor}`,
                     }}
                   >
                     {copy.beltNames[grade]}

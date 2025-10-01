@@ -1,4 +1,5 @@
 import type { ReactElement } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import type { Copy } from '../../shared/constants/i18n';
 import type { Locale, Technique } from '../../shared/types';
@@ -8,6 +9,8 @@ import { AddToCollectionMenu } from '../../features/bookmarks/components/AddToCo
 import { BookmarkIcon, BookmarkCheckIcon } from '../../shared/components/ui/icons';
 import { useMotionPreferences } from '../ui/motion';
 import { classNames } from '../../shared/utils/classNames';
+import { getCategoryStyle } from '../../shared/styles/glossary';
+import type { GlossaryTerm } from '../../shared/types';
 
 export type CollectionOption = {
   id: string;
@@ -46,6 +49,60 @@ export const TechniqueHeader = ({
   onTagClick,
 }: TechniqueHeaderProps): ReactElement => {
   const { toggleTransition, prefersReducedMotion } = useMotionPreferences();
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    // Check if dark mode is active
+    const checkDarkMode = () => {
+      const html = document.documentElement;
+      setIsDark(html.classList.contains('dark'));
+    };
+
+    // Initial check
+    checkDarkMode();
+
+    // Watch for theme changes
+    const observer = new MutationObserver(checkDarkMode);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Map tag to glossary category for appropriate styling
+  const getTagCategory = (tag: string): GlossaryTerm['category'] => {
+    const lowerTag = tag.toLowerCase();
+    
+    // Movement/technique category tags
+    if (lowerTag.includes('nage') || lowerTag.includes('throw') || lowerTag.includes('irimi') || 
+        lowerTag.includes('kaiten') || lowerTag.includes('kokyu')) {
+      return 'movement';
+    }
+    
+    // Stance category tags
+    if (lowerTag.includes('kamae') || lowerTag.includes('hanmi') || lowerTag.includes('seiza')) {
+      return 'stance';  
+    }
+    
+    // Attack category tags
+    if (lowerTag.includes('dori') || lowerTag.includes('uchi') || lowerTag.includes('tsuki') || 
+        lowerTag.includes('grab') || lowerTag.includes('strike') || lowerTag.includes('punch') ||
+        lowerTag.includes('shomen') || lowerTag.includes('yokomen') || lowerTag.includes('katate') ||
+        lowerTag.includes('ryote') || lowerTag.includes('morote') || lowerTag.includes('mune')) {
+      return 'attack';
+    }
+    
+    // Control/technique family tags (nikyo, ikkyo, etc.)
+    if (lowerTag.includes('kyo') || lowerTag.includes('control') || lowerTag.includes('pin') || 
+        lowerTag.includes('osae') || lowerTag.includes('katame')) {
+      return 'other';
+    }
+    
+    // Default to movement for general technique terms
+    return 'movement';
+  };
 
   return (
     <header className="z-10 border-b surface-border pb-4 bg-transparent space-y-6">
@@ -70,25 +127,35 @@ export const TechniqueHeader = ({
             {technique.jp && <div className="text-sm text-subtle">{technique.jp}</div>}
             {tags.length > 0 && (
               <div className="flex flex-wrap gap-2 pt-1">
-                {tags.map((tag) => (
-                  onTagClick ? (
+                {tags.map((tag) => {
+                  const tagCategory = getTagCategory(tag);
+                  const categoryStyle = getCategoryStyle(tagCategory, isDark);
+                  return onTagClick ? (
                     <button
                       key={tag}
                       type="button"
                       onClick={() => onTagClick(tag)}
-                      className="rounded-lg border surface-border bg-[var(--color-surface)] px-2 py-1 text-xs uppercase tracking-wide text-subtle hover:bg-[var(--color-surface-hover)] hover:text-[var(--color-text)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+                      className="rounded-lg px-2 py-1 text-xs uppercase tracking-wide hover:opacity-80 transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+                      style={{
+                        backgroundColor: categoryStyle.backgroundColor,
+                        color: categoryStyle.color,
+                      }}
                     >
                       {tag}
                     </button>
                   ) : (
                     <span
                       key={tag}
-                      className="rounded-lg border surface-border bg-[var(--color-surface)] px-2 py-1 text-xs uppercase tracking-wide text-subtle"
+                      className="rounded-lg px-2 py-1 text-xs uppercase tracking-wide"
+                      style={{
+                        backgroundColor: categoryStyle.backgroundColor,
+                        color: categoryStyle.color,
+                      }}
                     >
                       {tag}
                     </span>
-                  )
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>

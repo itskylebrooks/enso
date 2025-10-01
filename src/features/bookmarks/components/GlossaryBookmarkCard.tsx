@@ -1,8 +1,10 @@
 import type { KeyboardEvent, ReactElement } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, type Variants, type Transition } from 'motion/react';
 import type { GlossaryTerm, GlossaryProgress } from '../../../shared/types';
 import type { Locale } from '../../../shared/types';
 import type { Copy } from '../../../shared/constants/i18n';
+import { getCategoryStyle, getCategoryLabel } from '../../../shared/styles/glossary';
 
 type MotionProps = {
   variants: Variants;
@@ -21,29 +23,7 @@ type GlossaryBookmarkCardProps = {
   actionSlot?: ReactElement;
 } & MotionProps;
 
-const getCategoryLabel = (category: GlossaryTerm['category'], copy: Copy): string => {
-  const labels: Record<GlossaryTerm['category'], string> = {
-    movement: copy.categoryMovement,
-    stance: copy.categoryStance,
-    attack: copy.categoryAttack,
-    etiquette: copy.categoryEtiquette,
-    philosophy: copy.categoryPhilosophy,
-    other: copy.categoryOther,
-  };
-  return labels[category];
-};
 
-const getCategoryColor = (category: GlossaryTerm['category']): string => {
-  const colors: Record<GlossaryTerm['category'], string> = {
-    movement: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300',
-    stance: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300',
-    attack: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300',
-    etiquette: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300',
-    philosophy: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300',
-    other: 'bg-gray-100 text-gray-700 dark:bg-gray-800/50 dark:text-gray-300',
-  };
-  return colors[category];
-};
 
 export const GlossaryBookmarkCard = ({
   term,
@@ -57,9 +37,31 @@ export const GlossaryBookmarkCard = ({
   isDimmed = false,
   actionSlot,
 }: GlossaryBookmarkCardProps): ReactElement => {
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    // Check if dark mode is active
+    const checkDarkMode = () => {
+      const html = document.documentElement;
+      setIsDark(html.classList.contains('dark'));
+    };
+
+    // Initial check
+    checkDarkMode();
+
+    // Watch for theme changes
+    const observer = new MutationObserver(checkDarkMode);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
   const definition = term.def[locale] || term.def.en;
   const categoryLabel = getCategoryLabel(term.category, copy);
-  const categoryStyle = getCategoryColor(term.category);
+  const categoryStyle = getCategoryStyle(term.category, isDark);
   
   const handleActivate = () => {
     onSelect(term.slug);
@@ -107,7 +109,13 @@ export const GlossaryBookmarkCard = ({
 
       {/* Category label at bottom */}
       <div className="mt-auto flex justify-end pt-1">
-        <span className={`text-xs font-medium px-2 py-1 rounded-full ${categoryStyle}`}>
+        <span 
+          className="text-xs font-medium px-2 py-1 rounded-full"
+          style={{
+            backgroundColor: categoryStyle.backgroundColor,
+            color: categoryStyle.color,
+          }}
+        >
           {categoryLabel}
         </span>
       </div>
