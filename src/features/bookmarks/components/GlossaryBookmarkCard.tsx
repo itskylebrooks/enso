@@ -87,7 +87,7 @@ export const GlossaryBookmarkCard = ({
       onClick={handleActivate}
       onKeyDown={handleKeyDown}
       className={
-        `group relative surface border surface-border rounded-2xl p-4 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] flex flex-col gap-3 text-left` +
+        `group relative surface border surface-border rounded-2xl p-4 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] flex flex-col gap-3 text-left h-[160px]` +
         (isDimmed ? ' pointer-events-none opacity-70 blur-card' : '')
       }
       variants={variants}
@@ -116,8 +116,8 @@ export const GlossaryBookmarkCard = ({
         {truncateDefinition(definition, 140)}
       </p>
 
-      {/* Category label in bottom right corner */}
-      <div className="flex justify-end">
+      {/* Category label positioned higher */}
+      <div className="flex justify-end -mt-1">
         <span className={`text-xs font-medium px-2 py-1 rounded-full ${categoryStyle}`}>
           {categoryLabel}
         </span>
