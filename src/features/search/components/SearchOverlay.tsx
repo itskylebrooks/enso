@@ -52,7 +52,8 @@ export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen, onOpe
   const normalizedQuery = useMemo(() => normalizeSearchQuery(query), [query]);
 
   const results = useMemo((): SearchResult[] => {
-    if (normalizedQuery.length === 0) {
+    // Require minimum query length to avoid too many partial matches
+    if (normalizedQuery.length === 0 || query.trim().length < 2) {
       // Show just a few results when no query: 3 techniques + 3 glossary terms
       const recentTechniques: SearchResult[] = techniques.slice(0, 3).map(item => ({ type: 'technique', item }));
       const someGlossaryTerms: SearchResult[] = glossaryTerms.slice(0, 3).map(item => ({ type: 'glossary', item }));
@@ -78,8 +79,9 @@ export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen, onOpe
       .filter((entry) => matchSearch(entry.haystack, normalizedQuery))
       .map((entry) => ({ type: 'glossary', item: entry.term }));
 
-    // Separate techniques into exact name matches vs partial matches
+    // Enhanced ranking: separate into exact matches, prefix matches, and partial matches
     const exactTechniqueMatches: SearchResult[] = [];
+    const prefixTechniqueMatches: SearchResult[] = [];
     const partialTechniqueMatches: SearchResult[] = [];
     
     allTechniqueResults.forEach(result => {
@@ -88,25 +90,65 @@ export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen, onOpe
         const nameEn = technique.name.en.toLowerCase();
         const nameDe = technique.name.de.toLowerCase();
         const jp = technique.jp?.toLowerCase() || '';
+        const slug = technique.slug.toLowerCase();
         
-        if (nameEn.startsWith(queryText) || nameDe.startsWith(queryText) || 
-            jp === queryText || technique.slug.toLowerCase() === queryText) {
+        // Check for exact matches (highest priority)
+        if (nameEn === queryText || nameDe === queryText || 
+            jp === queryText || slug === queryText) {
           exactTechniqueMatches.push(result);
-        } else {
+        }
+        // Check for prefix matches (second priority) - includes hyphenated terms
+        else if (nameEn.startsWith(queryText) || nameDe.startsWith(queryText) ||
+                 nameEn.includes('-' + queryText) || nameDe.includes('-' + queryText) ||
+                 nameEn.includes(' ' + queryText) || nameDe.includes(' ' + queryText) ||
+                 slug.startsWith(queryText)) {
+          prefixTechniqueMatches.push(result);
+        }
+        // All other matches (lowest priority)
+        else {
           partialTechniqueMatches.push(result);
         }
       }
+    });
+
+    // Sort prefix matches by relevance (shorter names first, then alphabetical)
+    prefixTechniqueMatches.sort((a, b) => {
+      if (a.type !== 'technique' || b.type !== 'technique') return 0;
+      const aName = (a.item.name.en || a.item.name.de).toLowerCase();
+      const bName = (b.item.name.en || b.item.name.de).toLowerCase();
+      
+      // Prioritize matches that start with the query
+      const aStartsWith = aName.startsWith(queryText);
+      const bStartsWith = bName.startsWith(queryText);
+      
+      if (aStartsWith && !bStartsWith) return -1;
+      if (!aStartsWith && bStartsWith) return 1;
+      
+      // If both start with query or both don't, sort by length then alphabetically
+      if (aName.length !== bName.length) {
+        return aName.length - bName.length;
+      }
+      return aName.localeCompare(bName);
+    });
+
+    // Sort exact matches alphabetically
+    exactTechniqueMatches.sort((a, b) => {
+      if (a.type !== 'technique' || b.type !== 'technique') return 0;
+      const aName = (a.item.name.en || a.item.name.de).toLowerCase();
+      const bName = (b.item.name.en || b.item.name.de).toLowerCase();
+      return aName.localeCompare(bName);
     });
 
     // Remove exact matches from regular glossary results to avoid duplicates
     const exactMatchIds = new Set(exactGlossaryMatches.map(r => r.item.id));
     const otherGlossaryResults = allGlossaryResults.filter(r => !exactMatchIds.has(r.item.id));
 
-    // Prioritize: exact glossary matches first, then exact technique matches, then partial matches
+    // Enhanced prioritization: exact matches first, then prefix matches, then partial matches
     return [
       ...exactGlossaryMatches,
-      ...exactTechniqueMatches.slice(0, 10),
-      ...partialTechniqueMatches.slice(0, 15),
+      ...exactTechniqueMatches.slice(0, 5),
+      ...prefixTechniqueMatches.slice(0, 8),
+      ...partialTechniqueMatches.slice(0, 10),
       ...otherGlossaryResults.slice(0, 8)
     ];
   }, [techniqueIndex, glossaryIndex, normalizedQuery, techniques, glossaryTerms, query]);
@@ -123,10 +165,11 @@ export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen, onOpe
     }
   }, [results, selectedIndex]);
 
-  // Update highlight position when selection changes
+  // Update highlight position when selection changes and ensure visibility
   useLayoutEffect(() => {
-    if (selectedIndex >= 0 && resultRefs.current[selectedIndex]) {
+    if (selectedIndex >= 0 && resultRefs.current[selectedIndex] && resultsContainerRef.current) {
       const selectedElement = resultRefs.current[selectedIndex];
+      const container = resultsContainerRef.current;
       
       if (selectedElement) {
         const elementRect = selectedElement.getBoundingClientRect();
@@ -135,6 +178,29 @@ export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen, onOpe
           y: selectedElement.offsetTop,
           height: elementRect.height,
         });
+
+        // Smooth scroll to ensure the selected item is visible
+        const itemTop = selectedElement.offsetTop;
+        const itemBottom = itemTop + selectedElement.offsetHeight;
+        const containerScrollTop = container.scrollTop;
+        const containerHeight = container.clientHeight;
+        const containerVisibleTop = containerScrollTop;
+        const containerVisibleBottom = containerScrollTop + containerHeight;
+
+        // Check if item is above visible area
+        if (itemTop < containerVisibleTop) {
+          container.scrollTo({
+            top: itemTop - 8, // 8px padding from top
+            behavior: 'smooth'
+          });
+        }
+        // Check if item is below visible area
+        else if (itemBottom > containerVisibleBottom) {
+          container.scrollTo({
+            top: itemBottom - containerHeight + 8, // 8px padding from bottom
+            behavior: 'smooth'
+          });
+        }
       }
     }
   }, [selectedIndex, results]);
@@ -223,7 +289,7 @@ export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen, onOpe
             </motion.button>
           </div>
           <div className="border-t surface-border mt-2 pt-3">
-          <div ref={resultsContainerRef} className="max-h-[60vh] overflow-y-auto relative">
+          <div ref={resultsContainerRef} className="max-h-[60vh] overflow-y-auto relative scrollbar-hide">
             {/* Animated background highlight */}
             {results.length > 0 && selectedIndex >= 0 && (
               <motion.div

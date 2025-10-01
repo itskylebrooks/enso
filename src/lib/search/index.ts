@@ -15,7 +15,7 @@ export type SearchDoc = {
   aliases?: string[];
 };
 
-export type SearchHit = Fuse.FuseResult<SearchDoc>;
+export type SearchHit = any;
 
 type SearchIndex = {
   fuse: Fuse<SearchDoc>;
@@ -49,7 +49,7 @@ const createDocs = (techniques: TechniqueV2[]): SearchDoc[] =>
     aliases: [],
   }));
 
-const buildOptions = (locale: Locale): Fuse.IFuseOptions<SearchDoc> => {
+const buildOptions = (locale: Locale): any => {
   const localeKey = locale === 'de' ? 'name_de' : 'name_en';
   return {
     includeMatches: true,

@@ -131,7 +131,36 @@ export const normalizeSearchQuery = (value: string): string[] => {
 };
 
 export const matchSearch = (haystack: string, queries: string[]): boolean =>
-  queries.every((query) => haystack.includes(query));
+  queries.every((query) => {
+    // For very short queries (1-2 chars), be more strict to avoid too many partial matches
+    if (query.length <= 2) {
+      // Only match if it's at the start of a word or exact token match
+      const tokens = haystack.split(/\s+/);
+      return tokens.some(token => {
+        return token === query || token.startsWith(query + '-') || token.startsWith(query);
+      });
+    }
+    
+    // For longer queries, split haystack into words and check for meaningful matches
+    const tokens = haystack.split(/\s+/);
+    
+    return tokens.some(token => {
+      // Exact token match (highest priority)
+      if (token === query) return true;
+      
+      // Token starts with query (second priority)  
+      if (token.startsWith(query)) return true;
+      
+      // Allow matches after word separators (hyphens, underscores) 
+      if (token.includes('-' + query) || token.includes('_' + query)) return true;
+      
+      // For queries 4+ characters, allow substring matches within tokens
+      // This helps with compound words but reduces noise for shorter queries
+      if (query.length >= 4 && token.includes(query)) return true;
+      
+      return false;
+    });
+  });
 
 // Glossary search functionality
 type GlossarySearchEntry = {

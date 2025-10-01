@@ -175,3 +175,16 @@ button {
   -webkit-filter: blur(2px);
   opacity: 0.88;
 }
+
+/* Hide scrollbar while maintaining scroll functionality */
+.scrollbar-hide {
+  /* Firefox */
+  scrollbar-width: none;
+  
+  /* Webkit browsers (Chrome, Safari, Edge) */
+  -ms-overflow-style: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
