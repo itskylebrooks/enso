@@ -11,6 +11,7 @@ import { useMotionPreferences } from '../ui/motion';
 import { classNames } from '../../shared/utils/classNames';
 import { getCategoryStyle } from '../../shared/styles/glossary';
 import type { GlossaryTerm } from '../../shared/types';
+import { getInitialThemeState } from '../../shared/utils/theme';
 
 export type CollectionOption = {
   id: string;
@@ -49,7 +50,7 @@ export const TechniqueHeader = ({
   onTagClick,
 }: TechniqueHeaderProps): ReactElement => {
   const { toggleTransition, prefersReducedMotion } = useMotionPreferences();
-  const [isDark, setIsDark] = useState(false);
+  const [isDark, setIsDark] = useState(getInitialThemeState);
 
   useEffect(() => {
     // Check if dark mode is active

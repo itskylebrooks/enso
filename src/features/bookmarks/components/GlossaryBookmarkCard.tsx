@@ -5,6 +5,7 @@ import type { GlossaryTerm, GlossaryProgress } from '../../../shared/types';
 import type { Locale } from '../../../shared/types';
 import type { Copy } from '../../../shared/constants/i18n';
 import { getCategoryStyle, getCategoryLabel } from '../../../shared/styles/glossary';
+import { getInitialThemeState } from '../../../shared/utils/theme';
 
 type MotionProps = {
   variants: Variants;
@@ -37,7 +38,7 @@ export const GlossaryBookmarkCard = ({
   isDimmed = false,
   actionSlot,
 }: GlossaryBookmarkCardProps): ReactElement => {
-  const [isDark, setIsDark] = useState(false);
+  const [isDark, setIsDark] = useState(getInitialThemeState);
 
   useEffect(() => {
     // Check if dark mode is active

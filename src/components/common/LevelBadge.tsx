@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import type { Grade, Locale } from '../../shared/types';
 import { gradeLabel } from '../../shared/styles/belts';
 import { getGradeStyle } from '../../shared/utils/grades';
+import { getInitialThemeState } from '../../shared/utils/theme';
 
 type LevelBadgeProps = {
   level: Grade;
@@ -10,7 +11,7 @@ type LevelBadgeProps = {
 };
 
 export const LevelBadge = ({ level, locale }: LevelBadgeProps): ReactElement => {
-  const [isDark, setIsDark] = useState(false);
+  const [isDark, setIsDark] = useState(getInitialThemeState);
 
   useEffect(() => {
     // Check if dark mode is active

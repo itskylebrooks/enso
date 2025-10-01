@@ -10,6 +10,7 @@ import { AddToCollectionMenu } from '../../../features/bookmarks/components/AddT
 import { BookmarkIcon, BookmarkCheckIcon } from '../../../shared/components/ui/icons';
 import { classNames } from '../../../shared/utils/classNames';
 import { getCategoryStyle, getCategoryLabel } from '../../../shared/styles/glossary';
+import { getInitialThemeState } from '../../../shared/utils/theme';
 
 export type CollectionOption = {
   id: string;
@@ -46,7 +47,7 @@ export const GlossaryDetailPage = ({
   const [term, setTerm] = useState<GlossaryTerm | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isDark, setIsDark] = useState(false);
+  const [isDark, setIsDark] = useState(getInitialThemeState);
   const { pageMotion } = useMotionPreferences();
 
   useEffect(() => {

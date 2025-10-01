@@ -17,36 +17,34 @@ const ordinal = (value: string, locale: Locale): string => {
   return `${number}th`;
 };
 
-// Light mode palette - good contrast on light backgrounds
-const lightPalette: Record<Grade, { bg: string; fg: string }> = {
-  kyu5: { bg: '#f59e0b', fg: '#1A1A1A' },  // Darker yellow for better contrast
-  kyu4: { bg: '#f2571a', fg: '#FFFFFF' },
-  kyu3: { bg: '#0aad28', fg: '#FFFFFF' },
-  kyu2: { bg: '#2563EB', fg: '#FFFFFF' },
-  kyu1: { bg: '#8c4b0b', fg: '#FFFFFF' },
-  dan1: { bg: '#1F2937', fg: '#FFFFFF' },  // Dark gray instead of pure black
-  dan2: { bg: '#1F2937', fg: '#FFFFFF' },
-  dan3: { bg: '#1F2937', fg: '#FFFFFF' },
-  dan4: { bg: '#1F2937', fg: '#FFFFFF' },
-  dan5: { bg: '#1F2937', fg: '#FFFFFF' },
+// Base colors - consistent across light and dark modes
+const baseColors: Record<Grade, string> = {
+  kyu5: '#f7d80e',  // Yellow
+  kyu4: '#f2571a',  // Orange
+  kyu3: '#0aad28',  // Green
+  kyu2: '#2563EB',  // Blue
+  kyu1: '#8c4b0b',  // Brown
+  dan1: '#0B0B0B',  // Black
+  dan2: '#0B0B0B',  // Black
+  dan3: '#0B0B0B',  // Black
+  dan4: '#0B0B0B',  // Black
+  dan5: '#0B0B0B',  // Black
 };
 
-// Dark mode palette - good contrast on dark backgrounds  
-const darkPalette: Record<Grade, { bg: string; fg: string }> = {
-  kyu5: { bg: '#fbbf24', fg: '#1A1A1A' },  // Brighter yellow for dark backgrounds
-  kyu4: { bg: '#f97316', fg: '#FFFFFF' },
-  kyu3: { bg: '#22c55e', fg: '#000000' },  // Brighter green with dark text
-  kyu2: { bg: '#3b82f6', fg: '#FFFFFF' },
-  kyu1: { bg: '#a16207', fg: '#FFFFFF' },
-  dan1: { bg: '#374151', fg: '#FFFFFF' },  // Gray that's visible on dark backgrounds
-  dan2: { bg: '#374151', fg: '#FFFFFF' },
-  dan3: { bg: '#374151', fg: '#FFFFFF' },
-  dan4: { bg: '#374151', fg: '#FFFFFF' },
-  dan5: { bg: '#374151', fg: '#FFFFFF' },
+// Text color mapping based on theme mode
+const getTextColor = (isDark: boolean): string => {
+  // Light mode: white text on all belt backgrounds
+  // Dark mode: black text on all belt backgrounds
+  return isDark ? '#000000' : '#FFFFFF';
 };
 
-// Legacy palette for compatibility
-const palette: Record<Grade, { bg: string; fg: string }> = lightPalette;
+// Legacy palette for compatibility (defaults to light mode)
+const palette: Record<Grade, { bg: string; fg: string }> = Object.fromEntries(
+  Object.entries(baseColors).map(([grade, bg]) => [
+    grade,
+    { bg, fg: getTextColor(false) } // false = light mode = white text
+  ])
+) as Record<Grade, { bg: string; fg: string }>;
 
 export const gradePalette = palette;
 
@@ -70,7 +68,7 @@ export const gradeLabel = (grade: Grade, locale: Locale): string => {
 };
 
 export const getGradeStyle = (grade: Grade, isDark?: boolean): { backgroundColor: string; color: string } => {
-  const selectedPalette = isDark ? darkPalette : lightPalette;
-  const entry = selectedPalette[grade];
-  return { backgroundColor: entry.bg, color: entry.fg };
+  const backgroundColor = baseColors[grade];
+  const color = getTextColor(isDark || false);
+  return { backgroundColor, color };
 };

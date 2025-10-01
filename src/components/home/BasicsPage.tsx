@@ -5,6 +5,7 @@ import type { Grade, Locale } from '../../shared/types';
 import { gradeOrder } from '../../shared/utils/grades';
 import { gradeLabel, getGradeStyle } from '../../shared/styles/belts';
 import { useMotionPreferences, defaultEase } from '../ui/motion';
+import { getInitialThemeState } from '../../shared/utils/theme';
 
 type BasicsPageProps = {
   locale: Locale;
@@ -191,7 +192,7 @@ const sectionVariants = {
 export const BasicsPage = ({ locale, onNavigateToGlossaryWithMovementFilter }: BasicsPageProps): ReactElement => {
   const copy = content[locale];
   const { prefersReducedMotion } = useMotionPreferences();
-  const [isDark, setIsDark] = useState(false);
+  const [isDark, setIsDark] = useState(getInitialThemeState);
 
   useEffect(() => {
     // Check if dark mode is active
