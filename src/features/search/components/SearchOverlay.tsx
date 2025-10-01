@@ -27,6 +27,7 @@ export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen, onOpe
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [glossaryTerms, setGlossaryTerms] = useState<GlossaryTerm[]>([]);
   const [highlightPosition, setHighlightPosition] = useState({ y: 0, height: 0 });
+  const [hasMoreContent, setHasMoreContent] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
   const resultsContainerRef = useRef<HTMLDivElement>(null);
@@ -205,6 +206,29 @@ export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen, onOpe
     }
   }, [selectedIndex, results]);
 
+  // Check if there's scrollable content and update on scroll
+  useLayoutEffect(() => {
+    const container = resultsContainerRef.current;
+    if (!container) return;
+
+    const updateScrollState = () => {
+      const { scrollTop, scrollHeight, clientHeight } = container;
+      const isScrollable = scrollHeight > clientHeight;
+      const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1; // 1px tolerance
+      
+      // Show fade only if scrollable AND not at bottom
+      setHasMoreContent(isScrollable && !isAtBottom);
+    };
+
+    // Initial check
+    updateScrollState();
+    
+    // Update on scroll
+    container.addEventListener('scroll', updateScrollState, { passive: true });
+    
+    return () => container.removeEventListener('scroll', updateScrollState);
+  }, [results]);
+
   // Keyboard navigation handlers
   const handleInputKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'ArrowDown') {
@@ -288,12 +312,12 @@ export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen, onOpe
               <span className="sr-only">Close</span>
             </motion.button>
           </div>
-          <div className="border-t surface-border mt-2 pt-3">
+          <div className="border-t surface-border mt-2 pt-3 relative">
           <div ref={resultsContainerRef} className="max-h-[60vh] overflow-y-auto relative scrollbar-hide">
             {/* Animated background highlight */}
             {results.length > 0 && selectedIndex >= 0 && (
               <motion.div
-                className="absolute bg-black/5 dark:bg-white/5 rounded-xl pointer-events-none z-0"
+                className="absolute rounded-xl pointer-events-none z-0"
                 animate={{
                   y: highlightPosition.y,
                   opacity: 1,
@@ -309,6 +333,7 @@ export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen, onOpe
                   mass: 0.8,
                 }}
                 style={{
+                  backgroundColor: 'var(--color-surface-hover)',
                   width: 'calc(100% - 0px)',
                   height: highlightPosition.height || 64,
                   left: 0,
@@ -383,6 +408,12 @@ export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen, onOpe
               </div>
             )}
           </div>
+          
+          {/* Fade gradient to indicate scrollable content */}
+          {hasMoreContent && (
+            <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-[var(--color-surface)] from-0% via-[var(--color-surface)]/80 via-40% to-transparent pointer-events-none z-10" />
+          )}
+          
           </div>
           <div className="mt-2 px-3 pb-1 pt-2 text-xs text-subtle text-center">
             Use ↑↓ to navigate • Enter to select • Esc to close
