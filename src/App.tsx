@@ -10,7 +10,7 @@ import { TechniquePage } from './components/technique/TechniquePage';
 import { type CollectionOption } from './components/technique/TechniqueHeader';
 import { Toast } from './components/ui/Toast';
 import { MobileFilters } from './components/ui/MobileFilters';
-import { HomePage } from './components/home/HomePage';
+import { HomePage } from './features/home';
 import { AboutPage } from './components/home/AboutPage';
 import { BasicsPage } from './components/home/BasicsPage';
 import { GlossaryPage, GlossaryDetailPage, GlossaryFilterPanel, MobileGlossaryFilters, loadAllTerms } from './features/glossary';
