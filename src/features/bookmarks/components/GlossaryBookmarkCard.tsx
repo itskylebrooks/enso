@@ -55,7 +55,6 @@ const truncateDefinition = (text: string, maxLength: number = 120): string => {
 export const GlossaryBookmarkCard = ({
   term,
   locale,
-  progress,
   copy,
   onSelect,
   motionIndex,
