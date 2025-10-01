@@ -32,6 +32,7 @@ import {
 import type { AppRoute, Collection, DB, Filters, GlossaryBookmarkCollection, GlossaryProgress, GlossaryTerm, Locale, Progress, Technique, Theme } from './shared/types';
 import { gradeOrder } from './shared/utils/grades';
 import { unique, upsert } from './shared/utils/array';
+import { buildTechniqueUrl as buildUrl, parseTechniquePath } from './utils/urls';
 
 const defaultFilters: Filters = {};
 
@@ -47,6 +48,8 @@ const generateId = (): string => {
 type HistoryState = {
   route?: AppRoute;
   slug?: string;
+  trainerId?: string;
+  entry?: 'irimi' | 'tenkan';
 };
 
 const routeToPath = (route: AppRoute): string => {
@@ -66,10 +69,15 @@ const routeToPath = (route: AppRoute): string => {
   }
 };
 
-const getSlugFromPath = (pathname: string): string | null => {
-  const match = /^\/technique\/([^/?#]+)/.exec(pathname);
-  return match ? decodeURIComponent(match[1]) : null;
+export const buildTechniqueUrl = buildUrl;
+
+type TechniqueParams = {
+  slug: string;
+  trainerId?: string;
+  entry?: 'irimi' | 'tenkan';
 };
+
+
 
 const getGlossarySlugFromPath = (pathname: string): string | null => {
   const match = /^\/glossary\/([^/?#]+)/.exec(pathname);
@@ -79,11 +87,13 @@ const getGlossarySlugFromPath = (pathname: string): string | null => {
 const parseLocation = (
   pathname: string,
   state?: HistoryState,
-): { route: AppRoute; slug: string | null } => {
+): { route: AppRoute; slug: string | null; techniqueParams?: TechniqueParams } => {
   if (pathname.startsWith('/technique/')) {
-    const slug = getSlugFromPath(pathname);
-    const fallbackRoute = state?.route ?? 'library';
-    return { route: fallbackRoute, slug };
+    const techniqueParams = parseTechniquePath(pathname);
+    if (techniqueParams) {
+      const fallbackRoute = state?.route ?? 'library';
+      return { route: fallbackRoute, slug: techniqueParams.slug, techniqueParams };
+    }
   }
 
   if (pathname.startsWith('/glossary/')) {
@@ -114,7 +124,7 @@ const parseLocation = (
   return { route: 'home', slug: null };
 };
 
-const getInitialLocation = (): { route: AppRoute; slug: string | null } => {
+const getInitialLocation = (): { route: AppRoute; slug: string | null; techniqueParams?: TechniqueParams } => {
   if (typeof window === 'undefined') {
     return { route: 'home', slug: null };
   }
@@ -208,7 +218,6 @@ function applyFilters(techniques: Technique[], filters: Filters): Technique[] {
   return techniques.filter((technique) => {
     if (filters.category && technique.category !== filters.category) return false;
     if (filters.attack && technique.attack !== filters.attack) return false;
-    if (filters.stance && technique.stance !== filters.stance) return false;
     if (filters.weapon && technique.weapon !== filters.weapon) return false;
     if (filters.level && technique.level !== filters.level) return false;
     return true;
@@ -256,6 +265,8 @@ export default function App(): ReactElement {
   const [selectedCollectionId, setSelectedCollectionId] = useState<SelectedCollectionId>('all');
   const [route, setRoute] = useState<AppRoute>(() => getInitialLocation().route);
   const [activeSlug, setActiveSlug] = useState<string | null>(() => getInitialLocation().slug);
+  const [activeTrainerId, setActiveTrainerId] = useState<string | null>(() => getInitialLocation().techniqueParams?.trainerId ?? null);
+  const [activeEntry, setActiveEntry] = useState<'irimi' | 'tenkan' | null>(() => getInitialLocation().techniqueParams?.entry ?? null);
   const [searchOpen, setSearchOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [confirmClearOpen, setConfirmClearOpen] = useState(false);
@@ -427,9 +438,11 @@ export default function App(): ReactElement {
 
     const syncFromLocation = (event?: PopStateEvent) => {
       const state = (event?.state as HistoryState | undefined) ?? (window.history.state as HistoryState | undefined);
-      const { route: nextRoute, slug } = parseLocation(window.location.pathname, state);
+      const { route: nextRoute, slug, techniqueParams } = parseLocation(window.location.pathname, state);
       setRoute(nextRoute);
       setActiveSlug(slug);
+      setActiveTrainerId(techniqueParams?.trainerId ?? null);
+      setActiveEntry(techniqueParams?.entry ?? null);
     };
 
     window.addEventListener('popstate', syncFromLocation);
@@ -462,8 +475,8 @@ export default function App(): ReactElement {
     [db.techniques],
   );
   const stances = useMemo(
-    () => getSelectableValues(db.techniques, (technique) => technique.stance),
-    [db.techniques],
+    () => ['irimi', 'tenkan'], // Fixed list for entry modes
+    [],
   );
   const weapons = useMemo(
     () => getSelectableValues(db.techniques, (technique) => technique.weapon),
@@ -744,15 +757,14 @@ export default function App(): ReactElement {
     setDB(next);
   };
 
-  const openTechnique = (slug: string): void => {
+  const openTechnique = (slug: string, trainerId?: string, entry?: 'irimi' | 'tenkan'): void => {
     if (!db.techniques.some((technique) => technique.slug === slug)) {
       return;
     }
 
     if (typeof window !== 'undefined') {
-      const encodedSlug = encodeURIComponent(slug);
-      const techniquePath = `/technique/${encodedSlug}`;
-      const state: HistoryState = { route, slug };
+      const techniquePath = buildTechniqueUrl(slug, trainerId, entry);
+      const state: HistoryState = { route, slug, trainerId, entry };
 
       if (window.location.pathname !== techniquePath) {
         window.history.pushState(state, '', techniquePath);
@@ -762,6 +774,8 @@ export default function App(): ReactElement {
     }
 
     setActiveSlug(slug);
+    setActiveTrainerId(trainerId ?? null);
+    setActiveEntry(entry ?? null);
   };
 
   const openGlossaryTerm = (slug: string): void => {
@@ -826,6 +840,17 @@ export default function App(): ReactElement {
         onAssignToCollection={(collectionId) => assignToCollection(currentTechnique.id, collectionId)}
         onRemoveFromCollection={(collectionId) => removeFromCollection(currentTechnique.id, collectionId)}
         onOpenGlossary={openGlossaryTerm}
+        urlTrainerId={activeTrainerId}
+        urlEntry={activeEntry}
+        onUrlChange={(trainerId, entry) => {
+          const newUrl = buildTechniqueUrl(currentTechnique.slug, trainerId, entry);
+          const state: HistoryState = { route, slug: currentTechnique.slug, trainerId, entry };
+          if (typeof window !== 'undefined') {
+            window.history.replaceState(state, '', newUrl);
+          }
+          setActiveTrainerId(trainerId ?? null);
+          setActiveEntry(entry ?? null);
+        }}
       />
     );
   } else if (techniqueNotFound) {

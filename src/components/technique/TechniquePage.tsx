@@ -25,7 +25,6 @@ import {
   deriveEntryMode,
   setGlobalEntryPref,
   setTechniqueEntryPref,
-  updateURLEntry,
 } from '../../features/technique/entryPref';
 import { migrateTechniqueToStepsByEntry } from '../../utils/migrations/to-stepsByEntry';
 
@@ -89,6 +88,10 @@ type TechniquePageProps = {
   onAssignToCollection: (collectionId: string) => void;
   onRemoveFromCollection: (collectionId: string) => void;
   onOpenGlossary?: (slug: string) => void;
+  // URL parameters for hierarchical navigation
+  urlTrainerId?: string | null;
+  urlEntry?: 'irimi' | 'tenkan' | null;
+  onUrlChange?: (trainerId?: string, entry?: 'irimi' | 'tenkan') => void;
 };
 
 const getCollectionOptions = (
@@ -116,6 +119,11 @@ const ensureVersion = (versions: TechniqueVersion[], versionId: string | null | 
     if (match) return match;
   }
   return versions[0];
+};
+
+const findVersionByTrainerId = (versions: TechniqueVersion[], trainerId: string | null | undefined): TechniqueVersion | null => {
+  if (!trainerId) return null;
+  return versions.find((version) => version.trainerId === trainerId) ?? null;
 };
 
 // Map tag labels to glossary slugs
@@ -272,6 +280,9 @@ export const TechniquePage = ({
   onAssignToCollection,
   onRemoveFromCollection,
   onOpenGlossary,
+  urlTrainerId,
+  urlEntry,
+  onUrlChange,
 }: TechniquePageProps): ReactElement => {
   const tags = useMemo(() => buildTags(technique, locale), [technique, locale]);
   const summary = technique.summary[locale] || technique.summary.en;
@@ -298,7 +309,13 @@ export const TechniquePage = ({
 
   // Entry mode state management
   const [entryMode, setEntryMode] = useState<EntryMode>(() => {
-    const derivedMode = deriveEntryMode(window.location.search, technique.id);
+    // If URL specifies an entry mode, use it
+    if (urlEntry) {
+      return urlEntry;
+    }
+    
+    // For non-URL specified cases, try to get from preferences
+    const derivedMode = deriveEntryMode('', technique.id); // Pass empty search to avoid URL query conflicts
     const firstVersion = migratedTechnique.versions[0];
     
     // Check if the derived mode is available in the first version
@@ -310,18 +327,38 @@ export const TechniquePage = ({
     return getFirstAvailableEntryMode(firstVersion);
   });
 
-  const [activeVersionId, setActiveVersionId] = useState(() =>
-    ensureVersion(migratedTechnique.versions, storedLastViewed ?? migratedTechnique.versions[0].id).id,
-  );
+  const [activeVersionId, setActiveVersionId] = useState(() => {
+    // If URL specifies a trainer, try to find that version
+    if (urlTrainerId) {
+      const trainerVersion = findVersionByTrainerId(migratedTechnique.versions, urlTrainerId);
+      if (trainerVersion) {
+        return trainerVersion.id;
+      }
+    }
+    // Fallback to stored preference or default
+    return ensureVersion(migratedTechnique.versions, storedLastViewed ?? migratedTechnique.versions[0].id).id;
+  });
 
+  // Update active version when URL trainer changes (but avoid circular updates)
   useEffect(() => {
-    const nextActive = ensureVersion(migratedTechnique.versions, storedLastViewed ?? migratedTechnique.versions[0].id).id;
-    setActiveVersionId(nextActive);
-  }, [technique.id, migratedTechnique.versions, storedLastViewed]);
+    if (urlTrainerId) {
+      const trainerVersion = findVersionByTrainerId(migratedTechnique.versions, urlTrainerId);
+      if (trainerVersion && trainerVersion.id !== activeVersionId) {
+        setActiveVersionId(trainerVersion.id);
+      }
+    }
+  }, [urlTrainerId, migratedTechnique.versions, activeVersionId]);
 
   useEffect(() => {
     setLastViewedVersion(technique.id, activeVersionId);
   }, [technique.id, activeVersionId, setLastViewedVersion]);
+
+  // Sync entry mode when URL changes (only when urlEntry changes, not when entryMode changes)
+  useEffect(() => {
+    if (urlEntry) {
+      setEntryMode(urlEntry);
+    }
+  }, [urlEntry]);
 
   // Auto-switch entry mode when version changes and current mode is not available
   useEffect(() => {
@@ -335,16 +372,41 @@ export const TechniquePage = ({
       setEntryMode(newEntryMode);
       setTechniqueEntryPref(technique.id, newEntryMode);
       setGlobalEntryPref(newEntryMode);
-      updateURLEntry(newEntryMode);
+      
+      // Update URL with current trainer and new entry mode
+      const currentTrainerId = activeVersion?.trainerId;
+      onUrlChange?.(currentTrainerId, newEntryMode);
     }
-  }, [activeVersionId, migratedTechnique.versions, entryMode, technique.id]);
+  }, [activeVersionId, migratedTechnique.versions, technique.id, getFirstAvailableEntryMode, setTechniqueEntryPref, setGlobalEntryPref, onUrlChange]);
 
   // Entry mode change handler
   const handleEntryModeChange = (newMode: EntryMode) => {
     setEntryMode(newMode);
     setTechniqueEntryPref(technique.id, newMode);
     setGlobalEntryPref(newMode);
-    updateURLEntry(newMode);
+    
+    // Update URL with current trainer and new entry mode
+    const activeVersion = migratedTechnique.versions.find((v) => v.id === activeVersionId);
+    const currentTrainerId = activeVersion?.trainerId;
+    onUrlChange?.(currentTrainerId, newMode);
+  };
+
+  // Version change handler
+  const handleVersionChange = (versionId: string) => {
+    setActiveVersionId(versionId);
+    
+    // Find the new version and update URL
+    const newVersion = migratedTechnique.versions.find((v) => v.id === versionId);
+    const newTrainerId = newVersion?.trainerId;
+    
+    // Keep current entry mode if available in new version, otherwise reset
+    let newEntry = entryMode;
+    if (newVersion && !newVersion.stepsByEntry?.[entryMode]) {
+      newEntry = getFirstAvailableEntryMode(newVersion);
+      setEntryMode(newEntry);
+    }
+    
+    onUrlChange?.(newTrainerId, newEntry);
   };
 
   // Keyboard shortcuts for entry mode
@@ -486,7 +548,7 @@ export const TechniquePage = ({
           <VersionTabs
             versions={migratedTechnique.versions}
             activeVersionId={activeVersionId}
-            onChange={setActiveVersionId}
+            onChange={handleVersionChange}
             label={copy.version}
           />
         </div>
