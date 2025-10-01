@@ -43,27 +43,15 @@ export const GlossaryPage = ({ locale, copy, filters = {}, onOpenTerm }: Glossar
     loadTerms();
   }, [terms.length, setTerms, setLoading, setError]);
 
-  // Apply filters
+  // Apply filters and sort alphabetically
   const filteredTerms = terms.filter(term => {
     if (filters.category && term.category !== filters.category) {
       return false;
     }
     return true;
-  });
-
-  const termsByCategory = filteredTerms.reduce((acc, term) => {
-    const category = term.category || 'other';
-    if (!acc[category]) {
-      acc[category] = [];
-    }
-    acc[category].push(term);
-    return acc;
-  }, {} as Record<string, typeof filteredTerms>);
-
-  const sortedCategories = Object.keys(termsByCategory).sort((a, b) => {
-    // Order categories logically
-    const order = ['movement', 'stance', 'attack', 'etiquette', 'philosophy', 'other'];
-    return order.indexOf(a) - order.indexOf(b);
+  }).sort((a, b) => {
+    // Sort all terms alphabetically by romaji, regardless of category
+    return a.romaji.localeCompare(b.romaji, 'en', { sensitivity: 'base' });
   });
 
   if (!mounted) {
@@ -110,28 +98,19 @@ export const GlossaryPage = ({ locale, copy, filters = {}, onOpenTerm }: Glossar
           animate="show"
           layout
         >
-          {sortedCategories.map((category) =>
-            termsByCategory[category].map((term, termIndex) => {
-              // Calculate global index for animation delay
-              const globalIndex = sortedCategories
-                .slice(0, sortedCategories.indexOf(category))
-                .reduce((count, cat) => count + termsByCategory[cat].length, 0) + termIndex;
-
-              return (
-                <GlossaryCard
-                  key={term.id}
-                  term={term}
-                  locale={locale}
-                  copy={copy}
-                  onSelect={onOpenTerm}
-                  motionIndex={globalIndex}
-                  variants={listMotion.item}
-                  getTransition={getItemTransition}
-                  prefersReducedMotion={prefersReducedMotion}
-                />
-              );
-            })
-          )}
+          {filteredTerms.map((term, index) => (
+            <GlossaryCard
+              key={term.id}
+              term={term}
+              locale={locale}
+              copy={copy}
+              onSelect={onOpenTerm}
+              motionIndex={index}
+              variants={listMotion.item}
+              getTransition={getItemTransition}
+              prefersReducedMotion={prefersReducedMotion}
+            />
+          ))}
         </motion.div>
       )}
     </>

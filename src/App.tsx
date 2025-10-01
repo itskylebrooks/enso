@@ -212,6 +212,11 @@ function applyFilters(techniques: Technique[], filters: Filters): Technique[] {
     if (filters.weapon && technique.weapon !== filters.weapon) return false;
     if (filters.level && technique.level !== filters.level) return false;
     return true;
+  }).sort((a, b) => {
+    // Sort all techniques alphabetically by name (English), regardless of category
+    const aName = a.name.en || a.name.de || '';
+    const bName = b.name.en || b.name.de || '';
+    return aName.localeCompare(bName, 'en', { sensitivity: 'base' });
   });
 }
 
