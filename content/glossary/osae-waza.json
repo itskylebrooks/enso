@@ -1,0 +1,16 @@
+{
+  "id": "osae-waza",
+  "slug": "osae-waza",
+  "romaji": "Osae-waza",
+  "jp": "抑え技",
+  "category": "other",
+  "def": {
+    "en": "Pinning/immobilization techniques.",
+    "de": "Halte-/Fixiertechniken."
+  },
+  "literal": { "en": "to press/suppress + technique", "de": "drücken/unterdrücken + Technik" },
+  "notes": {
+    "en": "Finish with posture, breath, and safe spacing—no grinding force.",
+    "de": "Mit Haltung, Atem und sicherem Abstand abschließen – ohne \"Mahlen\"."
+  }
+}

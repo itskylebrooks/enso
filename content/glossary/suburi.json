@@ -1,0 +1,16 @@
+{
+  "id": "suburi",
+  "slug": "suburi",
+  "romaji": "Suburi",
+  "jp": "素振り",
+  "category": "other",
+  "def": {
+    "en": "Solo weapon swings/drills for form and conditioning.",
+    "de": "Solo-Waffenschwünge/Drills für Form und Kondition."
+  },
+  "literal": { "en": "plain/simple + swing", "de": "einfach + Schwung" },
+  "notes": {
+    "en": "Builds clean lines and endurance without a partner.",
+    "de": "Schult saubere Linien und Ausdauer ohne Partner."
+  }
+}

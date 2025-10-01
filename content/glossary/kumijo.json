@@ -1,0 +1,16 @@
+{
+  "id": "kumijo",
+  "slug": "kumijo",
+  "romaji": "Kumijō",
+  "jp": "組杖",
+  "category": "other",
+  "def": {
+    "en": "Paired staff (jō) forms with a partner.",
+    "de": "Paarübungen mit dem Stab (Jō)."
+  },
+  "literal": { "en": "paired + staff", "de": "paarweise + Stab" },
+  "notes": {
+    "en": "Emphasizes circular lines and blended entries.",
+    "de": "Betont kreisförmige Linien und fließende Einstiege."
+  }
+}

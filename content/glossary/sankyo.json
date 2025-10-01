@@ -1,0 +1,16 @@
+{
+  "id": "sankyo",
+  "slug": "sankyo",
+  "romaji": "Sankyō",
+  "jp": "三教",
+  "category": "other",
+  "def": {
+    "en": "Third control: spiral up the arm to the shoulder, leading posture.",
+    "de": "Dritte Kontrolle: Spiralhebel über den Arm bis zur Schulter, führt die Haltung."
+  },
+  "literal": { "en": "third + teaching", "de": "drittes + Lehren" },
+  "notes": {
+    "en": "Keep spiral continuous; small circles from the center, not the hands.",
+    "de": "Spirale kontinuierlich halten; kleine Kreise aus dem Zentrum, nicht aus den Händen."
+  }
+}

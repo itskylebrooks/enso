@@ -1,0 +1,16 @@
+{
+  "id": "gokyo",
+  "slug": "gokyo",
+  "romaji": "Gokyō",
+  "jp": "五教",
+  "category": "other",
+  "def": {
+    "en": "Fifth control: Ikkyo variation with reversed grip, often for knife defenses.",
+    "de": "Fünfte Kontrolle: Ikkyo-Variante mit umgekehrtem Griff, häufig für Messer-Abwehr."
+  },
+  "literal": { "en": "fifth + teaching", "de": "fünftes + Lehren" },
+  "notes": {
+    "en": "Control the blade side; hand change keeps edge away from your body.",
+    "de": "Klingenseite kontrollieren; Handwechsel hält die Schneide vom Körper fern."
+  }
+}

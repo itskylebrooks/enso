@@ -1,0 +1,16 @@
+{
+  "id": "ikkyo",
+  "slug": "ikkyo",
+  "romaji": "Ikkyō",
+  "jp": "一教",
+  "category": "other",
+  "def": {
+    "en": "First control: elbow/arm control across the center leading to a basic pin.",
+    "de": "Erste Kontrolle: Ellbogen-/Armkontrolle über die Mittellinie mit einfachem Haltegriff."
+  },
+  "literal": { "en": "first + teaching", "de": "erstes + Lehren" },
+  "notes": {
+    "en": "Keep uke's elbow close and shoulder aligned; finish with a stable osae.",
+    "de": "Ukes Ellbogen körpernah, Schulter ausgerichtet; Abschluss mit stabilem Osae."
+  }
+}

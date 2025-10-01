@@ -1,0 +1,16 @@
+{
+  "id": "katame-waza",
+  "slug": "katame-waza",
+  "romaji": "Katame-waza",
+  "jp": "固め技",
+  "category": "other",
+  "def": {
+    "en": "Fixation/holding techniques (controls).",
+    "de": "Fixier-/Haltetechniken (Kontrollen)."
+  },
+  "literal": { "en": "to make firm + technique", "de": "fest machen + Technik" },
+  "notes": {
+    "en": "Structure creates control; keep joints within safe range.",
+    "de": "Struktur erzeugt Kontrolle; Gelenke im sicheren Bereich halten."
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "id": "nikyo",
+  "slug": "nikyo",
+  "romaji": "Nikyō",
+  "jp": "二教",
+  "category": "other",
+  "def": {
+    "en": "Second control: rotational wrist lock creating a strong downward spiral.",
+    "de": "Zweite Kontrolle: Rotationshebel am Handgelenk mit starker Abwärtsspirale."
+  },
+  "literal": { "en": "second + teaching", "de": "zweites + Lehren" },
+  "notes": {
+    "en": "Turn from the hips; manage uke's elbow line to protect the joint.",
+    "de": "Aus der Hüfte drehen; Ukes Ellbogenlinie führen, um das Gelenk zu schützen."
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "id": "uke",
+  "slug": "uke",
+  "romaji": "Uke",
+  "jp": "受け",
+  "category": "other",
+  "def": {
+    "en": "Receiver/attacker; person who initiates attack and takes ukemi.",
+    "de": "Empfänger/Angreifer; Person, die angreift und Ukemi nimmt."
+  },
+  "literal": { "en": "to receive", "de": "empfangen/aufnehmen" },
+  "notes": {
+    "en": "Maintain intent and safety; offer honest lines and take clean falls.",
+    "de": "Intention und Sicherheit wahren; ehrliche Linien geben und sauber fallen."
+  }
+}

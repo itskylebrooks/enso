@@ -1,0 +1,16 @@
+{
+  "id": "nage-tori",
+  "slug": "nage-tori",
+  "romaji": "Nage / Tori",
+  "jp": "投げ／取り",
+  "category": "other",
+  "def": {
+    "en": "Executor of the technique (nage); also called tori in some schools.",
+    "de": "Ausführender der Technik (Nage); in manchen Schulen \"Tori\"."
+  },
+  "literal": { "en": "to throw / to take", "de": "werfen / nehmen/greifen" },
+  "notes": {
+    "en": "Lead with center and timing; protect uke throughout.",
+    "de": "Mit Zentrum und Timing führen; Uke durchgehend schützen."
+  }
+}

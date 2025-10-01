@@ -1,0 +1,16 @@
+{
+  "id": "kumitachi",
+  "slug": "kumitachi",
+  "romaji": "Kumitachi",
+  "jp": "組太刀",
+  "category": "other",
+  "def": {
+    "en": "Paired sword forms practiced with a partner.",
+    "de": "Paarübungen mit dem Schwert (Bokken)."
+  },
+  "literal": { "en": "paired + sword", "de": "paarweise + Schwert" },
+  "notes": {
+    "en": "Train distance, timing, and line—then translate to empty hand.",
+    "de": "Distanz, Timing und Linie trainieren – dann auf waffenlos übertragen."
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "id": "yonkyo",
+  "slug": "yonkyo",
+  "romaji": "Yonkyō",
+  "jp": "四教",
+  "category": "other",
+  "def": {
+    "en": "Fourth control: forearm compression along the bone/nerve for immobilization.",
+    "de": "Vierte Kontrolle: Unterarm-Kompression entlang Knochen/Nerv zur Immobilisierung."
+  },
+  "literal": { "en": "fourth + teaching", "de": "viertes + Lehren" },
+  "notes": {
+    "en": "Apply pressure with aligned structure; avoid jabbing with fingers.",
+    "de": "Druck mit ausgerichteter Struktur, nicht mit Fingern \"stechen\"."
+  }
+}

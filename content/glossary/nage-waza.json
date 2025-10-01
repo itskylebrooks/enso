@@ -1,0 +1,16 @@
+{
+  "id": "nage-waza",
+  "slug": "nage-waza",
+  "romaji": "Nage-waza",
+  "jp": "投げ技",
+  "category": "other",
+  "def": {
+    "en": "Throwing techniques.",
+    "de": "Wurftechniken."
+  },
+  "literal": { "en": "throw + technique", "de": "werfen + Technik" },
+  "notes": {
+    "en": "Unbalance first (kuzushi), then project along an open line.",
+    "de": "Zuerst Gleichgewicht brechen (Kuzushi), dann entlang freier Linie projizieren."
+  }
+}
