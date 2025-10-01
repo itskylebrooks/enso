@@ -31,10 +31,16 @@ const baseColors: Record<Grade, string> = {
   dan5: '#0B0B0B',  // Black
 };
 
-// Text color mapping based on theme mode
-const getTextColor = (isDark: boolean): string => {
-  // Light mode: white text on all belt backgrounds
-  // Dark mode: black text on all belt backgrounds
+// Text color mapping based on theme mode and belt type
+const getTextColor = (grade: Grade, isDark: boolean): string => {
+  // Dan belts (black belts) always use white text for readability
+  if (grade.startsWith('dan')) {
+    return '#FFFFFF';
+  }
+  
+  // For colored belts (kyu grades):
+  // Light mode: white text on colored backgrounds
+  // Dark mode: black text on colored backgrounds
   return isDark ? '#000000' : '#FFFFFF';
 };
 
@@ -42,7 +48,7 @@ const getTextColor = (isDark: boolean): string => {
 const palette: Record<Grade, { bg: string; fg: string }> = Object.fromEntries(
   Object.entries(baseColors).map(([grade, bg]) => [
     grade,
-    { bg, fg: getTextColor(false) } // false = light mode = white text
+    { bg, fg: getTextColor(grade as Grade, false) } // false = light mode
   ])
 ) as Record<Grade, { bg: string; fg: string }>;
 
@@ -69,6 +75,6 @@ export const gradeLabel = (grade: Grade, locale: Locale): string => {
 
 export const getGradeStyle = (grade: Grade, isDark?: boolean): { backgroundColor: string; color: string } => {
   const backgroundColor = baseColors[grade];
-  const color = getTextColor(isDark || false);
+  const color = getTextColor(grade, isDark || false);
   return { backgroundColor, color };
 };
