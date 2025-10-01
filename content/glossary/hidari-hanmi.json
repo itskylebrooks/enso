@@ -1,0 +1,19 @@
+{
+  "id": "hidari-hanmi",
+  "slug": "hidari-hanmi",
+  "romaji": "Hidari Hanmi",
+  "jp": "左半身",
+  "category": "stance",
+  "def": {
+    "en": "Left-lead hanmi: left foot forward, right foot back.",
+    "de": "Hanmi mit linker Führung: linker Fuß vorn, rechter zurück."
+  },
+  "literal": {
+    "en": "left + half-body",
+    "de": "links + Halbkörper"
+  },
+  "notes": {
+    "en": "Mirror of migi-hanmi. Hips light, front knee soft, spine tall.",
+    "de": "Spiegelbild von Migi-hanmi. Hüfte leicht, vorderes Knie locker, Wirbelsäule lang."
+  }
+}

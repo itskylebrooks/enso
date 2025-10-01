@@ -1,0 +1,19 @@
+{
+  "id": "seiza",
+  "slug": "seiza",
+  "romaji": "Seiza",
+  "jp": "正座",
+  "category": "stance",
+  "def": {
+    "en": "Formal kneeling posture used for etiquette and seated practice.",
+    "de": "Formales Kniesitzen für Etikette und Sitzübungen."
+  },
+  "literal": {
+    "en": "correct/proper + sit",
+    "de": "richtig + sitzen"
+  },
+  "notes": {
+    "en": "Hips heavy, spine tall; from seiza you transition to suwari-waza or shikkō.",
+    "de": "Hüfte schwer, Wirbelsäule lang; aus Seiza in Suwari-waza oder Shikkō wechseln."
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "id": "gyaku-hanmi",
+  "slug": "gyaku-hanmi",
+  "romaji": "Gyaku-hanmi",
+  "jp": "逆半身",
+  "category": "stance",
+  "def": {
+    "en": "Opposite-lead facing: partners have different feet forward.",
+    "de": "Gegenläufige Stellung: Partner mit unterschiedlichem vorderen Bein."
+  },
+  "literal": {
+    "en": "reverse/opposite + half-body",
+    "de": "umgekehrt/gegen + Halbkörper"
+  },
+  "notes": {
+    "en": "Crossed lines; many entries travel inside (uchi) toward center.",
+    "de": "Gekreuzte Linien; viele Einstiege verlaufen innen (uchi) zum Zentrum."
+  }
+}

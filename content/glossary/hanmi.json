@@ -1,0 +1,19 @@
+{
+  "id": "hanmi",
+  "slug": "hanmi",
+  "romaji": "Hanmi",
+  "jp": "半身",
+  "category": "stance",
+  "def": {
+    "en": "Angled 'half-body' stance: one foot forward, hips and shoulders turned.",
+    "de": "Abgewinkelte \"Halbkörper\"-Stellung: ein Fuß vorn, Hüfte und Schultern gedreht."
+  },
+  "literal": {
+    "en": "half + body",
+    "de": "halb + Körper"
+  },
+  "notes": {
+    "en": "Weight balanced, front hip open, hands in front line—not wide, not crossed.",
+    "de": "Gewicht ausgeglichen, vordere Hüfte offen, Hände auf der Linie – weder breit noch gekreuzt."
+  }
+}

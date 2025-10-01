@@ -1,0 +1,19 @@
+{
+  "id": "migi-hanmi",
+  "slug": "migi-hanmi",
+  "romaji": "Migi Hanmi",
+  "jp": "右半身",
+  "category": "stance",
+  "def": {
+    "en": "Right-lead hanmi: right foot forward, left foot back.",
+    "de": "Hanmi mit rechter Führung: rechter Fuß vorn, linker zurück."
+  },
+  "literal": {
+    "en": "right + half-body",
+    "de": "rechts + Halbkörper"
+  },
+  "notes": {
+    "en": "Keep the same hip/shoulder angle as hanmi; do not square the torso.",
+    "de": "Winkel wie in Hanmi beibehalten; Oberkörper nicht frontal drehen."
+  }
+}

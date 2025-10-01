@@ -1,0 +1,19 @@
+{
+  "id": "hito-emi",
+  "slug": "hito-emi",
+  "romaji": "Hito-emi",
+  "jp": "ひとえみ",
+  "category": "stance",
+  "def": {
+    "en": "Narrow body profile—turn shoulders/hips to present a thin line.",
+    "de": "Schmale Körperfläche – Schultern/Hüfte drehen, um eine \"dünne Linie\" zu zeigen."
+  },
+  "literal": {
+    "en": "single + body (profile)",
+    "de": "einfach + Körper (Profil)"
+  },
+  "notes": {
+    "en": "A principle applied inside hanmi to reduce target and slip power.",
+    "de": "Prinzip innerhalb von Hanmi, Zielfläche verkleinern und Kraft seitlich ableiten."
+  }
+}

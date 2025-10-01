@@ -1,0 +1,19 @@
+{
+  "id": "hanmi-handachi",
+  "slug": "hanmi-handachi",
+  "romaji": "Hanmi-handachi",
+  "jp": "半身半立ち",
+  "category": "stance",
+  "def": {
+    "en": "Half-standing posture: nage kneels, uke stands (training format for posture/connection).",
+    "de": "Halbstehende Form: Nage kniet, Uke steht (Übungsformat für Haltung/Verbindung)."
+  },
+  "literal": {
+    "en": "half-body + half-standing",
+    "de": "Halbkörper + halbes Stehen"
+  },
+  "notes": {
+    "en": "Keep tall spine while kneeling; move from hips, not shoulders.",
+    "de": "Wirbelsäule aufrecht im Knien; aus der Hüfte bewegen, nicht aus den Schultern."
+  }
+}

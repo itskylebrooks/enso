@@ -1,0 +1,19 @@
+{
+  "id": "agura",
+  "slug": "agura",
+  "romaji": "Agura",
+  "jp": "胡座",
+  "category": "stance",
+  "def": {
+    "en": "Comfortable cross-legged sitting; informal rest posture.",
+    "de": "Bequemes Sitzen im Schneidersitz; informelle Ruhehaltung."
+  },
+  "literal": {
+    "en": "cross-legged sitting",
+    "de": "Schneidersitz"
+  },
+  "notes": {
+    "en": "Used outside formal portions; keep spine upright and shoulders soft.",
+    "de": "Außerhalb formeller Teile; Wirbelsäule aufrecht, Schultern weich."
+  }
+}

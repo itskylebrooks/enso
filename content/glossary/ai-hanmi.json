@@ -1,0 +1,19 @@
+{
+  "id": "ai-hanmi",
+  "slug": "ai-hanmi",
+  "romaji": "Ai-hanmi",
+  "jp": "相半身",
+  "category": "stance",
+  "def": {
+    "en": "Same-lead facing: both partners with the same foot forward.",
+    "de": "Gleichführige Stellung: beide Partner mit demselben Bein vorn."
+  },
+  "literal": {
+    "en": "mutual/same + half-body",
+    "de": "gemeinsam/gleich + Halbkörper"
+  },
+  "notes": {
+    "en": "Lines are parallel; entries tend to be outside (soto) or tight inside with atemi.",
+    "de": "Linien sind parallel; Einstiege oft außen (soto) oder eng innen mit Atemi."
+  }
+}

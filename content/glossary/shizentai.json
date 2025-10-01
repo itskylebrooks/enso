@@ -1,0 +1,19 @@
+{
+  "id": "shizentai",
+  "slug": "shizentai",
+  "romaji": "Shizentai",
+  "jp": "自然体",
+  "category": "stance",
+  "def": {
+    "en": "Natural stance: feet under hips, easy posture, ready to move.",
+    "de": "Natürliche Haltung: Füße unter der Hüfte, lockere Haltung, bewegungsbereit."
+  },
+  "literal": {
+    "en": "natural + body",
+    "de": "natürlich + Körper"
+  },
+  "notes": {
+    "en": "Use between drills; from here you can form hanmi instantly.",
+    "de": "Zwischen Übungen; von hier aus sofort in Hanmi gehen."
+  }
+}
