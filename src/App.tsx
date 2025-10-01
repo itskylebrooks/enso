@@ -214,12 +214,21 @@ const getSelectableValues = (techniques: Technique[], selector: (technique: Tech
       .sort(),
   );
 
+const getTrainerValues = (techniques: Technique[]): string[] =>
+  unique(
+    techniques
+      .flatMap((technique) => technique.versions.map((version) => version.trainerId))
+      .filter((value): value is string => Boolean(value && value.trim().length > 0))
+      .sort(),
+  );
+
 function applyFilters(techniques: Technique[], filters: Filters): Technique[] {
   return techniques.filter((technique) => {
     if (filters.category && technique.category !== filters.category) return false;
     if (filters.attack && technique.attack !== filters.attack) return false;
     if (filters.weapon && technique.weapon !== filters.weapon) return false;
     if (filters.level && technique.level !== filters.level) return false;
+    if (filters.trainer && !technique.versions.some(version => version.trainerId === filters.trainer)) return false;
     return true;
   }).sort((a, b) => {
     // Sort all techniques alphabetically by name (English), regardless of category
@@ -480,6 +489,10 @@ export default function App(): ReactElement {
   );
   const weapons = useMemo(
     () => getSelectableValues(db.techniques, (technique) => technique.weapon),
+    [db.techniques],
+  );
+  const trainers = useMemo(
+    () => getTrainerValues(db.techniques),
     [db.techniques],
   );
 
@@ -902,6 +915,7 @@ export default function App(): ReactElement {
                 stances={stances}
                 weapons={weapons}
                 levels={gradeOrder}
+                trainers={trainers}
                 onChange={setFilters}
               />
             </div>
@@ -916,6 +930,7 @@ export default function App(): ReactElement {
                   stances={stances}
                   weapons={weapons}
                   levels={gradeOrder}
+                  trainers={trainers}
                   onChange={setFilters}
                 />
               </aside>

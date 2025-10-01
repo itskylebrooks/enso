@@ -104,6 +104,7 @@ export type Filters = {
   stance?: string;
   weapon?: string;
   level?: Grade;
+  trainer?: string;
 };
 
 export type GlossaryTerm = {

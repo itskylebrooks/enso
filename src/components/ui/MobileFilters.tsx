@@ -35,6 +35,20 @@ const buildEntryModeOptions = (locale: Locale, values: string[]) => {
   }));
 };
 
+const buildTrainerOptions = (values: string[]): Option[] => {
+  const formatTrainerName = (trainerId: string): string => {
+    return trainerId
+      .split('-')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  };
+  
+  return values.map((value) => ({
+    value,
+    label: formatTrainerName(value),
+  })).sort((a, b) => a.label.localeCompare(b.label));
+};
+
 type MobileFiltersProps = {
   copy: Copy;
   locale: Locale;
@@ -44,10 +58,11 @@ type MobileFiltersProps = {
   stances: string[];
   weapons: string[];
   levels: Grade[];
+  trainers: string[];
   onChange: (filters: Filters) => void;
 };
 
-type SectionKey = 'category' | 'attack' | 'stance' | 'weapon' | 'level';
+type SectionKey = 'category' | 'attack' | 'stance' | 'weapon' | 'level' | 'trainer';
 
 type Option = {
   value: string;
@@ -64,6 +79,7 @@ export const MobileFilters = ({
   stances,
   weapons,
   levels,
+  trainers,
   onChange,
 }: MobileFiltersProps): ReactElement => {
   const [openSection, setOpenSection] = useState<SectionKey | null>(null);
@@ -76,6 +92,7 @@ export const MobileFilters = ({
     [normalizedStances, locale],
   );
   const weaponOptions = useMemo(() => buildTaxonomyOptions(locale, 'weapon', weapons), [weapons, locale]);
+  const trainerOptions = useMemo(() => buildTrainerOptions(trainers), [trainers]);
   const levelOptions = useMemo<Option[]>(
     () =>
       levels.map((grade) => ({
@@ -107,6 +124,7 @@ export const MobileFilters = ({
     { key: 'attack', title: copy.attack, options: attackOptions, selected: filters.attack },
     { key: 'stance', title: copy.stance, options: stanceOptions, selected: filters.stance },
     { key: 'weapon', title: copy.weapon, options: weaponOptions, selected: filters.weapon },
+    { key: 'trainer', title: copy.trainer, options: trainerOptions, selected: filters.trainer },
     { key: 'level', title: copy.level, options: levelOptions, selected: filters.level },
   ];
 

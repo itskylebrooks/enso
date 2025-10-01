@@ -18,6 +18,7 @@ type FilterPanelProps = {
   stances: string[];
   weapons: string[];
   levels: Grade[];
+  trainers: string[];
   onChange: (filters: Filters) => void;
 };
 
@@ -57,6 +58,21 @@ const buildEntryModeOptions = (locale: Locale, values: string[]): Option[] => {
   }));
 };
 
+const buildTrainerOptions = (values: string[]): Option[] => {
+  // Format trainer IDs into more readable names
+  const formatTrainerName = (trainerId: string): string => {
+    return trainerId
+      .split('-')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  };
+  
+  return values.map((value) => ({
+    value,
+    label: formatTrainerName(value),
+  })).sort((a, b) => a.label.localeCompare(b.label));
+};
+
 export const FilterPanel = ({
   copy,
   locale,
@@ -66,17 +82,19 @@ export const FilterPanel = ({
   stances,
   weapons,
   levels,
+  trainers,
   onChange,
 }: FilterPanelProps): ReactNode => {
   const hasActiveFilters = useMemo(() => Object.values(filters).some(Boolean), [filters]);
 
-  type SectionKey = 'category' | 'attack' | 'stance' | 'weapon' | 'level';
+  type SectionKey = 'category' | 'attack' | 'stance' | 'weapon' | 'level' | 'trainer';
   const [open, setOpen] = useState<Record<SectionKey, boolean>>({
     category: true,
     attack: false,
     stance: false,
     weapon: false,
     level: false,
+    trainer: false,
   });
 
   const toggleOpen = (key: SectionKey): void => setOpen((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -86,11 +104,13 @@ export const FilterPanel = ({
   const normalizedStances = useMemo(() => (stances.length > 0 ? stances : ['irimi', 'tenkan']), [stances]);
   const availableStanceSet = useMemo(() => new Set(normalizedStances.filter(Boolean)), [normalizedStances]);
   const availableWeaponSet = useMemo(() => new Set(weapons.filter(Boolean)), [weapons]);
+  const availableTrainerSet = useMemo(() => new Set(trainers.filter(Boolean)), [trainers]);
 
   const categoryOptions = useMemo(() => buildTaxonomyOptions(locale, 'category', categories), [categories, locale]);
   const attackOptions = useMemo(() => buildTaxonomyOptions(locale, 'attack', attacks), [attacks, locale]);
   const stanceOptions = useMemo(() => buildEntryModeOptions(locale, normalizedStances), [normalizedStances, locale]);
   const weaponOptions = useMemo(() => buildTaxonomyOptions(locale, 'weapon', weapons), [weapons, locale]);
+  const trainerOptions = useMemo(() => buildTrainerOptions(trainers), [trainers]);
   const levelOptions = useMemo<Option[]>(
     () =>
       levels.map((grade) => ({
@@ -185,6 +205,16 @@ export const FilterPanel = ({
         available={availableWeaponSet}
         isOpen={open.weapon}
         onToggle={() => toggleOpen('weapon')}
+      />
+
+      <FilterSection
+        title={copy.trainer}
+        options={trainerOptions}
+        selected={filters.trainer}
+        onSelect={(value) => handleToggle('trainer', value)}
+        available={availableTrainerSet}
+        isOpen={open.trainer}
+        onToggle={() => toggleOpen('trainer')}
       />
 
       <FilterSection
