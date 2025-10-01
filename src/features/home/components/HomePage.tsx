@@ -1,7 +1,8 @@
 import type { ReactElement } from 'react';
+import { useState } from 'react';
 import type { Copy } from '../../../shared/constants/i18n';
 import type { Locale } from '../../../shared/types';
-import { Logo } from '../../../shared/components';
+import { Logo, SakuraFlower } from '../../../shared/components';
 import { QuoteRotator } from './QuoteRotator';
 import { getAllQuotes } from '../../../utils/quotes';
 
@@ -25,9 +26,10 @@ export const HomePage = ({
   onViewAbout,
 }: HomePageProps): ReactElement => {
   const quotes = getAllQuotes(locale);
+  const [isGratitudeHovered, setIsGratitudeHovered] = useState(false);
   
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen font-sans">
       {/* Hero Section */}
       <section className="relative py-16 md:py-24">
         {/* Subtle background watermark */}
@@ -58,7 +60,7 @@ export const HomePage = ({
 
       <div className="container max-w-4xl mx-auto px-4 md:px-6 space-y-8 md:space-y-12 pb-16 md:pb-24">
         {/* Quick Guide Card */}
-        <section className="rounded-2xl border surface-border surface surface-hover transition-colors p-6 md:p-8">
+        <section className="rounded-2xl border surface-border surface surface-hover transition-colors p-6 md:p-8 shake-on-hover">
           <div className="space-y-6">
             <div className="text-center space-y-2">
               <div className="text-xs uppercase tracking-widest text-subtle">
@@ -129,7 +131,7 @@ export const HomePage = ({
         {/* Two Column Cards: Quote & Historical Note */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Random Quote Card */}
-          <section className="rounded-2xl border surface-border surface surface-hover transition-all p-6 md:p-8">
+          <section className="rounded-2xl border surface-border surface surface-hover transition-all p-6 md:p-8 jump-on-hover">
             <div className="space-y-4">
               <h2 className="text-lg md:text-xl font-semibold">
                 {copy.homeQuoteOfMomentTitle}
@@ -139,7 +141,7 @@ export const HomePage = ({
           </section>
 
           {/* Historical Note Card */}
-          <section className="rounded-2xl border surface-border surface surface-hover transition-all p-6 md:p-8">
+          <section className="rounded-2xl border surface-border surface surface-hover transition-all p-6 md:p-8 jump-on-hover">
             <div className="space-y-4">
               <h2 className="text-lg md:text-xl font-semibold">
                 {copy.homeHistoricalNoteTitle}
@@ -157,8 +159,43 @@ export const HomePage = ({
         </div>
 
         {/* Dojo Credit Card */}
-        <section className="rounded-2xl border surface-border surface surface-hover transition-colors p-6 md:p-8">
-          <div className="space-y-4">
+        <section 
+          className="rounded-2xl border surface-border surface surface-hover transition-colors p-6 md:p-8 relative overflow-hidden"
+          onMouseEnter={() => setIsGratitudeHovered(true)}
+          onMouseLeave={() => setIsGratitudeHovered(false)}
+        >
+          {/* Sakura Flowers Background */}
+          <div className={`absolute inset-0 pointer-events-none transition-opacity duration-500 ${isGratitudeHovered ? 'opacity-10' : 'opacity-0'}`}>
+            {/* Top right sakura */}
+            <SakuraFlower 
+              className="absolute -top-8 -right-8 w-28 h-28 transition-all duration-500 ease-out"
+              style={{
+                transform: isGratitudeHovered 
+                  ? 'rotate(15deg) scale(1) translate(0, 0)' 
+                  : 'rotate(45deg) scale(0.7) translate(10px, 10px)',
+              }}
+            />
+            {/* Top left sakura */}
+            <SakuraFlower 
+              className="absolute top-8 -left-6 w-20 h-20 transition-all duration-500 delay-100 ease-out"
+              style={{
+                transform: isGratitudeHovered 
+                  ? 'rotate(-20deg) scale(1) translate(0, 0)' 
+                  : 'rotate(-50deg) scale(0.6) translate(-8px, 8px)',
+              }}
+            />
+            {/* Bottom right sakura */}
+            <SakuraFlower 
+              className="absolute -bottom-6 right-12 w-18 h-18 transition-all duration-500 delay-200 ease-out"
+              style={{
+                transform: isGratitudeHovered 
+                  ? 'rotate(30deg) scale(1) translate(0, 0)' 
+                  : 'rotate(60deg) scale(0.5) translate(6px, -6px)',
+              }}
+            />
+          </div>
+
+          <div className="space-y-4 relative z-10">
             <h2 className="text-lg md:text-xl font-semibold">
               {copy.homeDojoCreditTitle}
             </h2>

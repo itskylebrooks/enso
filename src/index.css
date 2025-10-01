@@ -188,3 +188,23 @@ button {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+/* Shake animation */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-6px); }
+  75% { transform: translateX(6px); }
+}
+
+.shake-on-hover:hover {
+  animation: shake 0.6s ease-in-out;
+}
+
+/* Jump forward animation */
+.jump-on-hover {
+  transition: transform 0.2s ease-out;
+}
+
+.jump-on-hover:hover {
+  transform: translateY(-4px) scale(1.02);
+}
