@@ -4,12 +4,12 @@ import type { Copy } from '../../shared/constants/i18n';
 import type {
   BookmarkCollection,
   Collection,
+  EntryMode,
   Locale,
   Progress,
   Technique,
   TechniqueVersion,
 } from '../../shared/types';
-import { classNames } from '../../shared/utils/classNames';
 import { getTaxonomyLabel } from '../../shared/i18n/taxonomy';
 import { stripDiacritics } from '../../shared/utils/text';
 import { useMotionPreferences, defaultEase } from '../ui/motion';
@@ -20,6 +20,14 @@ import { UkePanel } from './UkePanel';
 import { MediaPanel } from './MediaPanel';
 import { NotesPanel } from './NotesPanel';
 import { useTechniqueViewStore } from '../../features/technique';
+import { Segmented, type SegmentedOption } from '../../shared/components/ui/Segmented';
+import {
+  deriveEntryMode,
+  setGlobalEntryPref,
+  setTechniqueEntryPref,
+  updateURLEntry,
+} from '../../features/technique/entryPref';
+import { migrateTechniqueToStepsByEntry } from '../../utils/migrations/to-stepsByEntry';
 
 const buildTags = (technique: Technique, locale: Locale): string[] => {
   const title = technique.name[locale]?.toLowerCase?.() ?? '';
@@ -238,26 +246,97 @@ export const TechniquePage = ({
   const summary = technique.summary[locale] || technique.summary.en;
   const { prefersReducedMotion } = useMotionPreferences();
 
+  // Apply migration on runtime to support new stepsByEntry structure
+  const migratedTechnique = useMemo(() => migrateTechniqueToStepsByEntry(technique), [technique]);
+
   const storedLastViewed = useTechniqueViewStore((state) => state.lastViewedVersion[technique.id]);
   const setLastViewedVersion = useTechniqueViewStore((state) => state.setLastViewedVersion);
 
+  // Entry mode state management
+  const [entryMode, setEntryMode] = useState<EntryMode>(() =>
+    deriveEntryMode(window.location.search, technique.id)
+  );
+
   const [activeVersionId, setActiveVersionId] = useState(() =>
-    ensureVersion(technique.versions, storedLastViewed ?? technique.versions[0].id).id,
+    ensureVersion(migratedTechnique.versions, storedLastViewed ?? migratedTechnique.versions[0].id).id,
   );
 
   useEffect(() => {
-    const nextActive = ensureVersion(technique.versions, storedLastViewed ?? technique.versions[0].id).id;
+    const nextActive = ensureVersion(migratedTechnique.versions, storedLastViewed ?? migratedTechnique.versions[0].id).id;
     setActiveVersionId(nextActive);
-  }, [technique.id, technique.versions, storedLastViewed]);
+  }, [technique.id, migratedTechnique.versions, storedLastViewed]);
 
   useEffect(() => {
     setLastViewedVersion(technique.id, activeVersionId);
   }, [technique.id, activeVersionId, setLastViewedVersion]);
 
+  // Entry mode change handler
+  const handleEntryModeChange = (newMode: EntryMode) => {
+    setEntryMode(newMode);
+    setTechniqueEntryPref(technique.id, newMode);
+    setGlobalEntryPref(newMode);
+    updateURLEntry(newMode);
+  };
+
+  // Keyboard shortcuts for entry mode
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Don't interfere with inputs or content editable elements
+      const target = event.target as HTMLElement;
+      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
+        return;
+      }
+
+      if (event.key === 'o' || event.key === 'O') {
+        event.preventDefault();
+        handleEntryModeChange('omote');
+      } else if (event.key === 'u' || event.key === 'U') {
+        event.preventDefault();
+        handleEntryModeChange('ura');
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [technique.id]);
+
   const activeVersion = useMemo(
-    () => technique.versions.find((version) => version.id === activeVersionId) ?? technique.versions[0],
-    [technique.versions, activeVersionId],
+    () => migratedTechnique.versions.find((version) => version.id === activeVersionId) ?? migratedTechnique.versions[0],
+    [migratedTechnique.versions, activeVersionId],
   );
+
+  // Entry mode options with localized labels
+  const entryOptions: SegmentedOption<EntryMode>[] = useMemo(() => [
+    {
+      value: 'omote',
+      label: copy.entryOmote,
+      disabled: !activeVersion.stepsByEntry?.omote,
+      tooltip: !activeVersion.stepsByEntry?.omote ? copy.entryNotAvailable : undefined,
+    },
+    {
+      value: 'ura',
+      label: copy.entryUra,
+      disabled: !activeVersion.stepsByEntry?.ura,
+      tooltip: !activeVersion.stepsByEntry?.ura ? copy.entryNotAvailable : undefined,
+    },
+  ], [activeVersion.stepsByEntry, copy]);
+
+  // Derive current steps based on entry mode and available data
+  const currentSteps = useMemo(() => {
+    // Try to get steps for current entry mode
+    const entrySteps = activeVersion.stepsByEntry?.[entryMode];
+    if (entrySteps) {
+      return entrySteps[locale] ?? entrySteps.en;
+    }
+
+    // Fallback to legacy steps if available
+    if (activeVersion.steps) {
+      return activeVersion.steps[locale] ?? activeVersion.steps.en;
+    }
+
+    // No steps available
+    return null;
+  }, [activeVersion, entryMode, locale]);
 
   const bookmarkedActive = Boolean(progress?.bookmarked);
   const collectionOptions = useMemo(
@@ -326,18 +405,27 @@ export const TechniquePage = ({
         onTagClick={onOpenGlossary ? handleTagClick : undefined}
       />
 
-      <div
-        className={classNames(
-          'flex flex-col gap-4 md:flex-row md:items-center -mb-2',
-          technique.versions.length > 1 ? 'md:justify-between' : 'md:justify-start',
-        )}
-      >
-        <VersionTabs
-          versions={technique.versions}
-          activeVersionId={activeVersionId}
-          onChange={setActiveVersionId}
-          label={copy.version}
-        />
+      <div className="flex flex-col gap-4 md:flex-row md:items-center -mb-2">
+        {/* Entry mode toggle - vertical stack on far left, centered in y-axis */}
+        <div className="flex flex-row md:flex-col gap-2 md:justify-center">
+          <Segmented
+            options={entryOptions}
+            value={entryMode}
+            onChange={handleEntryModeChange}
+            aria-label={copy.entrySelectLabel}
+            className="md:flex-col"
+          />
+        </div>
+        
+        {/* Version tabs - to the right of entry mode */}
+        <div className="flex-1 md:ml-4">
+          <VersionTabs
+            versions={migratedTechnique.versions}
+            activeVersionId={activeVersionId}
+            onChange={setActiveVersionId}
+            label={copy.version}
+          />
+        </div>
       </div>
 
       <AnimatePresence mode="wait">
@@ -352,10 +440,32 @@ export const TechniquePage = ({
             <div className="space-y-8">
               <section className="space-y-4">
                 <header className="text-xs uppercase tracking-[0.3em] text-subtle">{stepsLabel}</header>
-                <StepsList
-                  steps={activeVersion.steps[locale] ?? activeVersion.steps.en}
-                  ariaLabel={`${technique.name[locale]} – ${copy.steps}`}
-                />
+                {currentSteps ? (
+                  <StepsList
+                    steps={currentSteps}
+                    ariaLabel={`${migratedTechnique.name[locale]} – ${copy.steps}`}
+                  />
+                ) : (
+                  <div className="space-y-4">
+                    <div className="text-muted">
+                      {locale === 'de' 
+                        ? <>Für <strong>{entryOptions.find(opt => opt.value === entryMode)?.label}</strong> sind noch keine Schritte dokumentiert.</>
+                        : <>No steps documented for <strong>{entryOptions.find(opt => opt.value === entryMode)?.label}</strong> yet.</>
+                      }
+                    </div>
+                    <button
+                      type="button"
+                      className="text-sm text-subtle hover:text-[var(--color-text)] transition-colors"
+                      onClick={() => {
+                        // Placeholder for future feedback form integration
+                        const subject = `Suggest steps for ${migratedTechnique.name[locale]} (${entryOptions.find(opt => opt.value === entryMode)?.label})`;
+                        window.open(`mailto:feedback@example.com?subject=${encodeURIComponent(subject)}`, '_blank');
+                      }}
+                    >
+                      {copy.entrySuggestSteps}
+                    </button>
+                  </div>
+                )}
               </section>
               <UkePanel
                 role={ukeNotes.role[locale] ?? ukeNotes.role.en}

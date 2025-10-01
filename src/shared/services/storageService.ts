@@ -1,6 +1,7 @@
 import { parseTechnique } from '../../content/schema';
 import { APP_NAME, DB_VERSION, LOCALE_KEY, STORAGE_KEY, THEME_KEY } from '../constants/storage';
 import type { BookmarkCollection, Collection, DB, GlossaryBookmarkCollection, GlossaryProgress, Locale, Progress, Technique, TechniqueVersion, Theme } from '../types';
+import { migrateTechniqueToStepsByEntry } from '../../utils/migrations/to-stepsByEntry';
 
 // Load technique files directly from the content/techniques folder.
 // Vite's import.meta.glob with { eager: true } returns the parsed JSON modules at build time.
@@ -45,7 +46,11 @@ const normalizeVersion = (version: TechniqueVersion): TechniqueVersion => {
     lineage: normalizeOptional(version.lineage),
     sourceUrl: normalizeOptional(version.sourceUrl),
     lastUpdated: normalizeOptional(version.lastUpdated),
-    steps: normalizeLocalizedArray(version.steps),
+    steps: version.steps ? normalizeLocalizedArray(version.steps) : undefined,
+    stepsByEntry: version.stepsByEntry ? {
+      omote: version.stepsByEntry.omote ? normalizeLocalizedArray(version.stepsByEntry.omote) : undefined,
+      ura: version.stepsByEntry.ura ? normalizeLocalizedArray(version.stepsByEntry.ura) : undefined,
+    } : undefined,
     uke: {
       role: normalizeLocalizedString(version.uke.role),
       notes: normalizeLocalizedArray(version.uke.notes),
@@ -86,7 +91,9 @@ const seedTechniques: Technique[] = Object.keys(techniqueModules)
     const slug = filename.replace(/\.json$/i, '');
     // parse/validate technique using schema
     const parsed = parseTechnique(raw, slug);
-    return normalizeTechnique(parsed);
+    const normalized = normalizeTechnique(parsed);
+    // Apply migration to support stepsByEntry structure at runtime
+    return migrateTechniqueToStepsByEntry(normalized);
   })
   .sort((a, b) => a.name.en.localeCompare(b.name.en));
 

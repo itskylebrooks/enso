@@ -6,6 +6,10 @@ export type Grade =
   | 'kyu5' | 'kyu4' | 'kyu3' | 'kyu2' | 'kyu1'
   | 'dan1' | 'dan2' | 'dan3' | 'dan4' | 'dan5';
 
+export type EntryMode = 'omote' | 'ura';
+
+export type LocalizedSteps = { en: string[]; de: string[] };
+
 export type TechniqueVersion = {
   id: string;
   label: string;
@@ -14,7 +18,13 @@ export type TechniqueVersion = {
   lineage?: string;
   sourceUrl?: string;
   lastUpdated?: string;
-  steps: { en: string[]; de: string[] };
+  // New structure for entry-based steps
+  stepsByEntry?: {
+    omote?: LocalizedSteps;
+    ura?: LocalizedSteps;
+  };
+  // Legacy structure for backward compatibility
+  steps?: { en: string[]; de: string[] };
   uke: {
     role: { en: string; de: string };
     notes: { en: string[]; de: string[] };
@@ -24,6 +34,9 @@ export type TechniqueVersion = {
   commonMistakes?: { en: string[]; de: string[] };
   context?: { en: string; de: string };
 };
+
+// Alias for consistency with requirements
+export type Version = TechniqueVersion;
 
 export type TechniqueV2 = {
   id: string;
