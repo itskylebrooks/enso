@@ -1,0 +1,19 @@
+{
+  "id": "mune-dori",
+  "slug": "mune-dori",
+  "romaji": "Mune-dori",
+  "jp": "胸取り",
+  "category": "attack",
+  "def": {
+    "en": "Chest/lapel grab at the gi.",
+    "de": "Brust-/Reversgriff am Gi."
+  },
+  "literal": {
+    "en": "chest + seize",
+    "de": "Brust + greifen"
+  },
+  "notes": {
+    "en": "Keep chin protected; lead via elbow/shoulder line rather than peeling the hand.",
+    "de": "Kinn schützen; über Ellbogen/Schulterlinie führen statt die Hand abzureißen."
+  }
+}

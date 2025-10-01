@@ -1,0 +1,19 @@
+{
+  "id": "sode-dori",
+  "slug": "sode-dori",
+  "romaji": "Sode-dori",
+  "jp": "袖取り",
+  "category": "attack",
+  "def": {
+    "en": "Sleeve grab.",
+    "de": "Ärmelgriff."
+  },
+  "literal": {
+    "en": "sleeve + seize",
+    "de": "Ärmel + greifen"
+  },
+  "notes": {
+    "en": "Turn palm and rotate forearm to free; connect to shoulder to unbalance.",
+    "de": "Handfläche drehen, Unterarm rotieren; Verbindung zur Schulter für Kuzushi."
+  }
+}

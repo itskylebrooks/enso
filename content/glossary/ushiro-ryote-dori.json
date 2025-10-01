@@ -1,0 +1,19 @@
+{
+  "id": "ushiro-ryote-dori",
+  "slug": "ushiro-ryote-dori",
+  "romaji": "Ushiro-ryote-dori",
+  "jp": "後ろ両手取り",
+  "category": "attack",
+  "def": {
+    "en": "Both wrists grabbed from behind.",
+    "de": "Beide Handgelenke von hinten gefasst."
+  },
+  "literal": {
+    "en": "rear + both + hands + seize",
+    "de": "hinten + beide + Hände + greifen"
+  },
+  "notes": {
+    "en": "Sink weight, step diagonally, rotate from hips to free and lead.",
+    "de": "Gewicht senken, diagonal steigen, aus der Hüfte rotieren zum Lösen und Führen."
+  }
+}

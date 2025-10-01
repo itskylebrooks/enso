@@ -1,0 +1,19 @@
+{
+  "id": "ryote-dori",
+  "slug": "ryote-dori",
+  "romaji": "Ryote-dori",
+  "jp": "両手取り",
+  "category": "attack",
+  "def": {
+    "en": "Both wrists grabbed (each of uke's hands on each wrist).",
+    "de": "Beide Handgelenke werden gefasst (jede Hand greift ein Handgelenk)."
+  },
+  "literal": {
+    "en": "both + hands + seize",
+    "de": "beide + Hände + greifen"
+  },
+  "notes": {
+    "en": "Center must stay mobile; use whole-body leading, not arm strength.",
+    "de": "Zentrum beweglich halten; Ganzkörperführung statt Armkraft."
+  }
+}

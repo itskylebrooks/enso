@@ -1,0 +1,19 @@
+{
+  "id": "kata-dori-men-uchi",
+  "slug": "kata-dori-men-uchi",
+  "romaji": "Kata-dori Men-uchi",
+  "jp": "肩取り面打ち",
+  "category": "attack",
+  "def": {
+    "en": "Shoulder grab combined with a frontal strike.",
+    "de": "Schultergriff kombiniert mit frontalem Schlag."
+  },
+  "literal": {
+    "en": "shoulder + seize; face + strike",
+    "de": "Schulter + greifen; Gesicht + Schlag"
+  },
+  "notes": {
+    "en": "Trains managing a grab and strike together—prioritize line and balance.",
+    "de": "Schult das gleichzeitige Managen von Griff und Schlag – Linie und Balance priorisieren."
+  }
+}

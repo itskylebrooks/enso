@@ -1,0 +1,19 @@
+{
+  "id": "gyaku-hanmi-katate-dori",
+  "slug": "gyaku-hanmi-katate-dori",
+  "romaji": "Gyaku-hanmi Katate-dori",
+  "jp": "逆半身片手取り",
+  "category": "attack",
+  "def": {
+    "en": "Cross-hand wrist grab (right-to-left / left-to-right).",
+    "de": "Gekreuzter Handgelenkgriff (rechts-links / links-rechts)."
+  },
+  "literal": {
+    "en": "reverse + half-body + one hand + seize",
+    "de": "umgekehrt + Halbkörper + eine Hand + greifen"
+  },
+  "notes": {
+    "en": "Crossed lines encourage inside (uchi) entries and turning leads.",
+    "de": "Gekreuzte Linien fördern Inneneinstiege (uchi) und Drehführungen."
+  }
+}

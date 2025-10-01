@@ -1,0 +1,19 @@
+{
+  "id": "ushiro-eri-dori",
+  "slug": "ushiro-eri-dori",
+  "romaji": "Ushiro-eri-dori",
+  "jp": "後ろ襟取り",
+  "category": "attack",
+  "def": {
+    "en": "Collar grab from behind.",
+    "de": "Kragengriff von hinten."
+  },
+  "literal": {
+    "en": "rear + collar + seize",
+    "de": "hinten + Kragen + greifen"
+  },
+  "notes": {
+    "en": "Turn the spine tall, step off line, and peel with whole-body motion.",
+    "de": "Wirbelsäule aufrichten, aus der Linie treten und mit Ganzkörperbewegung lösen."
+  }
+}

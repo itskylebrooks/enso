@@ -1,0 +1,19 @@
+{
+  "id": "kata-dori",
+  "slug": "kata-dori",
+  "romaji": "Kata-dori",
+  "jp": "肩取り",
+  "category": "attack",
+  "def": {
+    "en": "Shoulder/gi grab on one side.",
+    "de": "Schulter-/Gi-Griff einseitig."
+  },
+  "literal": {
+    "en": "shoulder + seize",
+    "de": "Schulter + greifen"
+  },
+  "notes": {
+    "en": "Keep spine tall; use hip turn to free the line and lead.",
+    "de": "Wirbelsäule lang; mit Hüftdrehung die Linie öffnen und führen."
+  }
+}

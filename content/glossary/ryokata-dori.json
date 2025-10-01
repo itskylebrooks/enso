@@ -1,0 +1,19 @@
+{
+  "id": "ryokata-dori",
+  "slug": "ryokata-dori",
+  "romaji": "Ryokata-dori",
+  "jp": "両肩取り",
+  "category": "attack",
+  "def": {
+    "en": "Both shoulders grabbed.",
+    "de": "Beide Schultern werden gefasst."
+  },
+  "literal": {
+    "en": "both + shoulders + seize",
+    "de": "beide + Schultern + greifen"
+  },
+  "notes": {
+    "en": "Drop weight, turn from center; avoid fighting with the upper body.",
+    "de": "Gewicht senken, aus dem Zentrum drehen; nicht mit Oberkörper kämpfen."
+  }
+}

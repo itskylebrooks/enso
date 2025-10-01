@@ -1,0 +1,19 @@
+{
+  "id": "eri-dori",
+  "slug": "eri-dori",
+  "romaji": "Eri-dori",
+  "jp": "襟取り",
+  "category": "attack",
+  "def": {
+    "en": "Collar/lapel grab at the neck line.",
+    "de": "Kragen-/Reversgriff am Halsansatz."
+  },
+  "literal": {
+    "en": "collar + seize",
+    "de": "Kragen + greifen"
+  },
+  "notes": {
+    "en": "Protect the neck; lead the grabbing arm through shoulder rotation.",
+    "de": "Hals schützen; Greifarm über Schulterrotation führen."
+  }
+}

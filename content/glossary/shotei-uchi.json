@@ -1,0 +1,19 @@
+{
+  "id": "shotei-uchi",
+  "slug": "shotei-uchi",
+  "romaji": "Shotei-uchi",
+  "jp": "掌底打ち",
+  "category": "attack",
+  "def": {
+    "en": "Palm-heel strike (used as atemi).",
+    "de": "Handballenschlag (als Atemi genutzt)."
+  },
+  "literal": {
+    "en": "palm + base + strike",
+    "de": "Handfläche + Basis + Schlag"
+  },
+  "notes": {
+    "en": "Applied to open lines or disrupt balance; aim through center, not just surface.",
+    "de": "Zum Öffnen von Linien oder Stören der Balance; durch das Zentrum zielen, nicht nur an die Oberfläche."
+  }
+}

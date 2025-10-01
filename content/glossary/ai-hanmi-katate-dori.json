@@ -1,0 +1,19 @@
+{
+  "id": "ai-hanmi-katate-dori",
+  "slug": "ai-hanmi-katate-dori",
+  "romaji": "Ai-hanmi Katate-dori",
+  "jp": "相半身片手取り",
+  "category": "attack",
+  "def": {
+    "en": "Same-side wrist grab (right-to-right / left-to-left).",
+    "de": "Gleichseitiger Handgelenkgriff (rechts-rechts / links-links)."
+  },
+  "literal": {
+    "en": "mutual + half-body + one hand + seize",
+    "de": "gemeinsam + Halbkörper + eine Hand + greifen"
+  },
+  "notes": {
+    "en": "Lines are parallel; outside leads are common.",
+    "de": "Parallele Linien; Außenführungen sind häufig."
+  }
+}

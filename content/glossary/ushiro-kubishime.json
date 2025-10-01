@@ -1,0 +1,19 @@
+{
+  "id": "ushiro-kubishime",
+  "slug": "ushiro-kubishime",
+  "romaji": "Ushiro-kubishime",
+  "jp": "後ろ首絞め",
+  "category": "attack",
+  "def": {
+    "en": "Rear choke.",
+    "de": "Würger von hinten."
+  },
+  "literal": {
+    "en": "rear + neck + constrict",
+    "de": "hinten + Hals + würgen"
+  },
+  "notes": {
+    "en": "Protect airway with chin tuck; connect to attacker's elbow/shoulder to turn.",
+    "de": "Atemweg mit Kinnsenkung schützen; an Ellbogen/Schulter des Angreifers anbinden und drehen."
+  }
+}

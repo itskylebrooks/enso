@@ -1,0 +1,19 @@
+{
+  "id": "katate-dori",
+  "slug": "katate-dori",
+  "romaji": "Katate-dori",
+  "jp": "片手取り",
+  "category": "attack",
+  "def": {
+    "en": "Single-hand wrist grab.",
+    "de": "Einhand-Handgelenkgriff."
+  },
+  "literal": {
+    "en": "one/half + hand + seize",
+    "de": "ein/halb + Hand + greifen"
+  },
+  "notes": {
+    "en": "Base grab used for many entries. Variants: ai-hanmi (same-side) and gyaku-hanmi (cross).",
+    "de": "Basisgriff für viele Einstiege. Varianten: Ai-hanmi (gleichseitig) und Gyaku-hanmi (gekreuzt)."
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "id": "tsuki",
+  "slug": "tsuki",
+  "romaji": "Tsuki",
+  "jp": "突き",
+  "category": "attack",
+  "def": {
+    "en": "Straight thrust/punch to torso or face.",
+    "de": "Gerader Stoß/Schlag zum Rumpf oder Gesicht."
+  },
+  "literal": {
+    "en": "thrust",
+    "de": "Stoß"
+  },
+  "notes": {
+    "en": "Common lines: chudan (mid) or jodan (high). Manage distance (ma-ai) and center.",
+    "de": "Übliche Linien: Chūdan (Mitte) oder Jōdan (hoch). Distanz (ma-ai) und Zentrum führen."
+  }
+}

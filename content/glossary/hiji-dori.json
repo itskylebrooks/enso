@@ -1,0 +1,19 @@
+{
+  "id": "hiji-dori",
+  "slug": "hiji-dori",
+  "romaji": "Hiji-dori",
+  "jp": "肘取り",
+  "category": "attack",
+  "def": {
+    "en": "Elbow grab.",
+    "de": "Ellbogengriff."
+  },
+  "literal": {
+    "en": "elbow + seize",
+    "de": "Ellbogen + greifen"
+  },
+  "notes": {
+    "en": "Keep elbow close to body to prevent lock; rotate shoulder line to lead.",
+    "de": "Ellbogen körpernah halten, um Hebel zu vermeiden; Schulterlinie drehen zum Führen."
+  }
+}

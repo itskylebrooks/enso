@@ -1,0 +1,19 @@
+{
+  "id": "morote-dori",
+  "slug": "morote-dori",
+  "romaji": "Morote-dori",
+  "jp": "諸手取り",
+  "category": "attack",
+  "def": {
+    "en": "Two hands grabbing one wrist/forearm.",
+    "de": "Zweihandgriff an einem Handgelenk/Unterarm."
+  },
+  "literal": {
+    "en": "both/many + hands + seize",
+    "de": "beide/viele + Hände + greifen"
+  },
+  "notes": {
+    "en": "Maintain elbow connection; rotate from hips to unbalance.",
+    "de": "Ellbogenverbindung halten; aus der Hüfte rotieren für Kuzushi."
+  }
+}

@@ -5,11 +5,15 @@
   "jp": "正面打ち",
   "category": "attack",
   "def": {
-    "en": "Direct frontal strike to the head or forehead.",
-    "de": "Direkter frontaler Schlag zum Kopf oder zur Stirn."
+    "en": "Frontal strike to the head/forehead line.",
+    "de": "Frontaler Schlag zur Stirn/Kopflinie."
+  },
+  "literal": {
+    "en": "front + face + strike",
+    "de": "vorn + Gesicht + Schlag"
   },
   "notes": {
-    "en": "Classic aikidō attack form used in training. Represents committed downward strike with proper timing and distance.",
-    "de": "Klassische Aikidō-Angriffsform im Training. Stellt einen entschlossenen Schlag nach unten mit richtigem Timing und Distanz dar."
+    "en": "Strike travels down the center line; used to train direct entries and high-cover ukemi.",
+    "de": "Schlag verläuft auf der Mittellinie; dient für direkte Einstiege und hohe Deckung im Ukemi."
   }
 }

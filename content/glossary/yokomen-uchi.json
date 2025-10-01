@@ -1,0 +1,19 @@
+{
+  "id": "yokomen-uchi",
+  "slug": "yokomen-uchi",
+  "romaji": "Yokomen-uchi",
+  "jp": "横面打ち",
+  "category": "attack",
+  "def": {
+    "en": "Diagonal cut to the side of the head/neck.",
+    "de": "Diagonaler Schnitt zur Kopf-/Halsseite."
+  },
+  "literal": {
+    "en": "side + face + strike",
+    "de": "Seite + Gesicht + Schlag"
+  },
+  "notes": {
+    "en": "Angle invites outside (soto) blending and circular leading.",
+    "de": "Winkel begünstigt Außenführung (soto) und kreisendes Leiten."
+  }
+}
