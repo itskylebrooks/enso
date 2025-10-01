@@ -25,6 +25,10 @@ export const taxonomyLabels: TaxonomyLabels = {
       weapon: 'Weapons (Buki-waza)',
       ukemi: 'Ukemi',
     },
+    stance: {
+      omote: 'Omote (Irimi)',
+      ura: 'Ura (Tenkan)',
+    },
   },
   de: {
     category: {
@@ -33,6 +37,10 @@ export const taxonomyLabels: TaxonomyLabels = {
       immobilization: 'Immobilisationen (Katame-waza)',
       weapon: 'Waffen (Buki-waza)',
       ukemi: 'Ukemi',
+    },
+    stance: {
+      omote: 'Omote (Irimi)',
+      ura: 'Ura (Tenkan)',
     },
   },
 };

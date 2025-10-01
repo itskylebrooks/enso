@@ -160,14 +160,22 @@ const mapTagToGlossarySlug = (tagLabel: string): string | null => {
     '正面打ち': 'shomen-uchi',
     'shomen': 'shomen-uchi',
     
-    // Movement patterns  
-    'irimi': 'irimi',
-    'entering': 'irimi',
-    '入身': 'irimi',
+    // Movement patterns - all terms now point to comprehensive entries
+    'omote (irimi)': 'omote-irimi',
+    'omote irimi': 'omote-irimi',
+    '表（入身）': 'omote-irimi',
+    'omote': 'omote-irimi',
+    'irimi': 'omote-irimi',
+    'entering': 'omote-irimi',
+    '入身': 'omote-irimi',
     
-    'tenkan': 'tenkan', 
-    'turning': 'tenkan',
-    '転換': 'tenkan',
+    'ura (tenkan)': 'ura-tenkan',
+    'ura tenkan': 'ura-tenkan',
+    '裏（転換）': 'ura-tenkan',
+    'ura': 'ura-tenkan',
+    'tenkan': 'ura-tenkan', 
+    'turning': 'ura-tenkan',
+    '転換': 'ura-tenkan',
     
     // Concepts
     'ukemi': 'ukemi',

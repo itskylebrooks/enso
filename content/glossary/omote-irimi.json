@@ -1,0 +1,19 @@
+{
+  "id": "omote-irimi",
+  "slug": "omote-irimi",
+  "romaji": "Omote (Irimi)",
+  "jp": "表（入身）",
+  "category": "movement",
+  "def": {
+    "en": "Front/exterior entry line where nage moves directly toward uke's center, taking the inside track.",
+    "de": "Vordere/äußere Eingangslinie, bei der Nage direkt auf Ukes Zentrum zugeht und die innere Spur nimmt."
+  },
+  "literal": {
+    "en": "front/surface (enter + body)",
+    "de": "vorne/Oberfläche (hinein + Körper)"
+  },
+  "notes": {
+    "en": "The omote line emphasizes entering directly into uke's space, often requiring precise timing and positioning. This is contrasted with ura, which uses redirection.",
+    "de": "Die Omote-Linie betont das direkte Eindringen in Ukes Raum und erfordert oft präzises Timing und Positionierung. Dies steht im Gegensatz zu Ura, das Umleitung verwendet."
+  }
+}
