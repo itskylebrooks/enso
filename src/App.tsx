@@ -883,9 +883,13 @@ export default function App(): ReactElement {
     mainContent = (
       <HomePage
         copy={copy}
+        locale={locale}
         onOpenLibrary={() => navigateTo('library')}
         onViewBookmarks={() => navigateTo('bookmarks')}
         onViewBasics={() => navigateTo('basics')}
+        onViewGlossary={() => navigateTo('glossary')}
+        onViewAbout={() => navigateTo('about')}
+        onOpenSettings={openSettings}
       />
     );
   } else if (route === 'about') {
