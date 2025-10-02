@@ -129,7 +129,7 @@ export const ExamMatrix = ({ locale, copy, isDark, onCellClick }: ExamMatrixProp
         <table role="grid" className="w-full border-collapse text-sm">
           <thead>
             <tr className="surface border-b surface-border">
-              <th className="sticky left-0 surface z-10 px-3 py-1 text-left font-semibold text-xs uppercase tracking-wide border-r surface-border" style={{ minWidth: '220px', width: '220px' }}>
+              <th className="md:sticky left-0 surface z-10 px-3 py-1 text-left font-semibold text-xs uppercase tracking-wide border-r surface-border" style={{ minWidth: '220px', width: '220px' }}>
                 {locale === 'en' ? 'Technique' : 'Technik'}
               </th>
               {ATTACK_COLUMNS.map((col) => {
@@ -165,7 +165,7 @@ export const ExamMatrix = ({ locale, copy, isDark, onCellClick }: ExamMatrixProp
                     {/* Row header (technique name) */}
                     <th
                       scope="row"
-                      className="sticky left-0 surface z-10 px-3 py-1 text-left font-medium border-r surface-border whitespace-nowrap"
+                      className="md:sticky left-0 surface z-10 px-3 py-1 text-left font-medium border-r surface-border whitespace-nowrap"
                       style={{ minWidth: '220px', width: '220px' }}
                       role="gridcell"
                     >
