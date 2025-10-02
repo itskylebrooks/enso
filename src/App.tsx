@@ -29,7 +29,7 @@ import {
   saveLocale,
   saveTheme,
 } from './shared/services/storageService';
-import type { AppRoute, Collection, DB, Filters, GlossaryBookmarkCollection, GlossaryProgress, GlossaryTerm, Locale, Progress, Technique, Theme } from './shared/types';
+import type { AppRoute, Collection, DB, Filters, GlossaryBookmarkCollection, GlossaryProgress, GlossaryTerm, Grade, Locale, Progress, Technique, Theme } from './shared/types';
 import { gradeOrder } from './shared/utils/grades';
 import { unique, upsert } from './shared/utils/array';
 import { buildTechniqueUrl as buildUrl, parseTechniquePath } from './utils/urls';
@@ -623,6 +623,51 @@ export default function App(): ReactElement {
     return id;
   };
 
+  const createCollectionWithGrade = (name: string, grade: Grade): string | null => {
+    const collectionId = createCollection(name);
+    if (!collectionId) return null;
+
+    // Find all techniques matching this grade
+    const matchingTechniques = db.techniques.filter((technique) => technique.level === grade);
+    const now = Date.now();
+
+    setDB((prev) => {
+      // Create bookmark collection entries for all matching techniques
+      const newBookmarkCollections = matchingTechniques.map((technique) => ({
+        id: generateId(),
+        techniqueId: technique.id,
+        collectionId,
+        createdAt: now,
+      }));
+
+      // Auto-bookmark all these techniques
+      const techniqueIds = new Set(matchingTechniques.map((t) => t.id));
+      const nextProgress = prev.progress.map((p) =>
+        techniqueIds.has(p.techniqueId) && !p.bookmarked
+          ? { ...p, bookmarked: true, updatedAt: now }
+          : p
+      );
+
+      // Add progress entries for techniques that don't have them yet
+      const existingProgressIds = new Set(prev.progress.map((p) => p.techniqueId));
+      const newProgressEntries = matchingTechniques
+        .filter((t) => !existingProgressIds.has(t.id))
+        .map((technique) => ({
+          techniqueId: technique.id,
+          bookmarked: true,
+          updatedAt: now,
+        }));
+
+      return {
+        ...prev,
+        progress: [...nextProgress, ...newProgressEntries],
+        bookmarkCollections: [...prev.bookmarkCollections, ...newBookmarkCollections],
+      };
+    });
+
+    return collectionId;
+  };
+
   const renameCollection = (id: string, name: string): void => {
     const trimmed = name.trim();
     if (!trimmed) return;
@@ -902,9 +947,15 @@ export default function App(): ReactElement {
     mainContent = (
       <GuidePage
         locale={locale}
+        collections={db.collections}
         onNavigateToGlossaryWithMovementFilter={() => {
           setGlossaryFilters({ category: 'movement' });
           navigateTo('glossary');
+        }}
+        onCreateCollectionWithGrade={createCollectionWithGrade}
+        onNavigateToBookmarks={(collectionId) => {
+          setSelectedCollectionId(collectionId);
+          navigateTo('bookmarks');
         }}
       />
     );

@@ -1,15 +1,19 @@
 import { motion } from 'motion/react';
 import type { ReactElement } from 'react';
 import { useEffect, useState } from 'react';
-import type { Grade, Locale } from '../../shared/types';
+import type { Collection, Grade, Locale } from '../../shared/types';
 import { gradeOrder } from '../../shared/utils/grades';
 import { gradeLabel, getGradeStyle } from '../../shared/styles/belts';
 import { useMotionPreferences, defaultEase } from '../ui/motion';
 import { getInitialThemeState } from '../../shared/utils/theme';
+import { getCopy } from '../../shared/constants/i18n';
 
 type GuidePageProps = {
   locale: Locale;
+  collections: Collection[];
   onNavigateToGlossaryWithMovementFilter: () => void;
+  onCreateCollectionWithGrade: (name: string, grade: Grade) => string | null;
+  onNavigateToBookmarks: (collectionId: string) => void;
 };
 
 type TermEntry = {
@@ -189,8 +193,15 @@ const sectionVariants = {
   show: { opacity: 1, y: 0 },
 };
 
-export const GuidePage = ({ locale, onNavigateToGlossaryWithMovementFilter }: GuidePageProps): ReactElement => {
+export const GuidePage = ({ 
+  locale, 
+  collections,
+  onNavigateToGlossaryWithMovementFilter,
+  onCreateCollectionWithGrade,
+  onNavigateToBookmarks,
+}: GuidePageProps): ReactElement => {
   const copy = content[locale];
+  const i18nCopy = getCopy(locale);
   const { prefersReducedMotion } = useMotionPreferences();
   const [isDark, setIsDark] = useState(getInitialThemeState);
 
@@ -213,6 +224,29 @@ export const GuidePage = ({ locale, onNavigateToGlossaryWithMovementFilter }: Gu
 
     return () => observer.disconnect();
   }, []);
+
+  const handleBeltClick = (grade: Grade) => {
+    const label = gradeLabel(grade, locale);
+    const collectionName = locale === 'en' 
+      ? `Exam Program – ${label}`
+      : `Prüfungsprogramm – ${label}`;
+
+    // Check if collection already exists
+    const existingCollection = collections.find(
+      (c) => c.name.toLowerCase() === collectionName.toLowerCase()
+    );
+
+    if (existingCollection) {
+      // Navigate to existing collection
+      onNavigateToBookmarks(existingCollection.id);
+    } else {
+      // Create new collection with all techniques of this grade and navigate to it
+      const newCollectionId = onCreateCollectionWithGrade(collectionName, grade);
+      if (newCollectionId) {
+        onNavigateToBookmarks(newCollectionId);
+      }
+    }
+  };
   const animationProps = prefersReducedMotion
     ? {}
     : {
@@ -284,28 +318,34 @@ export const GuidePage = ({ locale, onNavigateToGlossaryWithMovementFilter }: Gu
             <h2 className="text-xl font-semibold leading-tight">{copy.headings.belts}</h2>
             <p className="text-sm text-subtle leading-relaxed">{copy.beltsLead}</p>
             <p className="text-xs text-subtle">{copy.beltNote}</p>
+            <p className="text-sm bg-[var(--color-surface)] border surface-border rounded-lg px-4 py-3 leading-relaxed">
+              {i18nCopy.beltExamProgramNote}
+            </p>
           </header>
           <ul className="grid gap-3 sm:grid-cols-2">
             {gradeOrder.map((grade) => {
               const style = getGradeStyle(grade, isDark);
               const borderColor = style.color === '#FFFFFF' ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.08)';
               return (
-                <li
-                  key={grade}
-                  className="rounded-xl border surface-border bg-[var(--color-surface)]/70 px-4 py-3 flex items-center justify-between gap-3"
-                >
-                  <span className="text-sm font-medium">{gradeLabel(grade, locale)}</span>
-                  <span
-                    aria-hidden
-                    className="inline-flex items-center justify-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide"
-                    style={{
-                      backgroundColor: style.backgroundColor,
-                      color: style.color,
-                      boxShadow: `inset 0 0 0 1px ${borderColor}`,
-                    }}
+                <li key={grade}>
+                  <button
+                    type="button"
+                    onClick={() => handleBeltClick(grade)}
+                    className="w-full rounded-xl border surface-border bg-[var(--color-surface)]/70 px-4 py-3 flex items-center justify-between gap-3 cursor-pointer hover:bg-[var(--color-surface)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
                   >
-                    {copy.beltNames[grade]}
-                  </span>
+                    <span className="text-sm font-medium">{gradeLabel(grade, locale)}</span>
+                    <span
+                      aria-hidden
+                      className="inline-flex items-center justify-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide"
+                      style={{
+                        backgroundColor: style.backgroundColor,
+                        color: style.color,
+                        boxShadow: `inset 0 0 0 1px ${borderColor}`,
+                      }}
+                    >
+                      {copy.beltNames[grade]}
+                    </span>
+                  </button>
                 </li>
               );
             })}

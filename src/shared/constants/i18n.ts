@@ -125,6 +125,8 @@ export const messages = {
     categoryEtiquette: 'Etiquette',
     categoryPhilosophy: 'Philosophy',
     categoryOther: 'Other',
+    // Guide page
+    beltExamProgramNote: 'Click on a belt to open its exam program collection. You can save techniques there and use it as your study guide.',
   },
   de: {
     app: 'Enso',
@@ -250,6 +252,8 @@ export const messages = {
     categoryEtiquette: 'Etikette',
     categoryPhilosophy: 'Philosophie',
     categoryOther: 'Andere',
+    // Guide page
+    beltExamProgramNote: 'Klicke auf einen Gürtel, um das Prüfungsprogramm zu öffnen. Du kannst dort Techniken speichern und es als Lernhilfe nutzen.',
   },
 } as const satisfies Record<Locale, Record<string, string>>;
 
