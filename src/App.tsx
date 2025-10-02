@@ -820,8 +820,8 @@ export default function App(): ReactElement {
     setDB(next);
   };
 
-  const openTechnique = (slug: string, trainerId?: string, entry?: 'irimi' | 'tenkan'): void => {
-    if (!db.techniques.some((technique) => technique.slug === slug)) {
+  const openTechnique = (slug: string, trainerId?: string, entry?: 'irimi' | 'tenkan', skipExistenceCheck?: boolean): void => {
+    if (!skipExistenceCheck && !db.techniques.some((technique) => technique.slug === slug)) {
       return;
     }
 
@@ -957,6 +957,7 @@ export default function App(): ReactElement {
           setSelectedCollectionId(collectionId);
           navigateTo('bookmarks');
         }}
+        onOpenTechnique={openTechnique}
       />
     );
   } else {

@@ -127,6 +127,16 @@ export const messages = {
     categoryOther: 'Other',
     // Guide page
     beltExamProgramNote: 'Click on a belt to open its exam program collection. You can save techniques there and use it as your study guide.',
+    examMatrixTitle: 'Exam Program of the German Aikido Federation (5th Kyū → 1st Dan)',
+    examMatrixLead: 'Numbers show the grade where a variation is examined. Click a technique or cell to see details. Scroll left/right to see the whole table.',
+    examMatrixLegendTitle: 'Legend',
+    examMatrixLegendKyu: 'Kyū grades (5–1)',
+    examMatrixLegendDan: '1st Dan',
+    examMatrixLegendCount: 'Number of variations',
+    examMatrixLegendDot: 'Examined (variation not specified)',
+    examMatrixSectionKatame: 'Katame-waza (Controls & Pins)',
+    examMatrixSectionNage: 'Nage-waza',
+    examMatrixSectionKatameShort: 'Katame-waza',
   },
   de: {
     app: 'Enso',
@@ -254,6 +264,16 @@ export const messages = {
     categoryOther: 'Andere',
     // Guide page
     beltExamProgramNote: 'Klicke auf einen Gürtel, um das Prüfungsprogramm zu öffnen. Du kannst dort Techniken speichern und es als Lernhilfe nutzen.',
+    examMatrixTitle: 'Prüfungsprogramm des Deutschen Aikido-Bundes (5. Kyū → 1. Dan)',
+    examMatrixLead: 'Zahlen zeigen den Prüfungsgrad für die jeweilige Variante. Technik oder Feld anklicken für Details. Links/rechts scrollen, um die ganze Tabelle zu sehen.',
+    examMatrixLegendTitle: 'Legende',
+    examMatrixLegendKyu: 'Kyū-Grade (5–1)',
+    examMatrixLegendDan: '1. Dan',
+    examMatrixLegendCount: 'Anzahl der Varianten',
+    examMatrixLegendDot: 'Geprüft (Variante nicht spezifiziert)',
+    examMatrixSectionKatame: 'Katame-waza (Kontrolltechniken & Fixierungen)',
+    examMatrixSectionNage: 'Nage-waza',
+    examMatrixSectionKatameShort: 'Katame-waza',
   },
 } as const satisfies Record<Locale, Record<string, string>>;
 

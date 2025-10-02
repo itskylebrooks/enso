@@ -7,6 +7,7 @@ import { gradeLabel, getGradeStyle } from '../../shared/styles/belts';
 import { useMotionPreferences, defaultEase } from '../ui/motion';
 import { getInitialThemeState } from '../../shared/utils/theme';
 import { getCopy } from '../../shared/constants/i18n';
+import { ExamMatrix } from '../guide/ExamMatrix';
 
 type GuidePageProps = {
   locale: Locale;
@@ -14,6 +15,7 @@ type GuidePageProps = {
   onNavigateToGlossaryWithMovementFilter: () => void;
   onCreateCollectionWithGrade: (name: string, grade: Grade) => string | null;
   onNavigateToBookmarks: (collectionId: string) => void;
+  onOpenTechnique: (slug: string, trainerId?: string, entry?: 'irimi' | 'tenkan', skipExistenceCheck?: boolean) => void;
 };
 
 type TermEntry = {
@@ -194,6 +196,7 @@ export const GuidePage = ({
   onNavigateToGlossaryWithMovementFilter,
   onCreateCollectionWithGrade,
   onNavigateToBookmarks,
+  onOpenTechnique,
 }: GuidePageProps): ReactElement => {
   const copy = content[locale];
   const i18nCopy = getCopy(locale);
@@ -344,6 +347,24 @@ export const GuidePage = ({
               );
             })}
           </ul>
+        </motion.article>
+
+        {/* Exam Program Matrix */}
+        <motion.article className="space-y-4" {...animationProps}>
+          <header className="space-y-2">
+            <h2 className="text-xl font-semibold leading-tight">{i18nCopy.examMatrixTitle}</h2>
+          </header>
+          <ExamMatrix
+            locale={locale}
+            copy={i18nCopy}
+            isDark={isDark}
+            onCellClick={(slug, attackKey) => {
+              // Create combined technique slug: e.g., "katate-dori-ude-osae-ikkyo-omote"
+              const attackSlug = attackKey.replace(/_/g, '-');
+              const combinedSlug = `${attackSlug}-${slug}`;
+              onOpenTechnique(combinedSlug, undefined, undefined, true);
+            }}
+          />
         </motion.article>
 
         {/* Etiquette */}
