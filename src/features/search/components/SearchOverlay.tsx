@@ -6,6 +6,7 @@ import { EmphasizedName } from '../../../shared/components';
 import { SearchIcon } from '../../../shared/components/ui/icons';
 import { useFocusTrap } from '../../../shared/hooks/useFocusTrap';
 import { buildSearchIndex, buildGlossarySearchIndex, matchSearch, normalizeSearchQuery } from '../indexer';
+import { scoreSearchResult, applyTieBreakers, type ScoredSearchResult } from '../scorer';
 import { useMotionPreferences } from '../../../components/ui/motion';
 import { loadAllTerms } from '../../glossary/loader';
 
@@ -61,98 +62,33 @@ export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen, onOpe
       return [...recentTechniques, ...someGlossaryTerms];
     }
 
-    // Check for exact glossary term matches first (highest priority)
-    const queryText = normalizedQuery.join(' ').toLowerCase();
-    const exactGlossaryMatches: SearchResult[] = glossaryTerms
-      .filter(term => 
-        term.romaji.toLowerCase() === queryText ||
-        term.slug.toLowerCase() === queryText ||
-        (term.jp && term.jp.toLowerCase() === queryText)
-      )
-      .map(term => ({ type: 'glossary', item: term }));
-
-    // Search techniques and glossary terms normally
-    const allTechniqueResults: SearchResult[] = techniqueIndex
+    // Get all matching results using the existing haystack filtering
+    const allTechniqueResults: ScoredSearchResult[] = techniqueIndex
       .filter((entry) => matchSearch(entry.haystack, normalizedQuery))
-      .map((entry) => ({ type: 'technique', item: entry.technique }));
+      .map((entry) => {
+        const score = scoreSearchResult({ type: 'technique', item: entry.technique }, normalizedQuery, locale);
+        return { type: 'technique', item: entry.technique, score };
+      });
     
-    const allGlossaryResults: SearchResult[] = glossaryIndex
+    const allGlossaryResults: ScoredSearchResult[] = glossaryIndex
       .filter((entry) => matchSearch(entry.haystack, normalizedQuery))
-      .map((entry) => ({ type: 'glossary', item: entry.term }));
+      .map((entry) => {
+        const score = scoreSearchResult({ type: 'glossary', item: entry.term }, normalizedQuery, locale);
+        return { type: 'glossary', item: entry.term, score };
+      });
 
-    // Enhanced ranking: separate into exact matches, prefix matches, and partial matches
-    const exactTechniqueMatches: SearchResult[] = [];
-    const prefixTechniqueMatches: SearchResult[] = [];
-    const partialTechniqueMatches: SearchResult[] = [];
-    
-    allTechniqueResults.forEach(result => {
-      if (result.type === 'technique') {
-        const technique = result.item;
-        const nameEn = technique.name.en.toLowerCase();
-        const nameDe = technique.name.de.toLowerCase();
-        const jp = technique.jp?.toLowerCase() || '';
-        const slug = technique.slug.toLowerCase();
-        
-        // Check for exact matches (highest priority)
-        if (nameEn === queryText || nameDe === queryText || 
-            jp === queryText || slug === queryText) {
-          exactTechniqueMatches.push(result);
-        }
-        // Check for prefix matches (second priority) - includes hyphenated terms
-        else if (nameEn.startsWith(queryText) || nameDe.startsWith(queryText) ||
-                 nameEn.includes('-' + queryText) || nameDe.includes('-' + queryText) ||
-                 nameEn.includes(' ' + queryText) || nameDe.includes(' ' + queryText) ||
-                 slug.startsWith(queryText)) {
-          prefixTechniqueMatches.push(result);
-        }
-        // All other matches (lowest priority)
-        else {
-          partialTechniqueMatches.push(result);
-        }
-      }
-    });
+    // Combine and sort by score with tie-breaking rules
+    const allResults = [...allTechniqueResults, ...allGlossaryResults];
+    allResults.sort(applyTieBreakers);
 
-    // Sort prefix matches by relevance (shorter names first, then alphabetical)
-    prefixTechniqueMatches.sort((a, b) => {
-      if (a.type !== 'technique' || b.type !== 'technique') return 0;
-      const aName = (a.item.name.en || a.item.name.de).toLowerCase();
-      const bName = (b.item.name.en || b.item.name.de).toLowerCase();
-      
-      // Prioritize matches that start with the query
-      const aStartsWith = aName.startsWith(queryText);
-      const bStartsWith = bName.startsWith(queryText);
-      
-      if (aStartsWith && !bStartsWith) return -1;
-      if (!aStartsWith && bStartsWith) return 1;
-      
-      // If both start with query or both don't, sort by length then alphabetically
-      if (aName.length !== bName.length) {
-        return aName.length - bName.length;
-      }
-      return aName.localeCompare(bName);
-    });
-
-    // Sort exact matches alphabetically
-    exactTechniqueMatches.sort((a, b) => {
-      if (a.type !== 'technique' || b.type !== 'technique') return 0;
-      const aName = (a.item.name.en || a.item.name.de).toLowerCase();
-      const bName = (b.item.name.en || b.item.name.de).toLowerCase();
-      return aName.localeCompare(bName);
-    });
-
-    // Remove exact matches from regular glossary results to avoid duplicates
-    const exactMatchIds = new Set(exactGlossaryMatches.map(r => r.item.id));
-    const otherGlossaryResults = allGlossaryResults.filter(r => !exactMatchIds.has(r.item.id));
-
-    // Enhanced prioritization: exact matches first, then prefix matches, then partial matches
-    return [
-      ...exactGlossaryMatches,
-      ...exactTechniqueMatches.slice(0, 5),
-      ...prefixTechniqueMatches.slice(0, 8),
-      ...partialTechniqueMatches.slice(0, 10),
-      ...otherGlossaryResults.slice(0, 8)
-    ];
-  }, [techniqueIndex, glossaryIndex, normalizedQuery, techniques, glossaryTerms, query]);
+    // Limit results and remove score for return type compatibility
+    return allResults
+      .slice(0, 20)
+      .map(result => ({
+        type: result.type,
+        item: result.item
+      })) as SearchResult[];
+  }, [techniqueIndex, glossaryIndex, normalizedQuery, techniques, glossaryTerms, query, locale]);
 
   // Reset selection when results change
   useEffect(() => {
