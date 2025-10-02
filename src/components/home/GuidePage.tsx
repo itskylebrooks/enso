@@ -7,7 +7,7 @@ import { gradeLabel, getGradeStyle } from '../../shared/styles/belts';
 import { useMotionPreferences, defaultEase } from '../ui/motion';
 import { getInitialThemeState } from '../../shared/utils/theme';
 
-type BasicsPageProps = {
+type GuidePageProps = {
   locale: Locale;
   onNavigateToGlossaryWithMovementFilter: () => void;
 };
@@ -17,7 +17,7 @@ type TermEntry = {
   detail: string;
 };
 
-type BasicsContent = {
+type GuideContent = {
   headings: {
     movements: string;
     philosophy: string;
@@ -42,7 +42,7 @@ type BasicsContent = {
   etiquettePoints: string[];
 };
 
-const content: Record<Locale, BasicsContent> = {
+const content: Record<Locale, GuideContent> = {
   en: {
     headings: {
       movements: 'Basic movements & stances',
@@ -189,7 +189,7 @@ const sectionVariants = {
   show: { opacity: 1, y: 0 },
 };
 
-export const BasicsPage = ({ locale, onNavigateToGlossaryWithMovementFilter }: BasicsPageProps): ReactElement => {
+export const GuidePage = ({ locale, onNavigateToGlossaryWithMovementFilter }: GuidePageProps): ReactElement => {
   const copy = content[locale];
   const { prefersReducedMotion } = useMotionPreferences();
   const [isDark, setIsDark] = useState(getInitialThemeState);

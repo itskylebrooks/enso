@@ -96,7 +96,7 @@ export type DB = {
   glossaryBookmarkCollections: GlossaryBookmarkCollection[];
 };
 
-export type AppRoute = 'home' | 'library' | 'bookmarks' | 'about' | 'basics' | 'glossary';
+export type AppRoute = 'home' | 'library' | 'bookmarks' | 'about' | 'guide' | 'glossary';
 
 export type Filters = {
   category?: string;

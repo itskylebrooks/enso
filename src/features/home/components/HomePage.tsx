@@ -11,7 +11,7 @@ type HomePageProps = {
   locale: Locale;
   onOpenLibrary: () => void;
   onViewBookmarks: () => void;
-  onViewBasics: () => void;
+  onViewGuide: () => void;
   onViewGlossary: () => void;
   onViewAbout: () => void;
 };
@@ -21,7 +21,7 @@ export const HomePage = ({
   locale,
   onOpenLibrary,
   onViewBookmarks,
-  onViewBasics,
+  onViewGuide,
   onViewGlossary,
   onViewAbout,
 }: HomePageProps): ReactElement => {
@@ -98,10 +98,10 @@ export const HomePage = ({
               </button>
               <button
                 type="button"
-                onClick={onViewBasics}
+                onClick={onViewGuide}
                 className="h-12 px-5 rounded-xl border btn-tonal surface-hover transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] focus:outline-none"
               >
-                {copy.basics}
+                {copy.guide}
               </button>
               <button
                 type="button"

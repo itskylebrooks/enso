@@ -12,7 +12,7 @@ import { Toast } from './components/ui/Toast';
 import { MobileFilters } from './components/ui/MobileFilters';
 import { HomePage } from './features/home';
 import { AboutPage } from './components/home/AboutPage';
-import { BasicsPage } from './components/home/BasicsPage';
+import { GuidePage } from './components/home/GuidePage';
 import { GlossaryPage, GlossaryDetailPage, GlossaryFilterPanel, MobileGlossaryFilters, loadAllTerms } from './features/glossary';
 import { ConfirmClearModal } from './shared/components/dialogs/ConfirmClearDialog';
 import { useMotionPreferences } from './components/ui/motion';
@@ -58,8 +58,8 @@ const routeToPath = (route: AppRoute): string => {
       return '/';
     case 'about':
       return '/about';
-    case 'basics':
-      return '/basics';
+    case 'guide':
+      return '/guide';
     case 'library':
     case 'bookmarks':
     case 'glossary':
@@ -117,8 +117,13 @@ const parseLocation = (
     return { route: 'about', slug: null };
   }
 
+  if (pathname === '/guide') {
+    return { route: 'guide', slug: null };
+  }
+
+  // Backwards compatibility for old /basics URL
   if (pathname === '/basics') {
-    return { route: 'basics', slug: null };
+    return { route: 'guide', slug: null };
   }
 
   return { route: 'home', slug: null };
@@ -830,8 +835,8 @@ export default function App(): ReactElement {
       ? copy.backToHome
       : route === 'about'
       ? copy.backToAbout
-      : route === 'basics'
-      ? copy.backToBasics
+      : route === 'guide'
+      ? copy.backToGuide
       : route === 'glossary'
       ? copy.backToGlossary
       : copy.backToLibrary;
@@ -886,17 +891,16 @@ export default function App(): ReactElement {
         locale={locale}
         onOpenLibrary={() => navigateTo('library')}
         onViewBookmarks={() => navigateTo('bookmarks')}
-        onViewBasics={() => navigateTo('basics')}
+        onViewGuide={() => navigateTo('guide')}
         onViewGlossary={() => navigateTo('glossary')}
         onViewAbout={() => navigateTo('about')}
-        onOpenSettings={openSettings}
       />
     );
   } else if (route === 'about') {
     mainContent = <AboutPage copy={copy} />;
-  } else if (route === 'basics') {
+  } else if (route === 'guide') {
     mainContent = (
-      <BasicsPage
+      <GuidePage
         locale={locale}
         onNavigateToGlossaryWithMovementFilter={() => {
           setGlossaryFilters({ category: 'movement' });

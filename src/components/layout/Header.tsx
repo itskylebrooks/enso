@@ -117,10 +117,10 @@ export const Header = ({
                 <span>{copy.searchBtn}</span>
               </span>
             </TextButton>
-            <TabButton active={route === 'basics'} onClick={() => onNavigate('basics')}>
+            <TabButton active={route === 'guide'} onClick={() => onNavigate('guide')}>
               <span className="flex items-center gap-1">
                 <SproutIcon className="w-4 h-4" />
-                <span>{copy.basicsLink}</span>
+                <span>{copy.guideLink}</span>
               </span>
             </TabButton>
             <TabButton active={route === 'library'} onClick={() => onNavigate('library')}>
@@ -183,11 +183,11 @@ export const Header = ({
                       type="button"
                       onClick={() => {
                         setMenuOpen(false);
-                        onNavigate('basics');
+                        onNavigate('guide');
                       }}
                       className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
                     >
-                      <span className="flex items-center gap-2"><SproutIcon className="w-4 h-4" />{copy.basicsLink}</span>
+                      <span className="flex items-center gap-2"><SproutIcon className="w-4 h-4" />{copy.guideLink}</span>
                     </button>
                   </li>
                   <li>
