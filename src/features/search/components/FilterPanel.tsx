@@ -48,8 +48,8 @@ const buildTaxonomyOptions = (
 
 const buildEntryModeOptions = (locale: Locale, values: string[]): Option[] => {
   const entryModeLabels: Record<string, string> = {
-    'irimi': locale === 'de' ? 'Irimi (Omote)' : 'Irimi (Omote)',
-    'tenkan': locale === 'de' ? 'Tenkan (Ura)' : 'Tenkan (Ura)'
+    'irimi': locale === 'de' ? 'Irimi' : 'Irimi',
+    'tenkan': locale === 'de' ? 'Tenkan' : 'Tenkan'
   };
   
   return values.map((value) => ({

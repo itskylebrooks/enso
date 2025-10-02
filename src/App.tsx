@@ -98,7 +98,13 @@ const parseLocation = (
 
   if (pathname.startsWith('/glossary/')) {
     const slug = getGlossarySlugFromPath(pathname);
-    return { route: 'glossary', slug };
+    // Handle backwards compatibility redirects
+    const slugRedirects: Record<string, string> = {
+      'irimi-omote': 'irimi',
+      'tenkan-ura': 'tenkan',
+    };
+    const finalSlug = slug && (slugRedirects[slug] || slug);
+    return { route: 'glossary', slug: finalSlug };
   }
 
   if (pathname === '/bookmarks') {
@@ -842,10 +848,17 @@ export default function App(): ReactElement {
   };
 
   const openGlossaryTerm = (slug: string): void => {
+    // Handle backwards compatibility redirects
+    const slugRedirects: Record<string, string> = {
+      'irimi-omote': 'irimi',
+      'tenkan-ura': 'tenkan',
+    };
+    const finalSlug = slugRedirects[slug] || slug;
+
     if (typeof window !== 'undefined') {
-      const encodedSlug = encodeURIComponent(slug);
+      const encodedSlug = encodeURIComponent(finalSlug);
       const glossaryPath = `/glossary/${encodedSlug}`;
-      const state: HistoryState = { route: 'glossary', slug };
+      const state: HistoryState = { route: 'glossary', slug: finalSlug };
 
       if (window.location.pathname !== glossaryPath) {
         window.history.pushState(state, '', glossaryPath);
@@ -855,7 +868,7 @@ export default function App(): ReactElement {
     }
 
     setRoute('glossary');
-    setActiveSlug(slug);
+    setActiveSlug(finalSlug);
   };
 
   const closeTechnique = (): void => {

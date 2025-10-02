@@ -7,6 +7,12 @@ const modules = import.meta.glob('/content/glossary/*.json', { eager: true });
 let termsCache: GlossaryTerm[] | null = null;
 let termsBySlugCache: Map<string, GlossaryTerm> | null = null;
 
+// Backwards compatibility redirects for renamed slugs
+const slugRedirects: Record<string, string> = {
+  'irimi-omote': 'irimi',
+  'tenkan-ura': 'tenkan',
+};
+
 /**
  * Load all glossary terms from JSON files and cache them
  */
@@ -53,13 +59,16 @@ export async function loadAllTerms(): Promise<GlossaryTerm[]> {
 }
 
 /**
- * Load a specific glossary term by its slug
+ * Load a specific glossary term by its slug, with backwards compatibility redirects
  */
 export async function loadTermBySlug(slug: string): Promise<GlossaryTerm | undefined> {
   // Ensure terms are loaded and cached
   await loadAllTerms();
   
-  return termsBySlugCache?.get(slug);
+  // Check for redirects first
+  const redirectedSlug = slugRedirects[slug] || slug;
+  
+  return termsBySlugCache?.get(redirectedSlug);
 }
 
 /**

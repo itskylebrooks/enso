@@ -25,8 +25,8 @@ const buildTaxonomyOptions = (locale: Locale, type: TaxonomyType, values: string
 
 const buildEntryModeOptions = (locale: Locale, values: string[]) => {
   const entryModeLabels: Record<string, string> = {
-    'irimi': locale === 'de' ? 'Irimi (Omote)' : 'Irimi (Omote)',
-    'tenkan': locale === 'de' ? 'Tenkan (Ura)' : 'Tenkan (Ura)'
+    'irimi': locale === 'de' ? 'Irimi' : 'Irimi',
+    'tenkan': locale === 'de' ? 'Tenkan' : 'Tenkan'
   };
   
   return values.map((value) => ({

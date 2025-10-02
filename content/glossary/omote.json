@@ -1,0 +1,19 @@
+{
+  "id": "omote",
+  "slug": "omote",
+  "romaji": "Omote",
+  "jp": "表",
+  "category": "movement",
+  "def": {
+    "en": "Front/exterior line of entry or technique execution, moving directly toward uke's front.",
+    "de": "Vordere/äußere Linie der Eingangsbewegung oder Technikausführung, direkt auf Ukes Vorderseite zu."
+  },
+  "literal": {
+    "en": "front, surface, exterior",
+    "de": "vorne, Oberfläche, äußerlich"
+  },
+  "notes": {
+    "en": "Omote represents the direct, frontal approach in techniques. It often requires precise timing and positioning as nage moves into uke's strongest line of force. Commonly paired with irimi movements.",
+    "de": "Omote stellt den direkten, frontalen Ansatz in Techniken dar. Es erfordert oft präzises Timing und Positionierung, da Nage in Ukes stärkste Kraftlinie hineingeht. Häufig mit Irimi-Bewegungen gepaart."
+  }
+}

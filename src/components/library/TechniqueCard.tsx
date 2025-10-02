@@ -40,10 +40,10 @@ export const TechniqueCard = ({
   const entryLabels: string[] = [];
   
   if (availableEntries.irimi) {
-    entryLabels.push(locale === 'de' ? 'Irimi (Omote)' : 'Irimi (Omote)');
+    entryLabels.push(locale === 'de' ? 'Irimi' : 'Irimi');
   }
   if (availableEntries.tenkan) {
-    entryLabels.push(locale === 'de' ? 'Tenkan (Ura)' : 'Tenkan (Ura)');
+    entryLabels.push(locale === 'de' ? 'Tenkan' : 'Tenkan');
   }
 
   const weaponLabel =

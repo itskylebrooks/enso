@@ -43,10 +43,10 @@ const buildTags = (technique: Technique, locale: Locale): string[] => {
   const entryModeTags: string[] = [];
   
   if (availableEntries.irimi) {
-    entryModeTags.push(locale === 'de' ? 'Irimi (Omote)' : 'Irimi (Omote)');
+    entryModeTags.push(locale === 'de' ? 'Irimi' : 'Irimi');
   }
   if (availableEntries.tenkan) {
-    entryModeTags.push(locale === 'de' ? 'Tenkan (Ura)' : 'Tenkan (Ura)');
+    entryModeTags.push(locale === 'de' ? 'Tenkan' : 'Tenkan');
   }
 
   const unique: string[] = [];
@@ -187,26 +187,30 @@ const mapTagToGlossarySlug = (tagLabel: string): string | null => {
     '正面打ち': 'shomen-uchi',
     'shomen': 'shomen-uchi',
     
-    // Movement patterns - all terms now point to comprehensive entries
-    'irimi (omote)': 'irimi-omote',
-    'irimi omote': 'irimi-omote',
-    'omote (irimi)': 'irimi-omote',
-    'omote irimi': 'irimi-omote',
-    '表（入身）': 'irimi-omote',
-    'omote': 'irimi-omote',
-    'irimi': 'irimi-omote',
-    'entering': 'irimi-omote',
-    '入身': 'irimi-omote',
+    // Movement patterns - all terms now point to appropriate entries
+    'irimi (omote)': 'irimi',
+    'irimi omote': 'irimi',
+    'omote (irimi)': 'irimi',
+    'omote irimi': 'irimi',
+    '表（入身）': 'irimi',
+    'irimi': 'irimi',
+    'entering': 'irimi',
+    '入身': 'irimi',
     
-    'tenkan (ura)': 'tenkan-ura',
-    'tenkan ura': 'tenkan-ura',
-    'ura (tenkan)': 'tenkan-ura',
-    'ura tenkan': 'tenkan-ura',
-    '裏（転換）': 'tenkan-ura',
-    'ura': 'tenkan-ura',
-    'tenkan': 'tenkan-ura',
-    'turning': 'tenkan-ura',
-    '転換': 'tenkan-ura',
+    'tenkan (ura)': 'tenkan',
+    'tenkan ura': 'tenkan',
+    'ura (tenkan)': 'tenkan',
+    'ura tenkan': 'tenkan',
+    '裏（転換）': 'tenkan',
+    'tenkan': 'tenkan',
+    'turning': 'tenkan',
+    '転換': 'tenkan',
+    
+    // Separate entries for line concepts
+    'omote': 'omote',
+    '表': 'omote',
+    'ura': 'ura',
+    '裏': 'ura',
     
     // Concepts
     'ukemi': 'ukemi',

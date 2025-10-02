@@ -17,7 +17,7 @@ export function getGlobalEntryPref(): EntryMode {
   } catch (error) {
     console.warn('Failed to read global entry preference from localStorage:', error);
   }
-  return 'irimi'; // Default fallback - prefer irimi (omote)
+  return 'irimi'; // Default fallback - prefer irimi
 }
 
 /**
