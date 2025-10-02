@@ -39,7 +39,6 @@ type GuideContent = {
   virtues: TermEntry[];
 
   beltsLead: string;
-  beltNote: string;
   beltNames: Record<Grade, string>;
 
   etiquetteLead: string;
@@ -87,8 +86,6 @@ const content: Record<Locale, GuideContent> = {
 
     beltsLead:
       'Gradings follow the kyū → dan structure. Colors vary by school; the list below is a common reference.',
-    beltNote:
-      'Note: our club (WSV Walddörfer Sportverein) uses this sequence. Other dojos may differ.',
     beltNames: {
       kyu5: 'Yellow',
       kyu4: 'Orange',
@@ -158,8 +155,6 @@ const content: Record<Locale, GuideContent> = {
 
     beltsLead:
       'Graduierungen folgen der Reihenfolge Kyū → Dan. Die Farben unterscheiden sich je nach Schule.',
-    beltNote:
-      'Hinweis: In unserem Verein (WSV Walddörfer Sportverein) gilt diese Reihenfolge. Andere Dōjōs weichen ggf. ab.',
     beltNames: {
       kyu5: 'Gelb',
       kyu4: 'Orange',
@@ -317,8 +312,7 @@ export const GuidePage = ({
           <header className="space-y-2">
             <h2 className="text-xl font-semibold leading-tight">{copy.headings.belts}</h2>
             <p className="text-sm text-subtle leading-relaxed">{copy.beltsLead}</p>
-            <p className="text-xs text-subtle">{copy.beltNote}</p>
-            <p className="text-sm bg-[var(--color-surface)] border surface-border rounded-lg px-4 py-3 leading-relaxed">
+            <p className="text-sm bg-[var(--color-surface)] border surface-border rounded-lg px-4 py-3 leading-relaxed text-center">
               {i18nCopy.beltExamProgramNote}
             </p>
           </header>
