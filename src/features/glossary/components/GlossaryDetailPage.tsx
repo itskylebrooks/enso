@@ -230,7 +230,7 @@ export const GlossaryDetailPage = ({
             <div className="space-y-3">
               {notes.split('\n').map((paragraph, index) => (
                 paragraph.trim() && (
-                  <p key={index} className="text-base leading-relaxed">
+                  <p key={index} className="text-base leading-relaxed text-center">
                     {paragraph.trim()}
                   </p>
                 )
