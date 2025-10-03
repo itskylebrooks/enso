@@ -32,7 +32,9 @@ export type TechniqueVersion = {
   keyPoints: { en: string[]; de: string[] };
   commonMistakes: { en: string[]; de: string[] };
   context?: { en: string; de: string };
-  media: Array<{ type: MediaType; url: string; title?: string }>;
+  media?: Array<{ type: MediaType; url: string; title?: string }>;
+  // Optional per-entry media (irimi/tenkan/omote/ura) - filename-level versions may include these
+  mediaByEntry?: Partial<Record<EntryMode, Array<{ type: MediaType; url: string; title?: string }>>>;
 };
 
 // Alias for consistency with requirements

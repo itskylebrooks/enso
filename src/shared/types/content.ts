@@ -40,6 +40,14 @@ const stepsByEntrySchema = z.object({
   tenkan: localizedStringArray.optional(),
   omote: localizedStringArray.optional(),
   ura: localizedStringArray.optional(),
+  media: z
+    .object({
+      irimi: z.array(mediaSchema).optional(),
+      tenkan: z.array(mediaSchema).optional(),
+      omote: z.array(mediaSchema).optional(),
+      ura: z.array(mediaSchema).optional(),
+    })
+    .optional(),
 }).refine(
   (data) => Boolean(data.irimi || data.tenkan || data.omote || data.ura),
   { message: 'At least one entry type must be provided' }
@@ -60,7 +68,7 @@ const versionSchema = z
     keyPoints: localizedStringArray,
     commonMistakes: localizedStringArray,
     context: localizedStringOptional.optional(),
-    media: z.array(mediaSchema),
+    media: z.array(mediaSchema).optional(),
   })
   .superRefine((value, ctx) => {
     // Validate stepsByEntry arrays have matching lengths

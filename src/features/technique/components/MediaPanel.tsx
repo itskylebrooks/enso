@@ -1,12 +1,12 @@
 import type { ReactElement } from 'react';
 import { motion } from 'motion/react';
 import type { Copy } from '@shared/constants/i18n';
-import type { TechniqueVersion } from '@shared/types';
+import type { MediaItem } from '@shared/types';
 import { MediaEmbed } from '@shared/components/media/MediaEmbed';
 import { useMotionPreferences } from '@shared/components/ui/motion';
 
 export type MediaPanelProps = {
-  media: TechniqueVersion['media'];
+  media?: MediaItem[] | null;
   copy: Copy;
 };
 
@@ -23,10 +23,10 @@ export const MediaPanel = ({ media, copy }: MediaPanelProps): ReactElement => {
         animate="show"
         transition={mediaMotion.transition}
       >
-        {media.length === 0 && (
+        {(!media || media.length === 0) && (
           <p className="text-sm text-muted leading-relaxed">{copy.mediaEmpty}</p>
         )}
-        {media.map((item, index) => (
+        {(media || []).map((item, index) => (
           <MediaEmbed key={`${item.url}-${index}`} media={item} />
         ))}
       </motion.div>

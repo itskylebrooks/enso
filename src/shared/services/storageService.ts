@@ -72,11 +72,26 @@ const normalizeVersion = (version: TechniqueVersion): TechniqueVersion => {
     keyPoints: normalizeLocalizedArray(version.keyPoints),
     commonMistakes: normalizeLocalizedArray(version.commonMistakes),
     context: version.context ? normalizeLocalizedString(version.context) : undefined,
-    media: version.media.map((item) => ({
-      type: item.type,
-      url: item.url.trim(),
-      title: item.title ? item.title.trim() : undefined,
-    })),
+    media: Array.isArray(version.media)
+      ? version.media.map((item) => ({
+          type: item.type,
+          url: item.url.trim(),
+          title: item.title ? item.title.trim() : undefined,
+        }))
+      : [],
+    // support optional per-entry media block under stepsByEntry.media
+    mediaByEntry: (() => {
+      const mediaObj = (version.stepsByEntry as any)?.media;
+      if (!mediaObj || typeof mediaObj !== 'object') return undefined;
+      const out: Record<string, Array<{ type: string; url: string; title?: string }>> = {};
+      ['irimi', 'tenkan', 'omote', 'ura'].forEach((k) => {
+        const arr = mediaObj[k];
+        if (Array.isArray(arr)) {
+          out[k] = arr.map((m: any) => ({ type: m.type, url: (m.url ?? '').trim(), title: m.title ? m.title.trim() : undefined }));
+        }
+      });
+      return Object.keys(out).length > 0 ? (out as any) : undefined;
+    })(),
   };
 
   return normalized;

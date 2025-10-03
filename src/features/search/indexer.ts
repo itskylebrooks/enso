@@ -91,10 +91,25 @@ export const buildSearchIndex = (techniques: Technique[]): SearchEntry[] =>
       version.uke.notes.en.forEach((note) => pushToken(tokens, note));
       version.uke.notes.de.forEach((note) => pushToken(tokens, note));
 
-      version.media.forEach((media) => {
-        pushToken(tokens, media.title);
-        pushToken(tokens, media.url);
-      });
+      // Index version-level media (if any)
+      if (Array.isArray((version as any).media)) {
+        (version as any).media.forEach((media: any) => {
+          pushToken(tokens, media.title);
+          pushToken(tokens, media.url);
+        });
+      }
+
+      // Index per-entry media under stepsByEntry.media if present
+      const mediaObj = (version as any).mediaByEntry || (version.stepsByEntry as any)?.media;
+      if (mediaObj && typeof mediaObj === 'object') {
+        Object.values(mediaObj).forEach((arr: any) => {
+          if (!Array.isArray(arr)) return;
+          arr.forEach((media: any) => {
+            pushToken(tokens, media.title);
+            pushToken(tokens, media.url);
+          });
+        });
+      }
 
       version.keyPoints.en.forEach((item) => pushToken(tokens, item));
       version.keyPoints.de.forEach((item) => pushToken(tokens, item));

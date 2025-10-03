@@ -81,7 +81,10 @@ export const convertToVariants = (technique: Technique): TechniqueVariant[] => {
         keyPoints: version.keyPoints as Localized<string[]> | undefined,
         commonMistakes: version.commonMistakes as Localized<string[]> | undefined,
         context: version.context as Localized<string> | undefined,
-        media: version.media,
+        // Prefer per-entry media if present (new shape), otherwise fallback to version.media
+        media: (version as any).mediaByEntry && (version as any).mediaByEntry[direction]
+          ? (version as any).mediaByEntry[direction]
+          : version.media,
       };
       
       variants.push(variant);
