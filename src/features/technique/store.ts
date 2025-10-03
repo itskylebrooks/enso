@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage, type StateStorage } from 'zustand/middleware';
-import type { Direction, WeaponKind, Technique, TechniqueVariant } from '../../shared/types';
+import type { Direction, WeaponKind, Technique, TechniqueVariant, Hanmi } from '../../shared/types';
 
 export type TechniqueViewState = {
   lastViewedVersion: Record<string, string>;
@@ -46,6 +46,7 @@ export const useTechniqueViewStore = create<TechniqueViewState>()(
 // Helper to get active variant from technique data
 export const getActiveVariant = (
   technique: Technique,
+  hanmi: Hanmi | null | undefined,
   direction: Direction,
   weapon: WeaponKind,
   versionId?: string | null,
@@ -54,9 +55,13 @@ export const getActiveVariant = (
     return null;
   }
 
-  // Try exact match
+  // Normalize hanmi to null for comparison
+  const normalizedHanmi = hanmi || null;
+
+  // Try exact match including hanmi
   const exactMatch = technique.variants.find(
     (variant) =>
+      (variant.key.hanmi || null) === normalizedHanmi &&
       variant.key.direction === direction &&
       variant.key.weapon === weapon &&
       variant.key.versionId === versionId,
@@ -66,9 +71,10 @@ export const getActiveVariant = (
     return exactMatch;
   }
 
-  // Try fallback to standard (null/undefined versionId) for this direction/weapon
+  // Try fallback to standard (null/undefined versionId) for this hanmi/direction/weapon
   const standardMatch = technique.variants.find(
     (variant) =>
+      (variant.key.hanmi || null) === normalizedHanmi &&
       variant.key.direction === direction &&
       variant.key.weapon === weapon &&
       (variant.key.versionId === null || variant.key.versionId === undefined),

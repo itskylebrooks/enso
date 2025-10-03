@@ -1,15 +1,17 @@
 import { useCallback, useMemo, type ReactElement } from 'react';
-import type { Direction, WeaponKind, TechniqueVersionMeta } from '../../shared/types';
+import type { Hanmi, Direction, WeaponKind, TechniqueVersionMeta } from '../../shared/types';
 import { Select, type SelectOption } from '../../shared/components/ui/Select';
 import { HandIcon, BokkenIcon, JoIcon, TantoIcon } from '../../shared/components/ui/icons';
 
 export type TechniqueToolbarValue = {
+  hanmi?: Hanmi | null;
   direction: Direction;
   weapon: WeaponKind;
   versionId?: string | null;
 };
 
 export type TechniqueToolbarProps = {
+  hanmisAvailable: Hanmi[];
   directionsAvailable: Direction[];
   weaponsAvailable: WeaponKind[];
   versions: TechniqueVersionMeta[];
@@ -18,9 +20,13 @@ export type TechniqueToolbarProps = {
   // Function to check if a specific combo is available
   isComboAvailable?: (direction: Direction, weapon: WeaponKind, versionId: string | null) => boolean;
   labels: {
+    hanmi: string;
     direction: string;
     weapon: string;
     version: string;
+    // Hanmi labels
+    aiHanmi: string;
+    gyakuHanmi: string;
     // Direction labels
     irimi: string;
     tenkan: string;
@@ -36,6 +42,7 @@ export type TechniqueToolbarProps = {
   };
 };
 
+const HANMI_ORDER: Hanmi[] = ['ai-hanmi', 'gyaku-hanmi'];
 const DIRECTION_ORDER: Direction[] = ['irimi', 'tenkan', 'omote', 'ura'];
 
 const weaponIcons: Record<WeaponKind, ReactElement> = {
@@ -46,6 +53,7 @@ const weaponIcons: Record<WeaponKind, ReactElement> = {
 };
 
 export const TechniqueToolbar = ({
+  hanmisAvailable,
   directionsAvailable,
   weaponsAvailable,
   versions,
@@ -53,6 +61,25 @@ export const TechniqueToolbar = ({
   onChange,
   labels,
 }: TechniqueToolbarProps): ReactElement => {
+  // Hanmi options
+  const hanmiOptions: SelectOption<Hanmi>[] = useMemo(
+    () => {
+      const labelMap: Record<Hanmi, string> = {
+        'ai-hanmi': labels.aiHanmi,
+        'gyaku-hanmi': labels.gyakuHanmi,
+      };
+
+      return HANMI_ORDER.map((hanmi) => {
+        return {
+          value: hanmi,
+          label: labelMap[hanmi],
+          disabled: !hanmisAvailable.includes(hanmi),
+        };
+      });
+    },
+    [hanmisAvailable, labels]
+  );
+
   // Direction options
   const directionOptions: SelectOption<Direction>[] = useMemo(
     () => {
@@ -123,6 +150,13 @@ export const TechniqueToolbar = ({
   );
 
   // Handlers
+  const handleHanmiChange = useCallback(
+    (hanmi: Hanmi) => {
+      onChange({ ...value, hanmi });
+    },
+    [value, onChange]
+  );
+
   const handleDirectionChange = useCallback(
     (direction: Direction) => {
       onChange({ ...value, direction });
@@ -155,6 +189,17 @@ export const TechniqueToolbar = ({
       role="toolbar"
       aria-label="Technique variant selector"
     >
+      {/* Hanmi select - always show */}
+      <fieldset className="flex-1 sm:flex-initial sm:min-w-[200px]">
+        <legend className="sr-only">{labels.hanmi}</legend>
+        <Select
+          options={hanmiOptions}
+          value={value.hanmi || 'ai-hanmi'}
+          onChange={handleHanmiChange}
+          aria-label={labels.hanmi}
+        />
+      </fieldset>
+
       {/* Direction select */}
       <fieldset className="flex-1 sm:flex-initial sm:min-w-[200px]">
         <legend className="sr-only">{labels.direction}</legend>

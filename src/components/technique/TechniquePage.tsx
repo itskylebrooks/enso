@@ -141,8 +141,9 @@ export const TechniquePage = ({
   }, [enrichedTechnique]);
 
   // Helper to check if a specific combination exists
-  const variantExists = useCallback((direction: Direction, weapon: WeaponKind, versionId: string | null) => {
+  const variantExists = useCallback((hanmi: import('../../shared/types').Hanmi | null | undefined, direction: Direction, weapon: WeaponKind, versionId: string | null) => {
     return availableVariants.some(v => 
+      (v.key.hanmi || null) === (hanmi || null) &&
       v.key.direction === direction && 
       v.key.weapon === weapon && 
       v.key.versionId === versionId
@@ -151,13 +152,21 @@ export const TechniquePage = ({
 
   // Initialize toolbar state from URL or defaults to first available variant
   const [toolbarValue, setToolbarValue] = useState<TechniqueToolbarValue>(() => {
+    const urlHanmi = initialVariantParams?.hanmi;
     const urlDir = initialVariantParams?.direction;
     const urlWeapon = initialVariantParams?.weapon;
     const urlVersion = initialVariantParams?.versionId;
 
     // If URL params specify a valid variant, use it
-    if (urlDir && urlWeapon && variantExists(urlDir, urlWeapon, urlVersion || null)) {
+    if (urlDir && urlWeapon && variantExists(urlHanmi, urlDir, urlWeapon, urlVersion || null)) {
+      const firstVariant = availableVariants.find(v => 
+        (v.key.hanmi || null) === (urlHanmi || null) &&
+        v.key.direction === urlDir && 
+        v.key.weapon === urlWeapon && 
+        v.key.versionId === (urlVersion || null)
+      );
       return {
+        hanmi: firstVariant?.key.hanmi || null,
         direction: urlDir,
         weapon: urlWeapon,
         versionId: urlVersion || null,
@@ -168,6 +177,7 @@ export const TechniquePage = ({
     const firstVariant = availableVariants[0];
     if (firstVariant) {
       return {
+        hanmi: firstVariant.key.hanmi || null,
         direction: firstVariant.key.direction,
         weapon: firstVariant.key.weapon,
         versionId: firstVariant.key.versionId || null,
@@ -176,13 +186,24 @@ export const TechniquePage = ({
 
     // Fallback
     return {
+      hanmi: null,
       direction: 'irimi',
       weapon: 'empty',
       versionId: null,
     };
   });
 
-  // Get available directions/weapons for the CURRENTLY SELECTED version
+  // Get available hanmis/directions/weapons for the CURRENTLY SELECTED version
+  const availableHanmisForCurrentVersion = useMemo(() => {
+    const hanmis = new Set<import('../../shared/types').Hanmi>();
+    availableVariants
+      .filter(v => v.key.versionId === (toolbarValue.versionId || null))
+      .forEach(v => {
+        if (v.key.hanmi) hanmis.add(v.key.hanmi);
+      });
+    return Array.from(hanmis).sort();
+  }, [availableVariants, toolbarValue.versionId]);
+
   const availableDirectionsForCurrentVersion = useMemo(() => {
     const directions = new Set<Direction>();
     availableVariants
@@ -203,6 +224,7 @@ export const TechniquePage = ({
   const activeVariant = useMemo(
     () => getActiveVariant(
       enrichedTechnique,
+      toolbarValue.hanmi,
       toolbarValue.direction,
       toolbarValue.weapon,
       toolbarValue.versionId
@@ -214,7 +236,7 @@ export const TechniquePage = ({
   const handleToolbarChange = useCallback(
     (newValue: TechniqueToolbarValue) => {
       // Check if this combination exists
-      const exists = variantExists(newValue.direction, newValue.weapon, newValue.versionId || null);
+      const exists = variantExists(newValue.hanmi, newValue.direction, newValue.weapon, newValue.versionId || null);
       
       let finalValue = newValue;
       
@@ -228,58 +250,48 @@ export const TechniquePage = ({
         const versionChanged = newValue.versionId !== previousValue.versionId;
         
         if (versionChanged) {
-          // Version changed - find first available direction/weapon for this version
+          // Version changed - find first available hanmi/direction/weapon for this version
           const firstForVersion = availableVariants.find(v => 
             v.key.versionId === (newValue.versionId || null)
           );
           
           if (firstForVersion) {
             finalValue = {
+              hanmi: firstForVersion.key.hanmi || null,
               direction: firstForVersion.key.direction,
               weapon: firstForVersion.key.weapon,
               versionId: newValue.versionId,
             };
           }
         } else {
-          // Direction or weapon changed - try to keep as much as possible
-          // First try: keep version, adjust direction or weapon
+          // Direction, weapon, or hanmi changed - try to keep as much as possible
+          // First try: keep version, adjust other parameters
           const availableForVersion = availableVariants.filter(v => 
             v.key.versionId === (newValue.versionId || null)
           );
           
-          // Try to keep the direction if weapon changed
-          if (newValue.weapon !== previousValue.weapon) {
-            const keepDirection = availableForVersion.find(v => v.key.direction === newValue.direction);
-            if (keepDirection) {
-              finalValue = {
-                direction: keepDirection.key.direction,
-                weapon: keepDirection.key.weapon,
-                versionId: newValue.versionId,
-              };
-            } else if (availableForVersion[0]) {
-              finalValue = {
-                direction: availableForVersion[0].key.direction,
-                weapon: availableForVersion[0].key.weapon,
-                versionId: newValue.versionId,
-              };
-            }
-          }
-          // Try to keep the weapon if direction changed
-          else if (newValue.direction !== previousValue.direction) {
-            const keepWeapon = availableForVersion.find(v => v.key.weapon === newValue.weapon);
-            if (keepWeapon) {
-              finalValue = {
-                direction: keepWeapon.key.direction,
-                weapon: keepWeapon.key.weapon,
-                versionId: newValue.versionId,
-              };
-            } else if (availableForVersion[0]) {
-              finalValue = {
-                direction: availableForVersion[0].key.direction,
-                weapon: availableForVersion[0].key.weapon,
-                versionId: newValue.versionId,
-              };
-            }
+          // Try to find a matching variant
+          const match = availableForVersion.find(v => 
+            (v.key.hanmi || null) === (newValue.hanmi || null) &&
+            v.key.direction === newValue.direction &&
+            v.key.weapon === newValue.weapon
+          );
+          
+          if (match) {
+            finalValue = {
+              hanmi: match.key.hanmi || null,
+              direction: match.key.direction,
+              weapon: match.key.weapon,
+              versionId: newValue.versionId,
+            };
+          } else if (availableForVersion[0]) {
+            // Fallback to first available for this version
+            finalValue = {
+              hanmi: availableForVersion[0].key.hanmi || null,
+              direction: availableForVersion[0].key.direction,
+              weapon: availableForVersion[0].key.weapon,
+              versionId: newValue.versionId,
+            };
           }
         }
       }
@@ -289,6 +301,11 @@ export const TechniquePage = ({
       // Update URL without full page reload
       if (typeof window !== 'undefined') {
         const url = new URL(window.location.href);
+        if (finalValue.hanmi) {
+          url.searchParams.set('hanmi', finalValue.hanmi);
+        } else {
+          url.searchParams.delete('hanmi');
+        }
         url.searchParams.set('dir', finalValue.direction);
         url.searchParams.set('wp', finalValue.weapon);
         if (finalValue.versionId) {
@@ -345,9 +362,12 @@ export const TechniquePage = ({
 
   // Toolbar labels
   const toolbarLabels = {
+    hanmi: copy.toolbarHanmi,
     direction: copy.toolbarDirection,
     weapon: copy.toolbarWeapon,
     version: copy.toolbarVersion,
+    aiHanmi: copy.hanmiAiHanmi,
+    gyakuHanmi: copy.hanmiGyakuHanmi,
     irimi: copy.entryIrimi,
     tenkan: copy.entryTenkan,
     omote: copy.entryOmote,
@@ -383,6 +403,7 @@ export const TechniquePage = ({
 
       {/* New Toolbar */}
       <TechniqueToolbar
+        hanmisAvailable={availableHanmisForCurrentVersion}
         directionsAvailable={availableDirectionsForCurrentVersion}
         weaponsAvailable={availableWeaponsForCurrentVersion}
         versions={versionsMeta}

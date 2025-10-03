@@ -9,6 +9,7 @@ export type Grade =
 export type EntryMode = 'irimi' | 'tenkan' | 'omote' | 'ura';
 
 // New types for toolbar redesign
+export type Hanmi = 'ai-hanmi' | 'gyaku-hanmi';
 export type Direction = 'irimi' | 'tenkan' | 'omote' | 'ura';
 export type WeaponKind = 'empty' | 'bokken' | 'jo' | 'tanto';
 
@@ -21,6 +22,7 @@ export type TechniqueVersion = {
   trainerId?: string;
   dojoId?: string;
   label?: string; // Optional, can be generated dynamically
+  hanmi?: Hanmi; // Optional: ai-hanmi or gyaku-hanmi
   stepsByEntry: StepsByEntry;
   steps?: LocalizedSteps; // Legacy support for migration
   uke: {
@@ -45,6 +47,7 @@ export type TechniqueVersionMeta = {
 };
 
 export type TechniqueVariantKey = {
+  hanmi?: Hanmi | null;      // undefined or null => not specified
   direction: Direction;
   weapon: WeaponKind;
   versionId?: string | null; // undefined or null => standard

@@ -2,7 +2,7 @@
  * Utility functions for building hierarchical technique URLs
  */
 
-import type { EntryMode, Direction, WeaponKind } from '../shared/types';
+import type { EntryMode, Direction, WeaponKind, Hanmi } from '../shared/types';
 
 const isEntryPathMode = (value: string | undefined): value is EntryMode =>
   value === 'irimi' || value === 'tenkan' || value === 'omote' || value === 'ura';
@@ -12,6 +12,9 @@ const isDirection = (value: string | undefined): value is Direction =>
 
 const isWeaponKind = (value: string | undefined): value is WeaponKind =>
   value === 'empty' || value === 'bokken' || value === 'jo' || value === 'tanto';
+
+const isHanmi = (value: string | undefined): value is Hanmi =>
+  value === 'ai-hanmi' || value === 'gyaku-hanmi';
 
 /**
  * Builds a technique URL with optional trainer and entry parameters
@@ -69,6 +72,7 @@ export const parseTechniquePath = (pathname: string): { slug: string; trainerId?
  * Toolbar-based variant parameters (query string approach)
  */
 export type TechniqueVariantParams = {
+  hanmi?: Hanmi;
   direction?: Direction;
   weapon?: WeaponKind;
   versionId?: string | null;
@@ -94,6 +98,10 @@ export const buildTechniqueUrlWithVariant = (slug: string, params?: TechniqueVar
   if (!params) return path;
   
   const queryParams: string[] = [];
+  
+  if (params.hanmi) {
+    queryParams.push(`hanmi=${encodeURIComponent(params.hanmi)}`);
+  }
   
   if (params.direction) {
     queryParams.push(`dir=${encodeURIComponent(params.direction)}`);
@@ -123,11 +131,13 @@ export const buildTechniqueUrlWithVariant = (slug: string, params?: TechniqueVar
 export const parseTechniqueVariantParams = (search: string): TechniqueVariantParams => {
   const params = new URLSearchParams(search);
   
+  const hanmiCandidate = params.get('hanmi');
   const directionCandidate = params.get('dir');
   const weaponCandidate = params.get('wp');
   const versionId = params.get('ver');
   
   return {
+    hanmi: isHanmi(hanmiCandidate || undefined) ? hanmiCandidate as Hanmi : undefined,
     direction: isDirection(directionCandidate || undefined) ? directionCandidate as Direction : undefined,
     weapon: isWeaponKind(weaponCandidate || undefined) ? weaponCandidate as WeaponKind : undefined,
     versionId: versionId || undefined,
