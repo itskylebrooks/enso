@@ -8,6 +8,7 @@ import { useMotionPreferences, defaultEase } from '../ui/motion';
 import { getInitialThemeState } from '../../shared/utils/theme';
 import { getCopy } from '../../shared/constants/i18n';
 import { ExamMatrix } from '../guide/ExamMatrix';
+import { SayaNoUchiMatrix } from '../guide/SayaNoUchiMatrix';
 
 type GuidePageProps = {
   locale: Locale;
@@ -361,6 +362,29 @@ export const GuidePage = ({
             onCellClick={(slug, attackKey) => {
               // Create combined technique slug: e.g., "katate-dori-ude-osae-ikkyo-omote"
               const attackSlug = attackKey.replace(/_/g, '-');
+              const combinedSlug = `${attackSlug}-${slug}`;
+              onOpenTechnique(combinedSlug, undefined, undefined, true);
+            }}
+          />
+        </motion.article>
+
+        {/* Saya no Uchi Program */}
+        <motion.article className="space-y-4" {...animationProps}>
+          <header className="space-y-2">
+            <h2 className="text-xl font-semibold leading-tight">{i18nCopy.sayaNoUchiTitle}</h2>
+            <p className="text-sm text-subtle leading-relaxed">{i18nCopy.sayaNoUchiLead}</p>
+          </header>
+          <SayaNoUchiMatrix
+            locale={locale}
+            isDark={isDark}
+            onCellClick={(slug, attackKey) => {
+              // Create combined technique slug, removing ai_hanmi, gyaku_hanmi, and hanmi_hantachi
+              // e.g., "katate_dori_ai_hanmi" -> "katate-dori"
+              let attackSlug = attackKey
+                .replace(/_ai_hanmi$/, '')
+                .replace(/_gyaku_hanmi$/, '')
+                .replace(/^hanmi_hantachi_/, '')
+                .replace(/_/g, '-');
               const combinedSlug = `${attackSlug}-${slug}`;
               onOpenTechnique(combinedSlug, undefined, undefined, true);
             }}

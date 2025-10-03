@@ -33,3 +33,32 @@ export type AttackColumn = {
   label: { en: string; de: string };
   short?: string;                                  // optional short label for mobile
 };
+
+// Saya no Uchi Program types
+export type SayaNoUchiAttackKey =
+  | 'katate_dori_ai_hanmi'
+  | 'katate_dori_gyaku_hanmi'
+  | 'kata_dori'
+  | 'ushiro_ryokata_dori'
+  | 'ushiro_ryote_dori'
+  | 'ushiro_eri_dori'
+  | 'hanmi_hantachi_katate_dori_gyaku_hanmi'
+  | 'ken_tai_jo_saya_no_uchi';
+
+export type SayaNoUchiSection = 'tachi_waza' | 'hanmi_hantachi' | 'buki_waza';
+
+export type SayaNoUchiCell =
+  | { kind: 'check' }                              // checkmark icon
+  | { kind: 'empty' };                             // empty cell
+
+export type SayaNoUchiRow = {
+  id: string;                                      // slug for technique
+  label: { en: string; de: string };               // row header text
+  cells: Record<SayaNoUchiAttackKey, SayaNoUchiCell>;
+};
+
+export type SayaNoUchiColumn = {
+  key: SayaNoUchiAttackKey;
+  label: { en: string; de: string };
+  section: SayaNoUchiSection;
+};

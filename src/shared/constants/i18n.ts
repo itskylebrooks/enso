@@ -148,6 +148,8 @@ export const messages = {
     examMatrixSectionKatame: 'Katame-waza (Controls & Pins)',
     examMatrixSectionNage: 'Nage-waza',
     examMatrixSectionKatameShort: 'Katame-waza',
+    sayaNoUchiTitle: 'Saya no Uchi Program',
+    sayaNoUchiLead: 'This table shows the relationship between attacks and techniques in the Saya no Uchi program. Icons indicate where a technique is applied against a specific attack. Click on a technique or cell to view details and variations. Scroll left/right to see the complete table.',
   },
   de: {
     app: 'Enso',
@@ -296,6 +298,8 @@ export const messages = {
     examMatrixSectionKatame: 'Katame-waza (Kontrolltechniken & Fixierungen)',
     examMatrixSectionNage: 'Nage-waza',
     examMatrixSectionKatameShort: 'Katame-waza',
+    sayaNoUchiTitle: 'Saya-no-Uchi-Programm',
+    sayaNoUchiLead: 'Diese Tabelle zeigt die Beziehung zwischen Angriffen und Techniken im Saya-no-Uchi-Programm. Symbole markieren, wo eine Technik gegen einen bestimmten Angriff angewendet wird. Klicke auf eine Technik oder Zelle, um Details und Varianten zu sehen. Zum vollständigen Anzeigen bitte nach links/rechts scrollen.',
   },
 } as const satisfies Record<Locale, Record<string, string>>;
 
