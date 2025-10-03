@@ -2,10 +2,16 @@
  * Utility functions for building hierarchical technique URLs
  */
 
-import type { EntryMode } from '../shared/types';
+import type { EntryMode, Direction, WeaponKind } from '../shared/types';
 
 const isEntryPathMode = (value: string | undefined): value is EntryMode =>
   value === 'irimi' || value === 'tenkan' || value === 'omote' || value === 'ura';
+
+const isDirection = (value: string | undefined): value is Direction =>
+  value === 'irimi' || value === 'tenkan' || value === 'omote' || value === 'ura';
+
+const isWeaponKind = (value: string | undefined): value is WeaponKind =>
+  value === 'empty' || value === 'bokken' || value === 'jo' || value === 'tanto';
 
 /**
  * Builds a technique URL with optional trainer and entry parameters
@@ -57,4 +63,73 @@ export const parseTechniquePath = (pathname: string): { slug: string; trainerId?
   const entry = isEntryPathMode(entryCandidate) ? entryCandidate : undefined;
   
   return { slug, trainerId, entry };
+};
+
+/**
+ * Toolbar-based variant parameters (query string approach)
+ */
+export type TechniqueVariantParams = {
+  direction?: Direction;
+  weapon?: WeaponKind;
+  versionId?: string | null;
+};
+
+/**
+ * Builds a technique URL with toolbar query parameters
+ * 
+ * @param slug - The technique slug
+ * @param params - Toolbar variant parameters
+ * @returns Technique URL with query string
+ * 
+ * Examples:
+ * - buildTechniqueUrlWithVariant('shiho-nage') → '/technique/shiho-nage'
+ * - buildTechniqueUrlWithVariant('shiho-nage', {direction: 'irimi'}) → '/technique/shiho-nage?dir=irimi'
+ * - buildTechniqueUrlWithVariant('shiho-nage', {direction: 'irimi', weapon: 'bokken', versionId: 'haase-bsv'}) 
+ *   → '/technique/shiho-nage?dir=irimi&wp=bokken&ver=haase-bsv'
+ */
+export const buildTechniqueUrlWithVariant = (slug: string, params?: TechniqueVariantParams): string => {
+  const encodedSlug = encodeURIComponent(slug);
+  let path = `/technique/${encodedSlug}`;
+  
+  if (!params) return path;
+  
+  const queryParams: string[] = [];
+  
+  if (params.direction) {
+    queryParams.push(`dir=${encodeURIComponent(params.direction)}`);
+  }
+  
+  if (params.weapon) {
+    queryParams.push(`wp=${encodeURIComponent(params.weapon)}`);
+  }
+  
+  if (params.versionId) {
+    queryParams.push(`ver=${encodeURIComponent(params.versionId)}`);
+  }
+  
+  if (queryParams.length > 0) {
+    path += '?' + queryParams.join('&');
+  }
+  
+  return path;
+};
+
+/**
+ * Parses toolbar variant parameters from URL search params
+ * 
+ * @param search - The URL search string (e.g., '?dir=irimi&wp=empty&ver=haase-bsv')
+ * @returns Parsed variant parameters
+ */
+export const parseTechniqueVariantParams = (search: string): TechniqueVariantParams => {
+  const params = new URLSearchParams(search);
+  
+  const directionCandidate = params.get('dir');
+  const weaponCandidate = params.get('wp');
+  const versionId = params.get('ver');
+  
+  return {
+    direction: isDirection(directionCandidate || undefined) ? directionCandidate as Direction : undefined,
+    weapon: isWeaponKind(weaponCandidate || undefined) ? weaponCandidate as WeaponKind : undefined,
+    versionId: versionId || undefined,
+  };
 };

@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage, type StateStorage } from 'zustand/middleware';
+import type { Direction, WeaponKind, Technique, TechniqueVariant } from '../../shared/types';
 
 export type TechniqueViewState = {
   lastViewedVersion: Record<string, string>;
@@ -41,3 +42,37 @@ export const useTechniqueViewStore = create<TechniqueViewState>()(
     },
   ),
 );
+
+// Helper to get active variant from technique data
+export const getActiveVariant = (
+  technique: Technique,
+  direction: Direction,
+  weapon: WeaponKind,
+  versionId?: string | null,
+): TechniqueVariant | null => {
+  if (!technique.variants || technique.variants.length === 0) {
+    return null;
+  }
+
+  // Try exact match
+  const exactMatch = technique.variants.find(
+    (variant) =>
+      variant.key.direction === direction &&
+      variant.key.weapon === weapon &&
+      variant.key.versionId === versionId,
+  );
+
+  if (exactMatch) {
+    return exactMatch;
+  }
+
+  // Try fallback to standard (null/undefined versionId) for this direction/weapon
+  const standardMatch = technique.variants.find(
+    (variant) =>
+      variant.key.direction === direction &&
+      variant.key.weapon === weapon &&
+      (variant.key.versionId === null || variant.key.versionId === undefined),
+  );
+
+  return standardMatch || null;
+};

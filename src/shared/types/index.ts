@@ -8,6 +8,10 @@ export type Grade =
 
 export type EntryMode = 'irimi' | 'tenkan' | 'omote' | 'ura';
 
+// New types for toolbar redesign
+export type Direction = 'irimi' | 'tenkan' | 'omote' | 'ura';
+export type WeaponKind = 'empty' | 'bokken' | 'jo' | 'tanto';
+
 export type StepsByEntry = Partial<Record<EntryMode, LocalizedSteps>>;
 
 export type LocalizedSteps = { en: string[]; de: string[] };
@@ -32,6 +36,44 @@ export type TechniqueVersion = {
 // Alias for consistency with requirements
 export type Version = TechniqueVersion;
 
+// New types for toolbar-based variant system
+export type TechniqueVersionMeta = {
+  id: string;           // stable slug: e.g., "haase-bsv"
+  label: string;        // "Alfred Haase (BSV)"
+  dojo?: string;        // "BSV"
+  trainerId?: string;   // "alfred-haase"
+};
+
+export type TechniqueVariantKey = {
+  direction: Direction;
+  weapon: WeaponKind;
+  versionId?: string | null; // undefined or null => standard
+};
+
+export type Localized<T> = {
+  en: T;
+  de: T;
+};
+
+export type MediaItem = {
+  type: MediaType;
+  url: string;
+  title?: string;
+};
+
+export type TechniqueVariant = {
+  key: TechniqueVariantKey;
+  steps: Localized<string[]>;
+  uke?: {
+    role: Localized<string>;
+    notes: Localized<string[]>;
+  };
+  keyPoints?: Localized<string[]>;
+  commonMistakes?: Localized<string[]>;
+  context?: Localized<string>;
+  media?: MediaItem[];
+};
+
 export type TechniqueV2 = {
   id: string;
   slug: string;
@@ -45,6 +87,9 @@ export type TechniqueV2 = {
   summary: { en: string; de: string };
   tags: string[];
   versions: TechniqueVersion[];
+  // New fields for toolbar-based variant system (optional for migration)
+  versionsMeta?: TechniqueVersionMeta[];  // catalog of available version authors
+  variants?: TechniqueVariant[];          // content per (direction, weapon, version)
 };
 
 export type Technique = TechniqueV2;

@@ -1,35 +1,29 @@
-import { useCallback, useEffect, useMemo, useState, type ReactElement } from 'react';
+import { useCallback, useMemo, useState, type ReactElement } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import type { Copy } from '../../shared/constants/i18n';
 import type {
   BookmarkCollection,
   Collection,
-  EntryMode,
+  Direction,
+  WeaponKind,
   Locale,
   Progress,
   Technique,
-  TechniqueVersion,
 } from '../../shared/types';
 import { getTaxonomyLabel } from '../../shared/i18n/taxonomy';
 import { stripDiacritics } from '../../shared/utils/text';
 import { useMotionPreferences, defaultEase } from '../ui/motion';
 import { TechniqueHeader, type CollectionOption } from './TechniqueHeader';
-import { VersionTabs } from './VersionTabs';
+import { TechniqueToolbar, type TechniqueToolbarValue } from './TechniqueToolbar';
 import { StepsList } from './StepsList';
 import { UkePanel } from './UkePanel';
 import { MediaPanel } from './MediaPanel';
 import { NotesPanel } from './NotesPanel';
-import { useTechniqueViewStore } from '../../features/technique';
-import { Segmented, type SegmentedOption } from '../../shared/components/ui/Segmented';
-import {
-  deriveEntryMode,
-  setGlobalEntryPref,
-  setTechniqueEntryPref,
-} from '../../features/technique/entryPref';
-import { migrateTechniqueToStepsByEntry } from '../../utils/migrations/to-stepsByEntry';
-import { DEFAULT_ENTRY_MODE, ENTRY_MODE_ORDER } from '../../shared/constants/entryModes';
+import { enrichTechniqueWithVariants } from '../../utils/variantMapping';
+import { getActiveVariant } from '../../features/technique/store';
+import { parseTechniqueVariantParams } from '../../utils/urls';
 
-const buildTags = (technique: Technique, locale: Locale, copy: Copy): string[] => {
+const buildTags = (technique: Technique, locale: Locale): string[] => {
   const title = technique.name[locale]?.toLowerCase?.() ?? '';
   const normalizedTitle = stripDiacritics(title);
 
@@ -38,18 +32,6 @@ const buildTags = (technique: Technique, locale: Locale, copy: Copy): string[] =
     { type: 'category', value: technique.category },
     { type: 'attack', value: technique.attack },
   ];
-
-  // Add entry mode tags based on available stepsByEntry
-  const availableEntries = technique.versions[0]?.stepsByEntry || {};
-  const entryModeLabels: Record<EntryMode, string> = {
-    irimi: copy.entryIrimi,
-    omote: copy.entryOmote,
-    tenkan: copy.entryTenkan,
-    ura: copy.entryUra,
-  };
-  const entryModeTags = ENTRY_MODE_ORDER.flatMap((mode) =>
-    availableEntries[mode] ? [entryModeLabels[mode]] : []
-  );
 
   const unique: string[] = [];
   const seen = new Set<string>();
@@ -63,15 +45,6 @@ const buildTags = (technique: Technique, locale: Locale, copy: Copy): string[] =
     if (seen.has(normalizedValue)) return;
     seen.add(normalizedValue);
     unique.push(label);
-  });
-
-  // Add entry mode tags (these are always shown as they're important context)
-  entryModeTags.forEach(tag => {
-    const normalizedTag = stripDiacritics(tag.toLowerCase());
-    if (!seen.has(normalizedTag)) {
-      seen.add(normalizedTag);
-      unique.push(tag);
-    }
   });
 
   return unique;
@@ -90,10 +63,7 @@ type TechniquePageProps = {
   onAssignToCollection: (collectionId: string) => void;
   onRemoveFromCollection: (collectionId: string) => void;
   onOpenGlossary?: (slug: string) => void;
-  // URL parameters for hierarchical navigation
-  urlTrainerId?: string | null;
-  urlEntry?: EntryMode | null;
-  onUrlChange?: (trainerId?: string, entry?: EntryMode) => void;
+  onVariantChange?: (direction: Direction, weapon: WeaponKind, versionId?: string | null) => void;
 };
 
 const getCollectionOptions = (
@@ -115,162 +85,24 @@ const getCollectionOptions = (
   }));
 };
 
-const ensureVersion = (versions: TechniqueVersion[], versionId: string | null | undefined): TechniqueVersion => {
-  if (versionId) {
-    const match = versions.find((version) => version.id === versionId);
-    if (match) return match;
-  }
-  return versions[0];
-};
-
-const findVersionByTrainerId = (versions: TechniqueVersion[], trainerId: string | null | undefined): TechniqueVersion | null => {
-  if (!trainerId) return null;
-  return versions.find((version) => version.trainerId === trainerId) ?? null;
-};
-
-// Map tag labels to glossary slugs
+// Map tag labels to glossary slugs (simplified version)
 const mapTagToGlossarySlug = (tagLabel: string): string | null => {
-  // Create a comprehensive map of localized labels to glossary slugs
   const labelToSlugMap: Record<string, string> = {
-    // Category mappings (English)
     'throws (nage-waza)': 'nage-waza',
     'throws': 'nage-waza',
-    'nage-waza': 'nage-waza',
-    'nage waza': 'nage-waza',
-    'throw': 'nage-waza',
-    'throwing techniques': 'nage-waza',
-    
     'controls / pins (osae-waza)': 'osae-waza',
-    'controls / pins': 'osae-waza',
     'controls': 'osae-waza',
-    'pins': 'osae-waza',
-    'osae-waza': 'osae-waza',
-    'osae waza': 'osae-waza',
-    'control': 'osae-waza',
-    'pinning techniques': 'osae-waza',
-    
     'immobilizations (katame-waza)': 'katame-waza',
-    'immobilizations': 'katame-waza',
-    'katame-waza': 'katame-waza',
-    'katame waza': 'katame-waza',
-    'immobilization': 'katame-waza',
-    'holding techniques': 'katame-waza',
-    
     'weapons (buki-waza)': 'buki-waza',
-    'weapons': 'buki-waza',
-    'buki-waza': 'buki-waza',
-    'buki waza': 'buki-waza',
-    'weapon': 'buki-waza',
-    'weapon techniques': 'buki-waza',
-    
-    // Category mappings (German)
-    'würfe (nage-waza)': 'nage-waza',
-    'würfe': 'nage-waza',
-    'wurf': 'nage-waza',
-    
-    'kontrollen / haltegriffe (osae-waza)': 'osae-waza',
-    'kontrollen / haltegriffe': 'osae-waza',
-    'kontrollen': 'osae-waza',
-    'haltegriffe': 'osae-waza',
-    'kontrolle': 'osae-waza',
-    
-    'immobilisationen (katame-waza)': 'katame-waza',
-    'immobilisationen': 'katame-waza',
-    'immobilisation': 'katame-waza',
-    
-    'waffen (buki-waza)': 'buki-waza',
-    'waffen': 'buki-waza',
-    'waffe': 'buki-waza',
-    
-    // Attack patterns (English labels)
     'shomen-uchi': 'shomen-uchi',
-    'shomen uchi': 'shomen-uchi',
-    'shōmen-uchi': 'shomen-uchi',
-    '正面打ち': 'shomen-uchi',
-    'shomen': 'shomen-uchi',
-    
-    // Movement patterns - all terms now point to appropriate entries
-    'irimi (omote)': 'irimi',
-    'irimi omote': 'irimi',
-    'omote (irimi)': 'irimi',
-    'omote irimi': 'irimi',
-    '表（入身）': 'irimi',
     'irimi': 'irimi',
-    'entering': 'irimi',
-    '入身': 'irimi',
-    
-    'tenkan (ura)': 'tenkan',
-    'tenkan ura': 'tenkan',
-    'ura (tenkan)': 'tenkan',
-    'ura tenkan': 'tenkan',
-    '裏（転換）': 'tenkan',
     'tenkan': 'tenkan',
-    'turning': 'tenkan',
-    '転換': 'tenkan',
-    
-    // Separate entries for line concepts
     'omote': 'omote',
-    '表': 'omote',
     'ura': 'ura',
-    '裏': 'ura',
-    
-    // Concepts
-    'ukemi': 'ukemi',
-    '受身': 'ukemi',
-    'breakfalls': 'ukemi',
-    'rolling': 'ukemi',
-    
-    'rei': 'rei',
-    '礼': 'rei',
-    'bow': 'rei',
-    'bowing': 'rei',
-    
-    'ma-ai': 'ma-ai',
-    'ma ai': 'ma-ai',
-    '間合い': 'ma-ai',
-    'distance': 'ma-ai',
-    'timing': 'ma-ai',
-    
-    'kamae': 'kamae',
-    '構え': 'kamae',
-    'stance': 'kamae',
-    'ready position': 'kamae',
-    
-    'tai-sabaki': 'tai-sabaki',
-    'tai sabaki': 'tai-sabaki',
-    '体捌き': 'tai-sabaki',
-    'body movement': 'tai-sabaki',
-    'evasion': 'tai-sabaki',
   };
 
-  // Normalize the tag label for lookup
-  const normalizedTag = tagLabel.toLowerCase()
-    .replace(/\s+/g, ' ')
-    .replace(/[()]/g, '')
-    .replace(/[・]/g, '')  // Remove Japanese separator
-    .trim();
-
-  // Direct lookup
-  if (labelToSlugMap[normalizedTag]) {
-    return labelToSlugMap[normalizedTag];
-  }
-
-  // Try without spaces/hyphens/punctuation
-  const withoutPunctuation = normalizedTag.replace(/[\s\-_.]/g, '');
-  for (const [key, slug] of Object.entries(labelToSlugMap)) {
-    if (key.replace(/[\s\-_.]/g, '') === withoutPunctuation) {
-      return slug;
-    }
-  }
-
-  // Check if the normalized tag contains any known terms (substring matching)
-  for (const [key, slug] of Object.entries(labelToSlugMap)) {
-    if (normalizedTag.includes(key) || key.includes(normalizedTag)) {
-      return slug;
-    }
-  }
-
-  return null;
+  const normalizedTag = tagLabel.toLowerCase().replace(/\s+/g, ' ').trim();
+  return labelToSlugMap[normalizedTag] || null;
 };
 
 export const TechniquePage = ({
@@ -286,216 +118,198 @@ export const TechniquePage = ({
   onAssignToCollection,
   onRemoveFromCollection,
   onOpenGlossary,
-  urlTrainerId,
-  urlEntry,
-  onUrlChange,
+  onVariantChange,
 }: TechniquePageProps): ReactElement => {
-  const tags = useMemo(() => buildTags(technique, locale, copy), [technique, locale, copy]);
+  const tags = useMemo(() => buildTags(technique, locale), [technique, locale]);
   const summary = technique.summary[locale] || technique.summary.en;
   const { prefersReducedMotion } = useMotionPreferences();
 
-  // Apply migration on runtime to support new stepsByEntry structure
-  const migratedTechnique = useMemo(() => migrateTechniqueToStepsByEntry(technique), [technique]);
+  // Enrich technique with variants if not already present
+  const enrichedTechnique = useMemo(() => enrichTechniqueWithVariants(technique), [technique]);
 
-  const getFirstAvailableEntryMode = useCallback((version: TechniqueVersion): EntryMode => {
-    for (const mode of ENTRY_MODE_ORDER) {
-      if (version.stepsByEntry?.[mode]) {
-        return mode;
-      }
-    }
-
-    return DEFAULT_ENTRY_MODE;
+  // Parse URL params on mount to hydrate initial state
+  const initialVariantParams = useMemo(() => {
+    if (typeof window === 'undefined') return null;
+    return parseTechniqueVariantParams(window.location.search);
   }, []);
 
-  const storedLastViewed = useTechniqueViewStore((state) => state.lastViewedVersion[technique.id]);
-  const setLastViewedVersion = useTechniqueViewStore((state) => state.setLastViewedVersion);
+  const versionsMeta = enrichedTechnique.versionsMeta || [];
 
-  // Entry mode state management
-  const [entryMode, setEntryMode] = useState<EntryMode>(() => {
-    // If URL specifies an entry mode, use it
-    if (urlEntry) {
-      return urlEntry;
+  // Get available variant combinations to intelligently disable options
+  const availableVariants = useMemo(() => {
+    return enrichedTechnique.variants || [];
+  }, [enrichedTechnique]);
+
+  // Helper to check if a specific combination exists
+  const variantExists = useCallback((direction: Direction, weapon: WeaponKind, versionId: string | null) => {
+    return availableVariants.some(v => 
+      v.key.direction === direction && 
+      v.key.weapon === weapon && 
+      v.key.versionId === versionId
+    );
+  }, [availableVariants]);
+
+  // Initialize toolbar state from URL or defaults to first available variant
+  const [toolbarValue, setToolbarValue] = useState<TechniqueToolbarValue>(() => {
+    const urlDir = initialVariantParams?.direction;
+    const urlWeapon = initialVariantParams?.weapon;
+    const urlVersion = initialVariantParams?.versionId;
+
+    // If URL params specify a valid variant, use it
+    if (urlDir && urlWeapon && variantExists(urlDir, urlWeapon, urlVersion || null)) {
+      return {
+        direction: urlDir,
+        weapon: urlWeapon,
+        versionId: urlVersion || null,
+      };
     }
-    
-    // For non-URL specified cases, try to get from preferences
-    const derivedMode = deriveEntryMode('', technique.id); // Pass empty search to avoid URL query conflicts
-    const firstVersion = migratedTechnique.versions[0];
-    
-    // Check if the derived mode is available in the first version
-    if (firstVersion.stepsByEntry?.[derivedMode]) {
-      return derivedMode;
+
+    // Otherwise, find first available variant
+    const firstVariant = availableVariants[0];
+    if (firstVariant) {
+      return {
+        direction: firstVariant.key.direction,
+        weapon: firstVariant.key.weapon,
+        versionId: firstVariant.key.versionId || null,
+      };
     }
-    
-    // If not available, select the first available entry mode
-    return getFirstAvailableEntryMode(firstVersion);
+
+    // Fallback
+    return {
+      direction: 'irimi',
+      weapon: 'empty',
+      versionId: null,
+    };
   });
 
-  const [activeVersionId, setActiveVersionId] = useState(() => {
-    // If URL specifies a trainer, try to find that version
-    if (urlTrainerId) {
-      const trainerVersion = findVersionByTrainerId(migratedTechnique.versions, urlTrainerId);
-      if (trainerVersion) {
-        return trainerVersion.id;
-      }
-    }
-    // Fallback to stored preference or default
-    return ensureVersion(migratedTechnique.versions, storedLastViewed ?? migratedTechnique.versions[0].id).id;
-  });
+  // Get available directions/weapons for the CURRENTLY SELECTED version
+  const availableDirectionsForCurrentVersion = useMemo(() => {
+    const directions = new Set<Direction>();
+    availableVariants
+      .filter(v => v.key.versionId === (toolbarValue.versionId || null))
+      .forEach(v => directions.add(v.key.direction));
+    return Array.from(directions).sort();
+  }, [availableVariants, toolbarValue.versionId]);
 
-  // Update active version when URL trainer changes (but avoid circular updates)
-  useEffect(() => {
-    if (urlTrainerId) {
-      const trainerVersion = findVersionByTrainerId(migratedTechnique.versions, urlTrainerId);
-      if (trainerVersion && trainerVersion.id !== activeVersionId) {
-        setActiveVersionId(trainerVersion.id);
-      }
-    }
-  }, [urlTrainerId, migratedTechnique.versions, activeVersionId]);
+  const availableWeaponsForCurrentVersion = useMemo(() => {
+    const weapons = new Set<WeaponKind>();
+    availableVariants
+      .filter(v => v.key.versionId === (toolbarValue.versionId || null))
+      .forEach(v => weapons.add(v.key.weapon));
+    return Array.from(weapons).sort();
+  }, [availableVariants, toolbarValue.versionId]);
 
-  useEffect(() => {
-    setLastViewedVersion(technique.id, activeVersionId);
-  }, [technique.id, activeVersionId, setLastViewedVersion]);
-
-  const activeVersion = useMemo(
-    () => migratedTechnique.versions.find((version) => version.id === activeVersionId) ?? migratedTechnique.versions[0],
-    [migratedTechnique.versions, activeVersionId],
+  // Get active variant based on current toolbar selection
+  const activeVariant = useMemo(
+    () => getActiveVariant(
+      enrichedTechnique,
+      toolbarValue.direction,
+      toolbarValue.weapon,
+      toolbarValue.versionId
+    ),
+    [enrichedTechnique, toolbarValue]
   );
 
-  // Sync entry mode when URL changes (only when urlEntry changes, not when entryMode changes)
-  useEffect(() => {
-    if (!urlEntry) {
-      return;
-    }
-
-    if (activeVersion.stepsByEntry?.[urlEntry]) {
-      if (entryMode !== urlEntry) {
-        setEntryMode(urlEntry);
-        setTechniqueEntryPref(technique.id, urlEntry);
-        setGlobalEntryPref(urlEntry);
-      }
-      return;
-    }
-
-    const fallbackMode = getFirstAvailableEntryMode(activeVersion);
-    if (fallbackMode !== entryMode) {
-      setEntryMode(fallbackMode);
-      setTechniqueEntryPref(technique.id, fallbackMode);
-      setGlobalEntryPref(fallbackMode);
-    }
-  }, [urlEntry, activeVersion, entryMode, getFirstAvailableEntryMode, technique.id, setTechniqueEntryPref, setGlobalEntryPref]);
-
-  // Auto-switch entry mode when version changes and current mode is not available
-  useEffect(() => {
-    const activeVersion = migratedTechnique.versions.find((version) => version.id === activeVersionId);
-    if (!activeVersion) return;
-
-    // Check if current entry mode is available in the active version
-    if (!activeVersion.stepsByEntry?.[entryMode]) {
-      // Switch to the first available entry mode
-      const newEntryMode = getFirstAvailableEntryMode(activeVersion);
-      setEntryMode(newEntryMode);
-      setTechniqueEntryPref(technique.id, newEntryMode);
-      setGlobalEntryPref(newEntryMode);
+  // Handle toolbar changes
+  const handleToolbarChange = useCallback(
+    (newValue: TechniqueToolbarValue) => {
+      // Check if this combination exists
+      const exists = variantExists(newValue.direction, newValue.weapon, newValue.versionId || null);
       
-      // Update URL with current trainer and new entry mode
-      const currentTrainerId = activeVersion?.trainerId;
-      onUrlChange?.(currentTrainerId, newEntryMode);
-    }
-  }, [activeVersionId, migratedTechnique.versions, technique.id, getFirstAvailableEntryMode, setTechniqueEntryPref, setGlobalEntryPref, onUrlChange]);
-
-  // Entry mode change handler
-  const handleEntryModeChange = useCallback((newMode: EntryMode) => {
-    setEntryMode(newMode);
-    setTechniqueEntryPref(technique.id, newMode);
-    setGlobalEntryPref(newMode);
-    
-    // Update URL with current trainer and new entry mode
-    const activeVersion = migratedTechnique.versions.find((v) => v.id === activeVersionId);
-    const currentTrainerId = activeVersion?.trainerId;
-    onUrlChange?.(currentTrainerId, newMode);
-  }, [migratedTechnique.versions, activeVersionId, technique.id, onUrlChange]);
-
-  // Version change handler
-  const handleVersionChange = useCallback((versionId: string) => {
-    setActiveVersionId(versionId);
-    
-    // Find the new version and update URL
-    const newVersion = migratedTechnique.versions.find((v) => v.id === versionId);
-    const newTrainerId = newVersion?.trainerId;
-    
-    // Keep current entry mode if available in new version, otherwise reset
-    let newEntry = entryMode;
-    if (newVersion && !newVersion.stepsByEntry?.[entryMode]) {
-      newEntry = getFirstAvailableEntryMode(newVersion);
-      setEntryMode(newEntry);
-    }
-    
-    onUrlChange?.(newTrainerId, newEntry);
-  }, [migratedTechnique.versions, entryMode, getFirstAvailableEntryMode, onUrlChange]);
-
-  // Keyboard shortcuts for entry mode
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      // Don't interfere with inputs or content editable elements
-      const target = event.target as HTMLElement;
-      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable) {
-        return;
+      let finalValue = newValue;
+      
+      // If combination doesn't exist, find first available variant
+      if (!exists) {
+        // Priority: Version determines what's available
+        // Find first available variant for this version (if version changed)
+        // Or find first available for this direction/weapon combo (if direction/weapon changed)
+        
+        const previousValue = toolbarValue;
+        const versionChanged = newValue.versionId !== previousValue.versionId;
+        
+        if (versionChanged) {
+          // Version changed - find first available direction/weapon for this version
+          const firstForVersion = availableVariants.find(v => 
+            v.key.versionId === (newValue.versionId || null)
+          );
+          
+          if (firstForVersion) {
+            finalValue = {
+              direction: firstForVersion.key.direction,
+              weapon: firstForVersion.key.weapon,
+              versionId: newValue.versionId,
+            };
+          }
+        } else {
+          // Direction or weapon changed - try to keep as much as possible
+          // First try: keep version, adjust direction or weapon
+          const availableForVersion = availableVariants.filter(v => 
+            v.key.versionId === (newValue.versionId || null)
+          );
+          
+          // Try to keep the direction if weapon changed
+          if (newValue.weapon !== previousValue.weapon) {
+            const keepDirection = availableForVersion.find(v => v.key.direction === newValue.direction);
+            if (keepDirection) {
+              finalValue = {
+                direction: keepDirection.key.direction,
+                weapon: keepDirection.key.weapon,
+                versionId: newValue.versionId,
+              };
+            } else if (availableForVersion[0]) {
+              finalValue = {
+                direction: availableForVersion[0].key.direction,
+                weapon: availableForVersion[0].key.weapon,
+                versionId: newValue.versionId,
+              };
+            }
+          }
+          // Try to keep the weapon if direction changed
+          else if (newValue.direction !== previousValue.direction) {
+            const keepWeapon = availableForVersion.find(v => v.key.weapon === newValue.weapon);
+            if (keepWeapon) {
+              finalValue = {
+                direction: keepWeapon.key.direction,
+                weapon: keepWeapon.key.weapon,
+                versionId: newValue.versionId,
+              };
+            } else if (availableForVersion[0]) {
+              finalValue = {
+                direction: availableForVersion[0].key.direction,
+                weapon: availableForVersion[0].key.weapon,
+                versionId: newValue.versionId,
+              };
+            }
+          }
+        }
       }
-
-      const key = event.key.toLowerCase();
-      const modeByKey: Record<string, EntryMode> = {
-        i: 'irimi',
-        t: 'tenkan',
-        o: 'omote',
-        u: 'ura',
-      };
-      const nextMode = modeByKey[key];
-      if (!nextMode) return;
-
-      if (!activeVersion.stepsByEntry?.[nextMode]) {
-        return;
+      
+      setToolbarValue(finalValue);
+      
+      // Update URL without full page reload
+      if (typeof window !== 'undefined') {
+        const url = new URL(window.location.href);
+        url.searchParams.set('dir', finalValue.direction);
+        url.searchParams.set('wp', finalValue.weapon);
+        if (finalValue.versionId) {
+          url.searchParams.set('ver', finalValue.versionId);
+        } else {
+          url.searchParams.delete('ver');
+        }
+        window.history.replaceState({}, '', url.toString());
       }
-
-      event.preventDefault();
-      handleEntryModeChange(nextMode);
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [activeVersion.stepsByEntry, handleEntryModeChange]);
-
-  // Entry mode options with localized labels
-  const entryOptions: SegmentedOption<EntryMode>[] = useMemo(() => {
-    const labels: Record<EntryMode, string> = {
-      irimi: copy.entryIrimi,
-      omote: copy.entryOmote,
-      tenkan: copy.entryTenkan,
-      ura: copy.entryUra,
-    };
-
-    return ENTRY_MODE_ORDER.map((mode) => {
-      const isAvailable = Boolean(activeVersion.stepsByEntry?.[mode]);
-      return {
-        value: mode,
-        label: labels[mode],
-        disabled: !isAvailable,
-        tooltip: !isAvailable ? copy.entryNotAvailable : undefined,
-        className: 'w-full text-center',
-      } satisfies SegmentedOption<EntryMode>;
-    });
-  }, [activeVersion.stepsByEntry, copy]);
-
-  // Derive current steps based on entry mode and available data
-  const currentSteps = useMemo(() => {
-    // Try to get steps for current entry mode
-    const entrySteps = activeVersion.stepsByEntry?.[entryMode];
-    if (entrySteps) {
-      return entrySteps[locale] ?? entrySteps.en;
-    }
-
-    // No steps available for this entry mode
-    return null;
-  }, [activeVersion, entryMode, locale]);
+      
+      // Notify parent
+      onVariantChange?.(finalValue.direction, finalValue.weapon, finalValue.versionId);
+      
+      // Preserve scroll to Steps heading
+      const stepsHeading = document.querySelector('[data-steps-section]');
+      if (stepsHeading) {
+        stepsHeading.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    },
+    [onVariantChange, variantExists, availableVariants, toolbarValue]
+  );
 
   const bookmarkedActive = Boolean(progress?.bookmarked);
   const collectionOptions = useMemo(
@@ -517,37 +331,40 @@ export const TechniquePage = ({
     const glossarySlug = mapTagToGlossarySlug(tagLabel);
     if (glossarySlug) {
       onOpenGlossary(glossarySlug);
-    } else {
-      // For tags that don't have glossary entries, we can still try to open them
-      // The GlossaryDetailPage will handle showing "not found" message
-      const fallbackSlug = tagLabel.toLowerCase()
-        .replace(/[()]/g, '')
-        .replace(/\s+/g, '-')
-        .replace(/[^a-z0-9\-]/g, '')
-        .trim();
-      
-      if (fallbackSlug) {
-        onOpenGlossary(fallbackSlug);
-      }
     }
   };
 
   const motionInitial = prefersReducedMotion ? undefined : { opacity: 0, y: 18 };
   const motionAnimate = prefersReducedMotion ? undefined : { opacity: 1, y: 0 };
   const motionExit = prefersReducedMotion ? undefined : { opacity: 0, y: -18 };
-  const versionMotionTransition = prefersReducedMotion
+  const variantMotionTransition = prefersReducedMotion
     ? { duration: 0.05 }
     : { duration: 0.18, ease: defaultEase };
 
   const stepsLabel = copy.steps;
-  const ukeNotes = activeVersion.uke;
+
+  // Toolbar labels
+  const toolbarLabels = {
+    direction: copy.toolbarDirection,
+    weapon: copy.toolbarWeapon,
+    version: copy.toolbarVersion,
+    irimi: copy.entryIrimi,
+    tenkan: copy.entryTenkan,
+    omote: copy.entryOmote,
+    ura: copy.entryUra,
+    emptyHand: copy.weaponEmptyHand,
+    bokken: copy.weaponBokken,
+    jo: copy.weaponJo,
+    tanto: copy.weaponTanto,
+    standard: copy.versionStandard,
+  };
 
   return (
     <motion.main
       className="mx-auto max-w-6xl px-4 sm:px-6 py-6 space-y-6"
       initial={motionInitial}
       animate={motionAnimate}
-      transition={versionMotionTransition}
+      transition={variantMotionTransition}
     >
       <TechniqueHeader
         technique={technique}
@@ -564,86 +381,59 @@ export const TechniquePage = ({
         onTagClick={onOpenGlossary ? handleTagClick : undefined}
       />
 
-      <div className="flex flex-col gap-4 md:flex-row md:items-center -mb-2">
-        {/* Entry mode toggle - vertical stack on far left, centered in y-axis */}
-        <div className="flex flex-row md:flex-col gap-2 md:justify-center">
-          <Segmented
-            options={entryOptions}
-            value={entryMode}
-            onChange={handleEntryModeChange}
-            aria-label={copy.entrySelectLabel}
-            className="!grid grid-cols-2 gap-2 auto-rows-fr md:w-44"
-          />
-        </div>
-        
-        {/* Version tabs - to the right of entry mode */}
-        <div className="flex-1 md:ml-4">
-          <VersionTabs
-            versions={migratedTechnique.versions}
-            activeVersionId={activeVersionId}
-            onChange={handleVersionChange}
-            label={copy.version}
-          />
-        </div>
-      </div>
+      {/* New Toolbar */}
+      <TechniqueToolbar
+        directionsAvailable={availableDirectionsForCurrentVersion}
+        weaponsAvailable={availableWeaponsForCurrentVersion}
+        versions={versionsMeta}
+        value={toolbarValue}
+        onChange={handleToolbarChange}
+        labels={toolbarLabels}
+      />
 
       <AnimatePresence mode="wait">
         <motion.section
-          key={activeVersion.id}
+          key={`${toolbarValue.direction}-${toolbarValue.weapon}-${toolbarValue.versionId || 'standard'}`}
           initial={motionInitial}
           animate={motionAnimate}
           exit={motionExit}
-          transition={versionMotionTransition}
+          transition={variantMotionTransition}
         >
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-[2fr,1fr]">
             <div className="space-y-8">
-              <section className="space-y-4">
-                <header className="text-xs uppercase tracking-[0.3em] text-subtle">{stepsLabel}</header>
-                {currentSteps ? (
+              {activeVariant && activeVariant.steps && (
+                <section className="space-y-4" data-steps-section>
+                  <header className="text-xs uppercase tracking-[0.3em] text-subtle">{stepsLabel}</header>
                   <StepsList
-                    steps={currentSteps}
-                    ariaLabel={`${migratedTechnique.name[locale]} – ${copy.steps}`}
+                    steps={activeVariant.steps[locale] || activeVariant.steps.en}
+                    ariaLabel={`${enrichedTechnique.name[locale]} – ${copy.steps}`}
                   />
-                ) : (
-                  <div className="space-y-4">
-                    <div className="text-muted">
-                      {locale === 'de' 
-                        ? <>Für <strong>{entryOptions.find(opt => opt.value === entryMode)?.label}</strong> sind noch keine Schritte dokumentiert.</>
-                        : <>No steps documented for <strong>{entryOptions.find(opt => opt.value === entryMode)?.label}</strong> yet.</>
-                      }
-                    </div>
-                    <button
-                      type="button"
-                      className="text-sm text-subtle hover:text-[var(--color-text)] transition-colors"
-                      onClick={() => {
-                        // Placeholder for future feedback form integration
-                        const subject = `Suggest steps for ${migratedTechnique.name[locale]} (${entryOptions.find(opt => opt.value === entryMode)?.label})`;
-                        window.open(`mailto:feedback@example.com?subject=${encodeURIComponent(subject)}`, '_blank');
-                      }}
-                    >
-                      {copy.entrySuggestSteps}
-                    </button>
-                  </div>
-                )}
-              </section>
-              <UkePanel
-                role={ukeNotes.role[locale] ?? ukeNotes.role.en}
-                notes={ukeNotes.notes[locale] ?? ukeNotes.notes.en}
-                copy={copy}
-              />
+                </section>
+              )}
+              {activeVariant?.uke && (
+                <UkePanel
+                  role={activeVariant.uke.role[locale] || activeVariant.uke.role.en}
+                  notes={activeVariant.uke.notes[locale] || activeVariant.uke.notes.en}
+                  copy={copy}
+                />
+              )}
             </div>
             <div className="space-y-8">
-              <MediaPanel media={activeVersion.media} copy={copy} />
-              <NotesPanel
-                keyPoints={activeVersion.keyPoints ? activeVersion.keyPoints[locale] ?? activeVersion.keyPoints.en : undefined}
-                commonMistakes={
-                  activeVersion.commonMistakes
-                    ? activeVersion.commonMistakes[locale] ?? activeVersion.commonMistakes.en
-                    : undefined
-                }
-                context={activeVersion.context ? activeVersion.context[locale] ?? activeVersion.context.en : undefined}
-                copy={copy}
-              />
+              {activeVariant?.media && activeVariant.media.length > 0 && (
+                <MediaPanel media={activeVariant.media} copy={copy} />
+              )}
+              {(activeVariant?.keyPoints || activeVariant?.commonMistakes || activeVariant?.context) && (
+                <NotesPanel
+                  keyPoints={activeVariant.keyPoints ? activeVariant.keyPoints[locale] || activeVariant.keyPoints.en : undefined}
+                  commonMistakes={
+                    activeVariant.commonMistakes
+                      ? activeVariant.commonMistakes[locale] || activeVariant.commonMistakes.en
+                      : undefined
+                  }
+                  context={activeVariant.context ? activeVariant.context[locale] || activeVariant.context.en : undefined}
+                  copy={copy}
+                />
+              )}
             </div>
           </div>
         </motion.section>
