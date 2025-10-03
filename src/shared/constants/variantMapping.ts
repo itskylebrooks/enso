@@ -15,16 +15,33 @@ import { generateVersionLabel } from './versionLabels';
 
 /**
  * Extract version metadata from existing technique versions
- * Excludes the first version (which is treated as "Standard")
+ * Excludes versions with id "v-standard" (which are treated as the default "Standard" version)
  */
 export const extractVersionsMeta = (technique: Technique): TechniqueVersionMeta[] => {
-  // Skip the first version as it's the "standard" version (versionId: null)
-  return technique.versions.slice(1).map((version) => ({
-    id: version.id,
-    label: version.label || generateVersionLabel(version),
-    dojo: version.dojoId,
-    trainerId: version.trainerId,
-  }));
+  // Deduplicate by version.id - multiple versions can have the same ID
+  // (e.g., same version for different hanmi)
+  // Also exclude any version with id "v-standard" as it's the standard/default
+  const seen = new Set<string>();
+  const uniqueVersions: TechniqueVersionMeta[] = [];
+  
+  for (const version of technique.versions) {
+    // Skip standard versions - they're accessed via the default "Standard" dropdown option
+    if (version.id === 'v-standard') {
+      continue;
+    }
+    
+    if (!seen.has(version.id)) {
+      seen.add(version.id);
+      uniqueVersions.push({
+        id: version.id,
+        label: version.label || generateVersionLabel(version),
+        dojo: version.dojoId,
+        trainerId: version.trainerId,
+      });
+    }
+  }
+  
+  return uniqueVersions;
 };
 
 /**
@@ -54,7 +71,7 @@ export const convertToVariants = (technique: Technique): TechniqueVariant[] => {
           hanmi: version.hanmi, // Now required in TechniqueVersion
           direction,
           weapon: defaultWeapon,
-          versionId: version.id === technique.versions[0].id ? null : version.id, // null for first version (standard)
+          versionId: version.id === 'v-standard' ? null : version.id, // null for standard versions
         },
         steps: steps as Localized<string[]>,
         uke: version.uke ? {
