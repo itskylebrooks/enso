@@ -195,7 +195,7 @@ export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen, onOpe
 
   return (
     <motion.div
-      className="fixed inset-0 z-40 flex items-start justify-center pt-[15vh] px-4 bg-black/45"
+      className="fixed inset-0 z-40 flex items-start justify-center pt-4 sm:pt-[15vh] px-4 bg-black/45"
       variants={overlayMotion.backdrop}
       initial="initial"
       animate="animate"
@@ -249,7 +249,7 @@ export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen, onOpe
             </motion.button>
           </div>
           <div className="border-t surface-border mt-2 pt-3 relative">
-          <div ref={resultsContainerRef} className="max-h-[60vh] overflow-y-auto relative scrollbar-hide">
+          <div ref={resultsContainerRef} className="max-h-[50vh] sm:max-h-[60vh] overflow-y-auto relative scrollbar-hide">
             {/* Animated background highlight */}
             {results.length > 0 && selectedIndex >= 0 && (
               <motion.div
@@ -352,7 +352,8 @@ export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen, onOpe
           
           </div>
           <div className="mt-2 px-3 pb-1 pt-2 text-xs text-subtle text-center">
-            Use ↑↓ to navigate • Enter to select • Esc to close
+            <span className="hidden sm:inline">Use ↑↓ to navigate • Enter to select • Esc to close</span>
+            <span className="sm:hidden">Scroll to see more results</span>
           </div>
         </div>
       </motion.div>
