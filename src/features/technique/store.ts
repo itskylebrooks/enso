@@ -46,7 +46,7 @@ export const useTechniqueViewStore = create<TechniqueViewState>()(
 // Helper to get active variant from technique data
 export const getActiveVariant = (
   technique: Technique,
-  hanmi: Hanmi | null | undefined,
+  hanmi: Hanmi,
   direction: Direction,
   weapon: WeaponKind,
   versionId?: string | null,
@@ -55,13 +55,10 @@ export const getActiveVariant = (
     return null;
   }
 
-  // Normalize hanmi to null for comparison
-  const normalizedHanmi = hanmi || null;
-
   // Try exact match including hanmi
   const exactMatch = technique.variants.find(
     (variant) =>
-      (variant.key.hanmi || null) === normalizedHanmi &&
+      variant.key.hanmi === hanmi &&
       variant.key.direction === direction &&
       variant.key.weapon === weapon &&
       variant.key.versionId === versionId,
@@ -74,7 +71,7 @@ export const getActiveVariant = (
   // Try fallback to standard (null/undefined versionId) for this hanmi/direction/weapon
   const standardMatch = technique.variants.find(
     (variant) =>
-      (variant.key.hanmi || null) === normalizedHanmi &&
+      variant.key.hanmi === hanmi &&
       variant.key.direction === direction &&
       variant.key.weapon === weapon &&
       (variant.key.versionId === null || variant.key.versionId === undefined),

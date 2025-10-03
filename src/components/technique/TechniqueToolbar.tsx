@@ -4,7 +4,7 @@ import { Select, type SelectOption } from '../../shared/components/ui/Select';
 import { HandIcon, BokkenIcon, JoIcon, TantoIcon } from '../../shared/components/ui/icons';
 
 export type TechniqueToolbarValue = {
-  hanmi?: Hanmi | null;
+  hanmi: Hanmi;
   direction: Direction;
   weapon: WeaponKind;
   versionId?: string | null;
@@ -194,7 +194,7 @@ export const TechniqueToolbar = ({
         <legend className="sr-only">{labels.hanmi}</legend>
         <Select
           options={hanmiOptions}
-          value={value.hanmi || 'ai-hanmi'}
+          value={value.hanmi}
           onChange={handleHanmiChange}
           aria-label={labels.hanmi}
         />

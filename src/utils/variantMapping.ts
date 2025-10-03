@@ -51,7 +51,7 @@ export const convertToVariants = (technique: Technique): TechniqueVariant[] => {
       // Create variant for this (direction, weapon, version) combination
       const variant: TechniqueVariant = {
         key: {
-          hanmi: version.hanmi || null, // Extract hanmi from version
+          hanmi: version.hanmi, // Now required in TechniqueVersion
           direction,
           weapon: defaultWeapon,
           versionId: version.id === technique.versions[0].id ? null : version.id, // null for first version (standard)
@@ -115,16 +115,12 @@ export const getAvailableDirections = (technique: Technique): Direction[] => {
  */
 export const getAvailableHanmis = (technique: Technique): import('../shared/types').Hanmi[] => {
   if (technique.variants && technique.variants.length > 0) {
-    const hanmis = new Set(
-      technique.variants
-        .map((v) => v.key.hanmi)
-        .filter((h): h is import('../shared/types').Hanmi => h != null)
-    );
+    const hanmis = new Set(technique.variants.map((v) => v.key.hanmi));
     return Array.from(hanmis).sort();
   }
   
-  // Default to empty array (no hanmi specified)
-  return [];
+  // Fallback: should not happen with required hanmi
+  return ['ai-hanmi'];
 };
 
 /**

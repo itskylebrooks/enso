@@ -69,77 +69,78 @@ export const parseTechniquePath = (pathname: string): { slug: string; trainerId?
 };
 
 /**
- * Toolbar-based variant parameters (query string approach)
+ * Toolbar-based variant parameters (path-based approach)
+ * URL structure: /technique/[slug]/[version]/[hanmi]/[direction]/[weapon]
+ * - version: 'v-standard' or custom version id (e.g., 'v-haase')
+ * - hanmi: 'ai-hanmi' or 'gyaku-hanmi' (required)
+ * - direction: 'irimi', 'tenkan', 'omote', or 'ura'
+ * - weapon: omitted for 'empty' (default), or 'bokken', 'jo', 'tanto'
  */
 export type TechniqueVariantParams = {
-  hanmi?: Hanmi;
-  direction?: Direction;
-  weapon?: WeaponKind;
+  hanmi: Hanmi;
+  direction: Direction;
+  weapon: WeaponKind;
   versionId?: string | null;
 };
 
 /**
- * Builds a technique URL with toolbar query parameters
+ * Builds a technique URL with path-based variant parameters
  * 
  * @param slug - The technique slug
- * @param params - Toolbar variant parameters
- * @returns Technique URL with query string
+ * @param params - Variant parameters (hanmi, direction, weapon, versionId)
+ * @returns Path-based technique URL
  * 
  * Examples:
- * - buildTechniqueUrlWithVariant('shiho-nage') → '/technique/shiho-nage'
- * - buildTechniqueUrlWithVariant('shiho-nage', {direction: 'irimi'}) → '/technique/shiho-nage?dir=irimi'
- * - buildTechniqueUrlWithVariant('shiho-nage', {direction: 'irimi', weapon: 'bokken', versionId: 'haase-bsv'}) 
- *   → '/technique/shiho-nage?dir=irimi&wp=bokken&ver=haase-bsv'
+ * - buildTechniqueUrlWithVariant('shiho-nage', {hanmi: 'ai-hanmi', direction: 'irimi', weapon: 'empty'}) 
+ *   → '/technique/shiho-nage/v-standard/ai-hanmi/irimi'
+ * - buildTechniqueUrlWithVariant('shiho-nage', {hanmi: 'ai-hanmi', direction: 'irimi', weapon: 'bokken', versionId: 'v-haase'}) 
+ *   → '/technique/shiho-nage/v-haase/ai-hanmi/irimi/bokken'
  */
-export const buildTechniqueUrlWithVariant = (slug: string, params?: TechniqueVariantParams): string => {
+export const buildTechniqueUrlWithVariant = (slug: string, params: TechniqueVariantParams): string => {
   const encodedSlug = encodeURIComponent(slug);
-  let path = `/technique/${encodedSlug}`;
+  const version = params.versionId || 'v-standard';
+  const segments = [
+    'technique',
+    encodedSlug,
+    encodeURIComponent(version),
+    encodeURIComponent(params.hanmi),
+    encodeURIComponent(params.direction),
+  ];
   
-  if (!params) return path;
-  
-  const queryParams: string[] = [];
-  
-  if (params.hanmi) {
-    queryParams.push(`hanmi=${encodeURIComponent(params.hanmi)}`);
+  // Only add weapon if it's not empty-hand (default)
+  if (params.weapon !== 'empty') {
+    segments.push(encodeURIComponent(params.weapon));
   }
   
-  if (params.direction) {
-    queryParams.push(`dir=${encodeURIComponent(params.direction)}`);
-  }
-  
-  if (params.weapon) {
-    queryParams.push(`wp=${encodeURIComponent(params.weapon)}`);
-  }
-  
-  if (params.versionId) {
-    queryParams.push(`ver=${encodeURIComponent(params.versionId)}`);
-  }
-  
-  if (queryParams.length > 0) {
-    path += '?' + queryParams.join('&');
-  }
-  
-  return path;
+  return '/' + segments.join('/');
 };
 
 /**
- * Parses toolbar variant parameters from URL search params
+ * Parses toolbar variant parameters from pathname
  * 
- * @param search - The URL search string (e.g., '?dir=irimi&wp=empty&ver=haase-bsv')
- * @returns Parsed variant parameters
+ * @param pathname - The URL pathname (e.g., '/technique/slug/v-standard/ai-hanmi/irimi' or '/technique/slug/v-haase/gyaku-hanmi/omote/bokken')
+ * @returns Parsed variant parameters or undefined if incomplete
  */
-export const parseTechniqueVariantParams = (search: string): TechniqueVariantParams => {
-  const params = new URLSearchParams(search);
+export const parseTechniqueVariantParams = (pathname: string): TechniqueVariantParams | undefined => {
+  // Match pattern: /technique/{slug}/{version}/{hanmi}/{direction}/{weapon?}
+  const match = /^\/technique\/([^/?#]+)\/([^/?#]+)\/([^/?#]+)\/([^/?#]+)(?:\/([^/?#]+))?/.exec(pathname);
   
-  const hanmiCandidate = params.get('hanmi');
-  const directionCandidate = params.get('dir');
-  const weaponCandidate = params.get('wp');
-  const versionId = params.get('ver');
+  if (!match) return undefined;
+  
+  const versionCandidate = decodeURIComponent(match[2]);
+  const hanmiCandidate = decodeURIComponent(match[3]);
+  const directionCandidate = decodeURIComponent(match[4]);
+  const weaponCandidate = match[5] ? decodeURIComponent(match[5]) : 'empty'; // Default to empty
+  
+  // Validate all parameters
+  if (!isHanmi(hanmiCandidate)) return undefined;
+  if (!isDirection(directionCandidate)) return undefined;
+  if (!isWeaponKind(weaponCandidate)) return undefined;
   
   return {
-    hanmi: isHanmi(hanmiCandidate || undefined) ? hanmiCandidate as Hanmi : undefined,
-    direction: isDirection(directionCandidate || undefined) ? directionCandidate as Direction : undefined,
-    weapon: isWeaponKind(weaponCandidate || undefined) ? weaponCandidate as WeaponKind : undefined,
-    versionId: versionId || undefined,
+    hanmi: hanmiCandidate as Hanmi,
+    direction: directionCandidate as Direction,
+    weapon: weaponCandidate as WeaponKind,
+    versionId: versionCandidate === 'v-standard' ? null : versionCandidate,
   };
 };

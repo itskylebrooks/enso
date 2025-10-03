@@ -22,7 +22,7 @@ export type TechniqueVersion = {
   trainerId?: string;
   dojoId?: string;
   label?: string; // Optional, can be generated dynamically
-  hanmi?: Hanmi; // Optional: ai-hanmi or gyaku-hanmi
+  hanmi: Hanmi; // Required: ai-hanmi or gyaku-hanmi
   stepsByEntry: StepsByEntry;
   steps?: LocalizedSteps; // Legacy support for migration
   uke: {
@@ -47,7 +47,7 @@ export type TechniqueVersionMeta = {
 };
 
 export type TechniqueVariantKey = {
-  hanmi?: Hanmi | null;      // undefined or null => not specified
+  hanmi: Hanmi;              // Required hanmi
   direction: Direction;
   weapon: WeaponKind;
   versionId?: string | null; // undefined or null => standard

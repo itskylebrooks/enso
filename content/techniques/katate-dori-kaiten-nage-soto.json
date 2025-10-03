@@ -23,6 +23,7 @@
   "versions": [
     {
       "id": "v-standard",
+      "hanmi": "ai-hanmi",
       "stepsByEntry": {
         "tenkan": {
           "en": [

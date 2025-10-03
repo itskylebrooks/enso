@@ -21,7 +21,7 @@ import { MediaPanel } from './MediaPanel';
 import { NotesPanel } from './NotesPanel';
 import { enrichTechniqueWithVariants } from '../../utils/variantMapping';
 import { getActiveVariant } from '../../features/technique/store';
-import { parseTechniqueVariantParams } from '../../utils/urls';
+import { parseTechniqueVariantParams, buildTechniqueUrlWithVariant } from '../../utils/urls';
 
 const buildTags = (technique: Technique, locale: Locale): string[] => {
   const title = technique.name[locale]?.toLowerCase?.() ?? '';
@@ -130,7 +130,7 @@ export const TechniquePage = ({
   // Parse URL params on mount to hydrate initial state
   const initialVariantParams = useMemo(() => {
     if (typeof window === 'undefined') return null;
-    return parseTechniqueVariantParams(window.location.search);
+    return parseTechniqueVariantParams(window.location.pathname);
   }, []);
 
   const versionsMeta = enrichedTechnique.versionsMeta || [];
@@ -141,9 +141,9 @@ export const TechniquePage = ({
   }, [enrichedTechnique]);
 
   // Helper to check if a specific combination exists
-  const variantExists = useCallback((hanmi: import('../../shared/types').Hanmi | null | undefined, direction: Direction, weapon: WeaponKind, versionId: string | null) => {
+  const variantExists = useCallback((hanmi: import('../../shared/types').Hanmi, direction: Direction, weapon: WeaponKind, versionId: string | null) => {
     return availableVariants.some(v => 
-      (v.key.hanmi || null) === (hanmi || null) &&
+      v.key.hanmi === hanmi &&
       v.key.direction === direction && 
       v.key.weapon === weapon && 
       v.key.versionId === versionId
@@ -152,24 +152,13 @@ export const TechniquePage = ({
 
   // Initialize toolbar state from URL or defaults to first available variant
   const [toolbarValue, setToolbarValue] = useState<TechniqueToolbarValue>(() => {
-    const urlHanmi = initialVariantParams?.hanmi;
-    const urlDir = initialVariantParams?.direction;
-    const urlWeapon = initialVariantParams?.weapon;
-    const urlVersion = initialVariantParams?.versionId;
-
     // If URL params specify a valid variant, use it
-    if (urlDir && urlWeapon && variantExists(urlHanmi, urlDir, urlWeapon, urlVersion || null)) {
-      const firstVariant = availableVariants.find(v => 
-        (v.key.hanmi || null) === (urlHanmi || null) &&
-        v.key.direction === urlDir && 
-        v.key.weapon === urlWeapon && 
-        v.key.versionId === (urlVersion || null)
-      );
+    if (initialVariantParams && variantExists(initialVariantParams.hanmi, initialVariantParams.direction, initialVariantParams.weapon, initialVariantParams.versionId || null)) {
       return {
-        hanmi: firstVariant?.key.hanmi || null,
-        direction: urlDir,
-        weapon: urlWeapon,
-        versionId: urlVersion || null,
+        hanmi: initialVariantParams.hanmi,
+        direction: initialVariantParams.direction,
+        weapon: initialVariantParams.weapon,
+        versionId: initialVariantParams.versionId || null,
       };
     }
 
@@ -177,16 +166,16 @@ export const TechniquePage = ({
     const firstVariant = availableVariants[0];
     if (firstVariant) {
       return {
-        hanmi: firstVariant.key.hanmi || null,
+        hanmi: firstVariant.key.hanmi,
         direction: firstVariant.key.direction,
         weapon: firstVariant.key.weapon,
         versionId: firstVariant.key.versionId || null,
       };
     }
 
-    // Fallback
+    // Fallback (should not happen with required hanmi in all versions)
     return {
-      hanmi: null,
+      hanmi: 'ai-hanmi',
       direction: 'irimi',
       weapon: 'empty',
       versionId: null,
@@ -199,7 +188,7 @@ export const TechniquePage = ({
     availableVariants
       .filter(v => v.key.versionId === (toolbarValue.versionId || null))
       .forEach(v => {
-        if (v.key.hanmi) hanmis.add(v.key.hanmi);
+        hanmis.add(v.key.hanmi);
       });
     return Array.from(hanmis).sort();
   }, [availableVariants, toolbarValue.versionId]);
@@ -257,7 +246,7 @@ export const TechniquePage = ({
           
           if (firstForVersion) {
             finalValue = {
-              hanmi: firstForVersion.key.hanmi || null,
+              hanmi: firstForVersion.key.hanmi,
               direction: firstForVersion.key.direction,
               weapon: firstForVersion.key.weapon,
               versionId: newValue.versionId,
@@ -272,14 +261,14 @@ export const TechniquePage = ({
           
           // Try to find a matching variant
           const match = availableForVersion.find(v => 
-            (v.key.hanmi || null) === (newValue.hanmi || null) &&
+            v.key.hanmi === newValue.hanmi &&
             v.key.direction === newValue.direction &&
             v.key.weapon === newValue.weapon
           );
           
           if (match) {
             finalValue = {
-              hanmi: match.key.hanmi || null,
+              hanmi: match.key.hanmi,
               direction: match.key.direction,
               weapon: match.key.weapon,
               versionId: newValue.versionId,
@@ -287,7 +276,7 @@ export const TechniquePage = ({
           } else if (availableForVersion[0]) {
             // Fallback to first available for this version
             finalValue = {
-              hanmi: availableForVersion[0].key.hanmi || null,
+              hanmi: availableForVersion[0].key.hanmi,
               direction: availableForVersion[0].key.direction,
               weapon: availableForVersion[0].key.weapon,
               versionId: newValue.versionId,
@@ -298,22 +287,15 @@ export const TechniquePage = ({
       
       setToolbarValue(finalValue);
       
-      // Update URL without full page reload
+      // Update URL without full page reload - using path-based routing
       if (typeof window !== 'undefined') {
-        const url = new URL(window.location.href);
-        if (finalValue.hanmi) {
-          url.searchParams.set('hanmi', finalValue.hanmi);
-        } else {
-          url.searchParams.delete('hanmi');
-        }
-        url.searchParams.set('dir', finalValue.direction);
-        url.searchParams.set('wp', finalValue.weapon);
-        if (finalValue.versionId) {
-          url.searchParams.set('ver', finalValue.versionId);
-        } else {
-          url.searchParams.delete('ver');
-        }
-        window.history.replaceState({}, '', url.toString());
+        const newPath = buildTechniqueUrlWithVariant(technique.slug, {
+          hanmi: finalValue.hanmi,
+          direction: finalValue.direction,
+          weapon: finalValue.weapon,
+          versionId: finalValue.versionId,
+        });
+        window.history.replaceState({}, '', newPath);
       }
       
       // Notify parent

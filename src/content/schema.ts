@@ -51,6 +51,7 @@ const versionSchema = z
     trainerId: z.string().optional(),
     dojoId: z.string().optional(),
     label: z.string().optional(), // Now optional, can be generated dynamically
+    hanmi: z.enum(['ai-hanmi', 'gyaku-hanmi']), // Required field
     stepsByEntry: stepsByEntrySchema,
     uke: z.object({
       role: localizedString,
