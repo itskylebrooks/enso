@@ -1,73 +1,235 @@
-# React + TypeScript + Vite
+# Enso — Aikidō study companion (v0.9.0)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+*A clean, bilingual (EN/DE) catalog of Aikidō techniques with fast search, versions by trainer, and personal study tools.*
 
-Currently, two official plugins are available:
+> “Your personal Aikidō library and study companion.”
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## Status
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+**v0.9.0 (Beta)** — Core experience is stable and usable. Some features are placeholders (feedback page). Content currently focuses on a curated set of techniques to demonstrate depth (variations, versions) rather than breadth.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Highlights
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- **Library** — Filterable, searchable list of techniques.
+- **Technique pages** — Concise *Summary*, *Key Points*, *Common Mistakes*, *Context*, and *Steps*.
+- **Variations toolbar** — Choose **Direction** (Irimi / Tenkan / Omote / Ura), **Hanmi** (Ai / Gyaku), **Weapon** (Empty / Bokken / Jō / Tantō), and **Version** (trainer/dojo) from a single, scalable toolbar.
+- **Bookmarks & Collections** — Save techniques and organize them into belt-oriented or custom collections.
+- **Guide** — Movements, stances, etiquette, principles, and **exam program** (exam tables complete; more techniques coming).
+- **Glossary** — Core Aikidō terms with EN/DE definitions (clickable from tags).
+- **Search** — Diacritic-insensitive, field-weighted ranking; grouped results (Terms / Techniques / Collections).
+- **Bilingual UI** — **English** and **Deutsch** toggle.
+- **Theme** — Light/Dark mode.
+- **Privacy** — Local-first storage; export/import available for bookmarks/collections.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Roadmap (next)
+
+- **1.0**
+  - Complete **all 5th kyū techniques** with full variations (direction, hanmi, weapon, version).
+  - **Exam program tables** (Saya-no-Uchi and weapon tables) with clickable cells → technique pages.
+  - **Feedback page** form (email works now; in-app form later).
+  - Share/print **Collections** (read-only link; clean print layout).
+- **Later**
+  - Advanced search chips (Exact / Close / Fuzzy).
+  - Optional PWA/offline.
+  - Optional trainer pages and contribution flow.
+
+---
+
+## Tech Stack
+
+- **React + TypeScript + Vite**
+- **Tailwind CSS**
+- **Zustand** (client state)
+- **Local-first storage** (via app storage service; export/import for bookmarks)
+- **Framer Motion (Motion)** for subtle animations
+- Simple **i18n dictionaries** (no heavy framework)
+
+> Fonts: **IBM Plex Sans** (SIL Open Font License 1.1).
+
+---
+
+## Getting Started
+
+### Prerequisites
+- Node 18+ (or 20+)
+- **pnpm** recommended
+
+### Setup
+```bash
+pnpm i
+pnpm dev
+# open http://localhost:5173
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Build & Preview
+```bash
+pnpm build
+pnpm preview
 ```
+
+### Lint (optional)
+```bash
+pnpm lint
+```
+
+---
+
+## Project Structure (high level)
+
+```
+src/
+├─ App.css
+├─ App.tsx
+├─ ErrorBoundary.tsx
+├─ index.css
+├─ main.tsx
+├─ react-app-env.d.ts
+├─ components/
+│  ├─ common/
+│  ├─ feedback/
+│  ├─ guide/
+│  ├─ home/
+│  ├─ layout/
+│  ├─ library/
+│  ├─ media/
+│  ├─ progress/
+│  ├─ settings/
+│  ├─ technique/
+│  └─ ui/
+├─ content/
+│  └─ schema.ts
+├─ features/
+│  ├─ bookmarks/
+│  ├─ glossary/
+│  ├─ home/
+│  ├─ search/
+│  └─ technique/
+├─ lib/
+│  └─ search/
+├─ shared/
+│  ├─ components/
+│  ├─ constants/
+│  ├─ data/
+│  ├─ hooks/
+│  ├─ i18n/
+│  ├─ services/
+│  ├─ store/
+│  ├─ styles/
+│  ├─ types/
+│  └─ utils/
+└─ utils/
+   ├─ migrations/
+   ├─ quotes.ts
+   ├─ urls.ts
+   ├─ variantMapping.ts
+   └─ versionLabels.ts
+```
+
+---
+
+## Data Model (techniques) — v2 (overview)
+
+Each technique contains core metadata, a catalog of available **versions** (trainers/dojo), and **variants** (content for a specific combination of direction/weapon/hanmi/version).
+
+```ts
+type Direction = 'irimi' | 'tenkan' | 'omote' | 'ura';
+type Hanmi = 'ai' | 'gyaku';
+type Weapon = 'empty' | 'bokken' | 'jo' | 'tanto';
+
+type VersionMeta = {
+  id: string;           // "haase-bsv"
+  label: string;        // "Alfred Haase (BSV)"
+  dojo?: string;        // optional
+  trainerId?: string;   // optional
+};
+
+type VariantKey = {
+  direction: Direction;
+  hanmi: Hanmi;
+  weapon: Weapon;
+  versionId?: string | null;  // null/undefined => Standard
+};
+
+type Localized<T> = { en: T; de: T };
+
+type TechniqueVariant = {
+  key: VariantKey;
+  steps: Localized<string[]>;           // concise skeleton (4–6 cues)
+  keyPoints?: Localized<string[]>;
+  commonMistakes?: Localized<string[]>;
+  context?: Localized<string>;
+  uke?: {
+    role: Localized<string>;
+    notes?: Localized<string[]>;
+  };
+  media?: Array<{ type: 'youtube'|'vimeo'|'url'; url: string; title?: string }>;
+};
+
+type Technique = {
+  id: string;
+  slug: string;
+  name: Localized<string>;
+  jp?: string;
+  category: 'throw'|'control'|'pin'|'other';
+  attack: string;               // e.g. 'katate-dori'
+  level?: string;               // belt tag for filtering (display-only)
+  summary: Localized<string>;
+  tags: string[];               // searchable aliases
+  versions: VersionMeta[];      // catalog of trainers/lines
+  variants: TechniqueVariant[]; // content per combination
+};
+```
+
+> **Why this shape?** It scales to many trainers and weapon contexts without duplicating whole techniques, and it keeps steps as concise cues rather than long essays.
+
+---
+
+## UX Conventions
+
+- **Toolbar** over technique content with four selectors:
+  - **Direction** (segmented)
+  - **Hanmi** (select)
+  - **Weapon** (select)
+  - **Version** (select; searchable; grouped by dojo)
+- **URL params** reflect the active selection (shareable deep links).
+- **Empty combination** → gentle “no content yet” message (notes/media may still show).
+- **Search** highlights matches and groups by entity (Glossary / Techniques / Collections).
+- **Accessibility**: keyboard-navigable controls, visible focus states, readable contrast.
+
+---
+
+## Content & Legal
+
+- **Unofficial**: This site is an **unofficial study aid**. Requirements vary by dojo/federation.
+- **Accuracy**: *All mistakes are mine; trainers have not formally approved the descriptions yet.*
+- **Exam programs**: Tables in Enso are **reformatted** from public curricula in a new design; we do **not** republish copyrighted PDFs/images.
+- **Logos/marks**: Dojo/federation logos remain trademarks of their owners.
+- **Fonts**: IBM Plex Sans — SIL Open Font License 1.1.
+
+### German (Kurzfassung)
+- **Inoffiziell**: Enso ist eine **inoffizielle Lernhilfe**. Prüfungsinhalte können je nach Dojo/Verband abweichen.  
+- **Hinweis**: *Alle Fehler liegen bei mir; Trainer:innen haben die Inhalte noch nicht offiziell freigegeben.*  
+- **Prüfungstabellen**: Neu gestaltet, keine Weiterveröffentlichung von fremden PDFs/Bildern.  
+
+---
+
+## Contributing
+
+Right now we’re prioritizing stability and content quality.  
+- **Bugs / suggestions**: Settings → Feedback (Email works; in-app form planned).  
+- Pull requests are welcome once v1.0 lands and the content model is frozen.
+
+---
+
+## License
+
+The entire project (code and content) is licensed under the Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0).  
+See: https://creativecommons.org/licenses/by-nc/4.0/
+ 
+Fonts: IBM Plex Sans — SIL Open Font License 1.1.
