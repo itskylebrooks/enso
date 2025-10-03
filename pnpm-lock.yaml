@@ -39,6 +39,9 @@ importers:
       '@tailwindcss/line-clamp':
         specifier: ^0.4.4
         version: 0.4.4(tailwindcss@3.4.17)
+      '@types/node':
+        specifier: ^24.6.2
+        version: 24.6.2
       '@types/react':
         specifier: ^19.1.13
         version: 19.1.15
@@ -50,7 +53,7 @@ importers:
         version: 1.0.8(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       '@vitejs/plugin-react':
         specifier: ^5.0.3
-        version: 5.0.4(vite@7.1.7(jiti@1.21.7)(tsx@4.20.6)(yaml@2.8.1))
+        version: 5.0.4(vite@7.1.7(@types/node@24.6.2)(jiti@1.21.7)(tsx@4.20.6)(yaml@2.8.1))
       autoprefixer:
         specifier: ^10.4.21
         version: 10.4.21(postcss@8.5.6)
@@ -83,7 +86,7 @@ importers:
         version: 8.44.1(eslint@9.36.0(jiti@1.21.7))(typescript@5.8.3)
       vite:
         specifier: ^7.1.7
-        version: 7.1.7(jiti@1.21.7)(tsx@4.20.6)(yaml@2.8.1)
+        version: 7.1.7(@types/node@24.6.2)(jiti@1.21.7)(tsx@4.20.6)(yaml@2.8.1)
 
 packages:
 
@@ -555,6 +558,9 @@ packages:
 
   '@types/json-schema@7.0.15':
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
+
+  '@types/node@24.6.2':
+    resolution: {integrity: sha512-d2L25Y4j+W3ZlNAeMKcy7yDsK425ibcAOO2t7aPTz6gNMH0z2GThtwENCDc0d/Pw9wgyRqE5Px1wkV7naz8ang==}
 
   '@types/react-dom@19.1.9':
     resolution: {integrity: sha512-qXRuZaOsAdXKFyOhRBg6Lqqc0yay13vN7KrIg4L7N4aaHN68ma9OK3NE1BoDFgFOTfM7zg+3/8+2n8rLUH3OKQ==}
@@ -1417,6 +1423,9 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
+  undici-types@7.13.0:
+    resolution: {integrity: sha512-Ov2Rr9Sx+fRgagJ5AX0qvItZG/JKKoBRAVITs1zk7IqZGTJUwgUr7qoYBpWwakpWilTZFM98rG/AFRocu10iIQ==}
+
   update-browserslist-db@1.1.3:
     resolution: {integrity: sha512-UxhIZQ+QInVdunkDAaiazvvT/+fXL5Osr0JZlJulepYu6Jd7qJtDZjlur0emRlT71EN3ScPoE7gvsuIKKNavKw==}
     hasBin: true
@@ -1908,6 +1917,10 @@ snapshots:
 
   '@types/json-schema@7.0.15': {}
 
+  '@types/node@24.6.2':
+    dependencies:
+      undici-types: 7.13.0
+
   '@types/react-dom@19.1.9(@types/react@19.1.15)':
     dependencies:
       '@types/react': 19.1.15
@@ -2016,7 +2029,7 @@ snapshots:
       '@typescript-eslint/types': 8.44.1
       eslint-visitor-keys: 4.2.1
 
-  '@vitejs/plugin-react@5.0.4(vite@7.1.7(jiti@1.21.7)(tsx@4.20.6)(yaml@2.8.1))':
+  '@vitejs/plugin-react@5.0.4(vite@7.1.7(@types/node@24.6.2)(jiti@1.21.7)(tsx@4.20.6)(yaml@2.8.1))':
     dependencies:
       '@babel/core': 7.28.4
       '@babel/plugin-transform-react-jsx-self': 7.27.1(@babel/core@7.28.4)
@@ -2024,7 +2037,7 @@ snapshots:
       '@rolldown/pluginutils': 1.0.0-beta.38
       '@types/babel__core': 7.20.5
       react-refresh: 0.17.0
-      vite: 7.1.7(jiti@1.21.7)(tsx@4.20.6)(yaml@2.8.1)
+      vite: 7.1.7(@types/node@24.6.2)(jiti@1.21.7)(tsx@4.20.6)(yaml@2.8.1)
     transitivePeerDependencies:
       - supports-color
 
@@ -2793,6 +2806,8 @@ snapshots:
 
   typescript@5.8.3: {}
 
+  undici-types@7.13.0: {}
+
   update-browserslist-db@1.1.3(browserslist@4.26.2):
     dependencies:
       browserslist: 4.26.2
@@ -2805,7 +2820,7 @@ snapshots:
 
   util-deprecate@1.0.2: {}
 
-  vite@7.1.7(jiti@1.21.7)(tsx@4.20.6)(yaml@2.8.1):
+  vite@7.1.7(@types/node@24.6.2)(jiti@1.21.7)(tsx@4.20.6)(yaml@2.8.1):
     dependencies:
       esbuild: 0.25.10
       fdir: 6.5.0(picomatch@4.0.3)
@@ -2814,6 +2829,7 @@ snapshots:
       rollup: 4.52.3
       tinyglobby: 0.2.15
     optionalDependencies:
+      '@types/node': 24.6.2
       fsevents: 2.3.3
       jiti: 1.21.7
       tsx: 4.20.6
