@@ -228,3 +228,11 @@ export const JoIcon = (props: SVGProps<SVGSVGElement>): ReactElement => (
     <path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/>
   </svg>
 );
+
+export const MessageSquarePlusIcon = (props: SVGProps<SVGSVGElement>): ReactElement => (
+  <svg {...baseProps} {...props} className={['lucide lucide-message-square-plus-icon lucide-message-square-plus', props.className].filter(Boolean).join(' ')}>
+    <path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/>
+    <path d="M12 8v6"/>
+    <path d="M9 11h6"/>
+  </svg>
+);

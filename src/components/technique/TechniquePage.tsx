@@ -64,6 +64,7 @@ type TechniquePageProps = {
   onRemoveFromCollection: (collectionId: string) => void;
   onOpenGlossary?: (slug: string) => void;
   onVariantChange?: (direction: Direction, weapon: WeaponKind, versionId?: string | null) => void;
+  onFeedbackClick?: () => void;
 };
 
 const getCollectionOptions = (
@@ -119,6 +120,7 @@ export const TechniquePage = ({
   onRemoveFromCollection,
   onOpenGlossary,
   onVariantChange,
+  onFeedbackClick,
 }: TechniquePageProps): ReactElement => {
   const tags = useMemo(() => buildTags(technique, locale), [technique, locale]);
   const summary = technique.summary[locale] || technique.summary.en;
@@ -435,6 +437,7 @@ export const TechniquePage = ({
                   }
                   context={activeVariant.context ? activeVariant.context[locale] || activeVariant.context.en : undefined}
                   copy={copy}
+                  onFeedbackClick={onFeedbackClick}
                 />
               )}
             </div>

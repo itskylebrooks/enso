@@ -1,14 +1,16 @@
 import type { ReactElement } from 'react';
 import type { Copy } from '../../shared/constants/i18n';
+import { MessageSquarePlusIcon } from '../../shared/components/ui/icons';
 
 export type NotesPanelProps = {
   keyPoints?: string[];
   commonMistakes?: string[];
   context?: string;
   copy: Copy;
+  onFeedbackClick?: () => void;
 };
 
-export const NotesPanel = ({ keyPoints, commonMistakes, context, copy }: NotesPanelProps): ReactElement => {
+export const NotesPanel = ({ keyPoints, commonMistakes, context, copy, onFeedbackClick }: NotesPanelProps): ReactElement => {
   const cards: Array<{
     title: string;
     items?: string[];
@@ -42,6 +44,18 @@ export const NotesPanel = ({ keyPoints, commonMistakes, context, copy }: NotesPa
             )}
           </article>
         ))}
+        
+        {/* Feedback Button */}
+        {onFeedbackClick && (
+          <button
+            type="button"
+            onClick={onFeedbackClick}
+            className="w-full rounded-xl border border-white/10 p-4 sm:p-5 flex items-center gap-3 surface-hover transition-soft motion-ease"
+          >
+            <MessageSquarePlusIcon className="shrink-0" />
+            <span className="text-sm font-medium">{copy.feedback}</span>
+          </button>
+        )}
       </div>
     </section>
   );

@@ -13,6 +13,7 @@ import { MobileFilters } from './components/ui/MobileFilters';
 import { HomePage } from './features/home';
 import { AboutPage } from './components/home/AboutPage';
 import { GuidePage } from './components/home/GuidePage';
+import { FeedbackPage } from './components/feedback/FeedbackPage';
 import { GlossaryPage, GlossaryDetailPage, GlossaryFilterPanel, MobileGlossaryFilters, loadAllTerms } from './features/glossary';
 import { ConfirmClearModal } from './shared/components/dialogs/ConfirmClearDialog';
 import { useMotionPreferences } from './components/ui/motion';
@@ -75,6 +76,8 @@ const routeToPath = (route: AppRoute): string => {
       return '/about';
     case 'guide':
       return '/guide';
+    case 'feedback':
+      return '/feedback';
     case 'library':
     case 'bookmarks':
     case 'glossary':
@@ -140,6 +143,10 @@ const parseLocation = (
 
   if (pathname === '/guide') {
     return { route: 'guide', slug: null };
+  }
+
+  if (pathname === '/feedback') {
+    return { route: 'feedback', slug: null };
   }
 
   // Backwards compatibility for old /basics URL
@@ -912,6 +919,8 @@ export default function App(): ReactElement {
       ? copy.backToGuide
       : route === 'glossary'
       ? copy.backToGlossary
+      : route === 'feedback'
+      ? copy.backToFeedback
       : copy.backToLibrary;
 
   let mainContent: ReactElement;
@@ -931,6 +940,7 @@ export default function App(): ReactElement {
         onAssignToCollection={(collectionId) => assignToCollection(currentTechnique.id, collectionId)}
         onRemoveFromCollection={(collectionId) => removeFromCollection(currentTechnique.id, collectionId)}
         onOpenGlossary={openGlossaryTerm}
+        onFeedbackClick={() => navigateTo('feedback')}
       />
     );
   } else if (techniqueNotFound) {
@@ -977,6 +987,8 @@ export default function App(): ReactElement {
         onOpenTechnique={openTechnique}
       />
     );
+  } else if (route === 'feedback') {
+    mainContent = <FeedbackPage copy={copy} onBack={() => navigateTo('library')} />;
   } else {
     mainContent = (
       <div className="max-w-6xl mx-auto px-4 py-4 space-y-4">
@@ -1164,6 +1176,14 @@ export default function App(): ReactElement {
             onChangeLocale={handleLocaleChange}
             onChangeTheme={handleThemeChange}
             onChangeDB={handleDBChange}
+            onNavigateToFeedback={() => {
+              closeSettings();
+              navigateTo('feedback');
+            }}
+            onNavigateToAbout={() => {
+              closeSettings();
+              navigateTo('about');
+            }}
             clearButtonRef={settingsClearButtonRef}
             trapEnabled={!confirmClearOpen}
           />

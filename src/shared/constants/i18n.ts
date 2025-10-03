@@ -43,6 +43,7 @@ export const messages = {
     backToAbout: 'Back to About',
     backToGuide: 'Back to Guide',
     backToGlossary: 'Back to Glossary',
+    backToFeedback: 'Back to Feedback',
     status: 'Progress',
     focus: 'Focus',
     notNow: 'Not now',
@@ -132,6 +133,12 @@ export const messages = {
   homeDojoCreditPart1: 'To my teachers Joachim Eiselen and Markus Möller, my warm community at WSV (Walddörfer Sportverein), and the BSV (Bramfelder Sportverein), who always welcome me kindly as a guest, especially Karen and Stefan Jakuszeit, and Alfred Haase.',
     homeDojoCreditPart2: 'Thank you all for inspiring me, for helping me enjoy every training, and for reminding me how Aikidō lets us forget everything else by focusing on harmony.',
     openAriaPrefix: 'Open',
+    // Feedback
+    feedback: 'Feedback',
+    feedbackTitle: 'Feedback',
+    feedbackDescription: 'This page will allow you to share corrections, suggestions, or improvements directly inside the app.\n\nIn the future, you will be able to:\n• Suggest edits for technique descriptions\n• Report mistakes or unclear explanations\n• Propose new glossary terms or versions\n• Share your training experience to improve Enso\n\nFor now, you can still contact me via Email in the Settings → Feedback section.',
+    feedbackInApp: 'In-App',
+    feedbackEmail: 'Email',
     // Glossary categories
     categoryMovement: 'Movement',
     categoryStance: 'Stance',
@@ -205,6 +212,7 @@ export const messages = {
     backToAbout: 'Zurück zu Über Enso',
     backToGuide: 'Zurück zum Leitfaden',
     backToGlossary: 'Zurück zum Glossar',
+    backToFeedback: 'Zurück zum Feedback',
     status: 'Fortschritt',
     focus: 'Fokus',
     notNow: 'Später',
@@ -294,6 +302,12 @@ export const messages = {
     homeDojoCreditPart1: 'An meine Lehrer Joachim Eiselen und Markus Möller, meine warme Gemeinschaft beim WSV (Walddörfer Sportverein) und dem BSV (Bramfelder Sportverein), die mich immer herzlich als Gast aufnehmen, besonders Karen und Stefan Jakuszeit sowie Alfred Haase.',
     homeDojoCreditPart2: 'Danke euch allen dafür, dass ihr mich inspiriert, mir dabei helft, jedes Training zu genießen und mich daran erinnert, wie Aikidō uns alles andere vergessen lässt, indem wir uns auf Harmonie konzentrieren.',
     openAriaPrefix: 'Öffne',
+    // Feedback
+    feedback: 'Feedback',
+    feedbackTitle: 'Feedback',
+    feedbackDescription: 'Auf dieser Seite kannst du in Zukunft direkt im Programm Korrekturen, Vorschläge oder Verbesserungen mitteilen.\n\nGeplant ist, dass du hier:\n• Änderungen an Technikbeschreibungen vorschlagen kannst\n• Fehler oder unklare Erklärungen meldest\n• Neue Glossarbegriffe oder Versionen einreichst\n• Deine Trainingserfahrungen teilst, um Enso weiterzuentwickeln\n\nBis dahin erreichst du mich weiterhin per E-Mail unter Einstellungen → Feedback.',
+    feedbackInApp: 'In-App',
+    feedbackEmail: 'E-Mail',
     // Glossary categories
     categoryMovement: 'Bewegung',
     categoryStance: 'Haltung',

@@ -144,7 +144,7 @@ export type DB = {
   glossaryBookmarkCollections: GlossaryBookmarkCollection[];
 };
 
-export type AppRoute = 'home' | 'library' | 'bookmarks' | 'about' | 'guide' | 'glossary';
+export type AppRoute = 'home' | 'library' | 'bookmarks' | 'about' | 'guide' | 'glossary' | 'feedback';
 
 export type Filters = {
   category?: string;
