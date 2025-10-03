@@ -398,7 +398,7 @@ export const TechniquePage = ({
 
       <AnimatePresence mode="wait">
         <motion.section
-          key={`${toolbarValue.direction}-${toolbarValue.weapon}-${toolbarValue.versionId || 'standard'}`}
+          key={`${toolbarValue.hanmi}-${toolbarValue.direction}-${toolbarValue.weapon}-${toolbarValue.versionId || 'standard'}`}
           initial={motionInitial}
           animate={motionAnimate}
           exit={motionExit}
