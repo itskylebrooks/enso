@@ -12,112 +12,195 @@
 
 ## Adding New Techniques
 
-Techniques are stored as JSON files in `/content/techniques/`. Each file represents one technique with all its possible variations.
+Techniques are stored as JSON files in `/content/techniques/`. Each file represents one technique with multiple versions (Standard, trainer-specific) and entry variations (irimi/tenkan).
 
 ### Template Structure
 
-Create a new file: `/content/techniques/your-technique-name.json`
+Create a new file: `/content/techniques/attack-technique-direction.json`
 
 ```json
 {
-  "id": "unique-id-here",
-  "slug": "technique-url-slug",
+  "id": "t-unique-id",
+  "slug": "attack-technique-direction",
   "name": {
-    "en": "English Technique Name",
-    "de": "German Technique Name"
+    "en": "Attack Technique Name (Direction)",
+    "de": "Attack Technique Name (Direction)"
   },
-  "jp": "日本語名 (Optional romaji)",
+  "jp": "日本語名",
   "category": "throw",
   "attack": "katate-dori",
-  "level": "5kyu",
+  "weapon": "empty-hand",
+  "level": "kyu5",
   "summary": {
     "en": "Brief English description of what this technique is and its purpose.",
     "de": "Kurze deutsche Beschreibung der Technik und ihres Zwecks."
   },
-  "tags": ["alternative-name", "searchable-alias"],
+  "tags": [
+    "technique-name",
+    "direction",
+    "category",
+    "attack"
+  ],
   "versions": [
     {
-      "id": "standard",
-      "label": "Standard"
-    },
-    {
-      "id": "haase-bsv",
-      "label": "Alfred Haase (BSV)",
-      "dojo": "BSV Berlin",
-      "trainerId": "alfred-haase"
-    }
-  ],
-  "variants": [
-    {
-      "key": {
-        "direction": "irimi",
-        "hanmi": "ai",
-        "weapon": "empty",
-        "versionId": "standard"
-      },
-      "steps": {
-        "en": [
-          "Step 1: Enter and blend with partner's energy",
-          "Step 2: Establish proper grip and posture",
-          "Step 3: Execute the technique",
-          "Step 4: Complete with safe ukemi"
-        ],
-        "de": [
-          "Schritt 1: Eintreten und mit Energie verschmelzen",
-          "Schritt 2: Richtigen Griff und Haltung etablieren",
-          "Schritt 3: Technik ausführen",
-          "Schritt 4: Mit sicherem Ukemi abschließen"
-        ]
-      },
-      "keyPoints": {
-        "en": [
-          "Maintain proper ma-ai (distance)",
-          "Keep your center low and stable",
-          "Blend rather than oppose"
-        ],
-        "de": [
-          "Richtiges Ma-ai (Abstand) beibehalten",
-          "Zentrum tief und stabil halten",
-          "Verschmelzen statt widerstehen"
-        ]
-      },
-      "commonMistakes": {
-        "en": [
-          "Using too much upper body strength",
-          "Breaking posture during entry",
-          "Losing connection with partner"
-        ],
-        "de": [
-          "Zu viel Oberkörperkraft verwenden",
-          "Haltung beim Eintreten verlieren",
-          "Verbindung zum Partner verlieren"
-        ]
-      },
-      "context": {
-        "en": "This variation is typically practiced from static grab. Focus on smooth entry and maintaining connection throughout.",
-        "de": "Diese Variation wird typischerweise aus statischem Griff geübt. Fokus auf fließenden Eintritt und durchgehende Verbindung."
+      "id": "v-standard",
+      "hanmi": "ai-hanmi",
+      "stepsByEntry": {
+        "irimi": {
+          "en": [
+            "Receive the attack softly; align posture.",
+            "Step off-line (irimi) and establish connection.",
+            "Guide partner's energy through the technique.",
+            "Complete movement maintaining control.",
+            "Finish with safe ukemi and zanshin."
+          ],
+          "de": [
+            "Nimm den Angriff weich an; richte die Haltung aus.",
+            "Tritt von der Linie (Irimi) und etabliere Verbindung.",
+            "Führe die Energie des Partners durch die Technik.",
+            "Vollende die Bewegung mit Kontrolle.",
+            "Beende mit sicherem Ukemi und Zanshin."
+          ]
+        },
+        "tenkan": {
+          "en": [
+            "Receive the attack softly; align posture.",
+            "Turn (tenkan) and blend with partner's energy.",
+            "Maintain connection while pivoting.",
+            "Execute the technique from the new angle.",
+            "Guide to safe ukemi and maintain zanshin."
+          ],
+          "de": [
+            "Nimm den Angriff weich an; richte die Haltung aus.",
+            "Drehe (Tenkan) und verschmelze mit der Energie.",
+            "Halte Verbindung beim Drehen.",
+            "Führe die Technik aus dem neuen Winkel aus.",
+            "Führe in sicheres Ukemi und halte Zanshin."
+          ]
+        }
       },
       "uke": {
         "role": {
-          "en": "Attack with committed forward energy",
-          "de": "Mit entschlossener Vorwärtsenergie angreifen"
+          "en": "Provide a committed attack and follow the lead with appropriate resistance.",
+          "de": "Greife engagiert an und folge der Führung mit angemessenem Widerstand."
         },
         "notes": {
           "en": [
             "Maintain realistic attack energy",
-            "Take safe ukemi when thrown"
+            "Stay connected throughout the movement",
+            "Take safe ukemi when balance is broken"
           ],
           "de": [
             "Realistische Angriffsenergie beibehalten",
-            "Sicheres Ukemi beim Wurf nehmen"
+            "Verbindung während der Bewegung halten",
+            "Sicheres Ukemi nehmen wenn Gleichgewicht bricht"
           ]
         }
+      },
+      "media": [],
+      "keyPoints": {
+        "en": [
+          "Move from center, not arms",
+          "Maintain proper ma-ai throughout",
+          "Blend with partner's energy"
+        ],
+        "de": [
+          "Aus dem Zentrum bewegen, nicht mit Armen",
+          "Richtiges Ma-ai durchgehend beibehalten",
+          "Mit Energie des Partners verschmelzen"
+        ]
+      },
+      "commonMistakes": {
+        "en": [
+          "Using upper body strength instead of whole body movement",
+          "Breaking posture during execution",
+          "Losing connection with partner"
+        ],
+        "de": [
+          "Oberkörperkraft statt Ganzkörperbewegung verwenden",
+          "Haltung während Ausführung verlieren",
+          "Verbindung zum Partner verlieren"
+        ]
+      },
+      "context": {
+        "en": "Context about when and how this variation is practiced, important principles to remember.",
+        "de": "Kontext darüber, wann und wie diese Variation geübt wird, wichtige Prinzipien zum Merken."
+      }
+    },
+    {
+      "id": "v-mustermann",
+      "trainerId": "max-mustermann",
+      "dojoId": "example-dojo",
+      "hanmi": "ai-hanmi",
+      "stepsByEntry": {
+        "irimi": {
+          "en": [
+            "Start in ai-hanmi; receive the attack.",
+            "Enter with strong irimi emphasizing hip rotation.",
+            "Control partner's center throughout movement.",
+            "Execute technique with whole body power.",
+            "Guide to completion with precision and zanshin."
+          ],
+          "de": [
+            "Beginne in Ai-Hanmi; empfange den Angriff.",
+            "Trete mit starkem Irimi ein, betone Hüftrotation.",
+            "Kontrolliere das Zentrum des Partners während der Bewegung.",
+            "Führe Technik mit Ganzkörperkraft aus.",
+            "Führe zur Vollendung mit Präzision und Zanshin."
+          ]
+        }
+      },
+      "uke": {
+        "role": {
+          "en": "Grab with intent from ai-hanmi. Follow the entry without resistance and receive the throw safely.",
+          "de": "Greife entschlossen aus Ai-Hanmi. Folge dem Eintritt ohne Widerstand und nimm den Wurf sicher an."
+        },
+        "notes": {
+          "en": [
+            "Maintain firm but not rigid grip",
+            "Move with the technique",
+            "Prepare for appropriate ukemi"
+          ],
+          "de": [
+            "Festen aber nicht starren Griff halten",
+            "Mit der Technik mitgehen",
+            "Auf passendes Ukemi vorbereiten"
+          ]
+        }
+      },
+      "keyPoints": {
+        "en": [
+          "Strong irimi entry is essential",
+          "Hip-driven power, not arm strength",
+          "Maintain center-to-center connection"
+        ],
+        "de": [
+          "Starker Irimi-Eintritt ist essenziell",
+          "Hüftgetriebene Kraft, nicht Armkraft",
+          "Zentrum-zu-Zentrum-Verbindung beibehalten"
+        ]
+      },
+      "commonMistakes": {
+        "en": [
+          "Weak entry creating too much distance",
+          "Relying on arm strength",
+          "Losing postural control"
+        ],
+        "de": [
+          "Schwacher Eintritt erzeugt zu viel Abstand",
+          "Sich auf Armkraft verlassen",
+          "Haltungskontrolle verlieren"
+        ]
+      },
+      "context": {
+        "en": "Max Mustermann's interpretation emphasizes strong entry and hip-driven movement, maintaining center control throughout.",
+        "de": "Max Mustermanns Interpretation betont starken Eintritt und hüftgetriebene Bewegung, Zentrumskontrolle durchgehend beibehaltend."
       },
       "media": [
         {
           "type": "youtube",
-          "url": "https://www.youtube.com/watch?v=example",
-          "title": "Demonstration by [Sensei Name]"
+          "url": "https://www.youtube-nocookie.com/embed/VIDEO_ID",
+          "title": "Technique Name - Max Mustermann"
         }
       ]
     }
@@ -131,242 +214,91 @@ Create a new file: `/content/techniques/your-technique-name.json`
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `id` | string | ✅ | Unique identifier (e.g., "irimi-nage-001") |
-| `slug` | string | ✅ | URL-friendly name (e.g., "irimi-nage") |
+| `id` | string | ✅ | Unique identifier (e.g., "t-shn-katatedori-omote") |
+| `slug` | string | ✅ | URL-friendly name (e.g., "katate-dori-shiho-nage-omote") |
 | `name` | Localized | ✅ | Technique name in EN/DE |
 | `jp` | string | ❌ | Japanese name (romaji or kanji) |
 | `category` | enum | ✅ | One of: `throw`, `control`, `pin`, `other` |
 | `attack` | string | ✅ | Attack type (e.g., "katate-dori", "shomen-uchi") |
-| `level` | string | ❌ | Belt level for filtering (e.g., "5kyu", "4kyu") |
+| `weapon` | string | ✅ | Weapon context: `empty-hand`, `bokken`, `jo`, `tanto` |
+| `level` | string | ❌ | Belt level for filtering (e.g., "kyu5", "kyu4", "kyu3") |
 | `summary` | Localized | ✅ | Brief description of the technique |
-| `tags` | string[] | ❌ | Alternative names for search |
+| `tags` | string[] | ✅ | Alternative names for search |
 
-#### Versions
+#### Versions Structure
 
-The `versions` array catalogs different interpretations of the technique:
+Each technique has multiple **versions** - different interpretations by trainers or dojos. The first version should always be the standard one:
 
 ```json
 "versions": [
   {
-    "id": "standard",          // Always include "standard"
-    "label": "Standard"
+    "id": "v-standard",        // Required: Always start with standard version
+    "hanmi": "ai-hanmi",       // Required: "ai-hanmi" or "gyaku-hanmi"
+    "stepsByEntry": { ... },   // Required: Steps for irimi and/or tenkan
+    "uke": { ... },           // Required: Uke's role and notes
+    "media": [],              // Optional: Video/image references
+    "keyPoints": { ... },     // Optional: Important principles
+    "commonMistakes": { ... },// Optional: Things to avoid
+    "context": { ... }        // Optional: When/how to use
   },
   {
-    "id": "haase-bsv",        // Trainer-specific version
-    "label": "Alfred Haase (BSV)",
-    "dojo": "BSV Berlin",     // Optional: dojo affiliation
-    "trainerId": "alfred-haase" // Optional: links to trainer profile
+    "id": "v-mustermann",     // Trainer-specific version
+    "trainerId": "max-mustermann",  // Links to trainer profile
+    "dojoId": "example-dojo",       // Links to dojo
+    "hanmi": "ai-hanmi",
+    // ... same structure as above
   }
 ]
 ```
 
-**First version must be "standard"** — this is the default shown to users.
+**Important**: Version IDs must start with `v-` prefix (e.g., `v-standard`, `v-mustermann`, `v-haase`).
 
-#### Variant Keys
+#### Steps By Entry
 
-Each variant has a `key` that defines its specific combination:
+Each version contains `stepsByEntry` - an object with steps for different entry types:
 
-##### **Direction** (required)
-- `irimi` — Entering movement
-- `tenkan` — Turning movement
-- `omote` — Front/outside variation
-- `ura` — Back/inside variation
+```json
+"stepsByEntry": {
+  "irimi": {              // Entering/direct entry
+    "en": [ "step 1", "step 2", ... ],
+    "de": [ "Schritt 1", "Schritt 2", ... ]
+  },
+  "tenkan": {             // Turning/pivoting entry
+    "en": [ "step 1", "step 2", ... ],
+    "de": [ "Schritt 1", "Schritt 2", ... ]
+  }
+}
+```
 
-##### **Hanmi** (required)
-- `ai` — Ai-hanmi (same stance)
-- `gyaku` — Gyaku-hanmi (opposite stance)
+**Entry Types:**
+- `irimi` — Direct entering movement
+- `tenkan` — Turning/pivoting movement
 
-##### **Weapon** (required)
-- `empty` — Empty-handed (no weapon)
-- `bokken` — Wooden sword
-- `jo` — Staff
-- `tanto` — Knife
+You can include one or both entry types. Each should have 4-8 clear, actionable steps.
 
-##### **Version** (optional)
-- `"standard"` or `null` — Standard version
-- `"haase-bsv"` — Specific trainer's version (must match `versions[].id`)
+#### Hanmi (Stance)
 
-### Variant Content
+Each version specifies the **hanmi** (stance relationship):
+- `ai-hanmi` — Same stance (both partners have same foot forward)
+- `gyaku-hanmi` — Opposite stance (opposite feet forward)
 
-Each variant can include:
+#### Additional Content
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `steps` | Localized<string[]> | ✅ | 4-6 concise step-by-step cues |
-| `keyPoints` | Localized<string[]> | ❌ | Important principles to remember |
-| `commonMistakes` | Localized<string[]> | ❌ | Things to avoid |
-| `context` | Localized<string> | ❌ | When/how to use this variation |
-| `uke` | Object | ❌ | Guidance for the attacking partner |
-| `media` | Array | ❌ | Video/image references |
+| `uke` | Object | ✅ | Guidance for the attacking partner |
+| `uke.role` | Localized<string> | ✅ | Brief description of uke's role |
+| `uke.notes` | Localized<string[]> | ✅ | Specific tips for uke (can be empty array) |
+| `media` | Array | ✅ | Video/image references (can be empty array) |
+| `keyPoints` | Localized<string[]> | ✅ | Important principles (can be empty) |
+| `commonMistakes` | Localized<string[]> | ✅ | Things to avoid (can be empty) |
+| `context` | Localized<string> | ✅ | When/how to practice (can be empty string) |
 
-### Complete Example: Multiple Variations
+**Note**: Even if empty, these fields should be present in the JSON for consistency.
 
-```json
-{
-  "id": "shiho-nage-001",
-  "slug": "shiho-nage",
-  "name": {
-    "en": "Four-Direction Throw",
-    "de": "Vier-Richtungen-Wurf"
-  },
-  "jp": "四方投げ",
-  "category": "throw",
-  "attack": "katate-dori",
-  "level": "5kyu",
-  "summary": {
-    "en": "A fundamental throw that leads uke's energy in four directions.",
-    "de": "Ein fundamentaler Wurf, der Ukes Energie in vier Richtungen führt."
-  },
-  "tags": ["shiho-nage", "4-direction-throw"],
-  "versions": [
-    {
-      "id": "standard",
-      "label": "Standard"
-    },
-    {
-      "id": "haase-bsv",
-      "label": "Alfred Haase (BSV)",
-      "dojo": "BSV Berlin"
-    }
-  ],
-  "variants": [
-    {
-      "key": {
-        "direction": "omote",
-        "hanmi": "ai",
-        "weapon": "empty",
-        "versionId": "standard"
-      },
-      "steps": {
-        "en": [
-          "Receive ai-hanmi katate-dori attack",
-          "Step forward while raising partner's arm",
-          "Pivot 180° bringing arm overhead",
-          "Guide partner down with shiho-nage"
-        ],
-        "de": [
-          "Ai-Hanmi Katate-Dori Angriff empfangen",
-          "Vorwärts treten während Partner-Arm angehoben wird",
-          "180° drehen und Arm über Kopf führen",
-          "Partner mit Shiho-Nage nach unten führen"
-        ]
-      },
-      "keyPoints": {
-        "en": [
-          "Raise arm smoothly without forcing",
-          "Maintain connection throughout pivot",
-          "Control descent angle for safety"
-        ],
-        "de": [
-          "Arm sanft ohne Zwang anheben",
-          "Verbindung während Drehung beibehalten",
-          "Abstiegswinkel für Sicherheit kontrollieren"
-        ]
-      }
-    },
-    {
-      "key": {
-        "direction": "ura",
-        "hanmi": "ai",
-        "weapon": "empty",
-        "versionId": "standard"
-      },
-      "steps": {
-        "en": [
-          "Receive ai-hanmi katate-dori attack",
-          "Step back and tenkan behind partner",
-          "Raise arm while pivoting",
-          "Complete with shiho-nage entry"
-        ],
-        "de": [
-          "Ai-Hanmi Katate-Dori Angriff empfangen",
-          "Zurücktreten und Tenkan hinter Partner",
-          "Arm während Drehung anheben",
-          "Mit Shiho-Nage Eintritt abschließen"
-        ]
-      }
-    },
-    {
-      "key": {
-        "direction": "omote",
-        "hanmi": "gyaku",
-        "weapon": "empty",
-        "versionId": "standard"
-      },
-      "steps": {
-        "en": [
-          "Receive gyaku-hanmi katate-dori attack",
-          "Cross-step and blend with forward energy",
-          "Raise and guide arm overhead",
-          "Execute throw maintaining control"
-        ],
-        "de": [
-          "Gyaku-Hanmi Katate-Dori Angriff empfangen",
-          "Kreuzschritt und mit Vorwärtsenergie verschmelzen",
-          "Arm über Kopf anheben und führen",
-          "Wurf ausführen und Kontrolle behalten"
-        ]
-      }
-    },
-    {
-      "key": {
-        "direction": "omote",
-        "hanmi": "ai",
-        "weapon": "bokken",
-        "versionId": "standard"
-      },
-      "steps": {
-        "en": [
-          "Partner strikes shomen-uchi with bokken",
-          "Enter and deflect with your bokken",
-          "Control weapon arm and establish shiho-nage grip",
-          "Complete technique disarming if needed"
-        ],
-        "de": [
-          "Partner schlägt Shomen-Uchi mit Bokken",
-          "Eintreten und mit Bokken abwehren",
-          "Waffenarm kontrollieren und Shiho-Nage Griff etablieren",
-          "Technik abschließen, bei Bedarf entwaffnen"
-        ]
-      }
-    },
-    {
-      "key": {
-        "direction": "omote",
-        "hanmi": "ai",
-        "weapon": "empty",
-        "versionId": "haase-bsv"
-      },
-      "steps": {
-        "en": [
-          "Receive attack with soft hand",
-          "Lead with hip rotation rather than arm",
-          "Emphasize circular movement",
-          "Finish with gentle control"
-        ],
-        "de": [
-          "Angriff mit weicher Hand empfangen",
-          "Mit Hüftrotation statt Arm führen",
-          "Kreisförmige Bewegung betonen",
-          "Mit sanfter Kontrolle abschließen"
-        ]
-      },
-      "keyPoints": {
-        "en": [
-          "Haase style emphasizes hip-led movement",
-          "Less tension in arms and shoulders",
-          "Focus on whole-body coordination"
-        ],
-        "de": [
-          "Haase-Stil betont hüftgeführte Bewegung",
-          "Weniger Spannung in Armen und Schultern",
-          "Fokus auf Ganzkörper-Koordination"
-        ]
-      }
-    }
-  ]
-}
-```
+### Complete Example
+
+See `/content/techniques/katate-dori-kaiten-nage-soto.json` for a real working example with both standard and trainer-specific versions.
 
 ### Validation
 
@@ -385,22 +317,24 @@ This will check:
 
 ### Tips for Writing Techniques
 
-1. **Steps**: Keep to 4-6 clear, actionable cues — not essays
+1. **Steps**: Keep to 4-8 clear, actionable cues per entry type — not essays
 2. **Key Points**: Focus on principles, not repetition of steps
 3. **Common Mistakes**: Help students avoid typical errors
-4. **Context**: When would you use this specific variation?
+4. **Context**: Explain when you'd use irimi vs tenkan for this technique
 5. **Uke guidance**: Include notes for the attacking partner's role
-6. **Media**: Add video links only if high quality and relevant
+6. **Media**: Add video links only if high quality and relevant (use youtube-nocookie.com URLs)
 
 ### Naming Conventions
 
-- **IDs**: `technique-name-###` (e.g., `ikkyo-001`, `kote-gaeshi-002`)
-- **Slugs**: `kebab-case` matching common usage (e.g., `shiho-nage`, `irimi-nage`)
-- **Version IDs**: `trainer-dojo` format (e.g., `haase-bsv`, `yamada-nyai`)
+- **IDs**: `t-abbreviation-attack-technique` (e.g., `t-shn-katatedori-omote`, `t1`, `t8`)
+- **Slugs**: `kebab-case` matching common usage (e.g., `katate-dori-shiho-nage-omote`)
+- **Version IDs**: `v-standard` (required first), then `v-trainername` (e.g., `v-haase`, `v-mustermann`)
+- **Trainer IDs**: `kebab-case` (e.g., `max-mustermann`, `alfred-haase`)
+- **Dojo IDs**: `kebab-case` or abbreviation (e.g., `bsv`, `example-dojo`)
 
 ---
 
-## UX Conventionstus
+## Status
 
 **v0.9.0 (Beta)** — Core experience is stable and usable. Some features are placeholders (feedback page). Content currently focuses on a curated set of techniques to demonstrate depth (variations, versions) rather than breadth.
 
