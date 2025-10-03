@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type ReactElement } from 'react';
 import { motion } from 'motion/react';
 import type { Copy } from '../../constants/i18n';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
-import { useMotionPreferences } from '../../../components/ui/motion';
+import { useMotionPreferences } from '../ui/motion';
 
 type ConfirmClearModalProps = {
   copy: Copy;

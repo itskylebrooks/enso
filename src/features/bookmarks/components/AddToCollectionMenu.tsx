@@ -2,8 +2,8 @@ import { useEffect, useMemo, useRef, useState, type ReactElement } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'motion/react';
 import type { Copy } from '../../../shared/constants/i18n';
-import { CheckIcon, FolderPlusIcon, FolderCheckIcon, PlusIcon } from '../../../shared/components/ui/icons';
-import { useMotionPreferences } from '../../../components/ui/motion';
+import { CheckIcon, FolderPlusIcon, FolderCheckIcon, PlusIcon } from '@shared/components/ui/icons';
+import { useMotionPreferences } from '@shared/components/ui/motion';
 import useLockBodyScroll from '../../../shared/hooks/useLockBodyScroll';
 
 type CollectionOption = {

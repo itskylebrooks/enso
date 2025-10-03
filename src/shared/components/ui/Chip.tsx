@@ -1,7 +1,7 @@
 import type { ReactElement } from 'react';
 import { motion, type HTMLMotionProps, useReducedMotion } from 'motion/react';
 import { classNames } from '../../utils/classNames';
-import { defaultEase } from '../../../components/ui/motion';
+import { defaultEase } from './motion';
 
 type ChipProps = {
   label: string;

@@ -1,5 +1,5 @@
 import type { Technique, GlossaryTerm, Locale } from '../../shared/types';
-import { stripDiacritics } from '../../shared/utils/text';
+import { stripDiacritics } from '@shared/utils/text';
 import { ENTRY_MODE_ORDER } from '../../shared/constants/entryModes';
 
 export type ScoredSearchResult = 

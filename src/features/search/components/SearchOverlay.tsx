@@ -3,11 +3,11 @@ import { motion } from 'motion/react';
 import type { Copy } from '../../../shared/constants/i18n';
 import type { Locale, Technique, GlossaryTerm } from '../../../shared/types';
 import { EmphasizedName } from '../../../shared/components';
-import { SearchIcon } from '../../../shared/components/ui/icons';
+import { SearchIcon } from '@shared/components/ui/icons';
 import { useFocusTrap } from '../../../shared/hooks/useFocusTrap';
 import { buildSearchIndex, buildGlossarySearchIndex, matchSearch, normalizeSearchQuery } from '../indexer';
 import { scoreSearchResult, applyTieBreakers, type ScoredSearchResult } from '../scorer';
-import { useMotionPreferences } from '../../../components/ui/motion';
+import { useMotionPreferences } from '@shared/components/ui/motion';
 import { loadAllTerms } from '../../glossary/loader';
 
 type SearchResult = 

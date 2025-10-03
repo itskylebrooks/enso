@@ -1,7 +1,7 @@
 import type { ReactElement, ReactNode } from 'react';
 import type { EntryMode } from '../../types';
 import { motion } from 'motion/react';
-import { useMotionPreferences } from '../../../components/ui/motion';
+import { useMotionPreferences } from './motion';
 import { classNames } from '../../utils/classNames';
 
 export type SegmentedOption<T extends string = string> = {

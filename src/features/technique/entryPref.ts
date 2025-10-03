@@ -1,5 +1,5 @@
-import type { EntryMode } from '../../shared/types';
-import { DEFAULT_ENTRY_MODE, isEntryMode } from '../../shared/constants/entryModes';
+import type { EntryMode } from '@shared/types';
+import { DEFAULT_ENTRY_MODE, isEntryMode } from '@shared/constants/entryModes';
 
 // Storage keys
 const ENTRY_KEY = 'enso:entryMode';

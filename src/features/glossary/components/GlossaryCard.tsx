@@ -5,7 +5,7 @@ import type { GlossaryTerm } from '../../../shared/types';
 import type { Locale } from '../../../shared/types';
 import type { Copy } from '../../../shared/constants/i18n';
 import { getCategoryStyle, getCategoryLabel } from '../../../shared/styles/glossary';
-import { getInitialThemeState } from '../../../shared/utils/theme';
+import { getInitialThemeState } from '@shared/utils/theme';
 
 type MotionProps = {
   variants: Variants;

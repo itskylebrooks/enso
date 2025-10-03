@@ -3,13 +3,13 @@ import type { ReactNode } from 'react';
 import { motion } from 'motion/react';
 import type { Copy } from '../../../shared/constants/i18n';
 import type { Filters, Grade, Locale } from '../../../shared/types';
-import { classNames } from '../../../shared/utils/classNames';
+import { classNames } from '@shared/utils/classNames';
 import { gradePalette } from '../../../shared/styles/belts';
 import { getLevelLabel, getOrderedTaxonomyValues, getTaxonomyLabel, type TaxonomyType } from '../../../shared/i18n/taxonomy';
 import { SectionTitle } from '../../../shared/components';
-import { useMotionPreferences } from '../../../components/ui/motion';
+import { useMotionPreferences } from '@shared/components/ui/motion';
 import { ENTRY_MODE_ORDER } from '../../../shared/constants/entryModes';
-import { ChevronDownIcon } from '../../../shared/components/ui/icons';
+import { ChevronDownIcon } from '@shared/components/ui/icons';
 
 type FilterPanelProps = {
   copy: Copy;

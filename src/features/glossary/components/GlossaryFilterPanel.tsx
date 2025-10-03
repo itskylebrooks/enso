@@ -2,7 +2,7 @@ import type { ReactElement } from 'react';
 import type { Copy } from '../../../shared/constants/i18n';
 import type { GlossaryTerm } from '../../../shared/types';
 import { SectionTitle } from '../../../shared/components';
-import { classNames } from '../../../shared/utils/classNames';
+import { classNames } from '@shared/utils/classNames';
 
 type GlossaryFilters = {
   category?: GlossaryTerm['category'];

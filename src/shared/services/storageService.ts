@@ -1,4 +1,4 @@
-import { parseTechnique } from '../../content/schema';
+import { parseTechnique } from '@shared/types/content';
 import { APP_NAME, DB_VERSION, LOCALE_KEY, STORAGE_KEY, THEME_KEY } from '../constants/storage';
 import type {
   BookmarkCollection,

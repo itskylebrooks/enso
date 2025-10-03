@@ -1,22 +1,22 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactElement } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Header } from './components/layout/Header';
+import { Header } from '@shared/components/layout/Header';
 import { FilterPanel } from './features/search/components/FilterPanel';
-import { Library } from './components/library/Library';
+import { Library } from '@features/technique/components/Library';
 import { BookmarksView } from './features/bookmarks/components/BookmarksView';
 import { SearchOverlay } from './features/search/components/SearchOverlay';
-import { SettingsModal } from './components/settings/SettingsModal';
-import { TechniquePage } from './components/technique/TechniquePage';
-import { type CollectionOption } from './components/technique/TechniqueHeader';
-import { Toast } from './components/ui/Toast';
-import { MobileFilters } from './components/ui/MobileFilters';
+import { SettingsModal } from '@features/home/components/settings/SettingsModal';
+import { TechniquePage } from '@features/technique/components/TechniquePage';
+import { type CollectionOption } from '@features/technique/components/TechniqueHeader';
+import { Toast } from '@shared/components/ui/Toast';
+import { MobileFilters } from '@shared/components/ui/MobileFilters';
 import { HomePage } from './features/home';
-import { AboutPage } from './components/home/AboutPage';
-import { GuidePage } from './components/home/GuidePage';
-import { FeedbackPage } from './components/feedback/FeedbackPage';
+import { AboutPage } from '@features/home/components/home/AboutPage';
+import { GuidePage } from '@features/home/components/home/GuidePage';
+import { FeedbackPage } from '@features/home/components/feedback/FeedbackPage';
 import { GlossaryPage, GlossaryDetailPage, GlossaryFilterPanel, MobileGlossaryFilters, loadAllTerms } from './features/glossary';
 import { ConfirmClearModal } from './shared/components/dialogs/ConfirmClearDialog';
-import { useMotionPreferences } from './components/ui/motion';
+import { useMotionPreferences } from '@shared/components/ui/motion';
 import { getCopy } from './shared/constants/i18n';
 import useLockBodyScroll from './shared/hooks/useLockBodyScroll';
 import {
@@ -47,7 +47,7 @@ import type {
 } from './shared/types';
 import { gradeOrder } from './shared/utils/grades';
 import { unique, upsert } from './shared/utils/array';
-import { buildTechniqueUrl as buildUrl, parseTechniquePath } from './utils/urls';
+import { buildTechniqueUrl as buildUrl, parseTechniquePath } from '@shared/constants/urls';
 import { ENTRY_MODE_ORDER, isEntryMode } from './shared/constants/entryModes';
 
 const defaultFilters: Filters = {};

@@ -1,7 +1,7 @@
 import { readdir, readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import process from 'node:process';
-import { parseTechnique } from '../src/content/schema';
+import { parseTechnique } from '../src/shared/types/content';
 
 const techniquesDir = join(process.cwd(), 'content', 'techniques');
 

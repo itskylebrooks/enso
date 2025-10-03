@@ -3,7 +3,7 @@ import type { ReactElement } from 'react';
 import { motion } from 'motion/react';
 import { loadAllTerms } from '../loader';
 import { useGlossaryStore } from '../store';
-import { useMotionPreferences } from '../../../components/ui/motion';
+import { useMotionPreferences } from '@shared/components/ui/motion';
 import { GlossaryCard } from './GlossaryCard.tsx';
 import type { Locale } from '../../../shared/types';
 import type { Copy } from '../../../shared/constants/i18n';

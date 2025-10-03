@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage, type StateStorage } from 'zustand/middleware';
-import type { Direction, WeaponKind, Technique, TechniqueVariant, Hanmi } from '../../shared/types';
+import type { Direction, WeaponKind, Technique, TechniqueVariant, Hanmi } from '@shared/types';
 
 export type TechniqueViewState = {
   lastViewedVersion: Record<string, string>;

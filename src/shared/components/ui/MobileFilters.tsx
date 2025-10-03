@@ -1,0 +1,197 @@
+import { useMemo, useState } from 'react';
+import type { ReactElement } from 'react';
+import type { Copy } from '@shared/constants/i18n';
+import type { Filters, Grade, Locale } from '@shared/types';
+import { gradePalette } from '@shared/styles/belts';
+import { classNames } from '../../utils/classNames';
+import { getLevelLabel, getOrderedTaxonomyValues, getTaxonomyLabel, type TaxonomyType } from '@shared/i18n/taxonomy';
+import { ENTRY_MODE_ORDER } from '@shared/constants/entryModes';
+
+const buildTaxonomyOptions = (locale: Locale, type: TaxonomyType, values: string[]) => {
+  const ordered = getOrderedTaxonomyValues(type);
+  const known = new Set(ordered);
+  const extras = values.filter((value) => value && !known.has(value));
+  const entries = [...ordered, ...extras];
+  const options = entries.map((value) => ({
+    value,
+    label: getTaxonomyLabel(locale, type, value),
+  }));
+  
+  // Sort all taxonomy types alphabetically by label (requested by user)
+  return options.sort((a, b) => a.label.localeCompare(b.label, locale, {
+    sensitivity: 'accent',
+    caseFirst: 'upper'
+  }));
+};
+
+const buildEntryModeOptions = (locale: Locale, values: string[]) => {
+  const entryModeLabels: Record<string, string> = {
+    'irimi': locale === 'de' ? 'Irimi' : 'Irimi',
+    'omote': locale === 'de' ? 'Omote' : 'Omote',
+    'tenkan': locale === 'de' ? 'Tenkan' : 'Tenkan',
+    'ura': locale === 'de' ? 'Ura' : 'Ura',
+  };
+  
+  return values.map((value) => ({
+    value,
+    label: entryModeLabels[value] || value,
+  }));
+};
+
+const buildTrainerOptions = (values: string[]): Option[] => {
+  const formatTrainerName = (trainerId: string): string => {
+    return trainerId
+      .split('-')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  };
+  
+  return values.map((value) => ({
+    value,
+    label: formatTrainerName(value),
+  })).sort((a, b) => a.label.localeCompare(b.label));
+};
+
+type MobileFiltersProps = {
+  copy: Copy;
+  locale: Locale;
+  filters: Filters;
+  categories: string[];
+  attacks: string[];
+  stances: string[];
+  weapons: string[];
+  levels: Grade[];
+  trainers: string[];
+  onChange: (filters: Filters) => void;
+};
+
+type SectionKey = 'category' | 'attack' | 'stance' | 'weapon' | 'level' | 'trainer';
+
+type Option = {
+  value: string;
+  label: string;
+  badge?: ReactElement;
+};
+
+export const MobileFilters = ({
+  copy,
+  locale,
+  filters,
+  categories,
+  attacks,
+  stances,
+  weapons,
+  levels,
+  trainers,
+  onChange,
+}: MobileFiltersProps): ReactElement => {
+  const [openSection, setOpenSection] = useState<SectionKey | null>(null);
+
+  const categoryOptions = useMemo(() => buildTaxonomyOptions(locale, 'category', categories), [categories, locale]);
+  const attackOptions = useMemo(() => buildTaxonomyOptions(locale, 'attack', attacks), [attacks, locale]);
+  const normalizedStances = useMemo(() => (stances.length > 0 ? stances : ENTRY_MODE_ORDER), [stances]);
+  const stanceOptions = useMemo(
+    () => buildEntryModeOptions(locale, normalizedStances),
+    [normalizedStances, locale],
+  );
+  const weaponOptions = useMemo(() => buildTaxonomyOptions(locale, 'weapon', weapons), [weapons, locale]);
+  const trainerOptions = useMemo(() => buildTrainerOptions(trainers), [trainers]);
+  const levelOptions = useMemo<Option[]>(
+    () =>
+      levels.map((grade) => ({
+        value: grade,
+        label: getLevelLabel(locale, grade),
+        badge: (
+          <span
+            aria-hidden
+            className="inline-flex h-4 w-12 flex-shrink-0 items-center justify-center rounded-sm border"
+            style={{
+              backgroundColor: gradePalette[grade].bg,
+              color: gradePalette[grade].fg,
+              borderColor:
+                gradePalette[grade].fg === '#FFFFFF' ? 'rgba(255,255,255,0.28)' : 'rgba(0,0,0,0.18)',
+            }}
+          />
+        ),
+      })),
+    [levels, locale],
+  );
+
+  const toggleValue = <K extends keyof Filters>(key: K, value: Filters[K] | undefined): void => {
+    const next = { ...filters, [key]: filters[key] === value ? undefined : value };
+    onChange(next);
+  };
+
+  const sections: Array<{ key: SectionKey; title: string; options: Option[]; selected?: string }> = [
+    { key: 'category', title: copy.category, options: categoryOptions, selected: filters.category },
+    { key: 'attack', title: copy.attack, options: attackOptions, selected: filters.attack },
+    { key: 'stance', title: copy.stance, options: stanceOptions, selected: filters.stance },
+    { key: 'weapon', title: copy.weapon, options: weaponOptions, selected: filters.weapon },
+    { key: 'trainer', title: copy.trainer, options: trainerOptions, selected: filters.trainer },
+    { key: 'level', title: copy.level, options: levelOptions, selected: filters.level },
+  ];
+
+  const hasActiveFilters = Object.values(filters).some(Boolean);
+
+  return (
+    <div className="rounded-2xl border surface-border bg-[var(--color-surface)] p-4 space-y-4">
+      <div className="flex items-center justify-between">
+        <span className="text-sm font-semibold uppercase tracking-[0.2em] text-subtle">{copy.filters}</span>
+        {hasActiveFilters && (
+          <button
+            type="button"
+            onClick={() => onChange({})}
+            className="text-xs font-medium underline-offset-4 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+          >
+            {copy.resetFilters}
+          </button>
+        )}
+      </div>
+      <div className="space-y-2">
+        {sections.map(({ key, title, options, selected }) => {
+          const isOpen = openSection === key;
+          return (
+            <div key={key} className="border border-[var(--color-border)] rounded-xl bg-[var(--color-surface)]/70">
+              <button
+                type="button"
+                className="flex w-full items-center justify-between px-3 py-3 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+                aria-expanded={isOpen}
+                onClick={() => setOpenSection(isOpen ? null : key)}
+              >
+                <span className="text-sm font-medium">{title}</span>
+                <span aria-hidden className="text-xs text-subtle">{isOpen ? '▾' : '▸'}</span>
+              </button>
+              {isOpen && (
+                <div className="border-t border-[var(--color-border)]">
+                  <ul className="max-h-64 overflow-y-auto p-2 space-y-2">
+                    {options.map(({ value, label, badge }) => {
+                      const active = selected === value;
+                      return (
+                        <li key={value}>
+                          <button
+                            type="button"
+                            className={classNames(
+                              'w-full rounded-lg border px-3 py-2.5 text-sm flex items-center justify-between gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+                              active
+                                ? 'bg-[var(--color-text)] text-[var(--color-bg)] border-[var(--color-text)] font-semibold shadow-sm'
+                                : 'surface surface-border hover:border-[var(--color-text)]',
+                            )}
+                            aria-pressed={active}
+                            onClick={() => toggleValue(key, active ? undefined : (value as Filters[SectionKey]))}
+                          >
+                            <span className="truncate">{label}</span>
+                            {badge}
+                          </button>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};

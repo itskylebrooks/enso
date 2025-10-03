@@ -1,5 +1,5 @@
 import { useState, useEffect, type ReactElement } from 'react';
-import type { Quote } from '../../../utils/quotes';
+import type { Quote } from '@shared/data/quotes';
 
 interface QuoteRotatorProps {
   quotes: Quote[];

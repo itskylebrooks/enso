@@ -2,15 +2,15 @@ import { useEffect, useState } from 'react';
 import type { ReactElement } from 'react';
 import { motion } from 'motion/react';
 import { loadTermBySlug } from '../loader';
-import { useMotionPreferences } from '../../../components/ui/motion';
+import { useMotionPreferences } from '@shared/components/ui/motion';
 import type { GlossaryTerm } from '../../../shared/types';
 import type { Locale } from '../../../shared/types';
 import type { Copy } from '../../../shared/constants/i18n';
 import { AddToCollectionMenu } from '../../../features/bookmarks/components/AddToCollectionMenu';
-import { BookmarkIcon, BookmarkCheckIcon } from '../../../shared/components/ui/icons';
-import { classNames } from '../../../shared/utils/classNames';
+import { BookmarkIcon, BookmarkCheckIcon } from '@shared/components/ui/icons';
+import { classNames } from '@shared/utils/classNames';
 import { getCategoryStyle, getCategoryLabel } from '../../../shared/styles/glossary';
-import { getInitialThemeState } from '../../../shared/utils/theme';
+import { getInitialThemeState } from '@shared/utils/theme';
 
 export type CollectionOption = {
   id: string;

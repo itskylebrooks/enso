@@ -11,14 +11,14 @@ import type {
   Progress,
   Technique,
 } from '../../../shared/types';
-import { TechniqueCard } from '../../../components/library/TechniqueCard';
-import { useMotionPreferences } from '../../../components/ui/motion';
+import { TechniqueCard } from '@features/technique/components/TechniqueCard';
+import { useMotionPreferences } from '@shared/components/ui/motion';
 import { CollectionsSidebar } from './CollectionsSidebar';
 import { AddToCollectionMenu } from './AddToCollectionMenu';
 import { GlossaryBookmarkCard } from './GlossaryBookmarkCard';
-import { NameModal } from '../../../components/ui/modals/NameModal';
-import { ConfirmModal } from '../../../components/ui/modals/ConfirmModal';
-import { MobileCollections } from '../../../components/ui/MobileCollections';
+import { NameModal } from '@shared/components/ui/modals/NameModal';
+import { ConfirmModal } from '@shared/components/ui/modals/ConfirmModal';
+import { MobileCollections } from '@shared/components/ui/MobileCollections';
 
 type SelectedCollectionId = 'all' | 'ungrouped' | string;
 

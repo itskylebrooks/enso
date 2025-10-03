@@ -2,7 +2,7 @@ import { expandWithSynonyms, getTaxonomyLabel } from '../../shared/i18n/taxonomy
 import type { TaxonomyType } from '../../shared/i18n/taxonomy';
 import type { Technique, GlossaryTerm } from '../../shared/types';
 import { gradeLabel } from '../../shared/styles/belts';
-import { stripDiacritics } from '../../shared/utils/text';
+import { stripDiacritics } from '@shared/utils/text';
 import { ENTRY_MODE_ORDER } from '../../shared/constants/entryModes';
 
 const TAXONOMY_FIELDS: TaxonomyType[] = ['category', 'attack', 'weapon'];

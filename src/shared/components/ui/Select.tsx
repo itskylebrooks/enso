@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, type ReactElement, type ReactNode } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { useMotionPreferences } from '../../../components/ui/motion';
+import { useMotionPreferences } from './motion';
 import { classNames } from '../../utils/classNames';
 import { ChevronDownIcon } from './icons';
 

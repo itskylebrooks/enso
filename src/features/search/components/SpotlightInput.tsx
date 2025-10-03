@@ -1,5 +1,5 @@
 import { forwardRef, type KeyboardEvent, type ReactElement } from 'react';
-import { SearchIcon } from '../../../shared/components/ui/icons';
+import { SearchIcon } from '@shared/components/ui/icons';
 
 export type SpotlightInputProps = {
   value: string;

@@ -4,7 +4,7 @@ import type { Copy } from '../../../shared/constants/i18n';
 import type { Locale } from '../../../shared/types';
 import { Logo, SakuraFlower } from '../../../shared/components';
 import { QuoteRotator } from './QuoteRotator';
-import { getAllQuotes } from '../../../utils/quotes';
+import { getAllQuotes } from '@shared/data/quotes';
 
 type HomePageProps = {
   copy: Copy;

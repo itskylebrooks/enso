@@ -84,52 +84,91 @@ pnpm lint
 
 ```
 src/
-├─ App.css
 ├─ App.tsx
-├─ ErrorBoundary.tsx
-├─ index.css
 ├─ main.tsx
-├─ react-app-env.d.ts
-├─ components/
-│  ├─ common/
-│  ├─ feedback/
-│  ├─ guide/
-│  ├─ home/
-│  ├─ layout/
-│  ├─ library/
-│  ├─ media/
-│  ├─ progress/
-│  ├─ settings/
-│  ├─ technique/
-│  └─ ui/
-├─ content/
-│  └─ schema.ts
+├─ index.css
+├─ ErrorBoundary.tsx
 ├─ features/
 │  ├─ bookmarks/
+│  │  ├─ components/
+│  │  │  ├─ AddToCollectionMenu.tsx
+│  │  │  ├─ BookmarksView.tsx
+│  │  │  ├─ CollectionsSidebar.tsx
+│  │  │  ├─ GlossaryBookmarkCard.tsx
+│  │  │  └─ progress/
+│  │  └─ store.ts
 │  ├─ glossary/
+│  │  ├─ components/
+│  │  ├─ loader.ts
+│  │  └─ store.ts
 │  ├─ home/
+│  │  ├─ components/
+│  │  │  ├─ feedback/
+│  │  │  ├─ guide/
+│  │  │  ├─ home/
+│  │  │  ├─ settings/
+│  │  │  ├─ HomePage.tsx
+│  │  │  └─ QuoteRotator.tsx
+│  │  └─ index.ts
 │  ├─ search/
+│  │  ├─ components/
+│  │  ├─ indexer.ts
+│  │  ├─ lib.ts
+│  │  ├─ scorer.ts
+│  │  └─ store.ts
 │  └─ technique/
-├─ lib/
-│  └─ search/
-├─ shared/
-│  ├─ components/
-│  ├─ constants/
-│  ├─ data/
-│  ├─ hooks/
-│  ├─ i18n/
-│  ├─ services/
-│  ├─ store/
-│  ├─ styles/
-│  ├─ types/
-│  └─ utils/
-└─ utils/
-   ├─ migrations/
-   ├─ quotes.ts
-   ├─ urls.ts
-   ├─ variantMapping.ts
-   └─ versionLabels.ts
+│     ├─ components/
+│     │  ├─ Library.tsx
+│     │  ├─ TechniqueCard.tsx
+│     │  ├─ TechniquePage.tsx
+│     │  ├─ TechniqueToolbar.tsx
+│     │  └─ ...
+│     ├─ entryPref.ts
+│     └─ store.ts
+├─ generated/
+│  └─ (build outputs: compiled JSON → TS)
+└─ shared/
+   ├─ components/
+   │  ├─ dialogs/
+   │  ├─ layout/
+   │  ├─ media/
+   │  ├─ ui/
+   │  │  ├─ icons.tsx
+   │  │  ├─ motion.ts
+   │  │  ├─ modals/
+   │  │  ├─ Chip.tsx
+   │  │  ├─ Segmented.tsx
+   │  │  ├─ Select.tsx
+   │  │  └─ ...
+   │  ├─ EmphasizedName.tsx
+   │  ├─ LevelBadge.tsx
+   │  ├─ Logo.tsx
+   │  └─ SectionTitle.tsx
+   ├─ constants/
+   │  ├─ i18n.ts
+   │  ├─ storage.ts
+   │  ├─ urls.ts
+   │  ├─ variantMapping.ts
+   │  └─ versionLabels.ts
+   ├─ data/
+   │  ├─ belts.ts
+   │  └─ quotes.ts
+   ├─ hooks/
+   ├─ i18n/
+   ├─ services/
+   ├─ store/
+   ├─ styles/
+   ├─ types/
+   │  └─ content.ts (was schema.ts)
+   └─ utils/
+      ├─ migrations/
+      ├─ array.ts
+      ├─ classNames.ts
+      ├─ format.ts
+      └─ text.ts
 ```
+
+**Path aliases** (`@features/*`, `@shared/*`, `@generated/*`, `@content/*`) are configured in `tsconfig.app.json` and `vite.config.ts` for cleaner imports.
 
 ---
 
