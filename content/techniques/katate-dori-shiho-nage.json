@@ -265,6 +265,20 @@
               "url": "https://www.youtube-nocookie.com/embed/oyuMjo93kaU?si=e1xbxQqYSnYjLDjj",
               "title": "Aikidoarts Hungary"
             }
+          ],
+          "omote": [
+            {
+              "type": "youtube",
+              "url": "https://www.youtube-nocookie.com/embed/09qAEiTYoPI?si=AqfYZTfzam8TLnC8",
+              "title": "Club Aikido Lleida"
+            }
+          ],
+          "ura": [
+            {
+              "type": "youtube",
+              "url": "https://www.youtube-nocookie.com/embed/09qAEiTYoPI?si=AqfYZTfzam8TLnC8",
+              "title": "Club Aikido Lleida"
+            }
           ]
         }
       },
