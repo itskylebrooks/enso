@@ -9,6 +9,8 @@ import { getInitialThemeState } from '../../shared/utils/theme';
 import { getCopy } from '../../shared/constants/i18n';
 import { ExamMatrix } from '../guide/ExamMatrix';
 import { SayaNoUchiMatrix } from '../guide/SayaNoUchiMatrix';
+import { JoMatrix } from '../guide/JoMatrix';
+import { TantoMatrix } from '../guide/TantoMatrix';
 
 type GuidePageProps = {
   locale: Locale;
@@ -385,6 +387,45 @@ export const GuidePage = ({
                 .replace(/_gyaku_hanmi$/, '')
                 .replace(/^hanmi_hantachi_/, '')
                 .replace(/_/g, '-');
+              const combinedSlug = `${attackSlug}-${slug}`;
+              onOpenTechnique(combinedSlug, undefined, undefined, true);
+            }}
+          />
+        </motion.article>
+
+        {/* Jō Techniques Program */}
+        <motion.article className="space-y-4" {...animationProps}>
+          <header className="space-y-2">
+            <h2 className="text-xl font-semibold leading-tight">{i18nCopy.joTechniquesTitle}</h2>
+            <p className="text-sm text-subtle leading-relaxed">{i18nCopy.joTechniquesLead}</p>
+          </header>
+          <JoMatrix
+            locale={locale}
+            isDark={isDark}
+            copy={i18nCopy}
+            onCellClick={(slug, attackKey) => {
+              // Create combined technique slug for jō techniques
+              // e.g., "jo_tsuki" -> "jo-tsuki"
+              const attackSlug = attackKey.replace(/_/g, '-');
+              const combinedSlug = `${attackSlug}-${slug}`;
+              onOpenTechnique(combinedSlug, undefined, undefined, true);
+            }}
+          />
+        </motion.article>
+
+        {/* Tantō Techniques Program */}
+        <motion.article className="space-y-4" {...animationProps}>
+          <header className="space-y-2">
+            <h2 className="text-xl font-semibold leading-tight">{i18nCopy.tantoTechniquesTitle}</h2>
+            <p className="text-sm text-subtle leading-relaxed">{i18nCopy.tantoTechniquesLead}</p>
+          </header>
+          <TantoMatrix
+            locale={locale}
+            isDark={isDark}
+            onCellClick={(slug, attackKey) => {
+              // Create combined technique slug for tantō techniques
+              // e.g., "tanto_tsuki" -> "tanto-tsuki"
+              const attackSlug = attackKey.replace(/_/g, '-');
               const combinedSlug = `${attackSlug}-${slug}`;
               onOpenTechnique(combinedSlug, undefined, undefined, true);
             }}

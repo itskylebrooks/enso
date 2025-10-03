@@ -62,3 +62,58 @@ export type SayaNoUchiColumn = {
   label: { en: string; de: string };
   section: SayaNoUchiSection;
 };
+
+// Jo Techniques Program types
+export type JoAttackKey =
+  | 'jo_ryote_dori_double'
+  | 'jo_ryote_dori_gyaku'
+  | 'jo_katate_dori'
+  | 'jo_katate_ryote_dori'
+  | 'jo_tsuki'
+  | 'jo_yokomen_uchi'
+  | 'jo_shomen_uchi'
+  | 'jo_morote_awase_tsuki';
+
+export type JoSection = 'jo_nage_waza' | 'jo_tori';
+
+export type JoCell =
+  | { kind: 'check' }                              // checkmark icon
+  | { kind: 'empty' };                             // empty cell
+
+export type JoRow = {
+  id: string;                                      // slug for technique
+  label: { en: string; de: string };               // row header text
+  cells: Record<JoAttackKey, JoCell>;
+};
+
+export type JoColumn = {
+  key: JoAttackKey;
+  label: { en: string; de: string };
+  section: JoSection;
+};
+
+// Tantō Techniques Program types
+export type TantoAttackKey =
+  | 'tanto_tsuki'
+  | 'tanto_shomen_uchi'
+  | 'tanto_yokomen_uchi'
+  | 'tanto_yokomen_soto'
+  | 'tanto_yoko_tsuki_soto'
+  | 'tanto_yoko_tsuki_uchi'
+  | 'mune_dori_tanto_yokomen_uchi'
+  | 'sode_dori_tanto_yoko_tsuki_soto';
+
+export type TantoCell =
+  | { kind: 'check' }                              // checkmark icon
+  | { kind: 'empty' };                             // empty cell
+
+export type TantoRow = {
+  id: string;                                      // slug for technique
+  label: { en: string; de: string };               // row header text
+  cells: Record<TantoAttackKey, TantoCell>;
+};
+
+export type TantoColumn = {
+  key: TantoAttackKey;
+  label: { en: string; de: string };
+};
