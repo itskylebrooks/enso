@@ -1,4 +1,5 @@
 import type { ReactElement, ReactNode } from 'react';
+import type { EntryMode } from '../../types';
 import { motion } from 'motion/react';
 import { useMotionPreferences } from '../../../components/ui/motion';
 import { classNames } from '../../utils/classNames';
@@ -8,6 +9,7 @@ export type SegmentedOption<T extends string = string> = {
   label: ReactNode;
   disabled?: boolean;
   tooltip?: string;
+  className?: string;
 };
 
 export type SegmentedProps<T extends string = string> = {
@@ -62,7 +64,8 @@ export const Segmented = <T extends string = string>({
                 ? 'bg-[var(--color-text)] text-[var(--color-bg)] border-transparent'
                 : isDisabled
                 ? 'bg-[var(--color-surface)] text-[var(--color-text-muted)] border-white/10 cursor-not-allowed opacity-50'
-                : 'bg-[var(--color-surface)] text-subtle border-white/10 hover:text-[var(--color-text)]'
+                : 'bg-[var(--color-surface)] text-subtle border-white/10 hover:text-[var(--color-text)]',
+              option.className,
             )}
           >
             <motion.span
@@ -80,6 +83,6 @@ export const Segmented = <T extends string = string>({
 };
 
 // Export a typed version for EntryMode specifically
-export type EntrySegmentedProps = Omit<SegmentedProps<'irimi' | 'tenkan'>, 'options'> & {
-  options: SegmentedOption<'irimi' | 'tenkan'>[];
+export type EntrySegmentedProps = Omit<SegmentedProps<EntryMode>, 'options'> & {
+  options: SegmentedOption<EntryMode>[];
 };

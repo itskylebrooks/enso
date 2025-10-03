@@ -1,6 +1,19 @@
 import { parseTechnique } from '../../content/schema';
 import { APP_NAME, DB_VERSION, LOCALE_KEY, STORAGE_KEY, THEME_KEY } from '../constants/storage';
-import type { BookmarkCollection, Collection, DB, GlossaryBookmarkCollection, GlossaryProgress, Locale, Progress, Technique, TechniqueVersion, Theme } from '../types';
+import type {
+  BookmarkCollection,
+  Collection,
+  DB,
+  GlossaryBookmarkCollection,
+  GlossaryProgress,
+  Locale,
+  Progress,
+  StepsByEntry,
+  Technique,
+  TechniqueVersion,
+  Theme,
+} from '../types';
+import { ENTRY_MODE_ORDER } from '../constants/entryModes';
 
 // Load technique files directly from the content/techniques folder.
 // Vite's import.meta.glob with { eager: true } returns the parsed JSON modules at build time.
@@ -37,15 +50,21 @@ const normalizeLocalizedArray = (value: { en: string[]; de: string[] }) => {
 };
 
 const normalizeVersion = (version: TechniqueVersion): TechniqueVersion => {
+  const normalizedSteps: StepsByEntry = {};
+
+  ENTRY_MODE_ORDER.forEach((mode) => {
+    const steps = version.stepsByEntry?.[mode];
+    if (steps) {
+      normalizedSteps[mode] = normalizeLocalizedArray(steps);
+    }
+  });
+
   const normalized: TechniqueVersion = {
     ...version,
     trainerId: normalizeOptional(version.trainerId),
     dojoId: normalizeOptional(version.dojoId),
     label: version.label ? version.label.trim() : undefined,
-    stepsByEntry: {
-      irimi: version.stepsByEntry.irimi ? normalizeLocalizedArray(version.stepsByEntry.irimi) : undefined,
-      tenkan: version.stepsByEntry.tenkan ? normalizeLocalizedArray(version.stepsByEntry.tenkan) : undefined,
-    },
+    stepsByEntry: normalizedSteps,
     uke: {
       role: normalizeLocalizedString(version.uke.role),
       notes: normalizeLocalizedArray(version.uke.notes),

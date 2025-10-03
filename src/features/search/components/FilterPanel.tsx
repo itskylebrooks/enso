@@ -8,6 +8,7 @@ import { gradePalette } from '../../../shared/styles/belts';
 import { getLevelLabel, getOrderedTaxonomyValues, getTaxonomyLabel, type TaxonomyType } from '../../../shared/i18n/taxonomy';
 import { SectionTitle } from '../../../shared/components';
 import { useMotionPreferences } from '../../../components/ui/motion';
+import { ENTRY_MODE_ORDER } from '../../../shared/constants/entryModes';
 
 type FilterPanelProps = {
   copy: Copy;
@@ -49,7 +50,9 @@ const buildTaxonomyOptions = (
 const buildEntryModeOptions = (locale: Locale, values: string[]): Option[] => {
   const entryModeLabels: Record<string, string> = {
     'irimi': locale === 'de' ? 'Irimi' : 'Irimi',
-    'tenkan': locale === 'de' ? 'Tenkan' : 'Tenkan'
+    'tenkan': locale === 'de' ? 'Tenkan' : 'Tenkan',
+    'omote': locale === 'de' ? 'Omote' : 'Omote',
+    'ura': locale === 'de' ? 'Ura' : 'Ura',
   };
   
   return values.map((value) => ({
@@ -101,7 +104,10 @@ export const FilterPanel = ({
 
   const availableCategorySet = useMemo(() => new Set(categories.filter(Boolean)), [categories]);
   const availableAttackSet = useMemo(() => new Set(attacks.filter(Boolean)), [attacks]);
-  const normalizedStances = useMemo(() => (stances.length > 0 ? stances : ['irimi', 'tenkan']), [stances]);
+  const normalizedStances = useMemo(
+    () => (stances.length > 0 ? stances : ENTRY_MODE_ORDER),
+    [stances],
+  );
   const availableStanceSet = useMemo(() => new Set(normalizedStances.filter(Boolean)), [normalizedStances]);
   const availableWeaponSet = useMemo(() => new Set(weapons.filter(Boolean)), [weapons]);
   const availableTrainerSet = useMemo(() => new Set(trainers.filter(Boolean)), [trainers]);

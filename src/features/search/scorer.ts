@@ -1,5 +1,6 @@
 import type { Technique, GlossaryTerm, Locale } from '../../shared/types';
 import { stripDiacritics } from '../../shared/utils/text';
+import { ENTRY_MODE_ORDER } from '../../shared/constants/entryModes';
 
 export type ScoredSearchResult = 
   | { type: 'technique'; item: Technique; score: number }
@@ -168,19 +169,15 @@ export const scoreTechnique = (technique: Technique, query: string, locale: Loca
   
   // Steps and key points (lowest priority)
   technique.versions.forEach(version => {
-    // Steps
-    if (version.stepsByEntry.irimi) {
-      const steps = version.stepsByEntry.irimi[locale] || version.stepsByEntry.irimi.en;
+    // Steps across entry modes
+    ENTRY_MODE_ORDER.forEach((mode) => {
+      const entry = version.stepsByEntry?.[mode];
+      if (!entry) return;
+      const steps = entry[locale] || entry.en;
       steps.forEach(step => {
         score += getFieldMatchScore(step, query, weights.steps) * MATCH_BOOSTS.secondary / MATCH_BOOSTS.contains;
       });
-    }
-    if (version.stepsByEntry.tenkan) {
-      const steps = version.stepsByEntry.tenkan[locale] || version.stepsByEntry.tenkan.en;
-      steps.forEach(step => {
-        score += getFieldMatchScore(step, query, weights.steps) * MATCH_BOOSTS.secondary / MATCH_BOOSTS.contains;
-      });
-    }
+    });
     
     // Key points
     const keyPoints = version.keyPoints[locale] || version.keyPoints.en;

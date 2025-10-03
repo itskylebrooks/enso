@@ -38,9 +38,11 @@ const localizedStringArray = z.object({
 const stepsByEntrySchema = z.object({
   irimi: localizedStringArray.optional(),
   tenkan: localizedStringArray.optional(),
+  omote: localizedStringArray.optional(),
+  ura: localizedStringArray.optional(),
 }).refine(
-  (data) => data.irimi || data.tenkan,
-  { message: 'At least one entry type (irimi or tenkan) must be provided' }
+  (data) => Boolean(data.irimi || data.tenkan || data.omote || data.ura),
+  { message: 'At least one entry type must be provided' }
 );
 
 const versionSchema = z
@@ -71,15 +73,24 @@ const versionSchema = z
       }
     }
 
-    if (value.stepsByEntry.tenkan) {
-      if (value.stepsByEntry.tenkan.en.length !== value.stepsByEntry.tenkan.de.length) {
+    const ensureMatchingLengths = (
+      entryKey: 'irimi' | 'tenkan' | 'omote' | 'ura',
+    ) => {
+      const entry = value.stepsByEntry[entryKey];
+      if (!entry) return;
+      if (entry.en.length !== entry.de.length) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: 'stepsByEntry.tenkan.en and stepsByEntry.tenkan.de must contain the same number of entries',
-          path: ['stepsByEntry', 'tenkan'],
+          message: `stepsByEntry.${entryKey}.en and stepsByEntry.${entryKey}.de must contain the same number of entries`,
+          path: ['stepsByEntry', entryKey],
         });
       }
-    }
+    };
+
+    ensureMatchingLengths('irimi');
+    ensureMatchingLengths('tenkan');
+    ensureMatchingLengths('omote');
+    ensureMatchingLengths('ura');
 
     if (value.uke.notes.en.length !== value.uke.notes.de.length) {
       ctx.addIssue({

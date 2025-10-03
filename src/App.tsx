@@ -29,10 +29,25 @@ import {
   saveLocale,
   saveTheme,
 } from './shared/services/storageService';
-import type { AppRoute, Collection, DB, Filters, GlossaryBookmarkCollection, GlossaryProgress, GlossaryTerm, Grade, Locale, Progress, Technique, Theme } from './shared/types';
+import type {
+  AppRoute,
+  Collection,
+  DB,
+  EntryMode,
+  Filters,
+  GlossaryBookmarkCollection,
+  GlossaryProgress,
+  GlossaryTerm,
+  Grade,
+  Locale,
+  Progress,
+  Technique,
+  Theme,
+} from './shared/types';
 import { gradeOrder } from './shared/utils/grades';
 import { unique, upsert } from './shared/utils/array';
 import { buildTechniqueUrl as buildUrl, parseTechniquePath } from './utils/urls';
+import { ENTRY_MODE_ORDER, isEntryMode } from './shared/constants/entryModes';
 
 const defaultFilters: Filters = {};
 
@@ -49,7 +64,7 @@ type HistoryState = {
   route?: AppRoute;
   slug?: string;
   trainerId?: string;
-  entry?: 'irimi' | 'tenkan';
+  entry?: EntryMode;
 };
 
 const routeToPath = (route: AppRoute): string => {
@@ -74,7 +89,7 @@ export const buildTechniqueUrl = buildUrl;
 type TechniqueParams = {
   slug: string;
   trainerId?: string;
-  entry?: 'irimi' | 'tenkan';
+  entry?: EntryMode;
 };
 
 
@@ -239,6 +254,15 @@ function applyFilters(techniques: Technique[], filters: Filters): Technique[] {
     if (filters.attack && technique.attack !== filters.attack) return false;
     if (filters.weapon && technique.weapon !== filters.weapon) return false;
     if (filters.level && technique.level !== filters.level) return false;
+    if (filters.stance) {
+      if (!isEntryMode(filters.stance)) {
+        return false;
+      }
+
+  const requiredEntry: EntryMode = filters.stance;
+      const hasEntryMode = technique.versions.some((version) => Boolean(version.stepsByEntry?.[requiredEntry]));
+      if (!hasEntryMode) return false;
+    }
     if (filters.trainer && !technique.versions.some(version => version.trainerId === filters.trainer)) return false;
     return true;
   }).sort((a, b) => {
@@ -286,7 +310,9 @@ export default function App(): ReactElement {
   const [route, setRoute] = useState<AppRoute>(() => getInitialLocation().route);
   const [activeSlug, setActiveSlug] = useState<string | null>(() => getInitialLocation().slug);
   const [activeTrainerId, setActiveTrainerId] = useState<string | null>(() => getInitialLocation().techniqueParams?.trainerId ?? null);
-  const [activeEntry, setActiveEntry] = useState<'irimi' | 'tenkan' | null>(() => getInitialLocation().techniqueParams?.entry ?? null);
+  const [activeEntry, setActiveEntry] = useState<EntryMode | null>(
+    () => getInitialLocation().techniqueParams?.entry ?? null,
+  );
   const [searchOpen, setSearchOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [confirmClearOpen, setConfirmClearOpen] = useState(false);
@@ -494,10 +520,7 @@ export default function App(): ReactElement {
     () => getSelectableValues(db.techniques, (technique) => technique.attack),
     [db.techniques],
   );
-  const stances = useMemo(
-    () => ['irimi', 'tenkan'], // Fixed list for entry modes
-    [],
-  );
+  const stances = ENTRY_MODE_ORDER;
   const weapons = useMemo(
     () => getSelectableValues(db.techniques, (technique) => technique.weapon),
     [db.techniques],
@@ -826,7 +849,7 @@ export default function App(): ReactElement {
     setDB(next);
   };
 
-  const openTechnique = (slug: string, trainerId?: string, entry?: 'irimi' | 'tenkan', skipExistenceCheck?: boolean): void => {
+  const openTechnique = (slug: string, trainerId?: string, entry?: EntryMode, skipExistenceCheck?: boolean): void => {
     if (!skipExistenceCheck && !db.techniques.some((technique) => technique.slug === slug)) {
       return;
     }

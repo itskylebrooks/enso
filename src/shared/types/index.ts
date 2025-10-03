@@ -6,7 +6,9 @@ export type Grade =
   | 'kyu5' | 'kyu4' | 'kyu3' | 'kyu2' | 'kyu1'
   | 'dan1' | 'dan2' | 'dan3' | 'dan4' | 'dan5';
 
-export type EntryMode = 'irimi' | 'tenkan';
+export type EntryMode = 'irimi' | 'tenkan' | 'omote' | 'ura';
+
+export type StepsByEntry = Partial<Record<EntryMode, LocalizedSteps>>;
 
 export type LocalizedSteps = { en: string[]; de: string[] };
 
@@ -15,10 +17,8 @@ export type TechniqueVersion = {
   trainerId?: string;
   dojoId?: string;
   label?: string; // Optional, can be generated dynamically
-  stepsByEntry: {
-    irimi?: LocalizedSteps;
-    tenkan?: LocalizedSteps;
-  };
+  stepsByEntry: StepsByEntry;
+  steps?: LocalizedSteps; // Legacy support for migration
   uke: {
     role: { en: string; de: string };
     notes: { en: string[]; de: string[] };

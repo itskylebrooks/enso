@@ -1,4 +1,5 @@
 import type { EntryMode } from '../../shared/types';
+import { DEFAULT_ENTRY_MODE, isEntryMode } from '../../shared/constants/entryModes';
 
 // Storage keys
 const ENTRY_KEY = 'enso:entryMode';
@@ -11,13 +12,13 @@ const TECHNIQUE_ENTRY_PREFIX = 'enso:entryMode:';
 export function getGlobalEntryPref(): EntryMode {
   try {
     const stored = localStorage.getItem(ENTRY_KEY);
-    if (stored === 'irimi' || stored === 'tenkan') {
+    if (isEntryMode(stored)) {
       return stored;
     }
   } catch (error) {
     console.warn('Failed to read global entry preference from localStorage:', error);
   }
-  return 'irimi'; // Default fallback - prefer irimi
+  return DEFAULT_ENTRY_MODE;
 }
 
 /**
@@ -40,7 +41,7 @@ export function setGlobalEntryPref(mode: EntryMode): void {
 export function getTechniqueEntryPref(techniqueId: string): EntryMode | null {
   try {
     const stored = localStorage.getItem(TECHNIQUE_ENTRY_PREFIX + techniqueId);
-    if (stored === 'irimi' || stored === 'tenkan') {
+    if (isEntryMode(stored)) {
       return stored;
     }
   } catch (error) {
@@ -71,7 +72,7 @@ export function parseEntryFromURL(search: string): EntryMode | null {
   try {
     const params = new URLSearchParams(search);
     const entry = params.get('entry');
-    if (entry === 'irimi' || entry === 'tenkan') {
+    if (isEntryMode(entry)) {
       return entry;
     }
   } catch (error) {

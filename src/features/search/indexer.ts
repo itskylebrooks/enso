@@ -3,6 +3,7 @@ import type { TaxonomyType } from '../../shared/i18n/taxonomy';
 import type { Technique, GlossaryTerm } from '../../shared/types';
 import { gradeLabel } from '../../shared/styles/belts';
 import { stripDiacritics } from '../../shared/utils/text';
+import { ENTRY_MODE_ORDER } from '../../shared/constants/entryModes';
 
 const TAXONOMY_FIELDS: TaxonomyType[] = ['category', 'attack', 'weapon'];
 
@@ -78,14 +79,12 @@ export const buildSearchIndex = (techniques: Technique[]): SearchEntry[] =>
       pushToken(tokens, version.dojoId);
 
       // Index steps from stepsByEntry structure
-      if (version.stepsByEntry.irimi) {
-        version.stepsByEntry.irimi.en.forEach((step) => pushToken(tokens, step));
-        version.stepsByEntry.irimi.de.forEach((step) => pushToken(tokens, step));
-      }
-      if (version.stepsByEntry.tenkan) {
-        version.stepsByEntry.tenkan.en.forEach((step) => pushToken(tokens, step));
-        version.stepsByEntry.tenkan.de.forEach((step) => pushToken(tokens, step));
-      }
+      ENTRY_MODE_ORDER.forEach((mode) => {
+        const entry = version.stepsByEntry?.[mode];
+        if (!entry) return;
+        entry.en.forEach((step) => pushToken(tokens, step));
+        entry.de.forEach((step) => pushToken(tokens, step));
+      });
 
       pushToken(tokens, version.uke.role.en);
       pushToken(tokens, version.uke.role.de);

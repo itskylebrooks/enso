@@ -1,10 +1,11 @@
 import type { KeyboardEvent, ReactElement, ReactNode } from 'react';
 import { motion, type Variants, type Transition } from 'motion/react';
 import type { Copy } from '../../shared/constants/i18n';
-import type { Locale, Progress, Technique } from '../../shared/types';
+import type { EntryMode, Locale, Progress, Technique } from '../../shared/types';
 import { LevelBadge } from '../common';
 import { EmphasizedName } from '../../shared/components';
 import { getTaxonomyLabel } from '../../shared/i18n/taxonomy';
+import { ENTRY_MODE_ORDER } from '../../shared/constants/entryModes';
 
 type MotionProps = {
   variants: Variants;
@@ -26,7 +27,7 @@ export type TechniqueCardProps = {
 export const TechniqueCard = ({
   technique,
   locale,
-  // progress and copy intentionally unused after removing focus/confident indicators
+  copy,
   onSelect,
   motionIndex,
   variants,
@@ -38,13 +39,19 @@ export const TechniqueCard = ({
   // Get available entry modes from the first version (assume all versions have same entries)
   const availableEntries = technique.versions[0]?.stepsByEntry || {};
   const entryLabels: string[] = [];
-  
-  if (availableEntries.irimi) {
-    entryLabels.push(locale === 'de' ? 'Irimi' : 'Irimi');
-  }
-  if (availableEntries.tenkan) {
-    entryLabels.push(locale === 'de' ? 'Tenkan' : 'Tenkan');
-  }
+
+  const labelByMode: Record<EntryMode, string> = {
+    irimi: copy.entryIrimi,
+    omote: copy.entryOmote,
+    tenkan: copy.entryTenkan,
+    ura: copy.entryUra,
+  };
+
+  ENTRY_MODE_ORDER.forEach((mode) => {
+    if (availableEntries[mode]) {
+      entryLabels.push(labelByMode[mode]);
+    }
+  });
 
   const weaponLabel =
     technique.weapon && technique.weapon !== 'empty-hand'

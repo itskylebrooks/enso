@@ -1,7 +1,7 @@
 import { motion } from 'motion/react';
 import type { ReactElement } from 'react';
 import { useEffect, useState } from 'react';
-import type { Collection, Grade, Locale } from '../../shared/types';
+import type { Collection, EntryMode, Grade, Locale } from '../../shared/types';
 import { gradeOrder } from '../../shared/utils/grades';
 import { gradeLabel, getGradeStyle } from '../../shared/styles/belts';
 import { useMotionPreferences, defaultEase } from '../ui/motion';
@@ -15,7 +15,7 @@ type GuidePageProps = {
   onNavigateToGlossaryWithMovementFilter: () => void;
   onCreateCollectionWithGrade: (name: string, grade: Grade) => string | null;
   onNavigateToBookmarks: (collectionId: string) => void;
-  onOpenTechnique: (slug: string, trainerId?: string, entry?: 'irimi' | 'tenkan', skipExistenceCheck?: boolean) => void;
+  onOpenTechnique: (slug: string, trainerId?: string, entry?: EntryMode, skipExistenceCheck?: boolean) => void;
 };
 
 type TermEntry = {

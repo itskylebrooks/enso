@@ -1,31 +1,55 @@
-import type { Technique, TechniqueVersion } from '../../shared/types';
+import type { Technique, TechniqueVersion, StepsByEntry, LocalizedSteps } from '../../shared/types';
+import { ENTRY_MODE_ORDER } from '../../shared/constants/entryModes';
 
 /**
- * Migration helper to convert legacy `steps` format to new `stepsByEntry` structure.
- * Assumes most current content is ura/tenkan-based and maps existing steps to `stepsByEntry.ura`.
+ * Migration helper to convert legacy step fields to the unified `stepsByEntry` structure.
+ * Supports historical `stepsIrimi`, `stepsTenkan`, `stepsOmote`, `stepsUra`, and the original `steps` array.
  */
 export function migrateVersionToStepsByEntry(version: TechniqueVersion): TechniqueVersion {
-  // If stepsByEntry already exists, no migration needed
-  if (version.stepsByEntry) {
-    return version;
-  }
+  const sanitizeExistingSteps = (): StepsByEntry => {
+    const sanitized: StepsByEntry = {};
+    ENTRY_MODE_ORDER.forEach((mode) => {
+      const steps = version.stepsByEntry?.[mode];
+      if (steps) {
+        sanitized[mode] = steps;
+      }
+    });
+    return sanitized;
+  };
 
-  // If no legacy steps exist, return as-is
-  if (!version.steps) {
+  const hasExistingSteps = ENTRY_MODE_ORDER.some((mode) => Boolean(version.stepsByEntry?.[mode]));
+  if (hasExistingSteps) {
     return {
       ...version,
-      stepsByEntry: {},
+      stepsByEntry: sanitizeExistingSteps(),
     };
   }
 
-  // Migrate legacy steps to ura entry (most current content is ura/tenkan-based)
+  const legacyVersion = version as TechniqueVersion & {
+    stepsIrimi?: LocalizedSteps;
+    stepsTenkan?: LocalizedSteps;
+    stepsOmote?: LocalizedSteps;
+    stepsUra?: LocalizedSteps;
+  };
+
+  const migrated: StepsByEntry = {};
+
+  ENTRY_MODE_ORDER.forEach((mode) => {
+    const legacyKey = `steps${mode.charAt(0).toUpperCase()}${mode.slice(1)}` as keyof typeof legacyVersion;
+    const legacySteps = legacyVersion[legacyKey] as LocalizedSteps | undefined;
+    if (legacySteps) {
+      migrated[mode] = legacySteps;
+    }
+  });
+
+  if (Object.keys(migrated).length === 0 && legacyVersion.steps) {
+    migrated.ura = legacyVersion.steps;
+  }
+
   return {
     ...version,
-    stepsByEntry: {
-      ura: version.steps,
-    },
-    // Keep legacy steps for compatibility during transition
-    steps: version.steps,
+    stepsByEntry: migrated,
+    steps: legacyVersion.steps,
   };
 }
 

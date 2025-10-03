@@ -5,6 +5,7 @@ import type { Filters, Grade, Locale } from '../../shared/types';
 import { gradePalette } from '../../shared/styles/belts';
 import { classNames } from '../../shared/utils/classNames';
 import { getLevelLabel, getOrderedTaxonomyValues, getTaxonomyLabel, type TaxonomyType } from '../../shared/i18n/taxonomy';
+import { ENTRY_MODE_ORDER } from '../../shared/constants/entryModes';
 
 const buildTaxonomyOptions = (locale: Locale, type: TaxonomyType, values: string[]) => {
   const ordered = getOrderedTaxonomyValues(type);
@@ -26,7 +27,9 @@ const buildTaxonomyOptions = (locale: Locale, type: TaxonomyType, values: string
 const buildEntryModeOptions = (locale: Locale, values: string[]) => {
   const entryModeLabels: Record<string, string> = {
     'irimi': locale === 'de' ? 'Irimi' : 'Irimi',
-    'tenkan': locale === 'de' ? 'Tenkan' : 'Tenkan'
+    'omote': locale === 'de' ? 'Omote' : 'Omote',
+    'tenkan': locale === 'de' ? 'Tenkan' : 'Tenkan',
+    'ura': locale === 'de' ? 'Ura' : 'Ura',
   };
   
   return values.map((value) => ({
@@ -86,7 +89,7 @@ export const MobileFilters = ({
 
   const categoryOptions = useMemo(() => buildTaxonomyOptions(locale, 'category', categories), [categories, locale]);
   const attackOptions = useMemo(() => buildTaxonomyOptions(locale, 'attack', attacks), [attacks, locale]);
-  const normalizedStances = useMemo(() => (stances.length > 0 ? stances : ['irimi', 'tenkan']), [stances]);
+  const normalizedStances = useMemo(() => (stances.length > 0 ? stances : ENTRY_MODE_ORDER), [stances]);
   const stanceOptions = useMemo(
     () => buildEntryModeOptions(locale, normalizedStances),
     [normalizedStances, locale],
