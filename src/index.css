@@ -17,6 +17,7 @@
   --color-surface: #ffffff;
   --color-surface-hover: #f4f4f5;
   --color-border: rgba(0, 0, 0, 0.08);
+  --color-border-hover: rgba(0, 0, 0, 0.15);
   --color-muted: #4b5563;
   --color-subtle: #6b7280;
 }
@@ -28,6 +29,7 @@
   --color-surface: #0b0b0b;
   --color-surface-hover: #1f1f1f;
   --color-border: rgba(255, 255, 255, 0.18);
+  --color-border-hover: rgba(255, 255, 255, 0.25);
   --color-muted: rgba(255, 255, 255, 0.72);
   --color-subtle: rgba(255, 255, 255, 0.62);
 }
@@ -62,6 +64,14 @@ body {
 
 .surface-border {
   border-color: var(--color-border);
+}
+
+.border-adaptive {
+  border-color: var(--color-border);
+}
+
+.hover-border-adaptive:hover {
+  border-color: var(--color-border-hover);
 }
 
 .text-muted {

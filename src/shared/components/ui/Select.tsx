@@ -170,9 +170,8 @@ export const Select = <T extends string = string>({
         aria-haspopup="listbox"
         aria-expanded={isOpen}
         className={classNames(
-          'w-full px-4 py-2.5 rounded-xl border border-white/10 bg-[var(--color-surface)]',
+          'w-full px-4 py-2.5 rounded-xl border border-adaptive hover-border-adaptive bg-[var(--color-surface)]',
           'text-left text-sm transition-colors',
-          'hover:border-white/20',
           'focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
           'flex items-center justify-between gap-2'
         )}
@@ -205,7 +204,7 @@ export const Select = <T extends string = string>({
             transition={{ duration: 0.15 }}
             className={classNames(
               'absolute z-50 w-full mt-2',
-              'bg-[var(--color-surface)] rounded-xl border border-white/10',
+              'bg-[var(--color-surface)] rounded-xl border border-adaptive',
               'shadow-2xl shadow-black/20',
               'max-h-[min(400px,50vh)] overflow-auto',
               'py-2'
@@ -232,7 +231,7 @@ export const Select = <T extends string = string>({
                   placeholder="Search…"
                   className={classNames(
                     'w-full px-3 py-2 rounded-lg',
-                    'bg-[var(--color-bg)] border border-white/10',
+                    'bg-[var(--color-bg)] border border-adaptive',
                     'text-sm text-[var(--color-text)]',
                     'focus:outline-none focus:ring-2 focus:ring-[var(--color-text)] focus:ring-offset-0',
                     'placeholder:text-muted'
