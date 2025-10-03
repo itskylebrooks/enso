@@ -9,6 +9,7 @@ import { getLevelLabel, getOrderedTaxonomyValues, getTaxonomyLabel, type Taxonom
 import { SectionTitle } from '../../../shared/components';
 import { useMotionPreferences } from '../../../components/ui/motion';
 import { ENTRY_MODE_ORDER } from '../../../shared/constants/entryModes';
+import { ChevronDownIcon } from '../../../shared/components/ui/icons';
 
 type FilterPanelProps = {
   copy: Copy;
@@ -259,11 +260,11 @@ const FilterSection = ({ title, options, selected, onSelect, available, isOpen =
         <SectionTitle>{title}</SectionTitle>
         <motion.span
           aria-hidden
-          className="text-xs text-subtle"
+          className="text-subtle"
           animate={{ rotate: isOpen ? 0 : -90 }}
           transition={{ duration: 0.2, ease: 'easeInOut' }}
         >
-          ▾
+          <ChevronDownIcon className="w-4 h-4" />
         </motion.span>
       </button>
       <motion.div
