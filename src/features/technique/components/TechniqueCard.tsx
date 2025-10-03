@@ -109,7 +109,9 @@ export const TechniqueCard = ({
           ))}
           {weaponLabel && <span className="rounded-sm bg-black/5 px-2 py-0.5 dark:bg-white/10">{weaponLabel}</span>}
         </div>
-        <LevelBadge locale={locale} level={technique.level} />
+        <div className="shrink-0 self-end">
+          <LevelBadge locale={locale} level={technique.level} />
+        </div>
       </div>
     </motion.div>
   );
