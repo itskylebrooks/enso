@@ -1,7 +1,6 @@
 import { useCallback, useMemo, type ReactElement } from 'react';
 import type { Hanmi, Direction, WeaponKind, TechniqueVersionMeta } from '@shared/types';
 import { Select, type SelectOption } from '@shared/components/ui/Select';
-import { HandIcon, BokkenIcon, JoIcon, TantoIcon } from '@shared/components/ui/icons';
 
 export type TechniqueToolbarValue = {
   hanmi: Hanmi;
@@ -44,13 +43,6 @@ export type TechniqueToolbarProps = {
 
 const HANMI_ORDER: Hanmi[] = ['ai-hanmi', 'gyaku-hanmi'];
 const DIRECTION_ORDER: Direction[] = ['irimi', 'tenkan', 'omote', 'ura'];
-
-const weaponIcons: Record<WeaponKind, ReactElement> = {
-  empty: <HandIcon className="w-5 h-5" />,
-  bokken: <BokkenIcon className="w-5 h-5" />,
-  jo: <JoIcon className="w-5 h-5" />,
-  tanto: <TantoIcon className="w-5 h-5" />,
-};
 
 export const TechniqueToolbar = ({
   hanmisAvailable,
@@ -117,7 +109,6 @@ export const TechniqueToolbar = ({
         return {
           value: weapon,
           label: labelMap[weapon],
-          icon: weaponIcons[weapon],
           disabled: !weaponsAvailable.includes(weapon),
         };
       });
