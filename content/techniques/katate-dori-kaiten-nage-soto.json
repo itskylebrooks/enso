@@ -1,0 +1,125 @@
+{
+  "id": "t-ktn-katatedori-soto",
+  "slug": "katate-dori-kaiten-nage-soto",
+  "name": {
+    "en": "Katate-dori Kaiten-nage (Soto)",
+    "de": "Katate-dori Kaiten-nage (Soto)"
+  },
+  "jp": "回転投げ（外）",
+  "category": "throw",
+  "attack": "katate-dori",
+  "weapon": "empty-hand",
+  "level": "kyu3",
+  "summary": {
+    "en": "Outside turning throw from a single-hand grab. Blend on the outside line, guide the elbow, turn under the arm, and cut a broad arc to project with clear space for ukemi.",
+    "de": "Außenrotationswurf aus Einhandgriff. Auf der Außenlinie führen, Ellbogen leiten, unter dem Arm drehen und mit weitem Bogen projizieren – mit freier Bahn für Ukemi."
+  },
+  "tags": [
+    "kaiten-nage",
+    "回転投げ",
+    "soto",
+    "throw",
+    "katate-dori",
+    "irimi",
+    "tenkan"
+  ],
+  "versions": [
+    {
+      "id": "v-standard",
+      "hanmi": "gyaku-hanmi",
+      "stepsByEntry": {
+        "irimi": {
+          "en": [
+            "Begin in gyaku-hanmi. Uke grabs your wrist (katate-dori). Keep shoulders soft, elbow heavy, spine tall.",
+            "Enter to the outside (soto) on uke's open side; rotate the captured palm upward to soften the grip without tugging.",
+            "Place your free hand to the outside of uke's elbow/triceps to establish two-point control (wrist + elbow).",
+            "Turn hips and shoulders together so uke's shoulder travels past their toes; keep their elbow close to your chest.",
+            "Lift slightly and turn under the captured arm to set the shoulder line without collapsing posture.",
+            "Cut a broad forward–down arc, uniting head and shoulder on the same circle; guide along a spiral, not straight down.",
+            "Release cleanly with safe spacing and recover distance with zanshin."
+          ],
+          "de": [
+            "Beginne in Gyaku-Hanmi. Uke greift dein Handgelenk (Katate-dori). Schultern weich, Ellbogen schwer, aufrechte Wirbelsäule.",
+            "Tritt auf die Außenlinie (Soto) auf Ukes offene Seite; drehe die gefasste Handfläche nach oben, ohne zu ziehen.",
+            "Lege die freie Hand außen an Ukes Ellbogen/Trizeps für Zweipunkt-Kontrolle (Handgelenk + Ellbogen).",
+            "Drehe Hüfte und Schultern gemeinsam, sodass Ukes Schulter an seinen Zehen vorbeigeht; Ellbogen körpernah halten.",
+            "Hebe leicht an und drehe unter dem gefassten Arm, um die Schulterlinie zu setzen, ohne die Haltung zu kollabieren.",
+            "Schneide einen weiten Bogen vorwärts–abwärts und führe Kopf und Schulter auf derselben Kreisbahn; spiralförmig, nicht gerade.",
+            "Sauber lösen, mit sicherem Abstand beenden und Zanshin halten."
+          ]
+        },
+        "tenkan": {
+          "en": [
+            "From gyaku-hanmi receive the grab with a heavy elbow and aligned center.",
+            "Turn (tenkan) smoothly to the outside line while rotating the captured palm up; keep contact and elbows close.",
+            "Guide uke's elbow slightly forward–outward so the shoulder begins to unload; avoid pulling with the arms.",
+            "Complete the pivot under the arm and stabilize your base; align your spine with uke's axis.",
+            "Set the shoulder with a small upward lead, then begin the outside circular cut.",
+            "Cut forward and slightly down on the circle, giving a clear path for ukemi.",
+            "Release at the edge of the circle and maintain awareness."
+          ],
+          "de": [
+            "Aus Gyaku-Hanmi den Griff mit schwerem Ellbogen und ausgerichtetem Zentrum annehmen.",
+            "Drehe (Tenkan) weich auf die Außenlinie und rotiere die gefasste Handfläche nach oben; Kontakt und Ellbogen körpernah halten.",
+            "Führe Ukes Ellbogen leicht vor–außen, sodass die Schulter entlastet; nicht mit den Armen ziehen.",
+            "Vervollständige die Drehung unter dem Arm und stabilisiere den Stand; Wirbelsäule auf Ukes Achse ausrichten.",
+            "Setze die Schulter mit kleinem Aufwärtsimpuls und beginne den äußeren Kreis-Schnitt.",
+            "Schneide vorwärts und leicht abwärts entlang des Kreises und gib eine klare Bahn für Ukemi.",
+            "Am Kreisrand lösen und Achtsamkeit beibehalten."
+          ]
+        }
+      },
+      "uke": {
+        "role": {
+          "en": "Offer a committed wrist grab without clamping. Move your feet with the lead, stay upright, and receive along the circular path with safe ukemi.",
+          "de": "Gib einen engagierten Handgelenkgriff ohne Klemmen. Gehe mit den Füßen mit der Führung mit, bleibe aufrecht und nimm auf der Kreisbahn sicheres Ukemi."
+        },
+        "notes": {
+          "en": [
+            "Allow palm-up rotation; avoid yanking back against the line.",
+            "Turn the torso with the lead; don't isolate the shoulder.",
+            "Prepare for side fall or forward roll depending on space and angle."
+          ],
+          "de": [
+            "Drehung zur Handfläche oben zulassen; nicht gegen die Linie zurückreißen.",
+            "Rumpf mitdrehen; die Schulter nicht isolieren.",
+            "Je nach Raum und Winkel Seitfall oder Vorwärtsrolle vorbereiten."
+          ]
+        }
+      },
+      "media": [],
+      "keyPoints": {
+        "en": [
+          "Outside line (soto) with two-point control: wrist + elbow.",
+          "Move from the hips; keep uke's elbow close to your chest.",
+          "Set the shoulder before the cut; then arc, don't push.",
+          "Maintain vertical posture; carve space for ukemi."
+        ],
+        "de": [
+          "Außenlinie (Soto) mit Zweipunkt-Kontrolle: Handgelenk + Ellbogen.",
+          "Aus der Hüfte bewegen; Ukes Ellbogen körpernah halten.",
+          "Schulter vor dem Schnitt setzen; dann Bogen, nicht schieben.",
+          "Aufrechte Haltung; Raum für Ukemi freihalten."
+        ]
+      },
+      "commonMistakes": {
+        "en": [
+          "Pulling with arm strength instead of rotating from the center.",
+          "Letting the captured arm straighten away from the body.",
+          "Cutting straight down rather than on the circular path.",
+          "Leaning forward and losing base; crowding uke with no exit."
+        ],
+        "de": [
+          "Mit Armkraft ziehen statt aus dem Zentrum zu drehen.",
+          "Den gefassten Arm vom Körper wegstrecken lassen.",
+          "Gerade nach unten schneiden statt auf der Kreisbahn.",
+          "Nach vorn lehnen und Stand verlieren; Uke ohne Ausweg bedrängen."
+        ]
+      },
+      "context": {
+        "en": "Soto favors outside blending when the inside lane is closed or the grab is heavy. Choose irimi for direct entry; choose tenkan to change angle smoothly without force.",
+        "de": "Soto eignet sich für das Führen auf die Außenlinie, wenn die Innenbahn geschlossen ist oder der Griff schwer wirkt. Irimi für direkten Einstieg; Tenkan für sanften Winkelwechsel ohne Kraft."
+      }
+    }
+  ]
+}
