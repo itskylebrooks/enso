@@ -61,9 +61,37 @@ export const SearchOverlay = ({ copy, locale, techniques, progress, glossaryProg
   const results = useMemo((): SearchResult[] => {
     // Require minimum query length to avoid too many partial matches
     if (normalizedQuery.length === 0 || query.trim().length < 2) {
-      // Show just a few results when no query: 3 techniques + 3 glossary terms
-      const recentTechniques: SearchResult[] = techniques.slice(0, 3).map(item => ({ type: 'technique', item }));
-      const someGlossaryTerms: SearchResult[] = glossaryTerms.slice(0, 3).map(item => ({ type: 'glossary', item }));
+      // Return a deterministic default ordering when search is empty.
+      // Requested default order (techniques then glossary):
+      // 1) Katate dori shiho nage (katate-dori-shiho-nage)
+      // 2) Katate-dori Kaiten-nage (Soto) (katate-dori-kaiten-nage-soto)
+      // 3) Ryote-dori Koshi-nage (ryote-dori-koshi-nage)
+      // 4) Onegai shimasu (onegai-shimasu) [glossary]
+      // 5) Kamae (kamae) [glossary]
+      // 6) uke (uke) [glossary]
+
+      const techniqueOrder = [
+        'ryote-dori-koshi-nage',
+        'katate-dori-kaiten-nage-soto',
+        'katate-dori-irimi-nage',
+      ];
+
+      const glossaryOrder = [
+        'onegai-shimasu',
+        'kamae',
+        'uke',
+      ];
+
+      const recentTechniques: SearchResult[] = techniqueOrder
+        .map(slug => techniques.find(t => t.slug === slug))
+        .filter(Boolean)
+        .map(item => ({ type: 'technique', item: item as Technique }));
+
+      const someGlossaryTerms: SearchResult[] = glossaryOrder
+        .map(slug => glossaryTerms.find(g => g.slug === slug))
+        .filter(Boolean)
+        .map(item => ({ type: 'glossary', item: item as GlossaryTerm }));
+
       return [...recentTechniques, ...someGlossaryTerms];
     }
 
