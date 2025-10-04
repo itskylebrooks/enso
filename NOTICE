@@ -1,0 +1,20 @@
+Enso — Aikidō Study Companion
+Copyright © 2025 Kyle Brooks
+
+This project is licensed under the MIT License.
+The content (technique descriptions, glossary entries, etc.) is licensed under
+Creative Commons Attribution–NonCommercial 4.0 International (CC BY-NC 4.0).
+
+Attribution:
+This project was created and maintained by Kyle Brooks.
+Website: https://enso-kb.vercel.app
+Repository: https://github.com/itskylebrooks/enso
+
+Acknowledgments:
+- Aikidō community at WSV and BSV (Hamburg)
+- Teachers Joachim Eiselen, Markus Möller, Karen and Stefan Jakuszeit, Alfred Haase
+- Built with React, TypeScript, Tailwind CSS, and Vite
+- Hosted on Vercel
+
+This NOTICE file provides attribution and credit information for Enso.
+It does not modify the license terms of the MIT License.
