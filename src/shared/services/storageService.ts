@@ -73,10 +73,10 @@ const normalizeVersion = (version: TechniqueVersion): TechniqueVersion => {
     commonMistakes: normalizeLocalizedArray(version.commonMistakes),
     context: version.context ? normalizeLocalizedString(version.context) : undefined,
     media: Array.isArray(version.media)
-      ? version.media.map((item) => ({
+      ? version.media.map((item: any) => ({
           type: item.type,
-          url: item.url.trim(),
-          title: item.title ? item.title.trim() : undefined,
+          url: (item.url ?? '').trim(),
+          title: typeof item.title === 'string' ? item.title.trim() : undefined,
         }))
       : [],
     // support optional per-entry media block under stepsByEntry.media
@@ -87,7 +87,11 @@ const normalizeVersion = (version: TechniqueVersion): TechniqueVersion => {
       ['irimi', 'tenkan', 'omote', 'ura'].forEach((k) => {
         const arr = mediaObj[k];
         if (Array.isArray(arr)) {
-          out[k] = arr.map((m: any) => ({ type: m.type, url: (m.url ?? '').trim(), title: m.title ? m.title.trim() : undefined }));
+          out[k] = arr.map((m: any) => ({
+            type: m.type,
+            url: (m.url ?? '').trim(),
+            title: typeof m.title === 'string' ? m.title.trim() : undefined,
+          }));
         }
       });
       return Object.keys(out).length > 0 ? (out as any) : undefined;
