@@ -1079,6 +1079,10 @@ export default function App(): ReactElement {
                     removeGlossaryFromCollection(activeSlug, collectionId);
                   }
                 }}
+                onNavigateToGlossaryWithFilter={(category) => {
+                  setGlossaryFilters({ category });
+                  navigateTo('glossary');
+                }}
               />
             ) : (
               <>

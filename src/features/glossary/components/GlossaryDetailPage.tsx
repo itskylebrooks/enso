@@ -28,6 +28,7 @@ type GlossaryDetailPageProps = {
   onToggleBookmark: () => void;
   collections: CollectionOption[];
   onToggleCollection: (collectionId: string, nextChecked: boolean) => void;
+  onNavigateToGlossaryWithFilter?: (category: GlossaryTerm['category']) => void;
 };
 
 
@@ -42,7 +43,8 @@ export const GlossaryDetailPage = ({
   isBookmarked, 
   onToggleBookmark, 
   collections, 
-  onToggleCollection 
+  onToggleCollection,
+  onNavigateToGlossaryWithFilter,
 }: GlossaryDetailPageProps): ReactElement => {
   const [term, setTerm] = useState<GlossaryTerm | null>(null);
   const [loading, setLoading] = useState(true);
@@ -160,15 +162,18 @@ export const GlossaryDetailPage = ({
             </div>
           )}
           <div className="flex justify-center">
-            <span 
-              className="text-xs font-medium px-2 py-1 rounded-full"
+            <button
+              type="button"
+              onClick={() => onNavigateToGlossaryWithFilter?.(term.category)}
+              aria-label={`Show ${categoryLabel} in glossary`}
+              className="rounded-lg px-2 py-1 text-xs uppercase tracking-wide hover:opacity-80 transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
               style={{
                 backgroundColor: categoryStyle.backgroundColor,
                 color: categoryStyle.color,
               }}
             >
               {categoryLabel}
-            </span>
+            </button>
           </div>
         </div>
         
