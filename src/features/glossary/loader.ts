@@ -39,23 +39,36 @@ export async function loadAllTerms(): Promise<GlossaryTerm[]> {
     }
   }
   
+  // Dedupe by slug (keep first occurrence) to avoid duplicate entries when
+  // multiple files define the same slug (e.g., legacy/redirected files).
+  const bySlug = new Map<string, GlossaryTerm>();
+  for (const term of terms) {
+    if (bySlug.has(term.slug)) {
+      console.warn(`Duplicate glossary slug encountered for '${term.slug}', skipping duplicate.`);
+      continue;
+    }
+    bySlug.set(term.slug, term);
+  }
+
+  const uniqueTerms = Array.from(bySlug.values());
+
   // Sort by romaji using locale-aware comparison
-  terms.sort((a, b) => 
-    a.romaji.localeCompare(b.romaji, 'en', { 
+  uniqueTerms.sort((a, b) =>
+    a.romaji.localeCompare(b.romaji, 'en', {
       sensitivity: 'accent',
-      caseFirst: 'lower'
+      caseFirst: 'lower',
     })
   );
-  
-  termsCache = terms;
-  
+
+  termsCache = uniqueTerms;
+
   // Build slug-to-term map for quick lookups
   termsBySlugCache = new Map();
-  terms.forEach(term => {
+  uniqueTerms.forEach(term => {
     termsBySlugCache!.set(term.slug, term);
   });
-  
-  return terms;
+
+  return uniqueTerms;
 }
 
 /**
