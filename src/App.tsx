@@ -281,24 +281,24 @@ function applyFilters(techniques: Technique[], filters: Filters): Technique[] {
   });
 }
 
-function useKeyboardShortcuts(onSearch: () => void): void {
+function useKeyboardShortcuts(onSearch: (method?: 'keyboard' | 'mouse') => void): void {
   useEffect(() => {
     const handler = (event: KeyboardEvent) => {
       const key = event.key.toLowerCase();
       if (isEditableElement(event.target)) {
         if ((event.metaKey || event.ctrlKey) && key === 'k') {
           event.preventDefault();
-          onSearch();
+          onSearch('keyboard');
         }
         return;
       }
 
       if ((event.metaKey || event.ctrlKey) && key === 'k') {
         event.preventDefault();
-        onSearch();
+        onSearch('keyboard');
       } else if (key === '/') {
         event.preventDefault();
-        onSearch();
+        onSearch('keyboard');
       }
     };
 
@@ -402,7 +402,9 @@ export default function App(): ReactElement {
     loadGlossaryTerms();
   }, []);
 
-  const openSearch = useCallback(() => {
+  const openSearch = useCallback((method: 'keyboard' | 'mouse' = 'mouse') => {
+    // store how the search was opened so the overlay can adjust pointer behavior
+    (openSearch as any).lastOpenedBy = method;
     setSearchOpen(true);
   }, []);
 
@@ -1216,6 +1218,7 @@ export default function App(): ReactElement {
             }}
             onToggleTechniqueBookmark={(techniqueId: string) => updateProgress(techniqueId, { bookmarked: !(db.progress.find(p => p.techniqueId === techniqueId)?.bookmarked) })}
             onToggleGlossaryBookmark={(termId: string) => updateGlossaryProgress(termId, { bookmarked: !(db.glossaryProgress.find(g => g.termId === termId)?.bookmarked) })}
+            openedBy={(openSearch as any).lastOpenedBy ?? 'mouse'}
           />
         )}
 

@@ -11,7 +11,7 @@ type HeaderProps = {
   copy: Copy;
   route: AppRoute;
   onNavigate: (route: AppRoute, options?: { replace?: boolean }) => void;
-  onSearch: () => void;
+  onSearch: (method?: 'keyboard' | 'mouse') => void;
   onSettings: () => void;
   searchButtonRef: RefObject<HTMLButtonElement | null>;
   settingsButtonRef: RefObject<HTMLButtonElement | null>;
@@ -111,7 +111,7 @@ export const Header = ({
         </a>
         <nav className="flex items-center gap-2">
           <div className="hidden md:flex items-center gap-2">
-            <TextButton ref={searchButtonRef} onClick={onSearch}>
+            <TextButton ref={searchButtonRef} onClick={() => onSearch?.('mouse')}>
               <span className="flex items-center gap-1">
                 <SearchIcon className="w-4 h-4" />
                 <span>{copy.searchBtn}</span>
@@ -152,7 +152,7 @@ export const Header = ({
           {/* Mobile: hamburger + animated dropdown */}
           <div className="md:hidden relative">
             <div className="flex items-center gap-2">
-              <IconButton ref={searchButtonRef} onClick={onSearch} label={copy.searchBtn}>
+              <IconButton ref={searchButtonRef} onClick={() => onSearch?.('mouse')} label={copy.searchBtn}>
                 <SearchIcon className="w-5 h-5" />
               </IconButton>
               <button

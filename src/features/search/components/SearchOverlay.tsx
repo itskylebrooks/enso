@@ -26,9 +26,13 @@ type SearchOverlayProps = {
   onOpenGlossary: (slug: string) => void;
   onToggleTechniqueBookmark?: (techniqueId: string) => void;
   onToggleGlossaryBookmark?: (termId: string) => void;
+  // Indicates how the overlay was opened. When opened by keyboard, pointer
+  // (mouse) interactions should not affect selection until the user actually
+  // moves or clicks the mouse.
+  openedBy?: 'keyboard' | 'mouse';
 };
 
-export const SearchOverlay = ({ copy, locale, techniques, progress, glossaryProgress, onClose, onOpen, onOpenGlossary, onToggleTechniqueBookmark, onToggleGlossaryBookmark }: SearchOverlayProps): ReactElement => {
+export const SearchOverlay = ({ copy, locale, techniques, progress, glossaryProgress, onClose, onOpen, onOpenGlossary, onToggleTechniqueBookmark, onToggleGlossaryBookmark, openedBy }: SearchOverlayProps): ReactElement => {
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [glossaryTerms, setGlossaryTerms] = useState<GlossaryTerm[]>([]);
@@ -41,6 +45,30 @@ export const SearchOverlay = ({ copy, locale, techniques, progress, glossaryProg
   const {
     overlayMotion,
   } = useMotionPreferences();
+
+  // When opened via keyboard shortcut, ignore pointer hover changes until the
+  // user actually uses the mouse (mousemove or mousedown). This prevents the
+  // mouse cursor from immediately stealing selection when the user intends
+  // to navigate with keyboard.
+  const [pointerEnabled, setPointerEnabled] = useState(openedBy !== 'keyboard');
+
+  useEffect(() => {
+    if (openedBy !== 'keyboard') return;
+
+    const enablePointer = () => {
+      setPointerEnabled(true);
+      document.removeEventListener('mousemove', enablePointer);
+      document.removeEventListener('mousedown', enablePointer);
+    };
+
+    document.addEventListener('mousemove', enablePointer, { passive: true });
+    document.addEventListener('mousedown', enablePointer, { passive: true });
+
+    return () => {
+      document.removeEventListener('mousemove', enablePointer);
+      document.removeEventListener('mousedown', enablePointer);
+    };
+  }, [openedBy]);
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -328,7 +356,10 @@ export const SearchOverlay = ({ copy, locale, techniques, progress, glossaryProg
                       onClose();
                     }
                   }}
-                  onMouseEnter={() => setSelectedIndex(index)}
+                  onMouseEnter={() => {
+                    if (!pointerEnabled) return;
+                    setSelectedIndex(index);
+                  }}
                   className="relative flex w-full items-baseline justify-between gap-4 rounded-xl px-3 py-3 text-left transition-colors z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--color-text)]"
                   title={result.type === 'technique' ? result.item.name[locale] : result.item.romaji}
                 >
