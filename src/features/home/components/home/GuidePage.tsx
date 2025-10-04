@@ -62,10 +62,10 @@ const content: Record<Locale, GuideContent> = {
     movementsLead:
       'These are the movement tools you will use constantly. Practice them slowly, then smoothly.',
     movementHighlights: [
-      { term: 'kamae (hanmi)', detail: 'ready posture: relaxed shoulders, soft knees, centered' },
-      { term: 'irimi', detail: 'decisive entering step that closes distance' },
-      { term: 'tenkan', detail: 'pivot/turn that leads uke past your center' },
-      { term: 'ukemi', detail: 'safe falling/rolling; protect neck, move with the throw' },
+      { term: 'Kamae (hanmi)', detail: 'ready posture: relaxed shoulders, soft knees, centered' },
+      { term: 'Irimi', detail: 'decisive entering step that closes distance' },
+      { term: 'Tenkan', detail: 'pivot/turn that leads uke past your center' },
+      { term: 'Ukemi', detail: 'safe falling/rolling; protect neck, move with the throw' },
     ],
     movementsCtaLabel: 'See all movement terms',
 
@@ -131,10 +131,10 @@ const content: Record<Locale, GuideContent> = {
     movementsLead:
       'Diese Bewegungen nutzt du ständig. Übe sie ruhig und präzise, dann fließend.',
     movementHighlights: [
-      { term: 'kamae (hanmi)', detail: 'Bereitschaftshaltung: Schultern weich, Knie locker, Zentrum stabil' },
-      { term: 'irimi', detail: 'entschlossenes Eintreten, das Distanz schließt' },
-      { term: 'tenkan', detail: 'Drehung, die Uke an deinem Zentrum vorbeiführt' },
-      { term: 'ukemi', detail: 'sicheres Fallen/Rollen; Nacken schützen, mit der Technik gehen' },
+      { term: 'Kamae (hanmi)', detail: 'Bereitschaftshaltung: Schultern weich, Knie locker, Zentrum stabil' },
+      { term: 'Irimi', detail: 'entschlossenes Eintreten, das Distanz schließt' },
+      { term: 'Tenkan', detail: 'Drehung, die Uke an deinem Zentrum vorbeiführt' },
+      { term: 'Ukemi', detail: 'sicheres Fallen/Rollen; Nacken schützen, mit der Technik gehen' },
     ],
     movementsCtaLabel: 'Alle Bewegungen im Glossar',
 
@@ -267,11 +267,11 @@ export const GuidePage = ({
             <h2 className="text-xl font-semibold leading-tight">{copy.headings.movements}</h2>
             <p className="text-sm text-subtle leading-relaxed">{copy.movementsLead}</p>
           </header>
-          <dl className="space-y-3">
+          <dl className="flex flex-col gap-3">
             {copy.movementHighlights.map(({ term, detail }) => (
-              <div key={term} className="rounded-xl border surface-border bg-[var(--color-surface)]/70 px-4 py-3">
-                <dt className="text-sm font-semibold uppercase tracking-[0.2em] text-subtle">{term}</dt>
-                <dd className="mt-1 text-sm leading-relaxed">{detail}</dd>
+              <div key={term} className="flex flex-col">
+                <dt className="text-neutral-100 font-semibold text-base leading-tight">{term}</dt>
+                <dd className="text-neutral-400 text-sm mt-1 leading-relaxed">{detail}</dd>
               </div>
             ))}
           </dl>
@@ -303,12 +303,12 @@ export const GuidePage = ({
           <div className="space-y-2">
             <h3 className="text-sm font-semibold tracking-wide uppercase text-subtle">{copy.virtuesTitle}</h3>
             <dl className="space-y-3">
-              {copy.virtues.map(({ term, detail }) => (
-                <div key={term} className="rounded-xl border surface-border bg-[var(--color-surface)]/70 px-4 py-3">
-                  <dt className="text-sm font-semibold uppercase tracking-[0.2em] text-subtle">{term}</dt>
-                  <dd className="mt-1 text-sm leading-relaxed">{detail}</dd>
-                </div>
-              ))}
+                {copy.virtues.map(({ term, detail }) => (
+                  <div key={term} className="flex flex-col">
+                    <dt className="text-neutral-100 font-semibold text-base leading-tight">{term}</dt>
+                    <dd className="text-neutral-400 text-sm mt-1 leading-relaxed">{detail}</dd>
+                  </div>
+                ))}
             </dl>
           </div>
         </motion.article>
