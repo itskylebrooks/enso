@@ -23,28 +23,57 @@ import { enrichTechniqueWithVariants } from '@shared/constants/variantMapping';
 import { getActiveVariant } from '@features/technique/store';
 import { parseTechniqueVariantParams, buildTechniqueUrlWithVariant } from '@shared/constants/urls';
 
-const buildTags = (technique: Technique, locale: Locale): string[] => {
+type TagItem = { label: string; kind: 'category' | 'attack' | 'weapon' | 'entry' };
+
+const buildTags = (technique: Technique, locale: Locale): TagItem[] => {
   const title = technique.name[locale]?.toLowerCase?.() ?? '';
   const normalizedTitle = stripDiacritics(title);
 
-  const candidates: Array<{ type: 'category' | 'attack' | 'weapon'; value?: string | null }> = [
-    { type: 'weapon', value: technique.weapon && technique.weapon !== 'empty-hand' ? technique.weapon : undefined },
-    { type: 'category', value: technique.category },
-    { type: 'attack', value: technique.attack },
-  ];
+  // We'll build tags in the requested order:
+  // 1) Category (canonical categories from taxonomy)
+  // 2) Attack
+  // 3) Weapon (if applicable and not empty-hand)
+  // 4) Entry tags (irimi, tenkan, omote, ura) last
 
-  const unique: string[] = [];
+  const unique: TagItem[] = [];
   const seen = new Set<string>();
 
-  candidates.forEach(({ type, value }) => {
-    if (!value) return;
-    const label = getTaxonomyLabel(locale, type, value);
+  const pushIfValid = (label: string | undefined | null, kind: TagItem['kind'], ignoreTitle = false) => {
+    if (!label) return;
     const normalizedValue = stripDiacritics(label.toLowerCase());
     if (normalizedValue.length === 0) return;
-    if (normalizedTitle.includes(normalizedValue)) return;
+    if (!ignoreTitle && normalizedTitle.includes(normalizedValue)) return;
     if (seen.has(normalizedValue)) return;
     seen.add(normalizedValue);
-    unique.push(label);
+    unique.push({ label, kind });
+  };
+
+  // 1) Category
+  pushIfValid(getTaxonomyLabel(locale, 'category', technique.category), 'category');
+
+  // 2) Attack
+  pushIfValid(getTaxonomyLabel(locale, 'attack', technique.attack || ''), 'attack');
+
+  // 3) Weapon (only if not empty-hand)
+  if (technique.weapon && technique.weapon !== 'empty-hand') {
+    pushIfValid(getTaxonomyLabel(locale, 'weapon', technique.weapon), 'weapon');
+  }
+
+  // 4) Entry type tags (irimi/tenkan/omote/ura) - add last in this order
+  const entrySet = new Set<string>();
+  (technique.versions || []).forEach((v) => {
+    const stepsBy = (v as any).stepsByEntry as Record<string, unknown> | undefined;
+    if (!stepsBy) return;
+    ['irimi', 'tenkan', 'omote', 'ura'].forEach((entry) => {
+      if (stepsBy[entry]) entrySet.add(entry);
+    });
+  });
+
+  ['irimi', 'tenkan', 'omote', 'ura'].forEach((entry) => {
+    if (entrySet.has(entry)) {
+      // For entry tags, show them even if the technique title already contains the word
+      pushIfValid(entry, 'entry', true);
+    }
   });
 
   return unique;
@@ -103,7 +132,16 @@ const mapTagToGlossarySlug = (tagLabel: string): string | null => {
   };
 
   const normalizedTag = tagLabel.toLowerCase().replace(/\s+/g, ' ').trim();
-  return labelToSlugMap[normalizedTag] || null;
+
+  // Direct mapping first
+  if (labelToSlugMap[normalizedTag]) return labelToSlugMap[normalizedTag];
+
+  // Fallback: attempt to convert a human label to a reasonable slug
+  // e.g. "Katate Dori" -> "katate-dori", "Kaiten-nage (soto)" -> "kaiten-nage-soto"
+  const stripped = normalizedTag.replace(/[()]/g, '').replace(/[^a-z0-9\s-_]/g, '');
+  const candidate = stripped.trim().replace(/\s+/g, '-');
+  if (candidate.length === 0) return null;
+  return candidate;
 };
 
 export const TechniquePage = ({

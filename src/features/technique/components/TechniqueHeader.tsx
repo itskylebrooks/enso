@@ -20,6 +20,8 @@ export type CollectionOption = {
   checked: boolean;
 };
 
+export type TagItem = { label: string; kind: 'category' | 'attack' | 'weapon' | 'entry' };
+
 export type TechniqueHeaderProps = {
   technique: Technique;
   locale: Locale;
@@ -27,7 +29,7 @@ export type TechniqueHeaderProps = {
   backLabel: string;
   onBack: () => void;
   summary: string;
-  tags: string[];
+  tags: TagItem[];
   isBookmarked: boolean;
   onToggleBookmark: () => void;
   collections: CollectionOption[];
@@ -129,31 +131,46 @@ export const TechniqueHeader = ({
             {tags.length > 0 && (
               <div className="flex flex-wrap gap-2 pt-1">
                 {tags.map((tag) => {
-                  const tagCategory = getTagCategory(tag);
+                  // tag is TagItem { label, kind }
+                  const lowerTagKey = tag.kind === 'entry' ? tag.label.toLowerCase() : '';
+                  let displayLabel = tag.label;
+                  if (tag.kind === 'entry' && ['irimi', 'tenkan', 'omote', 'ura'].includes(lowerTagKey)) {
+                    const map: Record<string, string> = {
+                      irimi: copy.entryIrimi,
+                      tenkan: copy.entryTenkan,
+                      omote: copy.entryOmote,
+                      ura: copy.entryUra,
+                    };
+                    displayLabel = map[lowerTagKey] || tag.label;
+                  }
+
+                  // Category tags should use the 'other' / grey palette in glossary
+                  const tagCategory = tag.kind === 'category' ? 'other' : getTagCategory(displayLabel);
                   const categoryStyle = getCategoryStyle(tagCategory, isDark);
+
                   return onTagClick ? (
                     <button
-                      key={tag}
+                      key={`${tag.label}-${tag.kind}`}
                       type="button"
-                      onClick={() => onTagClick(tag)}
+                      onClick={() => onTagClick(displayLabel)}
                       className="rounded-lg px-2 py-1 text-xs uppercase tracking-wide hover:opacity-80 transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
                       style={{
                         backgroundColor: categoryStyle.backgroundColor,
                         color: categoryStyle.color,
                       }}
                     >
-                      {tag}
+                      {displayLabel}
                     </button>
                   ) : (
                     <span
-                      key={tag}
+                      key={`${tag.label}-${tag.kind}`}
                       className="rounded-lg px-2 py-1 text-xs uppercase tracking-wide"
                       style={{
                         backgroundColor: categoryStyle.backgroundColor,
                         color: categoryStyle.color,
                       }}
                     >
-                      {tag}
+                      {displayLabel}
                     </span>
                   );
                 })}
