@@ -218,3 +218,12 @@ button {
 .jump-on-hover:hover {
   transform: translateY(-4px) scale(1.02);
 }
+
+/* Adaptive pill that reads inline CSS variables for bg and hover bg */
+.pill-adaptive {
+  background-color: var(--pill-bg);
+  transition: background-color 180ms var(--motion-ease), color 160ms var(--motion-ease);
+}
+.pill-adaptive:hover {
+  background-color: var(--pill-bg-hover);
+}

@@ -206,6 +206,22 @@ export const GuidePage = ({
   const { prefersReducedMotion } = useMotionPreferences();
   const [isDark, setIsDark] = useState(getInitialThemeState);
 
+  // Adaptive colors for highlighted external links (bg + text)
+  const externalColors = {
+    dab: {
+      light: { bg: 'rgba(249, 220, 4, 0.12)', fg: '#1f1f1f' }, // #f9dc04
+      dark: { bg: 'rgba(249, 220, 4, 0.16)', fg: '#f9dc04' },
+    },
+    wsv: {
+      light: { bg: 'rgba(2, 130, 53, 0.12)', fg: '#042d14' }, // #028235
+      dark: { bg: 'rgba(2, 130, 53, 0.2)', fg: '#bff7d1' },
+    },
+    bsv: {
+      light: { bg: 'rgba(178, 1, 0, 0.12)', fg: '#3b0000' }, // #b20100
+      dark: { bg: 'rgba(178, 1, 0, 0.18)', fg: '#ffd6d6' },
+    },
+  } as const;
+
   useEffect(() => {
     // Check if dark mode is active
     const checkDarkMode = () => {
@@ -446,6 +462,104 @@ export const GuidePage = ({
               </li>
             ))}
           </ul>
+        </motion.article>
+        {/* Further Study / Weiterführende Ressourcen */}
+        <motion.article className="space-y-3" {...animationProps}>
+          <header className="space-y-2">
+            <h2 className="text-xl font-semibold leading-tight">{locale === 'de' ? 'Weiterführende Ressourcen' : 'Further Study'}</h2>
+          </header>
+          <div className="flex flex-wrap gap-3">
+            <a
+              href="https://www.aikido-bund.de"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center rounded-full px-4 py-2 border text-sm transition-colors pill-adaptive"
+              style={{
+                '--pill-bg': isDark ? externalColors.dab.dark.bg : externalColors.dab.light.bg,
+                '--pill-bg-hover': isDark ? 'rgba(249, 220, 4, 0.22)' : 'rgba(249, 220, 4, 0.18)',
+                color: isDark ? externalColors.dab.dark.fg : externalColors.dab.light.fg,
+                borderColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'
+              } as any}
+              aria-label="Deutscher Aikido-Bund (opens in new tab)"
+            >
+              Deutscher Aikido-Bund
+            </a>
+
+            <a
+              href="https://www.aikido-hamburg.de"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center rounded-full px-4 py-2 bg-[var(--color-surface)]/20 border surface-border text-sm hover:bg-[var(--color-surface-hover)] transition-colors"
+              style={{ color: 'var(--color-text)' }}
+              aria-label="AV Hamburg (opens in new tab)"
+            >
+              AV Hamburg
+            </a>
+
+            <a
+              href="https://www.aikido-bayern.de"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center rounded-full px-4 py-2 bg-[var(--color-surface)]/20 border surface-border text-sm hover:bg-[var(--color-surface-hover)] transition-colors"
+              style={{ color: 'var(--color-text)' }}
+              aria-label="AV Bayern (opens in new tab)"
+            >
+              AV Bayern
+            </a>
+
+            <a
+              href="https://www.aikidoverein-wattenbek.de"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center rounded-full px-4 py-2 bg-[var(--color-surface)]/20 border surface-border text-sm hover:bg-[var(--color-surface-hover)] transition-colors"
+              style={{ color: 'var(--color-text)' }}
+              aria-label="AV Wattenbeck (opens in new tab)"
+            >
+              AV Wattenbeck
+            </a>
+
+            <a
+              href="https://theaikidowarrior.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center rounded-full px-4 py-2 bg-[var(--color-surface)]/20 border surface-border text-sm hover:bg-[var(--color-surface-hover)] transition-colors"
+              style={{ color: 'var(--color-text)' }}
+              aria-label="Aikido Warrior Dojo (opens in new tab)"
+            >
+              Aikido Warrior Dojo
+            </a>
+            <a
+              href="https://walddoerfer-sv.de/sportangebot/aikido/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center rounded-full px-4 py-2 border text-sm transition-colors pill-adaptive"
+              style={{
+                '--pill-bg': isDark ? externalColors.wsv.dark.bg : externalColors.wsv.light.bg,
+                '--pill-bg-hover': isDark ? 'rgba(2, 130, 53, 0.28)' : 'rgba(2, 130, 53, 0.18)',
+                color: isDark ? externalColors.wsv.dark.fg : externalColors.wsv.light.fg,
+                borderColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'
+              } as any}
+              aria-label="Walddörfer SV (opens in new tab)"
+            >
+              WSV
+            </a>
+
+            <a
+              href="https://www.aikido-bsv.de/index.php"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center rounded-full px-4 py-2 border text-sm transition-colors pill-adaptive"
+              style={{
+                '--pill-bg': isDark ? externalColors.bsv.dark.bg : externalColors.bsv.light.bg,
+                '--pill-bg-hover': isDark ? 'rgba(178, 1, 0, 0.28)' : 'rgba(178, 1, 0, 0.18)',
+                color: isDark ? externalColors.bsv.dark.fg : externalColors.bsv.light.fg,
+                borderColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'
+              } as any}
+              aria-label="Aikido BSV (opens in new tab)"
+            >
+              BSV
+            </a>
+          </div>
         </motion.article>
       </div>
     </section>
