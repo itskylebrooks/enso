@@ -126,6 +126,31 @@ export const AboutPage = ({ copy }: AboutPageProps): ReactElement => (
           </p>
         ))}
       </div>
+
+      {/* Author Section */}
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold">
+          {copy.aboutAuthorTitle}
+        </h2>
+
+        {/* Photo centered, but title and text use the page width */}
+        <div>
+          <div className="mb-4">
+            <img
+              src="/content/Lehrgang-2024-09.jpeg"
+              alt="Kyle Brooks — Aikidō Lehrgang, November 2024"
+              className="w-full h-auto rounded-lg object-cover"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <p className="text-base leading-relaxed">{copy.aboutAuthorPart1}</p>
+            <p className="text-base leading-relaxed">{copy.aboutAuthorPart2}</p>
+            <p className="text-base leading-relaxed">{copy.aboutAuthorPart3}</p>
+            <p className="text-base leading-relaxed">{copy.aboutAuthorPart4}</p>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 );
