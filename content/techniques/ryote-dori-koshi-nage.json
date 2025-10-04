@@ -1,0 +1,93 @@
+{
+  "id": "t-ksn-ryotedori",
+  "slug": "ryote-dori-koshi-nage",
+  "name": {
+    "en": "Ryote-dori Koshi-nage",
+    "de": "Ryote-dori Koshi-nage"
+  },
+  "jp": "両手取り腰投げ",
+  "category": "throw",
+  "attack": "ryote-dori",
+  "weapon": "empty-hand",
+  "level": "kyu2",
+  "summary": {
+    "en": "A hip throw from a two-handed wrist grab. Tori blends with uke's forward energy, entering to the side and using the hip as a fulcrum to project uke forward in a large, circular motion.",
+    "de": "Ein Hüftwurf aus einem beidhändigen Handgelenkgriff. Tori verschmilzt mit Ukes Vorwärtsenergie, tritt zur Seite ein und nutzt die Hüfte als Drehpunkt, um Uke in einer großen, kreisförmigen Bewegung nach vorne zu werfen."
+  },
+  "tags": [
+    "koshi-nage",
+    "腰投げ",
+    "throw",
+    "ryote-dori",
+    "irimi",
+    "hip throw"
+  ],
+  "versions": [
+    {
+      "id": "v-standard",
+      "hanmi": "ai-hanmi",
+      "stepsByEntry": {
+        "irimi": {
+          "en": [
+            "As uke grabs both wrists, respond by securing your own grip and raising their hands to unbalance them forward (kuzushi).",
+            "Enter (irimi) by stepping forward and turning to uke's side, keeping your feet relatively close together.",
+            "Extend uke's arms fully upward and forward in a large arc as you bend your knees deeply, dropping your hip below uke's center of gravity.",
+            "Position your hip firmly as a pivot point. Your body should be leaning to the side, not bent forward.",
+            "Project uke over your hip by pulling in a continuous, wheel-like motion and straightening your legs, guiding them into a safe forward roll (tobikoshi ukemi)."
+          ],
+          "de": [
+            "Während Uke beide Handgelenke greift, sichere deinen eigenen Griff und hebe seine Hände an, um ihn nach vorne aus dem Gleichgewicht zu bringen (Kuzushi).",
+            "Tritt ein (Irimi), indem du einen Schritt nach vorne machst und dich zu Ukes Seite drehst. Halte deine Füße dabei relativ nah beieinander.",
+            "Strecke Ukes Arme in einem großen Bogen vollständig nach oben und vorne, während du deine Knie tief beugst und deine Hüfte unter Ukes Schwerpunkt absenkst.",
+            "Positioniere deine Hüfte fest als Drehpunkt. Dein Körper sollte zur Seite geneigt sein, nicht nach vorne gebeugt.",
+            "Wirf Uke über deine Hüfte, indem du in einer kontinuierlichen, radähnlichen Bewegung ziehst und deine Beine streckst. Führe ihn dabei in eine sichere Vorwärtsrolle (Tobikoshi Ukemi)."
+          ]
+        }
+      },
+      "uke": {
+        "role": {
+          "en": "Offer a committed, two-handed grab with forward energy. Maintain a soft connection and be prepared to take a high forward roll (tobikoshi) over the hip without resisting the throw.",
+          "de": "Gib einen engagierten, beidhändigen Griff mit Vorwärtsenergie. Halte eine weiche Verbindung aufrecht und sei bereit, eine hohe Vorwärtsrolle (Tobikoshi) über die Hüfte zu machen, ohne dem Wurf zu widerstehen."
+        },
+        "notes": {
+          "en": [
+            "Do not stiffen your arms or plant your feet upon being unbalanced.",
+            "Commit to the forward momentum to allow for a smooth, flowing technique.",
+            "Execute a high, safe breakfall, landing with a palm slap to dissipate energy."
+          ],
+          "de": [
+            "Versteife nicht die Arme oder stemme die Füße in den Boden, wenn dein Gleichgewicht gebrochen wird.",
+            "Gib dich dem Vorwärtsimpuls hin, um eine fließende Technik zu ermöglichen.",
+            "Führe einen hohen, sicheren Fall aus und lande mit einem lauten Abschlag der Handfläche, um die Energie abzubauen."
+          ]
+        }
+      },
+      "media": [
+        {
+          "type": "youtube",
+          "url": "https://www.youtube.com/embed/CJf5PdOrwjE?si=WHH8cJzS75l_Vowj"
+        }
+      ],
+      "commonMistakes": {
+        "en": [
+          "Leaning forward instead of sideways, which loads uke's weight onto your back.",
+          "Not extending uke's arms fully, resulting in a failed off-balance (kuzushi).",
+          "Failing to lower the hips sufficiently below uke's center of gravity.",
+          "Using upper body strength to lift instead of using hip leverage to pivot.",
+          "Positioning feet too far apart, which limits stability and rotational power."
+        ],
+        "de": [
+          "Nach vorne lehnen statt seitwärts, wodurch Ukes Gewicht auf den Rücken geladen wird.",
+          "Ukes Arme nicht vollständig strecken, was zu einem fehlgeschlagenen Gleichgewichtsbruch (Kuzushi) führt.",
+          "Die Hüfte nicht tief genug unter Ukes Schwerpunkt absenken.",
+          "Oberkörperkraft zum Heben einsetzen, anstatt die Hüfte als Hebel zum Drehen zu nutzen.",
+          "Die Füße zu weit auseinander positionieren, was Stabilität und Drehkraft einschränkt."
+        ]
+      },
+      "context": {
+        "en": "Koshi-nage is a powerful hip throw that relies on proper timing, deep entry, and leverage rather than strength. It teaches tori to blend with a committed attack and redirect the partner's energy efficiently. Due to the high fall, both tori and uke must be proficient in their roles to ensure safety.",
+        "de": "Koshi-nage ist ein kraftvoller Hüftwurf, der auf richtigem Timing, einem tiefen Einstieg und Hebelwirkung anstelle von Kraft beruht. Er lehrt Tori, mit einem engagierten Angriff zu verschmelzen und die Energie des Partners effizient umzulenken. Wegen des hohen Falls müssen sowohl Tori als auch Uke ihre Rollen beherrschen, um die Sicherheit zu gewährleisten."
+      }
+    }
+  ]
+}
