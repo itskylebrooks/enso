@@ -6,25 +6,25 @@ import { TANTO_COLUMNS, TANTO_ROWS } from '@shared/data/tantoTechniquesData';
 
 type TantoMatrixProps = {
   locale: Locale;
-  isDark: boolean;
+  isDark?: boolean;
   onCellClick: (slug: string, attackKey: string) => void;
 };
 
 const CheckIcon = (): ReactElement => (
-  <svg 
-    xmlns="http://www.w3.org/2000/svg" 
-    width="24" 
-    height="24" 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2" 
-    strokeLinecap="round" 
-    strokeLinejoin="round" 
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
     className="lucide lucide-circle-check-icon lucide-circle-check inline-block"
   >
-    <circle cx="12" cy="12" r="10"/>
-    <path d="m9 12 2 2 4-4"/>
+    <circle cx="12" cy="12" r="10" />
+    <path d="m9 12 2 2 4-4" />
   </svg>
 );
 
@@ -53,14 +53,20 @@ export const TantoMatrix = ({ locale, onCellClick }: TantoMatrixProps): ReactEle
                 {locale === 'en' ? 'Technique' : 'Technik'}
               </th>
               {TANTO_COLUMNS.map((col) => {
+                const isTall = col.key === 'sode_dori_tanto_yoko_tsuki_soto';
                 return (
                   <th
                     key={col.key}
                     className="px-1 py-4 text-center font-medium text-xs relative overflow-hidden border-r surface-border"
-                    style={{ minWidth: '48px', width: '48px', height: '200px' }}
+                    style={{ minWidth: '48px', width: '48px', height: isTall ? '240px' : '200px' }}
                   >
-                    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 origin-center -rotate-90 whitespace-nowrap">
-                      <span className="block text-center leading-tight">{col.label[locale]}</span>
+                    <div className="absolute inset-0 flex items-end justify-center px-1 py-2">
+                      <span
+                        style={{ writingMode: 'vertical-rl', textOrientation: 'mixed', transform: 'rotate(180deg) translateY(4px)' }}
+                        className="leading-tight"
+                      >
+                        {col.label[locale]}
+                      </span>
                     </div>
                   </th>
                 );

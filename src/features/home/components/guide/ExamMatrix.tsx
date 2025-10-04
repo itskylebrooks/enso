@@ -138,8 +138,14 @@ export const ExamMatrix = ({ locale, copy, isDark, onCellClick }: ExamMatrixProp
                     }`}
                     style={{ minWidth: '48px', width: '48px', height: '200px' }}
                   >
-                    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 origin-center -rotate-90 whitespace-nowrap">
-                      <span className="block text-center leading-tight">{col.label[locale]}</span>
+                    {/* Vertical header anchored to the bottom-left using writing-mode so it stays inside the cell */}
+                    <div className="absolute inset-0 flex items-end justify-center px-1 py-2">
+                      <span
+                        style={{ writingMode: 'vertical-rl', textOrientation: 'mixed', transform: 'rotate(180deg) translateY(4px)' }}
+                        className="leading-tight"
+                      >
+                        {col.label[locale]}
+                      </span>
                     </div>
                   </th>
                 );
