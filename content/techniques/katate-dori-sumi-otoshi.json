@@ -1,0 +1,196 @@
+{
+  "id": "t-smo-katatedori",
+  "slug": "katate-dori-sumi-otoshi",
+  "name": {
+    "en": "Katate-dori Sumi-otoshi",
+    "de": "Katate-dori Sumi-otoshi"
+  },
+  "jp": "隅落とし",
+  "category": "throw",
+  "attack": "katate-dori",
+  "weapon": "empty-hand",
+  "level": "dan1",
+  "summary": {
+    "en": "Corner drop from a single-hand grab. Connect at uke’s wrist–elbow, move to the dead spot behind them, lower your center (often to a knee), and draw a diagonal ‘corner’ line that drops uke with space for ukemi.",
+    "de": "Eckenwurf aus Einhandgriff. Verbindung an Ukes Handgelenk–Ellbogen, in den toten Winkel hinter ihn gehen, das Zentrum senken (oft auf ein Knie) und die diagonale „Ecke“ zeichnen, die Uke mit Platz für Ukemi fallen lässt."
+  },
+  "tags": [
+    "sumi-otoshi",
+    "隅落とし",
+    "throw",
+    "katate-dori",
+    "irimi",
+    "tenkan",
+    "kuzushi"
+  ],
+  "versions": [
+    {
+      "id": "v-standard",
+      "hanmi": "ai-hanmi",
+      "stepsByEntry": {
+        "irimi": {
+          "en": [
+            "Uke grabs same-side at your lead wrist. Keep posture tall, elbows soft, center grounded.",
+            "Turn the seized palm slightly up and step in on a small inside angle, placing your free hand at the crook of uke’s elbow to feel their center.",
+            "Guide the connection toward the far front corner as you pass their shoulder line, shifting them onto the ‘dead spot’ behind their lead.",
+            "Lower your center—often settling to one knee—to increase leverage while your hips, not your arms, draw the diagonal drop.",
+            "Finish the corner line down-and-away, giving a clear lane for ukemi and maintaining zanshin."
+          ],
+          "de": [
+            "Uke greift gleichseitig an dein vorderes Handgelenk. Haltung aufrecht, Ellbogen weich, Zentrum geerdet.",
+            "Drehe die gefasste Hand leicht nach oben und tritt mit kleinem Innenwinkel ein; die freie Hand legt sich an Ukes Ellbogenbeuge, um sein Zentrum zu spüren.",
+            "Führe die Verbindung zur fernen vorderen Ecke, während du über seine Schulterlinie hinausgehst und ihn in den toten Winkel hinter seinem Stand bringst.",
+            "Senke dein Zentrum – oft bis auf ein Knie – für mehr Hebel; die Hüfte, nicht die Arme, zeichnet die diagonale Senkung.",
+            "Vollende die Ecklinie abwärts–weg, gib eine klare Ukemi-Bahn und bewahre Zanshin."
+          ]
+        },
+        "tenkan": {
+          "en": [
+            "Receive the grab with a heavy elbow and small palm-up spiral.",
+            "Turn (tenkan) off the line to open uke’s posture without yanking.",
+            "As you finish the pivot, place your free hand at the inside elbow and lead uke slightly forward–outward.",
+            "Let the hips settle and trace the diagonal drop toward the corner; keep uke’s elbow near your ribs.",
+            "Release at the edge of the corner with safe space for ukemi."
+          ],
+          "de": [
+            "Nimm den Griff mit schwerem Ellbogen und kleiner Aufwärtsspirale an.",
+            "Drehe (Tenkan) aus der Linie, öffne Ukes Haltung ohne zu reißen.",
+            "Lege beim Abschluss der Drehung die freie Hand an die Ellbogeninnenseite und führe Uke leicht vor–außen.",
+            "Lass die Hüfte sinken und zeichne die diagonale Senkung in die Ecke; Ukes Ellbogen bleibt körpernah.",
+            "Am Ende der Ecke lösen und Platz für sicheres Ukemi lassen."
+          ]
+        },
+        "media": {
+          "irimi": [
+            {
+              "type": "youtube",
+              "url": "https://www.youtube.com/embed/sx0FTUA5N2g?si=RqNgHhv7G_kKuOMY"
+            }
+          ],
+          "tenkan": []
+        }
+      },
+      "uke": {
+        "role": {
+          "en": "Offer a steady same-side wrist grab without clamping. Move your feet with the lead, keep the spine long, and receive the diagonal drop with soft knees and safe ukemi.",
+          "de": "Gib einen ruhigen gleichseitigen Handgelenkgriff ohne Klemmen. Gehe mit der Führung mit, Wirbelsäule lang, und nimm die diagonale Senkung mit weichen Knien und sicherem Ukemi an."
+        },
+        "notes": {
+          "en": [
+            "Allow palm-up rotation; don’t chase the hand.",
+            "Turn the torso with the lead to protect the shoulder.",
+            "Follow the diagonal path—head and shoulder travel together.",
+            "Prepare for a forward roll or side fall depending on angle and space."
+          ],
+          "de": [
+            "Handflächendrehung zulassen; der Hand nicht hinterherjagen.",
+            "Rumpf mit der Führung drehen, um die Schulter zu schützen.",
+            "Der Diagonale folgen – Kopf und Schulter reisen gemeinsam.",
+            "Je nach Winkel/Raum Vorwärtsrolle oder Seitfall vorbereiten."
+          ]
+        }
+      },
+      "commonMistakes": {
+        "en": [
+          "Yanking straight down instead of leading first to the far corner.",
+          "Pulling with the arms instead of dropping from the hips.",
+          "Failing to step to the dead spot and colliding on the line.",
+          "Collapsing onto the knee rather than settling the whole center.",
+          "Crowding uke and removing the ukemi lane."
+        ],
+        "de": [
+          "Gerade nach unten reißen statt erst in die ferne Ecke zu führen.",
+          "Mit den Armen ziehen statt aus der Hüfte zu senken.",
+          "Nicht in den toten Winkel gehen und auf der Linie kollidieren.",
+          "Aufs Knie „zusammenfallen“ statt das Zentrum zu senken.",
+          "Uke bedrängen und die Ukemi-Bahn nehmen."
+        ]
+      },
+      "context": {
+        "en": "Sumi-otoshi is a direct ‘corner drop’ that uses kuzushi, timing, and centered movement rather than force. Otoshi throws are hand-led but hip-driven; the goal is to draw a diagonal that empties uke’s corner while you stay balanced and give space for ukemi.",
+        "de": "Sumi-otoshi ist ein direkter „Eckenwurf“, der auf Kuzushi, Timing und zentrierter Bewegung statt Kraft beruht. Otoshi-Würfe werden mit den Händen geführt, aber von der Hüfte angetrieben; die Diagonale leert Ukes Ecke, während du balanciert bleibst und Raum für Ukemi gibst."
+      }
+    },
+    {
+      "id": "v-standard",
+      "hanmi": "gyaku-hanmi",
+      "stepsByEntry": {
+        "irimi": {
+          "en": [
+            "Uke grabs cross-hand. Open a small inside angle with palm-up rotation; keep your elbow heavy.",
+            "Pass slightly beyond the shoulder line and connect at the inside elbow to feel uke’s center.",
+            "Shift uke into the rear–outer corner (sumi) by stepping your rear foot up as your hips lower.",
+            "Draw the diagonal corner drop from the hips; arms direct but do not pull.",
+            "Release into clear space for ukemi and reset posture."
+          ],
+          "de": [
+            "Uke greift überkreuz. Öffne mit Aufwärtsdrehung einen kleinen Innenwinkel; Ellbogen bleibt schwer.",
+            "Gehe leicht über die Schulterlinie und verbinde dich an der Ellbogeninnenseite, um Ukes Zentrum zu spüren.",
+            "Verschiebe Uke in die hintere–äußere Ecke (Sumi), indem du den hinteren Fuß nachziehst und die Hüfte senkst.",
+            "Zeichne den diagonalen Eckenwurf aus der Hüfte; die Arme lenken, ziehen aber nicht.",
+            "Löse in freien Raum für Ukemi und richte die Haltung aus."
+          ]
+        },
+        "tenkan": {
+          "en": [
+            "Receive the cross-hand grip, then tenkan to create the outside angle.",
+            "Keep uke extended through your pivot; don’t let the seized arm drift away.",
+            "Face the far corner with your center and settle your hips.",
+            "Cut the diagonal drop, guiding—not forcing—the descent.",
+            "Finish with zanshin."
+          ],
+          "de": [
+            "Nimm den Überkreuz-Griff an und erzeuge mit Tenkan den Außenwinkel.",
+            "Halte Uke über die Drehung in der Länge; den gefassten Arm nicht wegdriften lassen.",
+            "Richte dein Zentrum zur fernen Ecke und senke die Hüfte.",
+            "Schneide die diagonale Senkung, führe statt zu zwingen.",
+            "Mit Zanshin beenden."
+          ]
+        },
+        "media": {
+          "irimi": [
+            {
+              "type": "youtube",
+              "url": "https://www.youtube.com/embed/ZGOtPXAPYx0?si=OR7Fr79jjPjh15LR"
+            }
+          ],
+          "tenkan": []
+        }
+      },
+      "uke": {
+        "role": {
+          "en": "Commit to the grip without clamping. As nage changes angle, move your feet and keep the shoulder soft. Receive diagonally with safe ukemi.",
+          "de": "Engagiert greifen ohne zu klemmen. Wenn Nage den Winkel ändert, Füße mitbewegen und Schulter weich halten. Diagonal mit sicherem Ukemi aufnehmen."
+        },
+        "notes": {
+          "en": [
+            "Avoid locking the shoulder; turn the torso with the lead.",
+            "Follow the diagonal—don’t plant your feet.",
+            "Protect the head with the free hand during the fall."
+          ],
+          "de": [
+            "Schulter nicht blockieren; Rumpf mit der Führung drehen.",
+            "Der Diagonale folgen – Füße nicht festkleben.",
+            "Kopf mit der freien Hand beim Fallen schützen."
+          ]
+        }
+      },
+      "commonMistakes": {
+        "en": [
+          "Entering head-on without first changing angle.",
+          "Letting uke’s elbow float and losing axis control.",
+          "Driving straight down instead of drawing the corner."
+        ],
+        "de": [
+          "Frontal eintreten ohne Winkelwechsel.",
+          "Ukes Ellbogen wegdriften lassen und Achsenkontrolle verlieren.",
+          "Gerade nach unten drücken statt die Ecke zu zeichnen."
+        ]
+      },
+      "context": {
+        "en": "Cross-hand grip closes your front; create angle first, then draw the far-corner line. The throw is the diagonal path, not a wrist lock.",
+        "de": "Der Überkreuz-Griff verschließt die Front; zuerst den Winkel schaffen, dann die Linie in die ferne Ecke zeichnen. Der Wurf ist die Diagonale, kein Handgelenkshebel."
+      }
+    }
+  ]
+}
