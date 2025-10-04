@@ -122,7 +122,8 @@ const parseLocation = (
       'tenkan-ura': 'tenkan',
     };
     const finalSlug = slug && (slugRedirects[slug] || slug);
-    return { route: 'glossary', slug: finalSlug };
+    const fallbackRoute = state?.route ?? 'glossary';
+    return { route: fallbackRoute, slug: finalSlug };
   }
 
   if (pathname === '/bookmarks') {
@@ -573,16 +574,20 @@ export default function App(): ReactElement {
     [db.progress, currentTechnique],
   );
 
+  const currentGlossaryTerm = useMemo(
+    () => (activeSlug ? glossaryTerms.find((term) => term.slug === activeSlug) ?? null : null),
+    [glossaryTerms, activeSlug],
+  );
+
   const currentGlossaryProgress = useMemo(() => {
-    if (!activeSlug || route !== 'glossary') return null;
-    // For glossary, activeSlug represents the glossary term slug/id
+    if (!activeSlug || !currentGlossaryTerm) return null;
     return db.glossaryProgress.find((entry) => entry.termId === activeSlug) ?? null;
-  }, [db.glossaryProgress, activeSlug, route]);
+  }, [db.glossaryProgress, activeSlug, currentGlossaryTerm]);
 
   const glossaryCollectionOptions = useMemo(() => {
-    if (!activeSlug || route !== 'glossary') return [];
+    if (!activeSlug || !currentGlossaryTerm) return [];
     return getGlossaryCollectionOptions(db.collections, db.glossaryBookmarkCollections, activeSlug);
-  }, [db.collections, db.glossaryBookmarkCollections, activeSlug, route]);
+  }, [db.collections, db.glossaryBookmarkCollections, activeSlug, currentGlossaryTerm]);
 
   const updateProgress = (id: string, patch: Partial<Progress>): void => {
     setDB((prev) => {
@@ -880,7 +885,8 @@ export default function App(): ReactElement {
     if (typeof window !== 'undefined') {
       const encodedSlug = encodeURIComponent(finalSlug);
       const glossaryPath = `/glossary/${encodedSlug}`;
-      const state: HistoryState = { route: 'glossary', slug: finalSlug };
+      // Push the current route into history state so the detail page knows where it was opened from
+      const state: HistoryState = { route, slug: finalSlug };
 
       if (window.location.pathname !== glossaryPath) {
         window.history.pushState(state, '', glossaryPath);
@@ -889,7 +895,8 @@ export default function App(): ReactElement {
       }
     }
 
-    setRoute('glossary');
+    // Mirror technique behavior: set active slug but keep `route` unchanged so the header/back label
+    // can still reflect the page the user opened the term from (e.g. bookmarks).
     setActiveSlug(finalSlug);
   };
 
@@ -923,6 +930,19 @@ export default function App(): ReactElement {
       ? copy.backToFeedback
       : copy.backToLibrary;
 
+  const glossaryBackLabel =
+    route === 'bookmarks'
+      ? copy.backToBookmarks
+      : route === 'home'
+      ? copy.backToHome
+      : route === 'about'
+      ? copy.backToAbout
+      : route === 'guide'
+      ? copy.backToGuide
+      : route === 'feedback'
+      ? copy.backToFeedback
+      : copy.backToGlossary;
+
   let mainContent: ReactElement;
 
   if (currentTechnique) {
@@ -941,6 +961,33 @@ export default function App(): ReactElement {
         onRemoveFromCollection={(collectionId) => removeFromCollection(currentTechnique.id, collectionId)}
         onOpenGlossary={openGlossaryTerm}
         onFeedbackClick={() => navigateTo('feedback')}
+      />
+    );
+  } else if (currentGlossaryTerm) {
+    // Render glossary detail when an active glossary term is set, regardless of current route
+    mainContent = (
+      <GlossaryDetailPage
+        slug={activeSlug!}
+        copy={copy}
+        locale={locale}
+        backLabel={glossaryBackLabel}
+        // Back should navigate to the route the user came from (stored in history state) —
+        // when opened from bookmarks the current `route` will still be 'bookmarks', so navigate there.
+        onBack={() => navigateTo(route, { replace: true })}
+        isBookmarked={Boolean(currentGlossaryProgress?.bookmarked)}
+        onToggleBookmark={() => updateGlossaryProgress(activeSlug!, { bookmarked: !currentGlossaryProgress?.bookmarked })}
+        collections={glossaryCollectionOptions}
+        onToggleCollection={(collectionId, nextChecked) => {
+          if (nextChecked) {
+            assignGlossaryToCollection(activeSlug!, collectionId);
+          } else {
+            removeGlossaryFromCollection(activeSlug!, collectionId);
+          }
+        }}
+        onNavigateToGlossaryWithFilter={(category) => {
+          setGlossaryFilters({ category });
+          navigateTo('glossary');
+        }}
       />
     );
   } else if (techniqueNotFound) {
@@ -1068,6 +1115,7 @@ export default function App(): ReactElement {
                 slug={activeSlug}
                 copy={copy}
                 locale={locale}
+                backLabel={glossaryBackLabel}
                 onBack={() => navigateTo('glossary', { replace: true })}
                 isBookmarked={Boolean(currentGlossaryProgress?.bookmarked)}
                 onToggleBookmark={() => updateGlossaryProgress(activeSlug, { bookmarked: !currentGlossaryProgress?.bookmarked })}

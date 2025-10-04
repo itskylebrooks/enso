@@ -24,6 +24,7 @@ type GlossaryDetailPageProps = {
   copy: Copy;
   locale: Locale;
   onBack: () => void;
+  backLabel?: string;
   isBookmarked: boolean;
   onToggleBookmark: () => void;
   collections: CollectionOption[];
@@ -40,6 +41,7 @@ export const GlossaryDetailPage = ({
   copy, 
   locale, 
   onBack, 
+  backLabel,
   isBookmarked, 
   onToggleBookmark, 
   collections, 
@@ -114,7 +116,7 @@ export const GlossaryDetailPage = ({
           onClick={onBack}
           className="text-sm underline"
         >
-          {copy.backToGlossary}
+          {backLabel ?? copy.backToGlossary}
         </button>
       </div>
     );
@@ -138,7 +140,7 @@ export const GlossaryDetailPage = ({
       <div className="flex items-center">
         <a
           href="/"
-          aria-label={copy.backToGlossary}
+          aria-label={backLabel ?? copy.backToGlossary}
           onClick={(event) => {
             event.preventDefault();
             onBack();
@@ -146,7 +148,7 @@ export const GlossaryDetailPage = ({
           className="text-sm text-subtle hover:text-[var(--color-text)] transition flex items-center gap-2"
         >
           <span aria-hidden>←</span>
-          <span>{copy.backToGlossary}</span>
+          <span>{backLabel ?? copy.backToGlossary}</span>
         </a>
       </div>
 
