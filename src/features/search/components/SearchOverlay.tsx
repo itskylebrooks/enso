@@ -1,9 +1,10 @@
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactElement, type KeyboardEvent } from 'react';
 import { motion } from 'motion/react';
 import type { Copy } from '../../../shared/constants/i18n';
-import type { Locale, Technique, GlossaryTerm } from '../../../shared/types';
+import type { Locale, Technique, GlossaryTerm, Progress, GlossaryProgress } from '../../../shared/types';
 import { EmphasizedName } from '../../../shared/components';
-import { SearchIcon } from '@shared/components/ui/icons';
+import { gradeLabel, getGradeStyle } from '@shared/styles/belts';
+import { SearchIcon, BookmarkIcon, BookmarkFilledIcon } from '@shared/components/ui/icons';
 import { useFocusTrap } from '../../../shared/hooks/useFocusTrap';
 import { buildSearchIndex, buildGlossarySearchIndex, matchSearch, normalizeSearchQuery } from '../indexer';
 import { scoreSearchResult, applyTieBreakers, type ScoredSearchResult } from '../scorer';
@@ -18,12 +19,16 @@ type SearchOverlayProps = {
   copy: Copy;
   locale: Locale;
   techniques: Technique[];
+  progress: Progress[];
+  glossaryProgress: GlossaryProgress[];
   onClose: () => void;
   onOpen: (slug: string) => void;
   onOpenGlossary: (slug: string) => void;
+  onToggleTechniqueBookmark?: (techniqueId: string) => void;
+  onToggleGlossaryBookmark?: (termId: string) => void;
 };
 
-export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen, onOpenGlossary }: SearchOverlayProps): ReactElement => {
+export const SearchOverlay = ({ copy, locale, techniques, progress, glossaryProgress, onClose, onOpen, onOpenGlossary, onToggleTechniqueBookmark, onToggleGlossaryBookmark }: SearchOverlayProps): ReactElement => {
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [glossaryTerms, setGlossaryTerms] = useState<GlossaryTerm[]>([]);
@@ -296,7 +301,7 @@ export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen, onOpe
                     }
                   }}
                   onMouseEnter={() => setSelectedIndex(index)}
-                  className="relative flex w-full items-center justify-between gap-4 rounded-xl px-3 py-3 text-left transition-colors z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--color-text)]"
+                  className="relative flex w-full items-baseline justify-between gap-4 rounded-xl px-3 py-3 text-left transition-colors z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--color-text)]"
                   title={result.type === 'technique' ? result.item.name[locale] : result.item.romaji}
                 >
                   <div className="min-w-0 flex-1">
@@ -305,13 +310,9 @@ export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen, onOpe
                         <div className="truncate text-sm font-semibold text-[color:var(--color-text)]">
                           <EmphasizedName name={result.item.name[locale]} />
                         </div>
-                        <div className="mt-1 flex flex-wrap items-center gap-2 text-xs text-subtle">
-                          {result.item.jp && (
-                            <span className="font-medium uppercase tracking-wide text-[0.65rem]">
-                              {result.item.jp}
-                            </span>
-                          )}
-                        </div>
+                          <div className="mt-1 text-xs font-medium text-subtle truncate mb-1">
+                            {result.item.summary?.[locale] ?? result.item.summary?.en}
+                          </div>
                       </>
                     ) : (
                       <>
@@ -319,20 +320,63 @@ export const SearchOverlay = ({ copy, locale, techniques, onClose, onOpen, onOpe
                           <div className="truncate text-sm font-semibold text-[color:var(--color-text)]">
                             {result.item.romaji}
                           </div>
-                          <span className="text-[0.65rem] font-medium text-white bg-blue-600 px-2 py-0.5 rounded-full flex-shrink-0">
-                            GLOSSARY
-                          </span>
                         </div>
                         <div className="text-xs font-medium text-subtle truncate mb-1">
                           {result.item.def[locale] || result.item.def.en}
                         </div>
-                        {result.item.jp && (
-                          <div className="text-xs text-subtle">
-                            <span className="font-medium uppercase tracking-wide text-[0.65rem]">
-                              {result.item.jp}
-                            </span>
-                          </div>
-                        )}
+                        {/* Japanese name intentionally omitted in search results */}
+                      </>
+                    )}
+                  </div>
+                  {/* Right-side label: technique belt or glossary label */}
+                  <div className="flex-shrink-0 ml-3 flex flex-col items-center gap-2">
+                    {result.type === 'technique' ? (
+                      <>
+                        <span
+                          className="text-[0.65rem] font-medium px-2 py-0.5 rounded-full"
+                          style={(() => {
+                            const style = getGradeStyle(result.item.level);
+                            return { backgroundColor: style.backgroundColor, color: style.color };
+                          })()}
+                        >
+                          {gradeLabel(result.item.level, locale)}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onToggleTechniqueBookmark?.(result.item.id);
+                          }}
+                          aria-label={progress.find(p => p.techniqueId === result.item.id && p.bookmarked) ? 'Unbookmark' : 'Bookmark'}
+                          className="p-1 -mt-1"
+                        >
+                          {progress.find(p => p.techniqueId === result.item.id && p.bookmarked) ? (
+                            <BookmarkFilledIcon className="w-4 h-4 text-subtle" />
+                          ) : (
+                            <BookmarkIcon className="w-4 h-4 text-subtle" />
+                          )}
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <span
+                          className="text-[0.65rem] font-medium px-2 py-0.5 rounded-full"
+                          style={{ backgroundColor: '#474747', color: '#FFFFFF' }}
+                        >
+                          Glossary
+                        </span>
+                        <button
+                          type="button"
+                          onClick={(e) => { e.stopPropagation(); onToggleGlossaryBookmark?.(result.item.id); }}
+                          aria-label={glossaryProgress.find(g => g.termId === result.item.id && g.bookmarked) ? 'Unbookmark' : 'Bookmark'}
+                          className="p-1 -mt-1"
+                        >
+                          {glossaryProgress.find(g => g.termId === result.item.id && g.bookmarked) ? (
+                            <BookmarkFilledIcon className="w-4 h-4 text-subtle" />
+                          ) : (
+                            <BookmarkIcon className="w-4 h-4 text-subtle" />
+                          )}
+                        </button>
                       </>
                     )}
                   </div>

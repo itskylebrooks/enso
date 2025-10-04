@@ -54,6 +54,12 @@ export const BookmarkIcon = (props: SVGProps<SVGSVGElement>): ReactElement => (
   </svg>
 );
 
+export const BookmarkFilledIcon = (props: SVGProps<SVGSVGElement>): ReactElement => (
+  <svg {...baseProps} {...props} fill="currentColor" stroke="none" className={['lucide lucide-bookmark-filled-icon', props.className].filter(Boolean).join(' ')}>
+    <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
+  </svg>
+);
+
 export const BookmarkCheckIcon = (props: SVGProps<SVGSVGElement>): ReactElement => (
   <svg {...baseProps} {...props} className={['lucide lucide-bookmark-check-icon', props.className].filter(Boolean).join(' ')}>
     <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2Z" />

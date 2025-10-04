@@ -1151,6 +1151,8 @@ export default function App(): ReactElement {
             copy={copy}
             locale={locale}
             techniques={db.techniques}
+            progress={db.progress}
+            glossaryProgress={db.glossaryProgress}
             onClose={closeSearch}
             onOpen={(slug) => {
               openTechnique(slug);
@@ -1160,6 +1162,8 @@ export default function App(): ReactElement {
               openGlossaryTerm(slug);
               closeSearch();
             }}
+            onToggleTechniqueBookmark={(techniqueId: string) => updateProgress(techniqueId, { bookmarked: !(db.progress.find(p => p.techniqueId === techniqueId)?.bookmarked) })}
+            onToggleGlossaryBookmark={(termId: string) => updateGlossaryProgress(termId, { bookmarked: !(db.glossaryProgress.find(g => g.termId === termId)?.bookmarked) })}
           />
         )}
 
