@@ -227,3 +227,9 @@ button {
 .pill-adaptive:hover {
   background-color: var(--pill-bg-hover);
 }
+
+/* Ensure the top-level header uses pure black in dark mode (override off-black surface)
+   This keeps other surfaces at their current dark-tone while making the header fully black. */
+.dark header.surface {
+  background-color: #000000;
+}
