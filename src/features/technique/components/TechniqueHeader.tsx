@@ -20,7 +20,7 @@ export type CollectionOption = {
   checked: boolean;
 };
 
-export type TagItem = { label: string; kind: 'category' | 'attack' | 'weapon' | 'entry' };
+export type TagItem = { label: string; kind: 'category' | 'stance' | 'attack' | 'weapon' | 'entry' };
 
 export type TechniqueHeaderProps = {
   technique: Technique;
@@ -145,7 +145,8 @@ export const TechniqueHeader = ({
                   }
 
                   // Category tags should use the 'other' / grey palette in glossary
-                  const tagCategory = tag.kind === 'category' ? 'other' : getTagCategory(displayLabel);
+                  // Stance tags should use the 'stance' (green) palette
+                  const tagCategory = tag.kind === 'category' ? 'other' : tag.kind === 'stance' ? 'stance' : getTagCategory(displayLabel);
                   const categoryStyle = getCategoryStyle(tagCategory, isDark);
 
                   return onTagClick ? (

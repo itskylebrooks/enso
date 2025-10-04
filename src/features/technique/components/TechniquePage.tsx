@@ -23,7 +23,7 @@ import { enrichTechniqueWithVariants } from '@shared/constants/variantMapping';
 import { getActiveVariant } from '@features/technique/store';
 import { parseTechniqueVariantParams, buildTechniqueUrlWithVariant } from '@shared/constants/urls';
 
-type TagItem = { label: string; kind: 'category' | 'attack' | 'weapon' | 'entry' };
+type TagItem = { label: string; kind: 'category' | 'stance' | 'attack' | 'weapon' | 'entry' };
 
 const buildTags = (technique: Technique, locale: Locale): TagItem[] => {
   const title = technique.name[locale]?.toLowerCase?.() ?? '';
@@ -50,6 +50,16 @@ const buildTags = (technique: Technique, locale: Locale): TagItem[] => {
 
   // 1) Category
   pushIfValid(getTaxonomyLabel(locale, 'category', technique.category), 'category');
+
+  // 1.5) Stance tags (hanmi) - show available hanmi values if present
+  const hanmiSet = new Set<string>();
+  (technique.versions || []).forEach((v) => {
+    const hanmi = (v as any).hanmi as string | undefined;
+    if (hanmi) hanmiSet.add(hanmi);
+  });
+  ['ai-hanmi', 'gyaku-hanmi'].forEach((h) => {
+    if (hanmiSet.has(h)) pushIfValid(h, 'stance');
+  });
 
   // 2) Attack
   pushIfValid(getTaxonomyLabel(locale, 'attack', technique.attack || ''), 'attack');
