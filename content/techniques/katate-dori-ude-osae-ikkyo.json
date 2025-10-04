@@ -2,8 +2,8 @@
   "id": "t-uds-katatedori",
   "slug": "katate-dori-ude-osae-ikkyo",
   "name": {
-    "en": "Katate-dori Ude Osae (Ikkyo)",
-    "de": "Katate-dori Ude Osae (Ikkyo)"
+    "en": "Katate-dori Ude-osae (Ikkyo)",
+    "de": "Katate-dori Ude-osae (Ikkyo)"
   },
   "jp": "片手取り一教 (腕抑え)",
   "category": "control",
@@ -30,34 +30,48 @@
       "stepsByEntry": {
         "irimi": {
           "en": [
-            "From gyaku-hanmi, uke grabs your left wrist with their right hand.",
-            "Step to your left while executing an atemi with your right hand toward uke's face to create an opening.",
-            "Grasp uke's right elbow from above with your right hand. Simultaneously, step forward with your left foot and pivot your hips to the right to unbalance uke.",
-            "Continue the forward motion, extending through uke's arm and cutting downward to bring them to the mat.",
-            "Transition smoothly to the ground, applying pressure on the elbow joint to finish the pin."
+            "From gyaku-hanmi (cross-stance), uke grabs your forward wrist.",
+            "Perform an evasive two-step movement (Doppelschritt) by stepping back with your front foot, then your rear foot, to create space.",
+            "During this movement, use your free hand to take control of uke's grabbing wrist, effectively changing hands (te-hodoki). Your previously grabbed hand is now free.",
+            "Now in a position analogous to ai-hanmi, step forward (irimi) with your lead foot, using your now-free hand to control uke's elbow from above.",
+            "Extend uke's arm forward and cut downward to break their balance and guide them to the mat for the pin."
           ],
           "de": [
-            "Aus Gyaku-Hanmi greift Uke dein linkes Handgelenk mit seiner rechten Hand.",
-            "Tritt nach links, während du mit der rechten Hand ein Atemi in Richtung von Ukes Gesicht ausführst, um eine Öffnung zu schaffen.",
-            "Greife Ukes rechten Ellbogen von oben mit deiner rechten Hand. Tritt gleichzeitig mit dem linken Fuß vor und drehe deine Hüften nach rechts, um Uke aus dem Gleichgewicht zu bringen.",
-            "Setze die Vorwärtsbewegung fort, strecke dich durch Ukes Arm und schneide nach unten, um ihn zu Boden zu bringen.",
-            "Gehe fließend zu Boden über und übe Druck auf das Ellbogengelenk aus, um den Festhalter abzuschließen."
+            "Aus Gyaku-Hanmi (Kreuzstellung) greift Uke dein vorderes Handgelenk.",
+            "Führe eine ausweichende Doppelschritt-Bewegung aus, indem du zuerst mit dem vorderen, dann mit dem hinteren Fuß zurücktrittst, um Raum zu schaffen.",
+            "Nutze während dieser Bewegung deine freie Hand, um die Kontrolle über Ukes greifendes Handgelenk zu übernehmen und so einen Handwechsel (te-hodoki) durchzuführen. Deine zuvor ergriffene Hand ist nun frei.",
+            "Jetzt in einer Position analog zu Ai-Hanmi, tritt vor (Irimi) und kontrolliere mit deiner nun freien Hand Ukes Ellbogen von oben.",
+            "Strecke Ukes Arm nach vorne und schneide abwärts, um sein Gleichgewicht zu brechen und ihn für den Festhalter zu Boden zu führen."
           ]
         },
         "tenkan": {
           "en": [
-            "From gyaku-hanmi, as uke grabs your wrist, blend with a tenkan (turning) movement away from the grabbing side.",
-            "As you turn, raise both hands in a large circle, using your free hand to control uke's elbow from underneath.",
-            "Continue the pivot to fully unbalance uke, keeping their arm extended.",
-            "Step forward out of the turn, cutting uke's controlled arm downward in an arc.",
-            "Guide uke to the mat and apply the pin, ensuring their arm is controlled at a right angle to their body."
+            "From gyaku-hanmi, as uke grabs your wrist, initiate a tenkan (turning) movement.",
+            "As you pivot, bring your grabbed hand up in an arc and use your free hand to take over the grip on uke's wrist, performing a hand change.",
+            "Your now-free hand immediately controls uke's elbow from underneath, establishing full control as you complete the turn.",
+            "Continue leading uke's momentum in a circle, keeping them unbalanced.",
+            "Step forward out of the turn, cut the arm downward, guide uke to the mat, and apply the pin."
           ],
           "de": [
-            "Aus Gyaku-Hanmi, während Uke dein Handgelenk greift, verschmelze mit einer Tenkan-Bewegung (Drehung) von der Greifseite weg.",
-            "Hebe bei der Drehung beide Hände in einem großen Kreis an und kontrolliere mit der freien Hand Ukes Ellbogen von unten.",
-            "Setze die Drehung fort, um Uke vollständig aus dem Gleichgewicht zu bringen, und halte seinen Arm gestreckt.",
-            "Tritt aus der Drehung nach vorne und schneide Ukes kontrollierten Arm in einem Bogen nach unten.",
-            "Führe Uke zu Boden und setze den Festhalter an, wobei du sicherstellst, dass sein Arm im rechten Winkel zu seinem Körper kontrolliert wird."
+            "Aus Gyaku-Hanmi, während Uke dein Handgelenk greift, beginne eine Tenkan-Bewegung (Drehung).",
+            "Hebe beim Drehen deine gegriffene Hand in einem Bogen an und übernimm mit deiner freien Hand den Griff an Ukes Handgelenk, um einen Handwechsel durchzuführen.",
+            "Deine nun freie Hand kontrolliert sofort Ukes Ellbogen von unten und stellt so die volle Kontrolle her, während du die Drehung beendest.",
+            "Führe Ukes Schwung weiter im Kreis und halte ihn aus dem Gleichgewicht.",
+            "Tritt aus der Drehung nach vorne, schneide den Arm nach unten, führe Uke zu Boden und setze den Festhalter an."
+          ]
+        },
+        "media": {
+          "tenkan": [
+            {
+              "type": "youtube",
+              "url": "https://www.youtube.com/embed/CVA45Joe7Ks?si=2oleiNWePmIqlMC4"
+            }
+          ],
+          "irimi": [
+            {
+              "type": "youtube",
+              "url": "https://www.youtube.com/embed/CVA45Joe7Ks?si=2oleiNWePmIqlMC4"
+            }
           ]
         }
       },
@@ -69,33 +83,33 @@
         "notes": {
           "en": [
             "Do not stiffen the arm or pull back against the movement.",
-            "Follow the circular lead to protect your shoulder joint.",
+            "Follow the initial evasive steps and the circular lead to protect your shoulder.",
             "Prepare for a forward roll as your balance is taken."
           ],
           "de": [
             "Den Arm nicht versteifen oder gegen die Bewegung zurückziehen.",
-            "Folge der kreisförmigen Führung, um dein Schultergelenk zu schützen.",
+            "Folge den ausweichenden Schritten und der kreisförmigen Führung, um dein Schultergelenk zu schützen.",
             "Bereite dich auf eine Vorwärtsrolle vor, sobald dein Gleichgewicht gebrochen wird."
           ]
         }
       },
       "commonMistakes": {
         "en": [
-          "Using arm strength instead of hip and body movement to force the technique.",
-          "Failing to break uke's balance (kuzushi) before attempting the takedown.",
-          "Losing connection by allowing space between your center and uke's arm.",
+          "Failing to create enough space with the initial steps, making the hand change difficult.",
+          "Using arm strength instead of body movement for the hand change and the takedown.",
+          "Losing connection with uke's center during the transition.",
           "Applying the pin incorrectly, causing pain without effective control."
         ],
         "de": [
-          "Armkraft anstelle von Hüft- und Körperbewegung einsetzen, um die Technik zu erzwingen.",
-          "Das Gleichgewicht von Uke (Kuzushi) nicht brechen, bevor der Wurf versucht wird.",
-          "Die Verbindung verlieren, indem Raum zwischen deinem Zentrum und Ukes Arm entsteht.",
+          "Nicht genug Raum mit den ersten Schritten schaffen, was den Handwechsel erschwert.",
+          "Armkraft anstelle von Körperbewegung für den Handwechsel und das Zu-Boden-Bringen einsetzen.",
+          "Die Verbindung zu Ukes Zentrum während des Übergangs verlieren.",
           "Den Festhalter falsch anwenden, was Schmerz ohne wirksame Kontrolle verursacht."
         ]
       },
       "context": {
-        "en": "Ikkyo is a foundational technique that teaches the core principles of unbalancing, controlling the center, and blending. The gyaku-hanmi variation requires a clear change of angle to resolve the initial cross-body tension.",
-        "de": "Ikkyo ist eine grundlegende Technik, die die Kernprinzipien des Gleichgewichtsbrechens, der Zentrumskontrolle und des Verschmelzens lehrt. Die Gyaku-Hanmi-Variante erfordert eine deutliche Winkeländerung, um die anfängliche Überkreuz-Spannung aufzulösen."
+        "en": "Ikkyo is a foundational technique that teaches core principles. The gyaku-hanmi variation is crucial for learning how to manage a cross-hand grab by creating space and changing the grip to regain a positional advantage before applying the control.",
+        "de": "Ikkyo ist eine grundlegende Technik, die Kernprinzipien lehrt. Die Gyaku-Hanmi-Variante ist entscheidend, um zu lernen, wie man einen Überkreuzgriff handhabt, indem man Raum schafft und den Griff wechselt, um vor dem Ansetzen der Kontrolle einen positionellen Vorteil zu erlangen."
       }
     },
     {
