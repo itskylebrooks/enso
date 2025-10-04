@@ -1,0 +1,198 @@
+{
+  "id": "t-irn-katatedori",
+  "slug": "katate-dori-irimi-nage",
+  "name": {
+    "en": "Katate-dori Irimi-nage",
+    "de": "Katate-dori Irimi-nage"
+  },
+  "jp": "入身投げ",
+  "category": "throw",
+  "attack": "katate-dori",
+  "weapon": "empty-hand",
+  "level": "kyu4",
+  "summary": {
+    "en": "Entering throw from a single-hand wrist grab. Turn the seized palm up, enter decisively to the inside, align shoulder and head in one arc, and project forward with clear space for ukemi.",
+    "de": "Einstiegswurf aus Einhandgriff. Gefasste Handfläche öffnen, entschlossen auf der Innenseite eintreten, Schulter und Kopf in einem Bogen ausrichten und vorwärts projizieren – mit freier Bahn für Ukemi."
+  },
+  "tags": [
+    "irimi-nage",
+    "入身投げ",
+    "throw",
+    "katate-dori",
+    "irimi"
+  ],
+  "versions": [
+    {
+      "id": "v-standard",
+      "hanmi": "ai-hanmi",
+      "stepsByEntry": {
+        "irimi": {
+          "en": [
+            "Stand in ai-hanmi. Uke grabs your lead wrist (katate-dori). Keep posture tall, shoulders soft, center calm.",
+            "Turn the seized palm upward and step straight in on the inside to uke’s right side; extend the free hand for a subtle atemi to fix posture.",
+            "With the free hand, take uke’s grabbing wrist from underneath and peel the grip as you continue entering.",
+            "Slide deeper so your chest nears uke’s shoulder; guide their arm past the back of the neck, keeping their elbow close to your body.",
+            "Step forward with the right foot and rotate the hips; cut your forearm across the front of uke’s face/neck so head and shoulders align in one arc.",
+            "Project forward with irimi-nage and release into clear space, maintaining zanshin and a lane for safe ukemi."
+          ],
+          "de": [
+            "Stehe in Ai-Hanmi. Uke greift dein vorderes Handgelenk (Katate-dori). Haltung aufrecht, Schultern weich, Zentrum ruhig.",
+            "Drehe die gefasste Handfläche nach oben und tritt auf der Innenseite entschlossen zu Ukes rechter Seite ein; setze mit der freien Hand einen dezenten Atemi zur Ausrichtung.",
+            "Greife mit der freien Hand von unten an Ukes greifendes Handgelenk und löse den Griff, während du weiter eintauchst.",
+            "Gleite näher heran, bis deine Brust an Ukes Schulter kommt; führe seinen Arm hinter den Nacken, den Ellbogen körpernah.",
+            "Mache mit dem rechten Fuß einen Schritt vor und rotiere aus der Hüfte; führe deinen Unterarm vor Ukes Gesicht/Hals, sodass Kopf und Schulter in einem Bogen ausgerichtet sind.",
+            "Projiziere vorwärts mit Irimi-nage und löse in den freien Raum, Zanshin und eine klare Ukemi-Bahn bewahrend."
+          ]
+        },
+        "media": {
+          "irimi": [
+            {
+              "type": "youtube",
+              "url": "https://www.youtube.com/embed/WRBlpx3aneY?si=k26_-zy94HzOlkDH"
+            }
+          ]
+        }
+      },
+      "uke": {
+        "role": {
+          "en": "Offer a committed same-side wrist grab without clamping. As nage enters on the inside, move your feet with the lead, keep posture upright, and take safe ukemi when the forearm crosses the face/neck line.",
+          "de": "Gib einen engagierten gleichseitigen Handgelenkgriff ohne zu klemmen. Wenn Nage auf der Innenseite eintritt, bewege die Füße mit, bleibe aufrecht und nimm sicheres Ukemi, sobald der Unterarm die Gesichts-/Halslinie kreuzt."
+        },
+        "notes": {
+          "en": [
+            "Allow the palm-up rotation; don’t chase the hand or clamp with the thumb.",
+            "Keep the spine long and step with your center as nage enters the inside lane.",
+            "When the forearm comes across, tuck the chin and prepare for a forward roll or side fall depending on angle and space."
+          ],
+          "de": [
+            "Drehung zur Handfläche oben zulassen; nicht mit dem Daumen klemmen und der Hand nicht hinterherjagen.",
+            "Wirbelsäule lang halten und mit dem Zentrum mitgehen, wenn Nage die Innenbahn nimmt.",
+            "Wenn der Unterarm herüberkommt, Kinn leicht einziehen und je nach Winkel/Platz Vorwärtsrolle oder Seitfall vorbereiten."
+          ]
+        }
+      },
+      "keyPoints": {
+        "en": [
+          "Inside entry (irimi): palm-up release plus forward step; use a subtle atemi to fix uke’s posture.",
+          "Link wrist to head/neck line; keep uke’s elbow close to your ribs so the whole body turns as one.",
+          "Hip-led projection: the forearm is the blade but the hips drive the throw.",
+          "Stay vertical and leave a clear lane for ukemi.",
+          "Release with zanshin, ready for follow-up."
+        ],
+        "de": [
+          "Inneneinstieg (Irimi): Handfläche öffnen und vorwärts eintreten; ein dezenter Atemi richtet Ukes Haltung aus.",
+          "Handgelenk mit Kopf-/Halslinie verbinden; Ukes Ellbogen körpernah führen, damit der Körper als Einheit dreht.",
+          "Hüftgeführte Projektion: der Unterarm ist das ‚Schwert‘, aber die Hüfte wirft.",
+          "Aufrecht bleiben und eine klare Ukemi-Bahn lassen.",
+          "Mit Zanshin lösen und bereit für die Folgetechnik bleiben."
+        ]
+      },
+      "commonMistakes": {
+        "en": [
+          "Trying to push the neck with arm strength instead of moving from hips and feet.",
+          "Entering straight down the center without a slight off-line angle, risking collision.",
+          "Letting uke’s elbow drift away from your torso and losing head–shoulder alignment.",
+          "Throwing before true kuzushi or before the grip is peeled.",
+          "Crowding uke and giving no room for ukemi."
+        ],
+        "de": [
+          "Den Hals mit Armkraft drücken statt aus Hüfte und Füßen zu arbeiten.",
+          "Gerade auf der Mittellinie eintreten ohne kleine Ausweichlinie – Kollisionsgefahr.",
+          "Ukes Ellbogen vom Körper wegdriften lassen und dadurch die Kopf–Schulter-Ausrichtung verlieren.",
+          "Werfen vor echtem Kuzushi oder bevor der Griff gelöst ist.",
+          "Uke bedrängen und keinen Platz für Ukemi lassen."
+        ]
+      },
+      "context": {
+        "en": "In ai-hanmi the same-side grab opens the inside door once the palm turns up. Use irimi when the lane is clear and posture is upright; it favors a direct forward arc and quick resolution.",
+        "de": "Im Ai-Hanmi öffnet der gleichseitige Griff nach der Handflächen-Drehung die Innenbahn. Nutze Irimi, wenn die Bahn frei ist und die Haltung aufgerichtet bleibt; es begünstigt einen direkten Vorwärtsbogen und eine schnelle Auflösung."
+      }
+    },
+    {
+      "id": "v-standard",
+      "hanmi": "gyaku-hanmi",
+      "stepsByEntry": {
+        "irimi": {
+          "en": [
+            "Stand in gyaku-hanmi. Uke grabs your lead wrist cross-hand. Keep the spine tall and your center grounded.",
+            "Turn the captured palm upward and take a small inside angle to uke’s right, keeping your elbow heavy as you begin to enter.",
+            "With the free hand, take uke’s grabbing wrist from underneath and free the grip while you deliver a forward atemi to their face to complete kuzushi.",
+            "Slide in close to uke’s shoulder and thread their arm behind the back of the neck; place your body slightly past their shoulder line.",
+            "Step through with the right foot, rotate the hips, and draw your forearm down along the jaw/neck so head and shoulders align in one arc.",
+            "Cut forward and down to project the irimi-nage, guiding uke into a safe fall and maintaining zanshin."
+          ],
+          "de": [
+            "Stehe in Gyaku-Hanmi. Uke greift dein vorderes Handgelenk überkreuz. Wirbelsäule lang, Zentrum geerdet.",
+            "Drehe die gefasste Handfläche nach oben und nimm einen kleinen Innenwinkel zu Ukes rechter Seite, Ellbogen schwer – Beginn des Eintretens.",
+            "Greife mit der freien Hand von unten an Ukes greifendes Handgelenk und löse den Griff, während du mit einem Vorwärts-Atemi ins Gesicht die Kuzushi vollendest.",
+            "Gleite dicht an Ukes Schulter und fädle seinen Arm hinter den Nacken; bringe deinen Körper leicht über seine Schulterlinie hinaus.",
+            "Tritt mit dem rechten Fuß durch, rotiere aus der Hüfte und führe deinen Unterarm entlang von Kiefer/Hals nach unten, sodass Kopf und Schulter in einem Bogen ausgerichtet sind.",
+            "Schneide vorwärts–abwärts und projiziere Irimi-nage, leite Uke in ein sicheres Ukemi und bewahre Zanshin."
+          ]
+        },
+        "media": {
+          "irimi": [
+            {
+              "type": "youtube",
+              "url": "https://www.youtube.com/embed/HCLG7bHvnxE?si=EffmZ4KzYi8cS_tT"
+            }
+          ]
+        }
+      },
+      "uke": {
+        "role": {
+          "en": "Offer a committed cross-hand grab without clamping. As nage takes the inside angle, move your feet, keep the shoulder soft, and take safe ukemi when the forearm draws your head in the arc.",
+          "de": "Gib einen engagierten Überkreuz-Griff ohne zu klemmen. Wenn Nage den Innenwinkel nimmt, bewege die Füße mit, halte die Schulter weich und nimm sicheres Ukemi, wenn der Unterarm den Kopf in den Bogen führt."
+        },
+        "notes": {
+          "en": [
+            "Allow the palm-up rotation; don’t lock the shoulder or clamp with the thumb.",
+            "Follow the inside step to your right so the elbow and torso turn together.",
+            "As your arm is threaded behind the neck, protect the jaw and be ready for a side fall or forward roll."
+          ],
+          "de": [
+            "Drehung zur Handfläche oben zulassen; Schulter nicht blockieren und nicht mit dem Daumen klemmen.",
+            "Dem Innenschritt nach rechts folgen, sodass Ellbogen und Rumpf gemeinsam drehen.",
+            "Wenn der Arm hinter den Nacken geführt wird, Kiefer schützen und für Seitfall oder Vorwärtsrolle bereit sein."
+          ]
+        }
+      },
+      "keyPoints": {
+        "en": [
+          "Create angle for the cross-hand grip: a small inside step before entering deep.",
+          "Peel the grip from below while using atemi to complete kuzushi.",
+          "Place your body slightly past uke’s shoulder line and keep their elbow close as you thread the arm behind the neck.",
+          "Rotate the hips to drive the forearm cut; project forward with a clear ukemi lane.",
+          "Finish with relaxed posture and steady zanshin."
+        ],
+        "de": [
+          "Winkel für den Überkreuz-Griff schaffen: kleiner Innenschritt vor dem tiefen Eintritt.",
+          "Den Griff von unten lösen und mit Atemi die Kuzushi vollenden.",
+          "Körper leicht über Ukes Schulterlinie bringen und den Ellbogen körpernah halten, während der Arm hinter den Nacken geführt wird.",
+          "Mit der Hüfte rotieren, um den Unterarmschnitt zu treiben; vorwärts projizieren und eine klare Ukemi-Bahn lassen.",
+          "Mit entspannter Haltung und ruhigem Zanshin beenden."
+        ]
+      },
+      "commonMistakes": {
+        "en": [
+          "Entering without first changing the angle, leading to head-on collision.",
+          "Overreaching the atemi and losing body connection.",
+          "Failing to get past the shoulder line and ending in a clinch.",
+          "Forcing the neck with arms instead of rotating from the hips.",
+          "Neglecting control of uke’s elbow."
+        ],
+        "de": [
+          "Eintreten ohne vorherigen Winkelwechsel – Kollision auf der Mittellinie.",
+          "Atemi überstrecken und die Körperverbindung verlieren.",
+          "Nicht über die Schulterlinie hinauskommen und in einer Klammer enden.",
+          "Den Hals mit Armkraft erzwingen statt aus der Hüfte zu rotieren.",
+          "Die Kontrolle über Ukes Ellbogen vernachlässigen."
+        ]
+      },
+      "context": {
+        "en": "In gyaku-hanmi the cross-hand grab closes your front; irimi requires a sharper inside angle and often a decisive atemi to open posture. Choose it when you can access the inside early; otherwise pivoting entries (tenkan) can create the angle first.",
+        "de": "Im Gyaku-Hanmi verschließt der Überkreuz-Griff die Front; Irimi benötigt einen klaren Innenwinkel und oft einen entschiedenen Atemi zur Öffnung der Haltung. Wähle es, wenn du früh die Innenbahn erreichst; ansonsten schafft Tenkan zunächst den benötigten Winkel."
+      }
+    }
+  ]
+}
