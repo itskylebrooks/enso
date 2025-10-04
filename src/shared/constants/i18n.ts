@@ -130,8 +130,8 @@ export const messages = {
     homeHistoricalNotePart2: 'It blends martial tradition with a philosophy of harmony, redirecting force rather than opposing it.',
     homeDojoCreditTitle: 'With Gratitude',
     homeDojoCreditSubtitle: 'With gratitude:',
-  homeDojoCreditPart1: 'To my teachers Joachim Eiselen and Markus Möller, my warm community at WSV (Walddörfer Sportverein), and the BSV (Bramfelder Sportverein), who always welcome me kindly as a guest, especially Karen and Stefan Jakuszeit, and Alfred Haase.',
-    homeDojoCreditPart2: 'Thank you all for inspiring me, for helping me enjoy every training, and for reminding me how Aikidō lets us forget everything else by focusing on harmony.',
+    homeDojoCreditPart1: 'To my teachers Joachim Eiselen and Markus Möller, my warm community at WSV (Walddörfer Sportverein), and BSV (Bramfelder Sportverein), who always welcome me kindly as a guest — especially Karen and Stefan Jakuszeit, and Alfred Haase.',
+    homeDojoCreditPart2: 'Thank you for inspiring me, for helping me enjoy every training, and for reminding me how Aikidō lets us leave everything else behind by focusing on harmony.',
     openAriaPrefix: 'Open',
     // Feedback
     feedback: 'Feedback',
@@ -299,8 +299,8 @@ export const messages = {
     homeHistoricalNotePart2: 'Es verbindet Kampftradition mit einer Philosophie der Harmonie und leitet Kraft um, anstatt sie zu bekämpfen.',
     homeDojoCreditTitle: 'Mit Dankbarkeit',
     homeDojoCreditSubtitle: 'Mit Dankbarkeit:',
-    homeDojoCreditPart1: 'An meine Lehrer Joachim Eiselen und Markus Möller, meine warme Gemeinschaft beim WSV (Walddörfer Sportverein) und dem BSV (Bramfelder Sportverein), die mich immer herzlich als Gast aufnehmen, besonders Karen und Stefan Jakuszeit sowie Alfred Haase.',
-    homeDojoCreditPart2: 'Danke euch allen dafür, dass ihr mich inspiriert, mir dabei helft, jedes Training zu genießen und mich daran erinnert, wie Aikidō uns alles andere vergessen lässt, indem wir uns auf Harmonie konzentrieren.',
+    homeDojoCreditPart1: 'Meinen Lehrern Joachim Eiselen und Markus Möller, meiner herzlichen Gemeinschaft im WSV (Walddörfer Sportverein) und dem BSV (Bramfelder Sportverein), die mich immer freundlich als Gast aufnehmen – besonders Karen und Stefan Jakuszeit sowie Alfred Haase.',
+    homeDojoCreditPart2: 'Danke, dass ihr mich inspiriert, mir helft, jedes Training zu genießen, und mich daran erinnert, wie Aikidō uns alles andere vergessen lässt, wenn wir uns auf Harmonie konzentrieren.',
     openAriaPrefix: 'Öffne',
     // Feedback
     feedback: 'Feedback',
