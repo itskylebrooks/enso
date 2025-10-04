@@ -69,13 +69,11 @@
           "irimi": [
             {
               "type": "youtube",
-              "url": "https://www.youtube-nocookie.com/embed/lM83-VAld-Y",
-              "title": "Alfred Haase (BSV)"
+              "url": "https://www.youtube-nocookie.com/embed/lM83-VAld-Y"
             },
             {
               "type": "youtube",
-              "url": "https://www.youtube-nocookie.com/embed/zTsuuTjkQgc",
-              "title": "Centrum Aikido Aikikai Polska"
+              "url": "https://www.youtube-nocookie.com/embed/zTsuuTjkQgc"
             }
           ]
         }
@@ -178,8 +176,7 @@
           "irimi": [
             {
               "type": "youtube",
-              "url": "https://www.youtube.com/embed/HV0Q2_x3QPo?si=n2eDfuF5PGL2xF9c",
-              "title": "Mill Hill Aikido Club"
+              "url": "https://www.youtube.com/embed/HV0Q2_x3QPo?si=n2eDfuF5PGL2xF9c"
             }
           ]
         }
