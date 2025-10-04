@@ -40,8 +40,7 @@ type GuideContent = {
 
   philosophyLead: string;
   philosophyPoints: string[];
-  virtuesTitle: string;
-  virtues: TermEntry[];
+  // virtues removed per request
 
   beltsLead: string;
   beltNames: Record<Grade, string>;
@@ -54,7 +53,7 @@ const content: Record<Locale, GuideContent> = {
   en: {
     headings: {
       movements: 'Basic movements & stances',
-      philosophy: 'Aikidō principles & virtues',
+  philosophy: 'Aikidō principles',
       belts: 'Belt grades & colors',
       etiquette: 'Dōjō etiquette & safety',
     },
@@ -78,16 +77,7 @@ const content: Record<Locale, GuideContent> = {
       'Triangle–Circle–Square: establish stance, move in circles, finish with stable control.',
       'Zanshin: remain aware before, during, and after technique.',
     ],
-    virtuesTitle: 'Seven virtues (bushidō)',
-    virtues: [
-      { term: 'Gi (義)', detail: 'rectitude / righteousness' },
-      { term: 'Rei (礼)', detail: 'respect / courtesy' },
-      { term: 'Yū (勇)', detail: 'courage' },
-      { term: 'Meiyo (名誉)', detail: 'honor' },
-      { term: 'Jin (仁)', detail: 'benevolence / compassion' },
-      { term: 'Makoto (誠)', detail: 'truthfulness / sincerity' },
-      { term: 'Chū (忠)', detail: 'loyalty' },
-    ],
+    // virtues removed per request
 
     beltsLead:
       'Gradings follow the kyū → dan structure. Colors vary by school; the list below is a common reference.',
@@ -123,7 +113,7 @@ const content: Record<Locale, GuideContent> = {
   de: {
     headings: {
       movements: 'Grundbewegungen & Stände',
-      philosophy: 'Aikidō‑Prinzipien & Tugenden',
+  philosophy: 'Aikidō‑Prinzipien',
       belts: 'Gürtelgrade & Farben',
       etiquette: 'Dōjō‑Etikette & Sicherheit',
     },
@@ -147,16 +137,7 @@ const content: Record<Locale, GuideContent> = {
       'Dreieck–Kreis–Quadrat: Stand finden, kreisförmig führen, stabil abschließen.',
       'Zanshin: vor, während und nach der Technik aufmerksam bleiben.',
     ],
-    virtuesTitle: 'Die sieben Tugenden (Bushidō)',
-    virtues: [
-      { term: 'Gi (義)', detail: 'Aufrichtigkeit, Rechtschaffenheit' },
-      { term: 'Rei (礼)', detail: 'Höflichkeit, Respekt' },
-      { term: 'Yū (勇)', detail: 'Mut' },
-      { term: 'Meiyo (名誉)', detail: 'Ehre' },
-      { term: 'Jin (仁)', detail: 'Mitgefühl, Menschlichkeit' },
-      { term: 'Makoto (誠)', detail: 'Wahrhaftigkeit, Aufrichtigkeit' },
-      { term: 'Chū (忠)', detail: 'Loyalität' },
-    ],
+    // virtues removed per request
 
     beltsLead:
       'Graduierungen folgen der Reihenfolge Kyū → Dan. Die Farben unterscheiden sich je nach Schule.',
@@ -316,17 +297,7 @@ export const GuidePage = ({
               </li>
             ))}
           </ul>
-          <div className="space-y-2">
-            <h3 className="text-sm font-semibold tracking-wide uppercase text-subtle">{copy.virtuesTitle}</h3>
-            <dl className="space-y-3">
-                {copy.virtues.map(({ term, detail }) => (
-                  <div key={term} className="flex flex-col">
-                    <dt className="font-semibold text-base leading-tight text-[var(--color-text)]">{term}</dt>
-                    <dd className="text-neutral-400 text-sm mt-1 leading-relaxed">{detail}</dd>
-                  </div>
-                ))}
-            </dl>
-          </div>
+          {/* virtues section removed */}
         </motion.article>
 
         {/* Belts */}
