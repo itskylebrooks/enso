@@ -17,8 +17,7 @@ const FIELD_WEIGHTS = {
     weapon: 3,
     level: 3,
     summary: 2,
-    steps: 1,
-    keyPoints: 1
+    steps: 1
   },
   glossary: {
     romaji: 8,
@@ -177,12 +176,6 @@ export const scoreTechnique = (technique: Technique, query: string, locale: Loca
       steps.forEach(step => {
         score += getFieldMatchScore(step, query, weights.steps) * MATCH_BOOSTS.secondary / MATCH_BOOSTS.contains;
       });
-    });
-    
-    // Key points
-    const keyPoints = version.keyPoints[locale] || version.keyPoints.en;
-    keyPoints.forEach(point => {
-      score += getFieldMatchScore(point, query, weights.keyPoints) * MATCH_BOOSTS.secondary / MATCH_BOOSTS.contains;
     });
   });
   

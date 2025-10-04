@@ -29,7 +29,6 @@ export type TechniqueVersion = {
     role: { en: string; de: string };
     notes: { en: string[]; de: string[] };
   };
-  keyPoints: { en: string[]; de: string[] };
   commonMistakes: { en: string[]; de: string[] };
   context?: { en: string; de: string };
   media?: Array<{ type: MediaType; url: string }>;
@@ -72,7 +71,6 @@ export type TechniqueVariant = {
     role: Localized<string>;
     notes: Localized<string[]>;
   };
-  keyPoints?: Localized<string[]>;
   commonMistakes?: Localized<string[]>;
   context?: Localized<string>;
   media?: MediaItem[];

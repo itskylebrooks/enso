@@ -65,7 +65,6 @@ const versionSchema = z
       role: localizedString,
       notes: localizedStringArray,
     }),
-    keyPoints: localizedStringArray,
     commonMistakes: localizedStringArray,
     context: localizedStringOptional.optional(),
     media: z.array(mediaSchema).optional(),
@@ -110,7 +109,7 @@ const versionSchema = z
     }
 
     const checkArrayLength = (
-      field: keyof Pick<typeof value, 'keyPoints' | 'commonMistakes'>,
+      field: keyof Pick<typeof value, 'commonMistakes'>,
       path: string[],
     ) => {
       const valueAtField = value[field];
@@ -124,7 +123,6 @@ const versionSchema = z
       }
     };
 
-    checkArrayLength('keyPoints', ['keyPoints']);
     checkArrayLength('commonMistakes', ['commonMistakes']);
   });
 

@@ -98,18 +98,6 @@ Create a new file: `/content/techniques/attack-technique-direction.json`
         }
       },
       "media": [],
-      "keyPoints": {
-        "en": [
-          "Move from center, not arms",
-          "Maintain proper ma-ai throughout",
-          "Blend with partner's energy"
-        ],
-        "de": [
-          "Aus dem Zentrum bewegen, nicht mit Armen",
-          "Richtiges Ma-ai durchgehend beibehalten",
-          "Mit Energie des Partners verschmelzen"
-        ]
-      },
       "commonMistakes": {
         "en": [
           "Using upper body strength instead of whole body movement",
@@ -168,18 +156,6 @@ Create a new file: `/content/techniques/attack-technique-direction.json`
           ]
         }
       },
-      "keyPoints": {
-        "en": [
-          "Strong irimi entry is essential",
-          "Hip-driven power, not arm strength",
-          "Maintain center-to-center connection"
-        ],
-        "de": [
-          "Starker Irimi-Eintritt ist essenziell",
-          "Hüftgetriebene Kraft, nicht Armkraft",
-          "Zentrum-zu-Zentrum-Verbindung beibehalten"
-        ]
-      },
       "commonMistakes": {
         "en": [
           "Weak entry creating too much distance",
@@ -237,7 +213,6 @@ Each technique has multiple **versions** - different interpretations by trainers
     "stepsByEntry": { ... },   // Required: Steps for irimi and/or tenkan
     "uke": { ... },           // Required: Uke's role and notes
     "media": [],              // Optional: Video/image references
-    "keyPoints": { ... },     // Optional: Important principles
     "commonMistakes": { ... },// Optional: Things to avoid
     "context": { ... }        // Optional: When/how to use
   },
@@ -290,7 +265,6 @@ Each version specifies the **hanmi** (stance relationship):
 | `uke.role` | Localized<string> | ✅ | Brief description of uke's role |
 | `uke.notes` | Localized<string[]> | ✅ | Specific tips for uke (can be empty array) |
 | `media` | Array | ✅ | Video/image references (can be empty array) |
-| `keyPoints` | Localized<string[]> | ✅ | Important principles (can be empty) |
 | `commonMistakes` | Localized<string[]> | ✅ | Things to avoid (can be empty) |
 | `context` | Localized<string> | ✅ | When/how to practice (can be empty string) |
 
@@ -318,11 +292,10 @@ This will check:
 ### Tips for Writing Techniques
 
 1. **Steps**: Keep to 4-8 clear, actionable cues per entry type — not essays
-2. **Key Points**: Focus on principles, not repetition of steps
-3. **Common Mistakes**: Help students avoid typical errors
-4. **Context**: Explain when you'd use irimi vs tenkan for this technique
-5. **Uke guidance**: Include notes for the attacking partner's role
-6. **Media**: Add video links only if high quality and relevant (use youtube-nocookie.com URLs)
+2. **Common Mistakes**: Help students avoid typical errors
+3. **Context**: Explain when you'd use irimi vs tenkan for this technique
+4. **Uke guidance**: Include notes for the attacking partner's role
+5. **Media**: Add video links only if high quality and relevant (use youtube-nocookie.com URLs)
 
 ### Naming Conventions
 
@@ -528,7 +501,6 @@ type Localized<T> = { en: T; de: T };
 type TechniqueVariant = {
   key: VariantKey;
   steps: Localized<string[]>;           // concise skeleton (4–6 cues)
-  keyPoints?: Localized<string[]>;
   commonMistakes?: Localized<string[]>;
   context?: Localized<string>;
   uke?: {

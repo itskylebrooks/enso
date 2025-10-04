@@ -111,8 +111,6 @@ export const buildSearchIndex = (techniques: Technique[]): SearchEntry[] =>
         });
       }
 
-      version.keyPoints.en.forEach((item) => pushToken(tokens, item));
-      version.keyPoints.de.forEach((item) => pushToken(tokens, item));
       version.commonMistakes.en.forEach((item) => pushToken(tokens, item));
       version.commonMistakes.de.forEach((item) => pushToken(tokens, item));
       if (version.context) {

@@ -3,20 +3,18 @@ import type { Copy } from '@shared/constants/i18n';
 import { MessageSquarePlusIcon } from '@shared/components/ui/icons';
 
 export type NotesPanelProps = {
-  keyPoints?: string[];
   commonMistakes?: string[];
   context?: string;
   copy: Copy;
   onFeedbackClick?: () => void;
 };
 
-export const NotesPanel = ({ keyPoints, commonMistakes, context, copy, onFeedbackClick }: NotesPanelProps): ReactElement => {
+export const NotesPanel = ({ commonMistakes, context, copy, onFeedbackClick }: NotesPanelProps): ReactElement => {
   const cards: Array<{
     title: string;
     items?: string[];
     text?: string;
   }> = [
-    { title: copy.keyPoints, items: keyPoints },
     { title: copy.commonMistakes, items: commonMistakes },
     { title: copy.context, text: context },
   ];

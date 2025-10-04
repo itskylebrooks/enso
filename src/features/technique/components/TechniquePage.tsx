@@ -427,9 +427,8 @@ export const TechniquePage = ({
               {activeVariant?.media && activeVariant.media.length > 0 && (
                 <MediaPanel media={activeVariant.media} copy={copy} />
               )}
-              {(activeVariant?.keyPoints || activeVariant?.commonMistakes || activeVariant?.context) && (
+              {(activeVariant?.commonMistakes || activeVariant?.context) && (
                 <NotesPanel
-                  keyPoints={activeVariant.keyPoints ? activeVariant.keyPoints[locale] || activeVariant.keyPoints.en : undefined}
                   commonMistakes={
                     activeVariant.commonMistakes
                       ? activeVariant.commonMistakes[locale] || activeVariant.commonMistakes.en

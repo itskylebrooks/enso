@@ -78,7 +78,6 @@ export const convertToVariants = (technique: Technique): TechniqueVariant[] => {
           role: version.uke.role as Localized<string>,
           notes: version.uke.notes as Localized<string[]>,
         } : undefined,
-        keyPoints: version.keyPoints as Localized<string[]> | undefined,
         commonMistakes: version.commonMistakes as Localized<string[]> | undefined,
         context: version.context as Localized<string> | undefined,
         // Prefer per-entry media if present (new shape), otherwise fallback to version.media

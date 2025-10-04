@@ -69,7 +69,6 @@ const normalizeVersion = (version: TechniqueVersion): TechniqueVersion => {
       role: normalizeLocalizedString(version.uke.role),
       notes: normalizeLocalizedArray(version.uke.notes),
     },
-    keyPoints: normalizeLocalizedArray(version.keyPoints),
     commonMistakes: normalizeLocalizedArray(version.commonMistakes),
     context: version.context ? normalizeLocalizedString(version.context) : undefined,
     media: Array.isArray(version.media)
