@@ -366,14 +366,12 @@ export const BookmarksView = ({
         </aside>
 
         <section>
-        <AnimatePresence mode="wait">
           <motion.div
             key={`${selectedCollectionId}-${sortedVisibleItems.map(item => `${item.type}-${item.id}`).join(',')}`}
             className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 min-h-[280px]"
             variants={listMotion.container}
             initial="hidden"
             animate="show"
-            exit="hidden"
             layout
           >
             {sortedVisibleItems.map((item, index) => {
@@ -467,8 +465,7 @@ export const BookmarksView = ({
               <div className="max-w-lg px-4">{emptyStateMessage}</div>
             </motion.div>
           )}
-        </motion.div>
-        </AnimatePresence>
+  </motion.div>
         </section>
       </div>
 
