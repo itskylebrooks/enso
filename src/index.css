@@ -241,7 +241,8 @@ button {
   transition: transform 180ms var(--motion-ease), box-shadow 180ms var(--motion-ease), border-color 180ms var(--motion-ease);
 }
 .card-hover-shadow:hover {
-  transform: translateY(-6px);
+  /* Only show adaptive shadow on hover. No translation to keep cards stationary. */
+  transform: none;
   box-shadow: var(--card-shadow);
 }
 @media (prefers-reduced-motion: reduce) {

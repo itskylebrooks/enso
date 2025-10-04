@@ -59,8 +59,8 @@ export const HomePage = ({
       </section>
 
       <div className="container max-w-4xl mx-auto px-4 md:px-6 space-y-8 md:space-y-12 pb-16 md:pb-24">
-        {/* Quick Guide Card */}
-        <section className="rounded-2xl border surface-border surface surface-hover transition-colors p-6 md:p-8">
+  {/* Quick Guide Card */}
+  <section className="rounded-2xl border surface-border surface card-hover-shadow p-6 md:p-8">
           <div className="space-y-6">
             <div className="text-center space-y-2">
               <div className="text-xs uppercase tracking-widest text-subtle">
@@ -131,7 +131,7 @@ export const HomePage = ({
         {/* Two Column Cards: Quote & Historical Note */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Random Quote Card */}
-          <section className="rounded-2xl border surface-border surface surface-hover transition-colors p-6 md:p-8">
+          <section className="rounded-2xl border surface-border surface card-hover-shadow p-6 md:p-8">
             <div className="space-y-4">
               <h2 className="text-lg md:text-xl font-semibold">
                 {copy.homeQuoteOfMomentTitle}
@@ -141,7 +141,7 @@ export const HomePage = ({
           </section>
 
           {/* Historical Note Card */}
-          <section className="rounded-2xl border surface-border surface surface-hover transition-colors p-6 md:p-8">
+          <section className="rounded-2xl border surface-border surface card-hover-shadow p-6 md:p-8">
             <div className="space-y-4">
               <h2 className="text-lg md:text-xl font-semibold">
                 {copy.homeHistoricalNoteTitle}
@@ -160,7 +160,7 @@ export const HomePage = ({
 
         {/* Dojo Credit Card */}
         <section 
-          className="rounded-2xl border surface-border surface surface-hover transition-colors p-6 md:p-8 relative overflow-hidden"
+          className="rounded-2xl border surface-border surface card-hover-shadow p-6 md:p-8 relative overflow-hidden"
           onMouseEnter={() => setIsGratitudeHovered(true)}
           onMouseLeave={() => setIsGratitudeHovered(false)}
         >
