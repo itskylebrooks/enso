@@ -32,7 +32,7 @@ export const TechniqueCard = ({
   motionIndex,
   variants,
   getTransition,
-  prefersReducedMotion,
+  // prefersReducedMotion removed (no hover motion)
   actionSlot,
   isDimmed,
 }: TechniqueCardProps): ReactElement => {
@@ -81,9 +81,8 @@ export const TechniqueCard = ({
       }
       variants={variants}
       transition={getTransition(motionIndex)}
-      whileHover={prefersReducedMotion ? undefined : { y: -2, boxShadow: '0 16px 30px -22px rgba(15,23,42,0.35)' }}
-      whileTap={prefersReducedMotion ? undefined : { scale: 0.99 }}
-      animate={isDimmed && !prefersReducedMotion ? { y: -2, boxShadow: '0 16px 30px -22px rgba(15,23,42,0.35)' } : {}}
+  /* Hover and tap motion removed to disable hover effects completely */
+  animate={isDimmed ? {} : {}}
       title={technique.name[locale]}
     >
       <div className="flex items-start justify-between gap-3">

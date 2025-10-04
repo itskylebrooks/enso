@@ -34,7 +34,7 @@ export const GlossaryBookmarkCard = ({
   motionIndex,
   variants,
   getTransition,
-  prefersReducedMotion,
+  // prefersReducedMotion removed (no hover motion)
   isDimmed = false,
   actionSlot,
 }: GlossaryBookmarkCardProps): ReactElement => {
@@ -82,14 +82,13 @@ export const GlossaryBookmarkCard = ({
       onClick={handleActivate}
       onKeyDown={handleKeyDown}
       className={
-        `group relative surface border surface-border rounded-2xl p-4 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] flex flex-col gap-3 text-left` +
+        `relative surface border surface-border rounded-2xl p-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] flex flex-col gap-3 text-left` +
         (isDimmed ? ' pointer-events-none opacity-70 blur-card' : '')
       }
       variants={variants}
       transition={getTransition(motionIndex)}
-      whileHover={prefersReducedMotion ? undefined : { y: -2, boxShadow: '0 16px 30px -22px rgba(15,23,42,0.35)' }}
-      whileTap={prefersReducedMotion ? undefined : { scale: 0.99 }}
-      animate={isDimmed && !prefersReducedMotion ? { y: -2, boxShadow: '0 16px 30px -22px rgba(15,23,42,0.35)' } : {}}
+  /* Hover and tap motion removed to disable hover effects completely */
+  animate={isDimmed ? {} : {}}
     >      
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 space-y-1">

@@ -14,7 +14,7 @@ export type ProgressListProps = {
 };
 
 export const ProgressList = ({ items, locale, copy, onOpen }: ProgressListProps): ReactElement => {
-  const { listMotion, getItemTransition, prefersReducedMotion } = useMotionPreferences();
+  const { listMotion, getItemTransition } = useMotionPreferences();
 
   if (items.length === 0) {
     return <div className="text-sm text-muted">—</div>;
@@ -41,8 +41,6 @@ export const ProgressList = ({ items, locale, copy, onOpen }: ProgressListProps)
               title={label}
               variants={listMotion.item}
               transition={getItemTransition(index)}
-              whileHover={prefersReducedMotion ? undefined : { y: -2, boxShadow: '0 12px 24px -20px rgba(15,23,42,0.35)' }}
-              whileTap={prefersReducedMotion ? undefined : { scale: 0.99 }}
             >
               <div className="min-w-0 space-y-1">
                 <div className="leading-snug line-clamp-2" title={label}>

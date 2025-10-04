@@ -38,7 +38,7 @@ export const GlossaryCard = ({
   motionIndex,
   variants,
   getTransition,
-  prefersReducedMotion,
+  // prefersReducedMotion removed (no hover motion)
 }: GlossaryCardProps): ReactElement => {
   const [isDark, setIsDark] = useState(getInitialThemeState);
 
@@ -85,11 +85,10 @@ export const GlossaryCard = ({
       tabIndex={0}
       onClick={handleActivate}
       onKeyDown={handleKeyDown}
-      className="surface border surface-border rounded-2xl p-4 flex flex-col gap-3 text-left cursor-pointer"
+      className="surface border surface-border rounded-2xl p-4 flex flex-col gap-3 text-left"
       variants={variants}
       transition={getTransition(motionIndex)}
-      whileHover={prefersReducedMotion ? undefined : { y: -2, boxShadow: '0 8px 20px -12px rgba(15,23,42,0.25)' }}
-      whileTap={prefersReducedMotion ? undefined : { scale: 0.99 }}
+  /* Hover and tap motion removed to disable hover effects completely */
       aria-label={ariaLabel}
     >
       {/* Header with romaji and badges */}
