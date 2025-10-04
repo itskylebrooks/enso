@@ -82,7 +82,7 @@ export const GlossaryBookmarkCard = ({
       onClick={handleActivate}
       onKeyDown={handleKeyDown}
       className={
-        `relative surface border surface-border rounded-2xl p-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] flex flex-col gap-3 text-left` +
+        `relative surface border surface-border rounded-2xl p-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] flex flex-col gap-3 text-left card-hover-shadow` +
         (isDimmed ? ' pointer-events-none opacity-70 blur-card' : '')
       }
       variants={variants}

@@ -22,6 +22,12 @@
   --color-border-hover: rgba(0, 0, 0, 0.15);
   --color-muted: #4b5563;
   --color-subtle: #6b7280;
+
+  /* Card shadow colors adapt to light/dark mode. In light mode use a dark shadow; in dark mode use a light (subtle) shadow */
+  --card-shadow-color: 15, 23, 42; /* rgb components for dark shadow */
+  --card-shadow-alpha: 0.12; /* default alpha for light mode */
+  /* Layered shadow for better depth: larger soft shadow + smaller mid shadow */
+  --card-shadow: 0 14px 44px -12px rgba(var(--card-shadow-color), var(--card-shadow-alpha)), 0 6px 18px -8px rgba(var(--card-shadow-color), 0.08);
 }
 
 .dark {
@@ -34,6 +40,12 @@
   --color-border-hover: rgba(255, 255, 255, 0.25);
   --color-muted: rgba(255, 255, 255, 0.72);
   --color-subtle: rgba(255, 255, 255, 0.62);
+
+  /* In dark mode, use a light/white layered shadow with slightly higher alpha so it remains visible */
+  --card-shadow-color: 255, 255, 255;
+  --card-shadow-alpha: 0.16;
+  /* Add a stronger near shadow for dark mode so lift is visible on black backgrounds */
+  --card-shadow: 0 12px 36px -8px rgba(var(--card-shadow-color), var(--card-shadow-alpha)), 0 6px 18px -4px rgba(var(--card-shadow-color), 0.12), 0 2px 6px -2px rgba(var(--card-shadow-color), 0.06);
 }
 
 *,
@@ -171,7 +183,7 @@ button {
 
 .motion-lift:hover {
   transform: translateY(-4px);
-  box-shadow: 0 16px 30px -22px rgba(15, 23, 42, 0.45);
+  box-shadow: var(--card-shadow);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -219,6 +231,24 @@ button {
 
 .jump-on-hover:hover {
   transform: translateY(-4px) scale(1.02);
+}
+
+/* Subtle card hover shadow utility used by content cards across the app.
+   - applies a small upward lift and adaptive shadow that changes with the theme
+   - respects prefers-reduced-motion
+*/
+.card-hover-shadow {
+  transition: transform 180ms var(--motion-ease), box-shadow 180ms var(--motion-ease), border-color 180ms var(--motion-ease);
+}
+.card-hover-shadow:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--card-shadow);
+}
+@media (prefers-reduced-motion: reduce) {
+  .card-hover-shadow:hover {
+    transform: none;
+    box-shadow: none;
+  }
 }
 
 /* Adaptive pill that reads inline CSS variables for bg and hover bg */
