@@ -122,7 +122,7 @@ export const TechniqueToolbar = ({
       // "Standard" option pinned at top
       const options: SelectOption<string>[] = [
         {
-          value: '__standard__',
+          value: '__base__',
           label: labels.standard,
         },
       ];
@@ -166,13 +166,13 @@ export const TechniqueToolbar = ({
     (versionId: string) => {
       onChange({
         ...value,
-        versionId: versionId === '__standard__' ? null : versionId,
+        versionId: versionId === '__base__' ? null : versionId,
       });
     },
     [value, onChange]
   );
 
-  const selectedVersionId = value.versionId || '__standard__';
+  const selectedVersionId = value.versionId || '__base__';
 
   return (
     <div

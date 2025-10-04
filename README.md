@@ -43,7 +43,7 @@ Create a new file: `/content/techniques/attack-technique-direction.json`
   ],
   "versions": [
     {
-      "id": "v-standard",
+  "id": "v-base",
       "hanmi": "ai-hanmi",
       "stepsByEntry": {
         "irimi": {
@@ -208,7 +208,7 @@ Each technique has multiple **versions** - different interpretations by trainers
 ```json
 "versions": [
   {
-    "id": "v-standard",        // Required: Always start with standard version
+  "id": "v-base",        // Required: Always start with base version
     "hanmi": "ai-hanmi",       // Required: "ai-hanmi" or "gyaku-hanmi"
     "stepsByEntry": { ... },   // Required: Steps for irimi and/or tenkan
     "uke": { ... },           // Required: Uke's role and notes
@@ -226,7 +226,7 @@ Each technique has multiple **versions** - different interpretations by trainers
 ]
 ```
 
-**Important**: Version IDs must start with `v-` prefix (e.g., `v-standard`, `v-mustermann`, `v-haase`).
+**Important**: Version IDs must start with `v-` prefix (e.g., `v-base`, `v-mustermann`, `v-haase`).
 
 #### Steps By Entry
 
@@ -301,7 +301,7 @@ This will check:
 
 - **IDs**: `t-abbreviation-attack-technique` (e.g., `t-shn-katatedori-omote`, `t1`, `t8`)
 - **Slugs**: `kebab-case` matching common usage (e.g., `katate-dori-shiho-nage-omote`)
-- **Version IDs**: `v-standard` (required first), then `v-trainername` (e.g., `v-haase`, `v-mustermann`)
+- **Version IDs**: `v-base` (required first), then `v-trainername` (e.g., `v-haase`, `v-mustermann`)
 - **Trainer IDs**: `kebab-case` (e.g., `max-mustermann`, `alfred-haase`)
 - **Dojo IDs**: `kebab-case` or abbreviation (e.g., `bsv`, `example-dojo`)
 

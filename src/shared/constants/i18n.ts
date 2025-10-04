@@ -81,7 +81,9 @@ export const messages = {
     weaponBokken: 'Bokken',
     weaponJo: 'Jō',
     weaponTanto: 'Tantō',
-    versionStandard: 'Standard',
+  versionBase: 'Base',
+  // Backwards-compat alias for older code expecting versionStandard
+  versionStandard: 'Base',
     lastPracticed: 'Last updated',
     settings: 'Settings',
     language: 'Language',
@@ -269,7 +271,9 @@ export const messages = {
     weaponBokken: 'Bokken',
     weaponJo: 'Jō',
     weaponTanto: 'Tantō',
-    versionStandard: 'Standard',
+  versionBase: 'Grundform',
+  // Backwards-compat alias
+  versionStandard: 'Grundform',
     lastPracticed: 'Zuletzt aktualisiert',
     settings: 'Einstellungen',
     language: 'Sprache',

@@ -63,6 +63,6 @@ export function generateVersionLabel(version: TechniqueVersion): string {
     }
   }
 
-  // Default to "Standard"
-  return "Standard";
+  // Default to "Base"
+  return "Base";
 }

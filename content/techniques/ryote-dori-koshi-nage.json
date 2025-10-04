@@ -24,7 +24,7 @@
   ],
   "versions": [
     {
-      "id": "v-standard",
+  "id": "v-base",
       "hanmi": "ai-hanmi",
       "stepsByEntry": {
         "irimi": {

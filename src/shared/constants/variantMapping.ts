@@ -15,18 +15,18 @@ import { generateVersionLabel } from './versionLabels';
 
 /**
  * Extract version metadata from existing technique versions
- * Excludes versions with id "v-standard" (which are treated as the default "Standard" version)
+ * Excludes versions with id "v-base" (which are treated as the default "Base" version)
  */
 export const extractVersionsMeta = (technique: Technique): TechniqueVersionMeta[] => {
   // Deduplicate by version.id - multiple versions can have the same ID
   // (e.g., same version for different hanmi)
-  // Also exclude any version with id "v-standard" as it's the standard/default
+  // Also exclude any version with id "v-base" as it's the base/default
   const seen = new Set<string>();
   const uniqueVersions: TechniqueVersionMeta[] = [];
   
   for (const version of technique.versions) {
     // Skip standard versions - they're accessed via the default "Standard" dropdown option
-    if (version.id === 'v-standard') {
+    if (version.id === 'v-base') {
       continue;
     }
     
@@ -71,7 +71,7 @@ export const convertToVariants = (technique: Technique): TechniqueVariant[] => {
           hanmi: version.hanmi, // Now required in TechniqueVersion
           direction,
           weapon: defaultWeapon,
-          versionId: version.id === 'v-standard' ? null : version.id, // null for standard versions
+          versionId: version.id === 'v-base' ? null : version.id, // null for base versions
         },
         steps: steps as Localized<string[]>,
         uke: version.uke ? {

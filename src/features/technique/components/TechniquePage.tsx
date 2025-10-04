@@ -451,7 +451,7 @@ export const TechniquePage = ({
     bokken: copy.weaponBokken,
     jo: copy.weaponJo,
     tanto: copy.weaponTanto,
-    standard: copy.versionStandard,
+    standard: copy.versionBase ?? 'Base',
   };
 
   return (
@@ -489,7 +489,7 @@ export const TechniquePage = ({
 
       <AnimatePresence mode="wait">
         <motion.section
-          key={`${toolbarValue.hanmi}-${toolbarValue.direction}-${toolbarValue.weapon}-${toolbarValue.versionId || 'standard'}`}
+    key={`${toolbarValue.hanmi}-${toolbarValue.direction}-${toolbarValue.weapon}-${toolbarValue.versionId || 'base'}`}
           initial={motionInitial}
           animate={motionAnimate}
           exit={motionExit}

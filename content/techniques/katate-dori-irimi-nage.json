@@ -23,7 +23,7 @@
   ],
   "versions": [
     {
-      "id": "v-standard",
+  "id": "v-base",
       "hanmi": "ai-hanmi",
       "stepsByEntry": {
         "irimi": {
@@ -93,7 +93,7 @@
       }
     },
     {
-      "id": "v-standard",
+  "id": "v-base",
       "hanmi": "gyaku-hanmi",
       "stepsByEntry": {
         "irimi": {

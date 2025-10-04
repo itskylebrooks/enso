@@ -71,7 +71,7 @@ export const parseTechniquePath = (pathname: string): { slug: string; trainerId?
 /**
  * Toolbar-based variant parameters (path-based approach)
  * URL structure: /technique/[slug]/[version]/[hanmi]/[direction]/[weapon]
- * - version: 'v-standard' or custom version id (e.g., 'v-haase')
+ * - version: 'v-base' or custom version id (e.g., 'v-haase')
  * - hanmi: 'ai-hanmi' or 'gyaku-hanmi' (required)
  * - direction: 'irimi', 'tenkan', 'omote', or 'ura'
  * - weapon: omitted for 'empty' (default), or 'bokken', 'jo', 'tanto'
@@ -92,13 +92,13 @@ export type TechniqueVariantParams = {
  * 
  * Examples:
  * - buildTechniqueUrlWithVariant('shiho-nage', {hanmi: 'ai-hanmi', direction: 'irimi', weapon: 'empty'}) 
- *   → '/technique/shiho-nage/v-standard/ai-hanmi/irimi'
+ *   → '/technique/shiho-nage/v-base/ai-hanmi/irimi'
  * - buildTechniqueUrlWithVariant('shiho-nage', {hanmi: 'ai-hanmi', direction: 'irimi', weapon: 'bokken', versionId: 'v-haase'}) 
  *   → '/technique/shiho-nage/v-haase/ai-hanmi/irimi/bokken'
  */
 export const buildTechniqueUrlWithVariant = (slug: string, params: TechniqueVariantParams): string => {
   const encodedSlug = encodeURIComponent(slug);
-  const version = params.versionId || 'v-standard';
+    const version = params.versionId || 'v-base';
   const segments = [
     'technique',
     encodedSlug,
@@ -118,7 +118,7 @@ export const buildTechniqueUrlWithVariant = (slug: string, params: TechniqueVari
 /**
  * Parses toolbar variant parameters from pathname
  * 
- * @param pathname - The URL pathname (e.g., '/technique/slug/v-standard/ai-hanmi/irimi' or '/technique/slug/v-haase/gyaku-hanmi/omote/bokken')
+ * @param pathname - The URL pathname (e.g., '/technique/slug/v-base/ai-hanmi/irimi' or '/technique/slug/v-haase/gyaku-hanmi/omote/bokken')
  * @returns Parsed variant parameters or undefined if incomplete
  */
 export const parseTechniqueVariantParams = (pathname: string): TechniqueVariantParams | undefined => {
@@ -137,10 +137,10 @@ export const parseTechniqueVariantParams = (pathname: string): TechniqueVariantP
   if (!isDirection(directionCandidate)) return undefined;
   if (!isWeaponKind(weaponCandidate)) return undefined;
   
-  return {
-    hanmi: hanmiCandidate as Hanmi,
-    direction: directionCandidate as Direction,
-    weapon: weaponCandidate as WeaponKind,
-    versionId: versionCandidate === 'v-standard' ? null : versionCandidate,
+    return {
+      hanmi: hanmiCandidate as Hanmi,
+      direction: directionCandidate as Direction,
+      weapon: weaponCandidate as WeaponKind,
+      versionId: versionCandidate === 'v-base' ? null : versionCandidate,
   };
 };
