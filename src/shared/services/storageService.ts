@@ -372,8 +372,41 @@ export const clearThemePreference = (): void => {
   removeLocalStorage(THEME_KEY);
 };
 
+/**
+ * Detects the user's browser language preference.
+ * Returns 'de' if any German locale is detected, otherwise 'en'.
+ * 
+ * This function checks navigator.language and navigator.languages
+ * to determine if the user prefers German. It safely handles SSR
+ * environments where navigator is undefined.
+ */
+const detectBrowserLanguage = (): Locale => {
+  if (typeof navigator === 'undefined') {
+    return fallbackLocale;
+  }
+
+  // Check navigator.language and navigator.languages for German
+  const languages = navigator.languages || [navigator.language];
+  
+  for (const lang of languages) {
+    if (lang && lang.toLowerCase().startsWith('de')) {
+      console.log(`[enso] Detected German browser language: ${lang}, setting locale to 'de'`);
+      return 'de';
+    }
+  }
+  
+  console.log(`[enso] No German language detected, defaulting to 'en'. Languages:`, languages);
+  return fallbackLocale;
+};
+
 export const loadLocale = (): Locale => {
   const value = readLocalStorage(LOCALE_KEY) as Locale | null;
+  
+  // If no saved preference, detect browser language
+  if (value === null) {
+    return detectBrowserLanguage();
+  }
+  
   return value === 'en' || value === 'de' ? value : fallbackLocale;
 };
 
