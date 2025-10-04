@@ -286,7 +286,7 @@ export const GuidePage = ({
           <dl className="flex flex-col gap-3">
             {copy.movementHighlights.map(({ term, detail }) => (
               <div key={term} className="flex flex-col">
-                <dt className="text-neutral-100 font-semibold text-base leading-tight">{term}</dt>
+                <dt className="font-semibold text-base leading-tight text-[var(--color-text)]">{term}</dt>
                 <dd className="text-neutral-400 text-sm mt-1 leading-relaxed">{detail}</dd>
               </div>
             ))}
@@ -321,7 +321,7 @@ export const GuidePage = ({
             <dl className="space-y-3">
                 {copy.virtues.map(({ term, detail }) => (
                   <div key={term} className="flex flex-col">
-                    <dt className="text-neutral-100 font-semibold text-base leading-tight">{term}</dt>
+                    <dt className="font-semibold text-base leading-tight text-[var(--color-text)]">{term}</dt>
                     <dd className="text-neutral-400 text-sm mt-1 leading-relaxed">{detail}</dd>
                   </div>
                 ))}
