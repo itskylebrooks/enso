@@ -216,8 +216,8 @@ export const GlossaryDetailPage = ({
       {literal && (
         <section className="prose prose-sm max-w-none dark:prose-invert">
           <div className="text-center space-y-4">
-            <h2 className="text-xs uppercase tracking-[0.3em] text-subtle">Literal Translation</h2>
-            <p className="text-sm italic text-subtle leading-relaxed">{literal}</p>
+            <h2 className="text-xs uppercase tracking-[0.3em] text-subtle italic text-[var(--color-text)]">Literal Translation</h2>
+            <p className="text-base italic text-[var(--color-text)] leading-relaxed">{literal}</p>
           </div>
         </section>
       )}
