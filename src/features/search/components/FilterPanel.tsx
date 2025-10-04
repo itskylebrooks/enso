@@ -126,11 +126,10 @@ export const FilterPanel = ({
         trailing: (
           <span
             aria-hidden
-            className="inline-flex h-3 w-10 flex-shrink-0 items-center justify-center rounded-sm border"
+            className="inline-flex h-3 w-10 flex-shrink-0 items-center justify-center rounded-sm"
             style={{
               backgroundColor: gradePalette[grade].bg,
               color: gradePalette[grade].fg,
-              borderColor: gradePalette[grade].fg === '#FFFFFF' ? 'rgba(255, 255, 255, 0.28)' : 'rgba(0, 0, 0, 0.18)',
             }}
           />
         ),

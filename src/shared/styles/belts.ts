@@ -31,25 +31,20 @@ const baseColors: Record<Grade, string> = {
   dan5: '#0B0B0B',  // Black
 };
 
-// Text color mapping based on theme mode and belt type
-const getTextColor = (grade: Grade, isDark: boolean): string => {
-  // Dan belts (black belts) always use white text for readability
-  if (grade.startsWith('dan')) {
-    return '#FFFFFF';
-  }
-  
-  // For colored belts (kyu grades):
-  // Light mode: white text on colored backgrounds
-  // Dark mode: black text on colored backgrounds
+// Default text color for belt labels (app-wide requirement): always white.
+const getTextColorAlwaysWhite = (_grade: Grade): string => '#FFFFFF';
+
+// Adaptive text color used only by the Guide page table (ExamMatrix).
+// Preserves previous contrast logic: dan belts always white; kyu belts
+// switch to black in dark mode for readability.
+const getAdaptiveTextColor = (grade: Grade, isDark: boolean): string => {
+  if (grade.startsWith('dan')) return '#FFFFFF';
   return isDark ? '#000000' : '#FFFFFF';
 };
 
 // Legacy palette for compatibility (defaults to light mode)
 const palette: Record<Grade, { bg: string; fg: string }> = Object.fromEntries(
-  Object.entries(baseColors).map(([grade, bg]) => [
-    grade,
-    { bg, fg: getTextColor(grade as Grade, false) } // false = light mode
-  ])
+  Object.entries(baseColors).map(([grade, bg]) => [grade, { bg, fg: getTextColorAlwaysWhite(grade as Grade) }])
 ) as Record<Grade, { bg: string; fg: string }>;
 
 export const gradePalette = palette;
@@ -75,6 +70,8 @@ export const gradeLabel = (grade: Grade, locale: Locale): string => {
 
 export const getGradeStyle = (grade: Grade, isDark?: boolean): { backgroundColor: string; color: string } => {
   const backgroundColor = baseColors[grade];
-  const color = getTextColor(grade, isDark || false);
+  // If isDark is provided use adaptive contrast (used by ExamMatrix table).
+  // Otherwise return the default always-white text color for belt labels.
+  const color = typeof isDark === 'boolean' ? getAdaptiveTextColor(grade, isDark) : getTextColorAlwaysWhite(grade);
   return { backgroundColor, color };
 };

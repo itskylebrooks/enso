@@ -104,12 +104,10 @@ export const MobileFilters = ({
         badge: (
           <span
             aria-hidden
-            className="inline-flex h-4 w-12 flex-shrink-0 items-center justify-center rounded-sm border"
+            className="inline-flex h-4 w-12 flex-shrink-0 items-center justify-center rounded-sm"
             style={{
               backgroundColor: gradePalette[grade].bg,
               color: gradePalette[grade].fg,
-              borderColor:
-                gradePalette[grade].fg === '#FFFFFF' ? 'rgba(255,255,255,0.28)' : 'rgba(0,0,0,0.18)',
             }}
           />
         ),

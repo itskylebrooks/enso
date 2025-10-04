@@ -311,8 +311,8 @@ export const GuidePage = ({
           </header>
           <ul className="grid gap-3 sm:grid-cols-2">
             {gradeOrder.map((grade) => {
-              const style = getGradeStyle(grade, isDark);
-              const borderColor = style.color === '#FFFFFF' ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.08)';
+              // Use default grade style (always-white text) for belt labels in the list.
+              const style = getGradeStyle(grade);
               return (
                 <li key={grade}>
                   <button
@@ -327,7 +327,6 @@ export const GuidePage = ({
                       style={{
                         backgroundColor: style.backgroundColor,
                         color: style.color,
-                        boxShadow: `inset 0 0 0 1px ${borderColor}`,
                       }}
                     >
                       {copy.beltNames[grade]}

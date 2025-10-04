@@ -20,8 +20,7 @@ const GradeCellComponent = ({ cell, isDark }: { cell: GradeCell; isDark: boolean
 
   if (cell.kind === 'kyu') {
     const gradeKey = `kyu${cell.kyu}` as const;
-    const style = getGradeStyle(gradeKey, isDark);
-    const borderColor = style.color === '#FFFFFF' ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.08)';
+  const style = getGradeStyle(gradeKey, isDark);
     
     return (
       <span
@@ -29,7 +28,6 @@ const GradeCellComponent = ({ cell, isDark }: { cell: GradeCell; isDark: boolean
         style={{
           backgroundColor: style.backgroundColor,
           color: style.color,
-          boxShadow: `inset 0 0 0 1px ${borderColor}`,
         }}
       >
         {cell.kyu}
@@ -38,8 +36,7 @@ const GradeCellComponent = ({ cell, isDark }: { cell: GradeCell; isDark: boolean
   }
 
   if (cell.kind === 'dan') {
-    const style = getGradeStyle('dan1', isDark);
-    const borderColor = 'rgba(255, 255, 255, 0.2)';
+  const style = getGradeStyle('dan1', isDark);
     
     return (
       <span
@@ -47,7 +44,6 @@ const GradeCellComponent = ({ cell, isDark }: { cell: GradeCell; isDark: boolean
         style={{
           backgroundColor: style.backgroundColor,
           color: style.color,
-          boxShadow: `inset 0 0 0 1px ${borderColor}`,
         }}
       >
         1.D.
