@@ -10,7 +10,7 @@ import type {
   Progress,
   Technique,
 } from '@shared/types';
-import { getTaxonomyLabel } from '@shared/i18n/taxonomy';
+import { getTaxonomyLabel, taxonomyLabels, expandWithSynonyms, normalizeTaxonomyValue } from '@shared/i18n/taxonomy';
 import { stripDiacritics } from '@shared/utils/text';
 import { useMotionPreferences, defaultEase } from '@shared/components/ui/motion';
 import { TechniqueHeader, type CollectionOption } from './TechniqueHeader';
@@ -125,9 +125,14 @@ const getCollectionOptions = (
   }));
 };
 
-// Map tag labels to glossary slugs (simplified version)
-const mapTagToGlossarySlug = (tagLabel: string): string | null => {
-  const labelToSlugMap: Record<string, string> = {
+// Map tag labels (possibly localized) to glossary slugs
+const mapTagToGlossarySlug = (tagLabel: string, locale: Locale): string | null => {
+  if (!tagLabel) return null;
+  const raw = tagLabel.trim();
+  const normalizedLabel = raw.toLowerCase().replace(/\s+/g, ' ').trim();
+
+  // Common direct mappings (English forms)
+  const direct: Record<string, string> = {
     'throws (nage-waza)': 'nage-waza',
     'throws': 'nage-waza',
     'controls / pins (osae-waza)': 'osae-waza',
@@ -141,17 +146,56 @@ const mapTagToGlossarySlug = (tagLabel: string): string | null => {
     'ura': 'ura',
   };
 
-  const normalizedTag = tagLabel.toLowerCase().replace(/\s+/g, ' ').trim();
+  if (direct[normalizedLabel]) return direct[normalizedLabel];
 
-  // Direct mapping first
-  if (labelToSlugMap[normalizedTag]) return labelToSlugMap[normalizedTag];
+  // 1) Try to detect explicit parenthetical slug: e.g. "Würfe (Nage-waza)"
+  const paren = raw.match(/\(([^)]+)\)/);
+  if (paren && paren[1]) {
+    const candidate = normalizeTaxonomyValue(paren[1]);
+    // check if it's a known category key
+    if (taxonomyLabels.en?.category && taxonomyLabels.en.category[candidate as keyof typeof taxonomyLabels.en.category]) {
+      return candidate;
+    }
+    // also allow direct candidate
+    return candidate;
+  }
 
-  // Fallback: attempt to convert a human label to a reasonable slug
-  // e.g. "Katate Dori" -> "katate-dori", "Kaiten-nage (soto)" -> "kaiten-nage-soto"
-  const stripped = normalizedTag.replace(/[()]/g, '').replace(/[^a-z0-9\s-_]/g, '');
-  const candidate = stripped.trim().replace(/\s+/g, '-');
-  if (candidate.length === 0) return null;
-  return candidate;
+  // 2) Reverse lookup in taxonomyLabels for both locales
+  const tryReverseLookup = (lookLocale: keyof typeof taxonomyLabels) => {
+    const map = taxonomyLabels[lookLocale].category || {};
+    for (const [key, label] of Object.entries(map)) {
+      const labelRaw = label || '';
+      const labelNormalized = normalizeTaxonomyValue(labelRaw);
+      const labelPrefix = normalizeTaxonomyValue(labelRaw.split('(')[0] || labelRaw);
+      if (
+        labelNormalized === normalizedLabel ||
+        labelPrefix === normalizedLabel ||
+        labelNormalized === raw.toLowerCase() ||
+        labelPrefix === raw.toLowerCase()
+      ) {
+        return key;
+      }
+    }
+    return null as string | null;
+  };
+
+  // Check current locale first, then fallback to English
+  const fromLocale = tryReverseLookup(locale);
+  if (fromLocale) return fromLocale;
+  const fromEn = tryReverseLookup('en');
+  if (fromEn) return fromEn;
+
+  // 3) Try synonyms expansion: if any synonym maps to a taxonomy key, return it
+  const synonyms = expandWithSynonyms(normalizedLabel);
+  for (const syn of synonyms) {
+    const cand = normalizeTaxonomyValue(syn);
+  if (taxonomyLabels.en?.category && taxonomyLabels.en.category[cand as keyof typeof taxonomyLabels.en.category]) return cand;
+  }
+
+  // 4) Fallback: slugify the label (remove non-ascii junk first)
+  const stripped = normalizedLabel.replace(/[()]/g, '').replace(/[^a-z0-9\s-_]/gi, '');
+  const candidate = stripped.trim().replace(/\s+/g, '-').toLowerCase();
+  return candidate.length > 0 ? candidate : null;
 };
 
 export const TechniquePage = ({
@@ -376,8 +420,7 @@ export const TechniquePage = ({
 
   const handleTagClick = (tagLabel: string) => {
     if (!onOpenGlossary) return;
-    
-    const glossarySlug = mapTagToGlossarySlug(tagLabel);
+    const glossarySlug = mapTagToGlossarySlug(tagLabel, locale);
     if (glossarySlug) {
       onOpenGlossary(glossarySlug);
     }
