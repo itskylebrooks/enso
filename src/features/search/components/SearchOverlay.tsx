@@ -357,7 +357,7 @@ export const SearchOverlay = ({ copy, locale, techniques, progress, glossaryProg
                     )}
                   </div>
                   {/* Right-side label: technique belt or glossary label */}
-                  <div className="flex-shrink-0 ml-3 flex flex-col items-center gap-2">
+                  <div className="flex-shrink-0 ml-3 w-14 flex flex-col items-center gap-2">
                     {result.type === 'technique' ? (
                       <>
                         <span
