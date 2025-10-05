@@ -854,7 +854,7 @@ export const messages = {
     danOverviewUkemiP1: 'Mit jedem Grad müssen Ukemi sicherer, anpassungsfähiger und spontaner werden, um dynamisches Training zu ermöglichen.',
 
   },
-} as const satisfies Record<Locale, Record<string, string>>;
+} as const satisfies Record<Locale, Record<string, unknown>>;
 
 type Messages = typeof messages;
 
