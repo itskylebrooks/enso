@@ -466,7 +466,7 @@ const buildFeedbackPayload = (
     };
   }
 
-  if (selectedCard === 'bugReport') {
+  if (selectedType === 'bugReport') {
     const bug = draft.bugReport;
     const summary = bug.details.split('\n')[0]?.slice(0, 120) || 'Bug report';
     const detailsMd = `### What happened\n${bug.details}\n\n### Steps to reproduce\n${bug.reproduction}`;
@@ -484,7 +484,7 @@ const buildFeedbackPayload = (
     };
   }
 
-  if (selectedCard === 'appFeedback') {
+  if (selectedType === 'appFeedback') {
     const feedback = draft.appFeedback;
     const summary = feedback.feedback.split('\n')[0]?.slice(0, 120) || 'App feedback';
     const detailsMd = feedback.feedback;

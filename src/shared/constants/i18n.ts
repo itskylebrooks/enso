@@ -1151,6 +1151,8 @@ export const messages = {
 type Messages = typeof messages;
 
 export type Copy = Messages[Locale];
-export type FeedbackPageCopy = typeof messages.en.feedbackPage;
+// Use a locale-agnostic type for feedback page copy to avoid literal
+// mismatches across languages (e.g., heroSubtitle string differs by locale).
+export type FeedbackPageCopy = Copy['feedbackPage'];
 
 export const getCopy = (locale: Locale): Copy => messages[locale];
