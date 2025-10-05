@@ -311,7 +311,9 @@ export const GuidePage = ({
             </p>
           </header>
           <ul className="grid gap-3 sm:grid-cols-2">
-            {gradeOrder.map((grade) => {
+            {gradeOrder
+              .filter((g) => !['dan2', 'dan3', 'dan4', 'dan5'].includes(g))
+              .map((grade) => {
               // Use default grade style (always-white text) for belt labels in the list.
               const style = getGradeStyle(grade);
               return (
