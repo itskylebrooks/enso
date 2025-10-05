@@ -46,6 +46,7 @@ type GuideContent = {
 
   etiquetteLead: string;
   etiquettePoints: string[];
+  furtherStudyLead: string;
 };
 
 const content: Record<Locale, GuideContent> = {
@@ -107,6 +108,8 @@ const content: Record<Locale, GuideContent> = {
       'Trim nails, remove jewelry, and tie back long hair.',
       'Communicate about injuries or limits before practice; tap early and clearly.',
     ],
+    furtherStudyLead:
+      'A selection of organizations, clubs, and resources to explore further study, local dojos, and supplementary learning materials.',
   },
 
   de: {
@@ -165,6 +168,8 @@ const content: Record<Locale, GuideContent> = {
       'Nägel kurz halten, Schmuck ablegen, lange Haare binden.',
       'Verletzungen/ Grenzen vorher mitteilen; früh und deutlich abklopfen.',
     ],
+    furtherStudyLead:
+      'Eine Auswahl an Organisationen, Vereinen und Ressourcen zum Weiterlesen — für lokale Dojos und ergänzendes Lernmaterial.',
   },
 };
 
@@ -408,6 +413,7 @@ export const GuidePage = ({
         <motion.article className="space-y-3" {...animationProps}>
           <header className="space-y-2">
             <h2 className="text-xl font-semibold leading-tight">{locale === 'de' ? 'Weiterführende Ressourcen' : 'Further Study'}</h2>
+            <p className="text-sm text-subtle leading-relaxed">{copy.furtherStudyLead}</p>
           </header>
           <div className="flex flex-wrap gap-3">
             <a
