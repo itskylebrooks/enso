@@ -931,6 +931,16 @@ export default function App(): ReactElement {
 
   const techniqueNotFound = Boolean(activeSlug) && !currentTechnique && route !== 'glossary';
 
+  // Ensure we scroll to the top whenever navigation changes to a new page or detail view.
+  // This guarantees that if the user was scrolled down on the previous page, opening
+  // a new route, technique, or glossary term always starts at the top of the page.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    // Use a micro task to ensure any route transition DOM updates happen first.
+    // This is particularly helpful when used with animated transitions.
+    Promise.resolve().then(() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' }));
+  }, [route, activeSlug, currentTechnique?.id]);
+
   const techniqueBackLabel =
     route === 'bookmarks'
       ? copy.backToBookmarks
