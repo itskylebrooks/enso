@@ -27,9 +27,10 @@ export const DanOverview = ({ locale }: Props): ReactElement => {
         <motion.header className="space-y-2" {...animationProps}>
           <h1 className="text-2xl font-semibold leading-tight">{copy.danOverviewTitle}</h1>
           <p className="text-sm text-subtle leading-relaxed">{copy.danOverviewLead}</p>
-        </motion.header>
+  </motion.header>
+  <hr className="border-t surface-border my-6" />
 
-        <motion.article className="prose max-w-none space-y-6" {...animationProps}>
+  <motion.article className="prose max-w-none space-y-6" {...animationProps}>
           {/* What this page is */}
           <div>
             <h2 className="text-lg font-semibold mb-3">{copy.danOverviewWhatTitle}</h2>
