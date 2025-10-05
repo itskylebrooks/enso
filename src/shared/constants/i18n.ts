@@ -192,7 +192,7 @@ export const messages = {
     tantoTechniquesLead: 'This table shows knife techniques (tantō-waza), focusing on defense against armed attacks and safe disarming methods. The icons indicate which defenses apply to each attack. Click on a technique or cell to see explanations and possible variations. Scroll left/right to explore the complete set.',
     // Advanced programs page/link
     advancedProgramsTitle: 'Advanced Programs',
-  advancedProgramsLead: 'Extended study tables for Saya no Uchi, Jō and Tantō techniques.',
+    advancedProgramsLead: 'Advanced programs practiced from 1st Dan onward, focusing on Aikidō’s weapons principles. These programs complement the regular examination curriculum.',
     advancedProgramsCta: 'View Advanced Programs',
     danOverviewTitle: 'Dan Overview (DAB)',
     danOverviewLead: 'A concise summary of 2nd–5th Dan requirements under the Deutscher Aikido-Bund (DAB). Regional bodies may add details; for weapons tables see Advanced Programs.',
@@ -441,7 +441,7 @@ export const messages = {
     tantoTechniquesLead: 'Diese Tabelle zeigt Messertechniken (Tantō-Waza), mit Schwerpunkt auf Verteidigung gegen bewaffnete Angriffe und sichere Entwaffnung. Symbole markieren, welche Abwehr gegen welchen Angriff angewendet wird. Klicke auf eine Technik oder Zelle, um Erklärungen und Varianten zu sehen. Zum vollständigen Anzeigen bitte nach links/rechts scrollen.',
     // Advanced programs page/link
     advancedProgramsTitle: 'Erweiterte Programme',
-  advancedProgramsLead: 'Erweiterte Tabellen für Saya-no-Uchi, Jō- und Tantō-Techniken.',
+    advancedProgramsLead: 'Fortgeschrittene Programme ab 1. Dan mit Schwerpunkt auf Waffenprinzipien des Aikidō. Diese Programme ergänzen das reguläre Prüfungsprogramm.',
     advancedProgramsCta: 'Erweiterte Programme ansehen',
     danOverviewTitle: 'Dan-Überblick (DAB)',
   danOverviewLead: 'Knapper Überblick über Anforderungen 2.–5. Dan nach Deutschem Aikido-Bund (DAB). Regionale Ergänzungen sind möglich; Waffen-Tabellen: Fortgeschrittene Programme.',

@@ -34,6 +34,12 @@ export const AdvancedPrograms = ({ locale, onOpenTechnique }: Props): ReactEleme
 
         <motion.article className="space-y-4" {...animationProps}>
           <header className="space-y-2">
+            <h1 className="text-2xl font-semibold leading-tight">{i18nCopy.advancedProgramsTitle}</h1>
+            <p className="text-sm text-subtle leading-relaxed">{i18nCopy.advancedProgramsLead}</p>
+          </header>
+          <hr className="border-t surface-border my-6" />
+
+          <header className="space-y-2">
             <h2 className="text-xl font-semibold leading-tight">{i18nCopy.sayaNoUchiTitle}</h2>
             <p className="text-sm text-subtle leading-relaxed">{i18nCopy.sayaNoUchiLead}</p>
           </header>
