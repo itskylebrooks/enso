@@ -292,9 +292,9 @@ export const GuidePage = ({
           </header>
           <ul className="space-y-3 text-sm leading-relaxed">
             {copy.philosophyPoints.map((point) => (
-              <li key={point} className="flex gap-2">
-                <span aria-hidden className="mt-1 text-base">•</span>
-                <span>{point}</span>
+              <li key={point} className="text-sm leading-relaxed flex gap-2">
+                <span aria-hidden className="shrink-0">•</span>
+                <span className="flex-1">{point}</span>
               </li>
             ))}
           </ul>
@@ -389,9 +389,9 @@ export const GuidePage = ({
           </header>
           <ul className="space-y-3 text-sm leading-relaxed">
             {copy.etiquettePoints.map((point) => (
-              <li key={point} className="flex gap-2">
-                <span aria-hidden className="mt-1 text-base">•</span>
-                <span>{point}</span>
+              <li key={point} className="text-sm leading-relaxed flex gap-2">
+                <span aria-hidden className="shrink-0">•</span>
+                <span className="flex-1">{point}</span>
               </li>
             ))}
           </ul>
