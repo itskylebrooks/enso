@@ -1244,6 +1244,8 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
 
   const handleTypeChange = (feedbackType: FeedbackType) => {
     setSubmissionState('idle');
+    setSubmitError(null);
+    setSubmitResult(null);
     setDraft((current) => {
       if (current.selectedType === feedbackType) return current;
       return { ...current, selectedType: feedbackType };
@@ -1360,7 +1362,11 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
   }, [draft.appFeedback]);
 
   const isBugReportReady = useMemo(() => {
-    return hasContent(draft.bugReport.location) && hasContent(draft.bugReport.details);
+    return (
+      hasContent(draft.bugReport.location) &&
+      hasContent(draft.bugReport.details) &&
+      hasContent(draft.bugReport.reproduction)
+    );
   }, [draft.bugReport]);
 
   const isNewTechniqueReady = (() => {
@@ -1754,7 +1760,12 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
                     onChange={() => toggleSection(typedSection)}
                     className="sr-only"
                   />
-                  <Chip label={improveSectionLabels[typedSection]} active={isActive} />
+                  <Chip
+                    label={improveSectionLabels[typedSection]}
+                    active={isActive}
+                    onClick={() => toggleSection(typedSection)}
+                    aria-pressed={isActive}
+                  />
                 </label>
               );
             })}
@@ -2034,7 +2045,12 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
                     onChange={() => toggleTag(tag)}
                     className="sr-only"
                   />
-                  <Chip label={categoryTagLabels[tag]} active={isActive} />
+                  <Chip
+                    label={categoryTagLabels[tag]}
+                    active={isActive}
+                    onClick={() => toggleTag(tag)}
+                    aria-pressed={isActive}
+                  />
                 </label>
               );
             })}
@@ -2474,16 +2490,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
           />
         </section>
 
-        <section className="space-y-2">
-          <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.app.screenshotLabel}</label>
-          <input
-            type="url"
-            value={screenshotUrl}
-            onChange={(event) => updateAppFeedback('screenshotUrl', event.target.value)}
-            placeholder={t.placeholders.screenshotUrl}
-            className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
-          />
-        </section>
+        {/* Screenshot/link input removed as requested */}
       </motion.div>
     );
   };
@@ -2676,7 +2683,10 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
                   className="rounded-xl border border-transparent bg-[var(--color-surface)] px-4 py-3 text-sm shadow-sm space-y-1"
                 >
                   <p className="font-medium">{t.hints.successTitle}</p>
-                  <p className="text-subtle">{t.hints.successBody}</p>
+                  <p className="text-subtle">{t.globalConsent}</p>
+                  {submitResult?.requestId && (
+                    <p className="text-xs text-subtle">{t.newTechnique.requestIdLabel} {submitResult.requestId}</p>
+                  )}
                   {submitResult.issueUrl && (
                     <a
                       href={submitResult.issueUrl}
@@ -2724,17 +2734,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
                 >
                   {t.buttons.downloadJson}
                 </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSubmissionState('idle');
-                    setSubmitError(null);
-                    setSubmitResult(null);
-                  }}
-                  className="rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm"
-                >
-                  {t.buttons.edit}
-                </button>
+                {/* Edit again button removed per request */}
                 {submissionState === 'success' && (
                   <button
                     type="button"
