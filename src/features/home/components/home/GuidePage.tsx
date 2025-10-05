@@ -168,6 +168,12 @@ const content: Record<Locale, GuideContent> = {
   },
 };
 
+// YouTube inspiration titles for localization
+const youtubeTitles: Record<Locale, { heading: string; lead: string }> = {
+  en: { heading: 'YouTube inspiration', lead: 'Curated playlists to watch for technique ideas, drills, and historical footage.' },
+  de: { heading: 'YouTube Inspiration', lead: 'Ausgewählte Playlists für Techniken, Drills und historisches Material.' },
+};
+
 const sectionVariants = {
   hidden: { opacity: 0, y: 14 },
   show: { opacity: 1, y: 0 },
@@ -493,6 +499,54 @@ export const GuidePage = ({
               aria-label="Aikido BSV (opens in new tab)"
             >
               BSV
+            </a>
+          </div>
+        </motion.article>
+        {/* YouTube Inspiration */}
+        <motion.article className="space-y-3" {...animationProps}>
+          <header className="space-y-2">
+            <h2 className="text-xl font-semibold leading-tight">{youtubeTitles[locale].heading}</h2>
+            <p className="text-sm text-subtle leading-relaxed">{youtubeTitles[locale].lead}</p>
+          </header>
+          <div className="flex flex-wrap gap-3">
+            <a
+              href="https://www.youtube.com/playlist?list=PLsN-xOAz_W0941oH9feDAApPxiRBN4zNu"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center rounded-full px-4 py-2 bg-[var(--color-surface)]/20 border surface-border text-sm hover:bg-[var(--color-surface-hover)] transition-colors"
+              aria-label="Budo SKK playlist (opens in new tab)"
+            >
+              Budo SKK
+            </a>
+
+            <a
+              href="https://www.youtube.com/playlist?list=PL970B7BDB368DB950"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center rounded-full px-4 py-2 bg-[var(--color-surface)]/20 border surface-border text-sm hover:bg-[var(--color-surface-hover)] transition-colors"
+              aria-label="Howcast playlist (opens in new tab)"
+            >
+              Howcast
+            </a>
+
+            <a
+              href="https://www.youtube.com/playlist?list=PLN_iPNgAZVncPf9AQfKQkhiyCjoLAjjET"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center rounded-full px-4 py-2 bg-[var(--color-surface)]/20 border surface-border text-sm hover:bg-[var(--color-surface-hover)] transition-colors"
+              aria-label="ExpertVillage / Leaf Group playlist (opens in new tab)"
+            >
+              ExpertVillage
+            </a>
+
+            <a
+              href="https://www.youtube.com/playlist?list=PLragapDhtsQXzrqgZk-ZgDX6zJopT0WCK"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center rounded-full px-4 py-2 bg-[var(--color-surface)]/20 border surface-border text-sm hover:bg-[var(--color-surface-hover)] transition-colors"
+              aria-label="Martial Arts Kenshinkai Aikido playlist (opens in new tab)"
+            >
+              Yoshinkan Aikido
             </a>
           </div>
         </motion.article>
