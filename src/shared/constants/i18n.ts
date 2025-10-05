@@ -193,19 +193,6 @@ export const messages = {
         chooseType: 'Choose a feedback type to reveal the tailored form.',
       },
       globalConsent: 'By submitting, you agree your contribution may appear in the Enso database.',
-      precheck: {
-        title: 'Before you add a new technique',
-        description: 'Search to verify the technique does not already exist. If it does, please submit it as a variation instead of duplicating it.',
-        searchLabel: 'Does it already exist?',
-        searchPlaceholder: 'Search by English, German, or Japanese name…',
-        matchesTitle: 'Possible matches',
-        noMatches: 'No close matches found in the current library.',
-        duplicateHint: 'If you recognise a similar technique, switch to the “New version / variation” form to keep the library consistent.',
-        switchToVariation: 'Switch to “New version / variation”',
-        checkboxLabel: 'I confirm this is not a duplicate of an existing technique.',
-        confirm: 'Continue to form',
-        cancel: 'Cancel',
-      },
       improve: {
         sections: {
           steps: 'Steps',
@@ -763,19 +750,6 @@ export const messages = {
       },
       globalConsent:
         'Mit dem Absenden stimmst du zu, dass dein Beitrag in der Enso-Datenbank erscheinen darf.',
-      precheck: {
-        title: 'Bevor du eine neue Technik hinzufügst',
-        description: 'Prüfe zuerst, ob die Technik bereits existiert. Falls ja, reiche sie als Variante ein, damit das Archiv sauber bleibt.',
-        searchLabel: 'Gibt es sie bereits?',
-        searchPlaceholder: 'Nach englischem, deutschem oder japanischem Namen suchen…',
-        matchesTitle: 'Mögliche Treffer',
-        noMatches: 'Keine ähnlichen Einträge in der aktuellen Bibliothek gefunden.',
-        duplicateHint: 'Wenn du eine ähnliche Technik erkennst, wechsle bitte zum Formular „Neue Variante/Version“, statt einen Doppelgänger anzulegen.',
-        switchToVariation: 'Zu „Neue Variante/Version“ wechseln',
-        checkboxLabel: 'Ich bestätige, dass es keine Dublette einer bestehenden Technik ist.',
-        confirm: 'Weiter zum Formular',
-        cancel: 'Abbrechen',
-      },
       improve: {
         sections: {
           steps: 'Schritte',
