@@ -129,7 +129,6 @@ type BugReportForm = {
   location: string;
   details: string;
   reproduction: string;
-  includeSystemInfo: boolean;
 };
 
 type NewTechniqueForm = {
@@ -363,7 +362,7 @@ const buildFeedbackPayload = (
 ): FeedbackApiPayload | null => {
   const { slugPreview, duplicateMatches, locale, findTechniqueName } = options;
   const clientVersion = getClientVersion();
-  const userAgent = typeof navigator !== 'undefined' ? navigator.userAgent : undefined;
+  // userAgent collection removed intentionally
   const defaultName =
     [draft.newTechnique.creditName, draft.addVariation.creditName, draft.improveTechnique.credit]
       .map((value) => (typeof value === 'string' ? value.trim() : ''))
@@ -492,7 +491,6 @@ const buildFeedbackPayload = (
       diffJson: fillMissing(flattened),
       media: summarizeMedia(form.media),
       clientVersion,
-      userAgent,
       honeypot: '',
     };
   }
@@ -574,7 +572,6 @@ const buildFeedbackPayload = (
       diffJson: fillMissing(flattened),
       media: summarizeMedia(form.media),
       clientVersion,
-      userAgent,
       honeypot: '',
     };
   }
@@ -604,7 +601,6 @@ const buildFeedbackPayload = (
       diffJson: improveTechnique,
       media: summarizeMedia(improveTechnique.media),
       clientVersion,
-      userAgent,
       honeypot: '',
     };
   }
@@ -621,7 +617,7 @@ const buildFeedbackPayload = (
       detailsMd,
       diffJson: bug,
       clientVersion,
-      userAgent,
+      // userAgent intentionally omitted per privacy settings
       honeypot: '',
     };
   }
@@ -650,7 +646,6 @@ const buildFeedbackPayload = (
           : [],
       ),
       clientVersion,
-      userAgent,
       honeypot: '',
     };
   }
@@ -720,7 +715,6 @@ const defaultBugReportForm = (): BugReportForm => ({
   location: '',
   details: '',
   reproduction: '',
-  includeSystemInfo: true,
 });
 
 const defaultDraft = (): FeedbackDraft => ({
@@ -1622,7 +1616,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
       ];
     }
 
-    const { location, details, reproduction, includeSystemInfo } = draft.bugReport;
+  const { location, details, reproduction } = draft.bugReport;
     const reproductionLines = reproduction
       .split('\n')
       .map((line) => line.trim())
@@ -1641,10 +1635,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
           ? formatCount(reproductionLines.length, t.summary.counts.reproduction)
           : '—',
       },
-      {
-        label: t.summary.labels.includeSystemInfo,
-        value: includeSystemInfo ? t.summary.boolean.yes : t.summary.boolean.no,
-      },
+      // includeSystemInfo removed from summary per privacy change
     ];
   }, [
     areaLabels,
@@ -2511,7 +2502,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
   };
 
   const renderAppFeedbackForm = (): ReactElement => {
-    const { area, feedback, screenshotUrl } = draft.appFeedback;
+    const { area, feedback } = draft.appFeedback;
     const areaOptions = (Object.keys(areaLabels) as AppArea[]).map((value) => ({
       value,
       label: areaLabels[value],
@@ -2553,7 +2544,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
   };
 
   const renderBugReportForm = (): ReactElement => {
-    const { location, details, reproduction, includeSystemInfo } = draft.bugReport;
+    const { location, details, reproduction } = draft.bugReport;
     return (
       <motion.div
         key="bug"
@@ -2596,15 +2587,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
           />
         </section>
 
-        <label className="flex items-center gap-3 text-sm text-subtle">
-          <input
-            type="checkbox"
-            checked={includeSystemInfo}
-            onChange={(event) => updateBugReport('includeSystemInfo', event.target.checked)}
-            className="h-4 w-4 rounded border surface-border"
-          />
-          {t.forms.bug.includeSystemInfoLabel}
-        </label>
+        {/* includeSystemInfo toggle removed per privacy change */}
       </motion.div>
     );
   };
