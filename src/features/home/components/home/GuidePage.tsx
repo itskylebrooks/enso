@@ -17,6 +17,7 @@ type GuidePageProps = {
   onNavigateToBookmarks: (collectionId: string) => void;
   onOpenTechnique: (slug: string, trainerId?: string, entry?: EntryMode, skipExistenceCheck?: boolean) => void;
   onNavigateToAdvanced: () => void;
+  onNavigateToDan: () => void;
 };
 
 type TermEntry = {
@@ -180,6 +181,7 @@ export const GuidePage = ({
   onNavigateToBookmarks,
   onOpenTechnique,
   onNavigateToAdvanced,
+  onNavigateToDan,
 }: GuidePageProps): ReactElement => {
   const copy = content[locale];
   const i18nCopy = getCopy(locale);
@@ -361,13 +363,20 @@ export const GuidePage = ({
             <h2 className="text-xl font-semibold leading-tight">{i18nCopy.advancedProgramsTitle}</h2>
             <p className="text-sm text-subtle leading-relaxed">{i18nCopy.advancedProgramsLead}</p>
           </header>
-          <div>
+          <div className="flex gap-3">
             <button
               type="button"
               onClick={onNavigateToAdvanced}
               className="inline-flex items-center rounded-xl border surface-border bg-[var(--color-surface)]/70 px-4 py-2 text-sm font-medium hover:bg-[var(--color-surface)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
             >
               {i18nCopy.advancedProgramsCta} →
+            </button>
+            <button
+              type="button"
+              onClick={() => onNavigateToDan?.()}
+              className="inline-flex items-center rounded-xl border surface-border bg-[var(--color-surface)]/20 px-4 py-2 text-sm font-medium hover:bg-[var(--color-surface-hover)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+            >
+              {i18nCopy.danOverviewCta} →
             </button>
           </div>
         </motion.article>

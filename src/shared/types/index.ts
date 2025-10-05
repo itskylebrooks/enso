@@ -150,6 +150,7 @@ export type AppRoute =
   | 'about'
   | 'guide'
   | 'guideAdvanced'
+  | 'guideDan'
   | 'glossary'
   | 'feedback';
 

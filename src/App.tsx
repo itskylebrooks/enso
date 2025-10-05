@@ -13,6 +13,7 @@ import { MobileFilters } from '@shared/components/ui/MobileFilters';
 import { HomePage } from './features/home';
 import { AboutPage } from '@features/home/components/home/AboutPage';
 import { AdvancedPrograms } from '@features/home/components/home/AdvancedPrograms';
+import { DanOverview } from '@features/home/components/home/DanOverview';
 import { GuidePage } from '@features/home/components/home/GuidePage';
 import { FeedbackPage } from '@features/home/components/feedback/FeedbackPage';
 import { GlossaryPage, GlossaryDetailPage, GlossaryFilterPanel, MobileGlossaryFilters, loadAllTerms } from './features/glossary';
@@ -79,6 +80,8 @@ const routeToPath = (route: AppRoute): string => {
       return '/guide';
     case 'guideAdvanced':
       return '/guide/advanced';
+    case 'guideDan':
+      return '/guide/dan';
     case 'feedback':
       return '/feedback';
     case 'library':
@@ -151,6 +154,10 @@ const parseLocation = (
 
   if (pathname === '/guide/advanced') {
     return { route: 'guideAdvanced', slug: null };
+  }
+
+  if (pathname === '/guide/dan') {
+    return { route: 'guideDan', slug: null };
   }
 
   if (pathname === '/feedback') {
@@ -1034,6 +1041,12 @@ export default function App(): ReactElement {
         onOpenTechnique={openTechnique}
       />
     );
+  } else if (route === 'guideDan') {
+    mainContent = (
+      <DanOverview
+        locale={locale}
+      />
+    );
   } else if (route === 'guide') {
     mainContent = (
       <GuidePage
@@ -1050,6 +1063,7 @@ export default function App(): ReactElement {
         }}
         onOpenTechnique={openTechnique}
         onNavigateToAdvanced={() => navigateTo('guideAdvanced')}
+        onNavigateToDan={() => navigateTo('guideDan')}
       />
     );
   } else if (route === 'feedback') {

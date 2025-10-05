@@ -28,7 +28,7 @@ export const Header = ({
 }: HeaderProps): ReactElement => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { overlayMotion, prefersReducedMotion } = useMotionPreferences();
-  const isGuideActive = route === 'guide' || route === 'guideAdvanced';
+  const isGuideActive = route === 'guide' || route === 'guideAdvanced' || route === 'guideDan';
   const menuRef = useRef<HTMLDivElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
 
