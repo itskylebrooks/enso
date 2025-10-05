@@ -22,6 +22,14 @@ export const MediaEmbed = ({ media }: MediaEmbedProps): ReactElement => {
     );
   }
 
+  if (media.type === 'image') {
+    return (
+      <figure className="w-full overflow-hidden rounded-xl border surface-border surface">
+        <img src={media.url} alt="Reference" className="w-full object-cover" loading="lazy" />
+      </figure>
+    );
+  }
+
   return (
     <a
       href={media.url}

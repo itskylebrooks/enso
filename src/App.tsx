@@ -1077,7 +1077,14 @@ export default function App(): ReactElement {
       />
     );
   } else if (route === 'feedback') {
-    mainContent = <FeedbackPage copy={copy} onBack={() => navigateTo('library')} />;
+    mainContent = (
+      <FeedbackPage
+        copy={copy}
+        locale={locale}
+        techniques={db.techniques}
+        onBack={() => navigateTo('library')}
+      />
+    );
   } else {
     mainContent = (
       <div className="max-w-6xl mx-auto px-4 py-4 space-y-4">

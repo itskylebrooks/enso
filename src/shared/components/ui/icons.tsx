@@ -220,3 +220,51 @@ export const FootprintsIcon = (props: SVGProps<SVGSVGElement>): ReactElement => 
     <path d="M4 13h4" />
   </svg>
 );
+
+export const BugIcon = (props: SVGProps<SVGSVGElement>): ReactElement => (
+  <svg {...baseProps} width={24} height={24} {...props} className={['lucide lucide-bug-icon lucide-bug', props.className].filter(Boolean).join(' ')}>
+    <path d="M12 20v-9" />
+    <path d="M14 7a4 4 0 0 1 4 4v3a6 6 0 0 1-12 0v-3a4 4 0 0 1 4-4z" />
+    <path d="M14.12 3.88 16 2" />
+    <path d="M21 21a4 4 0 0 0-3.81-4" />
+    <path d="M21 5a4 4 0 0 1-3.55 3.97" />
+    <path d="M22 13h-4" />
+    <path d="M3 21a4 4 0 0 1 3.81-4" />
+    <path d="M3 5a4 4 0 0 0 3.55 3.97" />
+    <path d="M6 13H2" />
+    <path d="m8 2 1.88 1.88" />
+    <path d="M9 7.13V6a3 3 0 1 1 6 0v1.13" />
+  </svg>
+);
+
+export const LightbulbIcon = (props: SVGProps<SVGSVGElement>): ReactElement => (
+  <svg {...baseProps} width={24} height={24} {...props} className={['lucide lucide-lightbulb-icon lucide-lightbulb', props.className].filter(Boolean).join(' ')}>
+    <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5" />
+    <path d="M9 18h6" />
+    <path d="M10 22h4" />
+  </svg>
+);
+
+export const RocketIcon = (props: SVGProps<SVGSVGElement>): ReactElement => (
+  <svg {...baseProps} width={24} height={24} {...props} className={['lucide lucide-rocket-icon lucide-rocket', props.className].filter(Boolean).join(' ')}>
+    <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z" />
+    <path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z" />
+    <path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" />
+    <path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" />
+  </svg>
+);
+
+export const BadgePlusIcon = (props: SVGProps<SVGSVGElement>): ReactElement => (
+  <svg {...baseProps} width={24} height={24} {...props} className={['lucide lucide-badge-plus-icon lucide-badge-plus', props.className].filter(Boolean).join(' ')}>
+    <path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" />
+    <line x1="12" x2="12" y1="8" y2="16" />
+    <line x1="8" x2="16" y1="12" y2="12" />
+  </svg>
+);
+
+export const HeartPulseIcon = (props: SVGProps<SVGSVGElement>): ReactElement => (
+  <svg {...baseProps} width={24} height={24} {...props} className={['lucide lucide-heart-pulse-icon lucide-heart-pulse', props.className].filter(Boolean).join(' ')}>
+    <path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5" />
+    <path d="M3.22 13H9.5l.5-1 2 4.5 2-7 1.5 3.5h5.27" />
+  </svg>
+);
