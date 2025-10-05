@@ -2,7 +2,6 @@ import { useCallback, useEffect, useMemo, useState, type ReactElement } from 're
 import { AnimatePresence, motion } from 'motion/react';
 import { Select, type SelectOption } from '@shared/components/ui/Select';
 import { Chip } from '@shared/components/ui/Chip';
-import { Segmented } from '@shared/components/ui/Segmented';
 import { useMotionPreferences } from '@shared/components/ui/motion';
 import { classNames } from '@shared/utils/classNames';
 import { gradeOrder } from '@shared/utils/grades';
@@ -17,7 +16,7 @@ import {
   SproutIcon,
 } from '@shared/components/ui/icons';
 import type { Copy, FeedbackPageCopy } from '@shared/constants/i18n';
-import type { Grade, Hanmi, Locale, Technique, Localized } from '@shared/types';
+import type { Grade, Hanmi, Locale, Technique } from '@shared/types';
 
 export type FeedbackType =
   | 'improveTechnique'
@@ -89,15 +88,35 @@ type ImproveTechniqueForm = {
 
 type VariationForm = {
   relatedTechniqueId: string | null;
-  variationName: string;
+  direction: 'irimi' | 'tenkan' | 'omote' | 'ura' | '';
+  stance: Hanmi | null;
+  trainer: string;
+  summary: string;
   categoryTags: CategoryTag[];
   level: Grade | null;
-  description: string;
   steps: StepItem[];
   ukeInstructions: string;
   media: MediaEntry[];
+  keyPoints: string[];
+  commonMistakes: string[];
   context: string;
-  credit: string;
+  creditName: string;
+  trainerCredit: string;
+  markAsBase: boolean;
+};
+
+type VariationDirection = Exclude<VariationForm['direction'], ''>;
+
+const variationDirectionLabels: Record<VariationDirection, string> = {
+  irimi: 'Irimi',
+  tenkan: 'Tenkan',
+  omote: 'Omote',
+  ura: 'Ura',
+};
+
+const hanmiLabelMap: Record<Hanmi, string> = {
+  'ai-hanmi': 'Ai-hanmi',
+  'gyaku-hanmi': 'Gyaku-hanmi',
 };
 
 type AppFeedbackForm = {
@@ -114,36 +133,26 @@ type BugReportForm = {
 };
 
 type NewTechniqueForm = {
-  precheckConfirmed: boolean;
-  name: Localized<string>;
-  jp: {
-    kanji: string;
-    romaji: string;
-  };
+  name: string;
+  jpName: string;
   attack: string | null;
   category: string | null;
   weapon: string | null;
   entries: Array<'irimi' | 'tenkan'>;
   hanmi: Hanmi | null;
+  summary: string;
   levelHint: string;
-  summary: Localized<string>;
-  steps: Localized<StepItem[]>;
-  ukeRole: Localized<string>;
-  ukeNotes: Localized<string[]>;
-  keyPoints: Localized<string[]>;
-  commonMistakes: Localized<string[]>;
+  steps: StepItem[];
+  ukeRole: string;
+  ukeNotes: string[];
+  keyPoints: string[];
+  commonMistakes: string[];
   media: MediaEntry[];
   sources: string;
-  contributor: {
-    name: string;
-    contact: string;
-  };
-  lineage: {
-    dojoOrTrainer: string;
-    markAsBase: boolean;
-  };
+  creditName: string;
+  trainerCredit: string;
+  markAsBase: boolean;
   consent: boolean;
-  precheckSearch: string;
 };
 
 type FeedbackDraft = {
@@ -166,44 +175,68 @@ const createId = (): string => {
 
 const createStepList = (): StepItem[] => [{ id: createId(), text: '' }];
 
-const defaultLocalizedSteps = (): Localized<StepItem[]> => ({
-  en: createStepList(),
-  de: createStepList(),
-});
-
 const SUMMARY_MAX = 230;
 
-const defaultLocalizedString = (): Localized<string> => ({ en: '', de: '' });
-
-const defaultLocalizedList = (): Localized<string[]> => ({ en: [''], de: [''] });
-
-const sanitizeLocalizedString = (value?: Localized<string>): Localized<string> => ({
-  en: value?.en ?? '',
-  de: value?.de ?? '',
-});
-
-const sanitizeLocalizedList = (value?: Localized<string[]>): Localized<string[]> => {
-  const sanitize = (list?: string[]): string[] => {
-    if (!Array.isArray(list)) return [''];
-    const cleaned = list.map((item) => item ?? '');
-    return cleaned.length > 0 ? cleaned : [''];
-  };
-  return {
-    en: sanitize(value?.en),
-    de: sanitize(value?.de),
-  };
+const ensureString = (value: unknown, fallback = ''): string => {
+  if (typeof value === 'string') return value;
+  if (value && typeof value === 'object') {
+    const localized = value as { en?: unknown; de?: unknown };
+    if (typeof localized.en === 'string' && localized.en.trim()) return localized.en;
+    if (typeof localized.de === 'string') return localized.de;
+  }
+  return fallback;
 };
 
-const sanitizeLocalizedSteps = (value?: Localized<StepItem[]>): Localized<StepItem[]> => ({
-  en: (value?.en && value.en.length > 0 ? value.en : createStepList()).map((step) => ({
-    id: step?.id || createId(),
-    text: step?.text || '',
-  })),
-  de: (value?.de && value.de.length > 0 ? value.de : createStepList()).map((step) => ({
-    id: step?.id || createId(),
-    text: step?.text || '',
-  })),
-});
+const ensureStringList = (value: unknown, minItems = 1): string[] => {
+  const coerce = (list: unknown[]): string[] => {
+    const cleaned = list.map((item) => (typeof item === 'string' ? item : '')).filter((item) => item !== undefined);
+    while (cleaned.length < minItems) cleaned.push('');
+    return cleaned.length > 0 ? cleaned : new Array(minItems).fill('');
+  };
+
+  if (Array.isArray(value) && value.length > 0) {
+    return coerce(value);
+  }
+
+  if (value && typeof value === 'object') {
+    const localized = value as { en?: unknown; de?: unknown };
+    if (Array.isArray(localized.en) && localized.en.length > 0) {
+      return coerce(localized.en);
+    }
+    if (Array.isArray(localized.de) && localized.de.length > 0) {
+      return coerce(localized.de);
+    }
+  }
+
+  return new Array(minItems).fill('');
+};
+
+const ensureStepList = (value: unknown): StepItem[] => {
+  const normalize = (list: unknown[]): StepItem[] =>
+    list.map((item) => {
+      const it = item as Record<string, unknown>;
+      return {
+        id: typeof it?.id === 'string' ? (it.id as string) : createId(),
+        text: typeof it?.text === 'string' ? (it.text as string) : '',
+      };
+    });
+
+  if (Array.isArray(value) && value.length > 0) {
+    return normalize(value);
+  }
+
+  if (value && typeof value === 'object') {
+    const localized = value as { en?: unknown[]; de?: unknown[] };
+    if (Array.isArray(localized.en) && localized.en.length > 0) {
+      return normalize(localized.en);
+    }
+    if (Array.isArray(localized.de) && localized.de.length > 0) {
+      return normalize(localized.de);
+    }
+  }
+
+  return createStepList();
+};
 
 const sanitizeEntries = (entries?: string[]): Array<'irimi' | 'tenkan'> => {
   if (!Array.isArray(entries)) return [];
@@ -216,6 +249,12 @@ const sanitizeEntries = (entries?: string[]): Array<'irimi' | 'tenkan'> => {
   return allowed;
 };
 
+const sanitizeHanmi = (value: unknown): Hanmi | null =>
+  value === 'ai-hanmi' || value === 'gyaku-hanmi' ? value : null;
+
+const isVariationDirection = (value: unknown): value is VariationForm['direction'] =>
+  value === 'irimi' || value === 'tenkan' || value === 'omote' || value === 'ura';
+
 const slugify = (value: string): string =>
   stripDiacritics(value)
     .toLowerCase()
@@ -226,12 +265,11 @@ const slugify = (value: string): string =>
 
 const buildNewTechniqueSlug = (
   attack: string | null,
-  name: Localized<string>,
+  name: string,
   entries: Array<'irimi' | 'tenkan'>,
 ): string => {
   const attackSegment = attack ? slugify(attack) : '';
-  const baseName = name.en.trim() || name.de.trim();
-  const nameSegment = baseName ? slugify(baseName) : '';
+  const nameSegment = name.trim() ? slugify(name) : '';
   const entriesSegment = entries.length > 0 ? entries.join('-') : '';
   return [attackSegment, nameSegment, entriesSegment].filter(Boolean).join('-');
 };
@@ -250,41 +288,28 @@ const isUnusualAttackWeapon = (attack: string | null, weapon: string | null): bo
 const computeDuplicateMatches = (form: NewTechniqueForm, techniques: Technique[]): Technique[] => {
   const slugPreview = buildNewTechniqueSlug(form.attack, form.name, form.entries);
   const normalizedSlug = slugPreview ? toSearchable(slugPreview) : '';
-  const nameEn = toSearchable(form.name.en);
-  const nameDe = toSearchable(form.name.de);
+  const normalizedName = toSearchable(form.name);
   const attack = form.attack;
   const weapon = form.weapon ?? 'empty-hand';
 
-  if (!nameEn && !nameDe && !normalizedSlug) return [];
+  if (!normalizedName && !normalizedSlug) return [];
 
-  return techniques.filter((tech) => {
-    const techNameEn = toSearchable(tech.name.en || '');
-    const techNameDe = toSearchable(tech.name.de || '');
-    const techSlug = toSearchable(tech.slug || '');
-    const techAttack = tech.attack;
-    const techWeapon = tech.weapon ?? 'empty-hand';
-
-    const slugMatch = normalizedSlug && techSlug === normalizedSlug;
-    const nameMatch =
-      (nameEn && techNameEn === nameEn) ||
-      (nameDe && techNameDe === nameDe);
-    const taxonomyMatch = (!attack || techAttack === attack) && techWeapon === weapon;
-
-    return slugMatch || (nameMatch && taxonomyMatch);
-  }).slice(0, 5);
-};
-
-const computePrecheckMatches = (query: string, techniques: Technique[]): Technique[] => {
-  const normalized = toSearchable(query.trim());
-  if (normalized.length < 2) return [];
   return techniques
     .filter((tech) => {
-      const nameEn = toSearchable(tech.name.en || '');
-      const nameDe = toSearchable(tech.name.de || '');
-      const slug = toSearchable(tech.slug || '');
-      return nameEn.includes(normalized) || nameDe.includes(normalized) || slug.includes(normalized);
+      const techNameEn = toSearchable(tech.name.en || '');
+      const techNameDe = toSearchable(tech.name.de || '');
+      const techSlug = toSearchable(tech.slug || '');
+      const techAttack = tech.attack;
+      const techWeapon = tech.weapon ?? 'empty-hand';
+
+      const slugMatch = normalizedSlug && techSlug === normalizedSlug;
+      const nameMatch =
+        normalizedName && (techNameEn === normalizedName || techNameDe === normalizedName);
+      const taxonomyMatch = (!attack || techAttack === attack) && techWeapon === weapon;
+
+      return slugMatch || (nameMatch && taxonomyMatch);
     })
-    .slice(0, 6);
+    .slice(0, 5);
 };
 
 const escapeInline = (value: string): string => {
@@ -339,29 +364,28 @@ const buildFeedbackPayload = (
   const { slugPreview, duplicateMatches, locale, findTechniqueName } = options;
   const clientVersion = getClientVersion();
   const userAgent = typeof navigator !== 'undefined' ? navigator.userAgent : undefined;
-  const defaultName = draft.newTechnique.contributor.name.trim() || 'Anonymous contributor';
+  const defaultName =
+    [draft.newTechnique.creditName, draft.addVariation.creditName, draft.improveTechnique.credit]
+      .map((value) => (typeof value === 'string' ? value.trim() : ''))
+      .find((value) => value.length > 0) ?? 'Anonymous contributor';
 
   if (selectedType === 'newTechnique') {
     const form = draft.newTechnique;
-    const summary = form.summary.en.trim() || form.summary.de.trim() || 'New technique proposal';
+    const summary = form.summary.trim() || 'New technique proposal';
+
+    const listMd = (items: string[]) =>
+      items.length ? items.map((item) => `- ${item || '-'}`).join('\n') : '-';
+    const stepsMd = form.steps.map((step, index) => `  ${index + 1}. ${step.text || '-'}`).join('\n') || '  -';
 
     const detailsParts: string[] = [];
-    detailsParts.push(`### Summary (EN)\n${form.summary.en.trim() || '-'}`);
-    detailsParts.push(`\n### Zusammenfassung (DE)\n${form.summary.de.trim() || '-'}`);
+    detailsParts.push(`### Summary\n${form.summary || '-'}`);
     detailsParts.push(
-      `\n### Taxonomy\n- Attack: ${form.attack ? form.attack : '—'}\n- Category: ${form.category ?? '—'}\n- Weapon: ${form.weapon ?? '—'}\n- Entries: ${form.entries.length ? form.entries.join(', ') : '—'}\n- Hanmi: ${form.hanmi ?? '—'}\n- Level hint: ${form.levelHint || '—'}`,
+      `\n### Taxonomy\n- Attack: ${form.attack ?? '—'}\n- Category: ${form.category ?? '—'}\n- Weapon: ${form.weapon ?? '—'}\n- Entries: ${form.entries.length ? form.entries.join(', ') : '—'}\n- Hanmi: ${form.hanmi ?? '—'}\n- Level hint: ${form.levelHint || '—'}`,
     );
-
-    const stepsEn = form.steps.en.map((step, index) => `  ${index + 1}. ${step.text || '-'}`).join('\n');
-    const stepsDe = form.steps.de.map((step, index) => `  ${index + 1}. ${step.text || '-'}`).join('\n');
-    detailsParts.push(`\n### Steps (EN)\n${stepsEn || '  -'}`);
-    detailsParts.push(`\n### Schritte (DE)\n${stepsDe || '  -'}`);
-
-    const formatList = (list: string[]) => (list.length ? list.map((item) => `- ${item || '-'}`).join('\n') : '-');
-    detailsParts.push(`\n### Uke guidance (EN)\n**Role:** ${form.ukeRole.en || '-'}\n${formatList(form.ukeNotes.en)}`);
-    detailsParts.push(`\n### Uke-Hinweise (DE)\n**Rolle:** ${form.ukeRole.de || '-'}\n${formatList(form.ukeNotes.de)}`);
-    detailsParts.push(`\n### Key points\n${formatList(form.keyPoints.en)}`);
-    detailsParts.push(`\n### Häufige Fehler\n${formatList(form.commonMistakes.de)}`);
+    detailsParts.push(`\n### Steps\n${stepsMd}`);
+    detailsParts.push(`\n### Uke guidance\n**Role:** ${form.ukeRole || '-'}\n${listMd(form.ukeNotes)}`);
+    detailsParts.push(`\n### Key points\n${listMd(form.keyPoints)}`);
+    detailsParts.push(`\n### Common mistakes\n${listMd(form.commonMistakes)}`);
 
     if (form.sources.trim()) {
       detailsParts.push(`\n### Sources / Attribution\n${form.sources.trim()}`);
@@ -377,8 +401,7 @@ const buildFeedbackPayload = (
     const detailsMd = detailsParts.join('\n');
 
     return {
-      name: escapeInline(defaultName),
-      email: form.contributor.contact.includes('@') ? form.contributor.contact.trim() : undefined,
+      name: escapeInline(form.creditName || defaultName),
       category: 'new-technique',
       entityType: 'technique',
       entityId: slugPreview || undefined,
@@ -387,7 +410,7 @@ const buildFeedbackPayload = (
       detailsMd,
       diffJson: {
         name: form.name,
-        jp: form.jp,
+        jpName: form.jpName,
         taxonomy: {
           attack: form.attack,
           category: form.category,
@@ -403,7 +426,11 @@ const buildFeedbackPayload = (
         },
         keyPoints: form.keyPoints,
         commonMistakes: form.commonMistakes,
-        lineage: form.lineage,
+        media: form.media,
+        sources: form.sources,
+        creditName: form.creditName,
+        trainerCredit: form.trainerCredit,
+        markAsBase: form.markAsBase,
       },
       media: summarizeMedia(form.media),
       clientVersion,
@@ -413,22 +440,65 @@ const buildFeedbackPayload = (
   }
 
   if (selectedType === 'addVariation') {
-    const { addVariation } = draft;
-    const summary = addVariation.description.trim() || addVariation.variationName || 'New variation suggestion';
-    const detailsMd = `Variation for ${addVariation.relatedTechniqueId || '-'}\n\n${addVariation.description || ''}\n\n### Steps\n${addVariation.steps
+    const form = draft.addVariation;
+    const techniqueLabel = findTechniqueName(form.relatedTechniqueId);
+    const directionLabel = form.direction && form.direction in variationDirectionLabels
+      ? variationDirectionLabels[form.direction as VariationDirection]
+      : '—';
+    const stanceLabel = form.stance ? hanmiLabelMap[form.stance] : '—';
+    const tagList = form.categoryTags.length
+      ? form.categoryTags.map((tag) => `- ${tag}`).join('\n')
+      : '-';
+    const stepsMd = form.steps
       .map((step, index) => `  ${index + 1}. ${step.text || '-'}`)
-      .join('\n')}`;
+      .join('\n') || '  -';
+    const keyPointsMd = form.keyPoints.map((item) => `- ${item || '-'}`).join('\n') || '-';
+    const mistakesMd = form.commonMistakes.map((item) => `- ${item || '-'}`).join('\n') || '-';
+
+    const summaryTextParts = [techniqueLabel, directionLabel].filter((value) => value && value !== '—');
+    const summary = summaryTextParts.length > 0 ? `${summaryTextParts.join(' – ')} variation` : `${techniqueLabel} variation`;
+
+    const detailsSections = [
+      `### Summary\n${form.summary || '-'}`,
+      `\n### Trainer & credit\n- Trainer: ${form.trainer || '—'}\n- Credit name: ${form.creditName || '—'}\n- Trainer credit: ${form.trainerCredit || '—'}\n- Mark as base: ${form.markAsBase ? 'Yes' : 'No'}`,
+      `\n### Direction & stance\n- Direction: ${directionLabel}\n- Stance: ${stanceLabel}\n- Level: ${form.level ? getLevelLabel(locale, form.level) : '—'}`,
+      `\n### Tags\n${tagList}`,
+      `\n### Steps\n${stepsMd}`,
+      `\n### Key points\n${keyPointsMd}`,
+      `\n### Common mistakes\n${mistakesMd}`,
+      `\n### Uke instructions\n${form.ukeInstructions || '-'}`,
+      `\n### Context / notes\n${form.context || '-'}`,
+    ];
+
+    const detailsMd = detailsSections.join('\n');
+
     return {
-      name: escapeInline(defaultName),
-      email: draft.newTechnique.contributor.contact.includes('@') ? draft.newTechnique.contributor.contact.trim() : undefined,
+      name: escapeInline(form.creditName || defaultName),
       category: 'new-variation',
       entityType: 'technique',
-      entityId: addVariation.relatedTechniqueId || undefined,
+      entityId: form.relatedTechniqueId || undefined,
       locale,
       summary: summary.length > 120 ? `${summary.slice(0, 117)}…` : summary,
       detailsMd,
-      diffJson: addVariation,
-      media: summarizeMedia(addVariation.media),
+      diffJson: {
+        relatedTechniqueId: form.relatedTechniqueId,
+        direction: form.direction,
+        stance: form.stance,
+        trainer: form.trainer,
+        summary: form.summary,
+        categoryTags: form.categoryTags,
+        level: form.level,
+        steps: form.steps,
+        keyPoints: form.keyPoints,
+        commonMistakes: form.commonMistakes,
+        ukeInstructions: form.ukeInstructions,
+        media: form.media,
+        context: form.context,
+        creditName: form.creditName,
+        trainerCredit: form.trainerCredit,
+        markAsBase: form.markAsBase,
+      },
+      media: summarizeMedia(form.media),
       clientVersion,
       userAgent,
       honeypot: '',
@@ -451,7 +521,6 @@ const buildFeedbackPayload = (
     const detailsMd = detailsParts.join('\n\n');
     return {
       name: escapeInline(defaultName),
-      email: draft.newTechnique.contributor.contact.includes('@') ? draft.newTechnique.contributor.contact.trim() : undefined,
       category: 'edit',
       entityType: 'technique',
       entityId: improveTechnique.techniqueId || undefined,
@@ -472,7 +541,6 @@ const buildFeedbackPayload = (
     const detailsMd = `### What happened\n${bug.details}\n\n### Steps to reproduce\n${bug.reproduction}`;
     return {
       name: escapeInline(defaultName),
-      email: draft.newTechnique.contributor.contact.includes('@') ? draft.newTechnique.contributor.contact.trim() : undefined,
       category: 'bug',
       entityType: 'other',
       summary,
@@ -490,7 +558,6 @@ const buildFeedbackPayload = (
     const detailsMd = feedback.feedback;
     return {
       name: escapeInline(defaultName),
-      email: draft.newTechnique.contributor.contact.includes('@') ? draft.newTechnique.contributor.contact.trim() : undefined,
       category: 'suggestion',
       entityType: 'guide',
       summary,
@@ -518,36 +585,26 @@ const buildFeedbackPayload = (
 };
 
 const defaultNewTechniqueForm = (): NewTechniqueForm => ({
-  precheckConfirmed: false,
-  name: defaultLocalizedString(),
-  jp: {
-    kanji: '',
-    romaji: '',
-  },
+  name: '',
+  jpName: '',
   attack: null,
   category: null,
   weapon: null,
   entries: [],
   hanmi: null,
+  summary: '',
   levelHint: '',
-  summary: defaultLocalizedString(),
-  steps: defaultLocalizedSteps(),
-  ukeRole: defaultLocalizedString(),
-  ukeNotes: defaultLocalizedList(),
-  keyPoints: defaultLocalizedList(),
-  commonMistakes: defaultLocalizedList(),
+  steps: [{ id: createId(), text: '' }],
+  ukeRole: '',
+  ukeNotes: ['', '', ''],
+  keyPoints: ['', '', ''],
+  commonMistakes: ['', '', ''],
   media: [],
   sources: '',
-  contributor: {
-    name: '',
-    contact: '',
-  },
-  lineage: {
-    dojoOrTrainer: '',
-    markAsBase: true,
-  },
+  creditName: '',
+  trainerCredit: '',
+  markAsBase: true,
   consent: false,
-  precheckSearch: '',
 });
 
 const defaultImproveTechniqueForm = (): ImproveTechniqueForm => ({
@@ -562,15 +619,21 @@ const defaultImproveTechniqueForm = (): ImproveTechniqueForm => ({
 
 const defaultVariationForm = (): VariationForm => ({
   relatedTechniqueId: null,
-  variationName: '',
+  direction: '',
+  stance: null,
+  trainer: '',
+  summary: '',
   categoryTags: [],
   level: null,
-  description: '',
   steps: [{ id: createId(), text: '' }],
+  keyPoints: ['', '', ''],
+  commonMistakes: ['', '', ''],
   ukeInstructions: '',
   media: [],
   context: '',
-  credit: '',
+  creditName: '',
+  trainerCredit: '',
+  markAsBase: false,
 });
 
 const defaultAppFeedbackForm = (): AppFeedbackForm => ({
@@ -644,7 +707,10 @@ const loadDraft = (): FeedbackDraft => {
     const stored = window.localStorage.getItem(STORAGE_KEY);
     if (!stored) return defaultDraft();
 
-    const parsed = JSON.parse(stored) as Partial<FeedbackDraft>;
+    // Parse as any to support legacy draft shapes (backwards compatibility)
+    // and avoid strict property checks during migration.
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const parsed: any = JSON.parse(stored);
 
     const selectedType = feedbackTypeOrder.includes(parsed.selectedType as FeedbackType)
       ? (parsed.selectedType as FeedbackType)
@@ -661,11 +727,11 @@ const loadDraft = (): FeedbackDraft => {
       improveTechnique: {
         ...defaultImproveTechniqueForm(),
         ...improveTechnique,
-        steps: (improveTechnique.steps ?? defaultImproveTechniqueForm().steps).map((step) => ({
+        steps: (improveTechnique.steps ?? defaultImproveTechniqueForm().steps).map((step: any) => ({
           id: step.id || createId(),
           text: step.text || '',
         })),
-        media: (improveTechnique.media ?? []).map((item) => ({
+        media: (improveTechnique.media ?? []).map((item: any) => ({
           id: item.id || createId(),
           url: item.url,
           type: item.type,
@@ -674,21 +740,34 @@ const loadDraft = (): FeedbackDraft => {
       },
       addVariation: {
         ...defaultVariationForm(),
-        ...addVariation,
-        level: addVariation.level && gradeOrder.includes(addVariation.level) ? addVariation.level : null,
+        relatedTechniqueId: addVariation.relatedTechniqueId ?? null,
+        direction: isVariationDirection(addVariation.direction)
+          ? addVariation.direction
+          : isVariationDirection(addVariation?.variationName)
+          ? (addVariation.variationName as VariationForm['direction'])
+          : '',
+        stance: sanitizeHanmi(addVariation.stance),
+        trainer: ensureString(addVariation.trainer ?? addVariation.credit),
+        summary: ensureString(addVariation.summary ?? addVariation.description ?? ''),
         categoryTags: Array.isArray(addVariation.categoryTags)
           ? addVariation.categoryTags.filter(isCategoryTag)
           : [],
-        steps: (addVariation.steps ?? defaultVariationForm().steps).map((step) => ({
-          id: step.id || createId(),
-          text: step.text || '',
-        })),
-        media: (addVariation.media ?? []).map((item) => ({
-          id: item.id || createId(),
-          url: item.url,
-          type: item.type,
-          embedUrl: item.embedUrl,
-        })),
+        level: addVariation.level && gradeOrder.includes(addVariation.level) ? addVariation.level : null,
+        steps: ensureStepList(addVariation.steps),
+        keyPoints: ensureStringList(addVariation.keyPoints, 3),
+        commonMistakes: ensureStringList(addVariation.commonMistakes, 3),
+        ukeInstructions: ensureString(addVariation.ukeInstructions),
+        media: (addVariation.media ?? []).map((item: any) => ({
+          id: item?.id || createId(),
+          url: item?.url || '',
+          type: item?.type || 'link',
+          embedUrl: item?.embedUrl,
+          title: item?.title ?? '',
+        })).filter((item: any) => item.url),
+        context: ensureString(addVariation.context),
+        creditName: ensureString(addVariation.creditName ?? addVariation.credit ?? ''),
+        trainerCredit: ensureString(addVariation.trainerCredit ?? ''),
+        markAsBase: Boolean(addVariation.markAsBase),
       },
       appFeedback: {
         ...defaultAppFeedbackForm(),
@@ -701,43 +780,32 @@ const loadDraft = (): FeedbackDraft => {
       },
       newTechnique: {
         ...defaultNewTechniqueForm(),
-        ...newTechnique,
-        precheckConfirmed: Boolean(newTechnique.precheckConfirmed),
-        name: sanitizeLocalizedString(newTechnique.name),
-        jp: {
-          kanji: newTechnique.jp?.kanji ?? '',
-          romaji: newTechnique.jp?.romaji ?? '',
-        },
-        attack: newTechnique.attack ?? null,
-        category: newTechnique.category ?? null,
-        weapon: newTechnique.weapon ?? null,
+        name: ensureString(newTechnique.name),
+        jpName: ensureString(newTechnique.jpName ?? newTechnique.jp?.kanji ?? ''),
+        attack: typeof newTechnique.attack === 'string' ? newTechnique.attack : null,
+        category: typeof newTechnique.category === 'string' ? newTechnique.category : null,
+        weapon: typeof newTechnique.weapon === 'string' ? newTechnique.weapon : null,
         entries: sanitizeEntries(newTechnique.entries),
-        hanmi: newTechnique.hanmi === 'ai-hanmi' || newTechnique.hanmi === 'gyaku-hanmi' ? newTechnique.hanmi : null,
-        levelHint: newTechnique.levelHint ?? '',
-        summary: sanitizeLocalizedString(newTechnique.summary),
-        steps: sanitizeLocalizedSteps(newTechnique.steps),
-        ukeRole: sanitizeLocalizedString(newTechnique.ukeRole),
-        ukeNotes: sanitizeLocalizedList(newTechnique.ukeNotes),
-        keyPoints: sanitizeLocalizedList(newTechnique.keyPoints),
-        commonMistakes: sanitizeLocalizedList(newTechnique.commonMistakes),
-        media: (newTechnique.media ?? []).map((item) => ({
+        hanmi: sanitizeHanmi(newTechnique.hanmi),
+        summary: ensureString(newTechnique.summary),
+        levelHint: ensureString(newTechnique.levelHint),
+        steps: ensureStepList(newTechnique.steps),
+        ukeRole: ensureString(newTechnique.ukeRole),
+        ukeNotes: ensureStringList(newTechnique.ukeNotes, 3),
+        keyPoints: ensureStringList(newTechnique.keyPoints, 3),
+        commonMistakes: ensureStringList(newTechnique.commonMistakes, 3),
+        media: (newTechnique.media ?? []).map((item: any) => ({
           id: item?.id || createId(),
           url: item?.url || '',
           type: item?.type || 'link',
           embedUrl: item?.embedUrl,
           title: item?.title ?? '',
-        })).filter((item) => item.url),
-        sources: newTechnique.sources ?? '',
-        contributor: {
-          name: newTechnique.contributor?.name ?? '',
-          contact: newTechnique.contributor?.contact ?? '',
-        },
-        lineage: {
-          dojoOrTrainer: newTechnique.lineage?.dojoOrTrainer ?? '',
-          markAsBase: newTechnique.lineage?.markAsBase ?? true,
-        },
+        })).filter((item: any) => item.url),
+        sources: ensureString(newTechnique.sources),
+        creditName: ensureString(newTechnique.creditName ?? newTechnique.contributor?.name ?? ''),
+        trainerCredit: ensureString(newTechnique.trainerCredit ?? newTechnique.lineage?.dojoOrTrainer ?? ''),
+        markAsBase: newTechnique.markAsBase ?? newTechnique.lineage?.markAsBase ?? true,
         consent: Boolean(newTechnique.consent),
-        precheckSearch: newTechnique.precheckSearch ?? '',
       },
     } satisfies FeedbackDraft;
   } catch (error) {
@@ -785,7 +853,7 @@ const StepBuilder = ({
 
   return (
     <div className="space-y-3">
-      {label && <h3 className="text-xs uppercase tracking-[0.3em] text-subtle">{label}</h3>}
+      {label && <h3 className="text-sm font-semibold text-[var(--color-text)]">{label}</h3>}
       <div className="space-y-3">
         {steps.map((step, index) => (
           <motion.div
@@ -1035,9 +1103,6 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
   const [submissionState, setSubmissionState] = useState<'idle' | 'success' | 'error' | 'submitting'>('idle');
   const [submitResult, setSubmitResult] = useState<{ ok: boolean; issueUrl?: string; issueNumber?: number; message?: string; requestId?: string } | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
-  const [activeLocaleTab, setActiveLocaleTab] = useState<Locale>('en');
-  const [isPrecheckOpen, setIsPrecheckOpen] = useState(false);
-  const [precheckAcknowledged, setPrecheckAcknowledged] = useState(false);
 
   const techniqueOptions = useMemo(() =>
     techniques
@@ -1116,11 +1181,6 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
   useEffect(() => {
     if (!initialType) return;
     setDraft((current) => {
-      if (initialType === 'newTechnique' && !current.newTechnique.precheckConfirmed) {
-        setIsPrecheckOpen(true);
-        setPrecheckAcknowledged(false);
-        return current;
-      }
       if (current.selectedType === initialType) return current;
       return {
         ...current,
@@ -1157,30 +1217,10 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
     [draft.newTechnique.attack, draft.newTechnique.weapon],
   );
 
-  const summaryLengths = useMemo(() => ({
-    en: draft.newTechnique.summary.en.trim().length,
-    de: draft.newTechnique.summary.de.trim().length,
-  }), [draft.newTechnique.summary]);
-
-  const summariesEmpty = useMemo(
-    () => !draft.newTechnique.summary.en.trim() && !draft.newTechnique.summary.de.trim(),
-    [draft.newTechnique.summary],
-  );
-
-  const { en: summaryLengthEn, de: summaryLengthDe } = summaryLengths;
-
-  const summaryExceeded = useMemo(
-    () => ({
-      en: summaryLengthEn > SUMMARY_MAX,
-      de: summaryLengthDe > SUMMARY_MAX,
-    }),
-    [summaryLengthEn, summaryLengthDe],
-  );
-
-  const precheckMatches = useMemo(
-    () => computePrecheckMatches(draft.newTechnique.precheckSearch, techniques),
-    [draft.newTechnique.precheckSearch, techniques],
-  );
+  const summaryLength = draft.newTechnique.summary.trim().length;
+  const summaryExceeded = summaryLength > SUMMARY_MAX;
+  const summaryRemaining = SUMMARY_MAX - summaryLength;
+  const summaryEmpty = summaryLength === 0;
 
   useEffect(() => {
     if (!isBrowser) return;
@@ -1205,16 +1245,8 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
   const handleTypeChange = (feedbackType: FeedbackType) => {
     setSubmissionState('idle');
     setDraft((current) => {
-      if (feedbackType === 'newTechnique' && !current.newTechnique.precheckConfirmed) {
-        setIsPrecheckOpen(true);
-        setPrecheckAcknowledged(false);
-        return current;
-      }
       if (current.selectedType === feedbackType) return current;
-      return {
-        ...current,
-        selectedType: feedbackType,
-      };
+      return { ...current, selectedType: feedbackType };
     });
   };
 
@@ -1272,100 +1304,6 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
     }));
   };
 
-  const updateTechniqueName = (localeKey: Locale, value: string) => {
-    setNewTechnique((form) => ({
-      ...form,
-      name: {
-        ...form.name,
-        [localeKey]: value,
-      },
-    }));
-  };
-
-  const updateTechniqueSummary = (localeKey: Locale, value: string) => {
-    setNewTechnique((form) => ({
-      ...form,
-      summary: {
-        ...form.summary,
-        [localeKey]: value,
-      },
-    }));
-  };
-
-  const updateUkeRole = (localeKey: Locale, value: string) => {
-    setNewTechnique((form) => ({
-      ...form,
-      ukeRole: {
-        ...form.ukeRole,
-        [localeKey]: value,
-      },
-    }));
-  };
-
-  const updateLocalizedListField = (
-    field: 'ukeNotes' | 'keyPoints' | 'commonMistakes',
-    localeKey: Locale,
-    index: number,
-    value: string,
-  ) => {
-    setNewTechnique((form) => {
-      const currentList = [...(form[field][localeKey] ?? [])];
-      if (index >= 0 && index < currentList.length) {
-        currentList[index] = value;
-      }
-      return {
-        ...form,
-        [field]: {
-          ...form[field],
-          [localeKey]: currentList,
-        },
-      };
-    });
-  };
-
-  const addLocalizedListItem = (field: 'ukeNotes' | 'keyPoints' | 'commonMistakes', localeKey: Locale) => {
-    setNewTechnique((form) => {
-      const currentList = [...(form[field][localeKey] ?? [])];
-      currentList.push('');
-      return {
-        ...form,
-        [field]: {
-          ...form[field],
-          [localeKey]: currentList,
-        },
-      };
-    });
-  };
-
-  const removeLocalizedListItem = (field: 'ukeNotes' | 'keyPoints' | 'commonMistakes', localeKey: Locale, index: number) => {
-    setNewTechnique((form) => {
-      const currentList = [...(form[field][localeKey] ?? [])];
-      if (index >= 0 && index < currentList.length) {
-        currentList.splice(index, 1);
-      }
-      if (currentList.length === 0) {
-        currentList.push('');
-      }
-      return {
-        ...form,
-        [field]: {
-          ...form[field],
-          [localeKey]: currentList,
-        },
-      };
-    });
-  };
-
-  const updateLocalizedSteps = (localeKey: Locale, steps: StepItem[]) => {
-    setNewTechnique((form) => ({
-      ...form,
-      steps: {
-        ...form.steps,
-        [localeKey]: steps,
-      },
-    }));
-  };
-
   const techniquePlaceholder =
     techniqueOptions.length > 0 ? t.options.searchTechniques : t.options.techniquesLoading;
 
@@ -1390,9 +1328,31 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
   }, [draft.improveTechnique]);
 
   const isVariationReady = useMemo(() => {
-    const { relatedTechniqueId, variationName, description, steps } = draft.addVariation;
+    const {
+      relatedTechniqueId,
+      direction,
+      stance,
+      trainer,
+      summary,
+      steps,
+      keyPoints,
+      commonMistakes,
+      ukeInstructions,
+    } = draft.addVariation;
     const hasSteps = steps.some((step) => hasContent(step.text));
-    return hasContent(relatedTechniqueId) && hasContent(variationName) && hasContent(description) && hasSteps;
+    const keyPointsComplete = keyPoints.every((item) => hasContent(item));
+    const mistakesComplete = commonMistakes.every((item) => hasContent(item));
+    return (
+      hasContent(relatedTechniqueId) &&
+      isVariationDirection(direction) &&
+      Boolean(stance) &&
+      hasContent(trainer) &&
+      hasContent(summary) &&
+      hasSteps &&
+      keyPointsComplete &&
+      mistakesComplete &&
+      hasContent(ukeInstructions)
+    );
   }, [draft.addVariation]);
 
   const isAppFeedbackReady = useMemo(() => {
@@ -1405,25 +1365,26 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
 
   const isNewTechniqueReady = (() => {
     const form = draft.newTechnique;
-    const nameComplete = hasContent(form.name.en) && hasContent(form.name.de);
-    const summaryComplete =
-      hasContent(form.summary.en) &&
-      hasContent(form.summary.de) &&
-      !summaryExceeded.en &&
-      !summaryExceeded.de;
     const taxonomyComplete = hasContent(form.attack) && hasContent(form.category) && hasContent(form.weapon);
-    const entriesComplete = form.entries.length >= 1;
+    const entriesComplete = form.entries.length > 0;
     const hanmiComplete = Boolean(form.hanmi);
-    const contributorComplete = hasContent(form.contributor.name) && hasContent(form.contributor.contact);
+    const stepsComplete = form.steps.some((step) => hasContent(step.text));
+    const ukeListComplete = form.ukeNotes.every((item) => hasContent(item));
+    const keyPointsComplete = form.keyPoints.every((item) => hasContent(item));
+    const mistakesComplete = form.commonMistakes.every((item) => hasContent(item));
+
     return (
-      form.precheckConfirmed &&
-      nameComplete &&
-      summaryComplete &&
+      hasContent(form.name) &&
       taxonomyComplete &&
       entriesComplete &&
       hanmiComplete &&
-      hasContent(form.levelHint) &&
-      contributorComplete &&
+      hasContent(form.summary) &&
+      !summaryExceeded &&
+      stepsComplete &&
+      hasContent(form.ukeRole) &&
+      ukeListComplete &&
+      keyPointsComplete &&
+      mistakesComplete &&
       form.consent
     );
   })();
@@ -1493,24 +1454,40 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
     }
 
     if (selectedCard === 'addVariation') {
-      const { relatedTechniqueId, variationName, steps, media, categoryTags, level, credit } = draft.addVariation;
-      const stepCount = steps.filter((step) => hasContent(step.text)).length;
-      const tagLabels = categoryTags.map((tag) => categoryTagLabels[tag]);
+      const form = draft.addVariation;
+      const stepCount = form.steps.filter((step) => hasContent(step.text)).length;
+      const tagLabels = form.categoryTags.map((tag) => categoryTagLabels[tag]);
+      const directionLabel = isVariationDirection(form.direction)
+        ? t.forms.variation.directionOptions[form.direction as VariationDirection]
+        : t.summary.notSpecified;
+      const stanceLabel = form.stance ? t.newTechnique.hanmiOptions[form.stance] : t.summary.notSpecified;
+      const summaryPreview = hasContent(form.summary)
+        ? form.summary.length > 90
+          ? `${form.summary.slice(0, 87)}…`
+          : form.summary
+        : '—';
+
       return [
         { label: t.summary.labels.type, value: cardContent[selectedCard].title },
-        { label: t.summary.labels.technique, value: findTechniqueName(relatedTechniqueId) },
-        { label: t.summary.labels.variation, value: hasContent(variationName) ? variationName : '—' },
+        { label: t.summary.labels.technique, value: findTechniqueName(form.relatedTechniqueId) },
+        { label: t.summary.labels.direction, value: directionLabel },
+        { label: t.summary.labels.hanmi, value: stanceLabel },
+        { label: t.summary.labels.trainer, value: hasContent(form.trainer) ? form.trainer : '—' },
+        { label: t.summary.labels.summary, value: summaryPreview },
         { label: t.summary.labels.tags, value: tagLabels.length > 0 ? tagLabels.join(', ') : '—' },
-        { label: t.summary.labels.level, value: level ? getLevelLabel(locale, level) : t.summary.notSpecified },
+        {
+          label: t.summary.labels.level,
+          value: form.level ? getLevelLabel(locale, form.level) : t.summary.notSpecified,
+        },
         {
           label: t.summary.labels.steps,
           value: stepCount > 0 ? formatCount(stepCount, t.summary.counts.documentedSteps) : '—',
         },
+        { label: t.summary.labels.credit, value: hasContent(form.creditName) ? form.creditName : '—' },
         {
-          label: t.summary.labels.media,
-          value: media.length > 0 ? formatCount(media.length, t.summary.counts.media) : '—',
+          label: t.summary.labels.markAsBase,
+          value: form.markAsBase ? t.summary.boolean.yes : t.summary.boolean.no,
         },
-        { label: t.summary.labels.credit, value: hasContent(credit) ? credit : '—' },
       ];
     }
 
@@ -1518,7 +1495,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
       const form = draft.newTechnique;
       const entriesLabel = form.entries.length
         ? form.entries.map((entry) => t.newTechnique.entryLabels[entry]).join(', ')
-        : '—';
+        : t.summary.notSpecified;
       const hanmiLabel = form.hanmi ? t.newTechnique.hanmiOptions[form.hanmi] : t.summary.notSpecified;
       const attackLabel = form.attack ? getTaxonomyLabel(locale, 'attack', form.attack) : t.summary.notSpecified;
       const categoryLabel = form.category ? getTaxonomyLabel(locale, 'category', form.category) : t.summary.notSpecified;
@@ -1529,20 +1506,21 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
 
       return [
         { label: t.summary.labels.type, value: cardContent[selectedCard].title },
-        { label: t.summary.labels.name, value: form.name.en || form.name.de || '—' },
+        { label: t.summary.labels.name, value: form.name || '—' },
+        { label: t.summary.labels.jpName, value: form.jpName || '—' },
         { label: t.summary.labels.attack, value: attackLabel },
         { label: t.summary.labels.category, value: categoryLabel },
         { label: t.summary.labels.weapon, value: weaponLabel },
         { label: t.summary.labels.entries, value: entriesLabel },
         { label: t.summary.labels.hanmi, value: hanmiLabel },
+        { label: t.summary.labels.levelHint, value: form.levelHint || '—' },
         { label: t.summary.labels.slug, value: slugPreview || '—' },
+        { label: t.summary.labels.summary, value: `${summaryLength}/${SUMMARY_MAX}` },
+        { label: t.summary.labels.credit, value: form.creditName || '—' },
+        { label: t.summary.labels.trainerCredit, value: form.trainerCredit || '—' },
         {
-          label: t.summary.labels.summary,
-          value: `${summaryLengths.en}/${SUMMARY_MAX} · ${summaryLengths.de}/${SUMMARY_MAX}`,
-        },
-        {
-          label: t.summary.labels.contributor,
-          value: form.contributor.name || '—',
+          label: t.summary.labels.markAsBase,
+          value: form.markAsBase ? t.summary.boolean.yes : t.summary.boolean.no,
         },
         {
           label: t.summary.labels.duplicates,
@@ -1599,7 +1577,8 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
     locale,
     selectedCard,
     slugPreview,
-    summaryLengths,
+    summaryLength,
+    t.forms,
     t.newTechnique,
     t.summary,
   ]);
@@ -1656,6 +1635,67 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
     }
   };
 
+  const buildDownloadPayload = () => {
+    const payload = buildFeedbackPayload(selectedCard, draft, {
+      slugPreview,
+      duplicateMatches,
+      locale,
+      findTechniqueName,
+    });
+    if (!payload) return null;
+
+    const fill = (value: unknown): unknown => {
+      if (value === null || value === undefined) return 'EMPTY';
+      if (typeof value === 'string') return value.trim().length === 0 ? 'EMPTY' : value;
+      if (Array.isArray(value)) return value.length === 0 ? ['EMPTY'] : value.map((item) => fill(item));
+      if (typeof value === 'object') {
+        const result: Record<string, unknown> = {};
+        for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
+          result[k] = fill(v);
+        }
+        return result;
+      }
+      return value;
+    };
+
+    if (selectedCard === 'newTechnique' || selectedCard === 'addVariation') {
+      return { ...payload, diffJson: fill(payload.diffJson) } as typeof payload;
+    }
+    return payload;
+  };
+
+  const handleDownloadJson = () => {
+    const payload = buildDownloadPayload();
+    if (!payload) return;
+    const typeLabel =
+      selectedCard === 'newTechnique'
+        ? 'new-technique'
+        : selectedCard === 'addVariation'
+        ? 'variation'
+        : selectedCard === 'improveTechnique'
+        ? 'improve'
+        : selectedCard === 'bugReport'
+        ? 'bug'
+        : selectedCard === 'appFeedback'
+        ? 'app'
+        : 'unknown';
+    const ts = new Date();
+    const pad = (n: number) => String(n).padStart(2, '0');
+    const timestamp = `${ts.getFullYear()}${pad(ts.getMonth() + 1)}${pad(ts.getDate())}-${pad(ts.getHours())}${pad(
+      ts.getMinutes(),
+    )}${pad(ts.getSeconds())}`;
+    const filename = `enso-feedback-${typeLabel}-${timestamp}.json`;
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  };
+
   const stepPlaceholder = (index: number) => t.placeholders.step.replace('{index}', String(index + 1));
   const removeStepAria = (index: number) => t.builder.removeStepAria.replace('{index}', String(index + 1));
 
@@ -1687,7 +1727,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
         className="space-y-6"
       >
         <section className="space-y-3">
-          <label className="text-xs uppercase tracking-[0.3em] text-subtle">
+          <label className="text-sm font-medium text-[var(--color-text)]">
             {t.forms.improve.techniqueLabel}
           </label>
           <Select
@@ -1701,7 +1741,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
         </section>
 
         <section className="space-y-3">
-          <span className="text-xs uppercase tracking-[0.3em] text-subtle">{t.forms.improve.sectionsLabel}</span>
+          <span className="text-sm font-semibold text-[var(--color-text)]">{t.forms.improve.sectionsLabel}</span>
           <div className="flex flex-wrap gap-2">
             {Object.keys(improveSectionLabels).map((section) => {
               const typedSection = section as ImproveSection;
@@ -1748,7 +1788,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
           .filter((section): section is ImproveTextSection => section !== 'steps')
           .map((section) => (
             <section key={section} className="space-y-3">
-              <label className="text-xs uppercase tracking-[0.3em] text-subtle">
+              <label className="text-sm font-medium text-[var(--color-text)]">
                 {improveSectionLabels[section]}
               </label>
               <textarea
@@ -1762,7 +1802,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
           ))}
 
         <section className="space-y-3">
-          <span className="text-xs uppercase tracking-[0.3em] text-subtle">{t.forms.improve.mediaLabel}</span>
+          <span className="text-sm font-semibold text-[var(--color-text)]">{t.forms.improve.mediaLabel}</span>
           <MediaManager
             media={media}
             onChange={(items) => updateImprove('media', items)}
@@ -1776,7 +1816,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
 
         <section className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
-            <label className="text-xs uppercase tracking-[0.3em] text-subtle">{t.forms.improve.sourceLabel}</label>
+          <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.improve.sourceLabel}</label>
             <input
               type="text"
               value={source}
@@ -1786,7 +1826,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
             />
           </div>
           <div className="space-y-2">
-            <label className="text-xs uppercase tracking-[0.3em] text-subtle">{t.forms.improve.creditLabel}</label>
+          <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.improve.creditLabel}</label>
             <input
               type="text"
               value={credit}
@@ -1803,21 +1843,78 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
   const renderVariationForm = (): ReactElement => {
     const {
       relatedTechniqueId,
-      variationName,
+      direction,
+      stance,
+      trainer,
+      summary,
       categoryTags,
       level,
-      description,
       steps,
+      keyPoints,
+      commonMistakes,
       ukeInstructions,
       media,
       context,
-      credit,
+      creditName,
+      trainerCredit,
+      markAsBase,
     } = draft.addVariation;
+
+    const directionOptions: SelectOption<string>[] = [
+      { value: 'none', label: t.options.selectDirection },
+      { value: 'irimi', label: t.forms.variation.directionOptions.irimi },
+      { value: 'tenkan', label: t.forms.variation.directionOptions.tenkan },
+      { value: 'omote', label: t.forms.variation.directionOptions.omote },
+      { value: 'ura', label: t.forms.variation.directionOptions.ura },
+    ];
+
+    const stanceOptions: SelectOption<string>[] = [
+      { value: 'none', label: t.options.selectHanmi },
+      { value: 'ai-hanmi', label: t.newTechnique.hanmiOptions['ai-hanmi'] },
+      { value: 'gyaku-hanmi', label: t.newTechnique.hanmiOptions['gyaku-hanmi'] },
+    ];
 
     const toggleTag = (tag: CategoryTag) => {
       const isActive = categoryTags.includes(tag);
       const nextTags = isActive ? categoryTags.filter((item) => item !== tag) : [...categoryTags, tag];
       updateVariation('categoryTags', nextTags);
+    };
+
+    const handleDirectionChange = (value: string) => {
+      updateVariation('direction', value === 'none' ? '' : (value as VariationForm['direction']));
+    };
+
+    const handleStanceChange = (value: string) => {
+      updateVariation('stance', value === 'none' ? null : (value as Hanmi));
+    };
+
+    const handleListItemChange = (field: 'keyPoints' | 'commonMistakes', index: number, value: string) => {
+      const source = field === 'keyPoints' ? keyPoints : commonMistakes;
+      const next = [...source];
+      next[index] = value;
+      updateVariation(field, next);
+    };
+
+    const renderBulletList = (field: 'keyPoints' | 'commonMistakes', label: string, placeholder: string) => {
+      const items = field === 'keyPoints' ? keyPoints : commonMistakes;
+      return (
+        <div className="space-y-2">
+          <h3 className="text-sm font-semibold text-[var(--color-text)]">{label}</h3>
+          <div className="space-y-2">
+            {items.map((value, index) => (
+              <div key={`${field}-${index}`} className="flex items-center gap-3">
+                <span className="text-sm text-subtle w-6 text-center">{index + 1}.</span>
+                <input
+                  value={value}
+                  onChange={(event) => handleListItemChange(field, index, event.target.value)}
+                  placeholder={placeholder}
+                  className="flex-1 rounded-xl border surface-border bg-[var(--color-surface)] px-3 py-2 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      );
     };
 
     return (
@@ -1827,12 +1924,10 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -16 }}
-        className="space-y-6"
+        className="space-y-8"
       >
         <section className="space-y-3">
-          <label className="text-xs uppercase tracking-[0.3em] text-subtle">
-            {t.forms.variation.relatedTechniqueLabel}
-          </label>
+          <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.variation.relatedTechniqueLabel}</label>
           <Select
             options={techniqueOptions}
             value={relatedTechniqueId ?? ''}
@@ -1842,30 +1937,92 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
           />
         </section>
 
-        <section className="grid gap-4 sm:grid-cols-2">
+        <section className="grid gap-4 md:grid-cols-3">
           <div className="space-y-2">
-            <label className="text-xs uppercase tracking-[0.3em] text-subtle">{t.forms.variation.variationNameLabel}</label>
-            <input
-              type="text"
-              value={variationName}
-              onChange={(event) => updateVariation('variationName', event.target.value)}
-              placeholder={t.placeholders.variationName}
-              className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+            <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.variation.directionLabel}</label>
+            <Select
+              options={directionOptions}
+              value={direction || 'none'}
+              onChange={handleDirectionChange}
             />
           </div>
           <div className="space-y-2">
-            <label className="text-xs uppercase tracking-[0.3em] text-subtle">{t.forms.variation.levelLabel}</label>
+            <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.variation.stanceLabel}</label>
+            <Select
+              options={stanceOptions}
+              value={stance ?? 'none'}
+              onChange={handleStanceChange}
+            />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.variation.levelLabel}</label>
             <Select
               options={levelOptions}
               value={level ?? 'none'}
               onChange={(value) => updateVariation('level', value === 'none' ? null : (value as Grade))}
-              placeholder={t.options.selectLevel}
             />
           </div>
         </section>
 
+        <section className="space-y-4">
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.variation.trainerLabel}</label>
+              <input
+                type="text"
+                value={trainer}
+                onChange={(event) => updateVariation('trainer', event.target.value)}
+                placeholder={t.placeholders.variationTrainer}
+                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.variation.creditNameLabel}</label>
+              <input
+                type="text"
+                value={creditName}
+                onChange={(event) => updateVariation('creditName', event.target.value)}
+                placeholder={t.placeholders.variationCreditName}
+                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+              />
+            </div>
+          </div>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.variation.trainerCreditLabel}</label>
+              <input
+                type="text"
+                value={trainerCredit}
+                onChange={(event) => updateVariation('trainerCredit', event.target.value)}
+                placeholder={t.placeholders.variationTrainerCredit}
+                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+              />
+            </div>
+            <label className="flex items-center gap-3 text-sm text-[var(--color-text)]">
+              <input
+                type="checkbox"
+                checked={markAsBase}
+                onChange={(event) => updateVariation('markAsBase', event.target.checked)}
+                className="h-4 w-4 rounded border surface-border"
+              />
+              {t.forms.variation.markAsBaseLabel}
+            </label>
+          </div>
+        </section>
+
+        <section className="space-y-2">
+          <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.variation.summaryLabel}</label>
+          <textarea
+            rows={4}
+            value={summary}
+            onChange={(event) => updateVariation('summary', event.target.value)}
+            placeholder={t.placeholders.variationSummary}
+            className="w-full rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-3 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+          />
+        </section>
+
         <section className="space-y-3">
-          <span className="text-xs uppercase tracking-[0.3em] text-subtle">{t.forms.variation.categoryTagsLabel}</span>
+          <h3 className="text-sm font-semibold text-[var(--color-text)]">{t.forms.variation.categoryTagsLabel}</h3>
           <div className="flex flex-wrap gap-2">
             {categoryTagOrder.map((tag) => {
               const isActive = categoryTags.includes(tag);
@@ -1884,17 +2041,6 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
           </div>
         </section>
 
-        <section className="space-y-3">
-          <label className="text-xs uppercase tracking-[0.3em] text-subtle">{t.forms.variation.descriptionLabel}</label>
-          <textarea
-            rows={3}
-            value={description}
-            onChange={(event) => updateVariation('description', event.target.value)}
-            placeholder={t.placeholders.variationDescription}
-            className="w-full rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-3 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
-          />
-        </section>
-
         <section className="rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-4">
           <StepBuilder
             label={t.forms.variation.stepsLabel}
@@ -1907,8 +2053,13 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
           />
         </section>
 
-        <section className="space-y-3">
-          <label className="text-xs uppercase tracking-[0.3em] text-subtle">{t.forms.variation.ukeLabel}</label>
+        <section className="grid gap-6 md:grid-cols-2">
+          {renderBulletList('keyPoints', t.forms.variation.keyPointsLabel, t.placeholders.variationKeyPoint)}
+          {renderBulletList('commonMistakes', t.forms.variation.commonMistakesLabel, t.placeholders.variationMistake)}
+        </section>
+
+        <section className="space-y-2">
+          <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.variation.ukeLabel}</label>
           <textarea
             rows={3}
             value={ukeInstructions}
@@ -1919,7 +2070,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
         </section>
 
         <section className="space-y-3">
-          <span className="text-xs uppercase tracking-[0.3em] text-subtle">{t.forms.variation.mediaLabel}</span>
+          <h3 className="text-sm font-semibold text-[var(--color-text)]">{t.forms.variation.mediaLabel}</h3>
           <MediaManager
             media={media}
             onChange={(items) => updateVariation('media', items)}
@@ -1928,11 +2079,14 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
             addLabel={t.buttons.addAction}
             cancelLabel={t.buttons.cancel}
             removeLabel={t.buttons.remove}
+            allowTitle
+            titleLabel={t.forms.variation.mediaTitleLabel}
+            titlePlaceholder={t.placeholders.variationMediaTitle}
           />
         </section>
 
-        <section className="space-y-3">
-          <label className="text-xs uppercase tracking-[0.3em] text-subtle">{t.forms.variation.contextLabel}</label>
+        <section className="space-y-2">
+          <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.variation.contextLabel}</label>
           <textarea
             rows={3}
             value={context}
@@ -1942,15 +2096,342 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
           />
         </section>
 
+        <p className="text-xs text-subtle">{t.globalConsent}</p>
+      </motion.div>
+    );
+  };
+
+
+  const renderNewTechniqueForm = (): ReactElement => {
+    const form = draft.newTechnique;
+
+    const hanmiOptions: SelectOption<string>[] = [
+      { value: 'ai-hanmi', label: t.newTechnique.hanmiOptions['ai-hanmi'] },
+      { value: 'gyaku-hanmi', label: t.newTechnique.hanmiOptions['gyaku-hanmi'] },
+    ];
+
+    const entryOptions: Array<'irimi' | 'tenkan'> = ['irimi', 'tenkan'];
+
+    const handleEntryToggle = (entry: 'irimi' | 'tenkan') => {
+      setNewTechnique((current) => {
+        const entries = current.entries.includes(entry)
+          ? current.entries.filter((value) => value !== entry)
+          : [...current.entries, entry];
+        return { ...current, entries };
+      });
+    };
+
+    const handleListItemChange = (field: 'ukeNotes' | 'keyPoints' | 'commonMistakes', index: number, value: string) => {
+      const next = [...form[field]];
+      if (index >= 0 && index < next.length) {
+        next[index] = value;
+        updateNewTechnique(field, next);
+      }
+    };
+
+    const renderList = (field: 'ukeNotes' | 'keyPoints' | 'commonMistakes', label: string, placeholder: string) => {
+      const items = form[field];
+      return (
+        <div className="space-y-2">
+          <h3 className="text-sm font-semibold text-[var(--color-text)]">{label}</h3>
+          <div className="space-y-2">
+            {items.map((value, index) => (
+              <div key={`${field}-${index}`} className="flex items-center gap-3">
+                <span className="text-sm text-subtle w-6 text-center">{index + 1}.</span>
+                <input
+                  value={value}
+                  onChange={(event) => handleListItemChange(field, index, event.target.value)}
+                  placeholder={placeholder}
+                  className="flex-1 rounded-xl border surface-border bg-[var(--color-surface)] px-3 py-2 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    };
+
+    const duplicatesHeadline = duplicateMatches.length > 0
+      ? t.newTechnique.duplicates.possibleMatches
+      : t.newTechnique.duplicates.none;
+
+    const summaryLabel = summaryExceeded
+      ? t.newTechnique.hints.summaryExceeded.replace('{remaining}', String(Math.abs(summaryRemaining)))
+      : t.newTechnique.hints.summaryRemaining.replace('{remaining}', String(summaryRemaining));
+
+    return (
+      <motion.div
+        key="newTechnique"
+        layout
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -16 }}
+        className="space-y-8"
+      >
+        <section className="space-y-4">
+          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.newTechnique.sections.details}</h2>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-[var(--color-text)]" htmlFor="nt-name">{t.newTechnique.fields.nameSingle}</label>
+              <input
+                id="nt-name"
+                value={form.name}
+                onChange={(event) => updateNewTechnique('name', event.target.value)}
+                placeholder={t.placeholders.newTechniqueName}
+                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-[var(--color-text)]" htmlFor="nt-jp-name">{t.newTechnique.fields.jpName}</label>
+              <input
+                id="nt-jp-name"
+                value={form.jpName}
+                onChange={(event) => updateNewTechnique('jpName', event.target.value)}
+                placeholder={t.placeholders.newTechniqueKanji}
+                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+              />
+            </div>
+          </div>
+        </section>
+
+        <section className="space-y-4">
+          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.newTechnique.sections.taxonomy}</h2>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-[var(--color-text)]">{t.newTechnique.fields.attack}</label>
+              <Select
+                options={attackOptions}
+                value={form.attack ?? ''}
+                onChange={(value) => updateNewTechnique('attack', value || null)}
+                placeholder={t.placeholders.newTechniqueAttack}
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-[var(--color-text)]">{t.newTechnique.fields.category}</label>
+              <Select
+                options={categoryOptions}
+                value={form.category ?? ''}
+                onChange={(value) => updateNewTechnique('category', value || null)}
+                placeholder={t.placeholders.newTechniqueCategory}
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-[var(--color-text)]">{t.newTechnique.fields.weapon}</label>
+              <Select
+                options={weaponOptions}
+                value={form.weapon ?? ''}
+                onChange={(value) => updateNewTechnique('weapon', value || null)}
+                placeholder={t.placeholders.newTechniqueWeapon}
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-[var(--color-text)]">{t.newTechnique.fields.hanmi}</label>
+              <Select
+                options={hanmiOptions}
+                value={form.hanmi ?? ''}
+                onChange={(value) => updateNewTechnique('hanmi', value === 'ai-hanmi' || value === 'gyaku-hanmi' ? (value as Hanmi) : null)}
+                placeholder={t.placeholders.newTechniqueHanmi}
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-[var(--color-text)]">{t.newTechnique.fields.entries}</label>
+              <div className="flex flex-wrap gap-3">
+                {entryOptions.map((entry) => {
+                  const isActive = form.entries.includes(entry);
+                  return (
+                    <label key={entry} className="inline-flex items-center gap-2 text-sm text-[var(--color-text)]">
+                      <input
+                        type="checkbox"
+                        checked={isActive}
+                        onChange={() => handleEntryToggle(entry)}
+                        className="h-4 w-4 rounded border surface-border"
+                      />
+                      {t.newTechnique.entryLabels[entry]}
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-[var(--color-text)]">{t.newTechnique.fields.levelHint}</label>
+              <input
+                value={form.levelHint}
+                onChange={(event) => updateNewTechnique('levelHint', event.target.value)}
+                placeholder={t.placeholders.newTechniqueLevel}
+                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+              />
+            </div>
+          </div>
+          {slugPreview && (
+            <p className="text-xs text-subtle">
+              {t.newTechnique.fields.slugPreview}: <span className="font-mono">{slugPreview}</span>
+            </p>
+          )}
+          {unusualCombo && (
+            <div className="rounded-lg border border-dashed surface-border px-3 py-2 text-xs text-subtle">
+              {t.newTechnique.hints.unusualCombo}
+            </div>
+          )}
+        </section>
+
+        <section className="space-y-3">
+          <label className="text-sm font-medium text-[var(--color-text)]" htmlFor="nt-summary">
+            {t.newTechnique.fields.summarySingle}
+          </label>
+          <textarea
+            id="nt-summary"
+            rows={4}
+            value={form.summary}
+            onChange={(event) => updateNewTechnique('summary', event.target.value)}
+            placeholder={t.placeholders.newTechniqueSummary}
+            className={classNames(
+              'w-full rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-3 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+              summaryExceeded && 'border-[var(--color-error, #b91c1c)]',
+            )}
+          />
+          <div className="flex justify-between text-xs">
+            <span className={classNames(summaryExceeded ? 'text-[var(--color-error, #b91c1c)]' : 'text-subtle')}>
+              {summaryLabel}
+            </span>
+            <span className={classNames(summaryExceeded ? 'text-[var(--color-error, #b91c1c)]' : 'text-subtle')}>
+              {summaryLength}/{SUMMARY_MAX}
+            </span>
+          </div>
+          {summaryEmpty && (
+            <p className="text-xs text-[var(--color-error, #b91c1c)]">{t.newTechnique.warnings.summaryMissingSingle}</p>
+          )}
+        </section>
+
+        <section className="space-y-3">
+          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.newTechnique.sections.steps}</h2>
+          <StepBuilder
+            steps={form.steps}
+            onChange={(nextSteps) => updateNewTechnique('steps', nextSteps)}
+            placeholderForIndex={stepPlaceholder}
+            helperText={t.hints.stepHelper}
+            addButtonLabel={t.buttons.addStep}
+            removeButtonAria={removeStepAria}
+          />
+        </section>
+
+        <section className="space-y-4">
+          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.newTechnique.sections.uke}</h2>
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-[var(--color-text)]">{t.newTechnique.fields.ukeRoleSingle}</label>
+            <input
+              value={form.ukeRole}
+              onChange={(event) => updateNewTechnique('ukeRole', event.target.value)}
+              placeholder={t.placeholders.newTechniqueUkeRole}
+              className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+            />
+          </div>
+          {renderList('ukeNotes', t.newTechnique.fields.ukeNotesSingle, t.placeholders.newTechniqueUkeNote)}
+        </section>
+
+        <section className="space-y-4">
+          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.newTechnique.sections.insights}</h2>
+          <div className="grid gap-6 md:grid-cols-2">
+            {renderList('keyPoints', t.newTechnique.fields.keyPointsSingle, t.placeholders.newTechniqueKeyPoint)}
+            {renderList('commonMistakes', t.newTechnique.fields.commonMistakesSingle, t.placeholders.newTechniqueMistake)}
+          </div>
+        </section>
+
+        <section className="space-y-3">
+          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.newTechnique.sections.media}</h2>
+          <MediaManager
+            media={form.media}
+            onChange={(items) => updateNewTechnique('media', items)}
+            placeholder={t.placeholders.mediaUrl}
+            triggerLabel={t.buttons.addMediaTrigger}
+            addLabel={t.buttons.addAction}
+            cancelLabel={t.buttons.cancel}
+            removeLabel={t.buttons.remove}
+            allowedKinds={['youtube', 'image']}
+            allowTitle
+            titleLabel={t.newTechnique.fields.mediaTitle}
+            titlePlaceholder={t.placeholders.newTechniqueMediaTitle}
+            disallowMessage={t.newTechnique.mediaRestrictions}
+          />
+        </section>
+
         <section className="space-y-2">
-          <label className="text-xs uppercase tracking-[0.3em] text-subtle">{t.forms.variation.creditLabel}</label>
+          <label className="text-sm font-medium text-[var(--color-text)]">{t.summary.labels.source}</label>
           <input
-            type="text"
-            value={credit}
-            onChange={(event) => updateVariation('credit', event.target.value)}
-            placeholder={t.placeholders.variationCredit}
+            value={form.sources}
+            onChange={(event) => updateNewTechnique('sources', event.target.value)}
+            placeholder={t.placeholders.newTechniqueSources}
             className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
           />
+        </section>
+
+        <section className="space-y-4">
+          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.newTechnique.sections.contributor}</h2>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-[var(--color-text)]">{t.newTechnique.fields.contributorNameSingle}</label>
+              <input
+                value={form.creditName}
+                onChange={(event) => updateNewTechnique('creditName', event.target.value)}
+                placeholder={t.placeholders.contributorName}
+                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-[var(--color-text)]">{t.newTechnique.fields.lineageSingle}</label>
+              <input
+                value={form.trainerCredit}
+                onChange={(event) => updateNewTechnique('trainerCredit', event.target.value)}
+                placeholder={t.placeholders.newTechniqueLineage}
+                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+              />
+            </div>
+          </div>
+          <label className="flex items-center gap-3 text-sm text-[var(--color-text)]">
+            <input
+              type="checkbox"
+              checked={form.markAsBase}
+              onChange={(event) => updateNewTechnique('markAsBase', event.target.checked)}
+              className="h-4 w-4 rounded border surface-border"
+            />
+            {t.newTechnique.lineageToggle}
+          </label>
+          <label className="flex items-center gap-3 text-sm text-[var(--color-text)]">
+            <input
+              type="checkbox"
+              checked={form.consent}
+              onChange={(event) => updateNewTechnique('consent', event.target.checked)}
+              className="h-4 w-4 rounded border surface-border"
+            />
+            {t.newTechnique.consentLabelUpdated}
+          </label>
+          {!form.consent && (
+            <p className="text-xs text-[var(--color-error, #b91c1c)]">{t.newTechnique.warnings.consentMissing}</p>
+          )}
+        </section>
+
+        <section className="space-y-2">
+          <h2 className="text-sm font-semibold text-[var(--color-text)]">{duplicatesHeadline}</h2>
+          {duplicateMatches.length === 0 ? (
+            <p className="text-xs text-subtle">{t.newTechnique.duplicates.noneHint}</p>
+          ) : (
+            <ul className="space-y-2 text-sm">
+              {duplicateMatches.map((tech) => (
+                <li key={`dup-${tech.id}`} className="rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-3">
+                  <p className="font-medium text-[var(--color-text)]">{tech.name[locale] || tech.name.en}</p>
+                  <p className="text-xs text-subtle">{tech.slug}</p>
+                </li>
+              ))}
+            </ul>
+          )}
+          {duplicateMatches.length > 0 && (
+            <button
+              type="button"
+              onClick={() => handleTypeChange('addVariation')}
+              className="text-xs text-[var(--color-accent, var(--color-text))] hover:underline"
+            >
+              {t.newTechnique.duplicates.switch}
+            </button>
+          )}
         </section>
       </motion.div>
     );
@@ -1973,7 +2454,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
         className="space-y-6"
       >
         <section className="space-y-3">
-          <label className="text-xs uppercase tracking-[0.3em] text-subtle">{t.forms.app.areaLabel}</label>
+          <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.app.areaLabel}</label>
           <Select
             options={areaOptions}
             value={area ?? ''}
@@ -1983,7 +2464,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
         </section>
 
         <section className="space-y-3">
-          <label className="text-xs uppercase tracking-[0.3em] text-subtle">{t.forms.app.feedbackLabel}</label>
+          <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.app.feedbackLabel}</label>
           <textarea
             rows={5}
             value={feedback}
@@ -1994,7 +2475,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
         </section>
 
         <section className="space-y-2">
-          <label className="text-xs uppercase tracking-[0.3em] text-subtle">{t.forms.app.screenshotLabel}</label>
+          <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.app.screenshotLabel}</label>
           <input
             type="url"
             value={screenshotUrl}
@@ -2019,7 +2500,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
         className="space-y-6"
       >
         <section className="space-y-2">
-          <label className="text-xs uppercase tracking-[0.3em] text-subtle">{t.forms.bug.locationLabel}</label>
+          <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.bug.locationLabel}</label>
           <input
             type="text"
             value={location}
@@ -2030,7 +2511,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
         </section>
 
         <section className="space-y-3">
-          <label className="text-xs uppercase tracking-[0.3em] text-subtle">{t.forms.bug.detailsLabel}</label>
+          <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.bug.detailsLabel}</label>
           <textarea
             rows={4}
             value={details}
@@ -2041,7 +2522,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
         </section>
 
         <section className="space-y-3">
-          <label className="text-xs uppercase tracking-[0.3em] text-subtle">{t.forms.bug.reproductionLabel}</label>
+          <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.bug.reproductionLabel}</label>
           <textarea
             rows={4}
             value={reproduction}
@@ -2064,497 +2545,9 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
     );
   };
 
-  const renderNewTechniqueForm = (): ReactElement => {
-    const form = draft.newTechnique;
-    const activeLocale = activeLocaleTab;
-    const summaryLimit = SUMMARY_MAX;
 
-    const hanmiOptions: SelectOption<string>[] = [
-      { value: 'ai-hanmi', label: t.newTechnique.hanmiOptions['ai-hanmi'] },
-      { value: 'gyaku-hanmi', label: t.newTechnique.hanmiOptions['gyaku-hanmi'] },
-    ];
 
-    const entryOptions: Array<'irimi' | 'tenkan'> = ['irimi', 'tenkan'];
 
-    const handleEntryToggle = (entry: 'irimi' | 'tenkan') => {
-      setNewTechnique((current) => {
-        const entries = current.entries.includes(entry)
-          ? current.entries.filter((value) => value !== entry)
-          : [...current.entries, entry];
-        return { ...current, entries };
-      });
-    };
-
-    const handleHanmiChange = (value: string) => {
-      updateNewTechnique('hanmi', value === 'ai-hanmi' || value === 'gyaku-hanmi' ? (value as Hanmi) : null);
-    };
-
-    const summaryFeedback = (localeKey: Locale): string => {
-      const remaining = summaryLimit - summaryLengths[localeKey];
-      if (summaryExceeded[localeKey]) {
-        return t.newTechnique.hints.summaryExceeded.replace('{remaining}', String(Math.abs(remaining)));
-      }
-      return t.newTechnique.hints.summaryRemaining.replace('{remaining}', String(remaining));
-    };
-
-    const localizedLists = {
-      ukeNotes: form.ukeNotes[activeLocale],
-      keyPoints: form.keyPoints[activeLocale],
-      commonMistakes: form.commonMistakes[activeLocale],
-    } as Record<'ukeNotes' | 'keyPoints' | 'commonMistakes', string[]>;
-
-    const renderListEditor = (
-      field: 'ukeNotes' | 'keyPoints' | 'commonMistakes',
-      label: string,
-      addLabel: string,
-      placeholder: string,
-    ) => {
-      const items = localizedLists[field];
-      return (
-        <section className="space-y-3">
-          <span className="text-xs uppercase tracking-[0.3em] text-subtle">{label}</span>
-          <div className="space-y-2">
-            {items.map((value, index) => (
-              <div key={`${field}-${activeLocale}-${index}`} className="flex items-center gap-2">
-                <input
-                  value={value}
-                  onChange={(event) => updateLocalizedListField(field, activeLocale, index, event.target.value)}
-                  placeholder={placeholder}
-                  className="flex-1 rounded-xl border surface-border bg-[var(--color-surface)] px-3 py-2 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
-                />
-                <button
-                  type="button"
-                  onClick={() => removeLocalizedListItem(field, activeLocale, index)}
-                  className="text-xs text-subtle hover:text-[var(--color-text)]"
-                  disabled={items.length <= 1}
-                >
-                  ✕
-                </button>
-              </div>
-            ))}
-          </div>
-          {items.length < 3 && (
-            <button
-              type="button"
-              onClick={() => addLocalizedListItem(field, activeLocale)}
-              className="text-sm text-[var(--color-accent, var(--color-text))] hover:underline"
-            >
-              + {addLabel}
-            </button>
-          )}
-        </section>
-      );
-    };
-
-    const duplicatesHeadline = duplicateMatches.length > 0 ? t.newTechnique.duplicates.possibleMatches : t.newTechnique.duplicates.none;
-
-    return (
-      <motion.div
-        key="newTechnique"
-        layout
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -16 }}
-        className="space-y-8"
-      >
-        {!form.precheckConfirmed && (
-          <div className="rounded-xl border border-dashed surface-border bg-[var(--color-surface)] px-4 py-3 text-sm text-subtle">
-            {t.newTechnique.precheckReminder}
-          </div>
-        )}
-
-        <section className="space-y-4">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div className="space-y-1">
-              <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.newTechnique.sections.details}</h2>
-              <p className="text-xs text-subtle">{t.newTechnique.languageInstruction}</p>
-            </div>
-            <Segmented
-              value={activeLocale}
-              onChange={(value) => setActiveLocaleTab(value as Locale)}
-              options={[
-                { value: 'en', label: t.newTechnique.languageOptions.en },
-                { value: 'de', label: t.newTechnique.languageOptions.de },
-              ]}
-            />
-          </div>
-
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-2">
-              <label className="text-xs uppercase tracking-[0.3em] text-subtle" htmlFor="nt-name-en">
-                {t.newTechnique.fields.name.en}
-              </label>
-              <input
-                id="nt-name-en"
-                value={form.name.en}
-                onChange={(event) => updateTechniqueName('en', event.target.value)}
-                placeholder={t.placeholders.newTechniqueNameEn}
-                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-xs uppercase tracking-[0.3em] text-subtle" htmlFor="nt-name-de">
-                {t.newTechnique.fields.name.de}
-              </label>
-              <input
-                id="nt-name-de"
-                value={form.name.de}
-                onChange={(event) => updateTechniqueName('de', event.target.value)}
-                placeholder={t.placeholders.newTechniqueNameDe}
-                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-xs uppercase tracking-[0.3em] text-subtle" htmlFor="nt-jp-kanji">
-                {t.newTechnique.fields.jpKanji}
-              </label>
-              <input
-                id="nt-jp-kanji"
-                value={form.jp.kanji}
-                onChange={(event) => updateNewTechnique('jp', { ...form.jp, kanji: event.target.value })}
-                placeholder={t.placeholders.newTechniqueKanji}
-                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-xs uppercase tracking-[0.3em] text-subtle" htmlFor="nt-jp-romaji">
-                {t.newTechnique.fields.romaji}
-              </label>
-              <input
-                id="nt-jp-romaji"
-                value={form.jp.romaji}
-                onChange={(event) => updateNewTechnique('jp', { ...form.jp, romaji: event.target.value })}
-                placeholder={t.placeholders.newTechniqueRomaji}
-                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
-              />
-            </div>
-          </div>
-        </section>
-
-        <section className="space-y-4">
-          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.newTechnique.sections.taxonomy}</h2>
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-2">
-              <label className="text-xs uppercase tracking-[0.3em] text-subtle">
-                {t.newTechnique.fields.attack}
-              </label>
-              <Select
-                options={attackOptions}
-                value={form.attack ?? ''}
-                onChange={(value) => updateNewTechnique('attack', value || null)}
-                placeholder={t.placeholders.newTechniqueAttack}
-                searchable
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-xs uppercase tracking-[0.3em] text-subtle">
-                {t.newTechnique.fields.category}
-              </label>
-              <Select
-                options={categoryOptions}
-                value={form.category ?? ''}
-                onChange={(value) => updateNewTechnique('category', value || null)}
-                placeholder={t.placeholders.newTechniqueCategory}
-                searchable
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-xs uppercase tracking-[0.3em] text-subtle">
-                {t.newTechnique.fields.weapon}
-              </label>
-              <Select
-                options={weaponOptions}
-                value={form.weapon ?? ''}
-                onChange={(value) => updateNewTechnique('weapon', value || null)}
-                placeholder={t.placeholders.newTechniqueWeapon}
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-xs uppercase tracking-[0.3em] text-subtle">
-                {t.newTechnique.fields.levelHint}
-              </label>
-              <input
-                value={form.levelHint}
-                onChange={(event) => updateNewTechnique('levelHint', event.target.value)}
-                placeholder={t.placeholders.newTechniqueLevel}
-                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
-              />
-            </div>
-          </div>
-
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-2">
-              <span className="text-xs uppercase tracking-[0.3em] text-subtle">{t.newTechnique.fields.entries}</span>
-              <div className="flex flex-wrap gap-2">
-                {entryOptions.map((entry) => {
-                  const active = form.entries.includes(entry);
-                  return (
-                    <label key={entry} className="cursor-pointer">
-                      <input
-                        type="checkbox"
-                        checked={active}
-                        onChange={() => handleEntryToggle(entry)}
-                        className="sr-only"
-                      />
-                      <Chip label={t.newTechnique.entryLabels[entry]} active={active} />
-                    </label>
-                  );
-                })}
-              </div>
-            </div>
-            <div className="space-y-2">
-              <label className="text-xs uppercase tracking-[0.3em] text-subtle">
-                {t.newTechnique.fields.hanmi}
-              </label>
-              <Select
-                options={hanmiOptions}
-                value={form.hanmi ?? ''}
-                onChange={handleHanmiChange}
-                placeholder={t.placeholders.newTechniqueHanmi}
-              />
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-xs uppercase tracking-[0.3em] text-subtle">{t.newTechnique.fields.slugPreview}</label>
-            <div className="rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2 text-sm font-mono">
-              {slugPreview || '—'}
-            </div>
-            <p className="text-xs text-subtle">{t.newTechnique.hints.slugPreview}</p>
-          </div>
-
-          <div className="space-y-2">
-            <p className="text-xs font-medium text-[var(--color-text)]">{duplicatesHeadline}</p>
-            {duplicateMatches.length > 0 && (
-              <ul className="space-y-1 text-xs text-subtle">
-                {duplicateMatches.map((match) => (
-                  <li key={match.id}>
-                    {match.name.en || match.name.de} · {getTaxonomyLabel(locale, 'attack', match.attack || '')}
-                  </li>
-                ))}
-              </ul>
-            )}
-            {duplicateMatches.length > 0 && (
-              <button
-                type="button"
-                onClick={() => handleTypeChange('addVariation')}
-                className="text-xs text-[var(--color-accent, var(--color-text))] hover:underline"
-              >
-                {t.newTechnique.duplicates.switch}
-              </button>
-            )}
-          </div>
-
-          {unusualCombo && (
-            <div className="rounded-lg border border-dashed surface-border px-3 py-2 text-xs text-subtle">
-              {t.newTechnique.hints.unusualCombo}
-            </div>
-          )}
-        </section>
-
-        <section className="space-y-4">
-          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.newTechnique.sections.summary}</h2>
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-2">
-              <label className="text-xs uppercase tracking-[0.3em] text-subtle" htmlFor="nt-summary-en">
-                {t.newTechnique.fields.summary.en}
-              </label>
-              <textarea
-                id="nt-summary-en"
-                rows={4}
-                value={form.summary.en}
-                onChange={(event) => updateTechniqueSummary('en', event.target.value)}
-                placeholder={t.placeholders.newTechniqueSummaryEn}
-                className={classNames(
-                  'w-full rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-3 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
-                  summaryExceeded.en && 'border-[var(--color-error, #b91c1c)]',
-                )}
-              />
-              <p
-                className={classNames(
-                  'text-xs',
-                  summaryExceeded.en ? 'text-[var(--color-error, #b91c1c)]' : 'text-subtle',
-                )}
-              >
-                {summaryFeedback('en')}
-              </p>
-            </div>
-            <div className="space-y-2">
-              <label className="text-xs uppercase tracking-[0.3em] text-subtle" htmlFor="nt-summary-de">
-                {t.newTechnique.fields.summary.de}
-              </label>
-              <textarea
-                id="nt-summary-de"
-                rows={4}
-                value={form.summary.de}
-                onChange={(event) => updateTechniqueSummary('de', event.target.value)}
-                placeholder={t.placeholders.newTechniqueSummaryDe}
-                className={classNames(
-                  'w-full rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-3 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
-                  summaryExceeded.de && 'border-[var(--color-error, #b91c1c)]',
-                )}
-              />
-              <p
-                className={classNames(
-                  'text-xs',
-                  summaryExceeded.de ? 'text-[var(--color-error, #b91c1c)]' : 'text-subtle',
-                )}
-              >
-                {summaryFeedback('de')}
-              </p>
-            </div>
-          </div>
-          {summariesEmpty && (
-            <p className="text-xs text-[var(--color-error, #b91c1c)]">{t.newTechnique.warnings.summaryMissing}</p>
-          )}
-        </section>
-
-        <section className="space-y-4">
-          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.newTechnique.sections.steps}</h2>
-          <p className="text-xs text-subtle">{t.newTechnique.hints.stepsLocalized}</p>
-          <StepBuilder
-            label={t.forms.improve.stepsLabel}
-            steps={form.steps[activeLocale]}
-            onChange={(steps) => updateLocalizedSteps(activeLocale, steps)}
-            placeholderForIndex={stepPlaceholder}
-            helperText={t.hints.stepHelper}
-            addButtonLabel={t.buttons.addStep}
-            removeButtonAria={removeStepAria}
-          />
-        </section>
-
-        <section className="space-y-4">
-          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.newTechnique.sections.uke}</h2>
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-2">
-              <label className="text-xs uppercase tracking-[0.3em] text-subtle">
-                {t.newTechnique.fields.ukeRole[activeLocale]}
-              </label>
-              <input
-                value={form.ukeRole[activeLocale]}
-                onChange={(event) => updateUkeRole(activeLocale, event.target.value)}
-                placeholder={t.placeholders.newTechniqueUkeRole}
-                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-xs uppercase tracking-[0.3em] text-subtle">
-                {t.newTechnique.fields.hanmi}
-              </label>
-              <Select
-                options={hanmiOptions}
-                value={form.hanmi ?? ''}
-                onChange={handleHanmiChange}
-                placeholder={t.placeholders.newTechniqueHanmi}
-              />
-            </div>
-          </div>
-          {renderListEditor('ukeNotes', t.newTechnique.fields.ukeNotes[activeLocale], t.buttons.addUkeNote, t.placeholders.newTechniqueUkeNote)}
-        </section>
-
-        <section className="space-y-4">
-          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.newTechnique.sections.insights}</h2>
-          <div className="grid gap-4 md:grid-cols-2">
-            {renderListEditor('keyPoints', t.newTechnique.fields.keyPoints[activeLocale], t.buttons.addKeyPoint, t.placeholders.newTechniqueKeyPoint)}
-            {renderListEditor('commonMistakes', t.newTechnique.fields.commonMistakes[activeLocale], t.buttons.addMistake, t.placeholders.newTechniqueMistake)}
-          </div>
-        </section>
-
-        <section className="space-y-3">
-          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.newTechnique.sections.media}</h2>
-          <MediaManager
-            media={form.media}
-            onChange={(items) => updateNewTechnique('media', items)}
-            placeholder={t.placeholders.mediaUrl}
-            triggerLabel={t.buttons.addMediaTrigger}
-            addLabel={t.buttons.addAction}
-            cancelLabel={t.buttons.cancel}
-            removeLabel={t.buttons.remove}
-            allowedKinds={['youtube', 'image']}
-            allowTitle
-            titleLabel={t.newTechnique.fields.mediaTitle}
-            titlePlaceholder={t.placeholders.newTechniqueMediaTitle}
-            disallowMessage={t.newTechnique.mediaRestrictions}
-          />
-        </section>
-
-        <section className="space-y-4">
-          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.newTechnique.sections.contributor}</h2>
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-2">
-              <label className="text-xs uppercase tracking-[0.3em] text-subtle">
-                {t.newTechnique.fields.contributorName}
-              </label>
-              <input
-                value={form.contributor.name}
-                onChange={(event) => updateNewTechnique('contributor', { ...form.contributor, name: event.target.value })}
-                placeholder={t.placeholders.contributorName}
-                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-xs uppercase tracking-[0.3em] text-subtle">
-                {t.newTechnique.fields.contributorContact}
-              </label>
-              <input
-                value={form.contributor.contact}
-                onChange={(event) => updateNewTechnique('contributor', { ...form.contributor, contact: event.target.value })}
-                placeholder={t.placeholders.contributorContact}
-                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
-              />
-            </div>
-          </div>
-          <div className="space-y-2">
-            <label className="text-xs uppercase tracking-[0.3em] text-subtle">
-              {t.newTechnique.fields.source}
-            </label>
-            <input
-              value={form.sources}
-              onChange={(event) => updateNewTechnique('sources', event.target.value)}
-              placeholder={t.placeholders.newTechniqueSources}
-              className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
-            />
-          </div>
-          <div className="space-y-2">
-            <label className="text-xs uppercase tracking-[0.3em] text-subtle">
-              {t.newTechnique.fields.lineage}
-            </label>
-            <input
-              value={form.lineage.dojoOrTrainer}
-              onChange={(event) => updateNewTechnique('lineage', { ...form.lineage, dojoOrTrainer: event.target.value })}
-              placeholder={t.placeholders.newTechniqueLineage}
-              className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
-            />
-            <label className="flex items-center gap-2 text-xs text-subtle">
-              <input
-                type="checkbox"
-                checked={form.lineage.markAsBase}
-                onChange={(event) => updateNewTechnique('lineage', { ...form.lineage, markAsBase: event.target.checked })}
-                className="h-4 w-4 rounded border surface-border"
-              />
-              {t.newTechnique.lineageToggle}
-            </label>
-            <p className="text-xs text-subtle">{t.newTechnique.lineageHelp}</p>
-          </div>
-        </section>
-
-        <section className="space-y-2">
-          <label className="flex items-center gap-3 text-sm text-[var(--color-text)]">
-            <input
-              type="checkbox"
-              checked={form.consent}
-              onChange={(event) => updateNewTechnique('consent', event.target.checked)}
-              className="h-4 w-4 rounded border surface-border"
-            />
-            {t.newTechnique.consentLabel}
-          </label>
-          {!form.consent && (
-            <p className="text-xs text-[var(--color-error, #b91c1c)]">{t.newTechnique.warnings.consentMissing}</p>
-          )}
-        </section>
-      </motion.div>
-    );
-  };
 
   const renderForm = () => {
     if (!selectedCard) return null;
@@ -2574,152 +2567,35 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
     }
   };
 
-  const renderPrecheckModal = (): ReactElement => (
-    <AnimatePresence>
-      {isPrecheckOpen && (
-        <motion.div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          onClick={() => {
-            setIsPrecheckOpen(false);
-          }}
-        >
-          <motion.div
-            className="w-full max-w-lg rounded-2xl border surface border-surface-border bg-[var(--color-surface)] p-6 shadow-xl"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -16 }}
-            onClick={(event) => event.stopPropagation()}
-          >
-            <div className="space-y-3">
-              <h2 className="text-lg font-semibold text-[var(--color-text)]">{t.precheck.title}</h2>
-              <p className="text-sm text-subtle">{t.precheck.description}</p>
-              <div className="space-y-2">
-                <label className="text-xs uppercase tracking-[0.3em] text-subtle" htmlFor="precheck-search">
-                  {t.precheck.searchLabel}
-                </label>
-                <input
-                  id="precheck-search"
-                  value={draft.newTechnique.precheckSearch}
-                  onChange={(event) => updateNewTechnique('precheckSearch', event.target.value)}
-                  placeholder={t.precheck.searchPlaceholder}
-                  className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
-                />
-              </div>
-              <div className="space-y-2">
-                <p className="text-xs font-medium text-[var(--color-text)]">{t.precheck.matchesTitle}</p>
-                {precheckMatches.length === 0 ? (
-                  <p className="text-xs text-subtle">{t.precheck.noMatches}</p>
-                ) : (
-                  <ul className="max-h-48 space-y-2 overflow-y-auto text-xs text-subtle">
-                    {precheckMatches.map((tech) => (
-                      <li key={`precheck-${tech.id}`} className="rounded-lg border surface-border px-3 py-2">
-                        <p className="font-medium text-[var(--color-text)]">{tech.name[locale] || tech.name.en}</p>
-                        <p>
-                          {tech.attack
-                            ? getTaxonomyLabel(locale, 'attack', tech.attack)
-                            : t.summary.notSpecified}
-                        </p>
-                        <button
-                          type="button"
-                          className="mt-1 text-[var(--color-accent, var(--color-text))] hover:underline"
-                          onClick={() => {
-                            handleTypeChange('addVariation');
-                            setIsPrecheckOpen(false);
-                            setPrecheckAcknowledged(false);
-                          }}
-                        >
-                          {t.precheck.switchToVariation}
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-              <p className="text-xs text-subtle">{t.precheck.duplicateHint}</p>
-              <label className="flex items-center gap-2 text-xs text-[var(--color-text)]">
-                <input
-                  type="checkbox"
-                  checked={precheckAcknowledged}
-                  onChange={(event) => setPrecheckAcknowledged(event.target.checked)}
-                  className="h-4 w-4 rounded border surface-border"
-                />
-                {t.precheck.checkboxLabel}
-              </label>
-              <div className="flex justify-end gap-3 pt-2">
-                <button
-                  type="button"
-                onClick={() => {
-                  setIsPrecheckOpen(false);
-                  setPrecheckAcknowledged(false);
-                }}
-                  className="rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2 text-sm"
-                >
-                  {t.precheck.cancel}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setDraft((current) => ({
-                      ...current,
-                      selectedType: 'newTechnique',
-                      newTechnique: {
-                        ...current.newTechnique,
-                        precheckConfirmed: true,
-                      },
-                    }));
-                    setIsPrecheckOpen(false);
-                    setPrecheckAcknowledged(false);
-                    setSubmissionState('idle');
-                  }}
-                  disabled={!precheckAcknowledged}
-                  className={classNames(
-                    'rounded-xl px-4 py-2 text-sm font-medium transition-soft',
-                    precheckAcknowledged
-                      ? 'bg-[var(--color-text)] text-[var(--color-bg)]'
-                      : 'border surface-border bg-[var(--color-surface)] text-subtle cursor-not-allowed',
-                  )}
-                >
-                  {t.precheck.confirm}
-                </button>
-              </div>
-            </div>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  );
-
   return (
     <>
-      <main className="mx-auto max-w-5xl px-4 sm:px-6 py-10 space-y-8">
-      {onBack && (
-        <button
-          type="button"
-          onClick={onBack}
-          className="flex items-center gap-2 text-sm text-muted hover:text-current transition-soft"
-        >
-          <span aria-hidden>‹</span>
-          {copy.backToLibrary}
-        </button>
-      )}
+      <main className="py-12 px-5 md:px-8">
+        <div className="mx-auto max-w-4xl space-y-8">
+          {onBack && (
+            <button
+              type="button"
+              onClick={onBack}
+              className="flex items-center gap-2 text-sm text-muted hover:text-current transition-soft"
+            >
+              <span aria-hidden>‹</span>
+              {copy.backToLibrary}
+            </button>
+          )}
 
-      <header className="space-y-4">
-        <div className="space-y-2">
-          <h1 className="text-3xl font-semibold flex items-center gap-3">
-            <HeartPulseIcon className="w-7 h-7 text-[var(--color-text)]" aria-hidden />
-            <span>{copy.feedbackTitle}</span>
-          </h1>
-          <p className="max-w-2xl text-sm text-muted">{t.heroSubtitle}</p>
-        </div>
-        <div className="h-px w-full bg-gradient-to-r from-transparent via-surface-border to-transparent" />
-      </header>
+          <header className="space-y-4">
+            <div className="space-y-2">
+              <h1 className="text-3xl font-semibold flex items-center gap-3">
+                <HeartPulseIcon className="w-7 h-7 text-[var(--color-text)]" aria-hidden />
+                <span>{copy.feedbackTitle}</span>
+              </h1>
+              <p className="max-w-2xl text-sm text-muted">{t.heroSubtitle}</p>
+            </div>
+            <div className="h-px w-full bg-gradient-to-r from-transparent via-surface-border to-transparent" />
+          </header>
 
-      <section className="space-y-4">
-        <h2 className="text-xs uppercase tracking-[0.3em] text-subtle">{t.headings.type}</h2>
-        <div className="grid gap-3 md:grid-cols-2">
+          <section className="space-y-4">
+            <h2 className="text-xs uppercase tracking-[0.3em] text-subtle">{t.headings.type}</h2>
+            <div className="grid gap-3 md:grid-cols-2">
           {feedbackTypeOrder.map((value) => {
             const content = cardContent[value];
             const isActive = value === selectedCard;
@@ -2732,7 +2608,6 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
                   'text-left rounded-2xl border px-4 py-4 shadow-sm transition-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
                   isActive ? 'border-[var(--color-text)] bg-[var(--color-surface)]' : 'surface-border bg-[var(--color-surface)] hover-border-adaptive',
                 )}
-                layoutId="feedback-card"
               >
                 <div className="flex items-start gap-3">
                   <span className="text-subtle" aria-hidden>
@@ -2746,136 +2621,143 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
               </motion.button>
             );
           })}
-        </div>
-        <AnimatePresence initial={false}>
-          {selectedCard && (
-            <motion.div
-              key="selector-divider"
-              initial={{ opacity: 0, y: -6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              className="h-px w-full bg-gradient-to-r from-transparent via-surface-border to-transparent"
-            />
-          )}
-        </AnimatePresence>
-      </section>
+            </div>
+            <AnimatePresence initial={false}>
+              {selectedCard && (
+                <motion.div
+                  key="selector-divider"
+                  initial={{ opacity: 0, y: -6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -6 }}
+                  className="h-px w-full bg-gradient-to-r from-transparent via-surface-border to-transparent"
+                />
+              )}
+            </AnimatePresence>
+          </section>
 
-      <section className="space-y-4">
-        <h2 className="text-xs uppercase tracking-[0.3em] text-subtle">{t.headings.dynamic}</h2>
-        <AnimatePresence initial={false}>
-          {selectedCard ? (
-            renderForm()
-          ) : (
-            <motion.div
-              key="placeholder"
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
-              className="rounded-2xl border border-dashed surface-border bg-[var(--color-surface)] px-4 py-6 text-sm text-subtle"
-            >
-              {t.prompts.chooseType}
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </section>
-
-      <section className="space-y-4">
-        <h2 className="text-xs uppercase tracking-[0.3em] text-subtle">{t.headings.summary}</h2>
-        <div className="rounded-2xl border surface-border bg-[var(--color-surface)] p-6 space-y-4">
-          <div className="space-y-1">
-            <h3 className="text-sm font-semibold text-[var(--color-text)]">{t.summary.title}</h3>
-            <p className="text-xs text-subtle">{t.summary.subtitle}</p>
-          </div>
-          <dl className="grid gap-3 sm:grid-cols-2">
-            {summaryEntries.map((item) => (
-              <div key={item.label} className="space-y-1">
-                <dt className="text-xs uppercase tracking-[0.3em] text-subtle">{item.label}</dt>
-                <dd className="text-sm text-[var(--color-text)]">{item.value}</dd>
-              </div>
-            ))}
-          </dl>
-          {submissionState === 'success' && submitResult?.ok ? (
-            <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="rounded-xl border border-transparent bg-[var(--color-surface)] px-4 py-3 text-sm shadow-sm space-y-1"
-            >
-              <p className="font-medium">{t.hints.successTitle}</p>
-              <p className="text-subtle">{t.hints.successBody}</p>
-              {submitResult.issueUrl && (
-                <a
-                  href={submitResult.issueUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-xs text-[var(--color-accent, var(--color-text))] underline-offset-4 hover:underline"
+          <section className="space-y-4">
+            <h2 className="text-xs uppercase tracking-[0.3em] text-subtle">{t.headings.dynamic}</h2>
+            <AnimatePresence initial={false}>
+              {selectedCard ? (
+                renderForm()
+              ) : (
+                <motion.div
+                  key="placeholder"
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  className="rounded-2xl border border-dashed surface-border bg-[var(--color-surface)] px-4 py-6 text-sm text-subtle"
                 >
-                  {t.newTechnique.viewIssue}
-                </a>
+                  {t.prompts.chooseType}
+                </motion.div>
               )}
-            </motion.div>
-          ) : submissionState === 'error' ? (
-            <motion.div
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="rounded-xl border border-[var(--color-error, #b91c1c)] bg-[var(--color-surface)] px-4 py-3 text-xs text-[var(--color-error, #b91c1c)]"
-            >
-              {submitError || t.newTechnique.errors.generic}
-              {submitResult?.requestId && ` · ${t.newTechnique.requestIdLabel} ${submitResult.requestId}`}
-            </motion.div>
-          ) : submissionState === 'submitting' ? (
-            <p className="text-xs text-subtle">{t.newTechnique.sending}</p>
-          ) : (
-            <p className="text-xs text-subtle">{t.hints.summaryHint}</p>
+            </AnimatePresence>
+          </section>
+
+          <section className="space-y-4">
+            <h2 className="text-xs uppercase tracking-[0.3em] text-subtle">{t.headings.summary}</h2>
+            <div className="rounded-2xl border surface-border bg-[var(--color-surface)] p-6 space-y-4">
+              <div className="space-y-1">
+                <h3 className="text-sm font-semibold text-[var(--color-text)]">{t.summary.title}</h3>
+                <p className="text-xs text-subtle">{t.summary.subtitle}</p>
+              </div>
+              <dl className="grid gap-3 sm:grid-cols-2">
+                {summaryEntries.map((item) => (
+                  <div key={item.label} className="space-y-1">
+                    <dt className="text-xs font-medium text-subtle">{item.label}</dt>
+                    <dd className="text-sm text-[var(--color-text)]">{item.value}</dd>
+                  </div>
+                ))}
+              </dl>
+              {submissionState === 'success' && submitResult?.ok ? (
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="rounded-xl border border-transparent bg-[var(--color-surface)] px-4 py-3 text-sm shadow-sm space-y-1"
+                >
+                  <p className="font-medium">{t.hints.successTitle}</p>
+                  <p className="text-subtle">{t.hints.successBody}</p>
+                  {submitResult.issueUrl && (
+                    <a
+                      href={submitResult.issueUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-xs text-[var(--color-accent, var(--color-text))] underline-offset-4 hover:underline"
+                    >
+                      {t.newTechnique.viewIssue}
+                    </a>
+                  )}
+                </motion.div>
+              ) : submissionState === 'error' ? (
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="rounded-xl border border-[var(--color-error, #b91c1c)] bg-[var(--color-surface)] px-4 py-3 text-xs text-[var(--color-error, #b91c1c)]"
+                >
+                  {submitError || t.newTechnique.errors.generic}
+                  {submitResult?.requestId && ` · ${t.newTechnique.requestIdLabel} ${submitResult.requestId}`}
+                </motion.div>
+              ) : submissionState === 'submitting' ? (
+                <p className="text-xs text-subtle">{t.newTechnique.sending}</p>
+              ) : (
+                <p className="text-xs text-subtle">{t.hints.summaryHint}</p>
+              )}
+
+              <div className="flex flex-wrap gap-3">
+                <button
+                  type="button"
+                  onClick={handleSubmit}
+                  disabled={!canSubmit}
+                  className={classNames(
+                    'rounded-xl px-4 py-2.5 text-sm font-medium transition-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+                    canSubmit
+                      ? 'bg-[var(--color-text)] text-[var(--color-bg)]'
+                      : 'border surface-border bg-[var(--color-surface)] text-subtle cursor-not-allowed',
+                  )}
+                >
+                  {submissionState === 'submitting' ? t.newTechnique.sendingButton : t.buttons.submit}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleDownloadJson}
+                  className="rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm"
+                >
+                  {t.buttons.downloadJson}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSubmissionState('idle');
+                    setSubmitError(null);
+                    setSubmitResult(null);
+                  }}
+                  className="rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm"
+                >
+                  {t.buttons.edit}
+                </button>
+                {submissionState === 'success' && (
+                  <button
+                    type="button"
+                    onClick={resetDraft}
+                    className="rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm"
+                  >
+                    {t.buttons.restart}
+                  </button>
+                )}
+              </div>
+            </div>
+          </section>
+
+          {showJsonPreview && (
+            <section className="space-y-3">
+          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.headings.jsonPreview}</h2>
+              <pre className="max-h-64 overflow-auto rounded-2xl border surface-border bg-[var(--color-surface)] p-4 text-xs">
+                {JSON.stringify(draft, null, 2)}
+              </pre>
+            </section>
           )}
-
-          <div className="flex flex-wrap gap-3">
-            <button
-              type="button"
-              onClick={handleSubmit}
-              disabled={!canSubmit}
-              className={classNames(
-                'rounded-xl px-4 py-2.5 text-sm font-medium transition-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
-                canSubmit
-                  ? 'bg-[var(--color-text)] text-[var(--color-bg)]'
-                  : 'border surface-border bg-[var(--color-surface)] text-subtle cursor-not-allowed',
-              )}
-            >
-              {submissionState === 'submitting' ? t.newTechnique.sendingButton : t.buttons.submit}
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setSubmissionState('idle');
-                setSubmitError(null);
-                setSubmitResult(null);
-              }}
-              className="rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm"
-            >
-              {t.buttons.edit}
-            </button>
-            {submissionState === 'success' && (
-              <button
-                type="button"
-                onClick={resetDraft}
-                className="rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm"
-              >
-                {t.buttons.restart}
-              </button>
-            )}
-          </div>
         </div>
-      </section>
-
-      {showJsonPreview && (
-        <section className="space-y-3">
-          <h2 className="text-xs uppercase tracking-[0.3em] text-subtle">{t.headings.jsonPreview}</h2>
-          <pre className="max-h-64 overflow-auto rounded-2xl border surface-border bg-[var(--color-surface)] p-4 text-xs">
-            {JSON.stringify(draft, null, 2)}
-          </pre>
-        </section>
-      )}
       </main>
-      {renderPrecheckModal()}
     </>
   );
 };

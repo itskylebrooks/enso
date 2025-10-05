@@ -135,6 +135,12 @@ body {
   border-color: var(--color-text);
 }
 
+/* Ensure native checkboxes/radios use theme color (not blue) */
+input[type="checkbox"],
+input[type="radio"] {
+  accent-color: var(--color-text);
+}
+
 .divide-border > :not([hidden]) ~ :not([hidden]) {
   border-color: var(--color-border);
 }

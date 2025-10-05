@@ -2,6 +2,7 @@ import type { ReactElement } from 'react';
 import { motion, type HTMLMotionProps, useReducedMotion } from 'motion/react';
 import { classNames } from '../../utils/classNames';
 import { defaultEase } from './motion';
+import { CheckIcon } from './icons';
 
 type ChipProps = {
   label: string;
@@ -30,7 +31,10 @@ export const Chip = ({ label, active = false, className, disabled, ...buttonProp
       transition={prefersReducedMotion ? { duration: 0.05 } : { duration: 0.1, ease: defaultEase }}
       whileTap={prefersReducedMotion ? undefined : { scale: 0.97 }}
     >
-      {label}
+      <span className="inline-flex items-center gap-1.5">
+        {active && <CheckIcon width={16} height={16} aria-hidden="true" />}
+        <span>{label}</span>
+      </span>
     </motion.button>
   );
 };
