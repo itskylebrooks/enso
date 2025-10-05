@@ -39,6 +39,8 @@ export type TechniqueToolbarProps = {
     // Version labels
     standard: string;
   };
+  // Whether the technique includes an explicit base version (v-base)
+  hasBaseVersion?: boolean;
 };
 
 const HANMI_ORDER: Hanmi[] = ['ai-hanmi', 'gyaku-hanmi'];
@@ -52,6 +54,7 @@ export const TechniqueToolbar = ({
   value,
   onChange,
   labels,
+  hasBaseVersion,
 }: TechniqueToolbarProps): ReactElement => {
   // Hanmi options
   const hanmiOptions: SelectOption<Hanmi>[] = useMemo(
@@ -119,13 +122,11 @@ export const TechniqueToolbar = ({
   // Version options
   const versionOptions: SelectOption<string>[] = useMemo(
     () => {
-      // "Standard" option pinned at top
-      const options: SelectOption<string>[] = [
-        {
-          value: '__base__',
-          label: labels.standard,
-        },
-      ];
+      // Optionally pin the "Base" option at the top only when a base version exists
+      const options: SelectOption<string>[] = [];
+      if (hasBaseVersion) {
+        options.push({ value: '__base__', label: labels.standard });
+      }
 
       // Add all other versions (no grouping, no dojo labels)
       versions.forEach((version) => {
@@ -137,7 +138,7 @@ export const TechniqueToolbar = ({
 
       return options;
     },
-    [versions, labels.standard]
+    [versions, labels.standard, hasBaseVersion]
   );
 
   // Handlers
@@ -172,7 +173,7 @@ export const TechniqueToolbar = ({
     [value, onChange]
   );
 
-  const selectedVersionId = value.versionId || '__base__';
+  const selectedVersionId = value.versionId ?? (hasBaseVersion ? '__base__' : (versions[0]?.id ?? ''));
 
   return (
     <div

@@ -229,6 +229,8 @@ export const TechniquePage = ({
 
   const versionsMeta = enrichedTechnique.versionsMeta || [];
 
+  const hasBaseVersion = (enrichedTechnique.versions || []).some(v => v.id === 'v-base');
+
   // Get available variant combinations to intelligently disable options
   const availableVariants = useMemo(() => {
     return enrichedTechnique.variants || [];
@@ -485,6 +487,7 @@ export const TechniquePage = ({
         value={toolbarValue}
         onChange={handleToolbarChange}
         labels={toolbarLabels}
+        hasBaseVersion={hasBaseVersion}
       />
 
       <AnimatePresence mode="wait">
