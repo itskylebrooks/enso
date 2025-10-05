@@ -211,7 +211,7 @@ export const Select = <T extends string = string>({
             )}
           >
             {searchable && (
-              <div className="px-2 pb-2 mb-2 border-b border-white/10">
+              <div className="px-2 pb-2 mb-2 border-b border-adaptive">
                 <input
                   ref={searchInputRef}
                   type="text"

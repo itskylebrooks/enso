@@ -27,7 +27,7 @@ export const MediaEmbed = ({ media }: MediaEmbedProps): ReactElement => {
       href={media.url}
       target="_blank"
       rel="noreferrer"
-      className="inline-flex items-center gap-2 rounded-lg border border-white/10 px-3 py-2 text-sm text-[var(--color-text)] underline-offset-4 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+      className="inline-flex items-center gap-2 rounded-lg border surface-border px-3 py-2 text-sm text-[var(--color-text)] underline-offset-4 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
     >
       <span>{media.url}</span>
       <span aria-hidden>↗</span>

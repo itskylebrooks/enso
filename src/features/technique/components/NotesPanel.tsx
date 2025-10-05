@@ -21,10 +21,9 @@ export const NotesPanel = ({ commonMistakes, context, copy, onFeedbackClick }: N
 
   return (
     <section className="space-y-3">
-      <header className="text-xs uppercase tracking-[0.3em] text-subtle">{copy.notes}</header>
       <div className="space-y-3">
         {cards.map((card) => (
-          <article key={card.title} className="rounded-xl border border-white/10 p-4 sm:p-5 space-y-3">
+          <article key={card.title} className="rounded-xl border surface-border bg-[var(--color-surface)]/80 p-4 sm:p-5 space-y-3">
             <h3 className="text-xs uppercase tracking-[0.3em] text-subtle">{card.title}</h3>
             {card.items && card.items.length > 0 && (
               <ul className="space-y-2 text-sm leading-relaxed text-muted">
@@ -48,7 +47,7 @@ export const NotesPanel = ({ commonMistakes, context, copy, onFeedbackClick }: N
           <button
             type="button"
             onClick={onFeedbackClick}
-            className="w-full rounded-xl border border-white/10 p-4 sm:p-5 flex items-center gap-3 surface-hover transition-soft motion-ease"
+            className="w-full rounded-xl border surface-border bg-[var(--color-surface)]/80 p-4 sm:p-5 flex items-center gap-3 surface-hover transition-soft motion-ease"
           >
             <MessageSquarePlusIcon className="shrink-0" />
             <span className="text-sm font-medium">{copy.feedback}</span>
