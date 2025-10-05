@@ -379,6 +379,18 @@ pnpm preview
 pnpm lint
 ```
 
+### Feedback integration (GitHub Issues)
+
+Add a `.env.local` file (git-ignored) and configure the GitHub target for feedback submissions:
+
+```
+GITHUB_TOKEN=***           # Fine-grained PAT, Issues: Read & Write, scoped to the target repo
+GITHUB_OWNER=your-user-or-org
+GITHUB_REPO=enso-feedback   # Repository to receive feedback issues
+```
+
+Configure the same variables in your Vercel project (Production / Preview / Development) before deploying the API route.
+
 ---
 
 ## Project Structure (high level)

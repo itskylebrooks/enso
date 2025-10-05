@@ -388,7 +388,6 @@ export const messages = {
       },
       newTechnique: {
         precheckReminder: 'Complete the quick duplicate check before filling in the new technique form.',
-        languageInstruction: 'Toggle the editor to enter English and German content. Both languages are required for key fields.',
         languageOptions: {
           en: 'Editing English',
           de: 'Editing German',
@@ -471,6 +470,15 @@ export const messages = {
         consentLabel: 'I confirm I have the rights to submit this text and media (CC BY-NC 4.0).',
         lineageToggle: 'Mark as canonical base version',
         lineageHelp: 'Uncheck if this technique belongs to a specific trainer/dojo lineage.',
+        viewIssue: 'View created GitHub issue',
+        errors: {
+          generic: 'Unable to submit at the moment. Please try again shortly.',
+          detailsShort: 'Please provide at least 20 characters of detail before submitting.',
+        },
+        sending: 'Sending feedback…',
+        sendingButton: 'Sending…',
+        requestIdLabel: 'Request ID',
+        languageInstruction: 'Toggle the editor to enter English and German content. Both languages are required for key fields.',
       },
     },
     feedbackInApp: 'In-App',
@@ -952,7 +960,6 @@ export const messages = {
       },
       newTechnique: {
         precheckReminder: 'Bitte zuerst die Dubletten-Prüfung abschließen, bevor du das Formular ausfüllst.',
-        languageInstruction: 'Wechsle zwischen Deutsch und Englisch, um alle Pflichtfelder zweisprachig zu pflegen.',
         languageOptions: {
           en: 'Englisch bearbeiten',
           de: 'Deutsch bearbeiten',
@@ -1035,6 +1042,15 @@ export const messages = {
         consentLabel: 'Ich bestätige, dass ich die Rechte an Text und Medien besitze (CC BY-NC 4.0).',
         lineageToggle: 'Als Standard-/Basisvariante markieren',
         lineageHelp: 'Deaktiviere dies, wenn die Technik einer bestimmten Trainer- oder Dojo-Linie zugeordnet ist.',
+        viewIssue: 'Erstelltes GitHub-Issue öffnen',
+        errors: {
+          generic: 'Feedback konnte nicht gesendet werden. Bitte versuche es später erneut.',
+          detailsShort: 'Bitte gib mindestens 20 Zeichen an Details an, bevor du sendest.',
+        },
+        sending: 'Feedback wird gesendet…',
+        sendingButton: 'Senden…',
+        requestIdLabel: 'Anfrage-ID',
+        languageInstruction: 'Wechsle zwischen Deutsch und Englisch, um alle Pflichtfelder zweisprachig zu pflegen.',
       },
     },
     feedbackInApp: 'In-App',

@@ -287,6 +287,236 @@ const computePrecheckMatches = (query: string, techniques: Technique[]): Techniq
     .slice(0, 6);
 };
 
+const escapeInline = (value: string): string => {
+  const normalized = value.replace(/\r/g, '').split('\n').map((line) => line.trim()).join(' ');
+  return ['*', '[', ']', '`'].reduce((acc, ch) => acc.split(ch).join(`\\${ch}`), normalized);
+};
+
+const summarizeMedia = (media?: MediaEntry[]) =>
+  (media ?? [])
+    .map((item) => ({
+      type: item.type === 'vimeo' ? 'link' : item.type,
+      url: item.url,
+      title: item.title,
+    }))
+    .filter((item) => item.url);
+
+const getClientVersion = (): string | undefined => {
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return (import.meta as any)?.env?.VITE_APP_VERSION ?? undefined;
+  } catch {
+    return undefined;
+  }
+};
+
+type FeedbackApiPayload = {
+  name: string;
+  email?: string;
+  category: 'suggestion' | 'bug' | 'edit' | 'new-version' | 'new-variation' | 'new-technique';
+  entityType: 'technique' | 'glossary' | 'exam' | 'guide' | 'other';
+  entityId?: string;
+  locale?: Locale;
+  summary: string;
+  detailsMd: string;
+  diffJson?: unknown;
+  media?: Array<{ type: 'youtube' | 'image' | 'link'; url: string; title?: string }>;
+  clientVersion?: string;
+  userAgent?: string;
+  honeypot: string;
+};
+
+const buildFeedbackPayload = (
+  selectedType: FeedbackType | null,
+  draft: FeedbackDraft,
+  options: {
+    slugPreview: string;
+    duplicateMatches: Technique[];
+    locale: Locale;
+    findTechniqueName: (slug: string | null) => string;
+  },
+): FeedbackApiPayload | null => {
+  const { slugPreview, duplicateMatches, locale, findTechniqueName } = options;
+  const clientVersion = getClientVersion();
+  const userAgent = typeof navigator !== 'undefined' ? navigator.userAgent : undefined;
+  const defaultName = draft.newTechnique.contributor.name.trim() || 'Anonymous contributor';
+
+  if (selectedType === 'newTechnique') {
+    const form = draft.newTechnique;
+    const summary = form.summary.en.trim() || form.summary.de.trim() || 'New technique proposal';
+
+    const detailsParts: string[] = [];
+    detailsParts.push(`### Summary (EN)\n${form.summary.en.trim() || '-'}`);
+    detailsParts.push(`\n### Zusammenfassung (DE)\n${form.summary.de.trim() || '-'}`);
+    detailsParts.push(
+      `\n### Taxonomy\n- Attack: ${form.attack ? form.attack : '—'}\n- Category: ${form.category ?? '—'}\n- Weapon: ${form.weapon ?? '—'}\n- Entries: ${form.entries.length ? form.entries.join(', ') : '—'}\n- Hanmi: ${form.hanmi ?? '—'}\n- Level hint: ${form.levelHint || '—'}`,
+    );
+
+    const stepsEn = form.steps.en.map((step, index) => `  ${index + 1}. ${step.text || '-'}`).join('\n');
+    const stepsDe = form.steps.de.map((step, index) => `  ${index + 1}. ${step.text || '-'}`).join('\n');
+    detailsParts.push(`\n### Steps (EN)\n${stepsEn || '  -'}`);
+    detailsParts.push(`\n### Schritte (DE)\n${stepsDe || '  -'}`);
+
+    const formatList = (list: string[]) => (list.length ? list.map((item) => `- ${item || '-'}`).join('\n') : '-');
+    detailsParts.push(`\n### Uke guidance (EN)\n**Role:** ${form.ukeRole.en || '-'}\n${formatList(form.ukeNotes.en)}`);
+    detailsParts.push(`\n### Uke-Hinweise (DE)\n**Rolle:** ${form.ukeRole.de || '-'}\n${formatList(form.ukeNotes.de)}`);
+    detailsParts.push(`\n### Key points\n${formatList(form.keyPoints.en)}`);
+    detailsParts.push(`\n### Häufige Fehler\n${formatList(form.commonMistakes.de)}`);
+
+    if (form.sources.trim()) {
+      detailsParts.push(`\n### Sources / Attribution\n${form.sources.trim()}`);
+    }
+
+    if (duplicateMatches.length > 0) {
+      const dupList = duplicateMatches
+        .map((tech) => `- ${tech.name.en || tech.name.de} (${tech.slug})`)
+        .join('\n');
+      detailsParts.push(`\n### Possible duplicates\n${dupList}`);
+    }
+
+    const detailsMd = detailsParts.join('\n');
+
+    return {
+      name: escapeInline(defaultName),
+      email: form.contributor.contact.includes('@') ? form.contributor.contact.trim() : undefined,
+      category: 'new-technique',
+      entityType: 'technique',
+      entityId: slugPreview || undefined,
+      locale,
+      summary: summary.length > 120 ? `${summary.slice(0, 117)}…` : summary,
+      detailsMd,
+      diffJson: {
+        name: form.name,
+        jp: form.jp,
+        taxonomy: {
+          attack: form.attack,
+          category: form.category,
+          weapon: form.weapon,
+          entries: form.entries,
+          hanmi: form.hanmi,
+        },
+        levelHint: form.levelHint,
+        steps: form.steps,
+        uke: {
+          role: form.ukeRole,
+          notes: form.ukeNotes,
+        },
+        keyPoints: form.keyPoints,
+        commonMistakes: form.commonMistakes,
+        lineage: form.lineage,
+      },
+      media: summarizeMedia(form.media),
+      clientVersion,
+      userAgent,
+      honeypot: '',
+    };
+  }
+
+  if (selectedType === 'addVariation') {
+    const { addVariation } = draft;
+    const summary = addVariation.description.trim() || addVariation.variationName || 'New variation suggestion';
+    const detailsMd = `Variation for ${addVariation.relatedTechniqueId || '-'}\n\n${addVariation.description || ''}\n\n### Steps\n${addVariation.steps
+      .map((step, index) => `  ${index + 1}. ${step.text || '-'}`)
+      .join('\n')}`;
+    return {
+      name: escapeInline(defaultName),
+      email: draft.newTechnique.contributor.contact.includes('@') ? draft.newTechnique.contributor.contact.trim() : undefined,
+      category: 'new-variation',
+      entityType: 'technique',
+      entityId: addVariation.relatedTechniqueId || undefined,
+      locale,
+      summary: summary.length > 120 ? `${summary.slice(0, 117)}…` : summary,
+      detailsMd,
+      diffJson: addVariation,
+      media: summarizeMedia(addVariation.media),
+      clientVersion,
+      userAgent,
+      honeypot: '',
+    };
+  }
+
+  if (selectedType === 'improveTechnique') {
+    const { improveTechnique } = draft;
+    const label = findTechniqueName(improveTechnique.techniqueId);
+    const summary = `Improvement for ${label}`;
+    const detailsParts = improveTechnique.sections.map((section) => {
+      if (section === 'steps') {
+        return `### Steps\n${improveTechnique.steps
+          .map((step, index) => `  ${index + 1}. ${step.text || '-'}`)
+          .join('\n')}`;
+      }
+      const text = improveTechnique.textBySection[section as ImproveTextSection] || '';
+      return `### ${section}\n${text || '-'}`;
+    });
+    const detailsMd = detailsParts.join('\n\n');
+    return {
+      name: escapeInline(defaultName),
+      email: draft.newTechnique.contributor.contact.includes('@') ? draft.newTechnique.contributor.contact.trim() : undefined,
+      category: 'edit',
+      entityType: 'technique',
+      entityId: improveTechnique.techniqueId || undefined,
+      locale,
+      summary,
+      detailsMd,
+      diffJson: improveTechnique,
+      media: summarizeMedia(improveTechnique.media),
+      clientVersion,
+      userAgent,
+      honeypot: '',
+    };
+  }
+
+  if (selectedCard === 'bugReport') {
+    const bug = draft.bugReport;
+    const summary = bug.details.split('\n')[0]?.slice(0, 120) || 'Bug report';
+    const detailsMd = `### What happened\n${bug.details}\n\n### Steps to reproduce\n${bug.reproduction}`;
+    return {
+      name: escapeInline(defaultName),
+      email: draft.newTechnique.contributor.contact.includes('@') ? draft.newTechnique.contributor.contact.trim() : undefined,
+      category: 'bug',
+      entityType: 'other',
+      summary,
+      detailsMd,
+      diffJson: bug,
+      clientVersion,
+      userAgent,
+      honeypot: '',
+    };
+  }
+
+  if (selectedCard === 'appFeedback') {
+    const feedback = draft.appFeedback;
+    const summary = feedback.feedback.split('\n')[0]?.slice(0, 120) || 'App feedback';
+    const detailsMd = feedback.feedback;
+    return {
+      name: escapeInline(defaultName),
+      email: draft.newTechnique.contributor.contact.includes('@') ? draft.newTechnique.contributor.contact.trim() : undefined,
+      category: 'suggestion',
+      entityType: 'guide',
+      summary,
+      detailsMd,
+      diffJson: feedback,
+      media: summarizeMedia(
+        feedback.screenshotUrl
+          ? [
+              {
+                id: createId(),
+                type: 'link',
+                url: feedback.screenshotUrl,
+                title: 'Screenshot',
+              },
+            ]
+          : [],
+      ),
+      clientVersion,
+      userAgent,
+      honeypot: '',
+    };
+  }
+
+  return null;
+};
+
 const defaultNewTechniqueForm = (): NewTechniqueForm => ({
   precheckConfirmed: false,
   name: defaultLocalizedString(),
@@ -802,7 +1032,9 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
   const t: FeedbackPageCopy = copy.feedbackPage;
   const [draft, setDraft] = useState<FeedbackDraft>(() => loadDraft());
   const [showJsonPreview, setShowJsonPreview] = useState(false);
-  const [submissionState, setSubmissionState] = useState<'idle' | 'success'>('idle');
+  const [submissionState, setSubmissionState] = useState<'idle' | 'success' | 'error' | 'submitting'>('idle');
+  const [submitResult, setSubmitResult] = useState<{ ok: boolean; issueUrl?: string; issueNumber?: number; message?: string; requestId?: string } | null>(null);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const [activeLocaleTab, setActiveLocaleTab] = useState<Locale>('en');
   const [isPrecheckOpen, setIsPrecheckOpen] = useState(false);
   const [precheckAcknowledged, setPrecheckAcknowledged] = useState(false);
@@ -819,7 +1051,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
         value,
         label: getTaxonomyLabel(locale, 'attack', value),
       })),
-    [locale],
+  [locale],
   );
 
   const categoryOptions = useMemo<SelectOption<string>[]>(
@@ -839,6 +1071,8 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
       })),
     [locale],
   );
+
+  const selectedCard = draft.selectedType;
 
   const levelOptions = useMemo<SelectOption<string>[]>(
     () => [
@@ -895,6 +1129,12 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
     });
     onConsumeInitialType?.();
   }, [initialType, onConsumeInitialType]);
+
+  useEffect(() => {
+    setSubmissionState('idle');
+    setSubmitResult(null);
+    setSubmitError(null);
+  }, [selectedCard]);
 
   const categoryTagLabels = t.categoryTags as Record<CategoryTag, string>;
   const areaLabels = t.appAreas as Record<AppArea, string>;
@@ -958,6 +1198,8 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
   const resetDraft = useCallback(() => {
     setDraft(defaultDraft());
     setSubmissionState('idle');
+    setSubmitResult(null);
+    setSubmitError(null);
   }, []);
 
   const handleTypeChange = (feedbackType: FeedbackType) => {
@@ -1124,8 +1366,6 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
     }));
   };
 
-  const selectedCard = draft.selectedType;
-
   const techniquePlaceholder =
     techniqueOptions.length > 0 ? t.options.searchTechniques : t.options.techniquesLoading;
 
@@ -1200,6 +1440,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
       : selectedCard === 'bugReport'
       ? isBugReportReady
       : false;
+  const canSubmit = isSubmitEnabled && submissionState !== 'submitting';
 
   const formatCount = (count: number, forms: { one: string; many: string }): string =>
     (count === 1 ? forms.one : forms.many).replace('{count}', String(count));
@@ -1363,9 +1604,56 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
     t.summary,
   ]);
 
-  const handleSubmit = () => {
-    if (!isSubmitEnabled) return;
-    setSubmissionState('success');
+  const handleSubmit = async () => {
+    if (!canSubmit) return;
+    const payload = buildFeedbackPayload(selectedCard, draft, {
+      slugPreview,
+      duplicateMatches,
+      locale,
+      findTechniqueName,
+    });
+
+    if (!payload) {
+      setSubmitError(t.newTechnique.errors.generic);
+      setSubmissionState('error');
+      return;
+    }
+
+    if (payload.detailsMd.trim().length < 20) {
+      setSubmitError(t.newTechnique.errors.detailsShort);
+      setSubmissionState('error');
+      return;
+    }
+
+    setSubmissionState('submitting');
+    setSubmitError(null);
+    setSubmitResult(null);
+
+    try {
+      const response = await fetch('/api/feedback', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await response.json().catch(() => ({ ok: false }));
+
+      if (response.ok && result?.ok) {
+        setSubmitResult(result);
+        setSubmissionState('success');
+      } else {
+        const message = result?.message || 'Feedback submission failed.';
+        setSubmitError(message);
+        setSubmitResult(result);
+        setSubmissionState('error');
+      }
+    } catch (error) {
+      console.error('[feedback-submit]', error);
+      setSubmitError('Network error while sending feedback.');
+      setSubmissionState('error');
+    }
   };
 
   const stepPlaceholder = (index: number) => t.placeholders.step.replace('{index}', String(index + 1));
@@ -2506,15 +2794,36 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
               </div>
             ))}
           </dl>
-          {submissionState === 'success' ? (
+          {submissionState === 'success' && submitResult?.ok ? (
             <motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              className="rounded-xl border border-transparent bg-[var(--color-surface)] px-4 py-3 text-sm shadow-sm"
+              className="rounded-xl border border-transparent bg-[var(--color-surface)] px-4 py-3 text-sm shadow-sm space-y-1"
             >
               <p className="font-medium">{t.hints.successTitle}</p>
               <p className="text-subtle">{t.hints.successBody}</p>
+              {submitResult.issueUrl && (
+                <a
+                  href={submitResult.issueUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-xs text-[var(--color-accent, var(--color-text))] underline-offset-4 hover:underline"
+                >
+                  {t.newTechnique.viewIssue}
+                </a>
+              )}
             </motion.div>
+          ) : submissionState === 'error' ? (
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="rounded-xl border border-[var(--color-error, #b91c1c)] bg-[var(--color-surface)] px-4 py-3 text-xs text-[var(--color-error, #b91c1c)]"
+            >
+              {submitError || t.newTechnique.errors.generic}
+              {submitResult?.requestId && ` · ${t.newTechnique.requestIdLabel} ${submitResult.requestId}`}
+            </motion.div>
+          ) : submissionState === 'submitting' ? (
+            <p className="text-xs text-subtle">{t.newTechnique.sending}</p>
           ) : (
             <p className="text-xs text-subtle">{t.hints.summaryHint}</p>
           )}
@@ -2523,19 +2832,23 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
             <button
               type="button"
               onClick={handleSubmit}
-              disabled={!isSubmitEnabled || submissionState === 'success'}
+              disabled={!canSubmit}
               className={classNames(
                 'rounded-xl px-4 py-2.5 text-sm font-medium transition-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
-                isSubmitEnabled && submissionState !== 'success'
+                canSubmit
                   ? 'bg-[var(--color-text)] text-[var(--color-bg)]'
                   : 'border surface-border bg-[var(--color-surface)] text-subtle cursor-not-allowed',
               )}
             >
-              {t.buttons.submit}
+              {submissionState === 'submitting' ? t.newTechnique.sendingButton : t.buttons.submit}
             </button>
             <button
               type="button"
-              onClick={() => setSubmissionState('idle')}
+              onClick={() => {
+                setSubmissionState('idle');
+                setSubmitError(null);
+                setSubmitResult(null);
+              }}
               className="rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm"
             >
               {t.buttons.edit}
