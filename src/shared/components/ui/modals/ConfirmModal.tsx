@@ -1,4 +1,5 @@
 import { useEffect, useRef, type ReactElement } from 'react';
+import { createPortal } from 'react-dom';
 import { motion } from 'motion/react';
 import { useFocusTrap } from '@shared/hooks/useFocusTrap';
 import { useMotionPreferences } from '../motion';
@@ -17,7 +18,7 @@ type ConfirmModalProps = {
   onConfirm: () => void;
 };
 
-export const ConfirmModal = ({ strings, onCancel, onConfirm }: ConfirmModalProps): ReactElement => {
+export const ConfirmModal = ({ strings, onCancel, onConfirm }: ConfirmModalProps): ReactElement | null => {
   const dialogRef = useRef<HTMLDivElement>(null);
   const { overlayMotion, toggleTransition, prefersReducedMotion } = useMotionPreferences();
 
@@ -37,7 +38,7 @@ export const ConfirmModal = ({ strings, onCancel, onConfirm }: ConfirmModalProps
     return () => window.removeEventListener('keydown', handleKey);
   }, [onCancel]);
 
-  return (
+  const content = (
     <motion.div
       className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/45"
       variants={overlayMotion.backdrop}
@@ -90,4 +91,7 @@ export const ConfirmModal = ({ strings, onCancel, onConfirm }: ConfirmModalProps
       </motion.div>
     </motion.div>
   );
+
+  if (typeof document === 'undefined') return null;
+  return createPortal(content, document.body);
 };

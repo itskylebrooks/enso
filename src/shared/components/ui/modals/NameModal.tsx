@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent, type ReactElement } from 'react';
+import { createPortal } from 'react-dom';
 import { motion } from 'motion/react';
 import { useFocusTrap } from '@shared/hooks/useFocusTrap';
 import { useMotionPreferences } from '../motion';
@@ -20,7 +21,7 @@ type NameModalProps = {
 
 const maxNameLength = 40;
 
-export const NameModal = ({ strings, initialName = '', onCancel, onConfirm }: NameModalProps): ReactElement => {
+export const NameModal = ({ strings, initialName = '', onCancel, onConfirm }: NameModalProps): ReactElement | null => {
   const dialogRef = useRef<HTMLDivElement>(null);
   const nameInputRef = useRef<HTMLInputElement>(null);
   const { overlayMotion, toggleTransition, prefersReducedMotion } = useMotionPreferences();
@@ -55,7 +56,7 @@ export const NameModal = ({ strings, initialName = '', onCancel, onConfirm }: Na
 
   const canSubmit = name.trim().length > 0;
 
-  return (
+  const content = (
     <motion.div
       className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/45"
       variants={overlayMotion.backdrop}
@@ -121,4 +122,7 @@ export const NameModal = ({ strings, initialName = '', onCancel, onConfirm }: Na
       </motion.div>
     </motion.div>
   );
+
+  if (typeof document === 'undefined') return null;
+  return createPortal(content, document.body);
 };

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type ReactElement } from 'react';
+import { createPortal } from 'react-dom';
 import { motion } from 'motion/react';
 import type { Copy } from '../../constants/i18n';
 import { useFocusTrap } from '../../hooks/useFocusTrap';
@@ -10,7 +11,7 @@ type ConfirmClearModalProps = {
   onConfirm: () => void;
 };
 
-export const ConfirmClearModal = ({ copy, onCancel, onConfirm }: ConfirmClearModalProps): ReactElement => {
+export const ConfirmClearModal = ({ copy, onCancel, onConfirm }: ConfirmClearModalProps): ReactElement | null => {
   const [value, setValue] = useState('');
   const dialogRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -28,7 +29,7 @@ export const ConfirmClearModal = ({ copy, onCancel, onConfirm }: ConfirmClearMod
 
   const canConfirm = value === 'CLEAR';
 
-  return (
+  const content = (
     <motion.div
       className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/45"
       variants={overlayMotion.backdrop}
@@ -101,4 +102,7 @@ export const ConfirmClearModal = ({ copy, onCancel, onConfirm }: ConfirmClearMod
       </motion.div>
     </motion.div>
   );
+
+  if (typeof document === 'undefined') return null;
+  return createPortal(content, document.body);
 };
