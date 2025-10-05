@@ -16,6 +16,7 @@ import { AdvancedPrograms } from '@features/home/components/home/AdvancedProgram
 import { DanOverview } from '@features/home/components/home/DanOverview';
 import { GuidePage } from '@features/home/components/home/GuidePage';
 import { FeedbackPage } from '@features/home/components/feedback/FeedbackPage';
+import type { FeedbackType } from '@features/home/components/feedback/FeedbackPage';
 import { GlossaryPage, GlossaryDetailPage, GlossaryFilterPanel, MobileGlossaryFilters, loadAllTerms } from './features/glossary';
 import { ConfirmClearModal } from './shared/components/dialogs/ConfirmClearDialog';
 import { useMotionPreferences } from '@shared/components/ui/motion';
@@ -336,6 +337,7 @@ export default function App(): ReactElement {
   const [confirmClearOpen, setConfirmClearOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const [glossaryTerms, setGlossaryTerms] = useState<GlossaryTerm[]>([]);
+  const [feedbackInitialType, setFeedbackInitialType] = useState<FeedbackType | null>(null);
 
   const copy = getCopy(locale);
   const { pageMotion } = useMotionPreferences();
@@ -372,6 +374,16 @@ export default function App(): ReactElement {
       }
     },
     [activeSlug, route],
+  );
+
+  const goToFeedback = useCallback(
+    (type?: FeedbackType) => {
+      if (type) {
+        setFeedbackInitialType(type);
+      }
+      navigateTo('feedback');
+    },
+    [navigateTo],
   );
 
   const showToast = useCallback(
@@ -986,7 +998,7 @@ export default function App(): ReactElement {
         onAssignToCollection={(collectionId) => assignToCollection(currentTechnique.id, collectionId)}
         onRemoveFromCollection={(collectionId) => removeFromCollection(currentTechnique.id, collectionId)}
         onOpenGlossary={openGlossaryTerm}
-          onFeedbackClick={() => navigateTo('feedback')}
+        onFeedbackClick={() => goToFeedback()}
           onCreateCollection={createCollection}
       />
     );
@@ -1083,6 +1095,8 @@ export default function App(): ReactElement {
         locale={locale}
         techniques={db.techniques}
         onBack={() => navigateTo('library')}
+        initialType={feedbackInitialType}
+        onConsumeInitialType={() => setFeedbackInitialType(null)}
       />
     );
   } else {
@@ -1120,6 +1134,15 @@ export default function App(): ReactElement {
                 />
               </aside>
               <section>
+                <div className="flex justify-end mb-4">
+                  <button
+                    type="button"
+                    onClick={() => goToFeedback('newTechnique')}
+                    className="rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2 text-sm transition-soft hover-border-adaptive"
+                  >
+                    {copy.feedbackAddTechniqueCta}
+                  </button>
+                </div>
                 <Library
                   copy={copy}
                   locale={locale}

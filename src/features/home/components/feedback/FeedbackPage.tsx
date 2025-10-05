@@ -2,23 +2,31 @@ import { useCallback, useEffect, useMemo, useState, type ReactElement } from 're
 import { AnimatePresence, motion } from 'motion/react';
 import { Select, type SelectOption } from '@shared/components/ui/Select';
 import { Chip } from '@shared/components/ui/Chip';
+import { Segmented } from '@shared/components/ui/Segmented';
 import { useMotionPreferences } from '@shared/components/ui/motion';
 import { classNames } from '@shared/utils/classNames';
 import { gradeOrder } from '@shared/utils/grades';
-import { getLevelLabel } from '@shared/i18n/taxonomy';
+import { getLevelLabel, getOrderedTaxonomyValues, getTaxonomyLabel } from '@shared/i18n/taxonomy';
+import { stripDiacritics, toSearchable } from '@shared/utils/text';
 import {
   BadgePlusIcon,
   BugIcon,
   HeartPulseIcon,
   LightbulbIcon,
   RocketIcon,
+  SproutIcon,
 } from '@shared/components/ui/icons';
-import type { Copy } from '@shared/constants/i18n';
-import type { Grade, Locale, Technique } from '@shared/types';
+import type { Copy, FeedbackPageCopy } from '@shared/constants/i18n';
+import type { Grade, Hanmi, Locale, Technique, Localized } from '@shared/types';
 
-export type FeedbackType = 'improveTechnique' | 'addVariation' | 'appFeedback' | 'bugReport';
+export type FeedbackType =
+  | 'improveTechnique'
+  | 'addVariation'
+  | 'newTechnique'
+  | 'appFeedback'
+  | 'bugReport';
 
-const feedbackTypeOrder: FeedbackType[] = ['improveTechnique', 'addVariation', 'appFeedback', 'bugReport'];
+const feedbackTypeOrder: FeedbackType[] = ['improveTechnique', 'addVariation', 'newTechnique', 'appFeedback', 'bugReport'];
 
 export type ImproveSection =
   | 'steps'
@@ -43,6 +51,7 @@ type MediaEntry = {
   url: string;
   type: MediaKind;
   embedUrl?: string;
+  title?: string;
 };
 
 type CategoryTag =
@@ -104,12 +113,46 @@ type BugReportForm = {
   includeSystemInfo: boolean;
 };
 
+type NewTechniqueForm = {
+  precheckConfirmed: boolean;
+  name: Localized<string>;
+  jp: {
+    kanji: string;
+    romaji: string;
+  };
+  attack: string | null;
+  category: string | null;
+  weapon: string | null;
+  entries: Array<'irimi' | 'tenkan'>;
+  hanmi: Hanmi | null;
+  levelHint: string;
+  summary: Localized<string>;
+  steps: Localized<StepItem[]>;
+  ukeRole: Localized<string>;
+  ukeNotes: Localized<string[]>;
+  keyPoints: Localized<string[]>;
+  commonMistakes: Localized<string[]>;
+  media: MediaEntry[];
+  sources: string;
+  contributor: {
+    name: string;
+    contact: string;
+  };
+  lineage: {
+    dojoOrTrainer: string;
+    markAsBase: boolean;
+  };
+  consent: boolean;
+  precheckSearch: string;
+};
+
 type FeedbackDraft = {
   selectedType: FeedbackType | null;
   improveTechnique: ImproveTechniqueForm;
   addVariation: VariationForm;
   appFeedback: AppFeedbackForm;
   bugReport: BugReportForm;
+  newTechnique: NewTechniqueForm;
 };
 
 const STORAGE_KEY = 'enso.feedbackDraft';
@@ -120,6 +163,162 @@ const createId = (): string => {
   }
   return Math.random().toString(36).slice(2, 11);
 };
+
+const createStepList = (): StepItem[] => [{ id: createId(), text: '' }];
+
+const defaultLocalizedSteps = (): Localized<StepItem[]> => ({
+  en: createStepList(),
+  de: createStepList(),
+});
+
+const SUMMARY_MAX = 230;
+
+const defaultLocalizedString = (): Localized<string> => ({ en: '', de: '' });
+
+const defaultLocalizedList = (): Localized<string[]> => ({ en: [''], de: [''] });
+
+const sanitizeLocalizedString = (value?: Localized<string>): Localized<string> => ({
+  en: value?.en ?? '',
+  de: value?.de ?? '',
+});
+
+const sanitizeLocalizedList = (value?: Localized<string[]>): Localized<string[]> => {
+  const sanitize = (list?: string[]): string[] => {
+    if (!Array.isArray(list)) return [''];
+    const cleaned = list.map((item) => item ?? '');
+    return cleaned.length > 0 ? cleaned : [''];
+  };
+  return {
+    en: sanitize(value?.en),
+    de: sanitize(value?.de),
+  };
+};
+
+const sanitizeLocalizedSteps = (value?: Localized<StepItem[]>): Localized<StepItem[]> => ({
+  en: (value?.en && value.en.length > 0 ? value.en : createStepList()).map((step) => ({
+    id: step?.id || createId(),
+    text: step?.text || '',
+  })),
+  de: (value?.de && value.de.length > 0 ? value.de : createStepList()).map((step) => ({
+    id: step?.id || createId(),
+    text: step?.text || '',
+  })),
+});
+
+const sanitizeEntries = (entries?: string[]): Array<'irimi' | 'tenkan'> => {
+  if (!Array.isArray(entries)) return [];
+  const allowed: Array<'irimi' | 'tenkan'> = [];
+  for (const entry of entries) {
+    if (entry === 'irimi' || entry === 'tenkan') {
+      if (!allowed.includes(entry)) allowed.push(entry);
+    }
+  }
+  return allowed;
+};
+
+const slugify = (value: string): string =>
+  stripDiacritics(value)
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .trim()
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-');
+
+const buildNewTechniqueSlug = (
+  attack: string | null,
+  name: Localized<string>,
+  entries: Array<'irimi' | 'tenkan'>,
+): string => {
+  const attackSegment = attack ? slugify(attack) : '';
+  const baseName = name.en.trim() || name.de.trim();
+  const nameSegment = baseName ? slugify(baseName) : '';
+  const entriesSegment = entries.length > 0 ? entries.join('-') : '';
+  return [attackSegment, nameSegment, entriesSegment].filter(Boolean).join('-');
+};
+
+const isUnusualAttackWeapon = (attack: string | null, weapon: string | null): boolean => {
+  if (!attack || !weapon || weapon === 'empty-hand') return false;
+  if (weapon === 'tanto') {
+    return attack.endsWith('-dori');
+  }
+  if (weapon === 'jo' || weapon === 'bokken') {
+    return attack.includes('dori');
+  }
+  return false;
+};
+
+const computeDuplicateMatches = (form: NewTechniqueForm, techniques: Technique[]): Technique[] => {
+  const slugPreview = buildNewTechniqueSlug(form.attack, form.name, form.entries);
+  const normalizedSlug = slugPreview ? toSearchable(slugPreview) : '';
+  const nameEn = toSearchable(form.name.en);
+  const nameDe = toSearchable(form.name.de);
+  const attack = form.attack;
+  const weapon = form.weapon ?? 'empty-hand';
+
+  if (!nameEn && !nameDe && !normalizedSlug) return [];
+
+  return techniques.filter((tech) => {
+    const techNameEn = toSearchable(tech.name.en || '');
+    const techNameDe = toSearchable(tech.name.de || '');
+    const techSlug = toSearchable(tech.slug || '');
+    const techAttack = tech.attack;
+    const techWeapon = tech.weapon ?? 'empty-hand';
+
+    const slugMatch = normalizedSlug && techSlug === normalizedSlug;
+    const nameMatch =
+      (nameEn && techNameEn === nameEn) ||
+      (nameDe && techNameDe === nameDe);
+    const taxonomyMatch = (!attack || techAttack === attack) && techWeapon === weapon;
+
+    return slugMatch || (nameMatch && taxonomyMatch);
+  }).slice(0, 5);
+};
+
+const computePrecheckMatches = (query: string, techniques: Technique[]): Technique[] => {
+  const normalized = toSearchable(query.trim());
+  if (normalized.length < 2) return [];
+  return techniques
+    .filter((tech) => {
+      const nameEn = toSearchable(tech.name.en || '');
+      const nameDe = toSearchable(tech.name.de || '');
+      const slug = toSearchable(tech.slug || '');
+      return nameEn.includes(normalized) || nameDe.includes(normalized) || slug.includes(normalized);
+    })
+    .slice(0, 6);
+};
+
+const defaultNewTechniqueForm = (): NewTechniqueForm => ({
+  precheckConfirmed: false,
+  name: defaultLocalizedString(),
+  jp: {
+    kanji: '',
+    romaji: '',
+  },
+  attack: null,
+  category: null,
+  weapon: null,
+  entries: [],
+  hanmi: null,
+  levelHint: '',
+  summary: defaultLocalizedString(),
+  steps: defaultLocalizedSteps(),
+  ukeRole: defaultLocalizedString(),
+  ukeNotes: defaultLocalizedList(),
+  keyPoints: defaultLocalizedList(),
+  commonMistakes: defaultLocalizedList(),
+  media: [],
+  sources: '',
+  contributor: {
+    name: '',
+    contact: '',
+  },
+  lineage: {
+    dojoOrTrainer: '',
+    markAsBase: true,
+  },
+  consent: false,
+  precheckSearch: '',
+});
 
 const defaultImproveTechniqueForm = (): ImproveTechniqueForm => ({
   techniqueId: null,
@@ -163,6 +362,7 @@ const defaultDraft = (): FeedbackDraft => ({
   addVariation: defaultVariationForm(),
   appFeedback: defaultAppFeedbackForm(),
   bugReport: defaultBugReportForm(),
+  newTechnique: defaultNewTechniqueForm(),
 });
 
 const isBrowser = typeof window !== 'undefined';
@@ -178,7 +378,7 @@ const detectMedia = (rawUrl: string): MediaEntry | null => {
       id: createId(),
       url,
       type: 'youtube',
-      embedUrl: `https://www.youtube.com/embed/${videoId}`,
+      embedUrl: `https://www.youtube-nocookie.com/embed/${videoId}`,
     };
   }
 
@@ -224,6 +424,7 @@ const loadDraft = (): FeedbackDraft => {
     const addVariation = parsed.addVariation ?? defaultVariationForm();
     const appFeedback = parsed.appFeedback ?? defaultAppFeedbackForm();
     const bugReport = parsed.bugReport ?? defaultBugReportForm();
+    const newTechnique = parsed.newTechnique ?? defaultNewTechniqueForm();
 
     return {
       selectedType,
@@ -267,6 +468,46 @@ const loadDraft = (): FeedbackDraft => {
       bugReport: {
         ...defaultBugReportForm(),
         ...bugReport,
+      },
+      newTechnique: {
+        ...defaultNewTechniqueForm(),
+        ...newTechnique,
+        precheckConfirmed: Boolean(newTechnique.precheckConfirmed),
+        name: sanitizeLocalizedString(newTechnique.name),
+        jp: {
+          kanji: newTechnique.jp?.kanji ?? '',
+          romaji: newTechnique.jp?.romaji ?? '',
+        },
+        attack: newTechnique.attack ?? null,
+        category: newTechnique.category ?? null,
+        weapon: newTechnique.weapon ?? null,
+        entries: sanitizeEntries(newTechnique.entries),
+        hanmi: newTechnique.hanmi === 'ai-hanmi' || newTechnique.hanmi === 'gyaku-hanmi' ? newTechnique.hanmi : null,
+        levelHint: newTechnique.levelHint ?? '',
+        summary: sanitizeLocalizedString(newTechnique.summary),
+        steps: sanitizeLocalizedSteps(newTechnique.steps),
+        ukeRole: sanitizeLocalizedString(newTechnique.ukeRole),
+        ukeNotes: sanitizeLocalizedList(newTechnique.ukeNotes),
+        keyPoints: sanitizeLocalizedList(newTechnique.keyPoints),
+        commonMistakes: sanitizeLocalizedList(newTechnique.commonMistakes),
+        media: (newTechnique.media ?? []).map((item) => ({
+          id: item?.id || createId(),
+          url: item?.url || '',
+          type: item?.type || 'link',
+          embedUrl: item?.embedUrl,
+          title: item?.title ?? '',
+        })).filter((item) => item.url),
+        sources: newTechnique.sources ?? '',
+        contributor: {
+          name: newTechnique.contributor?.name ?? '',
+          contact: newTechnique.contributor?.contact ?? '',
+        },
+        lineage: {
+          dojoOrTrainer: newTechnique.lineage?.dojoOrTrainer ?? '',
+          markAsBase: newTechnique.lineage?.markAsBase ?? true,
+        },
+        consent: Boolean(newTechnique.consent),
+        precheckSearch: newTechnique.precheckSearch ?? '',
       },
     } satisfies FeedbackDraft;
   } catch (error) {
@@ -363,6 +604,11 @@ type MediaManagerProps = {
   addLabel: string;
   cancelLabel: string;
   removeLabel: string;
+  allowedKinds?: MediaKind[];
+  allowTitle?: boolean;
+  titleLabel?: string;
+  titlePlaceholder?: string;
+  disallowMessage?: string;
 };
 
 const getMediaIcon = (type: MediaKind): string => {
@@ -377,15 +623,34 @@ const getMediaIcon = (type: MediaKind): string => {
   }
 };
 
-const MediaManager = ({ media, onChange, placeholder, triggerLabel, addLabel, cancelLabel, removeLabel }: MediaManagerProps): ReactElement => {
+const MediaManager = ({
+  media,
+  onChange,
+  placeholder,
+  triggerLabel,
+  addLabel,
+  cancelLabel,
+  removeLabel,
+  allowedKinds,
+  allowTitle = false,
+  titleLabel,
+  titlePlaceholder,
+  disallowMessage,
+}: MediaManagerProps): ReactElement => {
   const [isAdding, setIsAdding] = useState(false);
   const [inputValue, setInputValue] = useState('');
+  const [error, setError] = useState<string | null>(null);
 
   const handleAdd = () => {
     const entry = detectMedia(inputValue);
     if (!entry) return;
-    onChange([...media, entry]);
+    if (allowedKinds && !allowedKinds.includes(entry.type)) {
+      setError(disallowMessage ?? 'Unsupported media type.');
+      return;
+    }
+    onChange([...media, { ...entry, title: allowTitle ? '' : entry.title }]);
     setInputValue('');
+    setError(null);
     setIsAdding(false);
   };
 
@@ -393,32 +658,58 @@ const MediaManager = ({ media, onChange, placeholder, triggerLabel, addLabel, ca
     onChange(media.filter((item) => item.id !== id));
   };
 
+  const updateTitle = (id: string, title: string) => {
+    onChange(
+      media.map((item) =>
+        item.id === id
+          ? {
+              ...item,
+              title,
+            }
+          : item,
+      ),
+    );
+  };
+
   return (
     <div className="space-y-3">
-      <div className="flex flex-wrap gap-3">
+      <div className="flex flex-col gap-3">
         {media.map((item) => (
           <div
             key={item.id}
-            className="flex items-center gap-3 rounded-xl border surface-border bg-[var(--color-surface)] px-3 py-2 text-sm"
+            className="flex flex-col gap-2 rounded-xl border surface-border bg-[var(--color-surface)] px-3 py-2 text-sm"
           >
-            <span aria-hidden className="text-lg">
-              {getMediaIcon(item.type)}
-            </span>
-            <a
-              className="max-w-[14rem] truncate underline-offset-4 hover:underline"
-              href={item.url}
-              target="_blank"
-              rel="noreferrer"
-            >
-              {item.url}
-            </a>
-            <button
-              type="button"
-              onClick={() => handleRemove(item.id)}
-              className="ml-auto text-xs text-subtle hover:text-[var(--color-text)]"
-            >
-              {removeLabel}
-            </button>
+            <div className="flex items-start gap-3">
+              <span aria-hidden className="text-lg">
+                {getMediaIcon(item.type)}
+              </span>
+              <div className="min-w-0 flex-1">
+                <a
+                  className="block truncate underline-offset-4 hover:underline"
+                  href={item.url}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {item.url}
+                </a>
+                {allowTitle && (
+                  <input
+                    value={item.title ?? ''}
+                    onChange={(event) => updateTitle(item.id, event.target.value)}
+                    placeholder={titlePlaceholder}
+                    aria-label={titleLabel}
+                    className="mt-2 w-full rounded-lg border surface-border bg-[var(--color-surface)] px-3 py-1.5 text-xs focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+                  />
+                )}
+              </div>
+              <button
+                type="button"
+                onClick={() => handleRemove(item.id)}
+                className="ml-auto text-xs text-subtle hover:text-[var(--color-text)]"
+              >
+                {removeLabel}
+              </button>
+            </div>
           </div>
         ))}
       </div>
@@ -434,7 +725,10 @@ const MediaManager = ({ media, onChange, placeholder, triggerLabel, addLabel, ca
             <input
               type="url"
               value={inputValue}
-              onChange={(event) => setInputValue(event.target.value)}
+              onChange={(event) => {
+                setError(null);
+                setInputValue(event.target.value);
+              }}
               placeholder={placeholder}
               className="w-full sm:w-96 rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
             />
@@ -450,6 +744,7 @@ const MediaManager = ({ media, onChange, placeholder, triggerLabel, addLabel, ca
                 type="button"
                 onClick={() => {
                   setIsAdding(false);
+                  setError(null);
                   setInputValue('');
                 }}
                 className="rounded-xl border surface-border px-3 py-2 text-sm"
@@ -468,6 +763,7 @@ const MediaManager = ({ media, onChange, placeholder, triggerLabel, addLabel, ca
           </button>
         )}
       </AnimatePresence>
+      {error && <p className="text-xs text-[var(--color-error, #b91c1c)]">{error}</p>}
     </div>
   );
 };
@@ -498,19 +794,51 @@ type FeedbackPageProps = {
   locale: Locale;
   techniques: Technique[];
   onBack?: () => void;
+  initialType?: FeedbackType | null;
+  onConsumeInitialType?: () => void;
 };
 
-export const FeedbackPage = ({ copy, locale, techniques, onBack }: FeedbackPageProps): ReactElement => {
-  const t = copy.feedbackPage;
+export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, onConsumeInitialType }: FeedbackPageProps): ReactElement => {
+  const t: FeedbackPageCopy = copy.feedbackPage;
   const [draft, setDraft] = useState<FeedbackDraft>(() => loadDraft());
   const [showJsonPreview, setShowJsonPreview] = useState(false);
   const [submissionState, setSubmissionState] = useState<'idle' | 'success'>('idle');
+  const [activeLocaleTab, setActiveLocaleTab] = useState<Locale>('en');
+  const [isPrecheckOpen, setIsPrecheckOpen] = useState(false);
+  const [precheckAcknowledged, setPrecheckAcknowledged] = useState(false);
 
   const techniqueOptions = useMemo(() =>
     techniques
       .map((technique) => ({ value: technique.slug, label: technique.name[locale] || technique.name.en }))
       .sort((a, b) => a.label.localeCompare(b.label)),
   [techniques, locale]);
+
+  const attackOptions = useMemo<SelectOption<string>[]>(
+    () =>
+      getOrderedTaxonomyValues('attack').map((value) => ({
+        value,
+        label: getTaxonomyLabel(locale, 'attack', value),
+      })),
+    [locale],
+  );
+
+  const categoryOptions = useMemo<SelectOption<string>[]>(
+    () =>
+      getOrderedTaxonomyValues('category').map((value) => ({
+        value,
+        label: getTaxonomyLabel(locale, 'category', value),
+      })),
+    [locale],
+  );
+
+  const weaponOptions = useMemo<SelectOption<string>[]>(
+    () =>
+      getOrderedTaxonomyValues('weapon').map((value) => ({
+        value,
+        label: getTaxonomyLabel(locale, 'weapon', value),
+      })),
+    [locale],
+  );
 
   const levelOptions = useMemo<SelectOption<string>[]>(
     () => [
@@ -532,6 +860,11 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack }: FeedbackPageP
         title: t.cards.variation.title,
         description: t.cards.variation.description,
       },
+      newTechnique: {
+        icon: <SproutIcon className="w-5 h-5" aria-hidden />,
+        title: t.cards.newTechnique.title,
+        description: t.cards.newTechnique.description,
+      },
       appFeedback: {
         icon: <LightbulbIcon className="w-5 h-5" aria-hidden />,
         title: t.cards.app.title,
@@ -546,11 +879,68 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack }: FeedbackPageP
     [t.cards],
   );
 
+  useEffect(() => {
+    if (!initialType) return;
+    setDraft((current) => {
+      if (initialType === 'newTechnique' && !current.newTechnique.precheckConfirmed) {
+        setIsPrecheckOpen(true);
+        setPrecheckAcknowledged(false);
+        return current;
+      }
+      if (current.selectedType === initialType) return current;
+      return {
+        ...current,
+        selectedType: initialType,
+      };
+    });
+    onConsumeInitialType?.();
+  }, [initialType, onConsumeInitialType]);
+
   const categoryTagLabels = t.categoryTags as Record<CategoryTag, string>;
   const areaLabels = t.appAreas as Record<AppArea, string>;
   const improveSectionLabels = t.improve.sections as Record<ImproveSection, string>;
 
   useAutosave(draft);
+
+  const slugPreview = useMemo(
+    () => buildNewTechniqueSlug(draft.newTechnique.attack, draft.newTechnique.name, draft.newTechnique.entries),
+    [draft.newTechnique.attack, draft.newTechnique.name, draft.newTechnique.entries],
+  );
+
+  const duplicateMatches = useMemo(
+    () => computeDuplicateMatches(draft.newTechnique, techniques),
+    [draft.newTechnique, techniques],
+  );
+
+  const unusualCombo = useMemo(
+    () => isUnusualAttackWeapon(draft.newTechnique.attack, draft.newTechnique.weapon),
+    [draft.newTechnique.attack, draft.newTechnique.weapon],
+  );
+
+  const summaryLengths = useMemo(() => ({
+    en: draft.newTechnique.summary.en.trim().length,
+    de: draft.newTechnique.summary.de.trim().length,
+  }), [draft.newTechnique.summary]);
+
+  const summariesEmpty = useMemo(
+    () => !draft.newTechnique.summary.en.trim() && !draft.newTechnique.summary.de.trim(),
+    [draft.newTechnique.summary],
+  );
+
+  const { en: summaryLengthEn, de: summaryLengthDe } = summaryLengths;
+
+  const summaryExceeded = useMemo(
+    () => ({
+      en: summaryLengthEn > SUMMARY_MAX,
+      de: summaryLengthDe > SUMMARY_MAX,
+    }),
+    [summaryLengthEn, summaryLengthDe],
+  );
+
+  const precheckMatches = useMemo(
+    () => computePrecheckMatches(draft.newTechnique.precheckSearch, techniques),
+    [draft.newTechnique.precheckSearch, techniques],
+  );
 
   useEffect(() => {
     if (!isBrowser) return;
@@ -572,10 +962,18 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack }: FeedbackPageP
 
   const handleTypeChange = (feedbackType: FeedbackType) => {
     setSubmissionState('idle');
-    setDraft((current) => ({
-      ...current,
-      selectedType: feedbackType,
-    }));
+    setDraft((current) => {
+      if (feedbackType === 'newTechnique' && !current.newTechnique.precheckConfirmed) {
+        setIsPrecheckOpen(true);
+        setPrecheckAcknowledged(false);
+        return current;
+      }
+      if (current.selectedType === feedbackType) return current;
+      return {
+        ...current,
+        selectedType: feedbackType,
+      };
+    });
   };
 
   const updateImprove = <K extends keyof ImproveTechniqueForm>(key: K, value: ImproveTechniqueForm[K]) => {
@@ -614,6 +1012,114 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack }: FeedbackPageP
       bugReport: {
         ...current.bugReport,
         [key]: value,
+      },
+    }));
+  };
+
+  const setNewTechnique = (updater: (form: NewTechniqueForm) => NewTechniqueForm) => {
+    setDraft((current) => ({
+      ...current,
+      newTechnique: updater(current.newTechnique),
+    }));
+  };
+
+  const updateNewTechnique = <K extends keyof NewTechniqueForm>(key: K, value: NewTechniqueForm[K]) => {
+    setNewTechnique((form) => ({
+      ...form,
+      [key]: value,
+    }));
+  };
+
+  const updateTechniqueName = (localeKey: Locale, value: string) => {
+    setNewTechnique((form) => ({
+      ...form,
+      name: {
+        ...form.name,
+        [localeKey]: value,
+      },
+    }));
+  };
+
+  const updateTechniqueSummary = (localeKey: Locale, value: string) => {
+    setNewTechnique((form) => ({
+      ...form,
+      summary: {
+        ...form.summary,
+        [localeKey]: value,
+      },
+    }));
+  };
+
+  const updateUkeRole = (localeKey: Locale, value: string) => {
+    setNewTechnique((form) => ({
+      ...form,
+      ukeRole: {
+        ...form.ukeRole,
+        [localeKey]: value,
+      },
+    }));
+  };
+
+  const updateLocalizedListField = (
+    field: 'ukeNotes' | 'keyPoints' | 'commonMistakes',
+    localeKey: Locale,
+    index: number,
+    value: string,
+  ) => {
+    setNewTechnique((form) => {
+      const currentList = [...(form[field][localeKey] ?? [])];
+      if (index >= 0 && index < currentList.length) {
+        currentList[index] = value;
+      }
+      return {
+        ...form,
+        [field]: {
+          ...form[field],
+          [localeKey]: currentList,
+        },
+      };
+    });
+  };
+
+  const addLocalizedListItem = (field: 'ukeNotes' | 'keyPoints' | 'commonMistakes', localeKey: Locale) => {
+    setNewTechnique((form) => {
+      const currentList = [...(form[field][localeKey] ?? [])];
+      currentList.push('');
+      return {
+        ...form,
+        [field]: {
+          ...form[field],
+          [localeKey]: currentList,
+        },
+      };
+    });
+  };
+
+  const removeLocalizedListItem = (field: 'ukeNotes' | 'keyPoints' | 'commonMistakes', localeKey: Locale, index: number) => {
+    setNewTechnique((form) => {
+      const currentList = [...(form[field][localeKey] ?? [])];
+      if (index >= 0 && index < currentList.length) {
+        currentList.splice(index, 1);
+      }
+      if (currentList.length === 0) {
+        currentList.push('');
+      }
+      return {
+        ...form,
+        [field]: {
+          ...form[field],
+          [localeKey]: currentList,
+        },
+      };
+    });
+  };
+
+  const updateLocalizedSteps = (localeKey: Locale, steps: StepItem[]) => {
+    setNewTechnique((form) => ({
+      ...form,
+      steps: {
+        ...form.steps,
+        [localeKey]: steps,
       },
     }));
   };
@@ -657,11 +1163,38 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack }: FeedbackPageP
     return hasContent(draft.bugReport.location) && hasContent(draft.bugReport.details);
   }, [draft.bugReport]);
 
+  const isNewTechniqueReady = (() => {
+    const form = draft.newTechnique;
+    const nameComplete = hasContent(form.name.en) && hasContent(form.name.de);
+    const summaryComplete =
+      hasContent(form.summary.en) &&
+      hasContent(form.summary.de) &&
+      !summaryExceeded.en &&
+      !summaryExceeded.de;
+    const taxonomyComplete = hasContent(form.attack) && hasContent(form.category) && hasContent(form.weapon);
+    const entriesComplete = form.entries.length >= 1;
+    const hanmiComplete = Boolean(form.hanmi);
+    const contributorComplete = hasContent(form.contributor.name) && hasContent(form.contributor.contact);
+    return (
+      form.precheckConfirmed &&
+      nameComplete &&
+      summaryComplete &&
+      taxonomyComplete &&
+      entriesComplete &&
+      hanmiComplete &&
+      hasContent(form.levelHint) &&
+      contributorComplete &&
+      form.consent
+    );
+  })();
+
   const isSubmitEnabled =
     selectedCard === 'improveTechnique'
       ? isImproveReady
       : selectedCard === 'addVariation'
       ? isVariationReady
+      : selectedCard === 'newTechnique'
+      ? isNewTechniqueReady
       : selectedCard === 'appFeedback'
       ? isAppFeedbackReady
       : selectedCard === 'bugReport'
@@ -740,6 +1273,43 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack }: FeedbackPageP
       ];
     }
 
+    if (selectedCard === 'newTechnique') {
+      const form = draft.newTechnique;
+      const entriesLabel = form.entries.length
+        ? form.entries.map((entry) => t.newTechnique.entryLabels[entry]).join(', ')
+        : '—';
+      const hanmiLabel = form.hanmi ? t.newTechnique.hanmiOptions[form.hanmi] : t.summary.notSpecified;
+      const attackLabel = form.attack ? getTaxonomyLabel(locale, 'attack', form.attack) : t.summary.notSpecified;
+      const categoryLabel = form.category ? getTaxonomyLabel(locale, 'category', form.category) : t.summary.notSpecified;
+      const weaponLabel = form.weapon ? getTaxonomyLabel(locale, 'weapon', form.weapon) : t.summary.notSpecified;
+      const duplicateLabel = duplicateMatches.length
+        ? formatCount(duplicateMatches.length, t.summary.counts.duplicates)
+        : t.newTechnique.duplicates.none;
+
+      return [
+        { label: t.summary.labels.type, value: cardContent[selectedCard].title },
+        { label: t.summary.labels.name, value: form.name.en || form.name.de || '—' },
+        { label: t.summary.labels.attack, value: attackLabel },
+        { label: t.summary.labels.category, value: categoryLabel },
+        { label: t.summary.labels.weapon, value: weaponLabel },
+        { label: t.summary.labels.entries, value: entriesLabel },
+        { label: t.summary.labels.hanmi, value: hanmiLabel },
+        { label: t.summary.labels.slug, value: slugPreview || '—' },
+        {
+          label: t.summary.labels.summary,
+          value: `${summaryLengths.en}/${SUMMARY_MAX} · ${summaryLengths.de}/${SUMMARY_MAX}`,
+        },
+        {
+          label: t.summary.labels.contributor,
+          value: form.contributor.name || '—',
+        },
+        {
+          label: t.summary.labels.duplicates,
+          value: duplicateLabel,
+        },
+      ];
+    }
+
     if (selectedCard === 'appFeedback') {
       const { area, feedback, screenshotUrl } = draft.appFeedback;
       return [
@@ -782,10 +1352,14 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack }: FeedbackPageP
     cardContent,
     categoryTagLabels,
     draft,
+    duplicateMatches,
     findTechniqueName,
     improveSectionLabels,
     locale,
     selectedCard,
+    slugPreview,
+    summaryLengths,
+    t.newTechnique,
     t.summary,
   ]);
 
@@ -1202,6 +1776,498 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack }: FeedbackPageP
     );
   };
 
+  const renderNewTechniqueForm = (): ReactElement => {
+    const form = draft.newTechnique;
+    const activeLocale = activeLocaleTab;
+    const summaryLimit = SUMMARY_MAX;
+
+    const hanmiOptions: SelectOption<string>[] = [
+      { value: 'ai-hanmi', label: t.newTechnique.hanmiOptions['ai-hanmi'] },
+      { value: 'gyaku-hanmi', label: t.newTechnique.hanmiOptions['gyaku-hanmi'] },
+    ];
+
+    const entryOptions: Array<'irimi' | 'tenkan'> = ['irimi', 'tenkan'];
+
+    const handleEntryToggle = (entry: 'irimi' | 'tenkan') => {
+      setNewTechnique((current) => {
+        const entries = current.entries.includes(entry)
+          ? current.entries.filter((value) => value !== entry)
+          : [...current.entries, entry];
+        return { ...current, entries };
+      });
+    };
+
+    const handleHanmiChange = (value: string) => {
+      updateNewTechnique('hanmi', value === 'ai-hanmi' || value === 'gyaku-hanmi' ? (value as Hanmi) : null);
+    };
+
+    const summaryFeedback = (localeKey: Locale): string => {
+      const remaining = summaryLimit - summaryLengths[localeKey];
+      if (summaryExceeded[localeKey]) {
+        return t.newTechnique.hints.summaryExceeded.replace('{remaining}', String(Math.abs(remaining)));
+      }
+      return t.newTechnique.hints.summaryRemaining.replace('{remaining}', String(remaining));
+    };
+
+    const localizedLists = {
+      ukeNotes: form.ukeNotes[activeLocale],
+      keyPoints: form.keyPoints[activeLocale],
+      commonMistakes: form.commonMistakes[activeLocale],
+    } as Record<'ukeNotes' | 'keyPoints' | 'commonMistakes', string[]>;
+
+    const renderListEditor = (
+      field: 'ukeNotes' | 'keyPoints' | 'commonMistakes',
+      label: string,
+      addLabel: string,
+      placeholder: string,
+    ) => {
+      const items = localizedLists[field];
+      return (
+        <section className="space-y-3">
+          <span className="text-xs uppercase tracking-[0.3em] text-subtle">{label}</span>
+          <div className="space-y-2">
+            {items.map((value, index) => (
+              <div key={`${field}-${activeLocale}-${index}`} className="flex items-center gap-2">
+                <input
+                  value={value}
+                  onChange={(event) => updateLocalizedListField(field, activeLocale, index, event.target.value)}
+                  placeholder={placeholder}
+                  className="flex-1 rounded-xl border surface-border bg-[var(--color-surface)] px-3 py-2 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+                />
+                <button
+                  type="button"
+                  onClick={() => removeLocalizedListItem(field, activeLocale, index)}
+                  className="text-xs text-subtle hover:text-[var(--color-text)]"
+                  disabled={items.length <= 1}
+                >
+                  ✕
+                </button>
+              </div>
+            ))}
+          </div>
+          {items.length < 3 && (
+            <button
+              type="button"
+              onClick={() => addLocalizedListItem(field, activeLocale)}
+              className="text-sm text-[var(--color-accent, var(--color-text))] hover:underline"
+            >
+              + {addLabel}
+            </button>
+          )}
+        </section>
+      );
+    };
+
+    const duplicatesHeadline = duplicateMatches.length > 0 ? t.newTechnique.duplicates.possibleMatches : t.newTechnique.duplicates.none;
+
+    return (
+      <motion.div
+        key="newTechnique"
+        layout
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -16 }}
+        className="space-y-8"
+      >
+        {!form.precheckConfirmed && (
+          <div className="rounded-xl border border-dashed surface-border bg-[var(--color-surface)] px-4 py-3 text-sm text-subtle">
+            {t.newTechnique.precheckReminder}
+          </div>
+        )}
+
+        <section className="space-y-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="space-y-1">
+              <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.newTechnique.sections.details}</h2>
+              <p className="text-xs text-subtle">{t.newTechnique.languageInstruction}</p>
+            </div>
+            <Segmented
+              value={activeLocale}
+              onChange={(value) => setActiveLocaleTab(value as Locale)}
+              options={[
+                { value: 'en', label: t.newTechnique.languageOptions.en },
+                { value: 'de', label: t.newTechnique.languageOptions.de },
+              ]}
+            />
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <label className="text-xs uppercase tracking-[0.3em] text-subtle" htmlFor="nt-name-en">
+                {t.newTechnique.fields.name.en}
+              </label>
+              <input
+                id="nt-name-en"
+                value={form.name.en}
+                onChange={(event) => updateTechniqueName('en', event.target.value)}
+                placeholder={t.placeholders.newTechniqueNameEn}
+                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-xs uppercase tracking-[0.3em] text-subtle" htmlFor="nt-name-de">
+                {t.newTechnique.fields.name.de}
+              </label>
+              <input
+                id="nt-name-de"
+                value={form.name.de}
+                onChange={(event) => updateTechniqueName('de', event.target.value)}
+                placeholder={t.placeholders.newTechniqueNameDe}
+                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-xs uppercase tracking-[0.3em] text-subtle" htmlFor="nt-jp-kanji">
+                {t.newTechnique.fields.jpKanji}
+              </label>
+              <input
+                id="nt-jp-kanji"
+                value={form.jp.kanji}
+                onChange={(event) => updateNewTechnique('jp', { ...form.jp, kanji: event.target.value })}
+                placeholder={t.placeholders.newTechniqueKanji}
+                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-xs uppercase tracking-[0.3em] text-subtle" htmlFor="nt-jp-romaji">
+                {t.newTechnique.fields.romaji}
+              </label>
+              <input
+                id="nt-jp-romaji"
+                value={form.jp.romaji}
+                onChange={(event) => updateNewTechnique('jp', { ...form.jp, romaji: event.target.value })}
+                placeholder={t.placeholders.newTechniqueRomaji}
+                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+              />
+            </div>
+          </div>
+        </section>
+
+        <section className="space-y-4">
+          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.newTechnique.sections.taxonomy}</h2>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <label className="text-xs uppercase tracking-[0.3em] text-subtle">
+                {t.newTechnique.fields.attack}
+              </label>
+              <Select
+                options={attackOptions}
+                value={form.attack ?? ''}
+                onChange={(value) => updateNewTechnique('attack', value || null)}
+                placeholder={t.placeholders.newTechniqueAttack}
+                searchable
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-xs uppercase tracking-[0.3em] text-subtle">
+                {t.newTechnique.fields.category}
+              </label>
+              <Select
+                options={categoryOptions}
+                value={form.category ?? ''}
+                onChange={(value) => updateNewTechnique('category', value || null)}
+                placeholder={t.placeholders.newTechniqueCategory}
+                searchable
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-xs uppercase tracking-[0.3em] text-subtle">
+                {t.newTechnique.fields.weapon}
+              </label>
+              <Select
+                options={weaponOptions}
+                value={form.weapon ?? ''}
+                onChange={(value) => updateNewTechnique('weapon', value || null)}
+                placeholder={t.placeholders.newTechniqueWeapon}
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-xs uppercase tracking-[0.3em] text-subtle">
+                {t.newTechnique.fields.levelHint}
+              </label>
+              <input
+                value={form.levelHint}
+                onChange={(event) => updateNewTechnique('levelHint', event.target.value)}
+                placeholder={t.placeholders.newTechniqueLevel}
+                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+              />
+            </div>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <span className="text-xs uppercase tracking-[0.3em] text-subtle">{t.newTechnique.fields.entries}</span>
+              <div className="flex flex-wrap gap-2">
+                {entryOptions.map((entry) => {
+                  const active = form.entries.includes(entry);
+                  return (
+                    <label key={entry} className="cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={active}
+                        onChange={() => handleEntryToggle(entry)}
+                        className="sr-only"
+                      />
+                      <Chip label={t.newTechnique.entryLabels[entry]} active={active} />
+                    </label>
+                  );
+                })}
+              </div>
+            </div>
+            <div className="space-y-2">
+              <label className="text-xs uppercase tracking-[0.3em] text-subtle">
+                {t.newTechnique.fields.hanmi}
+              </label>
+              <Select
+                options={hanmiOptions}
+                value={form.hanmi ?? ''}
+                onChange={handleHanmiChange}
+                placeholder={t.placeholders.newTechniqueHanmi}
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-xs uppercase tracking-[0.3em] text-subtle">{t.newTechnique.fields.slugPreview}</label>
+            <div className="rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2 text-sm font-mono">
+              {slugPreview || '—'}
+            </div>
+            <p className="text-xs text-subtle">{t.newTechnique.hints.slugPreview}</p>
+          </div>
+
+          <div className="space-y-2">
+            <p className="text-xs font-medium text-[var(--color-text)]">{duplicatesHeadline}</p>
+            {duplicateMatches.length > 0 && (
+              <ul className="space-y-1 text-xs text-subtle">
+                {duplicateMatches.map((match) => (
+                  <li key={match.id}>
+                    {match.name.en || match.name.de} · {getTaxonomyLabel(locale, 'attack', match.attack || '')}
+                  </li>
+                ))}
+              </ul>
+            )}
+            {duplicateMatches.length > 0 && (
+              <button
+                type="button"
+                onClick={() => handleTypeChange('addVariation')}
+                className="text-xs text-[var(--color-accent, var(--color-text))] hover:underline"
+              >
+                {t.newTechnique.duplicates.switch}
+              </button>
+            )}
+          </div>
+
+          {unusualCombo && (
+            <div className="rounded-lg border border-dashed surface-border px-3 py-2 text-xs text-subtle">
+              {t.newTechnique.hints.unusualCombo}
+            </div>
+          )}
+        </section>
+
+        <section className="space-y-4">
+          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.newTechnique.sections.summary}</h2>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <label className="text-xs uppercase tracking-[0.3em] text-subtle" htmlFor="nt-summary-en">
+                {t.newTechnique.fields.summary.en}
+              </label>
+              <textarea
+                id="nt-summary-en"
+                rows={4}
+                value={form.summary.en}
+                onChange={(event) => updateTechniqueSummary('en', event.target.value)}
+                placeholder={t.placeholders.newTechniqueSummaryEn}
+                className={classNames(
+                  'w-full rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-3 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+                  summaryExceeded.en && 'border-[var(--color-error, #b91c1c)]',
+                )}
+              />
+              <p
+                className={classNames(
+                  'text-xs',
+                  summaryExceeded.en ? 'text-[var(--color-error, #b91c1c)]' : 'text-subtle',
+                )}
+              >
+                {summaryFeedback('en')}
+              </p>
+            </div>
+            <div className="space-y-2">
+              <label className="text-xs uppercase tracking-[0.3em] text-subtle" htmlFor="nt-summary-de">
+                {t.newTechnique.fields.summary.de}
+              </label>
+              <textarea
+                id="nt-summary-de"
+                rows={4}
+                value={form.summary.de}
+                onChange={(event) => updateTechniqueSummary('de', event.target.value)}
+                placeholder={t.placeholders.newTechniqueSummaryDe}
+                className={classNames(
+                  'w-full rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-3 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+                  summaryExceeded.de && 'border-[var(--color-error, #b91c1c)]',
+                )}
+              />
+              <p
+                className={classNames(
+                  'text-xs',
+                  summaryExceeded.de ? 'text-[var(--color-error, #b91c1c)]' : 'text-subtle',
+                )}
+              >
+                {summaryFeedback('de')}
+              </p>
+            </div>
+          </div>
+          {summariesEmpty && (
+            <p className="text-xs text-[var(--color-error, #b91c1c)]">{t.newTechnique.warnings.summaryMissing}</p>
+          )}
+        </section>
+
+        <section className="space-y-4">
+          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.newTechnique.sections.steps}</h2>
+          <p className="text-xs text-subtle">{t.newTechnique.hints.stepsLocalized}</p>
+          <StepBuilder
+            label={t.forms.improve.stepsLabel}
+            steps={form.steps[activeLocale]}
+            onChange={(steps) => updateLocalizedSteps(activeLocale, steps)}
+            placeholderForIndex={stepPlaceholder}
+            helperText={t.hints.stepHelper}
+            addButtonLabel={t.buttons.addStep}
+            removeButtonAria={removeStepAria}
+          />
+        </section>
+
+        <section className="space-y-4">
+          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.newTechnique.sections.uke}</h2>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <label className="text-xs uppercase tracking-[0.3em] text-subtle">
+                {t.newTechnique.fields.ukeRole[activeLocale]}
+              </label>
+              <input
+                value={form.ukeRole[activeLocale]}
+                onChange={(event) => updateUkeRole(activeLocale, event.target.value)}
+                placeholder={t.placeholders.newTechniqueUkeRole}
+                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-xs uppercase tracking-[0.3em] text-subtle">
+                {t.newTechnique.fields.hanmi}
+              </label>
+              <Select
+                options={hanmiOptions}
+                value={form.hanmi ?? ''}
+                onChange={handleHanmiChange}
+                placeholder={t.placeholders.newTechniqueHanmi}
+              />
+            </div>
+          </div>
+          {renderListEditor('ukeNotes', t.newTechnique.fields.ukeNotes[activeLocale], t.buttons.addUkeNote, t.placeholders.newTechniqueUkeNote)}
+        </section>
+
+        <section className="space-y-4">
+          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.newTechnique.sections.insights}</h2>
+          <div className="grid gap-4 md:grid-cols-2">
+            {renderListEditor('keyPoints', t.newTechnique.fields.keyPoints[activeLocale], t.buttons.addKeyPoint, t.placeholders.newTechniqueKeyPoint)}
+            {renderListEditor('commonMistakes', t.newTechnique.fields.commonMistakes[activeLocale], t.buttons.addMistake, t.placeholders.newTechniqueMistake)}
+          </div>
+        </section>
+
+        <section className="space-y-3">
+          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.newTechnique.sections.media}</h2>
+          <MediaManager
+            media={form.media}
+            onChange={(items) => updateNewTechnique('media', items)}
+            placeholder={t.placeholders.mediaUrl}
+            triggerLabel={t.buttons.addMediaTrigger}
+            addLabel={t.buttons.addAction}
+            cancelLabel={t.buttons.cancel}
+            removeLabel={t.buttons.remove}
+            allowedKinds={['youtube', 'image']}
+            allowTitle
+            titleLabel={t.newTechnique.fields.mediaTitle}
+            titlePlaceholder={t.placeholders.newTechniqueMediaTitle}
+            disallowMessage={t.newTechnique.mediaRestrictions}
+          />
+        </section>
+
+        <section className="space-y-4">
+          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.newTechnique.sections.contributor}</h2>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <label className="text-xs uppercase tracking-[0.3em] text-subtle">
+                {t.newTechnique.fields.contributorName}
+              </label>
+              <input
+                value={form.contributor.name}
+                onChange={(event) => updateNewTechnique('contributor', { ...form.contributor, name: event.target.value })}
+                placeholder={t.placeholders.contributorName}
+                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-xs uppercase tracking-[0.3em] text-subtle">
+                {t.newTechnique.fields.contributorContact}
+              </label>
+              <input
+                value={form.contributor.contact}
+                onChange={(event) => updateNewTechnique('contributor', { ...form.contributor, contact: event.target.value })}
+                placeholder={t.placeholders.contributorContact}
+                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+              />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <label className="text-xs uppercase tracking-[0.3em] text-subtle">
+              {t.newTechnique.fields.source}
+            </label>
+            <input
+              value={form.sources}
+              onChange={(event) => updateNewTechnique('sources', event.target.value)}
+              placeholder={t.placeholders.newTechniqueSources}
+              className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+            />
+          </div>
+          <div className="space-y-2">
+            <label className="text-xs uppercase tracking-[0.3em] text-subtle">
+              {t.newTechnique.fields.lineage}
+            </label>
+            <input
+              value={form.lineage.dojoOrTrainer}
+              onChange={(event) => updateNewTechnique('lineage', { ...form.lineage, dojoOrTrainer: event.target.value })}
+              placeholder={t.placeholders.newTechniqueLineage}
+              className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+            />
+            <label className="flex items-center gap-2 text-xs text-subtle">
+              <input
+                type="checkbox"
+                checked={form.lineage.markAsBase}
+                onChange={(event) => updateNewTechnique('lineage', { ...form.lineage, markAsBase: event.target.checked })}
+                className="h-4 w-4 rounded border surface-border"
+              />
+              {t.newTechnique.lineageToggle}
+            </label>
+            <p className="text-xs text-subtle">{t.newTechnique.lineageHelp}</p>
+          </div>
+        </section>
+
+        <section className="space-y-2">
+          <label className="flex items-center gap-3 text-sm text-[var(--color-text)]">
+            <input
+              type="checkbox"
+              checked={form.consent}
+              onChange={(event) => updateNewTechnique('consent', event.target.checked)}
+              className="h-4 w-4 rounded border surface-border"
+            />
+            {t.newTechnique.consentLabel}
+          </label>
+          {!form.consent && (
+            <p className="text-xs text-[var(--color-error, #b91c1c)]">{t.newTechnique.warnings.consentMissing}</p>
+          )}
+        </section>
+      </motion.div>
+    );
+  };
+
   const renderForm = () => {
     if (!selectedCard) return null;
     switch (selectedCard) {
@@ -1209,6 +2275,8 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack }: FeedbackPageP
         return renderImproveForm();
       case 'addVariation':
         return renderVariationForm();
+      case 'newTechnique':
+        return renderNewTechniqueForm();
       case 'appFeedback':
         return renderAppFeedbackForm();
       case 'bugReport':
@@ -1218,8 +2286,127 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack }: FeedbackPageP
     }
   };
 
+  const renderPrecheckModal = (): ReactElement => (
+    <AnimatePresence>
+      {isPrecheckOpen && (
+        <motion.div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={() => {
+            setIsPrecheckOpen(false);
+          }}
+        >
+          <motion.div
+            className="w-full max-w-lg rounded-2xl border surface border-surface-border bg-[var(--color-surface)] p-6 shadow-xl"
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -16 }}
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="space-y-3">
+              <h2 className="text-lg font-semibold text-[var(--color-text)]">{t.precheck.title}</h2>
+              <p className="text-sm text-subtle">{t.precheck.description}</p>
+              <div className="space-y-2">
+                <label className="text-xs uppercase tracking-[0.3em] text-subtle" htmlFor="precheck-search">
+                  {t.precheck.searchLabel}
+                </label>
+                <input
+                  id="precheck-search"
+                  value={draft.newTechnique.precheckSearch}
+                  onChange={(event) => updateNewTechnique('precheckSearch', event.target.value)}
+                  placeholder={t.precheck.searchPlaceholder}
+                  className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+                />
+              </div>
+              <div className="space-y-2">
+                <p className="text-xs font-medium text-[var(--color-text)]">{t.precheck.matchesTitle}</p>
+                {precheckMatches.length === 0 ? (
+                  <p className="text-xs text-subtle">{t.precheck.noMatches}</p>
+                ) : (
+                  <ul className="max-h-48 space-y-2 overflow-y-auto text-xs text-subtle">
+                    {precheckMatches.map((tech) => (
+                      <li key={`precheck-${tech.id}`} className="rounded-lg border surface-border px-3 py-2">
+                        <p className="font-medium text-[var(--color-text)]">{tech.name[locale] || tech.name.en}</p>
+                        <p>
+                          {tech.attack
+                            ? getTaxonomyLabel(locale, 'attack', tech.attack)
+                            : t.summary.notSpecified}
+                        </p>
+                        <button
+                          type="button"
+                          className="mt-1 text-[var(--color-accent, var(--color-text))] hover:underline"
+                          onClick={() => {
+                            handleTypeChange('addVariation');
+                            setIsPrecheckOpen(false);
+                            setPrecheckAcknowledged(false);
+                          }}
+                        >
+                          {t.precheck.switchToVariation}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+              <p className="text-xs text-subtle">{t.precheck.duplicateHint}</p>
+              <label className="flex items-center gap-2 text-xs text-[var(--color-text)]">
+                <input
+                  type="checkbox"
+                  checked={precheckAcknowledged}
+                  onChange={(event) => setPrecheckAcknowledged(event.target.checked)}
+                  className="h-4 w-4 rounded border surface-border"
+                />
+                {t.precheck.checkboxLabel}
+              </label>
+              <div className="flex justify-end gap-3 pt-2">
+                <button
+                  type="button"
+                onClick={() => {
+                  setIsPrecheckOpen(false);
+                  setPrecheckAcknowledged(false);
+                }}
+                  className="rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2 text-sm"
+                >
+                  {t.precheck.cancel}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setDraft((current) => ({
+                      ...current,
+                      selectedType: 'newTechnique',
+                      newTechnique: {
+                        ...current.newTechnique,
+                        precheckConfirmed: true,
+                      },
+                    }));
+                    setIsPrecheckOpen(false);
+                    setPrecheckAcknowledged(false);
+                    setSubmissionState('idle');
+                  }}
+                  disabled={!precheckAcknowledged}
+                  className={classNames(
+                    'rounded-xl px-4 py-2 text-sm font-medium transition-soft',
+                    precheckAcknowledged
+                      ? 'bg-[var(--color-text)] text-[var(--color-bg)]'
+                      : 'border surface-border bg-[var(--color-surface)] text-subtle cursor-not-allowed',
+                  )}
+                >
+                  {t.precheck.confirm}
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+
   return (
-    <main className="mx-auto max-w-5xl px-4 sm:px-6 py-10 space-y-8">
+    <>
+      <main className="mx-auto max-w-5xl px-4 sm:px-6 py-10 space-y-8">
       {onBack && (
         <button
           type="button"
@@ -1374,6 +2561,8 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack }: FeedbackPageP
           </pre>
         </section>
       )}
-    </main>
+      </main>
+      {renderPrecheckModal()}
+    </>
   );
 };
