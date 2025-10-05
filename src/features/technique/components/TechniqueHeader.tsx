@@ -34,6 +34,7 @@ export type TechniqueHeaderProps = {
   onToggleBookmark: () => void;
   collections: CollectionOption[];
   onToggleCollection: (collectionId: string, nextChecked: boolean) => void;
+  onCreateCollection?: () => void;
   onTagClick?: (tag: string) => void;
 };
 
@@ -49,6 +50,7 @@ export const TechniqueHeader = ({
   onToggleBookmark,
   collections,
   onToggleCollection,
+  onCreateCollection,
   onTagClick,
 }: TechniqueHeaderProps): ReactElement => {
   const { toggleTransition, prefersReducedMotion } = useMotionPreferences();
@@ -192,6 +194,7 @@ export const TechniqueHeader = ({
                 copy={copy}
                 collections={collections}
                 onToggle={(collectionId, nextChecked) => onToggleCollection(collectionId, nextChecked)}
+                onCreate={onCreateCollection}
               />
               <div className="inline-flex rounded-lg border surface-border overflow-hidden">
                 <motion.button

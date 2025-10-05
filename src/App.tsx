@@ -962,7 +962,8 @@ export default function App(): ReactElement {
         onAssignToCollection={(collectionId) => assignToCollection(currentTechnique.id, collectionId)}
         onRemoveFromCollection={(collectionId) => removeFromCollection(currentTechnique.id, collectionId)}
         onOpenGlossary={openGlossaryTerm}
-        onFeedbackClick={() => navigateTo('feedback')}
+          onFeedbackClick={() => navigateTo('feedback')}
+          onCreateCollection={createCollection}
       />
     );
   } else if (currentGlossaryTerm) {

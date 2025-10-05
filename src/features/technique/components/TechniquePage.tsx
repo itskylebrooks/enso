@@ -22,6 +22,7 @@ import { NotesPanel } from './NotesPanel';
 import { enrichTechniqueWithVariants } from '@shared/constants/variantMapping';
 import { getActiveVariant } from '@features/technique/store';
 import { parseTechniqueVariantParams, buildTechniqueUrlWithVariant } from '@shared/constants/urls';
+import { NameModal } from '@shared/components/ui/modals/NameModal';
 
 type TagItem = { label: string; kind: 'category' | 'stance' | 'attack' | 'weapon' | 'entry' };
 
@@ -104,6 +105,7 @@ type TechniquePageProps = {
   onOpenGlossary?: (slug: string) => void;
   onVariantChange?: (direction: Direction, weapon: WeaponKind, versionId?: string | null) => void;
   onFeedbackClick?: () => void;
+  onCreateCollection?: (name: string) => string | null;
 };
 
 const getCollectionOptions = (
@@ -213,6 +215,7 @@ export const TechniquePage = ({
   onOpenGlossary,
   onVariantChange,
   onFeedbackClick,
+  onCreateCollection,
 }: TechniquePageProps): ReactElement => {
   const tags = useMemo(() => buildTags(technique, locale), [technique, locale]);
   const summary = technique.summary[locale] || technique.summary.en;
@@ -412,6 +415,21 @@ export const TechniquePage = ({
     [collections, bookmarkCollections, technique.id],
   );
 
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+
+  const openCreateDialog = () => setDialogOpen(true);
+  const closeCreateDialog = () => setDialogOpen(false);
+
+  const handleCreate = (name: string) => {
+    if (!onCreateCollection) return closeCreateDialog();
+    const newId = onCreateCollection(name);
+    closeCreateDialog();
+    if (newId) {
+      // Assign the current technique to the newly created collection
+      onAssignToCollection(newId);
+    }
+  };
+
   const handleCollectionToggle = (collectionId: string, nextChecked: boolean) => {
     if (nextChecked) {
       onAssignToCollection(collectionId);
@@ -475,6 +493,7 @@ export const TechniquePage = ({
         onToggleBookmark={onToggleBookmark}
         collections={collectionOptions}
         onToggleCollection={handleCollectionToggle}
+        onCreateCollection={openCreateDialog}
         onTagClick={onOpenGlossary ? handleTagClick : undefined}
       />
 
@@ -536,6 +555,21 @@ export const TechniquePage = ({
             </div>
           </div>
         </motion.section>
+      </AnimatePresence>
+      <AnimatePresence>
+        {dialogOpen && (
+          <NameModal
+            key="technique-create-collection"
+            strings={{
+              title: copy.collectionsNew,
+              nameLabel: copy.collectionsNameLabel,
+              confirmLabel: copy.collectionsCreateAction,
+              cancelLabel: copy.collectionsCancel,
+            }}
+            onCancel={closeCreateDialog}
+            onConfirm={(name) => handleCreate(name)}
+          />
+        )}
       </AnimatePresence>
     </motion.main>
   );
