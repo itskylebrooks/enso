@@ -52,6 +52,7 @@ import { gradeOrder } from './shared/utils/grades';
 import { unique, upsert } from './shared/utils/array';
 import { buildTechniqueUrl as buildUrl, parseTechniquePath } from '@shared/constants/urls';
 import { ENTRY_MODE_ORDER, isEntryMode } from './shared/constants/entryModes';
+import { PencilLineIcon } from '@shared/components/ui/icons';
 
 const defaultFilters: Filters = {};
 
@@ -1118,6 +1119,17 @@ export default function App(): ReactElement {
                 onChange={setFilters}
               />
             </div>
+            {/* Mobile CTA under filters, above grid */}
+            <div className="md:hidden mb-4">
+              <button
+                type="button"
+                onClick={() => goToFeedback('newTechnique')}
+                className="inline-flex items-center gap-2 rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2 text-sm transition-soft hover-border-adaptive"
+              >
+                <PencilLineIcon width={20} height={20} aria-hidden />
+                {copy.feedbackAddTechniqueCta}
+              </button>
+            </div>
             <div className="grid md:grid-cols-[16rem,1fr] gap-6">
               <aside className="hidden md:block surface border surface-border rounded-2xl p-3 h-max sticky top-20">
                 <FilterPanel
@@ -1132,17 +1144,20 @@ export default function App(): ReactElement {
                   trainers={trainers}
                   onChange={setFilters}
                 />
-              </aside>
-              <section>
-                <div className="flex justify-end mb-4">
+                {/* Desktop CTA under filter panel */}
+                <div className="mt-3">
                   <button
                     type="button"
                     onClick={() => goToFeedback('newTechnique')}
-                    className="rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2 text-sm transition-soft hover-border-adaptive"
+                    className="w-full inline-flex items-center justify-center gap-2 rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2 text-sm transition-soft hover-border-adaptive"
                   >
+                    <PencilLineIcon width={20} height={20} aria-hidden />
                     {copy.feedbackAddTechniqueCta}
                   </button>
                 </div>
+              </aside>
+              <section>
+                {/* Button moved to under filters (desktop) and above grid (mobile) */}
                 <Library
                   copy={copy}
                   locale={locale}

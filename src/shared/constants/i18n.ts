@@ -158,7 +158,7 @@ export const messages = {
     feedback: 'Feedback',
     feedbackTitle: 'Feedback & Contributions',
     feedbackDescription: 'Help Enso grow by improving what’s here or adding your own insight. Whether it’s a small correction or a full variation — your Aikidō knowledge matters.',
-    feedbackAddTechniqueCta: '+ Add technique',
+    feedbackAddTechniqueCta: 'Contribute technique',
     feedbackPage: {
       heroSubtitle: 'Help Enso grow by improving what’s here or adding your own insight. Whether it’s a small correction or a full variation — your Aikidō knowledge matters.',
       headings: {
@@ -727,7 +727,7 @@ export const messages = {
     feedback: 'Feedback',
     feedbackTitle: 'Feedback & Beiträge',
     feedbackDescription: 'Hilf Enso zu wachsen, indem du bestehende Inhalte verbesserst oder deine Perspektive einbringst. Ob kleine Korrektur oder komplette Variante – dein Aikidō-Wissen zählt.',
-    feedbackAddTechniqueCta: '+ Technik anlegen',
+    feedbackAddTechniqueCta: 'Technik beitragen',
     feedbackPage: {
       heroSubtitle: 'Hilf Enso zu wachsen, indem du bestehende Inhalte verbesserst oder deine Perspektive einbringst. Ob kleine Korrektur oder komplette Variante – dein Aikidō-Wissen zählt.',
       headings: {
