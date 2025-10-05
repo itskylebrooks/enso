@@ -369,6 +369,42 @@ const buildFeedbackPayload = (
       .map((value) => (typeof value === 'string' ? value.trim() : ''))
       .find((value) => value.length > 0) ?? 'Anonymous contributor';
 
+  // Helpers to build flattened, bilingual fields with EMPTY fallbacks
+  const toBilingual = (value: string): { en: string; de: string } => {
+    const v = (value || '').trim();
+    return locale === 'de'
+      ? { en: v ? 'EMPTY' : 'EMPTY', de: v || 'EMPTY' }
+      : { en: v || 'EMPTY', de: v ? 'EMPTY' : 'EMPTY' };
+  };
+
+  const toBilingualArray = (values: string[]): { en: string[]; de: string[] } => {
+    const texts = Array.isArray(values) && values.length > 0 ? values.map((s) => (s || '').trim()) : [];
+    const ensure = (arr: string[]): string[] => (arr.length > 0 ? arr : ['EMPTY']).map((s) => (s ? s : 'EMPTY'));
+    if (locale === 'de') {
+      return { en: ensure([]), de: ensure(texts) };
+    }
+    return { en: ensure(texts), de: ensure([]) };
+  };
+
+  const toBilingualSteps = (steps: StepItem[]): { en: string[]; de: string[] } => {
+    const texts = Array.isArray(steps) && steps.length > 0 ? steps.map((s) => (s?.text || '').trim()) : [];
+    return toBilingualArray(texts);
+  };
+
+  const fillMissing = (value: unknown): unknown => {
+    if (value === null || value === undefined) return 'EMPTY';
+    if (typeof value === 'string') return value.trim().length === 0 ? 'EMPTY' : value;
+    if (Array.isArray(value)) return value.length === 0 ? ['EMPTY'] : value.map((item) => fillMissing(item));
+    if (typeof value === 'object') {
+      const result: Record<string, unknown> = {};
+      for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
+        result[k] = fillMissing(v);
+      }
+      return result;
+    }
+    return value;
+  };
+
   if (selectedType === 'newTechnique') {
     const form = draft.newTechnique;
     const summary = form.summary.trim() || 'New technique proposal';
@@ -400,6 +436,51 @@ const buildFeedbackPayload = (
 
     const detailsMd = detailsParts.join('\n');
 
+    // Build flattened, bilingual diff JSON
+    const nameBi = toBilingual(form.name);
+    const summaryBi = toBilingual(form.summary);
+    const levelHintBi = toBilingual(form.levelHint);
+    const stepsBi = toBilingualSteps(form.steps);
+    const ukeRoleBi = toBilingual(form.ukeRole);
+    const ukeNotesBi = toBilingualArray(form.ukeNotes);
+    const keyPointsBi = toBilingualArray(form.keyPoints);
+    const mistakesBi = toBilingualArray(form.commonMistakes);
+
+    const flattened = {
+      // Localized text
+      name_en: nameBi.en,
+      name_de: nameBi.de,
+      summary_en: summaryBi.en,
+      summary_de: summaryBi.de,
+      levelHint_en: levelHintBi.en,
+      levelHint_de: levelHintBi.de,
+      steps_en: stepsBi.en,
+      steps_de: stepsBi.de,
+      ukeRole_en: ukeRoleBi.en,
+      ukeRole_de: ukeRoleBi.de,
+      ukeNotes_en: ukeNotesBi.en,
+      ukeNotes_de: ukeNotesBi.de,
+      keyPoints_en: keyPointsBi.en,
+      keyPoints_de: keyPointsBi.de,
+      commonMistakes_en: mistakesBi.en,
+      commonMistakes_de: mistakesBi.de,
+      // Non-localized
+      jpName: form.jpName,
+      taxonomy: {
+        attack: form.attack,
+        category: form.category,
+        weapon: form.weapon,
+        entries: form.entries,
+        hanmi: form.hanmi,
+      },
+      media: form.media,
+      sources: form.sources,
+      creditName: form.creditName,
+      trainerCredit: form.trainerCredit,
+      markAsBase: form.markAsBase,
+      consent: form.consent,
+    } as const;
+
     return {
       name: escapeInline(form.creditName || defaultName),
       category: 'new-technique',
@@ -408,30 +489,7 @@ const buildFeedbackPayload = (
       locale,
       summary: summary.length > 120 ? `${summary.slice(0, 117)}…` : summary,
       detailsMd,
-      diffJson: {
-        name: form.name,
-        jpName: form.jpName,
-        taxonomy: {
-          attack: form.attack,
-          category: form.category,
-          weapon: form.weapon,
-          entries: form.entries,
-          hanmi: form.hanmi,
-        },
-        levelHint: form.levelHint,
-        steps: form.steps,
-        uke: {
-          role: form.ukeRole,
-          notes: form.ukeNotes,
-        },
-        keyPoints: form.keyPoints,
-        commonMistakes: form.commonMistakes,
-        media: form.media,
-        sources: form.sources,
-        creditName: form.creditName,
-        trainerCredit: form.trainerCredit,
-        markAsBase: form.markAsBase,
-      },
+      diffJson: fillMissing(flattened),
       media: summarizeMedia(form.media),
       clientVersion,
       userAgent,
@@ -472,6 +530,39 @@ const buildFeedbackPayload = (
 
     const detailsMd = detailsSections.join('\n');
 
+    // Build flattened, bilingual diff JSON for variation
+    const summaryBi = toBilingual(form.summary);
+    const keyPointsBi = toBilingualArray(form.keyPoints);
+    const mistakesBi = toBilingualArray(form.commonMistakes);
+    const stepsBi = toBilingualSteps(form.steps);
+    const ukeInstructionsBi = toBilingual(form.ukeInstructions);
+    const contextBi = toBilingual(form.context);
+
+    const flattened = {
+      relatedTechniqueId: form.relatedTechniqueId,
+      direction: form.direction,
+      stance: form.stance,
+      trainer: form.trainer,
+      summary_en: summaryBi.en,
+      summary_de: summaryBi.de,
+      steps_en: stepsBi.en,
+      steps_de: stepsBi.de,
+      keyPoints_en: keyPointsBi.en,
+      keyPoints_de: keyPointsBi.de,
+      commonMistakes_en: mistakesBi.en,
+      commonMistakes_de: mistakesBi.de,
+      ukeInstructions_en: ukeInstructionsBi.en,
+      ukeInstructions_de: ukeInstructionsBi.de,
+      context_en: contextBi.en,
+      context_de: contextBi.de,
+      categoryTags: form.categoryTags,
+      level: form.level,
+      media: form.media,
+      creditName: form.creditName,
+      trainerCredit: form.trainerCredit,
+      markAsBase: form.markAsBase,
+    } as const;
+
     return {
       name: escapeInline(form.creditName || defaultName),
       category: 'new-variation',
@@ -480,24 +571,7 @@ const buildFeedbackPayload = (
       locale,
       summary: summary.length > 120 ? `${summary.slice(0, 117)}…` : summary,
       detailsMd,
-      diffJson: {
-        relatedTechniqueId: form.relatedTechniqueId,
-        direction: form.direction,
-        stance: form.stance,
-        trainer: form.trainer,
-        summary: form.summary,
-        categoryTags: form.categoryTags,
-        level: form.level,
-        steps: form.steps,
-        keyPoints: form.keyPoints,
-        commonMistakes: form.commonMistakes,
-        ukeInstructions: form.ukeInstructions,
-        media: form.media,
-        context: form.context,
-        creditName: form.creditName,
-        trainerCredit: form.trainerCredit,
-        markAsBase: form.markAsBase,
-      },
+      diffJson: fillMissing(flattened),
       media: summarizeMedia(form.media),
       clientVersion,
       userAgent,
@@ -1649,24 +1723,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
       findTechniqueName,
     });
     if (!payload) return null;
-
-    const fill = (value: unknown): unknown => {
-      if (value === null || value === undefined) return 'EMPTY';
-      if (typeof value === 'string') return value.trim().length === 0 ? 'EMPTY' : value;
-      if (Array.isArray(value)) return value.length === 0 ? ['EMPTY'] : value.map((item) => fill(item));
-      if (typeof value === 'object') {
-        const result: Record<string, unknown> = {};
-        for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
-          result[k] = fill(v);
-        }
-        return result;
-      }
-      return value;
-    };
-
-    if (selectedCard === 'newTechnique' || selectedCard === 'addVariation') {
-      return { ...payload, diffJson: fill(payload.diffJson) } as typeof payload;
-    }
+    // Use the same payload (including filled diffJson) for download
     return payload;
   };
 
