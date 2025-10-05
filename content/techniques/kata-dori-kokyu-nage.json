@@ -1,0 +1,95 @@
+{
+  "id": "t-kkn-katadori-variant",
+  "slug": "kata-dori-kokyu-nage",
+  "name": {
+    "en": "Kata-dori Kokyu-nage",
+    "de": "Kata-dori Kokyu-nage"
+  },
+  "jp": "肩取り呼吸投げ",
+  "category": "throw",
+  "attack": "kata-dori",
+  "weapon": "empty-hand",
+  "level": "dan2",
+  "summary": {
+    "en": "A kokyu-nage variant from a shoulder grab where nage uses a two-step entry and a yokomen-uchi-like motion to unbalance uke, then drops to the knees while applying pressure to the inner elbow to project them forward.",
+    "de": "Eine Kokyu-nage-Variante aus einem Schultergriff, bei der Nage einen Doppelschritt-Einstieg und eine Yokomen-uchi-ähnliche Bewegung nutzt, um Uke aus dem Gleichgewicht zu bringen, und sich dann auf die Knie fallen lässt, während er Druck auf die Ellbogeninnenseite ausübt, um ihn nach vorne zu werfen."
+  },
+  "tags": [
+    "kokyu-nage",
+    "呼吸投げ",
+    "throw",
+    "kata-dori",
+    "gyaku-hanmi",
+    "irimi"
+  ],
+  "versions": [
+    {
+      "id": "v-haase",
+      "trainerId": "alfred-haase",
+      "dojoId": "bsv",
+      "hanmi": "gyaku-hanmi",
+      "stepsByEntry": {
+        "irimi": {
+          "en": [
+            "From gyaku-hanmi, uke grabs your shoulder (kata-dori).",
+            "Perform an evasive two-step movement (Doppelschritt), raising your free hand in a yokomen-uchi motion to unbalance uke.",
+            "As you turn, connect your raised arm to the inside of uke's grabbing elbow, applying firm, steady pressure.",
+            "Maintain an upright posture and drop to your knees, using this sudden change in level to project uke's center forward.",
+            "Guide uke into a safe forward roll and maintain zanshin."
+          ],
+          "de": [
+            "Aus Gyaku-Hanmi greift Uke deine Schulter (Kata-dori).",
+            "Führe einen ausweichenden Doppelschritt aus und hebe dabei deine freie Hand in einer Yokomen-uchi-Bewegung, um Uke aus dem Gleichgewicht zu bringen.",
+            "Während du dich drehst, verbinde deinen erhobenen Arm mit der Innenseite von Ukes Greif-Ellbogen und übe festen, stetigen Druck aus.",
+            "Behalte eine aufrechte Haltung bei und sinke auf deine Knie. Nutze diesen Ebenenwechsel, um Ukes Schwerpunkt nach vorne zu projizieren.",
+            "Führe Uke in eine sichere Vorwärtsrolle und bewahre Zanshin."
+          ]
+        },
+        "media": {
+          "irimi": [
+            {
+              "type": "youtube",
+              "url": "https://www.youtube.com/embed/dSjQwdEcDxQ?si=k2SCpTt7pml_1z4q"
+            }
+          ]
+        }
+      },
+      "uke": {
+        "role": {
+          "en": "Provide a committed shoulder grab from gyaku-hanmi. Follow the lead of the yokomen-uchi entry and the downward pressure without resisting, preparing for a forward roll.",
+          "de": "Gib einen engagierten Schultergriff aus Gyaku-Hanmi. Folge der Führung des Yokomen-uchi-Einstiegs und dem abwärts gerichteten Druck ohne Widerstand und bereite dich auf eine Vorwärtsrolle vor."
+        },
+        "notes": {
+          "en": [
+            "Allow your posture to be broken by the initial rising motion.",
+            "Do not stiffen the elbow; move with the downward projection.",
+            "Execute a smooth forward ukemi as nage drops to their knees."
+          ],
+          "de": [
+            "Lasse zu, dass deine Haltung durch die anfängliche Aufwärtsbewegung gebrochen wird.",
+            "Versteife nicht den Ellbogen; gehe mit der abwärts gerichteten Projektion mit.",
+            "Führe ein flüssiges vorderes Ukemi aus, während Nage sich auf die Knie absenkt."
+          ]
+        }
+      },
+      "commonMistakes": {
+        "en": [
+          "Striking too hard with the initial yokomen-uchi motion instead of using it to lead.",
+          "Failing to maintain an upright posture when dropping to the knees.",
+          "Applying pressure to the wrong part of the arm, losing leverage.",
+          "Moving too slowly, which allows uke to regain their balance and resist."
+        ],
+        "de": [
+          "Zu hart mit der anfänglichen Yokomen-uchi-Bewegung schlagen anstatt sie zum Führen zu nutzen.",
+          "Beim Absinken auf die Knie keine aufrechte Haltung bewahren.",
+          "Druck auf den falschen Teil des Arms ausüben und so den Hebel verlieren.",
+          "Zu langsam bewegen, sodass Uke sein Gleichgewicht wiederfinden und Widerstand leisten kann."
+        ]
+      },
+      "context": {
+        "en": "This variant of kokyu-nage emphasizes using a sudden change in level (dropping to the knees) to create a powerful, non-muscular projection. The initial yokomen-uchi-like entry is key to breaking uke's structure and creating the opening for the throw.",
+        "de": "Diese Variante des Kokyu-nage betont den Einsatz eines plötzlichen Ebenenwechsels (Absinken auf die Knie), um einen kraftvollen, nicht-muskulären Wurf zu erzeugen. Der anfängliche Yokomen-uchi-ähnliche Einstieg ist entscheidend, um Ukes Struktur zu brechen und die Öffnung für den Wurf zu schaffen."
+      }
+    }
+  ]
+}
