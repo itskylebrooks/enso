@@ -28,6 +28,7 @@ export const Header = ({
 }: HeaderProps): ReactElement => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { overlayMotion, prefersReducedMotion } = useMotionPreferences();
+  const isGuideActive = route === 'guide' || route === 'guideAdvanced';
   const menuRef = useRef<HTMLDivElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -117,7 +118,7 @@ export const Header = ({
                 <span>{copy.searchBtn}</span>
               </span>
             </TextButton>
-            <TabButton active={route === 'guide'} onClick={() => onNavigate('guide')}>
+            <TabButton active={isGuideActive} onClick={() => onNavigate('guide')}>
               <span className="flex items-center gap-1">
                 <SproutIcon className="w-4 h-4" />
                 <span>{copy.guideLink}</span>

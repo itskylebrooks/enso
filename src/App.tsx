@@ -12,6 +12,7 @@ import { Toast } from '@shared/components/ui/Toast';
 import { MobileFilters } from '@shared/components/ui/MobileFilters';
 import { HomePage } from './features/home';
 import { AboutPage } from '@features/home/components/home/AboutPage';
+import { AdvancedPrograms } from '@features/home/components/home/AdvancedPrograms';
 import { GuidePage } from '@features/home/components/home/GuidePage';
 import { FeedbackPage } from '@features/home/components/feedback/FeedbackPage';
 import { GlossaryPage, GlossaryDetailPage, GlossaryFilterPanel, MobileGlossaryFilters, loadAllTerms } from './features/glossary';
@@ -76,6 +77,8 @@ const routeToPath = (route: AppRoute): string => {
       return '/about';
     case 'guide':
       return '/guide';
+    case 'guideAdvanced':
+      return '/guide/advanced';
     case 'feedback':
       return '/feedback';
     case 'library':
@@ -144,6 +147,10 @@ const parseLocation = (
 
   if (pathname === '/guide') {
     return { route: 'guide', slug: null };
+  }
+
+  if (pathname === '/guide/advanced') {
+    return { route: 'guideAdvanced', slug: null };
   }
 
   if (pathname === '/feedback') {
@@ -938,7 +945,7 @@ export default function App(): ReactElement {
       : route === 'home'
       ? copy.backToHome
       : route === 'about'
-      ? copy.backToAbout
+  ? copy.backToAbout
       : route === 'guide'
       ? copy.backToGuide
       : route === 'feedback'
@@ -1020,6 +1027,13 @@ export default function App(): ReactElement {
     );
   } else if (route === 'about') {
     mainContent = <AboutPage copy={copy} />;
+  } else if (route === 'guideAdvanced') {
+    mainContent = (
+      <AdvancedPrograms
+        locale={locale}
+        onOpenTechnique={openTechnique}
+      />
+    );
   } else if (route === 'guide') {
     mainContent = (
       <GuidePage
@@ -1035,6 +1049,7 @@ export default function App(): ReactElement {
           navigateTo('bookmarks');
         }}
         onOpenTechnique={openTechnique}
+        onNavigateToAdvanced={() => navigateTo('guideAdvanced')}
       />
     );
   } else if (route === 'feedback') {

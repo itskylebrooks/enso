@@ -190,6 +190,10 @@ export const messages = {
     joTechniquesLegend4: 'Jō Katate Ryōte-dori (4): Nage one-handed',
     tantoTechniquesTitle: 'Weapons Techniques: Knife (Tantō)',
     tantoTechniquesLead: 'This table shows knife techniques (tantō-waza), focusing on defense against armed attacks and safe disarming methods. The icons indicate which defenses apply to each attack. Click on a technique or cell to see explanations and possible variations. Scroll left/right to explore the complete set.',
+    // Advanced programs page/link
+    advancedProgramsTitle: 'Advanced Programs',
+  advancedProgramsLead: 'Extended study tables for Saya no Uchi, Jō and Tantō techniques.',
+    advancedProgramsCta: 'View Advanced Programs',
   },
   de: {
     app: 'Enso',
@@ -380,6 +384,10 @@ export const messages = {
     joTechniquesLegend4: 'Jō Katate Ryōte-dori (4): Nage Einhändig',
     tantoTechniquesTitle: 'Waffentechniken: Messer (Tantō)',
     tantoTechniquesLead: 'Diese Tabelle zeigt Messertechniken (Tantō-Waza), mit Schwerpunkt auf Verteidigung gegen bewaffnete Angriffe und sichere Entwaffnung. Symbole markieren, welche Abwehr gegen welchen Angriff angewendet wird. Klicke auf eine Technik oder Zelle, um Erklärungen und Varianten zu sehen. Zum vollständigen Anzeigen bitte nach links/rechts scrollen.',
+    // Advanced programs page/link
+    advancedProgramsTitle: 'Erweiterte Programme',
+  advancedProgramsLead: 'Erweiterte Tabellen für Saya-no-Uchi, Jō- und Tantō-Techniken.',
+    advancedProgramsCta: 'Erweiterte Programme ansehen',
   },
 } as const satisfies Record<Locale, Record<string, string>>;
 

@@ -8,9 +8,6 @@ import { useMotionPreferences, defaultEase } from '@shared/components/ui/motion'
 import { getInitialThemeState } from '@shared/utils/theme';
 import { getCopy } from '@shared/constants/i18n';
 import { ExamMatrix } from '../guide/ExamMatrix';
-import { SayaNoUchiMatrix } from '../guide/SayaNoUchiMatrix';
-import { JoMatrix } from '../guide/JoMatrix';
-import { TantoMatrix } from '../guide/TantoMatrix';
 
 type GuidePageProps = {
   locale: Locale;
@@ -19,6 +16,7 @@ type GuidePageProps = {
   onCreateCollectionWithGrade: (name: string, grade: Grade) => string | null;
   onNavigateToBookmarks: (collectionId: string) => void;
   onOpenTechnique: (slug: string, trainerId?: string, entry?: EntryMode, skipExistenceCheck?: boolean) => void;
+  onNavigateToAdvanced: () => void;
 };
 
 type TermEntry = {
@@ -181,6 +179,7 @@ export const GuidePage = ({
   onCreateCollectionWithGrade,
   onNavigateToBookmarks,
   onOpenTechnique,
+  onNavigateToAdvanced,
 }: GuidePageProps): ReactElement => {
   const copy = content[locale];
   const i18nCopy = getCopy(locale);
@@ -356,66 +355,21 @@ export const GuidePage = ({
           />
         </motion.article>
 
-        {/* Saya no Uchi Program */}
+        {/* Advanced Programs (moved) */}
         <motion.article className="space-y-4" {...animationProps}>
           <header className="space-y-2">
-            <h2 className="text-xl font-semibold leading-tight">{i18nCopy.sayaNoUchiTitle}</h2>
-            <p className="text-sm text-subtle leading-relaxed">{i18nCopy.sayaNoUchiLead}</p>
+            <h2 className="text-xl font-semibold leading-tight">{i18nCopy.advancedProgramsTitle}</h2>
+            <p className="text-sm text-subtle leading-relaxed">{i18nCopy.advancedProgramsLead}</p>
           </header>
-          <SayaNoUchiMatrix
-            locale={locale}
-            isDark={isDark}
-            onCellClick={(slug, attackKey) => {
-              // Create combined technique slug, removing ai_hanmi, gyaku_hanmi, and hanmi_hantachi
-              // e.g., "katate_dori_ai_hanmi" -> "katate-dori"
-              let attackSlug = attackKey
-                .replace(/_ai_hanmi$/, '')
-                .replace(/_gyaku_hanmi$/, '')
-                .replace(/^hanmi_hantachi_/, '')
-                .replace(/_/g, '-');
-              const combinedSlug = `${attackSlug}-${slug}`;
-              onOpenTechnique(combinedSlug, undefined, undefined, true);
-            }}
-          />
-        </motion.article>
-
-        {/* Jō Techniques Program */}
-        <motion.article className="space-y-4" {...animationProps}>
-          <header className="space-y-2">
-            <h2 className="text-xl font-semibold leading-tight">{i18nCopy.joTechniquesTitle}</h2>
-            <p className="text-sm text-subtle leading-relaxed">{i18nCopy.joTechniquesLead}</p>
-          </header>
-          <JoMatrix
-            locale={locale}
-            isDark={isDark}
-            copy={i18nCopy}
-            onCellClick={(slug, attackKey) => {
-              // Create combined technique slug for jō techniques
-              // e.g., "jo_tsuki" -> "jo-tsuki"
-              const attackSlug = attackKey.replace(/_/g, '-');
-              const combinedSlug = `${attackSlug}-${slug}`;
-              onOpenTechnique(combinedSlug, undefined, undefined, true);
-            }}
-          />
-        </motion.article>
-
-        {/* Tantō Techniques Program */}
-        <motion.article className="space-y-4" {...animationProps}>
-          <header className="space-y-2">
-            <h2 className="text-xl font-semibold leading-tight">{i18nCopy.tantoTechniquesTitle}</h2>
-            <p className="text-sm text-subtle leading-relaxed">{i18nCopy.tantoTechniquesLead}</p>
-          </header>
-          <TantoMatrix
-            locale={locale}
-            isDark={isDark}
-            onCellClick={(slug, attackKey) => {
-              // Create combined technique slug for tantō techniques
-              // e.g., "tanto_tsuki" -> "tanto-tsuki"
-              const attackSlug = attackKey.replace(/_/g, '-');
-              const combinedSlug = `${attackSlug}-${slug}`;
-              onOpenTechnique(combinedSlug, undefined, undefined, true);
-            }}
-          />
+          <div>
+            <button
+              type="button"
+              onClick={onNavigateToAdvanced}
+              className="inline-flex items-center rounded-xl border surface-border bg-[var(--color-surface)]/70 px-4 py-2 text-sm font-medium hover:bg-[var(--color-surface)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+            >
+              {i18nCopy.advancedProgramsCta} →
+            </button>
+          </div>
         </motion.article>
 
         {/* Etiquette */}
