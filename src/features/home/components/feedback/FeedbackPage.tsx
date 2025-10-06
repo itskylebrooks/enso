@@ -17,7 +17,8 @@ import {
   LinkIcon,
 } from '@shared/components/ui/icons';
 import type { Copy, FeedbackPageCopy } from '@shared/constants/i18n';
-import { buildFeedbackPayloadV1 } from '@shared/lib/buildFeedbackPayload';
+import { buildFeedbackPayloadV1, type NewTechniqueFormState } from '@shared/lib/buildFeedbackPayload';
+import type { FeedbackPayloadV1 } from '@shared/types/feedback';
 import type { Grade, Hanmi, Locale, Technique } from '@shared/types';
 
 export type FeedbackType =
@@ -342,6 +343,110 @@ const getClientVersion = (): string | undefined => {
   } catch {
     return undefined;
   }
+};
+
+type FeedbackMediaItem = { type: 'youtube' | 'image' | 'link'; url: string; title?: string };
+
+type NewTechniqueSubmitPayload = Omit<FeedbackPayloadV1, 'media'> & {
+  media?: FeedbackMediaItem[];
+};
+
+const mapNewTechniqueDraftToFormState = (form: NewTechniqueForm, locale: Locale): NewTechniqueFormState => ({
+  contributorName: form.creditName || null,
+  contributorEmail: null,
+  name: {
+    en: locale === 'en' ? form.name : '',
+    de: locale === 'de' ? form.name : '',
+  },
+  summary: {
+    en: locale === 'en' ? form.summary : '',
+    de: locale === 'de' ? form.summary : '',
+  },
+  levelHint: {
+    en: locale === 'en' ? form.levelHint : '',
+    de: locale === 'de' ? form.levelHint : '',
+  },
+  steps: {
+    en: locale === 'en' ? form.steps.map((step) => step.text || '') : [],
+    de: locale === 'de' ? form.steps.map((step) => step.text || '') : [],
+  },
+  uke: {
+    role: {
+      en: locale === 'en' ? form.ukeRole : '',
+      de: locale === 'de' ? form.ukeRole : '',
+    },
+    notes: {
+      en: locale === 'en' ? form.ukeNotes : [],
+      de: locale === 'de' ? form.ukeNotes : [],
+    },
+  },
+  keyPoints: {
+    en: locale === 'en' ? form.keyPoints : [],
+    de: locale === 'de' ? form.keyPoints : [],
+  },
+  commonMistakes: {
+    en: locale === 'en' ? form.commonMistakes : [],
+    de: locale === 'de' ? form.commonMistakes : [],
+  },
+  jpName: form.jpName || null,
+  taxonomy: {
+    attack: form.attack || null,
+    category: form.category || null,
+    weapon: form.weapon || null,
+    entries: form.entries ? [form.entries] : [],
+    hanmi: form.hanmi || null,
+  },
+  mediaUrls: form.media.map((item) => item.url),
+  sources: form.sources || null,
+  creditName: form.creditName || null,
+  trainerCredit: form.trainerCredit || null,
+  markAsBase: form.markAsBase,
+  consent: form.consent,
+  honeypot: '',
+  detailsPreviewMd: undefined,
+});
+
+const normalizeUrlForSubmission = (rawUrl: string): string | null => {
+  const value = (rawUrl || '').trim();
+  if (!value || value === 'EMPTY') return null;
+  if (/^https?:\/\//i.test(value)) return value;
+  return `https://${value}`;
+};
+
+const normalizeMediaForSubmission = (media: MediaEntry[]): FeedbackMediaItem[] =>
+  media
+    .map((entry) => {
+      const url = normalizeUrlForSubmission(entry.url);
+      if (!url) return null;
+      const type: FeedbackMediaItem['type'] = entry.type === 'youtube' ? 'youtube' : entry.type === 'image' ? 'image' : 'link';
+      const title = entry.title?.trim();
+      return title ? { type, url, title } : { type, url };
+    })
+    .filter((item): item is FeedbackMediaItem => Boolean(item));
+
+const buildNewTechniqueSubmission = (
+  form: NewTechniqueForm,
+  options: { locale: Locale; entityId?: string },
+): { payload: NewTechniqueSubmitPayload; allTextEmpty: boolean; stepsEmpty: boolean } => {
+  const { locale, entityId } = options;
+  const formState = mapNewTechniqueDraftToFormState(form, locale);
+  const v1 = buildFeedbackPayloadV1(formState, { locale: locale === 'de' ? 'de' : 'en', entityId });
+  const diffLocale = locale;
+  const diffSteps = v1.diffJson.steps[diffLocale];
+  const allTextEmpty = v1.diffJson.name[diffLocale] === 'EMPTY' && v1.diffJson.summary[diffLocale] === 'EMPTY';
+  const stepsEmpty = Array.isArray(diffSteps) && diffSteps.length === 1 && diffSteps[0] === 'EMPTY';
+  const media = normalizeMediaForSubmission(form.media);
+  const fallbackDetails = form.summary
+    || form.steps.map((step) => step.text || '').filter(Boolean).join('\n')
+    || 'New technique proposal';
+  const detailsMd = v1.detailsMd && v1.detailsMd.trim().length > 0 ? v1.detailsMd : fallbackDetails;
+  const { media: _legacyMedia, ...rest } = v1;
+  const payload: NewTechniqueSubmitPayload = {
+    ...rest,
+    detailsMd,
+    media: media.length > 0 ? media : undefined,
+  };
+  return { payload, allTextEmpty, stepsEmpty };
 };
 
 type FeedbackApiPayload = {
@@ -1672,85 +1777,19 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
 
   const handleSubmit = async () => {
     if (!canSubmit) return;
-    // If submitting a new technique, build v1 payload
     let payload: unknown | null = null;
     if (selectedCard === 'newTechnique') {
-      // Map current draft into serializer form state
-      const form = draft.newTechnique;
-      const formState = {
-        contributorName: form.creditName || null,
-        contributorEmail: undefined,
-        name: {
-          en: locale === 'en' ? form.name : '',
-          de: locale === 'de' ? form.name : '',
-        },
-        summary: {
-          en: locale === 'en' ? form.summary : '',
-          de: locale === 'de' ? form.summary : '',
-        },
-        levelHint: { en: locale === 'en' ? form.levelHint : '', de: locale === 'de' ? form.levelHint : '' },
-        steps: {
-          en: locale === 'en' ? form.steps.map((s) => s.text || '') : [],
-          de: locale === 'de' ? form.steps.map((s) => s.text || '') : [],
-        },
-        uke: {
-          role: { en: locale === 'en' ? form.ukeRole : '', de: locale === 'de' ? form.ukeRole : '' },
-          notes: { en: locale === 'en' ? form.ukeNotes : [], de: locale === 'de' ? form.ukeNotes : [] },
-        },
-        keyPoints: { en: locale === 'en' ? form.keyPoints : [], de: locale === 'de' ? form.keyPoints : [] },
-        commonMistakes: { en: locale === 'en' ? form.commonMistakes : [], de: locale === 'de' ? form.commonMistakes : [] },
-        jpName: form.jpName || null,
-        taxonomy: {
-          attack: form.attack || null,
-          category: form.category || null,
-          weapon: form.weapon || null,
-    entries: form.entries ? [form.entries] : [],
-          hanmi: form.hanmi || null,
-        },
-        mediaUrls: form.media.map((m) => m.url),
-        sources: form.sources || null,
-        creditName: form.creditName || null,
-        trainerCredit: form.trainerCredit || null,
-        markAsBase: form.markAsBase,
-        consent: form.consent,
-        honeypot: '',
-        detailsPreviewMd: undefined,
-      };
-
-  const v1 = buildFeedbackPayloadV1(formState as any, { locale: locale === 'de' ? 'de' : 'en', entityId: slugPreview || undefined });
-
-      // soft-warning: ensure at least one step or short summary is provided, but allow bypass on second attempt
-      const allTextEmpty = v1.diffJson.name[locale] === 'EMPTY' && v1.diffJson.summary[locale] === 'EMPTY';
-      const stepsEmpty = Array.isArray(v1.diffJson.steps[locale]) && v1.diffJson.steps[locale].length === 1 && v1.diffJson.steps[locale][0] === 'EMPTY';
+      const { payload: newTechniquePayload, allTextEmpty, stepsEmpty } = buildNewTechniqueSubmission(
+        draft.newTechnique,
+        { locale, entityId: slugPreview || undefined },
+      );
       if (allTextEmpty && stepsEmpty && !softWarningShown) {
         setSubmitError('Please add at least one step or a short summary. Click Submit again to proceed.');
         setSoftWarningShown(true);
         setSubmissionState('idle');
         return;
       }
-      // Normalize payload for server: ensure detailsMd is non-empty and media items are objects
-      const normalizedV1: any = { ...v1 };
-      // v1.media may be an array of strings (media URLs). Convert to server-expected objects.
-      if (Array.isArray(v1.media) && v1.media.length && typeof v1.media[0] === 'string') {
-        const normalizeUrlForServer = (u: string) => {
-          const s = (u || '').trim();
-          if (!s || s === 'EMPTY') return null;
-          if (/^https?:\/\//i.test(s)) return s;
-          // Add https:// for bare domains/paths so zod .url() validation passes
-          return `https://${s}`;
-        };
-
-        normalizedV1.media = (v1.media as string[])
-          .map((u) => normalizeUrlForServer(u))
-          .filter((u): u is string => Boolean(u))
-          .map((url) => ({ type: 'link' as const, url }));
-      }
-      // Ensure detailsMd is not empty (server requires min length 1)
-      if (!normalizedV1.detailsMd || String(normalizedV1.detailsMd).trim().length === 0) {
-        normalizedV1.detailsMd = form.summary || (form.steps || []).map((s: any) => s.text || '').filter(Boolean).join('\n') || 'New technique proposal';
-      }
-
-      payload = normalizedV1;
+      payload = newTechniquePayload;
     } else {
       payload = buildFeedbackPayload(selectedCard, draft, {
         slugPreview,
@@ -1802,6 +1841,14 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
   };
 
   const buildDownloadPayload = () => {
+    if (selectedCard === 'newTechnique') {
+      const { payload } = buildNewTechniqueSubmission(draft.newTechnique, {
+        locale,
+        entityId: slugPreview || undefined,
+      });
+      return payload;
+    }
+
     const payload = buildFeedbackPayload(selectedCard, draft, {
       slugPreview,
       duplicateMatches,
@@ -1809,39 +1856,11 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
       findTechniqueName,
     });
     if (!payload) return null;
-    // Use the same payload (including filled diffJson) for download
     return payload;
   };
 
   const handleDownloadJson = () => {
-    let payload: unknown | null = null;
-    if (selectedCard === 'newTechnique') {
-      const form = draft.newTechnique;
-      const formState = {
-        contributorName: form.creditName || null,
-        contributorEmail: undefined,
-        name: { en: locale === 'en' ? form.name : '', de: locale === 'de' ? form.name : '' },
-        summary: { en: locale === 'en' ? form.summary : '', de: locale === 'de' ? form.summary : '' },
-        levelHint: { en: locale === 'en' ? form.levelHint : '', de: locale === 'de' ? form.levelHint : '' },
-        steps: { en: locale === 'en' ? form.steps.map((s) => s.text || '') : [], de: locale === 'de' ? form.steps.map((s) => s.text || '') : [] },
-        uke: { role: { en: locale === 'en' ? form.ukeRole : '', de: locale === 'de' ? form.ukeRole : '' }, notes: { en: locale === 'en' ? form.ukeNotes : [], de: locale === 'de' ? form.ukeNotes : [] } },
-        keyPoints: { en: locale === 'en' ? form.keyPoints : [], de: locale === 'de' ? form.keyPoints : [] },
-        commonMistakes: { en: locale === 'en' ? form.commonMistakes : [], de: locale === 'de' ? form.commonMistakes : [] },
-        jpName: form.jpName || null,
-  taxonomy: { attack: form.attack || null, category: form.category || null, weapon: form.weapon || null, entries: form.entries ? [form.entries] : [], hanmi: form.hanmi || null },
-        mediaUrls: form.media.map((m) => m.url),
-        sources: form.sources || null,
-        creditName: form.creditName || null,
-        trainerCredit: form.trainerCredit || null,
-        markAsBase: form.markAsBase,
-        consent: form.consent,
-        honeypot: '',
-        detailsPreviewMd: undefined,
-      };
-      payload = buildFeedbackPayloadV1(formState as any, { locale: locale === 'de' ? 'de' : 'en', entityId: slugPreview || undefined });
-    } else {
-      payload = buildDownloadPayload();
-    }
+    const payload = buildDownloadPayload();
     if (!payload) return;
     const typeLabel = selectedCard === 'newTechnique' ? 'new-technique-v1' : selectedCard === 'addVariation' ? 'variation' : selectedCard === 'improveTechnique' ? 'improve' : selectedCard === 'bugReport' ? 'bug' : selectedCard === 'appFeedback' ? 'app' : 'unknown';
     const ts = new Date();

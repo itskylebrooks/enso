@@ -117,17 +117,21 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
   }
 
   // Try to create a GitHub issue if credentials/config are present in env.
-  const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-  const rawRepoOwner = process.env.GITHUB_REPO_OWNER ?? process.env.GITHUB_OWNER;
-  const rawRepoName = process.env.GITHUB_REPO_NAME ?? process.env.GITHUB_REPO;
+  const GITHUB_TOKEN = process.env.GITHUB_TOKEN?.trim();
+  const ownerEnv = process.env.GITHUB_OWNER?.trim();
+  const repoEnv = process.env.GITHUB_REPO?.trim();
 
-  let repoOwner = rawRepoOwner ?? undefined;
-  let repoName = rawRepoName ?? undefined;
+  let repoOwner = ownerEnv ?? undefined;
+  let repoName = repoEnv ?? undefined;
 
-  if (!repoOwner && repoName && repoName.includes('/')) {
-    const [owner, name] = repoName.split('/', 2);
-    repoOwner = owner || undefined;
-    repoName = name || undefined;
+  if (repoEnv && repoEnv.includes('/')) {
+    const [repoOwnerFromSlug, repoNameFromSlug] = repoEnv.split('/', 2);
+    if (!repoOwner) repoOwner = repoOwnerFromSlug || undefined;
+    repoName = repoNameFromSlug || undefined;
+  }
+
+  if (repoOwner && repoOwner.includes('/')) {
+    repoOwner = repoOwner.split('/')[0] || repoOwner;
   }
 
   if (repoName && repoName.includes('/')) {

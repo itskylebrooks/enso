@@ -1,6 +1,6 @@
 import type { FeedbackPayloadV1 } from '../types/feedback';
 
-type NewTechniqueFormState = {
+export type NewTechniqueFormState = {
   // minimal subset of fields used for the serializer
   contributorName?: string | null;
   contributorEmail?: string | null;
