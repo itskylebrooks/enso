@@ -26,7 +26,7 @@ export const messages = {
     collectionsConfirmDeleteTitle: 'Delete collection?',
     collectionsConfirmDeleteBody: 'Items remain bookmarked but will be ungrouped.',
     collectionsAddTo: 'Add to Collection',
-    collectionsEmptyAll: 'No bookmarks yet. Browse the Library and tap ⭐ to save techniques.',
+    collectionsEmptyAll: 'No bookmarks yet. Browse the Library and tap the icon to save techniques.',
     collectionsEmptyCollection: 'Nothing here yet. Add items from the menu on each card.',
     collectionsEmptyUngrouped: 'Everything’s filed. Neat.',
     collectionsNone: 'No collections yet.',
@@ -179,7 +179,7 @@ export const messages = {
         },
         newTechnique: {
           title: 'Propose a new technique',
-          description: 'Introduce a new technique with bilingual details, taxonomy, and lineage context.',
+          description: 'Introduce a new technique with taxonomy and lineage context.',
         },
         app: {
           title: 'App feedback',
@@ -609,7 +609,7 @@ export const messages = {
     collectionsConfirmDeleteTitle: 'Sammlung löschen?',
     collectionsConfirmDeleteBody: 'Einträge bleiben als Lesezeichen gespeichert, werden aber nicht mehr zugeordnet.',
     collectionsAddTo: 'Zur Sammlung hinzufügen',
-    collectionsEmptyAll: 'Noch keine Lesezeichen. Durchstöbere die Bibliothek und tippe ⭐ zum Speichern.',
+    collectionsEmptyAll: 'Noch keine Lesezeichen. Durchstöbere die Bibliothek und tippe das Icon zum Speichern.',
     collectionsEmptyCollection: 'Hier ist noch nichts. Füge Einträge über das Menü auf den Karten hinzu.',
     collectionsEmptyUngrouped: 'Alles sortiert. Schön.',
     collectionsNone: 'Noch keine Sammlungen.',
@@ -762,7 +762,7 @@ export const messages = {
         },
         newTechnique: {
           title: 'Neue Technik vorschlagen',
-          description: 'Reiche eine völlig neue Technik mit zweisprachigen Details und Linienzuschreibung ein.',
+          description: 'Reiche eine völlig neue Technik mit Linienzuschreibung ein.',
         },
         app: {
           title: 'App-Feedback',
