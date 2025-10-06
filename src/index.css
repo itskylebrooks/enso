@@ -28,6 +28,10 @@
   --card-shadow-alpha: 0.12; /* default alpha for light mode */
   /* Layered shadow for better depth: larger soft shadow + smaller mid shadow */
   --card-shadow: 0 14px 44px -12px rgba(var(--card-shadow-color), var(--card-shadow-alpha)), 0 6px 18px -8px rgba(var(--card-shadow-color), 0.08);
+
+  /* Unified focus halo (adapts to theme) */
+  --focus-halo-color: rgba(0, 0, 0, 0.55);
+  --focus-halo-size: 2px;
 }
 
 .dark {
@@ -46,6 +50,9 @@
   --card-shadow-alpha: 0.16;
   /* Add a stronger near shadow for dark mode so lift is visible on black backgrounds */
   --card-shadow: 0 12px 36px -8px rgba(var(--card-shadow-color), var(--card-shadow-alpha)), 0 6px 18px -4px rgba(var(--card-shadow-color), 0.12), 0 2px 6px -2px rgba(var(--card-shadow-color), 0.06);
+
+  /* In dark mode use a light halo with similar perceived thickness */
+  --focus-halo-color: rgba(255, 255, 255, 0.6);
 }
 
 *,
@@ -217,6 +224,21 @@ button {
 
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
+}
+
+/* Unified, animated focus halo for inputs/selects */
+.focus-halo {
+  transition: border-color var(--motion-duration-short) var(--motion-ease),
+              box-shadow var(--motion-duration-short) var(--motion-ease),
+              background-color var(--motion-duration-short) var(--motion-ease);
+}
+
+.focus-halo:focus,
+.focus-halo:focus-visible {
+  outline: none;
+  /* A single halo that hugs the element to avoid a double frame */
+  box-shadow: 0 0 0 var(--focus-halo-size) var(--focus-halo-color);
+  border-color: var(--focus-halo-color);
 }
 
 /* Shake animation */

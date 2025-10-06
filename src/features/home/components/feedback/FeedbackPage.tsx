@@ -1192,7 +1192,7 @@ const MediaManager = ({
                 setInputValue(event.target.value);
               }}
               placeholder={placeholder}
-              className="w-full sm:w-96 rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+              className="w-full sm:w-96 rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2 text-sm focus-halo focus:outline-none"
             />
             <div className="flex gap-2">
               <button
@@ -1985,7 +1985,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
                 value={textBySection[section] ?? ''}
                 onChange={(event) => handleTextChange(section, event.target.value)}
                 placeholder={t.forms.improve.textPlaceholder}
-                className="w-full rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-3 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+            className="w-full rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-3 text-sm focus-halo focus:outline-none"
               />
             </section>
           ))}
@@ -2011,7 +2011,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
               value={source}
               onChange={(event) => updateImprove('source', event.target.value)}
               placeholder={t.placeholders.source}
-              className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+              className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus-halo focus:outline-none"
             />
           </div>
           <div className="space-y-2">
@@ -2021,7 +2021,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
               value={credit}
               onChange={(event) => updateImprove('credit', event.target.value)}
               placeholder={t.placeholders.credit}
-              className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+              className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus-halo focus:outline-none"
             />
           </div>
         </section>
@@ -2097,7 +2097,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
                   value={value}
                   onChange={(event) => handleListItemChange(field, index, event.target.value)}
                   placeholder={placeholder}
-                  className="flex-1 rounded-xl border surface-border bg-[var(--color-surface)] px-3 py-2 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+                  className="flex-1 rounded-xl border surface-border bg-[var(--color-surface)] px-3 py-2 text-sm focus-halo focus:outline-none"
                 />
               </div>
             ))}
@@ -2162,7 +2162,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
                 value={trainer}
                 onChange={(event) => updateVariation('trainer', event.target.value)}
                 placeholder={t.placeholders.variationTrainer}
-                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus-halo focus:outline-none"
               />
             </div>
             <div className="space-y-2">
@@ -2172,7 +2172,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
                 value={creditName}
                 onChange={(event) => updateVariation('creditName', event.target.value)}
                 placeholder={t.placeholders.variationCreditName}
-                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus-halo focus:outline-none"
               />
             </div>
           </div>
@@ -2184,7 +2184,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
                 value={trainerCredit}
                 onChange={(event) => updateVariation('trainerCredit', event.target.value)}
                 placeholder={t.placeholders.variationTrainerCredit}
-                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus-halo focus:outline-none"
               />
             </div>
             <label className="flex items-center gap-3 text-sm text-[var(--color-text)]">
@@ -2206,7 +2206,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
             value={summary}
             onChange={(event) => updateVariation('summary', event.target.value)}
             placeholder={t.placeholders.variationSummary}
-            className="w-full rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-3 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+            className="w-full rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-3 text-sm focus-halo focus:outline-none"
           />
         </section>
 
@@ -2259,7 +2259,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
             value={ukeInstructions}
             onChange={(event) => updateVariation('ukeInstructions', event.target.value)}
             placeholder={t.placeholders.variationUke}
-            className="w-full rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-3 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+            className="w-full rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-3 text-sm focus-halo focus:outline-none"
           />
         </section>
 
@@ -2283,7 +2283,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
             value={context}
             onChange={(event) => updateVariation('context', event.target.value)}
             placeholder={t.placeholders.variationContext}
-            className="w-full rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-3 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+            className="w-full rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-3 text-sm focus-halo focus:outline-none"
           />
         </section>
 
@@ -2330,7 +2330,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
                   value={value}
                   onChange={(event) => handleListItemChange(field, index, event.target.value)}
                   placeholder={placeholder}
-                  className="flex-1 rounded-xl border surface-border bg-[var(--color-surface)] px-3 py-2 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+                  className="flex-1 rounded-xl border surface-border bg-[var(--color-surface)] px-3 py-2 text-sm focus-halo focus:outline-none"
                 />
               </div>
             ))}
@@ -2366,7 +2366,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
                 value={form.name}
                 onChange={(event) => updateNewTechnique('name', event.target.value)}
                 placeholder={t.placeholders.newTechniqueName}
-                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus-halo focus:outline-none"
               />
             </div>
             <div className="space-y-2">
@@ -2376,7 +2376,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
                 value={form.jpName}
                 onChange={(event) => updateNewTechnique('jpName', event.target.value)}
                 placeholder={t.placeholders.newTechniqueKanji}
-                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus-halo focus:outline-none"
               />
             </div>
           </div>
@@ -2435,7 +2435,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
                 value={form.levelHint}
                 onChange={(event) => updateNewTechnique('levelHint', event.target.value)}
                 placeholder={t.placeholders.newTechniqueLevel}
-                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus-halo focus:outline-none"
               />
             </div>
           </div>
@@ -2455,17 +2455,17 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
           <label className="text-sm font-medium text-[var(--color-text)]" htmlFor="nt-summary">
             {t.newTechnique.fields.summarySingle}
           </label>
-          <textarea
-            id="nt-summary"
-            rows={4}
-            value={form.summary}
-            onChange={(event) => updateNewTechnique('summary', event.target.value)}
-            placeholder={t.placeholders.newTechniqueSummary}
-            className={classNames(
-              'w-full rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-3 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+              <textarea
+                id="nt-summary"
+                rows={4}
+                value={form.summary}
+                onChange={(event) => updateNewTechnique('summary', event.target.value)}
+                placeholder={t.placeholders.newTechniqueSummary}
+                className={classNames(
+              'w-full rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-3 text-sm focus-halo focus:outline-none',
               summaryExceeded && 'border-[var(--color-error, #b91c1c)]',
             )}
-          />
+              />
           <div className="flex justify-between text-xs">
             <span className={classNames(summaryExceeded ? 'text-[var(--color-error, #b91c1c)]' : 'text-subtle')}>
               {summaryLabel}
@@ -2499,7 +2499,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
               value={form.ukeRole}
               onChange={(event) => updateNewTechnique('ukeRole', event.target.value)}
               placeholder={t.placeholders.newTechniqueUkeRole}
-              className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+              className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus-halo focus:outline-none"
             />
           </div>
           {renderList('ukeNotes', t.newTechnique.fields.ukeNotesSingle, t.placeholders.newTechniqueUkeNote)}
@@ -2532,7 +2532,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
             value={form.sources}
             onChange={(event) => updateNewTechnique('sources', event.target.value)}
             placeholder={t.placeholders.newTechniqueSources}
-            className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+            className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus-halo focus:outline-none"
           />
         </section>
 
@@ -2545,7 +2545,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
                 value={form.creditName}
                 onChange={(event) => updateNewTechnique('creditName', event.target.value)}
                 placeholder={t.placeholders.contributorName}
-                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus-halo focus:outline-none"
               />
             </div>
             <div className="space-y-2">
@@ -2554,7 +2554,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
                 value={form.trainerCredit}
                 onChange={(event) => updateNewTechnique('trainerCredit', event.target.value)}
                 placeholder={t.placeholders.newTechniqueLineage}
-                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus-halo focus:outline-none"
               />
             </div>
           </div>
@@ -2642,7 +2642,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
             value={feedback}
             onChange={(event) => updateAppFeedback('feedback', event.target.value)}
             placeholder={t.placeholders.appFeedback}
-            className="w-full rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-3 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+            className="w-full rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-3 text-sm focus-halo focus:outline-none"
           />
         </section>
 
@@ -2669,7 +2669,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
             value={location}
             onChange={(event) => updateBugReport('location', event.target.value)}
             placeholder={t.placeholders.bugLocation}
-            className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+            className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus-halo focus:outline-none"
           />
         </section>
 
@@ -2680,7 +2680,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
             value={details}
             onChange={(event) => updateBugReport('details', event.target.value)}
             placeholder={t.placeholders.bugDetails}
-            className="w-full rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-3 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+            className="w-full rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-3 text-sm focus-halo focus:outline-none"
           />
         </section>
 
@@ -2691,7 +2691,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
             value={reproduction}
             onChange={(event) => updateBugReport('reproduction', event.target.value)}
             placeholder={t.placeholders.bugReproduction}
-            className="w-full rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-3 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+            className="w-full rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-3 text-sm focus-halo focus:outline-none"
           />
         </section>
 
