@@ -2430,10 +2430,6 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
       );
     };
 
-    const duplicatesHeadline = duplicateMatches.length > 0
-      ? t.newTechnique.duplicates.possibleMatches
-      : t.newTechnique.duplicates.none;
-
     const summaryLabel = summaryExceeded
       ? t.newTechnique.hints.summaryExceeded.replace('{remaining}', String(Math.abs(summaryRemaining)))
       : t.newTechnique.hints.summaryRemaining.replace('{remaining}', String(summaryRemaining));
@@ -2460,6 +2456,39 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
                 placeholder={t.placeholders.newTechniqueName}
                 className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus-halo focus:outline-none"
               />
+              {/* Inline duplicates notice under name */}
+              <div
+                className={classNames(
+                  'mt-2 rounded-xl border px-3 py-2 text-xs',
+                  'surface-border bg-[var(--color-surface)]',
+                )}
+              >
+                {duplicateMatches.length === 0 ? (
+                  <span className="text-subtle">{t.newTechnique.duplicates.noneHint}</span>
+                ) : (
+                  <div className="space-y-2">
+                    <p className="text-[var(--color-text)]">{t.newTechnique.duplicates.possibleMatches}</p>
+                    <ul className="space-y-1">
+                      {duplicateMatches.slice(0, 3).map((tech) => (
+                        <li key={`dup-inline-${tech.id}`} className="text-[var(--color-text)]">
+                          <span className="font-medium">{tech.name[locale] || tech.name.en}</span>
+                          <span className="text-subtle"> — {tech.slug}</span>
+                        </li>
+                      ))}
+                    </ul>
+                    {duplicateMatches.length > 3 && (
+                      <p className="text-subtle">+{duplicateMatches.length - 3} more…</p>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => handleTypeChange('addVariation')}
+                      className="text-[var(--color-accent, var(--color-text))] hover:underline"
+                    >
+                      {t.newTechnique.duplicates.switch}
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium text-[var(--color-text)]" htmlFor="nt-jp-name">{t.newTechnique.fields.jpName}</label>
@@ -2662,30 +2691,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
           {t.shared.help?.markAsBase && <p className="text-xs text-subtle">{t.shared.help.markAsBase}</p>}
         </section>
 
-        <section className="space-y-2">
-          <h2 className="text-sm font-semibold text-[var(--color-text)]">{duplicatesHeadline}</h2>
-          {duplicateMatches.length === 0 ? (
-            <p className="text-xs text-subtle">{t.newTechnique.duplicates.noneHint}</p>
-          ) : (
-            <ul className="space-y-2 text-sm">
-              {duplicateMatches.map((tech) => (
-                <li key={`dup-${tech.id}`} className="rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-3">
-                  <p className="font-medium text-[var(--color-text)]">{tech.name[locale] || tech.name.en}</p>
-                  <p className="text-xs text-subtle">{tech.slug}</p>
-                </li>
-              ))}
-            </ul>
-          )}
-          {duplicateMatches.length > 0 && (
-            <button
-              type="button"
-              onClick={() => handleTypeChange('addVariation')}
-              className="text-xs text-[var(--color-accent, var(--color-text))] hover:underline"
-            >
-              {t.newTechnique.duplicates.switch}
-            </button>
-          )}
-        </section>
+        {/* Removed bottom duplicates block; now shown inline under name and in Summary */}
       </motion.div>
     );
   };
@@ -2932,6 +2938,34 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
                 <h3 className="text-sm font-semibold text-[var(--color-text)]">{t.summary.title}</h3>
                 <p className="text-xs text-subtle">{t.summary.subtitle}</p>
               </div>
+              {/* Duplicates banner at top of summary */}
+              {selectedCard === 'newTechnique' && (
+                <div className={classNames('rounded-xl border px-4 py-3 text-sm', 'surface-border bg-[var(--color-surface)]')}>
+                  {duplicateMatches.length === 0 ? (
+                    <span className="text-subtle">{t.newTechnique.duplicates.noneHint}</span>
+                  ) : (
+                    <div className="space-y-2">
+                      <p className="font-medium text-[var(--color-text)]">{t.newTechnique.duplicates.possibleMatches}</p>
+                      <ul className="space-y-1">
+                        {duplicateMatches.map((tech) => (
+                          <li key={`dup-summary-${tech.id}`} className="flex items-center justify-between gap-2">
+                            <span className="text-[var(--color-text)]">{tech.name[locale] || tech.name.en}</span>
+                            <span className="text-xs text-subtle">{tech.slug}</span>
+                          </li>
+                        ))}
+                      </ul>
+                      <button
+                        type="button"
+                        onClick={() => handleTypeChange('addVariation')}
+                        className="text-xs text-[var(--color-accent, var(--color-text))] hover:underline"
+                      >
+                        {t.newTechnique.duplicates.switch}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
+
               <dl className="grid gap-3 sm:grid-cols-2">
                 {summaryEntries.map((item) => (
                   <div key={item.label} className="space-y-1">
