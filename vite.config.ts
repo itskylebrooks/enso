@@ -8,6 +8,16 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  // Dev-only prebundling to speed up cold starts. Does not affect prod output.
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'motion'],
+    esbuildOptions: {
+      // Modern target for dev prebundle
+      target: 'es2020',
+      // Drop license/banner comments in dev prebundle to reduce size
+      legalComments: 'none',
+    },
+  },
   build: {
     chunkSizeWarningLimit: 1500,
     rollupOptions: {
