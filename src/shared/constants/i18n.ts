@@ -290,7 +290,7 @@ export const messages = {
       hints: {
         stepHelper: 'Each line becomes a JSON array entry.',
         summaryHint: 'Double-check the details before sending.',
-        successTitle: '🌸 Thank you! Your contribution will be reviewed and added soon.',
+  successTitle: 'Thank you! Your contribution will be reviewed and added soon.',
         successBody: 'You’ve helped keep Enso alive and evolving.',
       },
       buttons: {
@@ -846,7 +846,7 @@ export const messages = {
       hints: {
         stepHelper: 'Jede Zeile wird zu einem JSON-Arrayeintrag.',
         summaryHint: 'Prüfe alles noch einmal, bevor du sendest.',
-        successTitle: '🌸 Danke! Dein Beitrag wird geprüft und bald ergänzt.',
+  successTitle: 'Danke! Dein Beitrag wird geprüft und bald ergänzt.',
         successBody: 'Du hilfst dabei, Enso lebendig zu halten.',
       },
       buttons: {
