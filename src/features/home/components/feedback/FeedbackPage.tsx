@@ -2872,6 +2872,14 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
                 >
                   {t.buttons.downloadJson}
                 </button>
+                <button
+                  type="button"
+                  onClick={() => clearCurrentForm(selectedCard ?? undefined)}
+                  disabled={!selectedCard}
+                  className="rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm disabled:opacity-60 disabled:cursor-not-allowed"
+                >
+                  {t.buttons.clearForm}
+                </button>
                 {/* Edit again button removed per request */}
                 {submissionState === 'success' && (
                   <button
