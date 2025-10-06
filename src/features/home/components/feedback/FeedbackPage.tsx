@@ -106,6 +106,7 @@ type VariationForm = {
   creditName: string;
   trainerCredit: string;
   markAsBase: boolean;
+  consent: boolean;
 };
 
 type VariationDirection = Exclude<VariationForm['direction'], ''>;
@@ -676,6 +677,7 @@ const buildFeedbackPayload = (
       creditName: form.creditName,
       trainerCredit: form.trainerCredit,
       markAsBase: form.markAsBase,
+      consent: form.consent,
     } as const;
 
     return {
@@ -826,6 +828,7 @@ const defaultVariationForm = (): VariationForm => ({
   creditName: '',
   trainerCredit: '',
   markAsBase: false,
+  consent: false,
 });
 
 const defaultAppFeedbackForm = (): AppFeedbackForm => ({
@@ -961,6 +964,7 @@ const loadDraft = (): FeedbackDraft => {
         creditName: ensureString(addVariation.creditName ?? addVariation.credit ?? ''),
         trainerCredit: ensureString(addVariation.trainerCredit ?? ''),
         markAsBase: Boolean(addVariation.markAsBase),
+        consent: Boolean(addVariation.consent),
       },
       appFeedback: {
         ...defaultAppFeedbackForm(),
@@ -1712,6 +1716,10 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
           label: t.summary.labels.markAsBase,
           value: form.markAsBase ? t.summary.boolean.yes : t.summary.boolean.no,
         },
+        {
+          label: t.summary.labels.consent,
+          value: form.consent ? t.summary.boolean.yes : t.summary.boolean.no,
+        },
       ];
     }
 
@@ -2088,6 +2096,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
       creditName,
       trainerCredit,
       markAsBase,
+      consent,
     } = draft.addVariation;
 
     const directionOptions: SelectOption<string>[] = [
@@ -2133,7 +2142,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
           <div className="space-y-2">
             {items.map((value, index) => (
               <div key={`${field}-${index}`} className="flex items-center gap-3">
-                <span className="text-sm text-subtle w-6 text-center">{index + 1}.</span>
+                <span className="w-6 text-center text-sm text-subtle">{index + 1}.</span>
                 <input
                   value={value}
                   onChange={(event) => handleListItemChange(field, index, event.target.value)}
@@ -2147,6 +2156,8 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
       );
     };
 
+    const markAsBaseHelp = t.shared.help?.markAsBase;
+
     return (
       <motion.div
         key="variation"
@@ -2157,146 +2168,135 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
         transition={formTransition}
         className="space-y-8"
       >
-        <section className="space-y-3">
-          <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.variation.relatedTechniqueLabel}</label>
-          <Select
-            options={techniqueOptions}
-            value={relatedTechniqueId ?? ''}
-            onChange={(value) => updateVariation('relatedTechniqueId', value)}
-            searchable
-            placeholder={techniquePlaceholder}
-          />
-        </section>
-
-        <section className="grid gap-4 md:grid-cols-3">
+        <section className="space-y-4">
+          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.forms.variation.sections.details}</h2>
           <div className="space-y-2">
-            <label className="text-sm font-semibold text-[var(--color-text)]">{t.forms.variation.directionLabel}</label>
+            <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.variation.relatedTechniqueLabel}</label>
             <Select
-              options={directionOptions}
-              value={direction || 'none'}
-              onChange={handleDirectionChange}
+              options={techniqueOptions}
+              value={relatedTechniqueId ?? ''}
+              onChange={(value) => updateVariation('relatedTechniqueId', value)}
+              searchable
+              placeholder={techniquePlaceholder}
             />
           </div>
-          <div className="space-y-2">
-            <label className="text-sm font-semibold text-[var(--color-text)]">{t.forms.variation.stanceLabel}</label>
-            <Select
-              options={stanceOptions}
-              value={stance ?? 'none'}
-              onChange={handleStanceChange}
-            />
+          <div className="grid gap-4 md:grid-cols-3">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.variation.directionLabel}</label>
+              <Select options={directionOptions} value={direction || 'none'} onChange={handleDirectionChange} />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.variation.stanceLabel}</label>
+              <Select options={stanceOptions} value={stance ?? 'none'} onChange={handleStanceChange} />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.variation.levelLabel}</label>
+              <Select
+                options={levelOptions}
+                value={level ?? 'none'}
+                onChange={(value) => updateVariation('level', value === 'none' ? null : (value as Grade))}
+              />
+            </div>
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-semibold text-[var(--color-text)]">{t.forms.variation.levelLabel}</label>
-            <Select
-              options={levelOptions}
-              value={level ?? 'none'}
-              onChange={(value) => updateVariation('level', value === 'none' ? null : (value as Grade))}
+            <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.variation.trainerLabel}</label>
+            <input
+              type="text"
+              value={trainer}
+              onChange={(event) => updateVariation('trainer', event.target.value)}
+              placeholder={t.placeholders.variationTrainer}
+              className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus-halo focus:outline-none"
             />
           </div>
         </section>
 
         <section className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.variation.creditNameLabel}</label>
-              <input
-                type="text"
-                value={creditName}
-                onChange={(event) => updateVariation('creditName', event.target.value)}
-                placeholder={t.placeholders.contributorName}
-                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus-halo focus:outline-none"
-              />
+          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.forms.variation.sections.summary}</h2>
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.variation.summaryLabel}</label>
+            <textarea
+              rows={4}
+              value={summary}
+              onChange={(event) => updateVariation('summary', event.target.value)}
+              placeholder={t.placeholders.variationSummary}
+              className="w-full rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-3 text-sm focus-halo focus:outline-none"
+            />
+          </div>
+          <div className="space-y-3">
+            <h3 className="text-sm font-medium text-[var(--color-text)]">{t.forms.variation.categoryTagsLabel}</h3>
+            <div className="flex flex-wrap gap-2">
+              {categoryTagOrder.map((tag) => {
+                const isActive = categoryTags.includes(tag);
+                return (
+                  <label key={tag} className="cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={isActive}
+                      onChange={() => toggleTag(tag)}
+                      className="sr-only"
+                    />
+                    <Chip
+                      label={categoryTagLabels[tag]}
+                      active={isActive}
+                      onClick={() => toggleTag(tag)}
+                      aria-pressed={isActive}
+                    />
+                  </label>
+                );
+              })}
             </div>
           </div>
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.variation.trainerCreditLabel}</label>
-              <input
-                type="text"
-                value={trainerCredit}
-                onChange={(event) => updateVariation('trainerCredit', event.target.value)}
-                placeholder={t.placeholders.variationTrainerCredit}
-                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus-halo focus:outline-none"
-              />
-            </div>
-            <label className="flex items-center gap-3 text-sm text-[var(--color-text)]">
-              <input
-                type="checkbox"
-                checked={markAsBase}
-                onChange={(event) => updateVariation('markAsBase', event.target.checked)}
-                className="h-4 w-4 rounded border surface-border"
-              />
-              {t.forms.variation.markAsBaseLabel}
-            </label>
+        </section>
+
+        <section className="space-y-4">
+          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.forms.variation.sections.steps}</h2>
+          <div className="rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-4">
+            <StepBuilder
+              label={t.forms.variation.stepsLabel}
+              steps={steps}
+              onChange={(nextSteps) => updateVariation('steps', nextSteps)}
+              placeholderForIndex={stepPlaceholder}
+              helperText={t.hints.stepHelper}
+              addButtonLabel={t.buttons.addStep}
+              removeButtonAria={removeStepAria}
+            />
           </div>
         </section>
 
-        <section className="space-y-2">
-          <label className="text-sm font-semibold text-[var(--color-text)]">{t.forms.variation.summaryLabel}</label>
-          <textarea
-            rows={4}
-            value={summary}
-            onChange={(event) => updateVariation('summary', event.target.value)}
-            placeholder={t.placeholders.variationSummary}
-            className="w-full rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-3 text-sm focus-halo focus:outline-none"
-          />
-        </section>
-
-        <section className="space-y-3">
-          <h3 className="text-sm font-semibold text-[var(--color-text)]">{t.forms.variation.categoryTagsLabel}</h3>
-          <div className="flex flex-wrap gap-2">
-            {categoryTagOrder.map((tag) => {
-              const isActive = categoryTags.includes(tag);
-              return (
-                <label key={tag} className="cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={isActive}
-                    onChange={() => toggleTag(tag)}
-                    className="sr-only"
-                  />
-                  <Chip
-                    label={categoryTagLabels[tag]}
-                    active={isActive}
-                    onClick={() => toggleTag(tag)}
-                    aria-pressed={isActive}
-                  />
-                </label>
-              );
-            })}
+        <section className="space-y-4">
+          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.forms.variation.sections.insights}</h2>
+          <div className="grid gap-6 md:grid-cols-2">
+            {renderBulletList('keyPoints', t.forms.variation.keyPointsLabel, t.placeholders.variationKeyPoint)}
+            {renderBulletList('commonMistakes', t.forms.variation.commonMistakesLabel, t.placeholders.variationMistake)}
           </div>
         </section>
 
-        <section className="rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-4">
-          <StepBuilder
-            label={t.forms.variation.stepsLabel}
-            steps={steps}
-            onChange={(nextSteps) => updateVariation('steps', nextSteps)}
-            placeholderForIndex={stepPlaceholder}
-            helperText={t.hints.stepHelper}
-            addButtonLabel={t.buttons.addStep}
-            removeButtonAria={removeStepAria}
-          />
+        <section className="space-y-4">
+          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.forms.variation.sections.uke}</h2>
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.variation.ukeLabel}</label>
+            <textarea
+              rows={3}
+              value={ukeInstructions}
+              onChange={(event) => updateVariation('ukeInstructions', event.target.value)}
+              placeholder={t.placeholders.variationUke}
+              className="w-full rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-3 text-sm focus-halo focus:outline-none"
+            />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.variation.contextLabel}</label>
+            <textarea
+              rows={3}
+              value={context}
+              onChange={(event) => updateVariation('context', event.target.value)}
+              placeholder={t.placeholders.variationContext}
+              className="w-full rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-3 text-sm focus-halo focus:outline-none"
+            />
+          </div>
         </section>
 
-        <section className="grid gap-6 md:grid-cols-2">
-          {renderBulletList('keyPoints', t.forms.variation.keyPointsLabel, t.placeholders.variationKeyPoint)}
-          {renderBulletList('commonMistakes', t.forms.variation.commonMistakesLabel, t.placeholders.variationMistake)}
-        </section>
-
-        <section className="space-y-2">
-          <label className="text-sm font-semibold text-[var(--color-text)]">{t.forms.variation.ukeLabel}</label>
-          <textarea
-            rows={3}
-            value={ukeInstructions}
-            onChange={(event) => updateVariation('ukeInstructions', event.target.value)}
-            placeholder={t.placeholders.variationUke}
-            className="w-full rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-3 text-sm focus-halo focus:outline-none"
-          />
-        </section>
-
-        <section className="space-y-3">
-          <h3 className="text-sm font-semibold text-[var(--color-text)]">{t.forms.variation.mediaLabel}</h3>
+        <section className="space-y-4">
+          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.shared.sections.media}</h2>
           <MediaManager
             media={media}
             onChange={(items) => updateVariation('media', items)}
@@ -2308,18 +2308,51 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
           />
         </section>
 
-        <section className="space-y-2">
-          <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.variation.contextLabel}</label>
-          <textarea
-            rows={3}
-            value={context}
-            onChange={(event) => updateVariation('context', event.target.value)}
-            placeholder={t.placeholders.variationContext}
-            className="w-full rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-3 text-sm focus-halo focus:outline-none"
-          />
+        <section className="space-y-4">
+          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.shared.sections.contributor}</h2>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-[var(--color-text)]">{t.shared.labels.contributorName}</label>
+              <input
+                type="text"
+                value={creditName}
+                onChange={(event) => updateVariation('creditName', event.target.value)}
+                placeholder={t.placeholders.contributorName}
+                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus-halo focus:outline-none"
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-[var(--color-text)]">{t.shared.labels.trainerCredit}</label>
+              <input
+                type="text"
+                value={trainerCredit}
+                onChange={(event) => updateVariation('trainerCredit', event.target.value)}
+                placeholder={t.placeholders.variationTrainerCredit}
+                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus-halo focus:outline-none"
+              />
+            </div>
+          </div>
+          <label className="flex items-center gap-3 text-sm text-[var(--color-text)]">
+            <input
+              type="checkbox"
+              checked={markAsBase}
+              onChange={(event) => updateVariation('markAsBase', event.target.checked)}
+              className="h-4 w-4 rounded border surface-border"
+            />
+            {t.shared.labels.markAsBase}
+          </label>
+          {markAsBaseHelp && <p className="text-xs text-subtle">{markAsBaseHelp}</p>}
+          <label className="flex items-center gap-3 text-sm text-[var(--color-text)]">
+            <input
+              type="checkbox"
+              checked={consent}
+              onChange={(event) => updateVariation('consent', event.target.checked)}
+              className="h-4 w-4 rounded border surface-border"
+            />
+            {t.shared.labels.consent}
+          </label>
+          <p className="text-xs text-subtle">{t.globalConsent}</p>
         </section>
-
-        <p className="text-xs text-subtle">{t.globalConsent}</p>
       </motion.div>
     );
   };
@@ -2573,7 +2606,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
           <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.newTechnique.sections.contributor}</h2>
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-[var(--color-text)]">{t.newTechnique.fields.contributorNameSingle}</label>
+              <label className="text-sm font-medium text-[var(--color-text)]">{t.shared.labels.contributorName}</label>
               <input
                 value={form.creditName}
                 onChange={(event) => updateNewTechnique('creditName', event.target.value)}
@@ -2582,7 +2615,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
               />
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium text-[var(--color-text)]">{t.newTechnique.fields.lineageSingle}</label>
+              <label className="text-sm font-medium text-[var(--color-text)]">{t.shared.labels.trainerCredit}</label>
               <input
                 value={form.trainerCredit}
                 onChange={(event) => updateNewTechnique('trainerCredit', event.target.value)}
@@ -2598,8 +2631,9 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
               onChange={(event) => updateNewTechnique('markAsBase', event.target.checked)}
               className="h-4 w-4 rounded border surface-border"
             />
-            {t.newTechnique.lineageToggle}
+            {t.shared.labels.markAsBase}
           </label>
+          {t.shared.help?.markAsBase && <p className="text-xs text-subtle">{t.shared.help.markAsBase}</p>}
           <div className="space-y-1">
             <label className="flex items-center gap-3 text-sm text-[var(--color-text)]">
               <input

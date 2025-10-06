@@ -194,6 +194,21 @@ export const messages = {
         chooseType: 'Choose a feedback type to reveal the tailored form.',
       },
       globalConsent: 'By submitting, you agree your contribution may appear in the Enso database.',
+      shared: {
+        sections: {
+          media: 'Reference media (optional)',
+          contributor: 'Contributor & lineage',
+        },
+        labels: {
+          contributorName: 'Credit name (optional)',
+          trainerCredit: 'Trainer / dojo attribution (optional)',
+          markAsBase: 'Mark as base version',
+          consent: 'I agree to publish this contribution',
+        },
+        help: {
+          markAsBase: 'Uncheck if this contribution belongs to a specific trainer/dojo lineage.',
+        },
+      },
       improve: {
         sections: {
           steps: 'Steps',
@@ -216,6 +231,15 @@ export const messages = {
           creditLabel: 'Credit name (optional)',
         },
         variation: {
+          sections: {
+            details: 'Variation basics',
+            summary: 'Summary & tags',
+            steps: 'Detailed steps',
+            uke: 'Uke guidance',
+            insights: 'Key points & mistakes',
+            media: 'Reference media (optional)',
+            contributor: 'Contributor & lineage',
+          },
           relatedTechniqueLabel: 'Related technique (base form)',
           directionLabel: 'Direction',
           stanceLabel: 'Stance',
@@ -227,12 +251,8 @@ export const messages = {
           keyPointsLabel: 'Key points',
           commonMistakesLabel: 'Common mistakes',
           ukeLabel: 'Uke instructions',
-          mediaLabel: 'Media (optional)',
           mediaTitleLabel: 'Media title',
           contextLabel: 'Context or notes (optional)',
-          creditNameLabel: 'Credit name (optional)',
-          trainerCreditLabel: 'Trainer / dojo attribution (optional)',
-          markAsBaseLabel: 'Mark as base version',
           directionOptions: {
             irimi: 'Irimi',
             tenkan: 'Tenkan',
@@ -363,6 +383,7 @@ export const messages = {
           contributor: 'Contributor',
           trainerCredit: 'Trainer credit',
           markAsBase: 'Base version',
+          consent: 'Consent',
           duplicates: 'Possible duplicates',
         },
         counts: {
@@ -459,7 +480,6 @@ export const messages = {
           switch: 'Switch to “New version / variation”',
         },
         consentLabelUpdated: 'By submitting, you agree your contribution may appear in the Enso database.',
-        lineageToggle: 'Mark as base version',
         lineageHelp: 'Uncheck if this technique belongs to a specific trainer/dojo lineage.',
         
         errors: {
@@ -756,6 +776,21 @@ export const messages = {
       },
       globalConsent:
         'Mit dem Absenden stimmst du zu, dass dein Beitrag in der Enso-Datenbank erscheinen darf.',
+      shared: {
+        sections: {
+          media: 'Referenzmedien (optional)',
+          contributor: 'Beitrag & Linie',
+        },
+        labels: {
+          contributorName: 'Credit-Name (optional)',
+          trainerCredit: 'Trainer-/Dojo-Credit (optional)',
+          markAsBase: 'Als Grundform markieren',
+          consent: 'Ich stimme der Veröffentlichung dieses Beitrags zu',
+        },
+        help: {
+          markAsBase: 'Deaktivieren, wenn dieser Beitrag zu einer spezifischen Linie gehört.',
+        },
+      },
       improve: {
         sections: {
           steps: 'Schritte',
@@ -778,6 +813,15 @@ export const messages = {
           creditLabel: 'Name für die Nennung (optional)',
         },
         variation: {
+          sections: {
+            details: 'Varianten-Basics',
+            summary: 'Zusammenfassung & Tags',
+            steps: 'Schritte & Ablauf',
+            uke: 'Hinweise für Uke',
+            insights: 'Kernpunkte & Fehler',
+            media: 'Referenzmedien (optional)',
+            contributor: 'Beitrag & Linie',
+          },
           relatedTechniqueLabel: 'Zugehörige Technik (Grundform)',
           directionLabel: 'Richtung',
           stanceLabel: 'Hanmi',
@@ -789,12 +833,8 @@ export const messages = {
           keyPointsLabel: 'Kernpunkte',
           commonMistakesLabel: 'Häufige Fehler',
           ukeLabel: 'Hinweise für Uke',
-          mediaLabel: 'Medien (optional)',
           mediaTitleLabel: 'Medientitel',
           contextLabel: 'Kontext oder Notizen (optional)',
-          creditNameLabel: 'Credit-Name (optional)',
-          trainerCreditLabel: 'Trainer-/Dojo-Credit (optional)',
-          markAsBaseLabel: 'Als Grundform markieren',
           directionOptions: {
             irimi: 'Irimi',
             tenkan: 'Tenkan',
@@ -924,6 +964,7 @@ export const messages = {
           trainer: 'Trainer',
           trainerCredit: 'Trainer-Credit',
           markAsBase: 'Basisversion',
+          consent: 'Zustimmung',
           duplicates: 'Mögliche Dubletten',
         },
         counts: {
@@ -1020,7 +1061,6 @@ export const messages = {
           switch: 'Zu „Neue Variante / Version“ wechseln',
         },
         consentLabelUpdated: 'Mit dem Absenden stimmst du zu, dass dein Beitrag in der Enso-Datenbank erscheinen darf.',
-        lineageToggle: 'Als Grundform markieren',
         lineageHelp: 'Deaktiviere dies, wenn die Technik zu einer bestimmten Trainer-/Dojo-Linie gehört.',
         
         errors: {
