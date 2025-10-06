@@ -87,6 +87,7 @@ type ImproveTechniqueForm = {
   media: MediaEntry[];
   source: string;
   credit: string;
+  consent: boolean;
 };
 
 type VariationForm = {
@@ -809,6 +810,7 @@ const defaultImproveTechniqueForm = (): ImproveTechniqueForm => ({
   media: [],
   source: '',
   credit: '',
+  consent: false,
 });
 
 const defaultVariationForm = (): VariationForm => ({
@@ -933,6 +935,7 @@ const loadDraft = (): FeedbackDraft => {
           type: item.type,
           embedUrl: item.embedUrl,
         })),
+        consent: Boolean(improveTechnique.consent),
       },
       addVariation: {
         ...defaultVariationForm(),
@@ -1547,7 +1550,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
       if (!hasTextContent) return false;
     }
 
-    return true;
+    return draft.improveTechnique.consent;
   }, [draft.improveTechnique]);
 
   const isVariationReady = useMemo(() => {
@@ -1561,6 +1564,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
       keyPoints,
       commonMistakes,
       ukeInstructions,
+      consent,
     } = draft.addVariation;
     const hasSteps = steps.some((step) => hasContent(step.text));
     const keyPointsComplete = keyPoints.every((item) => hasContent(item));
@@ -1574,7 +1578,8 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
       hasSteps &&
       keyPointsComplete &&
       mistakesComplete &&
-      hasContent(ukeInstructions)
+      hasContent(ukeInstructions) &&
+      consent
     );
   }, [draft.addVariation]);
 
@@ -1678,6 +1683,10 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
         },
         { label: t.summary.labels.source, value: hasContent(source) ? source : '—' },
         { label: t.summary.labels.credit, value: hasContent(credit) ? credit : '—' },
+        {
+          label: t.summary.labels.consent,
+          value: draft.improveTechnique.consent ? t.summary.boolean.yes : t.summary.boolean.no,
+        },
       ];
     }
 
@@ -1755,6 +1764,10 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
           value: form.markAsBase ? t.summary.boolean.yes : t.summary.boolean.no,
         },
         {
+          label: t.summary.labels.consent,
+          value: form.consent ? t.summary.boolean.yes : t.summary.boolean.no,
+        },
+        {
           label: t.summary.labels.duplicates,
           value: duplicateLabel,
         },
@@ -1811,6 +1824,30 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
     t.newTechnique,
     t.summary,
   ]);
+
+  const consentChecked =
+    selectedCard === 'improveTechnique'
+      ? draft.improveTechnique.consent
+      : selectedCard === 'addVariation'
+      ? draft.addVariation.consent
+      : selectedCard === 'newTechnique'
+      ? draft.newTechnique.consent
+      : null;
+
+  const consentWarningText =
+    selectedCard === 'newTechnique'
+      ? t.newTechnique.warnings.consentMissing
+      : t.shared.validation?.consentMissing ?? t.newTechnique.warnings.consentMissing;
+
+  const handleConsentChange = (checked: boolean) => {
+    if (selectedCard === 'improveTechnique') {
+      updateImprove('consent', checked);
+    } else if (selectedCard === 'addVariation') {
+      updateVariation('consent', checked);
+    } else if (selectedCard === 'newTechnique') {
+      updateNewTechnique('consent', checked);
+    }
+  };
 
   const handleSubmit = async () => {
     if (!canSubmit) return;
@@ -2096,7 +2133,6 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
       creditName,
       trainerCredit,
       markAsBase,
-      consent,
     } = draft.addVariation;
 
     const directionOptions: SelectOption<string>[] = [
@@ -2342,16 +2378,6 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
             {t.shared.labels.markAsBase}
           </label>
           {markAsBaseHelp && <p className="text-xs text-subtle">{markAsBaseHelp}</p>}
-          <label className="flex items-center gap-3 text-sm text-[var(--color-text)]">
-            <input
-              type="checkbox"
-              checked={consent}
-              onChange={(event) => updateVariation('consent', event.target.checked)}
-              className="h-4 w-4 rounded border surface-border"
-            />
-            {t.shared.labels.consent}
-          </label>
-          <p className="text-xs text-subtle">{t.globalConsent}</p>
         </section>
       </motion.div>
     );
@@ -2634,25 +2660,6 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
             {t.shared.labels.markAsBase}
           </label>
           {t.shared.help?.markAsBase && <p className="text-xs text-subtle">{t.shared.help.markAsBase}</p>}
-          <div className="space-y-1">
-            <label className="flex items-center gap-3 text-sm text-[var(--color-text)]">
-              <input
-                type="checkbox"
-                checked={form.consent}
-                onChange={(event) => updateNewTechnique('consent', event.target.checked)}
-                className="h-4 w-4 rounded border surface-border"
-              />
-              {t.newTechnique.consentLabelUpdated}
-            </label>
-            <p
-              className={classNames(
-                'text-xs transition-soft',
-                form.consent ? 'text-subtle' : 'text-[var(--color-error, #b91c1c)]',
-              )}
-            >
-              {t.newTechnique.warnings.consentMissing}
-            </p>
-          </div>
         </section>
 
         <section className="space-y-2">
@@ -2941,7 +2948,6 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
                   className="rounded-xl border border-transparent bg-[var(--color-surface)] px-4 py-3 text-sm shadow-sm space-y-1"
                 >
                   <p className="font-medium">{t.hints.successTitle}</p>
-                  <p className="text-subtle">{t.globalConsent}</p>
                   {submitResult?.requestId && (
                     <p className="text-xs text-subtle">{t.newTechnique.requestIdLabel} {submitResult.requestId}</p>
                   )}
@@ -2960,6 +2966,28 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
                 <p className="text-xs text-subtle">{t.newTechnique.sending}</p>
               ) : (
                 <p className="text-xs text-subtle">{t.hints.summaryHint}</p>
+              )}
+
+              {consentChecked !== null && (
+                <div className="space-y-1">
+                  <label className="flex items-center gap-3 text-sm text-[var(--color-text)]">
+                    <input
+                      type="checkbox"
+                      checked={consentChecked}
+                      onChange={(event) => handleConsentChange(event.target.checked)}
+                      className="h-4 w-4 rounded border surface-border"
+                    />
+                    {t.globalConsent}
+                  </label>
+                  <p
+                    className={classNames(
+                      'text-xs transition-soft',
+                      consentChecked ? 'text-subtle' : 'text-[var(--color-error, #b91c1c)]',
+                    )}
+                  >
+                    {consentWarningText}
+                  </p>
+                </div>
               )}
 
               <div className="flex flex-wrap gap-3">

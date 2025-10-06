@@ -203,10 +203,12 @@ export const messages = {
           contributorName: 'Credit name (optional)',
           trainerCredit: 'Trainer / dojo attribution (optional)',
           markAsBase: 'Mark as base version',
-          consent: 'I agree to publish this contribution',
         },
         help: {
           markAsBase: 'Uncheck if this contribution belongs to a specific trainer/dojo lineage.',
+        },
+        validation: {
+          consentMissing: 'Please confirm consent before submitting.',
         },
       },
       improve: {
@@ -785,10 +787,12 @@ export const messages = {
           contributorName: 'Credit-Name (optional)',
           trainerCredit: 'Trainer-/Dojo-Credit (optional)',
           markAsBase: 'Als Grundform markieren',
-          consent: 'Ich stimme der Veröffentlichung dieses Beitrags zu',
         },
         help: {
           markAsBase: 'Deaktivieren, wenn dieser Beitrag zu einer spezifischen Linie gehört.',
+        },
+        validation: {
+          consentMissing: 'Bitte bestätige vor dem Absenden deine Zustimmung.',
         },
       },
       improve: {
