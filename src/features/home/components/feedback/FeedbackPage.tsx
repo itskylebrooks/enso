@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useState, type ReactElement } from 're
 import { AnimatePresence, motion } from 'motion/react';
 import { Select, type SelectOption } from '@shared/components/ui/Select';
 import { Chip } from '@shared/components/ui/Chip';
-import { useMotionPreferences } from '@shared/components/ui/motion';
+import { useMotionPreferences, defaultEase } from '@shared/components/ui/motion';
 import { classNames } from '@shared/utils/classNames';
 import { gradeOrder } from '@shared/utils/grades';
 import { getLevelLabel, getOrderedTaxonomyValues, getTaxonomyLabel } from '@shared/i18n/taxonomy';
@@ -1017,6 +1017,7 @@ const StepBuilder = ({
   removeButtonAria,
 }: StepBuilderProps): ReactElement => {
   const { prefersReducedMotion } = useMotionPreferences();
+  const stepTransition = prefersReducedMotion ? { duration: 0.05 } : { duration: 0.18, ease: defaultEase };
 
   const handleStepChange = (id: string, text: string) => {
     onChange(steps.map((step) => (step.id === id ? { ...step, text } : step)));
@@ -1038,32 +1039,36 @@ const StepBuilder = ({
     <div className="space-y-3">
       {label && <h3 className="text-sm font-semibold text-[var(--color-text)]">{label}</h3>}
       <div className="space-y-3">
-        {steps.map((step, index) => (
-          <motion.div
-            key={step.id}
-            layout
-            initial={prefersReducedMotion ? false : { opacity: 0, y: 8 }}
-            animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
-            className="grid grid-cols-[auto,1fr,auto] items-center gap-2 rounded-xl border surface-border bg-[var(--color-surface)] px-3 py-2"
-          >
-            <span className="text-xs font-semibold text-subtle w-6 text-center">{index + 1}</span>
-            <input
-              type="text"
-              value={step.text}
-              onChange={(event) => handleStepChange(step.id, event.target.value)}
-              placeholder={placeholderForIndex(index)}
-              className="w-full bg-transparent text-sm focus:outline-none"
-            />
-            <button
-              type="button"
-              onClick={() => handleRemoveStep(step.id)}
-              aria-label={removeButtonAria(index)}
-              className="text-xs text-subtle hover:text-[var(--color-text)] transition-soft"
+        <AnimatePresence initial={false} mode="popLayout">
+          {steps.map((step, index) => (
+            <motion.div
+              key={step.id}
+              layout="position"
+              initial={prefersReducedMotion ? false : { opacity: 0, y: 8 }}
+              animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
+              exit={prefersReducedMotion ? undefined : { opacity: 0, y: -8 }}
+              transition={stepTransition}
+              className="grid grid-cols-[auto,1fr,auto] items-center gap-2 rounded-xl border surface-border bg-[var(--color-surface)] px-3 py-2 transition-soft focus-within:border-[var(--focus-halo-color)] focus-within:ring-2 focus-within:ring-[var(--focus-halo-color)] focus-within:ring-offset-0"
             >
-              ✕
-            </button>
-          </motion.div>
-        ))}
+              <span className="text-xs font-semibold text-subtle w-6 text-center">{index + 1}</span>
+              <input
+                type="text"
+                value={step.text}
+                onChange={(event) => handleStepChange(step.id, event.target.value)}
+                placeholder={placeholderForIndex(index)}
+                className="w-full bg-transparent text-sm focus:outline-none"
+              />
+              <button
+                type="button"
+                onClick={() => handleRemoveStep(step.id)}
+                aria-label={removeButtonAria(index)}
+                className="text-xs text-subtle hover:text-[var(--color-text)] transition-soft"
+              >
+                ✕
+              </button>
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </div>
       {helperText && <p className="text-xs text-subtle">{helperText}</p>}
       <button
@@ -1122,6 +1127,8 @@ const MediaManager = ({
   const [isAdding, setIsAdding] = useState(false);
   const [inputValue, setInputValue] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const { prefersReducedMotion } = useMotionPreferences();
+  const mediaTransition = prefersReducedMotion ? { duration: 0.05 } : { duration: 0.2, ease: defaultEase };
 
   const handleAdd = () => {
     const entry = detectMedia(inputValue);
@@ -1146,42 +1153,51 @@ const MediaManager = ({
   return (
     <div className="space-y-3">
       <div className="flex flex-col gap-3">
-        {media.map((item) => (
-          <div
-            key={item.id}
-            className="flex flex-col gap-2 rounded-xl border surface-border bg-[var(--color-surface)] px-3 py-2 text-sm"
-          >
-            <div className="flex items-start gap-3">
-              {getMediaIcon(item.type)}
-              <div className="min-w-0 flex-1">
-                <a
-                  className="block truncate underline-offset-4 hover:underline"
-                  href={normalizeUrl(item.url)}
-                  target="_blank"
-                  rel="noreferrer noopener"
+        <AnimatePresence initial={false} mode="popLayout">
+          {media.map((item) => (
+            <motion.div
+              key={item.id}
+              layout="position"
+              initial={prefersReducedMotion ? false : { opacity: 0, y: -6 }}
+              animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
+              exit={prefersReducedMotion ? undefined : { opacity: 0, y: -6 }}
+              transition={mediaTransition}
+              className="flex flex-col gap-2 rounded-xl border surface-border bg-[var(--color-surface)] px-3 py-2 text-sm transition-soft"
+            >
+              <div className="flex items-start gap-3">
+                {getMediaIcon(item.type)}
+                <div className="min-w-0 flex-1">
+                  <a
+                    className="block truncate underline-offset-4 hover:underline"
+                    href={normalizeUrl(item.url)}
+                    target="_blank"
+                    rel="noreferrer noopener"
+                  >
+                    {item.url}
+                  </a>
+                  {/* Title editing removed per design; media entries keep optional title metadata but it's not editable in the form */}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => handleRemove(item.id)}
+                  className="ml-auto text-xs text-subtle hover:text-[var(--color-text)] transition-soft"
                 >
-                  {item.url}
-                </a>
-                {/* Title editing removed per design; media entries keep optional title metadata but it's not editable in the form */}
+                  {removeLabel}
+                </button>
               </div>
-              <button
-                type="button"
-                onClick={() => handleRemove(item.id)}
-                className="ml-auto text-xs text-subtle hover:text-[var(--color-text)]"
-              >
-                {removeLabel}
-              </button>
-            </div>
-          </div>
-        ))}
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </div>
 
-      <AnimatePresence>
+      <AnimatePresence initial={false} mode="popLayout">
         {isAdding ? (
           <motion.div
-            initial={{ opacity: 0, y: -6 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -6 }}
+            layout="position"
+            initial={prefersReducedMotion ? false : { opacity: 0, y: -6 }}
+            animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
+            exit={prefersReducedMotion ? undefined : { opacity: 0, y: -6 }}
+            transition={mediaTransition}
             className="flex flex-wrap gap-2"
           >
             <input
@@ -1262,6 +1278,9 @@ type FeedbackPageProps = {
 
 export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, onConsumeInitialType }: FeedbackPageProps): ReactElement => {
   const t: FeedbackPageCopy = copy.feedbackPage;
+  const { prefersReducedMotion } = useMotionPreferences();
+  const formTransition = prefersReducedMotion ? { duration: 0.05 } : { duration: 0.24, ease: defaultEase };
+  const itemTransition = prefersReducedMotion ? { duration: 0.05 } : { duration: 0.18, ease: defaultEase };
   const [draft, setDraft] = useState<FeedbackDraft>(() => loadDraft());
   const [showJsonPreview, setShowJsonPreview] = useState(false);
   const [submissionState, setSubmissionState] = useState<'idle' | 'success' | 'error' | 'submitting'>('idle');
@@ -1904,10 +1923,11 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
     return (
       <motion.div
         key="improve"
-        layout
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -16 }}
+        layout="position"
+        initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
+        animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
+        exit={prefersReducedMotion ? undefined : { opacity: 0, y: -16 }}
+        transition={formTransition}
         className="space-y-6"
       >
         <section className="space-y-3">
@@ -1950,14 +1970,15 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
           </div>
         </section>
 
-        <AnimatePresence initial={false}>
+        <AnimatePresence initial={false} mode="popLayout">
           {sections.includes('steps') && (
             <motion.section
               key="steps"
-              layout
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -8 }}
+              layout="position"
+              initial={prefersReducedMotion ? false : { opacity: 0, y: 8 }}
+              animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
+              exit={prefersReducedMotion ? undefined : { opacity: 0, y: -8 }}
+              transition={itemTransition}
               className="rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-4"
             >
               <StepBuilder
@@ -1973,22 +1994,32 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
           )}
         </AnimatePresence>
 
-        {sections
-          .filter((section): section is ImproveTextSection => section !== 'steps')
-          .map((section) => (
-            <section key={section} className="space-y-3">
-              <label className="text-sm font-medium text-[var(--color-text)]">
-                {improveSectionLabels[section]}
-              </label>
-              <textarea
-                rows={4}
-                value={textBySection[section] ?? ''}
-                onChange={(event) => handleTextChange(section, event.target.value)}
-                placeholder={t.forms.improve.textPlaceholder}
-            className="w-full rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-3 text-sm focus-halo focus:outline-none"
-              />
-            </section>
-          ))}
+        <AnimatePresence initial={false} mode="popLayout">
+          {sections
+            .filter((section): section is ImproveTextSection => section !== 'steps')
+            .map((section) => (
+              <motion.section
+                key={section}
+                layout="position"
+                initial={prefersReducedMotion ? false : { opacity: 0, y: 8 }}
+                animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
+                exit={prefersReducedMotion ? undefined : { opacity: 0, y: -8 }}
+                transition={itemTransition}
+                className="space-y-3"
+              >
+                <label className="text-sm font-medium text-[var(--color-text)]">
+                  {improveSectionLabels[section]}
+                </label>
+                <textarea
+                  rows={4}
+                  value={textBySection[section] ?? ''}
+                  onChange={(event) => handleTextChange(section, event.target.value)}
+                  placeholder={t.forms.improve.textPlaceholder}
+                  className="w-full rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-3 text-sm focus-halo focus:outline-none"
+                />
+              </motion.section>
+            ))}
+        </AnimatePresence>
 
         <section className="space-y-3">
           <span className="text-sm font-semibold text-[var(--color-text)]">{t.forms.improve.mediaLabel}</span>
@@ -2109,10 +2140,11 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
     return (
       <motion.div
         key="variation"
-        layout
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -16 }}
+        layout="position"
+        initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
+        animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
+        exit={prefersReducedMotion ? undefined : { opacity: 0, y: -16 }}
+        transition={formTransition}
         className="space-y-8"
       >
         <section className="space-y-3">
@@ -2350,10 +2382,11 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
     return (
       <motion.div
         key="newTechnique"
-        layout
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -16 }}
+        layout="position"
+        initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
+        animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
+        exit={prefersReducedMotion ? undefined : { opacity: 0, y: -16 }}
+        transition={formTransition}
         className="space-y-8"
       >
         <section className="space-y-4">
@@ -2567,18 +2600,25 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
             />
             {t.newTechnique.lineageToggle}
           </label>
-          <label className="flex items-center gap-3 text-sm text-[var(--color-text)]">
-            <input
-              type="checkbox"
-              checked={form.consent}
-              onChange={(event) => updateNewTechnique('consent', event.target.checked)}
-              className="h-4 w-4 rounded border surface-border"
-            />
-            {t.newTechnique.consentLabelUpdated}
-          </label>
-          {!form.consent && (
-            <p className="text-xs text-[var(--color-error, #b91c1c)]">{t.newTechnique.warnings.consentMissing}</p>
-          )}
+          <div className="space-y-1">
+            <label className="flex items-center gap-3 text-sm text-[var(--color-text)]">
+              <input
+                type="checkbox"
+                checked={form.consent}
+                onChange={(event) => updateNewTechnique('consent', event.target.checked)}
+                className="h-4 w-4 rounded border surface-border"
+              />
+              {t.newTechnique.consentLabelUpdated}
+            </label>
+            <p
+              className={classNames(
+                'text-xs transition-soft',
+                form.consent ? 'text-subtle' : 'text-[var(--color-error, #b91c1c)]',
+              )}
+            >
+              {t.newTechnique.warnings.consentMissing}
+            </p>
+          </div>
         </section>
 
         <section className="space-y-2">
@@ -2619,10 +2659,11 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
     return (
       <motion.div
         key="app"
-        layout
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -16 }}
+        layout="position"
+        initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
+        animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
+        exit={prefersReducedMotion ? undefined : { opacity: 0, y: -16 }}
+        transition={formTransition}
         className="space-y-6"
       >
         <section className="space-y-3">
@@ -2656,10 +2697,11 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
     return (
       <motion.div
         key="bug"
-        layout
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -16 }}
+        layout="position"
+        initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
+        animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
+        exit={prefersReducedMotion ? undefined : { opacity: 0, y: -16 }}
+        transition={formTransition}
         className="space-y-6"
       >
         <section className="space-y-2">
@@ -2751,39 +2793,50 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
           <section className="space-y-4">
             <h2 className="text-xs uppercase tracking-[0.3em] text-subtle">{t.headings.type}</h2>
             <div className="grid gap-3 md:grid-cols-2">
-          {feedbackTypeOrder.map((value) => {
-            const content = cardContent[value];
-            const isActive = value === selectedCard;
-            return (
-              <motion.button
-                key={value}
-                type="button"
-                onClick={() => handleTypeChange(value)}
-                className={classNames(
-                  'text-left rounded-2xl border px-4 py-4 shadow-sm transition-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
-                  isActive ? 'border-[var(--color-text)] bg-[var(--color-surface)]' : 'surface-border bg-[var(--color-surface)] hover-border-adaptive',
-                )}
-              >
-                <div className="flex items-start gap-3">
-                  <span className="text-subtle" aria-hidden>
-                    {content.icon}
-                  </span>
-                  <div className="space-y-1">
-                    <p className="font-medium text-[var(--color-text)]">{content.title}</p>
-                    <p className="text-sm text-subtle">{content.description}</p>
-                  </div>
-                </div>
-              </motion.button>
-            );
-          })}
+              {feedbackTypeOrder.map((value) => {
+                const content = cardContent[value];
+                const isActive = value === selectedCard;
+                return (
+                  <motion.button
+                    key={value}
+                    type="button"
+                    layout="position"
+                    initial={false}
+                    animate={{
+                      backgroundColor: isActive ? 'var(--color-surface-hover)' : 'var(--color-surface)',
+                      borderColor: isActive ? 'var(--color-text)' : 'var(--color-border)',
+                    }}
+                    whileHover={prefersReducedMotion ? undefined : { backgroundColor: 'var(--color-surface-hover)' }}
+                    transition={itemTransition}
+                    onClick={() => handleTypeChange(value)}
+                    aria-pressed={isActive}
+                    className={classNames(
+                      'text-left rounded-2xl border surface surface-border px-4 py-4 transition-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+                      isActive ? 'shadow-md' : 'shadow-sm surface-hover',
+                    )}
+                  >
+                    <div className="flex items-start gap-3">
+                      <span className="text-subtle" aria-hidden>
+                        {content.icon}
+                      </span>
+                      <div className="space-y-1">
+                        <p className="font-medium text-[var(--color-text)]">{content.title}</p>
+                        <p className="text-sm text-subtle">{content.description}</p>
+                      </div>
+                    </div>
+                  </motion.button>
+                );
+              })}
             </div>
-            <AnimatePresence initial={false}>
+            <AnimatePresence initial={false} mode="popLayout">
               {selectedCard && (
                 <motion.div
                   key="selector-divider"
-                  initial={{ opacity: 0, y: -6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -6 }}
+                  layout="position"
+                  initial={prefersReducedMotion ? false : { opacity: 0, y: -6 }}
+                  animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
+                  exit={prefersReducedMotion ? undefined : { opacity: 0, y: -6 }}
+                  transition={itemTransition}
                   className="h-px w-full bg-gradient-to-r from-transparent via-surface-border to-transparent"
                 />
               )}
@@ -2792,15 +2845,17 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
 
           <section className="space-y-4">
             <h2 className="text-xs uppercase tracking-[0.3em] text-subtle">{t.headings.dynamic}</h2>
-            <AnimatePresence initial={false}>
+            <AnimatePresence initial={false} mode="wait">
               {selectedCard ? (
                 renderForm()
               ) : (
                 <motion.div
                   key="placeholder"
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
+                  layout="position"
+                  initial={prefersReducedMotion ? false : { opacity: 0, y: 8 }}
+                  animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
+                  exit={prefersReducedMotion ? undefined : { opacity: 0, y: -8 }}
+                  transition={itemTransition}
                   className="rounded-2xl border border-dashed surface-border bg-[var(--color-surface)] px-4 py-6 text-sm text-subtle"
                 >
                   {t.prompts.chooseType}
@@ -2826,8 +2881,9 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
               </dl>
               {submissionState === 'success' && submitResult?.ok ? (
                 <motion.div
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  initial={prefersReducedMotion ? false : { opacity: 0, y: 8 }}
+                  animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
+                  transition={itemTransition}
                   className="rounded-xl border border-transparent bg-[var(--color-surface)] px-4 py-3 text-sm shadow-sm space-y-1"
                 >
                   <p className="font-medium">{t.hints.successTitle}</p>
@@ -2838,8 +2894,9 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
                 </motion.div>
               ) : submissionState === 'error' ? (
                 <motion.div
-                  initial={{ opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  initial={prefersReducedMotion ? false : { opacity: 0, y: 8 }}
+                  animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
+                  transition={itemTransition}
                   className="rounded-xl border border-[var(--color-error, #b91c1c)] bg-[var(--color-surface)] px-4 py-3 text-xs text-[var(--color-error, #b91c1c)]"
                 >
                   {submitError || t.newTechnique.errors.generic}
