@@ -132,13 +132,15 @@ type BugReportForm = {
   reproduction: string;
 };
 
+type Entry = 'irimi' | 'tenkan' | 'omote' | 'ura';
+
 type NewTechniqueForm = {
   name: string;
   jpName: string;
   attack: string | null;
   category: string | null;
   weapon: string | null;
-  entries: Array<'irimi' | 'tenkan'>;
+  entries: Entry | '';
   hanmi: Hanmi | null;
   summary: string;
   levelHint: string;
@@ -238,15 +240,25 @@ const ensureStepList = (value: unknown): StepItem[] => {
   return createStepList();
 };
 
-const sanitizeEntries = (entries?: string[]): Array<'irimi' | 'tenkan'> => {
-  if (!Array.isArray(entries)) return [];
-  const allowed: Array<'irimi' | 'tenkan'> = [];
-  for (const entry of entries) {
-    if (entry === 'irimi' || entry === 'tenkan') {
-      if (!allowed.includes(entry)) allowed.push(entry);
+const sanitizeEntries = (entries?: unknown): Entry | '' => {
+  const allowedValues = ['irimi', 'tenkan', 'omote', 'ura'];
+  if (Array.isArray(entries) && entries.length > 0) {
+    for (const entry of entries) {
+      if (typeof entry === 'string' && allowedValues.includes(entry)) return entry as Entry;
+    }
+    return '';
+  }
+  if (typeof entries === 'string' && allowedValues.includes(entries)) return entries as Entry;
+  if (entries && typeof entries === 'object') {
+    const localized = entries as { en?: unknown; de?: unknown };
+    if (Array.isArray(localized.en) && localized.en.length > 0) {
+      for (const e of localized.en) if (typeof e === 'string' && allowedValues.includes(e)) return e as Entry;
+    }
+    if (Array.isArray(localized.de) && localized.de.length > 0) {
+      for (const e of localized.de) if (typeof e === 'string' && allowedValues.includes(e)) return e as Entry;
     }
   }
-  return allowed;
+  return '';
 };
 
 const sanitizeHanmi = (value: unknown): Hanmi | null =>
@@ -266,11 +278,11 @@ const slugify = (value: string): string =>
 const buildNewTechniqueSlug = (
   attack: string | null,
   name: string,
-  entries: Array<'irimi' | 'tenkan'>,
+  entries: Entry | '',
 ): string => {
   const attackSegment = attack ? slugify(attack) : '';
   const nameSegment = name.trim() ? slugify(name) : '';
-  const entriesSegment = entries.length > 0 ? entries.join('-') : '';
+  const entriesSegment = entries ? String(entries) : '';
   return [attackSegment, nameSegment, entriesSegment].filter(Boolean).join('-');
 };
 
@@ -416,7 +428,7 @@ const buildFeedbackPayload = (
     const detailsParts: string[] = [];
     detailsParts.push(`### Summary\n${form.summary || '-'}`);
     detailsParts.push(
-      `\n### Taxonomy\n- Attack: ${form.attack ?? '—'}\n- Category: ${form.category ?? '—'}\n- Weapon: ${form.weapon ?? '—'}\n- Entries: ${form.entries.length ? form.entries.join(', ') : '—'}\n- Hanmi: ${form.hanmi ?? '—'}\n- Level hint: ${form.levelHint || '—'}`,
+      `\n### Taxonomy\n- Attack: ${form.attack ?? '—'}\n- Category: ${form.category ?? '—'}\n- Weapon: ${form.weapon ?? '—'}\n- Entries: ${form.entries || '—'}\n- Hanmi: ${form.hanmi ?? '—'}\n- Level hint: ${form.levelHint || '—'}`,
     );
     detailsParts.push(`\n### Steps\n${stepsMd}`);
     detailsParts.push(`\n### Uke guidance\n**Role:** ${form.ukeRole || '-'}\n${listMd(form.ukeNotes)}`);
@@ -470,7 +482,7 @@ const buildFeedbackPayload = (
         attack: form.attack,
         category: form.category,
         weapon: form.weapon,
-        entries: form.entries,
+    entries: form.entries ? [form.entries] : [],
         hanmi: form.hanmi,
       },
       media: form.media,
@@ -660,7 +672,7 @@ const defaultNewTechniqueForm = (): NewTechniqueForm => ({
   attack: null,
   category: null,
   weapon: null,
-  entries: [],
+  entries: '',
   hanmi: null,
   summary: '',
   levelHint: '',
@@ -1465,7 +1477,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
   const isNewTechniqueReady = (() => {
     const form = draft.newTechnique;
     const taxonomyComplete = hasContent(form.attack) && hasContent(form.category) && hasContent(form.weapon);
-    const entriesComplete = form.entries.length > 0;
+  const entriesComplete = Boolean(form.entries);
     const hanmiComplete = Boolean(form.hanmi);
     const stepsComplete = form.steps.some((step) => hasContent(step.text));
     const ukeListComplete = form.ukeNotes.every((item) => hasContent(item));
@@ -1593,8 +1605,8 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
 
     if (selectedCard === 'newTechnique') {
       const form = draft.newTechnique;
-      const entriesLabel = form.entries.length
-        ? form.entries.map((entry) => t.newTechnique.entryLabels[entry]).join(', ')
+      const entriesLabel = form.entries
+        ? (t.newTechnique.entryLabels as any)[form.entries] ?? String(form.entries)
         : t.summary.notSpecified;
       const hanmiLabel = form.hanmi ? t.newTechnique.hanmiOptions[form.hanmi] : t.summary.notSpecified;
       const attackLabel = form.attack ? getTaxonomyLabel(locale, 'attack', form.attack) : t.summary.notSpecified;
@@ -2274,16 +2286,13 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
       { value: 'gyaku-hanmi', label: t.newTechnique.hanmiOptions['gyaku-hanmi'] },
     ];
 
-    const entryOptions: Array<'irimi' | 'tenkan'> = ['irimi', 'tenkan'];
-
-    const handleEntryToggle = (entry: 'irimi' | 'tenkan') => {
-      setNewTechnique((current) => {
-        const entries = current.entries.includes(entry)
-          ? current.entries.filter((value) => value !== entry)
-          : [...current.entries, entry];
-        return { ...current, entries };
-      });
-    };
+    const entrySelectOptions: SelectOption<string>[] = [
+        { value: '', label: t.options.notSpecified },
+        { value: 'irimi', label: t.newTechnique.entryLabels.irimi },
+        { value: 'tenkan', label: t.newTechnique.entryLabels.tenkan },
+        { value: 'omote', label: 'Omote' },
+        { value: 'ura', label: 'Ura' },
+      ];
 
     const handleListItemChange = (field: 'ukeNotes' | 'keyPoints' | 'commonMistakes', index: number, value: string) => {
       const next = [...form[field]];
@@ -2399,22 +2408,11 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium text-[var(--color-text)]">{t.newTechnique.fields.entries}</label>
-              <div className="flex flex-wrap gap-3">
-                {entryOptions.map((entry) => {
-                  const isActive = form.entries.includes(entry);
-                  return (
-                    <label key={entry} className="inline-flex items-center gap-2 text-sm text-[var(--color-text)]">
-                      <input
-                        type="checkbox"
-                        checked={isActive}
-                        onChange={() => handleEntryToggle(entry)}
-                        className="h-4 w-4 rounded border surface-border"
-                      />
-                      {t.newTechnique.entryLabels[entry]}
-                    </label>
-                  );
-                })}
-              </div>
+              <Select
+                options={entrySelectOptions}
+                value={form.entries ?? ''}
+                onChange={(value) => updateNewTechnique('entries', (value as Entry) || '')}
+              />
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium text-[var(--color-text)]">{t.newTechnique.fields.levelHint}</label>
