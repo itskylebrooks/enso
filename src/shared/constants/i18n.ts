@@ -156,7 +156,7 @@ export const messages = {
     openAriaPrefix: 'Open',
     // Feedback
     feedback: 'Feedback',
-    feedbackTitle: 'Feedback & Contributions',
+    feedbackTitle: 'Feedback & Contributions (Beta)',
     feedbackDescription: 'Help Enso grow by improving what’s here or adding your own insight. Whether it’s a small correction or a full variation — your Aikidō knowledge matters.',
     feedbackAddTechniqueCta: 'Contribute technique',
     feedbackPage: {
@@ -711,7 +711,7 @@ export const messages = {
     openAriaPrefix: 'Öffne',
     // Feedback
     feedback: 'Feedback',
-    feedbackTitle: 'Feedback & Beiträge',
+    feedbackTitle: 'Feedback &  Beiträge (Beta)',
     feedbackDescription: 'Hilf Enso zu wachsen, indem du bestehende Inhalte verbesserst oder deine Perspektive einbringst. Ob kleine Korrektur oder komplette Variante – dein Aikidō-Wissen zählt.',
     feedbackAddTechniqueCta: 'Technik beitragen',
     feedbackPage: {
