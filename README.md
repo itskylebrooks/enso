@@ -4,11 +4,7 @@
 
 > “Your personal Aikidō library and study companion.”
 
----
-
 #> **Why this shape?** It scales to many trainers and weapon contexts without duplicating whole techniques, and it keeps steps as concise cues rather than long essays.
-
----
 
 ## Adding New Techniques
 
@@ -305,13 +301,9 @@ This will check:
 - **Trainer IDs**: `kebab-case` (e.g., `max-mustermann`, `alfred-haase`)
 - **Dojo IDs**: `kebab-case` or abbreviation (e.g., `bsv`, `example-dojo`)
 
----
-
 ## Status
 
 **v0.9.0 (Beta)** — Core experience is stable and usable. The Feedback page now ships with full in-app submission flows. Content currently focuses on a curated set of techniques to demonstrate depth (variations, versions) rather than breadth.
-
----
 
 ## Highlights
 
@@ -327,8 +319,6 @@ This will check:
 - **Theme** — Light/Dark mode.
 - **Privacy** — Local-first storage; export/import available for bookmarks/collections.
 
----
-
 ## Roadmap (next)
 
 - **1.0**
@@ -340,8 +330,6 @@ This will check:
   - Optional PWA/offline.
   - Optional trainer pages and contribution flow.
 
----
-
 ## Tech Stack
 
 - **React + TypeScript + Vite**
@@ -352,8 +340,6 @@ This will check:
 - Simple **i18n dictionaries** (no heavy framework)
 
 > Fonts: **IBM Plex Sans** (SIL Open Font License 1.1).
-
----
 
 ## Getting Started
 
@@ -403,8 +389,6 @@ GITHUB_REPO=enso-feedback # Repository to receive feedback issues (accepts "owne
 ```
 
 Mirror the same variables in your Vercel project (Production / Preview / Development) before deploying the API route.
-
----
 
 ## Project Structure (high level)
 
@@ -496,8 +480,6 @@ src/
 
 **Path aliases** (`@features/*`, `@shared/*`, `@generated/*`, `@content/*`) are configured in `tsconfig.app.json` and `vite.config.ts` for cleaner imports.
 
----
-
 ## Data Model (techniques) — v2 (overview)
 
 Each technique contains core metadata, a catalog of available **versions** (trainers/dojo), and **variants** (content for a specific combination of direction/weapon/hanmi/version).
@@ -552,8 +534,6 @@ type Technique = {
 
 > **Why this shape?** It scales to many trainers and weapon contexts without duplicating whole techniques, and it keeps steps as concise cues rather than long essays.
 
----
-
 ## UX Conventions
 
 - **Toolbar** over technique content with four selectors:
@@ -565,8 +545,6 @@ type Technique = {
 - **Empty combination** → gentle “no content yet” message (notes/media may still show).
 - **Search** highlights matches and groups by entity (Glossary / Techniques / Collections).
 - **Accessibility**: keyboard-navigable controls, visible focus states, readable contrast.
-
----
 
 ## Content & Legal
 
@@ -581,15 +559,11 @@ type Technique = {
 - **Hinweis**: *Alle Fehler liegen bei mir; Trainer:innen haben die Inhalte noch nicht offiziell freigegeben.*  
 - **Prüfungstabellen**: Neu gestaltet, keine Weiterveröffentlichung von fremden PDFs/Bildern.  
 
----
-
 ## Contributing
 
 Right now we’re prioritizing stability and content quality.  
 - **Bugs / suggestions**: Settings → Feedback (in-app forms submit via `/api/feedback` + optional GitHub issues).  
 - Pull requests are welcome once v1.0 lands and the content model is frozen.
-
----
 
 ## License
 
