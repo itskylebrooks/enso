@@ -405,7 +405,7 @@ export const messages = {
           steps: 'Detailed steps',
           uke: 'Uke guidance',
           insights: 'Key points & common mistakes',
-          media: 'Reference media',
+          media: 'Reference media (optional)',
           contributor: 'Contributor & lineage',
         },
         fields: {
@@ -458,7 +458,6 @@ export const messages = {
         viewIssue: 'View created GitHub issue',
         errors: {
           generic: 'Unable to submit at the moment. Please try again shortly.',
-          detailsShort: 'Please provide at least 20 characters of detail before submitting.',
         },
         sending: 'Sending feedback…',
         sendingButton: 'Sending…',
@@ -961,7 +960,7 @@ export const messages = {
           steps: 'Detaillierte Schritte',
           uke: 'Uke-Hinweise',
           insights: 'Kernpunkte & häufige Fehler',
-          media: 'Referenzmedien',
+          media: 'Referenzmedien (optional)',
           contributor: 'Beitrag & Linie',
         },
         fields: {
@@ -1014,7 +1013,6 @@ export const messages = {
         viewIssue: 'Erstelltes GitHub-Issue ansehen',
         errors: {
           generic: 'Kann derzeit nicht gesendet werden. Bitte später erneut versuchen.',
-          detailsShort: 'Bitte gib vor dem Senden mindestens 20 Zeichen Text ein.',
         },
         sending: 'Feedback wird gesendet…',
         sendingButton: 'Senden…',

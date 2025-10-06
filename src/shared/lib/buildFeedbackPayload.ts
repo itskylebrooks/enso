@@ -95,7 +95,9 @@ export function buildFeedbackPayloadV1(form: NewTechniqueFormState, opts: { loca
       entries: sanitizeArr(form.taxonomy?.entries ?? []),
       hanmi: sanitize(form.taxonomy?.hanmi ?? ''),
     },
-    media: sanitizeArr(form.mediaUrls ?? []),
+    media: (form.mediaUrls ?? []).map((s) => (s ?? '').trim()).filter(Boolean).length
+      ? sanitizeArr(form.mediaUrls ?? [])
+      : undefined,
     sources: sanitize(form.sources ?? ''),
     creditName: sanitize(form.creditName ?? ''),
     trainerCredit: sanitize(form.trainerCredit ?? ''),
@@ -113,7 +115,9 @@ export function buildFeedbackPayloadV1(form: NewTechniqueFormState, opts: { loca
     summary: sanitize((locale === 'de' ? form.summary?.de : form.summary?.en) ?? ''),
     detailsMd: form.detailsPreviewMd ?? '',
     diffJson,
-    media: sanitizeArr(form.mediaUrls ?? []),
+    media: (form.mediaUrls ?? []).map((s) => (s ?? '').trim()).filter(Boolean).length
+      ? sanitizeArr(form.mediaUrls ?? [])
+      : undefined,
     honeypot: form.honeypot ?? '',
   };
 

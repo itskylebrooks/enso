@@ -42,7 +42,7 @@ export interface FeedbackPayloadV1 {
       entries: string[];
       hanmi: string;
     };
-    media: string[];
+    media?: string[];
     sources: string;
     creditName: string;
     trainerCredit: string;
@@ -50,6 +50,6 @@ export interface FeedbackPayloadV1 {
     consent: boolean;
   };
 
-  media: string[];
+  media?: string[];
   honeypot: string;
 }

@@ -1731,12 +1731,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
       return;
     }
 
-    // detailsMd length check for payloads that include detailsMd
-    if (typeof (payload as any).detailsMd === 'string' && (payload as any).detailsMd.trim().length < 20) {
-      setSubmitError(t.newTechnique.errors.detailsShort);
-      setSubmissionState('error');
-      return;
-    }
+    // details length rule removed — allow shorter submissions
 
     setSubmissionState('submitting');
     setSubmitError(null);
