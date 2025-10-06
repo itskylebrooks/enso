@@ -309,7 +309,7 @@ This will check:
 
 ## Status
 
-**v0.9.0 (Beta)** — Core experience is stable and usable. Some features are placeholders (feedback page). Content currently focuses on a curated set of techniques to demonstrate depth (variations, versions) rather than breadth.
+**v0.9.0 (Beta)** — Core experience is stable and usable. The Feedback page now ships with full in-app submission flows. Content currently focuses on a curated set of techniques to demonstrate depth (variations, versions) rather than breadth.
 
 ---
 
@@ -322,6 +322,7 @@ This will check:
 - **Guide** — Movements, stances, etiquette, principles, and **exam program** (exam tables complete; more techniques coming).
 - **Glossary** — Core Aikidō terms with EN/DE definitions (clickable from tags).
 - **Search** — Diacritic-insensitive, field-weighted ranking; grouped results (Terms / Techniques / Collections).
+- **Feedback page** — Guided forms for improvements, new variations/techniques, app ideas, or bug reports with autosave, live summaries, and JSON preview/export.
 - **Bilingual UI** — **English** and **Deutsch** toggle.
 - **Theme** — Light/Dark mode.
 - **Privacy** — Local-first storage; export/import available for bookmarks/collections.
@@ -333,7 +334,6 @@ This will check:
 - **1.0**
   - Complete **all 5th kyū techniques** with full variations (direction, hanmi, weapon, version).
   - **Exam program tables** (Saya-no-Uchi and weapon tables) with clickable cells → technique pages.
-  - **Feedback page** form (email works now; in-app form later).
   - Share/print **Collections** (read-only link; clean print layout).
 - **Later**
   - Advanced search chips (Exact / Close / Fuzzy).
@@ -379,9 +379,22 @@ pnpm preview
 pnpm lint
 ```
 
-### Feedback integration (GitHub Issues)
+### Feedback Page & GitHub Integration
 
-Add a `.env.local` file (git-ignored) and configure the GitHub target for feedback submissions:
+The in-app **Feedback** route (Settings → Feedback, technique footer button, or the Library CTA) sends every submission to `/api/feedback`. The page covers five flows: improve an existing technique, add a variation/version, propose a new technique, share general app feedback, or report a bug.
+
+Key behaviour:
+- Drafts autosave to `localStorage` (`enso.feedbackDraft`) so contributors can leave and return without losing work.
+- Each form shows a live summary panel (with duplicate detection for new techniques) plus a JSON preview and `Download JSON report` action for manual backups.
+- Navigation hints can preselect a card (the Library CTA jumps straight into “Propose a new technique”), otherwise visitors land on the picker.
+- Media links are normalised, YouTube/Vimeo previews are detected automatically, and contributors must opt-in to publishing via the consent toggle.
+- Submissions call `/api/feedback`, which validates payloads with Zod, enforces request size limits, and optionally opens a GitHub issue when credentials exist.
+
+During local development the API responds with `{ ok: true, warning: 'github_not_configured' }` if no repository is configured—this still clears the active form so you can test the UX.
+
+Implementation lives in `src/features/home/components/feedback/FeedbackPage.tsx`, with shared payload builders in `src/shared/lib/buildFeedbackPayload.ts` and the server entry in `api/feedback.ts`.
+
+To wire GitHub issues, add a `.env.local` file (git-ignored) and configure the target repository:
 
 ```
 GITHUB_TOKEN=***          # Fine-grained PAT, Issues: Read & Write, scoped to the target repo
@@ -389,7 +402,7 @@ GITHUB_OWNER=your-user-or-org
 GITHUB_REPO=enso-feedback # Repository to receive feedback issues (accepts "owner/repo" form too)
 ```
 
-Configure the same variables in your Vercel project (Production / Preview / Development) before deploying the API route.
+Mirror the same variables in your Vercel project (Production / Preview / Development) before deploying the API route.
 
 ---
 
@@ -573,7 +586,7 @@ type Technique = {
 ## Contributing
 
 Right now we’re prioritizing stability and content quality.  
-- **Bugs / suggestions**: Settings → Feedback (Email works; in-app form planned).  
+- **Bugs / suggestions**: Settings → Feedback (in-app forms submit via `/api/feedback` + optional GitHub issues).  
 - Pull requests are welcome once v1.0 lands and the content model is frozen.
 
 ---
