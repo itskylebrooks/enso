@@ -441,7 +441,7 @@ export const messages = {
           slugPreview: 'Slug builds from attack, name, and entry selection.',
           unusualCombo: 'This attack/weapon combination is uncommon. Double-check it or note the exception in context.',
         },
-        mediaRestrictions: 'Only YouTube (no-cookie) and direct image URLs are accepted for new techniques.',
+  mediaRestrictions: '',
         warnings: {
           summaryMissingSingle: 'Provide a short summary (max 230 characters).',
           consentMissing: 'You must confirm consent to submit this technique.',

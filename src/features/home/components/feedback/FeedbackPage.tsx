@@ -14,6 +14,7 @@ import {
   LightbulbIcon,
   RocketIcon,
   SproutIcon,
+  LinkIcon,
 } from '@shared/components/ui/icons';
 import type { Copy, FeedbackPageCopy } from '@shared/constants/i18n';
 import { buildFeedbackPayloadV1 } from '@shared/lib/buildFeedbackPayload';
@@ -980,22 +981,25 @@ type MediaManagerProps = {
   cancelLabel: string;
   removeLabel: string;
   allowedKinds?: MediaKind[];
-  allowTitle?: boolean;
-  titleLabel?: string;
-  titlePlaceholder?: string;
   disallowMessage?: string;
 };
 
-const getMediaIcon = (type: MediaKind): string => {
+const getMediaIcon = (type: MediaKind): ReactElement => {
   switch (type) {
     case 'youtube':
     case 'vimeo':
-      return '▶';
+      return <span aria-hidden className="text-lg">▶</span>;
     case 'image':
-      return '🖼️';
+      return <span aria-hidden className="text-lg">🖼️</span>;
     default:
-      return '🔗';
+      return <LinkIcon className="w-5 h-5" />;
   }
+};
+
+const normalizeUrl = (url: string): string => {
+  if (!url) return url;
+  if (/^https?:\/\//i.test(url)) return url;
+  return `https://${url}`;
 };
 
 const MediaManager = ({
@@ -1007,9 +1011,7 @@ const MediaManager = ({
   cancelLabel,
   removeLabel,
   allowedKinds,
-  allowTitle = false,
-  titleLabel,
-  titlePlaceholder,
+  // title editing removed; media entries keep optional title metadata but UI no longer allows editing
   disallowMessage,
 }: MediaManagerProps): ReactElement => {
   const [isAdding, setIsAdding] = useState(false);
@@ -1023,7 +1025,8 @@ const MediaManager = ({
       setError(disallowMessage ?? 'Unsupported media type.');
       return;
     }
-    onChange([...media, { ...entry, title: allowTitle ? '' : entry.title }]);
+    // Do not add editable title field from UI; keep media entry as detected
+    onChange([...media, { ...entry }]);
     setInputValue('');
     setError(null);
     setIsAdding(false);
@@ -1033,18 +1036,7 @@ const MediaManager = ({
     onChange(media.filter((item) => item.id !== id));
   };
 
-  const updateTitle = (id: string, title: string) => {
-    onChange(
-      media.map((item) =>
-        item.id === id
-          ? {
-              ...item,
-              title,
-            }
-          : item,
-      ),
-    );
-  };
+  // title editing removed
 
   return (
     <div className="space-y-3">
@@ -1055,27 +1047,17 @@ const MediaManager = ({
             className="flex flex-col gap-2 rounded-xl border surface-border bg-[var(--color-surface)] px-3 py-2 text-sm"
           >
             <div className="flex items-start gap-3">
-              <span aria-hidden className="text-lg">
-                {getMediaIcon(item.type)}
-              </span>
+              {getMediaIcon(item.type)}
               <div className="min-w-0 flex-1">
                 <a
                   className="block truncate underline-offset-4 hover:underline"
-                  href={item.url}
+                  href={normalizeUrl(item.url)}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noreferrer noopener"
                 >
                   {item.url}
                 </a>
-                {allowTitle && (
-                  <input
-                    value={item.title ?? ''}
-                    onChange={(event) => updateTitle(item.id, event.target.value)}
-                    placeholder={titlePlaceholder}
-                    aria-label={titleLabel}
-                    className="mt-2 w-full rounded-lg border surface-border bg-[var(--color-surface)] px-3 py-1.5 text-xs focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
-                  />
-                )}
+                {/* Title editing removed per design; media entries keep optional title metadata but it's not editable in the form */}
               </div>
               <button
                 type="button"
@@ -2251,9 +2233,6 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
             addLabel={t.buttons.addAction}
             cancelLabel={t.buttons.cancel}
             removeLabel={t.buttons.remove}
-            allowTitle
-            titleLabel={t.forms.variation.mediaTitleLabel}
-            titlePlaceholder={t.placeholders.variationMediaTitle}
           />
         </section>
 
@@ -2504,11 +2483,6 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
             addLabel={t.buttons.addAction}
             cancelLabel={t.buttons.cancel}
             removeLabel={t.buttons.remove}
-            allowedKinds={['youtube', 'image']}
-            allowTitle
-            titleLabel={t.newTechnique.fields.mediaTitle}
-            titlePlaceholder={t.placeholders.newTechniqueMediaTitle}
-            disallowMessage={t.newTechnique.mediaRestrictions}
           />
         </section>
 

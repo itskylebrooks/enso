@@ -32,6 +32,13 @@ export const SearchIcon = (props: SVGProps<SVGSVGElement>): ReactElement => (
   </svg>
 );
 
+export const LinkIcon = (props: SVGProps<SVGSVGElement>): ReactElement => (
+  <svg {...baseProps} {...props} className={['lucide lucide-link-icon', props.className].filter(Boolean).join(' ')}>
+    <path d="M10.59 13.41a5 5 0 0 0 7.07 0l1.41-1.41a5 5 0 0 0-7.07-7.07L10 6.93" />
+    <path d="M13.41 10.59a5 5 0 0 0-7.07 0L5 11.93a5 5 0 0 0 7.07 7.07L13.41 17" />
+  </svg>
+);
+
 export const MenuIcon = (props: SVGProps<SVGSVGElement>): ReactElement => (
   <svg {...baseProps} {...props} className={['lucide lucide-menu-icon', props.className].filter(Boolean).join(' ')}>
     <line x1="4" x2="20" y1="7" y2="7" />
