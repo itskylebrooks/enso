@@ -11,6 +11,7 @@ import { BookmarkIcon, BookmarkCheckIcon } from '@shared/components/ui/icons';
 import { classNames } from '@shared/utils/classNames';
 import { getCategoryStyle, getCategoryLabel } from '../../../shared/styles/glossary';
 import { getInitialThemeState } from '@shared/utils/theme';
+import BreathingDot from '@shared/components/ui/BreathingDot';
 
 export type CollectionOption = {
   id: string;
@@ -99,10 +100,8 @@ export const GlossaryDetailPage = ({
 
   if (loading) {
     return (
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 py-6">
-        <div className="text-center">
-          <p className="text-muted">Loading term...</p>
-        </div>
+      <div className="loader-center-viewport">
+        <BreathingDot label={copy.loading} size={96} />
       </div>
     );
   }

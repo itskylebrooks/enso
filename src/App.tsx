@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, lazy, Suspense, type ReactElement } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Header } from '@shared/components/layout/Header';
+import BreathingDot from '@shared/components/ui/BreathingDot';
 import { FilterPanel } from './features/search/components/FilterPanel';
 import { Library } from '@features/technique/components/Library';
 // Lazy-load heavy pages to keep initial bundle small
@@ -1034,10 +1035,8 @@ export default function App(): ReactElement {
     mainContent = (
       <Suspense
         fallback={
-          <div className="max-w-6xl mx-auto px-4 py-6">
-            <div className="rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-5 text-sm text-subtle">
-              {copy.loading}
-            </div>
+          <div className="loader-center-viewport">
+            <BreathingDot label={copy.loading} size={96} />
           </div>
         }
       >
@@ -1066,8 +1065,8 @@ export default function App(): ReactElement {
     mainContent = (
       <Suspense
         fallback={
-          <div className="max-w-5xl mx-auto px-6 py-6">
-            <div className="rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-5 text-sm text-subtle">{copy.loading}</div>
+          <div className="loader-center-viewport">
+            <BreathingDot label={copy.loading} size={96} />
           </div>
         }
       >
@@ -1162,10 +1161,8 @@ export default function App(): ReactElement {
     mainContent = (
       <Suspense
         fallback={
-          <div className="max-w-4xl mx-auto px-4 py-6">
-            <div className="rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-5 text-sm text-subtle">
-              {copy.loading}
-            </div>
+          <div className="loader-center-viewport">
+            <BreathingDot label={copy.loading} size={96} />
           </div>
         }
       >
@@ -1256,7 +1253,7 @@ export default function App(): ReactElement {
         )}
 
         {route === 'bookmarks' && (
-          <Suspense fallback={<div className="max-w-6xl mx-auto px-4 py-6"><div className="rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-5 text-sm text-subtle">{copy.loading}</div></div>}>
+  <Suspense fallback={<div className="loader-center-viewport"><BreathingDot label={copy.loading} size={96} /></div>}>
             <BookmarksView
             copy={copy}
             locale={locale}
@@ -1285,7 +1282,7 @@ export default function App(): ReactElement {
         {route === 'glossary' && (
           <>
             {activeSlug ? (
-              <Suspense fallback={<div className="max-w-6xl mx-auto px-4 py-6"><div className="rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-5 text-sm text-subtle">{copy.loading}</div></div>}>
+              <Suspense fallback={<div className="loader-center-viewport"><BreathingDot label={copy.loading} size={96} /></div>}>
                 <GlossaryDetailPage
                   slug={activeSlug}
                   copy={copy}
@@ -1328,7 +1325,7 @@ export default function App(): ReactElement {
                     />
                   </aside>
                   <section>
-                    <Suspense fallback={<div className="max-w-6xl mx-auto px-4 py-6"><div className="rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-5 text-sm text-subtle">{copy.loading}</div></div>}>
+                    <Suspense fallback={<div className="loader-center-viewport"><BreathingDot label={copy.loading} size={96} /></div>}>
                       <GlossaryPage
                       locale={locale}
                       copy={copy}

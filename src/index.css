@@ -282,6 +282,52 @@ button {
   transform: none;
   box-shadow: var(--card-shadow);
 }
+
+/* Breathing dot loader: single dot that grows/shrinks at a 1s cadence.
+   - Uses CSS custom properties to adapt to light/dark mode
+   - Respects prefers-reduced-motion
+*/
+.breathing-dot {
+  /* Defaults can be overridden inline via the component's style prop */
+  border-radius: 9999px;
+  /* Mix background and text to get a soft, adaptive grey that matches the page tone */
+  background-color: color-mix(in srgb, var(--color-bg) 60%, var(--color-text) 40%);
+  opacity: 0.98;
+  /* Larger soft shadow that adapts subtly to theme via --card-shadow-color */
+  box-shadow: 0 40px 120px -48px rgba(var(--card-shadow-color), 0.18), inset 0 2px 0 rgba(255,255,255,0.02);
+  transform-origin: center;
+  animation: breathing 1s ease-in-out infinite;
+  display: inline-block;
+}
+
+@keyframes breathing {
+  0% { transform: scale(0.86); opacity: 0.85; }
+  50% { transform: scale(1.18); opacity: 1; }
+  100% { transform: scale(0.86); opacity: 0.85; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .breathing-dot {
+    animation: none;
+    transform: none;
+  }
+}
+
+/* Make the dot adapt to dark/light by using --color-text which is set in :root/.dark */
+.dark .breathing-dot {
+  /* In dark mode, mix the background and text too, but favor a lighter tone so the dot is visible */
+  background-color: color-mix(in srgb, var(--color-bg) 62%, var(--color-text) 38%);
+  box-shadow: 0 48px 140px -60px rgba(255,255,255,0.06), inset 0 2px 0 rgba(255,255,255,0.02);
+}
+
+/* Utility to center a loader in the viewport (used for Suspense fallbacks) */
+.loader-center-viewport {
+  min-height: calc(100vh - 64px); /* leave room for header if present; tweak if needed */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .card-hover-shadow:hover {
     transform: none;
