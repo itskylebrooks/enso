@@ -1732,7 +1732,18 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
       const normalizedV1: any = { ...v1 };
       // v1.media may be an array of strings (media URLs). Convert to server-expected objects.
       if (Array.isArray(v1.media) && v1.media.length && typeof v1.media[0] === 'string') {
-        normalizedV1.media = (v1.media as string[]).map((u) => ({ type: 'link', url: u }));
+        const normalizeUrlForServer = (u: string) => {
+          const s = (u || '').trim();
+          if (!s || s === 'EMPTY') return null;
+          if (/^https?:\/\//i.test(s)) return s;
+          // Add https:// for bare domains/paths so zod .url() validation passes
+          return `https://${s}`;
+        };
+
+        normalizedV1.media = (v1.media as string[])
+          .map((u) => normalizeUrlForServer(u))
+          .filter((u): u is string => Boolean(u))
+          .map((url) => ({ type: 'link' as const, url }));
       }
       // Ensure detailsMd is not empty (server requires min length 1)
       if (!normalizedV1.detailsMd || String(normalizedV1.detailsMd).trim().length === 0) {
