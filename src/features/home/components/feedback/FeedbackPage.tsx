@@ -124,11 +124,13 @@ const hanmiLabelMap: Record<Hanmi, string> = {
 
 type AppFeedbackForm = {
   area: AppArea | null;
+  title?: string;
   feedback: string;
   screenshotUrl: string;
 };
 
 type BugReportForm = {
+  title?: string;
   location: string;
   details: string;
   reproduction: string;
@@ -481,7 +483,7 @@ const buildFeedbackPayload = (
   const defaultName =
     [draft.newTechnique.creditName, draft.addVariation.creditName, draft.improveTechnique.credit]
       .map((value) => (typeof value === 'string' ? value.trim() : ''))
-      .find((value) => value.length > 0) ?? 'Anonymous contributor';
+      .find((value) => value.length > 0) ?? 'Anonymous';
 
   // Helpers to build flattened, bilingual fields with EMPTY fallbacks
   const toBilingual = (value: string): { en: string; de: string } => {
@@ -722,7 +724,10 @@ const buildFeedbackPayload = (
 
   if (selectedType === 'bugReport') {
     const bug = draft.bugReport;
-    const summary = bug.details.split('\n')[0]?.slice(0, 120) || 'Bug report';
+    const fallback = bug.details.split('\n')[0]?.trim() || 'Bug report';
+    const baseTitle = (bug.title ?? '').trim() || fallback;
+    const withLocation = bug.location?.trim() ? `${baseTitle} — ${bug.location.trim()}` : baseTitle;
+    const summary = withLocation.length > 120 ? `${withLocation.slice(0, 117)}…` : withLocation;
     const detailsMd = `### What happened\n${bug.details}\n\n### Steps to reproduce\n${bug.reproduction}`;
     return {
       name: escapeInline(defaultName),
@@ -739,7 +744,10 @@ const buildFeedbackPayload = (
 
   if (selectedType === 'appFeedback') {
     const feedback = draft.appFeedback;
-    const summary = feedback.feedback.split('\n')[0]?.slice(0, 120) || 'App feedback';
+    const fallback = feedback.feedback.split('\n')[0]?.trim() || 'App feedback';
+    const baseTitle = (feedback.title ?? '').trim() || fallback;
+    const withArea = feedback.area ? `${baseTitle} — ${feedback.area}` : baseTitle;
+    const summary = withArea.length > 120 ? `${withArea.slice(0, 117)}…` : withArea;
     const detailsMd = feedback.feedback;
     return {
       name: escapeInline(defaultName),
@@ -822,11 +830,13 @@ const defaultVariationForm = (): VariationForm => ({
 
 const defaultAppFeedbackForm = (): AppFeedbackForm => ({
   area: null,
+  title: '',
   feedback: '',
   screenshotUrl: '',
 });
 
 const defaultBugReportForm = (): BugReportForm => ({
+  title: '',
   location: '',
   details: '',
   reproduction: '',
@@ -2650,7 +2660,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
   };
 
   const renderAppFeedbackForm = (): ReactElement => {
-    const { area, feedback } = draft.appFeedback;
+    const { area, title, feedback } = draft.appFeedback;
     const areaOptions = (Object.keys(areaLabels) as AppArea[]).map((value) => ({
       value,
       label: areaLabels[value],
@@ -2666,6 +2676,16 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
         transition={formTransition}
         className="space-y-6"
       >
+        <section className="space-y-2">
+          <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.app.titleLabel}</label>
+          <input
+            type="text"
+            value={title ?? ''}
+            onChange={(event) => updateAppFeedback('title', event.target.value)}
+            placeholder={t.placeholders.appTitle}
+            className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus-halo focus:outline-none"
+          />
+        </section>
         <section className="space-y-3">
           <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.app.areaLabel}</label>
           <Select
@@ -2693,7 +2713,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
   };
 
   const renderBugReportForm = (): ReactElement => {
-    const { location, details, reproduction } = draft.bugReport;
+    const { title, location, details, reproduction } = draft.bugReport;
     return (
       <motion.div
         key="bug"
@@ -2704,6 +2724,16 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
         transition={formTransition}
         className="space-y-6"
       >
+        <section className="space-y-2">
+          <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.bug.titleLabel}</label>
+          <input
+            type="text"
+            value={title ?? ''}
+            onChange={(event) => updateBugReport('title', event.target.value)}
+            placeholder={t.placeholders.bugTitle}
+            className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus-halo focus:outline-none"
+          />
+        </section>
         <section className="space-y-2">
           <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.bug.locationLabel}</label>
           <input
