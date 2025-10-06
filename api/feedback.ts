@@ -1,10 +1,4 @@
-// Use plain any types here to avoid dependency on '@vercel/node' type package in the editor.
-// The runtime on Vercel will continue to receive the platform request/response objects.
-// This avoids the TypeScript editor error when the optional package isn't installed.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type VercelRequest = any;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type VercelResponse = any;
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { z } from 'zod';
 import crypto from 'node:crypto';
 
