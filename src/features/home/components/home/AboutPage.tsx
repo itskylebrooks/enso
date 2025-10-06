@@ -73,6 +73,26 @@ export const AboutPage = ({ copy }: AboutPageProps): ReactElement => (
             <span className="mr-3 mt-1.5 h-1.5 w-1.5 rounded-full bg-current flex-shrink-0" />
             {copy.aboutPrivacy3}
           </li>
+          {copy.aboutPrivacy4 && (
+            <li className="text-base leading-relaxed flex items-start">
+              <span className="mr-3 mt-1.5 h-1.5 w-1.5 rounded-full bg-current flex-shrink-0" />
+              {/* Render the sentence but make the word 'GitHub' a clickable link */}
+              {(() => {
+                const text: string = String(copy.aboutPrivacy4);
+                const parts = text.split('GitHub');
+                const repoUrl = 'https://github.com/itskylebrooks/enso';
+                return (
+                  <span>
+                    {parts[0]}
+                    <a href={repoUrl} target="_blank" rel="noreferrer noopener" className="underline">
+                      GitHub
+                    </a>
+                    {parts[1] ?? ''}
+                  </span>
+                );
+              })()}
+            </li>
+          )}
         </ul>
       </div>
 
