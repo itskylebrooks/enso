@@ -124,6 +124,72 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
     return;
   }
 
-  // Accept the validated feedback and return a requestId. We no longer create GitHub issues.
-  res.status(201).json({ ok: true, requestId });
+  // Try to create a GitHub issue if credentials/config are present in env.
+  const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
+  const GITHUB_REPO_OWNER = process.env.GITHUB_REPO_OWNER;
+  const GITHUB_REPO_NAME = process.env.GITHUB_REPO_NAME;
+
+  if (!GITHUB_TOKEN || !GITHUB_REPO_OWNER || !GITHUB_REPO_NAME) {
+    // Not configured — accept the feedback but inform the client that no issue was created.
+    res.status(201).json({ ok: true, requestId, warning: 'github_not_configured' });
+    return;
+  }
+
+  const makeIssueBody = (p: typeof payload): string => {
+    const lines: string[] = [];
+    lines.push(`**Category:** ${p.category}`);
+    lines.push(`**Entity:** ${p.entityType}${p.entityId ? ` (${p.entityId})` : ''}`);
+    lines.push(`**Locale:** ${p.locale ?? 'n/a'}`);
+    lines.push(`**From:** ${escapeInline(p.name)}`);
+    if (p.email) lines.push(`**Email:** ${escapeInline(p.email)}`);
+    lines.push('');
+    lines.push('---');
+    lines.push('');
+    lines.push(p.detailsMd || '');
+    if (Array.isArray(p.media) && p.media.length > 0) {
+      lines.push('');
+      lines.push('**Media:**');
+      for (const m of p.media) {
+        lines.push(`- ${m.type}: ${m.url}${m.title ? ` (${escapeInline(m.title)})` : ''}`);
+      }
+    }
+    lines.push('');
+    lines.push('---');
+    lines.push(`Client version: ${p.clientVersion ?? 'unknown'}`);
+    return lines.join('\n');
+  };
+
+  const issueTitle = `[feedback] ${String(payload.summary).slice(0, 120)}`;
+  const issueBody = makeIssueBody(payload);
+
+  try {
+    const ghResp = await fetch(
+      `https://api.github.com/repos/${encodeURIComponent(GITHUB_REPO_OWNER)}/${encodeURIComponent(GITHUB_REPO_NAME)}/issues`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${GITHUB_TOKEN}`,
+          'Content-Type': 'application/json',
+          'User-Agent': 'enso-feedback-bot',
+          Accept: 'application/vnd.github.v3+json',
+        },
+        body: JSON.stringify({ title: issueTitle, body: issueBody, labels: ['feedback'] }),
+      },
+    );
+
+    const ghText = await ghResp.text();
+    if (!ghResp.ok) {
+      console.error('GitHub API error', ghResp.status, ghText);
+      res.status(502).json({ ok: false, code: 'github', message: 'Failed to create GitHub issue', requestId, details: ghText });
+      return;
+    }
+
+    const ghJson = JSON.parse(ghText);
+    res.status(201).json({ ok: true, requestId, issueNumber: ghJson.number, issueUrl: ghJson.html_url });
+    return;
+  } catch (err) {
+    console.error('GitHub fetch failed', err);
+    res.status(502).json({ ok: false, code: 'github_fetch', message: 'Failed to contact GitHub', requestId });
+    return;
+  }
 }
