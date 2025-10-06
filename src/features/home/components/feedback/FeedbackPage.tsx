@@ -1170,7 +1170,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
   const [draft, setDraft] = useState<FeedbackDraft>(() => loadDraft());
   const [showJsonPreview, setShowJsonPreview] = useState(false);
   const [submissionState, setSubmissionState] = useState<'idle' | 'success' | 'error' | 'submitting'>('idle');
-  const [submitResult, setSubmitResult] = useState<{ ok: boolean; issueUrl?: string; issueNumber?: number; message?: string; requestId?: string } | null>(null);
+  const [submitResult, setSubmitResult] = useState<{ ok: boolean; issueNumber?: number; message?: string; requestId?: string } | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [softWarningShown, setSoftWarningShown] = useState(false);
 
@@ -1310,6 +1310,29 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
     setSubmissionState('idle');
     setSubmitResult(null);
     setSubmitError(null);
+  }, []);
+
+  // Clear only the active form fields but keep the selected card.
+  const clearCurrentForm = useCallback((type?: FeedbackType) => {
+    setDraft((current) => {
+      const sel = type ?? current.selectedType;
+      if (!sel) return current;
+      switch (sel) {
+        case 'improveTechnique':
+          return { ...current, improveTechnique: defaultImproveTechniqueForm() };
+        case 'addVariation':
+          return { ...current, addVariation: defaultVariationForm() };
+        case 'newTechnique':
+          return { ...current, newTechnique: defaultNewTechniqueForm() };
+        case 'appFeedback':
+          return { ...current, appFeedback: defaultAppFeedbackForm() };
+        case 'bugReport':
+          return { ...current, bugReport: defaultBugReportForm() };
+        default:
+          return current;
+      }
+    });
+    setSoftWarningShown(false);
   }, []);
 
   const handleTypeChange = (feedbackType: FeedbackType) => {
@@ -1477,7 +1500,8 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
       : selectedCard === 'bugReport'
       ? isBugReportReady
       : false;
-  const canSubmit = isSubmitEnabled && submissionState !== 'submitting';
+  // Prevent submitting while already submitting or after a successful submit.
+  const canSubmit = isSubmitEnabled && submissionState !== 'submitting' && submissionState !== 'success';
 
   const formatCount = (count: number, forms: { one: string; many: string }): string =>
     (count === 1 ? forms.one : forms.many).replace('{count}', String(count));
@@ -1751,6 +1775,8 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
       if (response.ok && result?.ok) {
         setSubmitResult(result);
         setSubmissionState('success');
+        // Clear only the active form fields so inputs become empty, but keep the selected card visible.
+        clearCurrentForm(selectedCard ?? undefined);
       } else {
         const message = result?.message || 'Feedback submission failed.';
         setSubmitError(message);
@@ -2800,16 +2826,6 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
                   <p className="text-subtle">{t.globalConsent}</p>
                   {submitResult?.requestId && (
                     <p className="text-xs text-subtle">{t.newTechnique.requestIdLabel} {submitResult.requestId}</p>
-                  )}
-                  {submitResult.issueUrl && (
-                    <a
-                      href={submitResult.issueUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-xs text-[var(--color-accent, var(--color-text))] underline-offset-4 hover:underline"
-                    >
-                      {t.newTechnique.viewIssue}
-                    </a>
                   )}
                 </motion.div>
               ) : submissionState === 'error' ? (

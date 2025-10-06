@@ -3,7 +3,6 @@ import { z } from 'zod';
 import crypto from 'node:crypto';
 
 const MAX_BODY_BYTES = 1_000_000;
-const MIN_DETAILS_LENGTH = 20;
 
 const MediaSchema = z.object({
   type: z.enum(['youtube', 'image', 'link']),
@@ -57,97 +56,9 @@ const escapeInline = (value: string): string => {
   return ['*', '[', ']', '`'].reduce((acc, ch) => acc.split(ch).join(`\\${ch}`), normalized);
 };
 
-const buildIssueBody = (
-  payload: z.infer<typeof FeedbackSchema>,
-  meta: { requestId: string },
-): string => {
-  const headerLines = [
-    `**From:** ${escapeInline(payload.name)}${payload.email ? ` <${escapeInline(payload.email)}>` : ''}  `,
-    `**Entity:** ${payload.entityType}${payload.entityId ? ` / ${escapeInline(payload.entityId)}` : ''}  `,
-    `**App:** ${payload.clientVersion ?? '-'}  `,
-    `**Request:** ${meta.requestId}`,
-    '',
-    '---',
-    '',
-  ];
-
-  const structured = {
-    entityId: payload.entityId ?? null,
-    diffJson: payload.diffJson ?? null,
-    media: payload.media ?? null,
-    userAgent: payload.userAgent ?? null,
-  };
-
-  return (
-    headerLines.join('\n') +
-    `\n${payload.detailsMd}\n\n---\n**Structured payload**\n\n\`\`\`json\n${JSON.stringify(structured, null, 2)}\n\`\`\``
-  );
-};
-
-const createGitHubIssue = async (
-  payload: z.infer<typeof FeedbackSchema>,
-  requestId: string,
-): Promise<{ ok: boolean; issueNumber?: number; issueUrl?: string; status: number; message?: string } | null> => {
-  const token = process.env.GITHUB_TOKEN;
-  const owner = process.env.GITHUB_OWNER;
-  const repo = process.env.GITHUB_REPO;
-
-  if (!token || !owner || !repo) {
-    console.error(`[feedback] ${requestId} missing GitHub configuration`);
-    return null;
-  }
-
-  const titleBase = `${payload.entityType}${payload.entityId ? `:${payload.entityId}` : ''}`;
-  const title = `[Feedback/${payload.category}] ${titleBase} — ${payload.summary}`;
-
-  const localeLabel = `loc:${payload.locale ?? 'en'}`;
-  const labels = ['feedback', 'from-enso', `cat:${payload.category}`, `ent:${payload.entityType}`, localeLabel];
-
-  const body = buildIssueBody(payload, { requestId });
-
-  let response: Response;
-  try {
-    response = await fetch(`https://api.github.com/repos/${owner}/${repo}/issues`, {
-      method: 'POST',
-      headers: {
-        Authorization: `token ${token}`,
-        Accept: 'application/vnd.github+json',
-        'User-Agent': 'enso-feedback-bot',
-      },
-      body: JSON.stringify({
-        title,
-        body,
-        labels,
-      }),
-    });
-  } catch (error) {
-    console.error(`[feedback] ${requestId} GitHub request failed`, error);
-    return {
-      ok: false,
-      status: 0,
-      message: (error as Error).message,
-    };
-  }
-
-  if (response.status === 201) {
-    const json = await response.json();
-    return {
-      ok: true,
-      issueNumber: json.number,
-      issueUrl: json.html_url,
-      status: 201,
-    };
-  }
-
-  const message = await response.text();
-  console.error(`[feedback] ${requestId} GitHub error ${response.status}: ${message}`);
-
-  return {
-    ok: false,
-    status: response.status,
-    message,
-  };
-};
+// Simplified server handler: we no longer create GitHub issues from the server.
+// The handler will validate the payload and return a successful response with a requestId.
+// This keeps the server-side flow but removes external GitHub interaction.
 
 const validateOrigin = (req: VercelRequest): boolean => {
   const origin = req.headers.origin;
@@ -213,31 +124,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
     return;
   }
 
-  if (payload.detailsMd.trim().length < MIN_DETAILS_LENGTH) {
-    res.status(400).json({ ok: false, code: 'validation', message: 'Details too short', requestId });
-    return;
-  }
-
-  const githubResult = await createGitHubIssue(payload, requestId);
-  if (!githubResult) {
-    res.status(500).json({ ok: false, code: 'server', message: 'GitHub configuration error', requestId });
-    return;
-  }
-
-  if (githubResult.ok && githubResult.issueNumber && githubResult.issueUrl) {
-    res.status(201).json({ ok: true, issueNumber: githubResult.issueNumber, issueUrl: githubResult.issueUrl, requestId });
-    return;
-  }
-
-  if (githubResult.status === 401 || githubResult.status === 403) {
-    res.status(403).json({ ok: false, code: 'auth', message: 'GitHub authentication/permission failed', requestId });
-    return;
-  }
-
-  if (githubResult.status === 422) {
-    res.status(422).json({ ok: false, code: 'validation', message: 'GitHub rejected the payload', requestId });
-    return;
-  }
-
-  res.status(502).json({ ok: false, code: 'github', message: 'GitHub error', requestId });
+  // Accept the validated feedback and return a requestId. We no longer create GitHub issues.
+  res.status(201).json({ ok: true, requestId });
 }

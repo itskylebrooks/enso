@@ -455,7 +455,7 @@ export const messages = {
         consentLabelUpdated: 'By submitting, you agree your contribution may appear in the Enso database.',
         lineageToggle: 'Mark as canonical base version',
         lineageHelp: 'Uncheck if this technique belongs to a specific trainer/dojo lineage.',
-        viewIssue: 'View created GitHub issue',
+        
         errors: {
           generic: 'Unable to submit at the moment. Please try again shortly.',
         },
@@ -1010,7 +1010,7 @@ export const messages = {
         consentLabelUpdated: 'Mit dem Absenden stimmst du zu, dass dein Beitrag in der Enso-Datenbank erscheinen darf.',
         lineageToggle: 'Als kanonische Basisversion markieren',
         lineageHelp: 'Deaktiviere dies, wenn die Technik zu einer bestimmten Trainer-/Dojo-Linie gehört.',
-        viewIssue: 'Erstelltes GitHub-Issue ansehen',
+        
         errors: {
           generic: 'Kann derzeit nicht gesendet werden. Bitte später erneut versuchen.',
         },
