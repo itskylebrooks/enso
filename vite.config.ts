@@ -8,6 +8,20 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  build: {
+    chunkSizeWarningLimit: 1500,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('motion')) return 'motion';
+            if (id.includes('react')) return 'react-vendors';
+            return 'vendor';
+          }
+        },
+      },
+    },
+  },
   resolve: {
     alias: {
       '@features': path.resolve(__dirname, './src/features'),

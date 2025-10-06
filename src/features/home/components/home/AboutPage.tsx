@@ -2,7 +2,8 @@ import type { ReactElement } from 'react';
 import type { Copy } from '@shared/constants/i18n';
 
 // Import the author photo as a bundled URL so production builds include the asset.
-const imageModules = import.meta.glob('/content/*.{jpg,jpeg,png,webp}', { as: 'url', eager: true }) as Record<string, string>;
+// Vite deprecated `as: 'url'` in favor of `{ query: '?url', import: 'default' }`.
+const imageModules = import.meta.glob('/content/*.{jpg,jpeg,png,webp}', { query: '?url', import: 'default', eager: true }) as Record<string, string>;
 const authorPhotoUrl = imageModules['/content/Lehrgang-2024-09.jpeg'];
 
 type AboutPageProps = {

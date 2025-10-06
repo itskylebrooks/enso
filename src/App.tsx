@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type ReactElement } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, lazy, Suspense, type ReactElement } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Header } from '@shared/components/layout/Header';
 import { FilterPanel } from './features/search/components/FilterPanel';
@@ -6,7 +6,8 @@ import { Library } from '@features/technique/components/Library';
 import { BookmarksView } from './features/bookmarks/components/BookmarksView';
 import { SearchOverlay } from './features/search/components/SearchOverlay';
 import { SettingsModal } from '@features/home/components/settings/SettingsModal';
-import { TechniquePage } from '@features/technique/components/TechniquePage';
+// Lazy-load heavy pages to reduce initial bundle size
+const TechniquePage = lazy(() => import('@features/technique/components/TechniquePage').then(m => ({ default: m.TechniquePage })));
 import { type CollectionOption } from '@features/technique/components/TechniqueHeader';
 import { Toast } from '@shared/components/ui/Toast';
 import { MobileFilters } from '@shared/components/ui/MobileFilters';
@@ -15,7 +16,7 @@ import { AboutPage } from '@features/home/components/home/AboutPage';
 import { AdvancedPrograms } from '@features/home/components/home/AdvancedPrograms';
 import { DanOverview } from '@features/home/components/home/DanOverview';
 import { GuidePage } from '@features/home/components/home/GuidePage';
-import { FeedbackPage } from '@features/home/components/feedback/FeedbackPage';
+const FeedbackPage = lazy(() => import('@features/home/components/feedback/FeedbackPage').then(m => ({ default: m.FeedbackPage })));
 import type { FeedbackType } from '@features/home/components/feedback/FeedbackPage';
 import { GlossaryPage, GlossaryDetailPage, GlossaryFilterPanel, MobileGlossaryFilters, loadAllTerms } from './features/glossary';
 import { ConfirmClearModal } from './shared/components/dialogs/ConfirmClearDialog';
@@ -347,6 +348,22 @@ export default function App(): ReactElement {
   const settingsClearButtonRef = useRef<HTMLButtonElement | null>(null);
   const toastTimeoutRef = useRef<number | null>(null);
 
+  // Prefetch helpers for lazily loaded chunks (kept idempotent)
+  let prefetchedTechnique = useRef(false).current;
+  let prefetchedFeedback = useRef(false).current;
+  const prefetchTechniquePage = useCallback(() => {
+    if (!prefetchedTechnique) {
+      prefetchedTechnique = true;
+      void import('@features/technique/components/TechniquePage');
+    }
+  }, [prefetchedTechnique]);
+  const prefetchFeedbackPage = useCallback(() => {
+    if (!prefetchedFeedback) {
+      prefetchedFeedback = true;
+      void import('@features/home/components/feedback/FeedbackPage');
+    }
+  }, [prefetchedFeedback]);
+
   const navigateTo = useCallback(
     (next: AppRoute, options: { replace?: boolean } = {}) => {
       const path = typeof window !== 'undefined' ? routeToPath(next) : '';
@@ -527,6 +544,16 @@ export default function App(): ReactElement {
   }, []);
 
   useKeyboardShortcuts(openSearch);
+
+  // Idle prefetch both heavy chunks after initial render
+  useEffect(() => {
+    const idle = (cb: () => void) =>
+      (window as any).requestIdleCallback ? (window as any).requestIdleCallback(cb, { timeout: 1500 }) : setTimeout(cb, 600);
+    idle(() => {
+      prefetchTechniquePage();
+      prefetchFeedbackPage();
+    });
+  }, [prefetchTechniquePage, prefetchFeedbackPage]);
 
   useEffect(() => {
     if (hasManualTheme || typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
@@ -986,22 +1013,32 @@ export default function App(): ReactElement {
 
   if (currentTechnique) {
     mainContent = (
-      <TechniquePage
-        technique={currentTechnique}
-        progress={currentProgress ?? null}
-        copy={copy}
-        locale={locale}
-        backLabel={techniqueBackLabel}
-        onBack={() => closeTechnique()}
-        onToggleBookmark={() => toggleBookmark(currentTechnique, currentProgress ?? null)}
-        collections={db.collections}
-        bookmarkCollections={db.bookmarkCollections}
-        onAssignToCollection={(collectionId) => assignToCollection(currentTechnique.id, collectionId)}
-        onRemoveFromCollection={(collectionId) => removeFromCollection(currentTechnique.id, collectionId)}
-        onOpenGlossary={openGlossaryTerm}
-        onFeedbackClick={() => goToFeedback()}
+      <Suspense
+        fallback={
+          <div className="max-w-6xl mx-auto px-4 py-6">
+            <div className="rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-5 text-sm text-subtle">
+              {copy.loading}
+            </div>
+          </div>
+        }
+      >
+        <TechniquePage
+          technique={currentTechnique}
+          progress={currentProgress ?? null}
+          copy={copy}
+          locale={locale}
+          backLabel={techniqueBackLabel}
+          onBack={() => closeTechnique()}
+          onToggleBookmark={() => toggleBookmark(currentTechnique, currentProgress ?? null)}
+          collections={db.collections}
+          bookmarkCollections={db.bookmarkCollections}
+          onAssignToCollection={(collectionId) => assignToCollection(currentTechnique.id, collectionId)}
+          onRemoveFromCollection={(collectionId) => removeFromCollection(currentTechnique.id, collectionId)}
+          onOpenGlossary={openGlossaryTerm}
+          onFeedbackClick={() => goToFeedback()}
           onCreateCollection={createCollection}
-      />
+        />
+      </Suspense>
     );
   } else if (currentGlossaryTerm) {
     // Render glossary detail when an active glossary term is set, regardless of current route
@@ -1091,14 +1128,24 @@ export default function App(): ReactElement {
     );
   } else if (route === 'feedback') {
     mainContent = (
-      <FeedbackPage
-        copy={copy}
-        locale={locale}
-        techniques={db.techniques}
-        onBack={() => navigateTo('library')}
-        initialType={feedbackInitialType}
-        onConsumeInitialType={() => setFeedbackInitialType(null)}
-      />
+      <Suspense
+        fallback={
+          <div className="max-w-4xl mx-auto px-4 py-6">
+            <div className="rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-5 text-sm text-subtle">
+              {copy.loading}
+            </div>
+          </div>
+        }
+      >
+        <FeedbackPage
+          copy={copy}
+          locale={locale}
+          techniques={db.techniques}
+          onBack={() => navigateTo('library')}
+          initialType={feedbackInitialType}
+          onConsumeInitialType={() => setFeedbackInitialType(null)}
+        />
+      </Suspense>
     );
   } else {
     mainContent = (
@@ -1124,6 +1171,8 @@ export default function App(): ReactElement {
               <button
                 type="button"
                 onClick={() => goToFeedback('newTechnique')}
+                onMouseEnter={prefetchFeedbackPage}
+                onFocus={prefetchFeedbackPage}
                 className="inline-flex items-center gap-2 rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2 text-sm transition-soft hover-border-adaptive"
               >
                 <PencilLineIcon width={20} height={20} aria-hidden />
@@ -1149,6 +1198,8 @@ export default function App(): ReactElement {
                   <button
                     type="button"
                     onClick={() => goToFeedback('newTechnique')}
+                    onMouseEnter={prefetchFeedbackPage}
+                    onFocus={prefetchFeedbackPage}
                     className="w-full inline-flex items-center justify-center gap-2 rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2 text-sm transition-soft hover-border-adaptive"
                   >
                     <PencilLineIcon width={20} height={20} aria-hidden />

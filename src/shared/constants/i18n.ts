@@ -3,6 +3,7 @@ import type { Locale } from '../types';
 export const messages = {
   en: {
     app: 'Enso',
+    loading: 'Loading…',
     search: 'Search techniques…',
     filters: 'Filters',
     resetFilters: 'Reset filters',
@@ -559,6 +560,7 @@ export const messages = {
   },
   de: {
     app: 'Enso',
+    loading: 'Wird geladen…',
     search: 'Techniken suchen…',
     filters: 'Filter',
     resetFilters: 'Filter zurücksetzen',
