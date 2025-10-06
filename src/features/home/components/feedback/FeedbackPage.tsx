@@ -13,7 +13,6 @@ import {
   HeartPulseIcon,
   LightbulbIcon,
   RocketIcon,
-  SproutIcon,
   PencilLineIcon,
   LinkIcon,
 } from '@shared/components/ui/icons';
@@ -2879,15 +2878,20 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
                     onClick={() => handleTypeChange(value)}
                     aria-pressed={isActive}
                     className={classNames(
-                      'text-left rounded-2xl border surface surface-border px-4 py-4 transition-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+                      // Make bug report card visually centered and wider on md screens
+                      value === 'bugReport' ? 'md:col-span-2' : '',
+                      'rounded-2xl border surface surface-border px-4 py-4 transition-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
                       isActive ? 'shadow-md' : 'shadow-sm surface-hover',
                     )}
                   >
-                    <div className="flex items-start gap-3">
+                    <div className={classNames(
+                      // Center the overall block for the bug card, but keep text left-aligned
+                      value === 'bugReport' ? 'flex items-center justify-center gap-3' : 'flex items-center gap-3',
+                    )}>
                       <span className="text-subtle" aria-hidden>
                         {content.icon}
                       </span>
-                      <div className="space-y-1">
+                      <div className="space-y-1 text-left">
                         <p className="font-medium text-[var(--color-text)]">{content.title}</p>
                         <p className="text-sm text-subtle">{content.description}</p>
                       </div>
