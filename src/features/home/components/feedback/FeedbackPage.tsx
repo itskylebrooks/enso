@@ -1717,7 +1717,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
         detailsPreviewMd: undefined,
       };
 
-  const v1 = buildFeedbackPayloadV1(formState as any, { locale: locale === 'de' ? 'de' : 'en', entityId: slugPreview || undefined });
+      const v1 = buildFeedbackPayloadV1(formState as any, { locale: locale === 'de' ? 'de' : 'en', entityId: slugPreview || undefined });
 
       // soft-warning: ensure at least one step or short summary is provided, but allow bypass on second attempt
       const allTextEmpty = v1.diffJson.name[locale] === 'EMPTY' && v1.diffJson.summary[locale] === 'EMPTY';
@@ -1728,18 +1728,8 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
         setSubmissionState('idle');
         return;
       }
-      // Normalize payload for server: ensure detailsMd is non-empty and media items are objects
-      const normalizedV1: any = { ...v1 };
-      // v1.media may be an array of strings (media URLs). Convert to server-expected objects.
-      if (Array.isArray(v1.media) && v1.media.length && typeof v1.media[0] === 'string') {
-        normalizedV1.media = (v1.media as string[]).map((u) => ({ type: 'link', url: u }));
-      }
-      // Ensure detailsMd is not empty (server requires min length 1)
-      if (!normalizedV1.detailsMd || String(normalizedV1.detailsMd).trim().length === 0) {
-        normalizedV1.detailsMd = form.summary || (form.steps || []).map((s: any) => s.text || '').filter(Boolean).join('\n') || 'New technique proposal';
-      }
 
-      payload = normalizedV1;
+      payload = v1;
     } else {
       payload = buildFeedbackPayload(selectedCard, draft, {
         slugPreview,
