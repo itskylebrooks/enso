@@ -2170,7 +2170,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
 
         <section className="grid gap-4 md:grid-cols-3">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.variation.directionLabel}</label>
+            <label className="text-sm font-semibold text-[var(--color-text)]">{t.forms.variation.directionLabel}</label>
             <Select
               options={directionOptions}
               value={direction || 'none'}
@@ -2178,7 +2178,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
             />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.variation.stanceLabel}</label>
+            <label className="text-sm font-semibold text-[var(--color-text)]">{t.forms.variation.stanceLabel}</label>
             <Select
               options={stanceOptions}
               value={stance ?? 'none'}
@@ -2186,7 +2186,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
             />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.variation.levelLabel}</label>
+            <label className="text-sm font-semibold text-[var(--color-text)]">{t.forms.variation.levelLabel}</label>
             <Select
               options={levelOptions}
               value={level ?? 'none'}
@@ -2198,22 +2198,12 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
         <section className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.variation.trainerLabel}</label>
-              <input
-                type="text"
-                value={trainer}
-                onChange={(event) => updateVariation('trainer', event.target.value)}
-                placeholder={t.placeholders.variationTrainer}
-                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus-halo focus:outline-none"
-              />
-            </div>
-            <div className="space-y-2">
               <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.variation.creditNameLabel}</label>
               <input
                 type="text"
                 value={creditName}
                 onChange={(event) => updateVariation('creditName', event.target.value)}
-                placeholder={t.placeholders.variationCreditName}
+                placeholder={t.placeholders.contributorName}
                 className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus-halo focus:outline-none"
               />
             </div>
@@ -2242,7 +2232,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
         </section>
 
         <section className="space-y-2">
-          <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.variation.summaryLabel}</label>
+          <label className="text-sm font-semibold text-[var(--color-text)]">{t.forms.variation.summaryLabel}</label>
           <textarea
             rows={4}
             value={summary}
@@ -2295,7 +2285,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
         </section>
 
         <section className="space-y-2">
-          <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.variation.ukeLabel}</label>
+          <label className="text-sm font-semibold text-[var(--color-text)]">{t.forms.variation.ukeLabel}</label>
           <textarea
             rows={3}
             value={ukeInstructions}

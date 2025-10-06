@@ -293,7 +293,7 @@ export const messages = {
         contributorName: 'Your name for credit',
       },
       hints: {
-        stepHelper: 'Each line becomes a JSON array entry.',
+        stepHelper: '',
         summaryHint: 'Double-check the details before sending.',
   successTitle: 'Thank you! Your contribution will be reviewed and added soon.',
         successBody: 'You’ve helped keep Enso alive and evolving.',
@@ -459,7 +459,7 @@ export const messages = {
           switch: 'Switch to “New version / variation”',
         },
         consentLabelUpdated: 'By submitting, you agree your contribution may appear in the Enso database.',
-        lineageToggle: 'Mark as canonical base version',
+        lineageToggle: 'Mark as base version',
         lineageHelp: 'Uncheck if this technique belongs to a specific trainer/dojo lineage.',
         
         errors: {
@@ -794,7 +794,7 @@ export const messages = {
           contextLabel: 'Kontext oder Notizen (optional)',
           creditNameLabel: 'Credit-Name (optional)',
           trainerCreditLabel: 'Trainer-/Dojo-Credit (optional)',
-          markAsBaseLabel: 'Als Basisversion markieren',
+          markAsBaseLabel: 'Als Grundform markieren',
           directionOptions: {
             irimi: 'Irimi',
             tenkan: 'Tenkan',
@@ -855,7 +855,7 @@ export const messages = {
         contributorName: 'Dein Name für die Nennung',
       },
       hints: {
-        stepHelper: 'Jede Zeile wird zu einem JSON-Arrayeintrag.',
+        stepHelper: '',
         summaryHint: 'Prüfe alles noch einmal, bevor du sendest.',
   successTitle: 'Danke! Dein Beitrag wird geprüft und bald ergänzt.',
         successBody: 'Du hilfst dabei, Enso lebendig zu halten.',
@@ -1020,7 +1020,7 @@ export const messages = {
           switch: 'Zu „Neue Variante / Version“ wechseln',
         },
         consentLabelUpdated: 'Mit dem Absenden stimmst du zu, dass dein Beitrag in der Enso-Datenbank erscheinen darf.',
-        lineageToggle: 'Als kanonische Basisversion markieren',
+        lineageToggle: 'Als Grundform markieren',
         lineageHelp: 'Deaktiviere dies, wenn die Technik zu einer bestimmten Trainer-/Dojo-Linie gehört.',
         
         errors: {
