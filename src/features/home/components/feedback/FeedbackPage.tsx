@@ -275,15 +275,11 @@ const slugify = (value: string): string =>
     .replace(/\s+/g, '-')
     .replace(/-+/g, '-');
 
-const buildNewTechniqueSlug = (
-  attack: string | null,
-  name: string,
-  entries: Entry | '',
-): string => {
-  const attackSegment = attack ? slugify(attack) : '';
+const buildNewTechniqueSlug = (name: string): string => {
+  // Slug should be derived only from the technique name. Exclude primary attack
+  // and entry focus from the URL slug to keep slugs stable and concise.
   const nameSegment = name.trim() ? slugify(name) : '';
-  const entriesSegment = entries ? String(entries) : '';
-  return [attackSegment, nameSegment, entriesSegment].filter(Boolean).join('-');
+  return nameSegment;
 };
 
 const isUnusualAttackWeapon = (attack: string | null, weapon: string | null): boolean => {
@@ -298,7 +294,7 @@ const isUnusualAttackWeapon = (attack: string | null, weapon: string | null): bo
 };
 
 const computeDuplicateMatches = (form: NewTechniqueForm, techniques: Technique[]): Technique[] => {
-  const slugPreview = buildNewTechniqueSlug(form.attack, form.name, form.entries);
+  const slugPreview = buildNewTechniqueSlug(form.name);
   const normalizedSlug = slugPreview ? toSearchable(slugPreview) : '';
   const normalizedName = toSearchable(form.name);
   const attack = form.attack;
@@ -1285,8 +1281,8 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
   useAutosave(draft);
 
   const slugPreview = useMemo(
-    () => buildNewTechniqueSlug(draft.newTechnique.attack, draft.newTechnique.name, draft.newTechnique.entries),
-    [draft.newTechnique.attack, draft.newTechnique.name, draft.newTechnique.entries],
+  () => buildNewTechniqueSlug(draft.newTechnique.name),
+  [draft.newTechnique.name],
   );
 
   const duplicateMatches = useMemo(
