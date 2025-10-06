@@ -1041,6 +1041,7 @@ export default function App(): ReactElement {
           </div>
         }
       >
+        <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={pageMotion.transition}>
         <TechniquePage
           technique={currentTechnique}
           progress={currentProgress ?? null}
@@ -1057,6 +1058,7 @@ export default function App(): ReactElement {
           onFeedbackClick={() => goToFeedback()}
           onCreateCollection={createCollection}
         />
+        </motion.div>
       </Suspense>
     );
   } else if (currentGlossaryTerm) {
@@ -1167,6 +1169,7 @@ export default function App(): ReactElement {
           </div>
         }
       >
+        <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={pageMotion.transition}>
         <FeedbackPage
           copy={copy}
           locale={locale}
@@ -1175,6 +1178,7 @@ export default function App(): ReactElement {
           initialType={feedbackInitialType}
           onConsumeInitialType={() => setFeedbackInitialType(null)}
         />
+        </motion.div>
       </Suspense>
     );
   } else {
