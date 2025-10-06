@@ -206,6 +206,15 @@ button {
   }
 }
 
+/* Prevent iOS Safari input zoom on small screens by ensuring >=16px font-size */
+@media (max-width: 480px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px !important; /* override text-sm to avoid zoom */
+  }
+}
+
 /* When a card should be visually de-emphasized while an inline menu is open */
 .blur-card {
   filter: blur(2px);
