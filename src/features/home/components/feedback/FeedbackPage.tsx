@@ -14,6 +14,7 @@ import {
   LightbulbIcon,
   RocketIcon,
   SproutIcon,
+  PencilLineIcon,
   LinkIcon,
 } from '@shared/components/ui/icons';
 import type { Copy, FeedbackPageCopy } from '@shared/constants/i18n';
@@ -1361,7 +1362,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
         description: t.cards.variation.description,
       },
       newTechnique: {
-        icon: <SproutIcon className="w-5 h-5" aria-hidden />,
+        icon: <PencilLineIcon className="w-5 h-5" aria-hidden />,
         title: t.cards.newTechnique.title,
         description: t.cards.newTechnique.description,
       },
