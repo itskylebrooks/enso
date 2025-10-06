@@ -1728,18 +1728,9 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
         setSubmissionState('idle');
         return;
       }
-      // Normalize payload for server: ensure detailsMd is non-empty and media items are objects
-      const normalizedV1: any = { ...v1 };
-      // v1.media may be an array of strings (media URLs). Convert to server-expected objects.
-      if (Array.isArray(v1.media) && v1.media.length && typeof v1.media[0] === 'string') {
-        normalizedV1.media = (v1.media as string[]).map((u) => ({ type: 'link', url: u }));
-      }
-      // Ensure detailsMd is not empty (server requires min length 1)
-      if (!normalizedV1.detailsMd || String(normalizedV1.detailsMd).trim().length === 0) {
-        normalizedV1.detailsMd = form.summary || (form.steps || []).map((s: any) => s.text || '').filter(Boolean).join('\n') || 'New technique proposal';
-      }
+      
+      payload = v1;
 
-      payload = normalizedV1;
     } else {
       payload = buildFeedbackPayload(selectedCard, draft, {
         slugPreview,
@@ -1778,8 +1769,14 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
         // Clear only the active form fields so inputs become empty, but keep the selected card visible.
         clearCurrentForm(selectedCard ?? undefined);
       } else {
-        const message = result?.message || 'Feedback submission failed.';
-        setSubmitError(message);
+          // If server returned validation issues include them for debugging
+          const message = result?.message || 'Feedback submission failed.';
+          if (result?.issues && Array.isArray(result.issues)) {
+            const issueText = result.issues.map((i: any) => `${i.path?.join('.') || ''}: ${i.message}`).join(' · ');
+            setSubmitError(`${message} (${issueText})`);
+          } else {
+            setSubmitError(message);
+          }
         setSubmitResult(result);
         setSubmissionState('error');
       }
