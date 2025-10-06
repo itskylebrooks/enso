@@ -28,8 +28,6 @@ const FeedbackSchema = z
   })
   .strict();
 
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
 const readRequestBody = async (req: VercelRequest): Promise<string> => {
   return new Promise((resolve, reject) => {
     let size = 0;
@@ -55,10 +53,6 @@ const escapeInline = (value: string): string => {
   const normalized = value.replace(/\r/g, '').split('\n').map((line) => line.trim()).join(' ');
   return ['*', '[', ']', '`'].reduce((acc, ch) => acc.split(ch).join(`\\${ch}`), normalized);
 };
-
-// Simplified server handler: we no longer create GitHub issues from the server.
-// The handler will validate the payload and return a successful response with a requestId.
-// This keeps the server-side flow but removes external GitHub interaction.
 
 const validateOrigin = (req: VercelRequest): boolean => {
   const origin = req.headers.origin;
@@ -101,8 +95,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
     return;
   }
 
-  await sleep(50 + Math.floor(Math.random() * 100));
-
   let parsed: unknown;
   try {
     parsed = JSON.parse(raw);
@@ -126,10 +118,23 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
 
   // Try to create a GitHub issue if credentials/config are present in env.
   const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-  const GITHUB_REPO_OWNER = process.env.GITHUB_REPO_OWNER;
-  const GITHUB_REPO_NAME = process.env.GITHUB_REPO_NAME;
+  const rawRepoOwner = process.env.GITHUB_REPO_OWNER ?? process.env.GITHUB_OWNER;
+  const rawRepoName = process.env.GITHUB_REPO_NAME ?? process.env.GITHUB_REPO;
 
-  if (!GITHUB_TOKEN || !GITHUB_REPO_OWNER || !GITHUB_REPO_NAME) {
+  let repoOwner = rawRepoOwner ?? undefined;
+  let repoName = rawRepoName ?? undefined;
+
+  if (!repoOwner && repoName && repoName.includes('/')) {
+    const [owner, name] = repoName.split('/', 2);
+    repoOwner = owner || undefined;
+    repoName = name || undefined;
+  }
+
+  if (repoName && repoName.includes('/')) {
+    repoName = repoName.split('/').pop() || repoName;
+  }
+
+  if (!GITHUB_TOKEN || !repoOwner || !repoName) {
     // Not configured — accept the feedback but inform the client that no issue was created.
     res.status(201).json({ ok: true, requestId, warning: 'github_not_configured' });
     return;
@@ -164,7 +169,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
 
   try {
     const ghResp = await fetch(
-      `https://api.github.com/repos/${encodeURIComponent(GITHUB_REPO_OWNER)}/${encodeURIComponent(GITHUB_REPO_NAME)}/issues`,
+      `https://api.github.com/repos/${encodeURIComponent(repoOwner)}/${encodeURIComponent(repoName)}/issues`,
       {
         method: 'POST',
         headers: {

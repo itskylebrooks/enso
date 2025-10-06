@@ -384,10 +384,12 @@ pnpm lint
 Add a `.env.local` file (git-ignored) and configure the GitHub target for feedback submissions:
 
 ```
-GITHUB_TOKEN=***           # Fine-grained PAT, Issues: Read & Write, scoped to the target repo
-GITHUB_OWNER=your-user-or-org
-GITHUB_REPO=enso-feedback   # Repository to receive feedback issues
+GITHUB_TOKEN=***              # Fine-grained PAT, Issues: Read & Write, scoped to the target repo
+GITHUB_REPO_OWNER=your-user-or-org
+GITHUB_REPO_NAME=enso-feedback # Repository to receive feedback issues
 ```
+
+Legacy env names `GITHUB_OWNER`/`GITHUB_REPO` are still accepted if you prefer a shorter pair (`GITHUB_REPO` may also be set to `owner/repo`).
 
 Configure the same variables in your Vercel project (Production / Preview / Development) before deploying the API route.
 
