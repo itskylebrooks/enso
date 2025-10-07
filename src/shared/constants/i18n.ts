@@ -136,6 +136,9 @@ export const messages = {
   aboutAuthorPart3: 'The photo below was taken during an Aikidō Lehrgang led by Werner Lättig at the WSV Walddörfer Sportverein in November 2024 — a quiet moment that reminds me why I practice: harmony, focus, and gratitude.',
   aboutAuthorPart4: 'Outside the dojo, I study Software Systems Development at the University of Hamburg, and I build with React, TypeScript, and local-first principles. Enso is where those two paths meet — code and budō — where simplicity becomes practice, and practice becomes clarity.',
     aboutLink: 'About',
+  portfolio: 'Portfolio',
+  iconsBy: 'Icons by',
+  copyrightReserved: 'All rights reserved.',
     guideLink: 'Guide',
     viewGuideCta: 'Study Guide',
     // Homepage strings
@@ -720,6 +723,9 @@ export const messages = {
   aboutAuthorPart3: 'Das Foto unten entstand während eines Aikidō-Lehrgangs mit Werner Lättig im WSV Walddörfer Sportverein im November 2024 — ein stiller Moment, der mich daran erinnert, warum ich übe: Harmonie, Konzentration und Dankbarkeit.',
   aboutAuthorPart4: 'Außerhalb des Dōjō studiere ich an der Universität Hamburg und arbeite mit React, TypeScript und lokalen Speicherprinzipien. Enso ist der Ort, an dem sich diese beiden Wege treffen — Code und Budō — wo Einfachheit zur Übung wird, und Übung zu Klarheit.',
     aboutLink: 'Über',
+  portfolio: 'Portfolio',
+  iconsBy: 'Icons von',
+  copyrightReserved: 'Alle Rechte vorbehalten.',
     guideLink: 'Leitfaden',
     viewGuideCta: 'Leitfaden ansehen',
     // Homepage strings

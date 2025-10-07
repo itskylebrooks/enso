@@ -241,7 +241,7 @@ export const SettingsModal = ({
               <div>Enso {pkg.version}</div>
               <div className="relative flex items-center justify-center py-1">
                 {/* left icon container, vertically centered with this row */}
-                <div className="absolute left-4 inset-y-0 flex items-center">
+                <div className="absolute left-4 inset-y-0 flex flex-col items-center justify-center">
                   <button type="button" onClick={onNavigateToAbout} className="text-current" aria-label="About">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-info" aria-hidden>
                       <circle cx="12" cy="12" r="10" />
@@ -249,12 +249,16 @@ export const SettingsModal = ({
                       <path d="M12 8h.01" />
                     </svg>
                   </button>
+                    <div className="text-xs text-muted mt-1">{copy.aboutLink}</div>
                 </div>
 
-                <div>© {new Date().getFullYear()} Kyle Brooks. All rights reserved.</div>
+                <div>
+                  © {new Date().getFullYear()} Kyle Brooks.
+                  <span className="block sm:inline"> {copy.copyrightReserved}</span>
+                </div>
 
                 {/* right icon container, vertically centered with this row */}
-                <div className="absolute right-4 inset-y-0 flex items-center">
+                <div className="absolute right-4 inset-y-0 flex flex-col items-center justify-center">
                   <a href="https://itskylebrooks.vercel.app/" target="_blank" rel="noreferrer" className="text-current" aria-label="Kyle Brooks website">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-square-arrow-out-up-right" aria-hidden>
                       <path d="M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6" />
@@ -262,11 +266,12 @@ export const SettingsModal = ({
                       <path d="M15 3h6v6" />
                     </svg>
                   </a>
+                  <div className="text-xs text-muted mt-1">{copy.portfolio}</div>
                 </div>
               </div>
 
               <div>
-                Icons by{' '}
+                {copy.iconsBy}{' '}
                 <a href="https://lucide.dev/" target="_blank" rel="noreferrer" className="underline">
                   Lucide
                 </a>
