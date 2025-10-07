@@ -38,7 +38,7 @@ const buildEntryModeOptions = (locale: Locale, values: string[]) => {
   }));
 };
 
-const buildTrainerOptions = (values: string[]): Option[] => {
+const buildTrainerOptions = (locale: Locale, values: string[]): Option[] => {
   const formatTrainerName = (trainerId: string): string => {
     return trainerId
       .split('-')
@@ -46,10 +46,18 @@ const buildTrainerOptions = (values: string[]): Option[] => {
       .join(' ');
   };
   
-  return values.map((value) => ({
+  const options = values.map((value) => ({
     value,
     label: formatTrainerName(value),
-  })).sort((a, b) => a.label.localeCompare(b.label));
+  }));
+
+  const hasBase = values.includes('base-forms');
+  if (hasBase) {
+    const filtered = options.filter((o) => o.value !== 'base-forms');
+    return [{ value: 'base-forms', label: locale === 'de' ? 'Grundformen' : 'Base forms' }, ...filtered.sort((a, b) => a.label.localeCompare(b.label, locale))];
+  }
+
+  return options.sort((a, b) => a.label.localeCompare(b.label, locale));
 };
 
 type MobileFiltersProps = {
@@ -95,7 +103,7 @@ export const MobileFilters = ({
     [normalizedStances, locale],
   );
   const weaponOptions = useMemo(() => buildTaxonomyOptions(locale, 'weapon', weapons), [weapons, locale]);
-  const trainerOptions = useMemo(() => buildTrainerOptions(trainers), [trainers]);
+  const trainerOptions = useMemo(() => buildTrainerOptions(locale, trainers), [trainers, locale]);
   const levelOptions = useMemo<Option[]>(
     () =>
       levels.map((grade) => ({

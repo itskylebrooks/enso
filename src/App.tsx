@@ -269,13 +269,20 @@ const getSelectableValues = (techniques: Technique[], selector: (technique: Tech
       .sort(),
   );
 
-const getTrainerValues = (techniques: Technique[]): string[] =>
-  unique(
-    techniques
-      .flatMap((technique) => technique.versions.map((version) => version.trainerId))
-      .filter((value): value is string => Boolean(value && value.trim().length > 0))
-      .sort(),
-  );
+const getTrainerValues = (techniques: Technique[]): string[] => {
+  const trainerIds = techniques
+    .flatMap((technique) => technique.versions.map((version) => version.trainerId))
+    .filter((v): v is string => Boolean(v && v.trim().length > 0));
+
+  const hasBaseVersions = techniques.some((technique) => technique.versions.some((version) => !version.trainerId));
+
+  const values = unique(trainerIds).sort();
+  if (hasBaseVersions) {
+    // place 'base-forms' at the front so the option is visible
+    return ['base-forms', ...values];
+  }
+  return values;
+};
 
 function applyFilters(techniques: Technique[], filters: Filters): Technique[] {
   return techniques.filter((technique) => {
@@ -292,7 +299,14 @@ function applyFilters(techniques: Technique[], filters: Filters): Technique[] {
       const hasEntryMode = technique.versions.some((version) => Boolean(version.stepsByEntry?.[requiredEntry]));
       if (!hasEntryMode) return false;
     }
-    if (filters.trainer && !technique.versions.some(version => version.trainerId === filters.trainer)) return false;
+    if (filters.trainer) {
+      if (filters.trainer === 'base-forms') {
+        // include techniques which have at least one base version (version without trainerId)
+        if (!technique.versions.some((version) => !version.trainerId)) return false;
+      } else {
+        if (!technique.versions.some((version) => version.trainerId === filters.trainer)) return false;
+      }
+    }
     return true;
   }).sort((a, b) => {
     // Sort all techniques alphabetically by name (English), regardless of category

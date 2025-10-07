@@ -62,7 +62,7 @@ const buildEntryModeOptions = (locale: Locale, values: string[]): Option[] => {
   }));
 };
 
-const buildTrainerOptions = (values: string[]): Option[] => {
+const buildTrainerOptions = (locale: Locale, values: string[]): Option[] => {
   // Format trainer IDs into more readable names
   const formatTrainerName = (trainerId: string): string => {
     return trainerId
@@ -70,11 +70,22 @@ const buildTrainerOptions = (values: string[]): Option[] => {
       .map(word => word.charAt(0).toUpperCase() + word.slice(1))
       .join(' ');
   };
-  
-  return values.map((value) => ({
+
+  const options = values.map((value) => ({
     value,
     label: formatTrainerName(value),
-  })).sort((a, b) => a.label.localeCompare(b.label));
+  }));
+
+  // If there are techniques that are base versions (no trainer), expose a special option
+  // We'll include it as value 'base-forms' and label localized via copy/messages where needed
+  const hasBase = values.includes('base-forms');
+  if (hasBase) {
+    // ensure 'base-forms' sits at the top of the list and do not let it be re-sorted
+    const filtered = options.filter((o) => o.value !== 'base-forms');
+    return [{ value: 'base-forms', label: locale === 'de' ? 'Grundformen' : 'Base forms' }, ...filtered.sort((a, b) => a.label.localeCompare(b.label, locale))];
+  }
+
+  return options.sort((a, b) => a.label.localeCompare(b.label, locale));
 };
 
 export const FilterPanel = ({
@@ -117,7 +128,7 @@ export const FilterPanel = ({
   const attackOptions = useMemo(() => buildTaxonomyOptions(locale, 'attack', attacks), [attacks, locale]);
   const stanceOptions = useMemo(() => buildEntryModeOptions(locale, normalizedStances), [normalizedStances, locale]);
   const weaponOptions = useMemo(() => buildTaxonomyOptions(locale, 'weapon', weapons), [weapons, locale]);
-  const trainerOptions = useMemo(() => buildTrainerOptions(trainers), [trainers]);
+  const trainerOptions = useMemo(() => buildTrainerOptions(locale, trainers), [trainers, locale]);
   const levelOptions = useMemo<Option[]>(
     () =>
       levels.map((grade) => ({
