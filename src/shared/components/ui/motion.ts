@@ -201,9 +201,11 @@ export const useMotionPreferences = () => {
 
   const collapseMotion = useMemo(
     () => ({
-      // On Android prefer the scaleY-based collapseVariants which are cheaper
-      // than animating height:auto. Respect reduced-motion first.
-      variants: prefersReducedMotion ? reducedCollapseVariants : isAndroid ? collapseVariants : collapseVariants,
+      // Prefer height-based collapse (height: 0 / auto) for most platforms so
+      // closed panels don't leave a static visual height in the layout. On
+      // Android we keep the scaleY-based variants which are cheaper to
+      // composite and avoid animating height:auto there. Respect reduced-motion first.
+      variants: prefersReducedMotion ? reducedCollapseVariants : isAndroid ? collapseVariants : reducedCollapseVariants,
       transition: prefersReducedMotion ? reducedPageTransition : { duration: 0.25, ease: defaultEase },
     }),
     [prefersReducedMotion],
