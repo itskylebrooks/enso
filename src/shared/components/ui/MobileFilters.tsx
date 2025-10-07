@@ -144,13 +144,9 @@ export const MobileFilters = ({
           <button
             type="button"
             onClick={handleReset}
-            aria-label={copy.resetFilters}
-            className="text-subtle transition-colors duration-150 hover:text-[var(--color-text)]"
+            className="text-xs font-medium underline-offset-4 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M9 14 4 9l5-5" />
-              <path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11" />
-            </svg>
+            {copy.resetFilters}
           </button>
         )}
       </div>
