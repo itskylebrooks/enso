@@ -173,9 +173,9 @@ export const useMotionPreferences = () => {
         : isAndroid
         ? androidBackdropVariants
         : backdropVariants,
-      // Use panel variants with will-change/transform hints on Android for
-      // better compositing performance there.
-      panel: prefersReducedMotion ? reducedPanelVariants : isAndroid ? panelVariantsWithHints : panelVariants,
+      // Keep panel animations identical across platforms; only the backdrop
+      // differs on Android. This ensures the panel UX matches iPhone.
+      panel: prefersReducedMotion ? reducedPanelVariants : panelVariants,
       transition: prefersReducedMotion ? reducedPageTransition : pageTransition,
       panelTransition: prefersReducedMotion ? reducedPageTransition : springEase,
       closeButton: prefersReducedMotion ? reducedCloseButtonVariants : closeButtonVariants,
@@ -201,11 +201,9 @@ export const useMotionPreferences = () => {
 
   const collapseMotion = useMemo(
     () => ({
-      // Prefer height-based collapse (height: 0 / auto) for most platforms so
-      // closed panels don't leave a static visual height in the layout. On
-      // Android we keep the scaleY-based variants which are cheaper to
-      // composite and avoid animating height:auto there. Respect reduced-motion first.
-      variants: prefersReducedMotion ? reducedCollapseVariants : isAndroid ? collapseVariants : reducedCollapseVariants,
+      // Use the same collapse animation across platforms so mobile panels
+      // behave consistently. Only the backdrop animation is platform-specific.
+      variants: prefersReducedMotion ? reducedCollapseVariants : reducedCollapseVariants,
       transition: prefersReducedMotion ? reducedPageTransition : { duration: 0.25, ease: defaultEase },
     }),
     [prefersReducedMotion],

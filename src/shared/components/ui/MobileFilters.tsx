@@ -1,65 +1,15 @@
 import { useMemo, useState } from 'react';
 import type { ReactElement } from 'react';
-import { PencilLineIcon } from '@shared/components/ui/icons';
+import { motion } from 'motion/react';
 import type { Copy } from '@shared/constants/i18n';
 import type { Filters, Grade, Locale } from '@shared/types';
-import { gradePalette } from '@shared/styles/belts';
 import { classNames } from '../../utils/classNames';
+import { gradePalette } from '@shared/styles/belts';
 import { getLevelLabel, getOrderedTaxonomyValues, getTaxonomyLabel, type TaxonomyType } from '@shared/i18n/taxonomy';
 import { ENTRY_MODE_ORDER } from '@shared/constants/entryModes';
-
-const buildTaxonomyOptions = (locale: Locale, type: TaxonomyType, values: string[]) => {
-  const ordered = getOrderedTaxonomyValues(type);
-  const known = new Set(ordered);
-  const extras = values.filter((value) => value && !known.has(value));
-  const entries = [...ordered, ...extras];
-  const options = entries.map((value) => ({
-    value,
-    label: getTaxonomyLabel(locale, type, value),
-  }));
-  
-  // Sort all taxonomy types alphabetically by label (requested by user)
-  return options.sort((a, b) => a.label.localeCompare(b.label, locale, {
-    sensitivity: 'accent',
-    caseFirst: 'upper'
-  }));
-};
-
-const buildEntryModeOptions = (locale: Locale, values: string[]) => {
-  const entryModeLabels: Record<string, string> = {
-    'irimi': locale === 'de' ? 'Irimi' : 'Irimi',
-    'omote': locale === 'de' ? 'Omote' : 'Omote',
-    'tenkan': locale === 'de' ? 'Tenkan' : 'Tenkan',
-    'ura': locale === 'de' ? 'Ura' : 'Ura',
-  };
-  
-  return values.map((value) => ({
-    value,
-    label: entryModeLabels[value] || value,
-  }));
-};
-
-const buildTrainerOptions = (locale: Locale, values: string[]): Option[] => {
-  const formatTrainerName = (trainerId: string): string => {
-    return trainerId
-      .split('-')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ');
-  };
-  
-  const options = values.map((value) => ({
-    value,
-    label: formatTrainerName(value),
-  }));
-
-  const hasBase = values.includes('base-forms');
-  if (hasBase) {
-    const filtered = options.filter((o) => o.value !== 'base-forms');
-    return [{ value: 'base-forms', label: locale === 'de' ? 'Grundformen' : 'Base forms' }, ...filtered.sort((a, b) => a.label.localeCompare(b.label, locale))];
-  }
-
-  return options.sort((a, b) => a.label.localeCompare(b.label, locale));
-};
+import { SectionTitle } from '../index';
+import { useMotionPreferences } from './motion';
+import { PencilLineIcon, ChevronDownIcon } from './icons';
 
 type MobileFiltersProps = {
   copy: Copy;
@@ -81,7 +31,49 @@ type SectionKey = 'category' | 'attack' | 'stance' | 'weapon' | 'level' | 'train
 type Option = {
   value: string;
   label: string;
-  badge?: ReactElement;
+  trailing?: ReactElement;
+};
+
+const buildTaxonomyOptions = (
+  locale: Locale,
+  type: TaxonomyType,
+  values: string[],
+): Option[] => {
+  const ordered = getOrderedTaxonomyValues(type);
+  const known = new Set(ordered);
+  const extras = values.filter((value) => value && !known.has(value));
+  const entries = [...ordered, ...extras];
+  const options = entries.map((value) => ({ value, label: getTaxonomyLabel(locale, type, value) }));
+  return options.sort((a, b) => a.label.localeCompare(b.label, locale, { sensitivity: 'accent', caseFirst: 'upper' }));
+};
+
+const buildEntryModeOptions = (locale: Locale, values: string[]): Option[] => {
+  const entryModeLabels: Record<string, string> = {
+    irimi: locale === 'de' ? 'Irimi' : 'Irimi',
+    tenkan: locale === 'de' ? 'Tenkan' : 'Tenkan',
+    omote: locale === 'de' ? 'Omote' : 'Omote',
+    ura: locale === 'de' ? 'Ura' : 'Ura',
+  };
+
+  return values.map((value) => ({ value, label: entryModeLabels[value] || value }));
+};
+
+const buildTrainerOptions = (locale: Locale, values: string[]): Option[] => {
+  const formatTrainerName = (trainerId: string): string =>
+    trainerId
+      .split('-')
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+
+  const options = values.map((value) => ({ value, label: formatTrainerName(value) }));
+
+  const hasBase = values.includes('base-forms');
+  if (hasBase) {
+    const filtered = options.filter((o) => o.value !== 'base-forms');
+    return [{ value: 'base-forms', label: locale === 'de' ? 'Grundformen' : 'Base forms' }, ...filtered.sort((a, b) => a.label.localeCompare(b.label, locale))];
+  }
+
+  return options.sort((a, b) => a.label.localeCompare(b.label, locale));
 };
 
 export const MobileFilters = ({
@@ -98,15 +90,24 @@ export const MobileFilters = ({
   onContribute,
   onContributePrefetch,
 }: MobileFiltersProps): ReactElement => {
-  const [openSection, setOpenSection] = useState<SectionKey | null>(null);
+  const hasActiveFilters = useMemo(() => Object.values(filters).some(Boolean), [filters]);
+
+  const [open, setOpen] = useState<Record<SectionKey, boolean>>({
+    category: true,
+    attack: false,
+    stance: false,
+    weapon: false,
+    level: false,
+    trainer: false,
+  });
+
+  const toggleOpen = (key: SectionKey): void => setOpen((prev) => ({ ...prev, [key]: !prev[key] }));
+
+  const normalizedStances = useMemo(() => (stances.length > 0 ? stances : ENTRY_MODE_ORDER), [stances]);
 
   const categoryOptions = useMemo(() => buildTaxonomyOptions(locale, 'category', categories), [categories, locale]);
   const attackOptions = useMemo(() => buildTaxonomyOptions(locale, 'attack', attacks), [attacks, locale]);
-  const normalizedStances = useMemo(() => (stances.length > 0 ? stances : ENTRY_MODE_ORDER), [stances]);
-  const stanceOptions = useMemo(
-    () => buildEntryModeOptions(locale, normalizedStances),
-    [normalizedStances, locale],
-  );
+  const stanceOptions = useMemo(() => buildEntryModeOptions(locale, normalizedStances), [normalizedStances, locale]);
   const weaponOptions = useMemo(() => buildTaxonomyOptions(locale, 'weapon', weapons), [weapons, locale]);
   const trainerOptions = useMemo(() => buildTrainerOptions(locale, trainers), [trainers, locale]);
   const levelOptions = useMemo<Option[]>(
@@ -114,10 +115,10 @@ export const MobileFilters = ({
       levels.map((grade) => ({
         value: grade,
         label: getLevelLabel(locale, grade),
-        badge: (
+        trailing: (
           <span
             aria-hidden
-            className="inline-flex h-4 w-12 flex-shrink-0 items-center justify-center rounded-sm"
+            className="inline-flex h-3 w-10 flex-shrink-0 items-center justify-center rounded-sm"
             style={{
               backgroundColor: gradePalette[grade].bg,
               color: gradePalette[grade].fg,
@@ -128,84 +129,88 @@ export const MobileFilters = ({
     [levels, locale],
   );
 
-  const toggleValue = <K extends keyof Filters>(key: K, value: Filters[K] | undefined): void => {
+  const handleToggle = <K extends keyof Filters>(key: K, value: Filters[K] | undefined): void => {
     const next = { ...filters, [key]: filters[key] === value ? undefined : value };
     onChange(next);
   };
 
-  const sections: Array<{ key: SectionKey; title: string; options: Option[]; selected?: string }> = [
-    { key: 'category', title: copy.category, options: categoryOptions, selected: filters.category },
-    { key: 'attack', title: copy.attack, options: attackOptions, selected: filters.attack },
-    { key: 'stance', title: copy.stance, options: stanceOptions, selected: filters.stance },
-    { key: 'weapon', title: copy.weapon, options: weaponOptions, selected: filters.weapon },
-    { key: 'trainer', title: copy.trainer, options: trainerOptions, selected: filters.trainer },
-    { key: 'level', title: copy.level, options: levelOptions, selected: filters.level },
-  ];
-
-  const hasActiveFilters = Object.values(filters).some(Boolean);
+  const handleReset = (): void => onChange({});
 
   return (
-    <div className="rounded-2xl border surface-border bg-[var(--color-surface)] p-4 space-y-4">
-      <div className="flex items-center justify-between">
-        <span className="text-sm font-semibold uppercase tracking-[0.2em] text-subtle">{copy.filters}</span>
+    <div className="rounded-2xl border surface-border bg-[var(--color-surface)] p-4">
+      <div className="flex items-center justify-between mb-3">
+        <SectionTitle>{copy.filters}</SectionTitle>
         {hasActiveFilters && (
           <button
             type="button"
-            onClick={() => onChange({})}
-            className="text-xs font-medium underline-offset-4 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+            onClick={handleReset}
+            aria-label={copy.resetFilters}
+            className="text-subtle transition-colors duration-150 hover:text-[var(--color-text)]"
           >
-            {copy.resetFilters}
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M9 14 4 9l5-5" />
+              <path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11" />
+            </svg>
           </button>
         )}
       </div>
-      <div className="space-y-2">
-        {sections.map(({ key, title, options, selected }) => {
-          const isOpen = openSection === key;
-          return (
-            <div key={key} className="border border-[var(--color-border)] rounded-xl bg-[var(--color-surface)]/70">
-              <button
-                type="button"
-                className="flex w-full items-center justify-between px-3 py-3 text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
-                aria-expanded={isOpen}
-                onClick={() => setOpenSection(isOpen ? null : key)}
-              >
-                <span className="text-sm font-medium">{title}</span>
-                <span aria-hidden className="text-xs text-subtle">{isOpen ? '▾' : '▸'}</span>
-              </button>
-              {isOpen && (
-                <div className="border-t border-[var(--color-border)]">
-                  <ul className="max-h-64 overflow-y-auto p-2 space-y-2">
-                    {options.map(({ value, label, badge }) => {
-                      const active = selected === value;
-                      return (
-                        <li key={value}>
-                          <button
-                            type="button"
-                            className={classNames(
-                              'w-full rounded-lg border px-3 py-2.5 text-sm flex items-center justify-between gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
-                              active
-                                ? 'bg-[var(--color-text)] text-[var(--color-bg)] border-[var(--color-text)] font-semibold shadow-sm'
-                                : 'surface surface-border hover:border-[var(--color-text)]',
-                            )}
-                            aria-pressed={active}
-                            onClick={() => toggleValue(key, active ? undefined : (value as Filters[SectionKey]))}
-                          >
-                            <span className="truncate">{label}</span>
-                            {badge}
-                          </button>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
-      {/* Mobile CTA inside the filter panel (mirrors desktop) */}
+
+      <FilterSection
+        title={copy.category}
+        options={categoryOptions}
+        selected={filters.category}
+        onSelect={(value) => handleToggle('category', value)}
+        isOpen={open.category}
+        onToggle={() => toggleOpen('category')}
+      />
+
+      <FilterSection
+        title={copy.attack}
+        options={attackOptions}
+        selected={filters.attack}
+        onSelect={(value) => handleToggle('attack', value)}
+        isOpen={open.attack}
+        onToggle={() => toggleOpen('attack')}
+      />
+
+      <FilterSection
+        title={copy.stance}
+        options={stanceOptions}
+        selected={filters.stance}
+        onSelect={(value) => handleToggle('stance', value)}
+        isOpen={open.stance}
+        onToggle={() => toggleOpen('stance')}
+      />
+
+      <FilterSection
+        title={copy.weapon}
+        options={weaponOptions}
+        selected={filters.weapon}
+        onSelect={(value) => handleToggle('weapon', value)}
+        isOpen={open.weapon}
+        onToggle={() => toggleOpen('weapon')}
+      />
+
+      <FilterSection
+        title={copy.trainer}
+        options={trainerOptions}
+        selected={filters.trainer}
+        onSelect={(value) => handleToggle('trainer', value)}
+        isOpen={open.trainer}
+        onToggle={() => toggleOpen('trainer')}
+      />
+
+      <FilterSection
+        title={copy.level}
+        options={levelOptions}
+        selected={filters.level}
+        onSelect={(value) => handleToggle('level', value as Grade | undefined)}
+        isOpen={open.level}
+        onToggle={() => toggleOpen('level')}
+      />
+
       {onContribute && (
-        <div>
+        <div className="mt-4">
           <button
             type="button"
             onClick={onContribute}
@@ -221,3 +226,71 @@ export const MobileFilters = ({
     </div>
   );
 };
+
+type FilterSectionProps = {
+  title: string;
+  options: Option[];
+  selected?: string;
+  onSelect: (value: string | undefined) => void;
+  isOpen?: boolean;
+  onToggle?: () => void;
+};
+
+const FilterSection = ({ title, options, selected, onSelect, isOpen = false, onToggle }: FilterSectionProps): ReactElement => {
+  const { collapseMotion } = useMotionPreferences();
+
+  return (
+    <section className="mb-3">
+      <button
+        type="button"
+        aria-expanded={isOpen}
+        onClick={onToggle}
+        className="flex w-full items-center justify-between text-left rounded-lg px-3 py-2 bg-[var(--color-surface)]/0 hover:bg-[var(--color-surface-hover)] focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] touch-manipulation"
+        style={{ minHeight: 40 }}
+      >
+        <SectionTitle><span className="text-sm">{title}</span></SectionTitle>
+        <motion.span aria-hidden className="text-subtle" animate={{ rotate: isOpen ? 0 : -90 }} transition={{ duration: 0.2, ease: 'easeInOut' }}>
+          <ChevronDownIcon className="w-4 h-4" />
+        </motion.span>
+      </button>
+
+      <motion.div className="overflow-hidden" initial={false} animate={isOpen ? 'open' : 'closed'} variants={collapseMotion.variants} transition={collapseMotion.transition}>
+        <div className="pt-3">
+          <OptionList options={options} selected={selected} onSelect={onSelect} />
+        </div>
+      </motion.div>
+    </section>
+  );
+};
+
+type OptionListProps = {
+  options: Option[];
+  selected?: string;
+  onSelect: (value: string | undefined) => void;
+};
+
+const OptionList = ({ options, selected, onSelect }: OptionListProps): ReactElement => (
+  <div className="space-y-2">
+    {options.map(({ value, label, trailing }) => {
+      const isActive = selected === value;
+
+      return (
+        <button
+          key={value}
+          type="button"
+          aria-pressed={isActive}
+          onClick={() => onSelect(isActive ? undefined : value)}
+          className={classNames(
+            'flex w-full items-center justify-between rounded-md border px-3 py-2 text-sm transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] hover:border-[var(--color-text)] hover:bg-[var(--color-surface-hover)] touch-manipulation',
+            isActive
+              ? 'bg-[var(--color-text)] text-[var(--color-bg)] border-[var(--color-text)] shadow-sm hover:bg-[var(--color-text)]'
+              : 'surface surface-border',
+          )}
+        >
+          <span className="truncate">{label}</span>
+          {trailing && <span className="ml-3 flex-shrink-0">{trailing}</span>}
+        </button>
+      );
+    })}
+  </div>
+);
