@@ -22,12 +22,25 @@ const TRAINERS: Trainer[] = [
     name: "Alfred Haase", 
     dojoId: "bsv"
   }
+  ,
+  {
+    id: "hubert-luhmann",
+    name: "Hubert Luhmann",
+    dojoId: "dab"
+  }
 ];
 
 const DOJOS: Dojo[] = [
   {
     id: "bsv",
     name: "BSV",
+    city: "Hamburg",
+    country: "DE"
+  }
+  ,
+  {
+    id: "dab",
+    name: "DAB",
     city: "Hamburg",
     country: "DE"
   }
