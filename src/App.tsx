@@ -1209,21 +1209,11 @@ export default function App(): ReactElement {
                 levels={gradeOrder}
                 trainers={trainers}
                 onChange={setFilters}
+                onContribute={() => goToFeedback('newTechnique')}
+                onContributePrefetch={prefetchFeedbackPage}
               />
             </div>
-            {/* Mobile CTA under filters, above grid */}
-            <div className="md:hidden mb-4">
-              <button
-                type="button"
-                onClick={() => goToFeedback('newTechnique')}
-                onMouseEnter={prefetchFeedbackPage}
-                onFocus={prefetchFeedbackPage}
-                className="inline-flex items-center gap-2 rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2 text-sm transition-soft hover-border-adaptive"
-              >
-                <PencilLineIcon width={20} height={20} aria-hidden />
-                {copy.feedbackAddTechniqueCta}
-              </button>
-            </div>
+            {/* Mobile CTA removed here — now rendered inside the MobileFilters panel */}
             <div className="grid md:grid-cols-[16rem,1fr] gap-6">
               <aside className="hidden md:block surface border surface-border rounded-2xl p-3 h-max sticky top-20">
                 <FilterPanel

@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import type { ReactElement } from 'react';
+import { PencilLineIcon } from '@shared/components/ui/icons';
 import type { Copy } from '@shared/constants/i18n';
 import type { Filters, Grade, Locale } from '@shared/types';
 import { gradePalette } from '@shared/styles/belts';
@@ -71,6 +72,8 @@ type MobileFiltersProps = {
   levels: Grade[];
   trainers: string[];
   onChange: (filters: Filters) => void;
+  onContribute?: () => void;
+  onContributePrefetch?: () => void;
 };
 
 type SectionKey = 'category' | 'attack' | 'stance' | 'weapon' | 'level' | 'trainer';
@@ -92,6 +95,8 @@ export const MobileFilters = ({
   levels,
   trainers,
   onChange,
+  onContribute,
+  onContributePrefetch,
 }: MobileFiltersProps): ReactElement => {
   const [openSection, setOpenSection] = useState<SectionKey | null>(null);
 
@@ -198,6 +203,21 @@ export const MobileFilters = ({
           );
         })}
       </div>
+      {/* Mobile CTA inside the filter panel (mirrors desktop) */}
+      {onContribute && (
+        <div>
+          <button
+            type="button"
+            onClick={onContribute}
+            onMouseEnter={onContributePrefetch}
+            onFocus={onContributePrefetch}
+            className="w-full inline-flex items-center justify-center gap-2 rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2 text-sm transition-soft hover-border-adaptive"
+          >
+            <PencilLineIcon width={20} height={20} aria-hidden />
+            {copy.feedbackAddTechniqueCta}
+          </button>
+        </div>
+      )}
     </div>
   );
 };
