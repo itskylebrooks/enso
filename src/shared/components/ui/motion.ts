@@ -35,6 +35,25 @@ export const backdropVariants: Variants = {
   },
 };
 
+// Android-friendly backdrop: avoid backdrop-filter (expensive) and animate
+// backgroundColor opacity instead. This keeps visual separation but is much
+// cheaper on many Android devices.
+export const androidBackdropVariants: Variants = {
+  initial: {
+    opacity: 0,
+    backgroundColor: 'rgba(0,0,0,0)',
+  },
+  animate: {
+    opacity: 1,
+    backgroundColor: 'rgba(0,0,0,0.32)',
+    willChange: 'background-color, opacity',
+  },
+  exit: {
+    opacity: 0,
+    backgroundColor: 'rgba(0,0,0,0)',
+  },
+};
+
 export const reducedBackdropVariants: Variants = {
   initial: { opacity: 0 },
   animate: { opacity: 1 },
@@ -46,6 +65,14 @@ export const panelVariants: Variants = {
   initial: { opacity: 0, y: 20, scale: 0.95 },
   animate: { opacity: 1, y: 0, scale: 1 },
   exit: { opacity: 0, y: -10, scale: 0.98 },
+};
+
+// Hint that transforms and opacity will change to allow the browser to
+// promote the element to its own layer on some platforms.
+export const panelVariantsWithHints: Variants = {
+  initial: { opacity: 0, y: 20, scale: 0.95, willChange: 'transform, opacity' },
+  animate: { opacity: 1, y: 0, scale: 1, willChange: 'transform, opacity' },
+  exit: { opacity: 0, y: -10, scale: 0.98, willChange: 'transform, opacity' },
 };
 
 export const reducedPanelVariants: Variants = {
@@ -80,14 +107,21 @@ export const reducedListItemVariants: Variants = {
 
 export const collapseVariants: Variants = {
   open: {
+    // animating to height: 'auto' can be very expensive on Android; prefer
+    // animating scaleY with transformOrigin set to the top to create a
+    // visually similar collapse/expand that is cheaper to composite.
     opacity: 1,
-    height: 'auto',
+    scaleY: 1,
+    transformOrigin: 'top',
     overflow: 'hidden',
+    willChange: 'transform, opacity',
   },
   closed: {
     opacity: 0,
-    height: 0,
+    scaleY: 0,
+    transformOrigin: 'top',
     overflow: 'hidden',
+    willChange: 'transform, opacity',
   },
 };
 
@@ -127,10 +161,21 @@ export const useMotionPreferences = () => {
     [prefersReducedMotion],
   );
 
+  // Lightweight runtime UA check to detect Android devices. We only use this
+  // to pick cheaper variants for Android; keep reduced-motion preference
+  // authoritative first.
+  const isAndroid = typeof navigator !== 'undefined' && /android/i.test(navigator.userAgent);
+
   const overlayMotion = useMemo(
     () => ({
-      backdrop: prefersReducedMotion ? reducedBackdropVariants : backdropVariants,
-      panel: prefersReducedMotion ? reducedPanelVariants : panelVariants,
+      backdrop: prefersReducedMotion
+        ? reducedBackdropVariants
+        : isAndroid
+        ? androidBackdropVariants
+        : backdropVariants,
+      // Use panel variants with will-change/transform hints on Android for
+      // better compositing performance there.
+      panel: prefersReducedMotion ? reducedPanelVariants : isAndroid ? panelVariantsWithHints : panelVariants,
       transition: prefersReducedMotion ? reducedPageTransition : pageTransition,
       panelTransition: prefersReducedMotion ? reducedPageTransition : springEase,
       closeButton: prefersReducedMotion ? reducedCloseButtonVariants : closeButtonVariants,
@@ -156,7 +201,9 @@ export const useMotionPreferences = () => {
 
   const collapseMotion = useMemo(
     () => ({
-      variants: prefersReducedMotion ? reducedCollapseVariants : collapseVariants,
+      // On Android prefer the scaleY-based collapseVariants which are cheaper
+      // than animating height:auto. Respect reduced-motion first.
+      variants: prefersReducedMotion ? reducedCollapseVariants : isAndroid ? collapseVariants : collapseVariants,
       transition: prefersReducedMotion ? reducedPageTransition : { duration: 0.25, ease: defaultEase },
     }),
     [prefersReducedMotion],
