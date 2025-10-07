@@ -1,5 +1,6 @@
 import { parseTechnique } from '@shared/types/content';
 import { APP_NAME, DB_VERSION, LOCALE_KEY, STORAGE_KEY, THEME_KEY } from '../constants/storage';
+import { FILTERS_KEY } from '../constants/storage';
 import type {
   BookmarkCollection,
   Collection,
@@ -615,4 +616,27 @@ export const clearDB = (): DB => {
     window.localStorage.removeItem(STORAGE_KEY);
   }
   return buildDefaultDB();
+};
+
+// Filters persistence helpers
+export const loadFilters = <T = unknown>(): T | null => {
+  const raw = readLocalStorage(FILTERS_KEY);
+  if (!raw) return null;
+  try {
+    return JSON.parse(raw) as T;
+  } catch {
+    return null;
+  }
+};
+
+export const saveFilters = (filters: unknown): void => {
+  try {
+    writeLocalStorage(FILTERS_KEY, JSON.stringify(filters));
+  } catch {
+    /* noop */
+  }
+};
+
+export const clearFilters = (): void => {
+  removeLocalStorage(FILTERS_KEY);
 };

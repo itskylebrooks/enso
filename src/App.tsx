@@ -37,6 +37,9 @@ import {
   saveDB,
   saveLocale,
   saveTheme,
+  loadFilters,
+  saveFilters,
+  clearFilters,
 } from './shared/services/storageService';
 import type {
   AppRoute,
@@ -348,7 +351,14 @@ export default function App(): ReactElement {
   const [theme, setTheme] = useState<Theme>(() => loadTheme());
   const [hasManualTheme, setHasManualTheme] = useState<boolean>(() => hasStoredTheme());
   const [db, setDB] = useState<DB>(() => loadDB());
-  const [filters, setFilters] = useState<Filters>(defaultFilters);
+  const [filters, setFilters] = useState<Filters>(() => {
+    try {
+      const persisted = loadFilters<Filters>();
+      return persisted ?? defaultFilters;
+    } catch {
+      return defaultFilters;
+    }
+  });
   const [glossaryFilters, setGlossaryFilters] = useState<{ category?: 'movement' | 'stance' | 'attack' | 'etiquette' | 'philosophy' | 'other' }>({});
   const [selectedCollectionId, setSelectedCollectionId] = useState<SelectedCollectionId>('all');
   const [route, setRoute] = useState<AppRoute>(() => getInitialLocation().route);
@@ -527,6 +537,15 @@ export default function App(): ReactElement {
     showToast(copy.toastDataCleared);
   }, [copy.toastDataCleared, handleCancelClear, setDB, showToast]);
 
+  // When clearing the DB, also clear persisted filters to avoid stale state
+  useEffect(() => {
+    // detect when DB becomes the default (clearDB was called)
+    if (db.techniques.length === 0) {
+      // unlikely — keep as a safety net
+      clearFilters();
+    }
+  }, [db]);
+
   useEffect(() => {
     const root = document.documentElement;
     if (theme === 'dark') {
@@ -551,6 +570,15 @@ export default function App(): ReactElement {
   useEffect(() => {
     saveDB(db);
   }, [db]);
+
+  // Persist filters to local storage so they survive reloads/navigation
+  useEffect(() => {
+    try {
+      saveFilters(filters);
+    } catch {
+      // noop
+    }
+  }, [filters]);
 
   useEffect(() => {
     if (selectedCollectionId === 'all' || selectedCollectionId === 'ungrouped') {

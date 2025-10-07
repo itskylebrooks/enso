@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { motion } from 'motion/react';
 import type { Copy } from '../../../shared/constants/i18n';
@@ -103,14 +103,14 @@ export const FilterPanel = ({
   const hasActiveFilters = useMemo(() => Object.values(filters).some(Boolean), [filters]);
 
   type SectionKey = 'category' | 'attack' | 'stance' | 'weapon' | 'level' | 'trainer';
-  const [open, setOpen] = useState<Record<SectionKey, boolean>>({
-    category: true,
-    attack: false,
-    stance: false,
-    weapon: false,
-    level: false,
-    trainer: false,
-  });
+  const [open, setOpen] = useState<Record<SectionKey, boolean>>(() => ({
+    category: Boolean(filters.category),
+    attack: Boolean(filters.attack),
+    stance: Boolean(filters.stance),
+    weapon: Boolean(filters.weapon),
+    level: Boolean(filters.level),
+    trainer: Boolean(filters.trainer),
+  }));
 
   const toggleOpen = (key: SectionKey): void => setOpen((prev) => ({ ...prev, [key]: !prev[key] }));
 
@@ -152,6 +152,19 @@ export const FilterPanel = ({
     const next = { ...filters, [key]: filters[key] === value ? undefined : value };
     onChange(next);
   };
+
+  // Open sections automatically when filters become active (covers persisted filters and later changes)
+  useEffect(() => {
+    setOpen((prev) => ({
+      ...prev,
+      category: prev.category || Boolean(filters.category),
+      attack: prev.attack || Boolean(filters.attack),
+      stance: prev.stance || Boolean(filters.stance),
+      weapon: prev.weapon || Boolean(filters.weapon),
+      level: prev.level || Boolean(filters.level),
+      trainer: prev.trainer || Boolean(filters.trainer),
+    }));
+  }, [filters.category, filters.attack, filters.stance, filters.weapon, filters.level, filters.trainer]);
 
   const handleReset = (): void => onChange({});
 
