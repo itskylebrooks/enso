@@ -88,6 +88,80 @@
         "en": "Koshi-nage is a powerful hip throw that relies on proper timing, deep entry, and leverage rather than strength. It teaches tori to blend with a committed attack and redirect the partner's energy efficiently. Due to the high fall, both tori and uke must be proficient in their roles to ensure safety.",
         "de": "Koshi-nage ist ein kraftvoller Hüftwurf, der auf richtigem Timing, einem tiefen Einstieg und Hebelwirkung anstelle von Kraft beruht. Er lehrt Tori, mit einem engagierten Angriff zu verschmelzen und die Energie des Partners effizient umzulenken. Wegen des hohen Falls müssen sowohl Tori als auch Uke ihre Rollen beherrschen, um die Sicherheit zu gewährleisten."
       }
+    },
+    {
+      "id": "v-luhmann",
+      "trainerId": "hubert-luhmann",
+      "dojoId": "dab",
+      "hanmi": "ai-hanmi",
+      "stepsByEntry": {
+        "irimi": {
+          "en": [
+            "From ai-hanmi, uke grabs both of your wrists (Ryote-tori). Stand upright, shoulders soft, weight centered on your back foot.",
+            "Exhale, feel uke's pressure and lower your center slightly to engage your hara without lifting the shoulders.",
+            "Execute a fluid two-step (Doppelschritt), entering diagonally into uke's space (Irimi) and bringing your hips slightly across his center.",
+            "As you enter, raise your right hand upward (palm toward the sky) and draw the left hand downward and inward toward your centre to break uke's balance.",
+            "Continue the right hand over uke’s arm while aligning your hip under his center of gravity; keep your spine upright.",
+            "Use the left hand's downward connection to lead uke's torso onto your hip; keep contact close and controlled — the hip, not the arms, carries the load.",
+            "Shift your weight forward, bend the knees slightly and extend from the hara so uke loses footing.",
+            "Allow the throw to develop from the hip movement; do not muscle with the arms — guide uke smoothly over your hip.",
+            "Release contact gently, follow uke's fall, maintain zanshin and be ready for the next technique."
+          ],
+          "de": [
+            "Aus Ai-Hanmi greift Uke mit beiden Händen deine Handgelenke (Ryote-tori). Stehe aufrecht, Schultern weich, Gewicht auf dem hinteren Bein zentriert.",
+            "Atme aus, spüre Ukes Druck und senke dein Zentrum leicht, aktiviere dein Hara ohne die Schultern anzuheben.",
+            "Führe einen fließenden Doppelschritt (Doppelschritt) diagonal in Ukes Raum (Irimi) aus und bringe deine Hüfte leicht quer vor seine Körpermitte.",
+            "Während du eintrittst, führe die rechte Hand nach oben (Handfläche zum Himmel) und ziehe die linke Hand nach unten und innen zum Zentrum, um Ukes Gleichgewicht zu brechen.",
+            "Führe die rechte Hand weiter über Ukes Arm, schiebe deine Hüfte unter seinen Schwerpunkt und behalte eine aufrechte Wirbelsäule.",
+            "Nutze die abwärts verbindende linke Hand, um Ukes Oberkörper auf deine Hüfte zu leiten; halte den Kontakt nah und kontrolliert — die Hüfte trägt, nicht die Arme.",
+            "Verlagere das Gewicht nach vorn, beuge leicht die Knie und strecke aus dem Hara, sodass Uke den Stand verliert.",
+            "Lass den Wurf aus der Hüftbewegung entstehen; arbeite nicht muskulär mit den Armen, sondern führe Uke ruhig über deine Hüfte.",
+            "Löse den Kontakt sanft, folge Ukes Fall, zeige Zanshin und sei bereit für die nächste Technik."
+          ]
+        }
+      },
+      "uke": {
+        "role": {
+          "en": "Provide a committed double-wrist grab from ai-hanmi. Do not stiffen; follow the lead of Nage's entry and the downward connection. Prepare to roll forward and protect your head.",
+          "de": "Gib einen engagierten Doppel-Handgelenksgriff aus Ai-Hanmi. Versteife dich nicht; folge der Führung des Nage-Einstiegs und der abwärts gerichteten Verbindung. Bereite dich auf ein Vorwärts-Ukemi vor und schütze den Kopf."
+        },
+        "notes": {
+          "en": [
+            "Allow your posture to be broken by the upward/downward lead instead of resisting.",
+            "Keep the elbow soft; move with the projection and prepare a forward roll (mae-ukemi).",
+            "Tuck your chin and round through the roll so the head is never the first contact."
+          ],
+          "de": [
+            "Lasse zu, dass deine Haltung durch die aufwärts/abwärts Führung gebrochen wird, anstatt Widerstand zu leisten.",
+            "Halte den Ellbogen weich; gehe mit der Projektion mit und bereite ein Vorwärts-Ukemi (Mae-ukemi) vor.",
+            "Kinn einziehen und durch die Rolle rund rollen, sodass der Kopf nie der erste Aufprall ist."
+          ]
+        }
+      },
+        "media": [
+        {
+          "type": "youtube",
+          "url": "https://www.youtube-nocookie.com/embed/8EzPsCrFMyg?si=86FatcLB2iH_ruhV"
+        }
+      ],
+      "commonMistakes": {
+        "en": [
+          "Entering too late or stepping straight into uke's line instead of diagonal Irimi.",
+          "Lifting the shoulders when lowering the center, which loses hara connection.",
+          "Using the arms to force the throw instead of letting the hip carry the projection.",
+          "Pulling backwards with the hands, allowing uke to re-establish balance."
+        ],
+        "de": [
+          "Zu spät eintreten oder gerade in Ukes Linie statt diagonal im Irimi-Schritt zu gehen.",
+          "Beim Absenken des Zentrums die Schultern anheben und dadurch die Hara-Verbindung verlieren.",
+          "Die Arme zum Erzwingen des Wurfs verwenden, statt die Hüfte die Projektion tragen zu lassen.",
+          "Mit den Händen nach hinten ziehen, wodurch Uke sein Gleichgewicht wiederherstellen kann."
+        ]
+      },
+      "context": {
+        "en": "This is an Irimi (entering) variant of Ryote-tori Koshi-nage that emphasizes a two-step entry (Doppelschritt), a clear up/ down hand rhythm to break balance, and close hip contact to project uke. It is Irimi — you enter and take the space — not a Tenkan (turning) technique. The throw should come from structure and timing, not arm strength.",
+        "de": "Dies ist eine Irimi-Variante des Ryote-tori Koshi-nage, die einen Doppelschritt (Doppelschritt), einen klaren Auf-/Ab-Handrhythmus zum Brechen des Gleichgewichts und enge Hüftverbindung zur Projektion von Uke betont. Es ist Irimi — du trittst ein und nimmst den Raum — kein Tenkan (Dreh-Technik). Der Wurf sollte aus Struktur und Timing entstehen, nicht aus Armmuskulatur."
+      }
     }
   ]
 }
