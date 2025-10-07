@@ -55,7 +55,8 @@ import type {
 } from './shared/types';
 import { gradeOrder } from './shared/utils/grades';
 import { unique, upsert } from './shared/utils/array';
-import { buildTechniqueUrl as buildUrl, parseTechniquePath } from '@shared/constants/urls';
+import { buildTechniqueUrl as buildUrl, parseTechniquePath, buildTechniqueUrlWithVariant } from '@shared/constants/urls';
+import { enrichTechniqueWithVariants } from '@shared/constants/variantMapping';
 import { ENTRY_MODE_ORDER, isEntryMode } from './shared/constants/entryModes';
 import { PencilLineIcon } from '@shared/components/ui/icons';
 
@@ -950,14 +951,95 @@ export default function App(): ReactElement {
       return;
     }
 
-    if (typeof window !== 'undefined') {
-      const techniquePath = buildTechniqueUrl(slug, trainerId, entry);
-      const state: HistoryState = { route, slug, trainerId, entry };
+    // If the caller didn't pass explicit trainer/entry params, try to apply
+    // the current global filters so the technique opens to the matching
+    // version/variation (direction/weapon/version). Fallback to the
+    // legacy trainer/entry URL shape when no matching variant is found.
+    let finalPath: string;
+    let state: HistoryState = { route, slug, trainerId, entry };
 
-      if (window.location.pathname !== techniquePath) {
-        window.history.pushState(state, '', techniquePath);
+    const shouldAutoApplyFilters = !trainerId && !entry && (filters.trainer || filters.stance || filters.weapon);
+
+    if (shouldAutoApplyFilters) {
+      const technique = db.techniques.find((t) => t.slug === slug);
+      if (technique) {
+        const enriched = enrichTechniqueWithVariants(technique);
+
+        // Map filter values to toolbar/variant values
+        const direction = (filters.stance as any) ?? undefined; // irimi/tenkan/omote/ura
+        const weaponFilter = filters.weapon as string | undefined;
+        const weapon = weaponFilter ? (weaponFilter === 'empty-hand' ? 'empty' : (weaponFilter as any)) : undefined;
+
+        // Determine versionId candidate from trainer filter
+        let versionIdCandidate: string | null | undefined = undefined;
+        if (filters.trainer) {
+          if (filters.trainer === 'base-forms') {
+            // prefer a base version (null) if available
+            const hasBase = (technique.versions || []).some((v) => !v.trainerId || v.id === 'v-base');
+            versionIdCandidate = hasBase ? null : undefined;
+          }
+          if (versionIdCandidate === undefined) {
+            // try to find a version authored by the selected trainer
+            const authorVersion = (technique.versions || []).find((v) => v.trainerId === filters.trainer);
+            if (authorVersion) versionIdCandidate = authorVersion.id;
+          }
+        }
+
+        // Try to find the best matching variant
+        const variants = enriched.variants || [];
+
+        const matchPredicate = (v: any) => {
+          if (direction && v.key.direction !== direction) return false;
+          if (weapon && v.key.weapon !== weapon) return false;
+          if (versionIdCandidate !== undefined) {
+            // if candidate explicitly null, require null; otherwise allow matching id
+            if (versionIdCandidate === null) {
+              if (v.key.versionId !== null && v.key.versionId !== undefined) return false;
+            } else if (v.key.versionId !== versionIdCandidate) return false;
+          }
+          return true;
+        };
+
+        let found = variants.find(matchPredicate);
+
+        // If no strict match, relax version constraint (allow any version) if direction/weapon match
+        if (!found && (direction || weapon)) {
+          found = variants.find((v) => {
+            if (direction && v.key.direction !== direction) return false;
+            if (weapon && v.key.weapon !== weapon) return false;
+            return true;
+          });
+        }
+
+        if (found) {
+          // Build variant path so TechniquePage will pick the correct toolbar state
+          finalPath = buildTechniqueUrlWithVariant(slug, {
+            hanmi: found.key.hanmi,
+            direction: found.key.direction,
+            weapon: found.key.weapon,
+            versionId: found.key.versionId,
+          });
+          // store state for history (also include trainer/entry for back navigation)
+          state = { route, slug, trainerId: filters.trainer, entry: (filters.stance as EntryMode) ?? undefined };
+        } else {
+          // fallback to legacy path with trainer/entry if available
+          finalPath = buildTechniqueUrl(slug, filters.trainer ?? undefined, (filters.stance as any) ?? undefined);
+          state = { route, slug, trainerId: filters.trainer, entry: (filters.stance as EntryMode) ?? undefined };
+        }
       } else {
-        window.history.replaceState(state, '', techniquePath);
+        // technique not found in DB (edge case) - fallback to basic path
+        finalPath = buildTechniqueUrl(slug, trainerId, entry);
+      }
+    } else {
+      // explicit params were provided — respect them
+      finalPath = buildTechniqueUrl(slug, trainerId, entry);
+    }
+
+    if (typeof window !== 'undefined') {
+      if (window.location.pathname !== finalPath) {
+        window.history.pushState(state, '', finalPath);
+      } else {
+        window.history.replaceState(state, '', finalPath);
       }
     }
 
