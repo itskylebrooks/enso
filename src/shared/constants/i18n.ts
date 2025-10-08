@@ -140,6 +140,9 @@ export const messages = {
   portfolio: 'Portfolio',
   iconsBy: 'Icons by',
   copyrightReserved: 'All rights reserved.',
+  footerImprint: 'Imprint',
+  footerPrivacy: 'Privacy Policy',
+  footerLicense: 'License',
     guideLink: 'Guide',
     viewGuideCta: 'Study Guide',
     // Homepage strings
@@ -728,6 +731,9 @@ export const messages = {
   portfolio: 'Portfolio',
   iconsBy: 'Icons von',
   copyrightReserved: 'Alle Rechte vorbehalten.',
+  footerImprint: 'Impressum',
+  footerPrivacy: 'Datenschutzerklärung',
+  footerLicense: 'Lizenz',
     guideLink: 'Leitfaden',
     viewGuideCta: 'Leitfaden ansehen',
     // Homepage strings

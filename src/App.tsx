@@ -13,6 +13,7 @@ const TechniquePage = lazy(() => import('@features/technique/components/Techniqu
 import { type CollectionOption } from '@features/technique/components/TechniqueHeader';
 import { Toast } from '@shared/components/ui/Toast';
 import { MobileFilters } from '@shared/components/ui/MobileFilters';
+import Footer from '@shared/components/layout/Footer';
 import { HomePage } from './features/home';
 import { AboutPage } from '@features/home/components/home/AboutPage';
 import { AdvancedPrograms } from '@features/home/components/home/AdvancedPrograms';
@@ -1457,6 +1458,8 @@ export default function App(): ReactElement {
     );
   }
 
+  const pageKey = currentTechnique ? `technique-${currentTechnique.id}` : activeSlug ? `glossary-${activeSlug}` : route;
+
   return (
     <div className="min-h-screen flex flex-col app-bg">
       <Header
@@ -1471,7 +1474,7 @@ export default function App(): ReactElement {
 
       <AnimatePresence mode="wait" initial={false}>
         <motion.main
-          key={currentTechnique ? `technique-${currentTechnique.id}` : activeSlug ? `glossary-${activeSlug}` : route}
+          key={pageKey}
           variants={pageMotion.variants}
           initial="initial"
           animate="animate"
@@ -1481,9 +1484,20 @@ export default function App(): ReactElement {
         >
           {mainContent}
         </motion.main>
+
+        <motion.footer
+          key={`footer-${pageKey}`}
+          variants={pageMotion.variants}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+          transition={pageMotion.transition}
+        >
+          <Footer copy={copy} />
+        </motion.footer>
       </AnimatePresence>
 
-  {/* Footer removed per request */}
+      
 
       <AnimatePresence>
         {searchOpen && (
@@ -1545,7 +1559,7 @@ export default function App(): ReactElement {
         )}
       </AnimatePresence>
 
-      {toast && <Toast>{toast}</Toast>}
+  {toast && <Toast>{toast}</Toast>}
     </div>
   );
 }
