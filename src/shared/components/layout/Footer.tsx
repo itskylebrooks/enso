@@ -24,13 +24,13 @@ export const Footer = ({ copy }: FooterProps): ReactElement => {
           <div className="text-neutral-600 dark:text-neutral-400">
             {/* Mobile: stack links on top, copyright below. Desktop: single-line with justify-between */}
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2 items-center">
-              <div className="flex items-center gap-4 justify-center md:justify-end shrink-0 whitespace-nowrap">
+              <div className="flex items-center gap-4 justify-center md:justify-end shrink-0 whitespace-nowrap md:order-2">
                 <a className="underline text-neutral-600 dark:text-neutral-400" href={imprint} target="_blank" rel="noopener noreferrer">{imprintLabel}</a>
                 <a className="underline text-neutral-600 dark:text-neutral-400" href={privacy} target="_blank" rel="noopener noreferrer">{privacyLabel}</a>
                 <a className="underline text-neutral-600 dark:text-neutral-400" href={license} target="_blank" rel="noopener noreferrer">{licenseLabel}</a>
               </div>
 
-              <div className="truncate text-center md:text-right">© {year} Kyle Brooks. {copy.copyrightReserved}</div>
+              <div className="truncate text-center md:text-left md:order-1">© {year} Kyle Brooks. {copy.copyrightReserved}</div>
             </div>
           </div>
         </div>
