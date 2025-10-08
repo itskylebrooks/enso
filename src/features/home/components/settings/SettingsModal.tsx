@@ -238,7 +238,6 @@ export const SettingsModal = ({
           {/* Footer: full-width divider and centered content */}
           <div className="-mx-4 mt-4">
             <div className="pt-4 border-t surface-border text-center text-xs text-muted px-4">
-              <div>Enso {pkg.version}</div>
               <div className="relative flex items-center justify-center py-1">
                 {/* left icon container, vertically centered with this row */}
                 <div className="absolute left-4 inset-y-0 flex flex-col items-center justify-center">
@@ -249,12 +248,14 @@ export const SettingsModal = ({
                       <path d="M12 8h.01" />
                     </svg>
                   </button>
-                    <div className="text-xs text-muted mt-1">{copy.aboutLink}</div>
+                  <div className="text-xs text-muted mt-1">{copy.aboutLink}</div>
                 </div>
 
                 <div>
-                  © {new Date().getFullYear()} Kyle Brooks.
-                  <span className="block sm:inline"> {copy.copyrightReserved}</span>
+                  Enso {pkg.version} · {copy.iconsBy}{' '}
+                  <a href="https://lucide.dev/" target="_blank" rel="noreferrer" className="underline">
+                    Lucide
+                  </a>
                 </div>
 
                 {/* right icon container, vertically centered with this row */}
@@ -268,14 +269,6 @@ export const SettingsModal = ({
                   </a>
                   <div className="text-xs text-muted mt-1">{copy.portfolio}</div>
                 </div>
-              </div>
-
-              <div>
-                {copy.iconsBy}{' '}
-                <a href="https://lucide.dev/" target="_blank" rel="noreferrer" className="underline">
-                  Lucide
-                </a>
-                .
               </div>
             </div>
           </div>
