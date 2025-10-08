@@ -365,3 +365,16 @@ button {
 .dark header.surface {
   background-color: #000000;
 }
+
+/* Vertical table header utility used by technique/weapon matrices.
+   Keeps the column titles vertically oriented and prevents wrapping on narrow screens. */
+.vertical-header {
+  writing-mode: vertical-rl;
+  -webkit-writing-mode: vertical-rl;
+  text-orientation: mixed;
+  -webkit-text-orientation: mixed;
+  transform: rotate(180deg) translateY(4px);
+  display: inline-block;
+  white-space: nowrap;
+  line-height: 1;
+}

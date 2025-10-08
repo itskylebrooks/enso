@@ -61,12 +61,7 @@ export const TantoMatrix = ({ locale, onCellClick }: TantoMatrixProps): ReactEle
                     style={{ minWidth: '48px', width: '48px', height: isTall ? '240px' : '200px' }}
                   >
                     <div className="absolute inset-0 flex items-end justify-center px-1 py-2">
-                      <span
-                        style={{ writingMode: 'vertical-rl', textOrientation: 'mixed', transform: 'rotate(180deg) translateY(4px)' }}
-                        className="leading-tight"
-                      >
-                        {col.label[locale]}
-                      </span>
+                      <span className="vertical-header leading-tight">{col.label[locale]}</span>
                     </div>
                   </th>
                 );
