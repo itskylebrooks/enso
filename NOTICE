@@ -1,20 +1,20 @@
-Enso — Aikidō Study Companion
-Copyright © 2025 Kyle Brooks
+**Enso — Aikidō Study Companion**
+Copyright © 2025 [Kyle Brooks](https://itskylebrooks.vercel.app)
 
-This project is licensed under the MIT License.
-The content (technique descriptions, glossary entries, etc.) is licensed under
-Creative Commons Attribution–NonCommercial 4.0 International (CC BY-NC 4.0).
+This project’s **source code** is licensed under the [MIT License](https://opensource.org/licenses/MIT).
+All **content** (technique descriptions, glossary entries, exam guides, etc.) is licensed under the [Creative Commons Attribution–NonCommercial 4.0 International License (CC BY-NC 4.0)](https://creativecommons.org/licenses/by-nc/4.0/).
 
-Attribution:
-This project was created and maintained by Kyle Brooks.
-Website: https://enso-kb.vercel.app
-Repository: https://github.com/itskylebrooks/enso
+**Attribution:**
+This project was created and maintained by [Kyle Brooks](https://itskylebrooks.vercel.app).
+Website: [enso-kb.vercel.app](https://enso-kb.vercel.app)
+Repository: [github.com/itskylebrooks/enso](https://github.com/itskylebrooks/enso)
 
-Acknowledgments:
-- Aikidō community at WSV and BSV (Hamburg)
-- Teachers Joachim Eiselen, Markus Möller, Karen and Stefan Jakuszeit, Alfred Haase
-- Built with React, TypeScript, Tailwind CSS, and Vite
-- Hosted on Vercel
+**Acknowledgments:**
 
-This NOTICE file provides attribution and credit information for Enso.
-It does not modify the license terms of the MIT License.
+* Aikidō community at WSV and BSV (Hamburg)
+* Teachers Joachim Eiselen, Markus Möller, Karen and Stefan Jakuszeit, Alfred Haase
+* Built with [React](https://react.dev), [TypeScript](https://www.typescriptlang.org), [Tailwind CSS](https://tailwindcss.com), and [Vite](https://vitejs.dev)
+* Hosted on [Vercel](https://vercel.com)
+
+This NOTICE file provides attribution and credit information for *Enso*.
+It does not modify the license terms of the [MIT License](https://opensource.org/licenses/MIT).
