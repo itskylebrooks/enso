@@ -567,7 +567,12 @@ Right now we’re prioritizing stability and content quality.
 
 ## License
 
-The entire project (code and content) is licensed under the Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0).  
-See: https://creativecommons.org/licenses/by-nc/4.0/
- 
+Code: The source code in this repository is licensed under the MIT License (see `LICENSE`).
+
+Content: Text, images and other original website content are licensed under the Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0). See: https://creativecommons.org/licenses/by-nc/4.0/
+
 Fonts: IBM Plex Sans — SIL Open Font License 1.1.
+
+Notes:
+- Third-party logos, marks and some media may be subject to their owners' trademarks and/or separate licenses. The project does not relicense those assets.
+- If you redistribute content from this site please respect the non-commercial clause of the CC BY-NC 4.0 license and retain attribution.
