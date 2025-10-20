@@ -6,32 +6,32 @@ export const JO_COLUMNS: JoColumn[] = [
   { 
     key: 'jo_ryote_dori_double', 
     label: { 
-      en: 'Jō Ryōte-dori (1)', 
-      de: 'Jō Ryōte-dori (1)' 
+      en: 'Jō Ryōte-tori (1)', 
+      de: 'Jō Ryōte-tori (1)' 
     },
     section: 'jo_nage_waza'
   },
   { 
     key: 'jo_ryote_dori_gyaku', 
     label: { 
-      en: 'Jō Ryōte-dori (2)', 
-      de: 'Jō Ryōte-dori (2)' 
+      en: 'Jō Ryōte-tori (2)', 
+      de: 'Jō Ryōte-tori (2)' 
     },
     section: 'jo_nage_waza'
   },
   { 
     key: 'jo_katate_dori', 
     label: { 
-      en: 'Jō Katate-dori (3)', 
-      de: 'Jō Katate-dori (3)' 
+      en: 'Jō Katate-tori (3)', 
+      de: 'Jō Katate-tori (3)' 
     },
     section: 'jo_nage_waza'
   },
   { 
     key: 'jo_katate_ryote_dori', 
     label: { 
-      en: 'Jō Katate Ryōte-dori (4)', 
-      de: 'Jō Katate Ryōte-dori (4)' 
+      en: 'Jō Katate Ryōte-tori (4)', 
+      de: 'Jō Katate Ryōte-tori (4)' 
     },
     section: 'jo_nage_waza'
   },
@@ -200,7 +200,7 @@ export const JO_ROWS: JoRow[] = [
   },
   {
     id: 'katate-dori-ushiro-kubi-shime',
-    label: { en: 'Katate-dori Ushiro Kubi-shime', de: 'Katate-dori Ushiro Kubi-shime' },
+    label: { en: 'Katate-tori Ushiro Kubi-shime', de: 'Katate-tori Ushiro Kubi-shime' },
     cells: {
       jo_ryote_dori_double: { kind: 'empty' },
       jo_ryote_dori_gyaku: { kind: 'empty' },

@@ -5,38 +5,38 @@ export const SAYA_NO_UCHI_COLUMNS: SayaNoUchiColumn[] = [
   // Tachi Waza section
   { 
     key: 'katate_dori_ai_hanmi', 
-    label: { en: 'Katate-dori Ai-hanmi', de: 'Katate-dori Ai-hanmi' },
+    label: { en: 'Katate-tori Ai-hanmi', de: 'Katate-tori Ai-hanmi' },
     section: 'tachi_waza'
   },
   { 
     key: 'katate_dori_gyaku_hanmi', 
-    label: { en: 'Katate-dori Gyaku-hanmi', de: 'Katate-dori Gyaku-hanmi' },
+    label: { en: 'Katate-tori Gyaku-hanmi', de: 'Katate-tori Gyaku-hanmi' },
     section: 'tachi_waza'
   },
   { 
     key: 'kata_dori', 
-    label: { en: 'Kata-dori', de: 'Kata-dori' },
+    label: { en: 'Kata-tori', de: 'Kata-tori' },
     section: 'tachi_waza'
   },
   { 
     key: 'ushiro_ryokata_dori', 
-    label: { en: 'Ushiro-ryōkata-dori', de: 'Ushiro-ryōkata-dori' },
+    label: { en: 'Ushiro-ryōkata-tori', de: 'Ushiro-ryōkata-tori' },
     section: 'tachi_waza'
   },
   { 
     key: 'ushiro_ryote_dori', 
-    label: { en: 'Ushiro-ryōte-dori', de: 'Ushiro-ryōte-dori' },
+    label: { en: 'Ushiro-ryōte-tori', de: 'Ushiro-ryōte-tori' },
     section: 'tachi_waza'
   },
   { 
     key: 'ushiro_eri_dori', 
-    label: { en: 'Ushiro-eri-dori', de: 'Ushiro-eri-dori' },
+    label: { en: 'Ushiro-eri-tori', de: 'Ushiro-eri-tori' },
     section: 'tachi_waza'
   },
   // Hanmi Hantachi section
   { 
     key: 'hanmi_hantachi_katate_dori_gyaku_hanmi', 
-    label: { en: 'Katate-dori Gyaku-hanmi', de: 'Katate-dori Gyaku-hanmi' },
+    label: { en: 'Katate-tori Gyaku-hanmi', de: 'Katate-tori Gyaku-hanmi' },
     section: 'hanmi_hantachi'
   },
   // Buki Waza section

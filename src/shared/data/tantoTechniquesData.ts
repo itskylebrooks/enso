@@ -27,11 +27,11 @@ export const TANTO_COLUMNS: TantoColumn[] = [
   },
   {
     key: 'mune_dori_tanto_yokomen_uchi',
-    label: { en: 'Mune-dori - Tantō Yokomen Uchi', de: 'Mune-dori - Tantō Yokomen Uchi' },
+    label: { en: 'Mune-tori - Tantō Yokomen Uchi', de: 'Mune-tori - Tantō Yokomen Uchi' },
   },
   {
     key: 'sode_dori_tanto_yoko_tsuki_soto',
-    label: { en: 'Sode-dori - Tantō Yoko Tsuki (Soto)', de: 'Sode-dori - Tantō Yoko Tsuki (Soto)' },
+    label: { en: 'Sode-tori - Tantō Yoko Tsuki (Soto)', de: 'Sode-tori - Tantō Yoko Tsuki (Soto)' },
   },
 ];
 
@@ -150,7 +150,7 @@ export const TANTO_ROWS: TantoRow[] = [
   },
   {
     id: 'ushiro-tanto-dori-kubi-shime',
-    label: { en: 'Ushiro Tantō-dori Kubi Shime', de: 'Ushiro Tantō-dori Kubi Shime' },
+    label: { en: 'Ushiro Tantō-tori Kubi Shime', de: 'Ushiro Tantō-tori Kubi Shime' },
     cells: {
       tanto_tsuki: { kind: 'check' },
       tanto_shomen_uchi: { kind: 'check' },
