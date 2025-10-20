@@ -18,6 +18,22 @@ export const AboutPage = ({ copy }: AboutPageProps): ReactElement => (
         {copy.aboutTitle}
       </h1>
 
+      {/* Disclaimer Section (moved to top) */}
+      <div className="space-y-4">
+        <div className="rounded-xl border surface-border bg-[var(--color-surface)]/70 px-5 py-4">
+          <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-subtle mb-3">
+            {copy.aboutDisclaimerTitle}
+          </h2>
+          <div className="space-y-2.5">
+            {copy.aboutDisclaimer.split('\n').map((paragraph, index) => (
+              <p key={index} className="text-base leading-relaxed">
+                {paragraph}
+              </p>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* Introduction */}
       <div className="space-y-4">
         {copy.aboutIntro.split('\n').map((paragraph, index) => (
@@ -122,22 +138,6 @@ export const AboutPage = ({ copy }: AboutPageProps): ReactElement => (
             {copy.aboutTech4}
           </li>
         </ul>
-      </div>
-
-      {/* Disclaimer Section */}
-      <div className="space-y-4">
-        <div className="rounded-xl border surface-border bg-[var(--color-surface)]/70 px-5 py-4">
-          <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-subtle mb-3">
-            {copy.aboutDisclaimerTitle}
-          </h2>
-          <div className="space-y-2.5">
-            {copy.aboutDisclaimer.split('\n').map((paragraph, index) => (
-              <p key={index} className="text-base leading-relaxed">
-                {paragraph}
-              </p>
-            ))}
-          </div>
-        </div>
       </div>
 
       {/* Vision Section */}
