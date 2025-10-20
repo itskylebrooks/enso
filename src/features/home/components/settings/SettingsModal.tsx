@@ -268,15 +268,7 @@ export const SettingsModal = ({
                 </div>
               </div>
 
-              {/* Copyright line removed */}
-
-              <div className="leading-snug">
-                {copy.iconsBy}{' '}
-                <a href="https://lucide.dev/" target="_blank" rel="noreferrer" className="underline">
-                  Lucide
-                </a>
-                .
-              </div>
+              {/* Icons by Lucide line removed */}
               <div className="flex items-center justify-center gap-2.5 leading-snug">
                 <a className="underline" href="https://itskylebrooks.vercel.app/imprint" target="_blank" rel="noopener noreferrer">{(copy as unknown as Record<string, string>).footerImprint ?? 'Imprint'}</a>
                 <a className="underline" href="https://itskylebrooks.vercel.app/privacy" target="_blank" rel="noopener noreferrer">{(copy as unknown as Record<string, string>).footerPrivacy ?? 'Privacy Policy'}</a>
