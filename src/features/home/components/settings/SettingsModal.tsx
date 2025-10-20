@@ -238,8 +238,9 @@ export const SettingsModal = ({
           {/* Footer: full-width divider and centered content */}
           <div className="-mx-4 mt-4">
             <div className="pt-4 border-t surface-border text-center text-xs text-muted px-4">
-              <div>Enso {pkg.version}</div>
-              <div className="relative flex items-center justify-center py-0.5">
+              <div className="leading-snug">Enso {pkg.version}</div>
+              <div className="leading-snug">Kyle Brooks</div>
+              <div className="relative flex items-center justify-center leading-snug">
                 {/* left icon container, vertically centered with this row */}
                 <div className="absolute left-4 inset-y-0 flex flex-col items-center justify-center">
                   <button type="button" onClick={onNavigateToAbout} className="text-current" aria-label="About">
@@ -249,7 +250,7 @@ export const SettingsModal = ({
                       <path d="M12 8h.01" />
                     </svg>
                   </button>
-                    <div className="text-xs text-muted mt-0.5">{copy.aboutLink}</div>
+                    <div className="text-xs text-muted leading-snug">{copy.aboutLink}</div>
                 </div>
 
                 {/* Copyright removed as requested */}
@@ -263,16 +264,23 @@ export const SettingsModal = ({
                       <path d="M15 3h6v6" />
                     </svg>
                   </a>
-                  <div className="text-xs text-muted mt-0.5">{copy.portfolio}</div>
+                  <div className="text-xs text-muted leading-snug">{copy.portfolio}</div>
                 </div>
               </div>
 
-              <div>
+              {/* Copyright line removed */}
+
+              <div className="leading-snug">
                 {copy.iconsBy}{' '}
                 <a href="https://lucide.dev/" target="_blank" rel="noreferrer" className="underline">
                   Lucide
                 </a>
                 .
+              </div>
+              <div className="flex items-center justify-center gap-2.5 leading-snug">
+                <a className="underline" href="https://itskylebrooks.vercel.app/imprint" target="_blank" rel="noopener noreferrer">{(copy as unknown as Record<string, string>).footerImprint ?? 'Imprint'}</a>
+                <a className="underline" href="https://itskylebrooks.vercel.app/privacy" target="_blank" rel="noopener noreferrer">{(copy as unknown as Record<string, string>).footerPrivacy ?? 'Privacy Policy'}</a>
+                <a className="underline" href="https://itskylebrooks.vercel.app/license" target="_blank" rel="noopener noreferrer">{(copy as unknown as Record<string, string>).footerLicense ?? 'License'}</a>
               </div>
             </div>
           </div>

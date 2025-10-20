@@ -13,7 +13,6 @@ const TechniquePage = lazy(() => import('@features/technique/components/Techniqu
 import { type CollectionOption } from '@features/technique/components/TechniqueHeader';
 import { Toast } from '@shared/components/ui/Toast';
 import { MobileFilters } from '@shared/components/ui/MobileFilters';
-import Footer from '@shared/components/layout/Footer';
 import { HomePage } from './features/home';
 import { AboutPage } from '@features/home/components/home/AboutPage';
 import { AdvancedPrograms } from '@features/home/components/home/AdvancedPrograms';
@@ -1485,16 +1484,7 @@ export default function App(): ReactElement {
           {mainContent}
         </motion.main>
 
-        <motion.footer
-          key={`footer-${pageKey}`}
-          variants={pageMotion.variants}
-          initial="initial"
-          animate="animate"
-          exit="exit"
-          transition={pageMotion.transition}
-        >
-          <Footer copy={copy} />
-        </motion.footer>
+        {/* Footer removed as requested */}
       </AnimatePresence>
 
       
