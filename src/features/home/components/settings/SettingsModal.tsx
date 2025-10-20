@@ -235,14 +235,14 @@ export const SettingsModal = ({
               </a>
             </div>
           </div>
-          {/* Footer: full-width divider and centered content */}
+          {/* Footer: divider and single-line with centered name and icons */}
           <div className="-mx-4 mt-4">
             <div className="pt-4 border-t surface-border text-center text-xs text-muted px-4">
               <div className="leading-snug">Enso {pkg.version}</div>
-              <div className="leading-snug">Kyle Brooks</div>
-              <div className="relative flex items-center justify-center leading-snug">
-                {/* left icon container, vertically centered with this row */}
-                <div className="absolute left-4 inset-y-0 flex flex-col items-center justify-center">
+              {/* Center row with name and icons aligned to the same height */}
+              <div className="relative leading-snug flex items-center justify-center">
+                {/* Left icon */}
+                <div className="absolute left-4 inset-y-0 flex items-center">
                   <button type="button" onClick={onNavigateToAbout} className="text-current" aria-label="About">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-info" aria-hidden>
                       <circle cx="12" cy="12" r="10" />
@@ -250,13 +250,13 @@ export const SettingsModal = ({
                       <path d="M12 8h.01" />
                     </svg>
                   </button>
-                    <div className="text-xs text-muted leading-snug">{copy.aboutLink}</div>
                 </div>
 
-                {/* Copyright removed as requested */}
+                {/* Center text */}
+                <div>Kyle Brooks</div>
 
-                {/* right icon container, vertically centered with this row */}
-                <div className="absolute right-4 inset-y-0 flex flex-col items-center justify-center">
+                {/* Right icon */}
+                <div className="absolute right-4 inset-y-0 flex items-center">
                   <a href="https://itskylebrooks.vercel.app/" target="_blank" rel="noreferrer" className="text-current" aria-label="Kyle Brooks website">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-square-arrow-out-up-right" aria-hidden>
                       <path d="M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6" />
@@ -264,12 +264,11 @@ export const SettingsModal = ({
                       <path d="M15 3h6v6" />
                     </svg>
                   </a>
-                  <div className="text-xs text-muted leading-snug">{copy.portfolio}</div>
                 </div>
               </div>
 
-              {/* Icons by Lucide line removed */}
-              <div className="flex items-center justify-center gap-2.5 leading-snug">
+              {/* Legal links */}
+              <div className="flex items-center justify-center gap-2.5 leading-snug mt-1">
                 <a className="underline" href="https://itskylebrooks.vercel.app/imprint" target="_blank" rel="noopener noreferrer">{(copy as unknown as Record<string, string>).footerImprint ?? 'Imprint'}</a>
                 <a className="underline" href="https://itskylebrooks.vercel.app/privacy" target="_blank" rel="noopener noreferrer">{(copy as unknown as Record<string, string>).footerPrivacy ?? 'Privacy Policy'}</a>
                 <a className="underline" href="https://itskylebrooks.vercel.app/license" target="_blank" rel="noopener noreferrer">{(copy as unknown as Record<string, string>).footerLicense ?? 'License'}</a>
