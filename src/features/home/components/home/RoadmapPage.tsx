@@ -8,7 +8,8 @@ import { roadmapItems } from '@shared/data/roadmap';
 import { classNames } from '@shared/utils/classNames';
 import { useMotionPreferences, defaultEase } from '@shared/components/ui/motion';
 import { getInitialThemeState } from '@shared/utils/theme';
-import { DynamicIcon } from 'lucide-react/dynamic';
+import { DynamicIcon, iconNames } from 'lucide-react/dynamic';
+import type { IconName as LucideIconName } from 'lucide-react/dynamic';
 
 type RoadmapPageProps = {
   copy: Copy;
@@ -19,9 +20,15 @@ type ColumnStatus = Exclude<RoadmapStatus, 'meta'>;
 
 const columnStatuses: ColumnStatus[] = ['planned', 'in-progress', 'launched'];
 
-// Convert camelCase or snake_case names to Lucide's kebab-case
-const toLucideName = (name?: string): string | undefined =>
-  name?.replace(/([a-z0-9])([A-Z])/g, '$1-$2').replace(/_/g, '-').toLowerCase();
+// Convert camelCase or snake_case names to Lucide's kebab-case and validate
+const toLucideName = (name?: string): LucideIconName | undefined => {
+  if (!name) return undefined;
+  const candidate = name
+    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+    .replace(/_/g, '-')
+    .toLowerCase();
+  return (iconNames as readonly string[]).includes(candidate) ? (candidate as LucideIconName) : undefined;
+};
 
 const statusAccent = (copy: Copy) =>
   ({
@@ -273,7 +280,7 @@ const ArticleCard = ({
         <div className="flex items-start gap-3">
           {item.icon ? (
             <DynamicIcon
-              name={toLucideName(item.icon) || ''}
+              name={toLucideName(item.icon) ?? 'circle'}
               className="mt-0.5 h-5 w-5 text-[var(--color-text)]/75"
             />
           ) : null}
@@ -305,7 +312,7 @@ const MetaIcon = ({ iconName }: { iconName?: RoadmapIconName }): ReactElement | 
   if (!iconName) return null;
   return (
     <DynamicIcon
-      name={toLucideName(iconName) || ''}
+      name={toLucideName(iconName) ?? 'circle'}
       className="h-8 w-8 text-[var(--color-text)]/70"
     />
   );
