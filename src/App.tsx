@@ -18,6 +18,7 @@ import { AboutPage } from '@features/home/components/home/AboutPage';
 import { AdvancedPrograms } from '@features/home/components/home/AdvancedPrograms';
 import { DanOverview } from '@features/home/components/home/DanOverview';
 import { GuidePage } from '@features/home/components/home/GuidePage';
+import { RoadmapPage } from '@features/home/components/home/RoadmapPage';
 const FeedbackPage = lazy(() => import('@features/home/components/feedback/FeedbackPage').then(m => ({ default: m.FeedbackPage })));
 import type { FeedbackType } from '@features/home/components/feedback/FeedbackPage';
 const GlossaryPage = lazy(() => import('./features/glossary').then(m => ({ default: m.GlossaryPage })));
@@ -87,6 +88,8 @@ const routeToPath = (route: AppRoute): string => {
       return '/';
     case 'about':
       return '/about';
+    case 'roadmap':
+      return '/roadmap';
     case 'guide':
       return '/guide';
     case 'guideAdvanced':
@@ -157,6 +160,10 @@ const parseLocation = (
 
   if (pathname === '/about') {
     return { route: 'about', slug: null };
+  }
+
+  if (pathname === '/roadmap') {
+    return { route: 'roadmap', slug: null };
   }
 
   if (pathname === '/guide') {
@@ -1132,6 +1139,8 @@ export default function App(): ReactElement {
       ? copy.backToHome
       : route === 'about'
       ? copy.backToAbout
+      : route === 'roadmap'
+      ? copy.backToRoadmap
       : route === 'guide'
       ? copy.backToGuide
       : route === 'glossary'
@@ -1146,7 +1155,9 @@ export default function App(): ReactElement {
       : route === 'home'
       ? copy.backToHome
       : route === 'about'
-  ? copy.backToAbout
+      ? copy.backToAbout
+      : route === 'roadmap'
+      ? copy.backToRoadmap
       : route === 'guide'
       ? copy.backToGuide
       : route === 'feedback'
@@ -1242,9 +1253,12 @@ export default function App(): ReactElement {
         onViewBookmarks={() => navigateTo('bookmarks')}
         onViewGuide={() => navigateTo('guide')}
         onViewGlossary={() => navigateTo('glossary')}
+        onViewRoadmap={() => navigateTo('roadmap')}
         onViewAbout={() => navigateTo('about')}
       />
     );
+  } else if (route === 'roadmap') {
+    mainContent = <RoadmapPage copy={copy} locale={locale} />;
   } else if (route === 'about') {
     mainContent = <AboutPage copy={copy} />;
   } else if (route === 'guideAdvanced') {

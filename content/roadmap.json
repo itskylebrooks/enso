@@ -1,0 +1,177 @@
+[
+  {
+    "id": "exam-program-update",
+    "status": "in-progress",
+    "title": { "en": "DAB exam program update", "de": "DAB‑Prüfungsprogramm‑Update" },
+    "summary": {
+      "en": "All DAB techniques (5. Kyū → 1. Dan) added, phrasing aligned (Tori/Dori), taxonomy unified.",
+      "de": "Alle DAB‑Techniken (5. Kyū → 1. Dan) ergänzt, Formulierungen angeglichen (Tori/Dori) und Taxonomie vereinheitlicht."
+    },
+    "version": "v1.1",
+    "icon": "listCheck"
+  },
+  {
+    "id": "v1-2-refactor",
+    "status": "in-progress",
+    "title": { "en": "Refactor & polish", "de": "Refactor & Feinschliff" },
+    "summary": {
+      "en": "Refactor codebase, optimize system performance, fix bugs, and rewrite small details in techniques and glossary terms.",
+      "de": "Codebasis refactoren, Systemleistung optimieren, Fehler beheben und kleine Details in Techniken und Glossarbegriffen überarbeiten."
+    },
+    "version": "v1.2",
+    "icon": "wrench"
+  },
+  {
+    "id": "roadmap-board",
+    "status": "launched",
+    "title": { "en": "Roadmap & updates board", "de": "Roadmap‑ und Update‑Tafel" },
+    "summary": {
+      "en": "In‑app roadmap with Planned / In progress / Launched columns and links to releases.",
+      "de": "In‑App‑Roadmap mit Spalten „Geplant / In Arbeit / Veröffentlicht“ und Links zu Releases."
+    },
+    "version": "v1.0.5",
+    "icon": "gitBranch"
+  },
+  {
+    "id": "glossary-rewrite",
+    "status": "launched",
+    "title": { "en": "Glossary rewrite", "de": "Glossar‑Überarbeitung" },
+    "summary": {
+      "en": "All glossary terms were rewritten for clarity and added detail.",
+      "de": "Alle Glossarbegriffe wurden überarbeitet, um sie klarer und ausführlicher zu machen."
+    },
+    "version": "v1.0.4",
+    "icon": "notebook-pen"
+  },
+  {
+    "id": "offline-mode",
+    "status": "launched",
+    "title": { "en": "Offline mode", "de": "Offline‑Modus" },
+    "summary": {
+      "en": "Access techniques even without network.",
+      "de": "Techniken auch ohne Netzwerkzugang öffnen."
+    },
+    "version": "v1.0.3",
+    "icon": "cloudOff"
+  },
+  {
+    "id": "feedback-bridge",
+    "status": "launched",
+    "title": { "en": "Feedback bridge", "de": "Feedback‑Brücke" },
+    "summary": {
+      "en": "Submit structured edits directly to GitHub.",
+      "de": "Strukturierte Änderungen direkt an GitHub senden."
+    },
+    "version": "v1.0.2",
+    "icon": "handshake"
+  },
+  {
+    "id": "ui-refinements",
+    "status": "launched",
+    "title": { "en": "UI refinements", "de": "UI‑Verbesserungen" },
+    "summary": {
+      "en": "Simpler search, smoother animations.",
+      "de": "Einfachere Suche, weichere Animationen."
+    },
+    "version": "v1.0.1",
+    "icon": "sparkles"
+  },
+  {
+    "id": "technique-graph",
+    "status": "planned",
+    "title": { "en": "Technique connection diagram", "de": "Technik‑Verbindungsdiagramm" },
+    "summary": {
+      "en": "Interactive tree/radial view to visualize relations by attack, entry or family.",
+      "de": "Interaktive Baum‑/Radialansicht, um Beziehungen nach Angriff, Einstieg oder Familie zu visualisieren."
+    },
+    "version": "v1.3",
+    "icon": "gitBranch"
+  },
+  {
+    "id": "intro-guide",
+    "status": "planned",
+    "title": { "en": "Intro guide / onboarding", "de": "Einstieg / Onboarding" },
+    "summary": {
+      "en": "A 30‑second walkthrough of Library, Guide, Glossary, Bookmarks.",
+      "de": "30‑Sekunden‑Überblick über Bibliothek, Guide, Glossar, Lesezeichen."
+    },
+    "version": "v1.4",
+    "icon": "bookOpen"
+  },
+  {
+    "id": "glossary-visuals",
+    "status": "planned",
+    "title": { "en": "Glossary visuals", "de": "Glossar‑Visualisierungen" },
+    "summary": {
+      "en": "Add minimalist line art for key terms (stances, grips, weapons).",
+      "de": "Minimalistische Line‑Art für Schlüsselbegriffe (Stände, Griffe, Waffen)."
+    },
+    "version": "v1.5",
+    "icon": "palette"
+  },
+  {
+    "id": "compare-mode",
+    "status": "planned",
+    "title": { "en": "Compare mode", "de": "Vergleichsmodus" },
+    "summary": {
+      "en": "Two versions side by side with synced scroll (Steps, Uke, Mistakes).",
+      "de": "Zwei Varianten nebeneinander mit synchronem Scrollen (Schritte, Uke, Fehler)."
+    },
+    "version": "v1.7",
+    "icon": "splitSquareHorizontal"
+  },
+  {
+    "id": "local-progress",
+    "status": "planned",
+    "title": { "en": "Local study progress", "de": "Lokaler Lernfortschritt" },
+    "summary": {
+      "en": "Mark techniques as studied or needs work; export with bookmarks.",
+      "de": "Techniken als gelernt oder „braucht Arbeit“ markieren; mit Lesezeichen exportieren."
+    },
+    "version": "v1.8",
+    "icon": "checkSquare"
+  },
+  {
+    "id": "dojo-map",
+    "status": "planned",
+    "title": { "en": "Dojo map", "de": "Dojo‑Karte" },
+    "summary": {
+      "en": "Static JSON + OpenStreetMap; simple filters for federation and city.",
+      "de": "Statisches JSON + OpenStreetMap; einfache Filter für Verband und Stadt."
+    },
+    "version": "v1.9",
+    "icon": "map"
+  },
+  {
+    "id": "pwa-advanced",
+    "status": "planned",
+    "title": { "en": "PWA install & advanced offline", "de": "PWA‑Installation & erweiterter Offline‑Modus" },
+    "summary": {
+      "en": "Full PWA install prompt and broader caching strategy for Guide/Glossary.",
+      "de": "Vollständige PWA‑Installation und breiteres Caching für Guide/Glossar."
+    },
+    "version": "v2.0",
+    "icon": "download"
+  },
+  {
+    "id": "magic-phrase-sync",
+    "status": "planned",
+    "title": { "en": "“Magic phrase” sync", "de": "„Magic Phrase“-Sync" },
+    "summary": {
+      "en": "Share bookmarks/progress via a short, human‑readable phrase that encodes a snapshot.",
+      "de": "Lesezeichen/Fortschritt per kurzer, gut lesbarer Phrase als kodierter Snapshot teilen."
+    },
+    "version": "v2.1",
+    "icon": "key"
+  },
+  {
+    "id": "enso-evolves",
+    "status": "meta",
+    "title": { "en": "Enso evolves slowly", "de": "Enso entwickelt sich langsam" },
+    "summary": {
+      "en": "Each update aims to keep harmony between depth and simplicity.",
+      "de": "Jedes Update soll die Harmonie zwischen Tiefe und Einfachheit bewahren."
+    },
+    "icon": "infinity"
+  }
+]

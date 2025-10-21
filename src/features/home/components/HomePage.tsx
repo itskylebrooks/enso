@@ -12,6 +12,7 @@ type HomePageProps = {
   onOpenLibrary: () => void;
   onViewBookmarks: () => void;
   onViewGuide: () => void;
+  onViewRoadmap: () => void;
   onViewGlossary: () => void;
   onViewAbout: () => void;
 };
@@ -22,6 +23,7 @@ export const HomePage = ({
   onOpenLibrary,
   onViewBookmarks,
   onViewGuide,
+  onViewRoadmap,
   onViewGlossary,
   onViewAbout,
 }: HomePageProps): ReactElement => {
@@ -102,6 +104,13 @@ export const HomePage = ({
                 className="h-12 px-5 rounded-xl border btn-tonal surface-hover transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] focus:outline-none"
               >
                 {copy.guide}
+              </button>
+              <button
+                type="button"
+                onClick={onViewRoadmap}
+                className="h-12 px-5 rounded-xl border btn-tonal surface-hover transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] focus:outline-none"
+              >
+                {copy.roadmap}
               </button>
               <button
                 type="button"

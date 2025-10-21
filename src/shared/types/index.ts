@@ -148,6 +148,7 @@ export type AppRoute =
   | 'library'
   | 'bookmarks'
   | 'about'
+  | 'roadmap'
   | 'guide'
   | 'guideAdvanced'
   | 'guideDan'
