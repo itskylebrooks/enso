@@ -5,15 +5,15 @@
   "jp": "肩取り",
   "category": "attack",
   "def": {
-    "en": "Shoulder/gi grab on one side.",
-    "de": "Schulter-/Gi-Griff einseitig."
+    "en": "Single-side shoulder/gi grab.",
+    "de": "Einseitiger Schulter-/Gi-Griff."
   },
   "literal": {
     "en": "shoulder + seize",
     "de": "Schulter + greifen"
   },
   "notes": {
-    "en": "Keep spine tall; use hip turn to free the line and lead.",
-    "de": "Wirbelsäule lang; mit Hüftdrehung die Linie öffnen und führen."
+    "en": "Targets posture by fixing the jacket and shoulder line, reducing head mobility and turning capacity. Study how to keep the neck long, connect the grabbed side to your center, and lead the grip via the torso rather than the forearm. It’s foundational for learning to enter on a tight line (irimi) and to rotate the frame (tenkan/kaiten) without collapsing. Historically tied to clothing control in jūjutsu; in Aikidō it builds clean body mechanics for throws and pins without striking reliance.",
+    "de": "Zielt über das Fixieren von Jacke und Schulterlinie auf die Haltung, reduziert Kopfbeweglichkeit und Drehfähigkeit. Übe, den Nacken lang zu halten, die gegriffene Seite mit dem Zentrum zu verbinden und den Griff über den Rumpf statt über den Unterarm zu führen. Grundlegend, um eng einzutreten (irimi) und den Rahmen (tenkan/kaiten) zu drehen, ohne einzusacken. Historisch mit Kleidungskontrolle im Jūjutsu verbunden; im Aikidō schult es saubere Körpermechanik für Würfe und Halte ohne Schlagabhängigkeit."
   }
 }

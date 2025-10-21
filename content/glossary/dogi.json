@@ -5,12 +5,12 @@
   "jp": "道着",
   "category": "etiquette",
   "def": {
-    "en": "Uniform for the 'way' — another term for gi.",
-    "de": "Anzug für den \"Weg\" – anderer Begriff für Gi."
+    "en": "Training uniform (gi) worn for budō practice.",
+    "de": "Trainingsanzug (Gi) für Budō-Praxis."
   },
   "literal": { "en": "way + clothing", "de": "Weg + Kleidung" },
   "notes": {
-    "en": "Used interchangeably with keikogi.",
-    "de": "Weitgehend austauschbar mit Keikogi."
+    "en": "Also called keikogi; parts are jacket (uwagi), trousers (zubon), and belt (obi). In Aikidō, a hakama may be worn per dojo policy. Fit: cuffs above wrist/ankle enough to move; jacket overlaps left over right and is secured with the obi. Etiquette: keep the dōgi clean, nails short, no jewelry, patches minimal and consistent with dojo rules. Tie the belt firmly, ends even; retie facing away from shōmen.",
+    "de": "Auch keikogi genannt; Teile: Jacke (uwagi), Hose (zubon) und Gürtel (obi). Im Aikidō wird je nach Dojo-Regel eine Hakama getragen. Sitz: Ärmel/Beine so, dass freie Bewegung möglich ist; Jacke links über rechts, mit dem Obi gebunden. Etikette: Dōgi sauber halten, Nägel kurz, kein Schmuck, Abzeichen sparsam und dojo-konform. Gürtel fest binden, Enden gleich; zum Neu­binden vom Shōmen abwenden."
   }
 }

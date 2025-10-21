@@ -5,15 +5,15 @@
   "jp": "半身半立ち",
   "category": "stance",
   "def": {
-    "en": "Half-standing posture: nage kneels, uke stands (training format for posture/connection).",
-    "de": "Halbstehende Form: Nage kniet, Uke steht (Übungsformat für Haltung/Verbindung)."
+    "en": "Half-standing format: nage kneels, uke stands; tests posture and connection.",
+    "de": "Halbstehendes Format: Nage kniet, Uke steht; prüft Haltung und Verbindung."
   },
   "literal": {
     "en": "half-body + half-standing",
     "de": "Halbkörper + halbes Stehen"
   },
   "notes": {
-    "en": "Keep tall spine while kneeling; move from hips, not shoulders.",
-    "de": "Wirbelsäule aufrecht im Knien; aus der Hüfte bewegen, nicht aus den Schultern."
+    "en": "Nage maintains a tall spine with pelvis over knees; move from the hips and center, not the shoulders. Adjust with shikkō (knee-walking) or small knee slides; avoid twisting the knees. Uke lowers center to an appropriate attack height—no leaning from the waist. Objectives: receive force through the torso, keep elbows heavy, use atemi to normalize height, and unbalance through line rather than strength. Common errors: collapsing the chest, reaching with arms, or rising onto toes while kneeling.",
+    "de": "Nage hält die Wirbelsäule lang, Becken über den Knien; aus Hüfte und Zentrum bewegen, nicht aus den Schultern. Korrigieren mit shikkō (Knieschritt) oder kleinen Gleitbewegungen; Knie nicht verdrehen. Uke senkt sein Zentrum auf passende Angriffshöhe – kein Vorbeugen aus der Taille. Ziele: Kraft über den Rumpf aufnehmen, Ellbogen „schwer“ halten, Atemi zur Höhenangleichung nutzen und über die Linie destabilisieren statt über Kraft. Häufige Fehler: eingesunkter Brustkorb, Greifen mit den Armen, Hochkommen auf die Zehen im Knien."
   }
 }

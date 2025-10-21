@@ -5,7 +5,7 @@
   "jp": "相半身",
   "category": "stance",
   "def": {
-    "en": "Same-lead facing: both partners with the same foot forward.",
+    "en": "Same-lead facing: both partners share the same front foot.",
     "de": "Gleichführige Stellung: beide Partner mit demselben Bein vorn."
   },
   "literal": {
@@ -13,7 +13,7 @@
     "de": "gemeinsam/gleich + Halbkörper"
   },
   "notes": {
-    "en": "Lines are parallel; entries tend to be outside (soto) or tight inside with atemi.",
-    "de": "Linien sind parallel; Einstiege oft außen (soto) oder eng innen mit Atemi."
+    "en": "Parallel lines and mirrored guards. Outside entries (soto irimi/tenkan) are naturally available; inside entries are tighter and often supported by atemi. Maintain center-to-center alignment and avoid crossing your own line when changing leads.",
+    "de": "Parallele Linien und gespiegelte Guard. Außen-Einstiege (soto irimi/tenkan) bieten sich an; Innen-Einstiege sind enger und oft durch Atemi unterstützt. Zentrum-zu-Zentrum halten und beim Führungswechsel die eigene Linie nicht kreuzen."
   }
 }

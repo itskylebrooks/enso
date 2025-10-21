@@ -5,15 +5,15 @@
   "jp": "当身",
   "category": "movement",
   "def": {
-    "en": "Striking action to create openings or timing—not brawling.",
-    "de": "Schlag/Stoß, um Öffnungen oder Timing zu schaffen – kein Prügeln."
+    "en": "Strike to create openings, timing, or kuzushi—not brawling.",
+    "de": "Schlag/Stoß, um Öffnungen, Timing oder kuzushi zu erzeugen – kein Prügeln."
   },
   "literal": {
     "en": "apply/strike + body",
-    "de": "treffen + Körper"
+    "de": "treffen/anlegen + Körper"
   },
   "notes": {
-    "en": "Light, precise, on the line; often implied rather than delivered.",
-    "de": "Leicht, präzise, auf der Linie; oft angedeutet statt ausgeführt."
+    "en": "Purposeful and on-line: target head, solar plexus, forearm, or hip line to interrupt intent. Often indicated rather than delivered with force; the value is the reaction it provokes. Keep posture tall, elbow heavy, wrist aligned.",
+    "de": "Zweckmäßig und auf der Linie: Ziele z. B. Kopf, Solarplexus, Unterarm oder Hüftlinie, um Intention zu stören. Meist angedeutet statt hart ausgeführt; der Wert liegt in der Reaktion. Haltung aufrecht, Ellbogen schwer, Handgelenk ausgerichtet."
   }
 }

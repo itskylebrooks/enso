@@ -5,15 +5,15 @@
   "jp": "回転投げ",
   "category": "movement",
   "def": {
-    "en": "Turning throw under/around the arm, projecting along a circle.",
-    "de": "Drehwurf unter/um den Arm mit Projektion entlang eines Kreises."
+    "en": "Rotational throw built on a shoulder-axis and circular projection.",
+    "de": "Rotationswurf über eine Schulterachse und kreisförmige Projektion."
   },
   "literal": {
     "en": "rotation + throw",
     "de": "Rotation + Wurf"
   },
   "notes": {
-    "en": "Keep uke's elbow close to your chest; cut the circle with the body.",
-    "de": "Ukes Ellbogen körpernah halten; den Kreis mit dem Körper schneiden."
+    "en": "‘Kaiten’ (rotation) reflects Aikidō’s turn/tenkan pedagogy and the sword idea of drawing a circle to redirect force. The technique creates a temporary axis at uke’s shoulder; your body rotation carries the arm like the leg of a compass while the head/neck line is guided lightly. Point of study: establish the axis first (control elbow close; keep your own posture narrow—hito-emi), then rotate the whole body to move uke’s center on a circular path. Characteristics: inside or outside entries; small circle for tight control, larger circle for projection; height management determines whether uke is pinned or thrown. Transfer: clarifies how circular body power in tai-jutsu mirrors bokken circles and jō turns. Safety focus: manage the face/neck line without compression—rotation should come from your hips/torso, not from twisting the head with the arms. Common errors to avoid: spinning the arms without fixing uke’s center, letting the trapped elbow drift away from your chest, or leaning into the arc and losing your base.",
+    "de": "„Kaiten“ (Rotation) spiegelt die Tenkan-Didaktik des Aikidō und das Schwertbild des Kreisziehens zur Umlenkung von Kraft. Die Technik bildet eine temporäre Achse an Ukes Schulter; deine Kör­per­drehung führt den Arm wie den Schenkel eines Zirkels, während die Kopf-/Nackenlinie leicht geführt wird. Lernpunkt: zuerst die Achse setzen (Ellbogen eng kontrollieren; eigenes Profil schmal – hito-emi), dann mit dem ganzen Körper rotieren und Ukes Zentrum auf einer Kreisbahn bewegen. Merkmale: Innen- oder Außeneinstieg; kleiner Kreis für Nähe und Kontrolle, größerer Kreis für Projektion; Höhensteuerung entscheidet über Pin oder Wurf. Übertrag: verdeutlicht, wie kreisförmige Körperkraft im Tai-jutsu die Bokken-Kreise und Jō-Drehungen spiegelt. Sicherheit: Gesichts-/Nackenlinie ohne Kompression führen – die Rotation kommt aus Hüfte/Rumpf, nicht aus dem Kopfdrehen mit den Armen. Häufige Fehler: Armdrehen ohne Fixierung von Ukes Zentrum, den kontrollierten Ellbogen vom Brustkorb abdriften lassen oder in den Bogen hineinlehnen und die Basis verlieren."
   }
 }

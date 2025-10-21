@@ -5,12 +5,12 @@
   "jp": "袴",
   "category": "etiquette",
   "def": {
-    "en": "Pleated over-trousers worn over the gi.",
-    "de": "Gefaltete Überhose, über dem Gi getragen."
+    "en": "Pleated over-trousers worn over the gi, per dojo custom.",
+    "de": "Gefaltete Überhose über dem Gi, je nach Dojo-Brauch."
   },
   "literal": { "en": "pleated trousers", "de": "Faltenhose" },
   "notes": {
-    "en": "Worn per dojo rank custom; pleats represent virtues in some schools.",
-    "de": "Tragen je nach Dojo-Brauch; Falten stehen teils für Tugenden."
+    "en": "Wear per dojo policy (often from a certain rank or role). Fit: koshi-ita (back plate) centered at the sacrum; himo (ties) flat and secure so the hem does not drag. Etiquette: fold after class, do not step on the hem, keep pleats crisp. Function: conceals footwork, encourages upright posture, and reminds you to move from the hips. Some schools associate the seven pleats with virtues (e.g., jin, gi, rei, chi, shin, chū, kō); this is symbolic, not universal.",
+    "de": "Wird je nach Dojo-Regel getragen (oft ab bestimmtem Grad oder Funktion). Sitz: koshi-ita (Rückenplatte) mittig am Kreuzbein; himo (Bänder) flach und sicher binden, Saum darf nicht schleifen. Etikette: nach dem Training ordentlich falten, nicht auf den Saum treten, Falten pflegen. Funktion: verdeckt Fußarbeit, fördert aufrechte Haltung und erinnert an Bewegung aus der Hüfte. Mancherorts werden die sieben Falten mit Tugenden verbunden (z. B. jin, gi, rei, chi, shin, chū, kō); symbolisch und nicht allgemein verbindlich."
   }
 }

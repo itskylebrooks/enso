@@ -5,15 +5,15 @@
   "jp": "胡座",
   "category": "stance",
   "def": {
-    "en": "Comfortable cross-legged sitting; informal rest posture.",
-    "de": "Bequemes Sitzen im Schneidersitz; informelle Ruhehaltung."
+    "en": "Informal cross-legged sitting; not seiza.",
+    "de": "Informeller Schneidersitz; nicht seiza."
   },
   "literal": {
     "en": "cross-legged sitting",
     "de": "Schneidersitz"
   },
   "notes": {
-    "en": "Used outside formal portions; keep spine upright and shoulders soft.",
-    "de": "Außerhalb formeller Teile; Wirbelsäule aufrecht, Schultern weich."
+    "en": "Used for explanations or rest outside formal etiquette. Spine tall, pelvis neutral, shoulders soft; if holding a weapon, place it parallel on the right. Not for bows unless your dojo permits. Tight hips? Sit on a small cushion to avoid rounding the back.",
+    "de": "Für Erklärungen oder Pausen außerhalb der formellen Etikette. Wirbelsäule lang, Becken neutral, Schultern locker; Waffen rechts parallel ablegen. Nicht für Verbeugungen, außer das Dojo erlaubt es. Bei steifen Hüften ein Kissen nutzen, um Rundrücken zu vermeiden."
   }
 }

@@ -5,12 +5,12 @@
   "jp": "武器技",
   "category": "other",
   "def": {
-    "en": "Weapon techniques; training with traditional implements.",
-    "de": "Waffentechniken; Training mit traditionellen Geräten."
+    "en": "Weapons curriculum: bokken, jō, tantō.",
+    "de": "Waffen-Curriculum: Bokken, Jō, Tantō."
   },
   "literal": { "en": "weapon + technique", "de": "Waffe + Technik" },
   "notes": {
-    "en": "Includes sword (bokken), staff (jō), and knife (tantō) practice.",
-    "de": "Umfasst Schwert- (Bokken), Stab- (Jō) und Messertraining (Tantō)."
+    "en": "Trains posture, ma-ai, and line discipline via suburi (basics), kata (solo), and paired work (kumitachi/kumijō, tantō-dori). Weapons clarify hasuji (cutting angle) and center connection that transfer directly to tai-jutsu.",
+    "de": "Schult Haltung, ma-ai und Liniendisziplin über Suburi (Grundlagen), Kata (solo) und Partnerarbeit (Kumitachi/Kumijō, Tantō-dori). Waffen verdeutlichen Hasuji (Schnittwinkel) und Zentrumsverbindung – direkt auf Tai-jutsu übertragbar."
   }
 }

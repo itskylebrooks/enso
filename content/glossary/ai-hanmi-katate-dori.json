@@ -5,15 +5,15 @@
   "jp": "相半身片手取り",
   "category": "attack",
   "def": {
-    "en": "Same-side wrist grab (right-to-right / left-to-left).",
-    "de": "Gleichseitiger Handgelenkgriff (rechts-rechts / links-links)."
+    "en": "Same-lead one-hand wrist grab (R-R/L-L).",
+    "de": "Gleichständiger Einhand-Handgelenkgriff (R-R/L-L)."
   },
   "literal": {
-    "en": "mutual + half-body + one hand + seize",
-    "de": "gemeinsam + Halbkörper + eine Hand + greifen"
+    "en": "mutual/same + half-body (stance) + one hand + seize",
+    "de": "gemeinsam/gleich + Halbkörper (Stellung) + eine Hand + greifen"
   },
   "notes": {
-    "en": "Lines are parallel; outside leads are common.",
-    "de": "Parallele Linien; Außenführungen sind häufig."
+    "en": "Lines are parallel; outside path is open for irimi or tenkan. Connect through the forearm to your center—no arm-only tugging; keep elbows heavy. Typical follow-ups: ikkyo/nikyo/yonkyo, shiho-nage, kaiten-nage, irimi-nage. Contrast with gyaku-hanmi katate-dori (opposite lead), which flips the entering angles and inside/outside options.",
+    "de": "Parallele Linien; Außenbahn ist offen für irimi oder tenkan. Verbindung über den Unterarm bis ins Zentrum – kein reines Ziehen; Ellbogen „schwer“. Typische Weiterführungen: ikkyo/nikyo/yonkyo, shiho-nage, kaiten-nage, irimi-nage. Abgrenzung zu gyaku-hanmi katate-dori (gegenläufige Führung), das Eintrittswinkel und Innen/Außen-Optionen verändert."
   }
 }
