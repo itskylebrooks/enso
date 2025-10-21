@@ -1,13 +1,13 @@
 {
-  "id": "t-irn-katatedori",
-  "slug": "katate-dori-irimi-nage",
+  "id": "t-irn-katatetori",
+  "slug": "katate-tori-irimi-nage",
   "name": {
-    "en": "Katate-dori Irimi-nage",
-    "de": "Katate-dori Irimi-nage"
+    "en": "Katate-tori Irimi-nage",
+    "de": "Katate-tori Irimi-nage"
   },
   "jp": "入身投げ",
   "category": "throw",
-  "attack": "katate-dori",
+  "attack": "katate-tori",
   "weapon": "empty-hand",
   "level": "kyu4",
   "summary": {
@@ -18,7 +18,7 @@
     "irimi-nage",
     "入身投げ",
     "throw",
-    "katate-dori",
+    "katate-tori",
     "irimi"
   ],
   "versions": [
@@ -28,7 +28,7 @@
       "stepsByEntry": {
         "irimi": {
           "en": [
-            "Stand in ai-hanmi. Uke grabs your lead wrist (katate-dori). Keep posture tall, shoulders soft, center calm.",
+            "Stand in ai-hanmi. Uke grabs your lead wrist (katate-tori). Keep posture tall, shoulders soft, center calm.",
             "Turn the seized palm upward and step straight in on the inside to uke’s right side; extend the free hand for a subtle atemi to fix posture.",
             "With the free hand, take uke’s grabbing wrist from underneath and peel the grip as you continue entering.",
             "Slide deeper so your chest nears uke’s shoulder; guide their arm past the back of the neck, keeping their elbow close to your body.",
@@ -36,7 +36,7 @@
             "Project forward with irimi-nage and release into clear space, maintaining zanshin and a lane for safe ukemi."
           ],
           "de": [
-            "Stehe in Ai-Hanmi. Uke greift dein vorderes Handgelenk (Katate-dori). Haltung aufrecht, Schultern weich, Zentrum ruhig.",
+            "Stehe in Ai-Hanmi. Uke greift dein vorderes Handgelenk (Katate-tori). Haltung aufrecht, Schultern weich, Zentrum ruhig.",
             "Drehe die gefasste Handfläche nach oben und tritt auf der Innenseite entschlossen zu Ukes rechter Seite ein; setze mit der freien Hand einen dezenten Atemi zur Ausrichtung.",
             "Greife mit der freien Hand von unten an Ukes greifendes Handgelenk und löse den Griff, während du weiter eintauchst.",
             "Gleite näher heran, bis deine Brust an Ukes Schulter kommt; führe seinen Arm hinter den Nacken, den Ellbogen körpernah.",

@@ -1,25 +1,25 @@
 {
-  "id": "t-ktg-katatedori",
-  "slug": "katate-dori-kote-gaeshi",
+  "id": "t-ktg-katatetori",
+  "slug": "katate-tori-kote-gaeshi",
   "name": {
-    "en": "Katate-dori Kote-gaeshi",
-    "de": "Katate-dori Kote-gaeshi"
+    "en": "Katate-tori Kote-gaeshi",
+    "de": "Katate-tori Kote-gaeshi"
   },
   "jp": "小手返し",
   "category": "throw",
-  "attack": "katate-dori",
+  "attack": "katate-tori",
   "weapon": "empty-hand",
   "level": "kyu1",
   "summary": {
-    "en": "From ai-hanmi katate-dori, pivot off the line with tenkan, blend with uke's grip, and turn to apply kote-gaeshi in a wide spiral. The throw develops through rotation, not force.",
-    "de": "Aus Ai-hanmi Katate-dori mit Tenkan aus der Angriffslinie drehen, mit Ukes Griff verschmelzen und Kote-gaeshi in einer weiten Spirale ausführen. Der Wurf entsteht durch Rotation, nicht durch Kraft."
+    "en": "From ai-hanmi katate-tori, pivot off the line with tenkan, blend with uke's grip, and turn to apply kote-gaeshi in a wide spiral. The throw develops through rotation, not force.",
+    "de": "Aus Ai-hanmi Katate-tori mit Tenkan aus der Angriffslinie drehen, mit Ukes Griff verschmelzen und Kote-gaeshi in einer weiten Spirale ausführen. Der Wurf entsteht durch Rotation, nicht durch Kraft."
   },
   "tags": [
     "kote-gaeshi",
     "小手返し",
     "tenkan",
     "ura",
-    "katate-dori",
+    "katate-tori",
     "ai-hanmi",
     "throw",
     "aikido"
@@ -31,7 +31,7 @@
       "stepsByEntry": {
         "tenkan": {
           "en": [
-            "From gyaku-hanmi, uke grabs your right wrist with their left hand (cross-hand katate-dori). Keep posture tall, shoulders soft, and your center grounded.",
+            "From gyaku-hanmi, uke grabs your right wrist with their left hand (cross-hand katate-tori). Keep posture tall, shoulders soft, and your center grounded.",
             "Begin a small upward spiral with the seized hand (palm turning up) while keeping the elbow heavy to break uke’s line without pulling.",
             "Pivot (tenkan) off the center line to your right, aligning your spine with uke’s axis. With your free (left) hand, take uke’s grabbing wrist as you turn.",
             "Lead uke’s elbow forward–outward so the shoulder opens; keep both elbows close to your torso and rotate from your hips, not your arms.",
@@ -39,7 +39,7 @@
             "Follow uke into a safe descent and control the arm on the mat, applying osae with clear zanshin and space for ukemi."
           ],
           "de": [
-            "Aus Gyaku-Hanmi greift Uke mit der linken Hand dein rechtes Handgelenk (überkreuz, Katate-dori). Halte die Haltung aufrecht, Schultern weich, Zentrum geerdet.",
+            "Aus Gyaku-Hanmi greift Uke mit der linken Hand dein rechtes Handgelenk (überkreuz, Katate-tori). Halte die Haltung aufrecht, Schultern weich, Zentrum geerdet.",
             "Erzeuge mit der gefassten Hand eine kleine Aufwärtsspirale (Handfläche dreht nach oben), während der Ellbogen schwer bleibt – Gleichgewicht brechen ohne zu ziehen.",
             "Drehe (Tenkan) nach rechts aus der Linie und richte deine Wirbelsäule auf Ukes Achse aus. Greife mit der freien (linken) Hand Ukes greifendes Handgelenk während der Drehung.",
             "Führe Ukes Ellbogen vor–außen, sodass sich die Schulter öffnet; halte beide Ellbogen körpernah und rotiere aus der Hüfte, nicht aus den Armen.",
@@ -107,7 +107,7 @@
       "stepsByEntry": {
         "tenkan": {
           "en": [
-            "Uke grabs your right wrist with his right hand (katate-dori, ai-hanmi). Keep your posture upright, elbows soft, and center calm.",
+            "Uke grabs your right wrist with his right hand (katate-tori, ai-hanmi). Keep your posture upright, elbows soft, and center calm.",
             "Raise your right hand diagonally upward, palm turning slightly outward to create a small upward spiral and break uke's balance forward.",
             "Cut your right hand downward in a short vertical motion to continue uke's imbalance and open the turning line.",
             "Pivot (tenkan) to your right side, moving off the line of attack. With your left hand, grasp uke's right wrist. At the same time, extend your right hand toward uke's face for atemi, maintaining connection and control.",
@@ -115,7 +115,7 @@
             "As uke falls, control his arm along the circular path and apply the pin (osae) smoothly. Maintain zanshin and distance."
           ],
           "de": [
-            "Uke greift dein rechtes Handgelenk mit seiner rechten Hand (Katate-dori, Ai-hanmi). Halte die Haltung aufrecht, Schultern locker, Schwerpunkt ruhig.",
+            "Uke greift dein rechtes Handgelenk mit seiner rechten Hand (Katate-tori, Ai-hanmi). Halte die Haltung aufrecht, Schultern locker, Schwerpunkt ruhig.",
             "Führe deine rechte Hand schräg nach oben, Handfläche leicht nach außen, um Ukes Gleichgewicht nach vorn zu stören.",
             "Führe die Hand von oben nach unten, um Ukes Balance weiter zu brechen und Raum für die Drehung zu öffnen.",
             "Drehe dich mit Tenkan nach rechts, geh von der Angriffslinie weg. Greife mit der linken Hand Ukes rechtes Handgelenk. Gleichzeitig strecke die rechte Hand in Richtung Ukes Gesicht für einen Atemi.",
@@ -171,8 +171,8 @@
         ]
       },
       "context": {
-        "en": "This is the classical tenkan (ura) form of kote-gaeshi from ai-hanmi katate-dori. Instead of entering forward, tori pivots off the line, blending with uke's pulling energy and redirecting it into a spiral. The balance breaks through rotation, not collision. It embodies the principle of tenkan — yielding while maintaining control — and teaches how to use circular motion to transform attack into harmony.",
-        "de": "Dies ist die klassische Tenkan-Variante von Kote-gaeshi aus Ai-hanmi Katate-dori. Statt nach vorn zu gehen, weichst du mit einer Drehung aus, nimmst Ukes Energie auf und leitest sie spiralförmig um. Das Gleichgewicht wird durch Rotation, nicht durch Kraft gebrochen. Sie zeigt das Prinzip des Tenkan – Nachgeben ohne Aufgeben – und wie kreisförmige Bewegung einen Angriff harmonisch neutralisiert."
+        "en": "This is the classical tenkan (ura) form of kote-gaeshi from ai-hanmi katate-tori. Instead of entering forward, tori pivots off the line, blending with uke's pulling energy and redirecting it into a spiral. The balance breaks through rotation, not collision. It embodies the principle of tenkan — yielding while maintaining control — and teaches how to use circular motion to transform attack into harmony.",
+        "de": "Dies ist die klassische Tenkan-Variante von Kote-gaeshi aus Ai-hanmi Katate-tori. Statt nach vorn zu gehen, weichst du mit einer Drehung aus, nimmst Ukes Energie auf und leitest sie spiralförmig um. Das Gleichgewicht wird durch Rotation, nicht durch Kraft gebrochen. Sie zeigt das Prinzip des Tenkan – Nachgeben ohne Aufgeben – und wie kreisförmige Bewegung einen Angriff harmonisch neutralisiert."
       },
       "commentary": {
         "en": "Move as if tracing a wide circle with both hands, beginning upward and ending forward-downward. The throw should feel like turning a large wheel from your center — smooth, connected, and effortless.",

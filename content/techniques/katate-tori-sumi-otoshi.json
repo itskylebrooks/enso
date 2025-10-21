@@ -1,13 +1,13 @@
 {
-  "id": "t-smo-katatedori",
-  "slug": "katate-dori-sumi-otoshi",
+  "id": "t-smo-katatetori",
+  "slug": "katate-tori-sumi-otoshi",
   "name": {
-    "en": "Katate-dori Sumi-otoshi",
-    "de": "Katate-dori Sumi-otoshi"
+    "en": "Katate-tori Sumi-otoshi",
+    "de": "Katate-tori Sumi-otoshi"
   },
   "jp": "隅落とし",
   "category": "throw",
-  "attack": "katate-dori",
+  "attack": "katate-tori",
   "weapon": "empty-hand",
   "level": "dan1",
   "summary": {
@@ -18,7 +18,7 @@
     "sumi-otoshi",
     "隅落とし",
     "throw",
-    "katate-dori",
+    "katate-tori",
     "irimi",
     "tenkan",
     "kuzushi"

@@ -1,13 +1,13 @@
 {
-  "id": "t-ktn-katatedori-soto",
-  "slug": "katate-dori-kaiten-nage-soto",
+  "id": "t-ktn-katatetori-soto",
+  "slug": "katate-tori-kaiten-nage-soto",
   "name": {
-    "en": "Katate-dori Kaiten-nage (Soto)",
-    "de": "Katate-dori Kaiten-nage (Soto)"
+    "en": "Katate-tori Kaiten-nage (Soto)",
+    "de": "Katate-tori Kaiten-nage (Soto)"
   },
   "jp": "回転投げ（外）",
   "category": "throw",
-  "attack": "katate-dori",
+  "attack": "katate-tori",
   "weapon": "empty-hand",
   "level": "kyu3",
   "summary": {
@@ -19,7 +19,7 @@
     "回転投げ",
     "soto",
     "throw",
-    "katate-dori",
+    "katate-tori",
     "irimi",
     "tenkan"
   ],
@@ -30,14 +30,14 @@
       "stepsByEntry": {
         "irimi": {
           "en": [
-            "Uke grips your wrist (katate-dori) from gyaku hanmi. Keep your spine tall, shoulders soft, and let your center settle down.",
+            "Uke grips your wrist (katate-tori) from gyaku hanmi. Keep your spine tall, shoulders soft, and let your center settle down.",
             "Enter (irimi) to uke’s outside line (soto): step forward and slightly off-line with your front foot to uke’s open side, turning your seized palm upward to release tension.",
             "Raise and guide uke’s arm in a circular motion above their head, while your free hand moves to the back of uke’s neck. This gives you two-point control (wrist + neck).",
             "Turn your hips and shoulders together, keeping uke’s arm extended and their balance forward. Guide their head down in a spiral arc, leading their body toward the mat.",
             "Complete the throw by cutting a wide forward-downward circle with both hands, lowering uke smoothly to the ground. Maintain zanshin (awareness) and safe distance as uke rolls or falls."
           ],
           "de": [
-            "Uke greift dein Handgelenk (Katate-dori) aus Gyaku-Hanmi. Halte die Wirbelsäule aufrecht, Schultern weich und lass dein Zentrum sinken.",
+            "Uke greift dein Handgelenk (Katate-tori) aus Gyaku-Hanmi. Halte die Wirbelsäule aufrecht, Schultern weich und lass dein Zentrum sinken.",
             "Tritt (Irimi) auf Ukes Außenlinie (Soto): mache mit dem Vorderfuß einen Schritt vorwärts und leicht aus der Linie zur offenen Seite von Uke und drehe die gefasste Handfläche nach oben, um die Spannung zu lösen.",
             "Führe Ukes Arm kreisförmig über seinen Kopf, während deine freie Hand an den Hinterkopf von Uke geht. So erhältst du Zweipunkt-Kontrolle (Handgelenk + Nacken).",
             "Drehe Hüfte und Schultern zusammen, halte Ukes Arm gestreckt und sein Gewicht nach vorn. Führe den Kopf in einem spiralförmigen Bogen nach unten und leite den Körper Richtung Matten.",
@@ -120,14 +120,14 @@
       "stepsByEntry": {
         "irimi": {
           "en": [
-            "Uke grips your wrist (katate-dori) from ai hanmi. Keep your stance natural, center low, and spine upright.",
+            "Uke grips your wrist (katate-tori) from ai hanmi. Keep your stance natural, center low, and spine upright.",
             "Step forward to the outside (soto), slightly off-line toward uke’s open side. As you move in, turn your seized hand palm-up, connecting to uke’s center without pulling.",
             "Guide uke’s arm upward in a circular path, opening their posture. Place your free hand lightly at the back of uke’s neck or shoulder to establish two-point control.",
             "Turn your hips and shoulders together, spiraling your movement forward. Your body drop (marui) leads uke’s head down, while the raised arm maintains extension without force.",
             "Complete the throw by cutting a wide, downward-forward arc. Uke’s balance collapses as their head follows the circle, and you release into clear zanshin, leaving space for safe ukemi."
           ],
           "de": [
-            "Uke greift dein Handgelenk (katate-dori) aus Ai-hanmi. Halte deine Haltung aufrecht, Zentrum tief, Schultern entspannt.",
+            "Uke greift dein Handgelenk (katate-tori) aus Ai-hanmi. Halte deine Haltung aufrecht, Zentrum tief, Schultern entspannt.",
             "Tritt vor auf die Außenlinie (soto), leicht außerhalb von Ukes Angriffslinie, zu seiner offenen Seite. Drehe die gefasste Handfläche nach oben, ohne zu ziehen, und verbinde dich so mit Ukes Zentrum.",
             "Führe Ukes Arm nach oben in einer Kreisbewegung und öffne dadurch seine Haltung. Lege die freie Hand an Ukes Nacken oder Schulter, um die Zweipunkt-Kontrolle herzustellen.",
             "Drehe Hüfte und Schultern gemeinsam, während du dich spiralförmig nach vorn bewegst. Dein Absenken (marui) bringt Ukes Kopf nach unten, während der Arm gestreckt bleibt, ohne Kraftaufwand.",

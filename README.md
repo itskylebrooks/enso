@@ -24,7 +24,7 @@ Create a new file: `/content/techniques/attack-technique-direction.json`
   },
   "jp": "日本語名",
   "category": "throw",
-  "attack": "katate-dori",
+  "attack": "katate-tori",
   "weapon": "empty-hand",
   "level": "kyu5",
   "summary": {
@@ -186,12 +186,12 @@ Create a new file: `/content/techniques/attack-technique-direction.json`
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `id` | string | ✅ | Unique identifier (e.g., "t-shn-katatedori-omote") |
-| `slug` | string | ✅ | URL-friendly name (e.g., "katate-dori-shiho-nage-omote") |
+| `id` | string | ✅ | Unique identifier (e.g., "t-shn-katatetori-omote") |
+| `slug` | string | ✅ | URL-friendly name (e.g., "katate-tori-shiho-nage-omote") |
 | `name` | Localized | ✅ | Technique name in EN/DE |
 | `jp` | string | ❌ | Japanese name (romaji or kanji) |
 | `category` | enum | ✅ | One of: `throw`, `control`, `pin`, `other` |
-| `attack` | string | ✅ | Attack type (e.g., "katate-dori", "shomen-uchi") |
+| `attack` | string | ✅ | Attack type (e.g., "katate-tori", "shomen-uchi") |
 | `weapon` | string | ✅ | Weapon context: `empty-hand`, `bokken`, `jo`, `tanto` |
 | `level` | string | ❌ | Belt level for filtering (e.g., "kyu5", "kyu4", "kyu3") |
 | `summary` | Localized | ✅ | Brief description of the technique |
@@ -268,7 +268,7 @@ Each version specifies the **hanmi** (stance relationship):
 
 ### Complete Example
 
-See `/content/techniques/katate-dori-kaiten-nage-soto.json` for a real working example with both standard and trainer-specific versions.
+See `/content/techniques/katate-tori-kaiten-nage-soto.json` for a real working example with both standard and trainer-specific versions.
 
 ### Validation
 
@@ -295,8 +295,8 @@ This will check:
 
 ### Naming Conventions
 
-- **IDs**: `t-abbreviation-attack-technique` (e.g., `t-shn-katatedori-omote`, `t1`, `t8`)
-- **Slugs**: `kebab-case` matching common usage (e.g., `katate-dori-shiho-nage-omote`)
+- **IDs**: `t-abbreviation-attack-technique` (e.g., `t-shn-katatetori-omote`, `t1`, `t8`)
+- **Slugs**: `kebab-case` matching common usage (e.g., `katate-tori-shiho-nage-omote`)
 - **Version IDs**: `v-base` (required first), then `v-trainername` (e.g., `v-haase`, `v-mustermann`)
 - **Trainer IDs**: `kebab-case` (e.g., `max-mustermann`, `alfred-haase`)
 - **Dojo IDs**: `kebab-case` or abbreviation (e.g., `bsv`, `example-dojo`)
@@ -523,7 +523,7 @@ type Technique = {
   name: Localized<string>;
   jp?: string;
   category: 'throw'|'control'|'pin'|'other';
-  attack: string;               // e.g. 'katate-dori'
+  attack: string;               // e.g. 'katate-tori'
   level?: string;               // belt tag for filtering (display-only)
   summary: Localized<string>;
   tags: string[];               // searchable aliases

@@ -92,7 +92,7 @@ export const TechniqueHeader = ({
     }
     
     // Attack category tags
-    if (lowerTag.includes('dori') || lowerTag.includes('uchi') || lowerTag.includes('tsuki') || 
+    if (lowerTag.includes('tori') || lowerTag.includes('uchi') || lowerTag.includes('tsuki') || 
         lowerTag.includes('grab') || lowerTag.includes('strike') || lowerTag.includes('punch') ||
         lowerTag.includes('shomen') || lowerTag.includes('yokomen') || lowerTag.includes('katate') ||
         lowerTag.includes('ryote') || lowerTag.includes('morote') || lowerTag.includes('mune')) {

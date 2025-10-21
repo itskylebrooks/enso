@@ -1,13 +1,13 @@
 {
-  "id": "t-uds-katatedori",
-  "slug": "katate-dori-ude-osae-ikkyo",
+  "id": "t-uds-katatetori",
+  "slug": "katate-tori-ude-osae-ikkyo",
   "name": {
-    "en": "Katate-dori Ude-osae (Ikkyo)",
-    "de": "Katate-dori Ude-osae (Ikkyo)"
+    "en": "Katate-tori Ude-osae (Ikkyo)",
+    "de": "Katate-tori Ude-osae (Ikkyo)"
   },
   "jp": "片手取り一教 (腕抑え)",
   "category": "control",
-  "attack": "katate-dori",
+  "attack": "katate-tori",
   "weapon": "empty-hand",
   "level": "kyu5",
   "summary": {
@@ -19,7 +19,7 @@
     "一教",
     "ude osae",
     "pin",
-    "katate-dori",
+    "katate-tori",
     "irimi",
     "tenkan"
   ],

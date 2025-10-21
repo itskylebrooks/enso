@@ -91,17 +91,17 @@ export const SearchOverlay = ({ copy, locale, techniques, progress, glossaryProg
     if (normalizedQuery.length === 0 || query.trim().length < 2) {
       // Return a deterministic default ordering when search is empty.
       // Requested default order (techniques then glossary):
-      // 1) Katate dori shiho nage (katate-dori-shiho-nage)
-      // 2) Katate-dori Kaiten-nage (Soto) (katate-dori-kaiten-nage-soto)
-      // 3) Ryote-dori Koshi-nage (ryote-dori-koshi-nage)
+      // 1) Katate tori shiho nage (katate-tori-shiho-nage)
+      // 2) Katate-tori Kaiten-nage (Soto) (katate-tori-kaiten-nage-soto)
+      // 3) Ryote-tori Koshi-nage (ryote-tori-koshi-nage)
       // 4) Onegai shimasu (onegai-shimasu) [glossary]
       // 5) Kamae (kamae) [glossary]
       // 6) uke (uke) [glossary]
 
       const techniqueOrder = [
-        'ryote-dori-koshi-nage',
-        'katate-dori-kaiten-nage-soto',
-        'katate-dori-irimi-nage',
+        'ryote-tori-koshi-nage',
+        'katate-tori-kaiten-nage-soto',
+        'katate-tori-irimi-nage',
       ];
 
       const glossaryOrder = [

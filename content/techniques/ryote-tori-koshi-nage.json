@@ -1,13 +1,13 @@
 {
-  "id": "t-ksn-ryotedori",
-  "slug": "ryote-dori-koshi-nage",
+  "id": "t-ksn-ryotetori",
+  "slug": "ryote-tori-koshi-nage",
   "name": {
-    "en": "Ryote-dori Koshi-nage",
-    "de": "Ryote-dori Koshi-nage"
+    "en": "Ryote-tori Koshi-nage",
+    "de": "Ryote-tori Koshi-nage"
   },
   "jp": "両手取り腰投げ",
   "category": "throw",
-  "attack": "ryote-dori",
+  "attack": "ryote-tori",
   "weapon": "empty-hand",
   "level": "kyu2",
   "summary": {
@@ -18,7 +18,7 @@
     "koshi-nage",
     "腰投げ",
     "throw",
-    "ryote-dori",
+    "ryote-tori",
     "irimi",
     "hip throw"
   ],

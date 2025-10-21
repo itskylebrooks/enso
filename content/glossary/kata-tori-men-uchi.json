@@ -1,0 +1,19 @@
+{
+  "id": "kata-tori-men-uchi",
+  "slug": "kata-tori-men-uchi",
+  "romaji": "Kata-tori Men-uchi",
+  "jp": "肩取り面打ち",
+  "category": "attack",
+  "def": {
+    "en": "Shoulder grab combined with a frontal strike.",
+    "de": "Schultergriff kombiniert mit frontalem Schlag."
+  },
+  "literal": {
+    "en": "shoulder + seize; face/head + strike",
+    "de": "Schulter + greifen; Gesicht/Kopf + Schlag"
+  },
+  "notes": {
+    "en": "A pedagogical attack that tests composure under mixed stimuli: the grab disrupts posture at the shoulder girdle while the strike forces immediate line management. It trains prioritization (protect the head line without sacrificing the grabbed shoulder), timing (hyōshi) under pressure, and use of atemi to recover initiative. Lines and angles mirror tanto-tori logic: manage the near hand, then address the incoming line. Variants include shōmen-uchi phrasing and different shoulders depending on stance.",
+    "de": "Eine didaktische Angriffskombination, die Ruhe unter Mehrfachreizen schult: Der Griff stört die Haltung am Schultergürtel, der Schlag erzwingt sofortiges Linienmanagement. Trainiert Priorisierung (Kopflinie schützen, ohne die gegriffene Schulter preiszugeben), Timing (hyōshi) unter Druck und den Einsatz von Atemi zur Wiedergewinnung der Initiative. Linien und Winkel entsprechen dem Prinzip aus dem Tantō-tori: die nahe Hand sichern, dann die ankommende Linie führen. Varianten umfassen die Shōmen-uchi-Formulierung und unterschiedliche Schultern je nach Stellung."
+  }
+}

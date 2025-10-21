@@ -1,13 +1,13 @@
 {
-  "id": "t-shn-katatedori",
-  "slug": "katate-dori-shiho-nage",
+  "id": "t-shn-katatetori",
+  "slug": "katate-tori-shiho-nage",
   "name": {
-    "en": "Katate-dori Shiho-nage",
-    "de": "Katate-dori Shiho-nage"
+    "en": "Katate-tori Shiho-nage",
+    "de": "Katate-tori Shiho-nage"
   },
   "jp": "四方投げ",
   "category": "throw",
-  "attack": "katate-dori",
+  "attack": "katate-tori",
   "weapon": "empty-hand",
   "level": "kyu5",
   "summary": {
@@ -19,7 +19,7 @@
     "shihonage",
     "四方投げ",
     "throw",
-    "katate-dori",
+    "katate-tori",
     "irimi",
     "tenkan"
   ],

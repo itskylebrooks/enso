@@ -362,7 +362,7 @@ export const GuidePage = ({
             copy={i18nCopy}
             isDark={isDark}
             onCellClick={(slug, attackKey) => {
-              // Create combined technique slug: e.g., "katate-dori-ude-osae-ikkyo-omote"
+              // Create combined technique slug: e.g., "katate-tori-ude-osae-ikkyo-omote"
               const attackSlug = attackKey.replace(/_/g, '-');
               const combinedSlug = `${attackSlug}-${slug}`;
               onOpenTechnique(combinedSlug, undefined, undefined, true);

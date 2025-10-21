@@ -53,7 +53,7 @@ export const TantoMatrix = ({ locale, onCellClick }: TantoMatrixProps): ReactEle
                 {locale === 'en' ? 'Technique' : 'Technik'}
               </th>
               {TANTO_COLUMNS.map((col) => {
-                const isTall = col.key === 'sode_dori_tanto_yoko_tsuki_soto';
+                const isTall = col.key === 'sode_tori_tanto_yoko_tsuki_soto';
                 return (
                   <th
                     key={col.key}

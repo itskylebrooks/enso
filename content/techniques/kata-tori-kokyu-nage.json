@@ -1,13 +1,13 @@
 {
-  "id": "t-kkn-katadori-variant",
-  "slug": "kata-dori-kokyu-nage",
+  "id": "t-kkn-katatori-variant",
+  "slug": "kata-tori-kokyu-nage",
   "name": {
-    "en": "Kata-dori Kokyu-nage",
-    "de": "Kata-dori Kokyu-nage"
+    "en": "Kata-tori Kokyu-nage",
+    "de": "Kata-tori Kokyu-nage"
   },
   "jp": "肩取り呼吸投げ",
   "category": "throw",
-  "attack": "kata-dori",
+  "attack": "kata-tori",
   "weapon": "empty-hand",
   "level": "dan2",
   "summary": {
@@ -18,7 +18,7 @@
     "kokyu-nage",
     "呼吸投げ",
     "throw",
-    "kata-dori",
+    "kata-tori",
     "gyaku-hanmi",
     "irimi"
   ],
@@ -31,14 +31,14 @@
       "stepsByEntry": {
         "irimi": {
           "en": [
-            "From gyaku-hanmi, uke grabs your shoulder (kata-dori).",
+            "From gyaku-hanmi, uke grabs your shoulder (kata-tori).",
             "Perform an evasive two-step movement (Doppelschritt), raising your free hand in a yokomen-uchi motion to unbalance uke.",
             "As you turn, connect your raised arm to the inside of uke's grabbing elbow, applying firm, steady pressure.",
             "Maintain an upright posture and drop to your knees, using this sudden change in level to project uke's center forward.",
             "Guide uke into a safe forward roll and maintain zanshin."
           ],
           "de": [
-            "Aus Gyaku-Hanmi greift Uke deine Schulter (Kata-dori).",
+            "Aus Gyaku-Hanmi greift Uke deine Schulter (Kata-tori).",
             "Führe einen ausweichenden Doppelschritt aus und hebe dabei deine freie Hand in einer Yokomen-uchi-Bewegung, um Uke aus dem Gleichgewicht zu bringen.",
             "Während du dich drehst, verbinde deinen erhobenen Arm mit der Innenseite von Ukes Greif-Ellbogen und übe festen, stetigen Druck aus.",
             "Behalte eine aufrechte Haltung bei und sinke auf deine Knie. Nutze diesen Ebenenwechsel, um Ukes Schwerpunkt nach vorne zu projizieren.",

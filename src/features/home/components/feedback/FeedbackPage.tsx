@@ -64,12 +64,12 @@ type CategoryTag =
   | 'tanto'
   | 'sword'
   | 'advanced'
-  | 'randori'
+  | 'rantori'
   | 'weapons'
   | 'kids'
   | 'flow';
 
-const categoryTagOrder: CategoryTag[] = ['throw', 'pin', 'defense', 'jo', 'tanto', 'sword', 'advanced', 'randori', 'weapons', 'kids', 'flow'];
+const categoryTagOrder: CategoryTag[] = ['throw', 'pin', 'defense', 'jo', 'tanto', 'sword', 'advanced', 'rantori', 'weapons', 'kids', 'flow'];
 
 const isCategoryTag = (value: unknown): value is CategoryTag =>
   typeof value === 'string' && (categoryTagOrder as string[]).includes(value);
@@ -291,10 +291,10 @@ const buildNewTechniqueSlug = (name: string): string => {
 const isUnusualAttackWeapon = (attack: string | null, weapon: string | null): boolean => {
   if (!attack || !weapon || weapon === 'empty-hand') return false;
   if (weapon === 'tanto') {
-    return attack.endsWith('-dori');
+    return attack.endsWith('-tori');
   }
   if (weapon === 'jo' || weapon === 'bokken') {
-    return attack.includes('dori');
+    return attack.includes('tori');
   }
   return false;
 };

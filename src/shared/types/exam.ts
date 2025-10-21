@@ -1,14 +1,14 @@
 export type AttackKey =
-  | 'katate_dori'
-  | 'ryote_dori'
-  | 'katate_ryote_dori'
-  | 'mune_dori'
+  | 'katate_tori'
+  | 'ryote_tori'
+  | 'katate_ryote_tori'
+  | 'mune_tori'
   | 'yoko_kubi_shime'
-  | 'ushiro_ryokata_dori'
-  | 'ushiro_kakae_dori'
-  | 'ushiro_ryote_dori'
-  | 'ushiro_eri_dori'
-  | 'ushiro_katate_dori_kubi_shime'
+  | 'ushiro_ryokata_tori'
+  | 'ushiro_kakae_tori'
+  | 'ushiro_ryote_tori'
+  | 'ushiro_eri_tori'
+  | 'ushiro_katate_tori_kubi_shime'
   | 'ushiro_kubi_shime'
   | 'yokomen_uchi'
   | 'shomen_uchi'
@@ -36,13 +36,13 @@ export type AttackColumn = {
 
 // Saya no Uchi Program types
 export type SayaNoUchiAttackKey =
-  | 'katate_dori_ai_hanmi'
-  | 'katate_dori_gyaku_hanmi'
-  | 'kata_dori'
-  | 'ushiro_ryokata_dori'
-  | 'ushiro_ryote_dori'
-  | 'ushiro_eri_dori'
-  | 'hanmi_hantachi_katate_dori_gyaku_hanmi'
+  | 'katate_tori_ai_hanmi'
+  | 'katate_tori_gyaku_hanmi'
+  | 'kata_tori'
+  | 'ushiro_ryokata_tori'
+  | 'ushiro_ryote_tori'
+  | 'ushiro_eri_tori'
+  | 'hanmi_hantachi_katate_tori_gyaku_hanmi'
   | 'ken_tai_jo_saya_no_uchi';
 
 export type SayaNoUchiSection = 'tachi_waza' | 'hanmi_hantachi' | 'buki_waza';
@@ -65,10 +65,10 @@ export type SayaNoUchiColumn = {
 
 // Jo Techniques Program types
 export type JoAttackKey =
-  | 'jo_ryote_dori_double'
-  | 'jo_ryote_dori_gyaku'
-  | 'jo_katate_dori'
-  | 'jo_katate_ryote_dori'
+  | 'jo_ryote_tori_double'
+  | 'jo_ryote_tori_gyaku'
+  | 'jo_katate_tori'
+  | 'jo_katate_ryote_tori'
   | 'jo_tsuki'
   | 'jo_yokomen_uchi'
   | 'jo_shomen_uchi'
@@ -100,8 +100,8 @@ export type TantoAttackKey =
   | 'tanto_yokomen_soto'
   | 'tanto_yoko_tsuki_soto'
   | 'tanto_yoko_tsuki_uchi'
-  | 'mune_dori_tanto_yokomen_uchi'
-  | 'sode_dori_tanto_yoko_tsuki_soto';
+  | 'mune_tori_tanto_yokomen_uchi'
+  | 'sode_tori_tanto_yoko_tsuki_soto';
 
 export type TantoCell =
   | { kind: 'check' }                              // checkmark icon

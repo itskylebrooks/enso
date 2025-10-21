@@ -1,0 +1,19 @@
+{
+  "id": "morote-tori",
+  "slug": "morote-tori",
+  "romaji": "Morote-tori",
+  "jp": "諸手取り",
+  "category": "attack",
+  "def": {
+    "en": "Two hands grabbing one wrist/forearm.",
+    "de": "Zweihandgriff an einem Handgelenk/Unterarm."
+  },
+  "literal": {
+    "en": "both/many + hands + seize",
+    "de": "beide/viele + Hände + greifen"
+  },
+  "notes": {
+    "en": "A pressure amplifier used to teach connection and whole-body response. Keep the captured elbow close and linked to your center; align the wrist so the line travels through your structure, not into the joint. Unbalance by moving from the hips (irimi/tenkan) rather than tugging with the forearm; atemi clarifies angle if space is tight. Related grips—ryōte-tori (both wrists) and kata-tori (shoulder)—train the same priorities: line, timing, elbow control. Safety: avoid sudden twists on the wrist; lead the shoulder line instead.",
+    "de": "Ein „Druckverstärker“, um Verbindung und Ganzkörperantwort zu lehren. Den gefassten Ellbogen körpernah halten und mit dem Zentrum koppeln; das Handgelenk so ausrichten, dass die Kraft durch die eigene Struktur läuft und nicht ins Gelenk. Aus der Hüfte (irimi/tenkan) destabilisieren statt mit dem Unterarm zu ziehen; bei wenig Raum klärt Atemi den Winkel. Verwandte Griffe – ryōte-tori (beide Handgelenke) und kata-tori (Schulter) – schulen dieselben Prioritäten: Linie, Timing, Ellbogenkontrolle. Sicherheit: keine ruckartigen Verdrehungen am Handgelenk; die Schulterlinie führen."
+  }
+}

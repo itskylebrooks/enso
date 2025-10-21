@@ -25,9 +25,9 @@ const isHanmi = (value: string | undefined): value is Hanmi =>
  * @returns Hierarchical technique URL
  * 
  * Examples:
- * - buildTechniqueUrl('katate-dori-kaiten-nage-soto') → '/technique/katate-dori-kaiten-nage-soto'
- * - buildTechniqueUrl('katate-dori-kaiten-nage-soto', 'alfred-haase') → '/technique/katate-dori-kaiten-nage-soto/alfred-haase'
- * - buildTechniqueUrl('katate-dori-kaiten-nage-soto', 'alfred-haase', 'irimi') → '/technique/katate-dori-kaiten-nage-soto/alfred-haase/irimi'
+ * - buildTechniqueUrl('katate-tori-kaiten-nage-soto') → '/technique/katate-tori-kaiten-nage-soto'
+ * - buildTechniqueUrl('katate-tori-kaiten-nage-soto', 'alfred-haase') → '/technique/katate-tori-kaiten-nage-soto/alfred-haase'
+ * - buildTechniqueUrl('katate-tori-kaiten-nage-soto', 'alfred-haase', 'irimi') → '/technique/katate-tori-kaiten-nage-soto/alfred-haase/irimi'
  */
 export const buildTechniqueUrl = (slug: string, trainerId?: string, entry?: EntryMode): string => {
   const encodedSlug = encodeURIComponent(slug);
