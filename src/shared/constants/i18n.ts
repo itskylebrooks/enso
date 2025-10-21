@@ -149,6 +149,8 @@ export const messages = {
     viewGuideCta: 'Study Guide',
     // Homepage strings
     homeIdentityTagline: 'Your personal Aikidō library and study companion.',
+    homeActiveDevNote: 'Actively developed —',
+    homeActiveDevRoadmapCta: 'view the Roadmap!',
     homeQuickGuideTitle: 'Quick Guide',
     homeQuickGuideSubtitle: '3 steps to get started:',
     homeQuickGuideStep1: 'Explore techniques in Library.',
@@ -753,6 +755,8 @@ export const messages = {
     viewGuideCta: 'Leitfaden ansehen',
     // Homepage strings
     homeIdentityTagline: 'Deine persönliche Aikidō-Bibliothek und Studienbegleiter.',
+    homeActiveDevNote: 'Aktiv in Entwicklung —',
+    homeActiveDevRoadmapCta: 'zur Roadmap!',
     homeQuickGuideTitle: 'Schnelleinstieg',
     homeQuickGuideSubtitle: '3 Schritte zum Beginnen:',
     homeQuickGuideStep1: 'Erkunde Techniken in der Bibliothek.',

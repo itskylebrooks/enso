@@ -56,6 +56,17 @@ export const HomePage = ({
             <p className="mt-3 text-base md:text-lg text-subtle max-w-xl mx-auto">
               {copy.homeIdentityTagline}
             </p>
+            <p className="mt-2 text-xs md:text-sm text-subtle flex items-center justify-center gap-2">
+              <span>{copy.homeActiveDevNote}</span>
+              <button
+                type="button"
+                onClick={onViewRoadmap}
+                className="underline underline-offset-4 hover:opacity-80 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] rounded"
+                aria-label="Open Roadmap"
+              >
+                {copy.homeActiveDevRoadmapCta}
+              </button>
+            </p>
           </div>
         </div>
       </section>
@@ -104,13 +115,6 @@ export const HomePage = ({
                 className="h-12 px-5 rounded-xl border btn-tonal surface-hover transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] focus:outline-none"
               >
                 {copy.guide}
-              </button>
-              <button
-                type="button"
-                onClick={onViewRoadmap}
-                className="h-12 px-5 rounded-xl border btn-tonal surface-hover transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] focus:outline-none"
-              >
-                {copy.roadmap}
               </button>
               <button
                 type="button"
