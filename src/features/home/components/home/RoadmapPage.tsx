@@ -8,7 +8,7 @@ import { roadmapItems } from '@shared/data/roadmap';
 import { classNames } from '@shared/utils/classNames';
 import { useMotionPreferences, defaultEase } from '@shared/components/ui/motion';
 import { getInitialThemeState } from '@shared/utils/theme';
-import { DynamicIcon } from 'lucide-react/dynamic';
+import { DynamicIcon, iconNames, type IconName as LucideIconName } from 'lucide-react/dynamic';
 
 type RoadmapPageProps = {
   copy: Copy;
@@ -22,6 +22,13 @@ const columnStatuses: ColumnStatus[] = ['planned', 'in-progress', 'launched'];
 // Convert camelCase or snake_case names to Lucide's kebab-case
 const toLucideName = (name?: string): string | undefined =>
   name?.replace(/([a-z0-9])([A-Z])/g, '$1-$2').replace(/_/g, '-').toLowerCase();
+
+// Validate against lucide's exported iconNames so TypeScript accepts the union
+const toSafeLucideName = (name?: string): LucideIconName | null => {
+  const kebab = toLucideName(name);
+  if (!kebab) return null;
+  return (iconNames as readonly string[]).includes(kebab) ? (kebab as LucideIconName) : null;
+};
 
 const statusAccent = (copy: Copy) =>
   ({
@@ -257,7 +264,6 @@ const ArticleCard = ({
   hoverRingClass,
   focusRingClass,
   hoverBorderClass,
-  prefersReducedMotion,
   disableInViewAnimations,
   locale,
 }: ArticleCardProps): ReactElement => {
@@ -282,12 +288,15 @@ const ArticleCard = ({
 
       <div className="relative z-10 space-y-4">
         <div className="flex items-start gap-3">
-          {item.icon ? (
-            <DynamicIcon
-              name={toLucideName(item.icon) || ''}
-              className="mt-0.5 h-5 w-5 text-[var(--color-text)]/75"
-            />
-          ) : null}
+          {(() => {
+            const safe = toSafeLucideName(item.icon);
+            return safe ? (
+              <DynamicIcon
+                name={safe}
+                className="mt-0.5 h-5 w-5 text-[var(--color-text)]/75"
+              />
+            ) : null;
+          })()}
           <div className="space-y-1.5">
             <h3 className="text-lg font-medium tracking-tight">
               {selectTitle(item.title, locale)}
@@ -314,10 +323,8 @@ const ArticleCard = ({
 
 const MetaIcon = ({ iconName }: { iconName?: RoadmapIconName }): ReactElement | null => {
   if (!iconName) return null;
-  return (
-    <DynamicIcon
-      name={toLucideName(iconName) || ''}
-      className="h-8 w-8 text-[var(--color-text)]/70"
-    />
-  );
+  const safe = toSafeLucideName(iconName);
+  return safe ? (
+    <DynamicIcon name={safe} className="h-8 w-8 text-[var(--color-text)]/70" />
+  ) : null;
 };

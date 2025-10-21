@@ -25,7 +25,7 @@ const GlossaryPage = lazy(() => import('./features/glossary').then(m => ({ defau
 const GlossaryDetailPage = lazy(() => import('./features/glossary').then(m => ({ default: m.GlossaryDetailPage })));
 import { GlossaryFilterPanel, MobileGlossaryFilters, loadAllTerms } from './features/glossary';
 import { ConfirmClearModal } from './shared/components/dialogs/ConfirmClearDialog';
-import { useMotionPreferences } from '@shared/components/ui/motion';
+import { useMotionPreferences, defaultEase } from '@shared/components/ui/motion';
 import { getCopy } from './shared/constants/i18n';
 import useLockBodyScroll from './shared/hooks/useLockBodyScroll';
 import {
@@ -81,6 +81,11 @@ type HistoryState = {
   trainerId?: string;
   entry?: EntryMode;
 };
+
+type IosTransitionPhase = 'idle' | 'fade-out' | 'fade-in';
+
+const IOS_TRANSITION_MS = 240;
+const IOS_TRANSITION_DURATION = IOS_TRANSITION_MS / 1000;
 
 const routeToPath = (route: AppRoute): string => {
   switch (route) {
@@ -378,11 +383,122 @@ export default function App(): ReactElement {
   const [feedbackInitialType, setFeedbackInitialType] = useState<FeedbackType | null>(null);
 
   const copy = getCopy(locale);
-  const { pageMotion } = useMotionPreferences();
+  const { pageMotion, prefersReducedMotion } = useMotionPreferences();
   const searchTriggerRef = useRef<HTMLButtonElement | null>(null);
   const settingsTriggerRef = useRef<HTMLButtonElement | null>(null);
   const settingsClearButtonRef = useRef<HTMLButtonElement | null>(null);
   const toastTimeoutRef = useRef<number | null>(null);
+
+  const isIOS = useMemo(() => {
+    if (typeof navigator === 'undefined') {
+      return false;
+    }
+
+    const ua = navigator.userAgent ?? '';
+    const platform = navigator.platform ?? '';
+    const isAppleMobile = /iPad|iPhone|iPod/.test(ua);
+    const maxTouchPoints = typeof navigator.maxTouchPoints === 'number' ? navigator.maxTouchPoints : 0;
+    const isTouchMac = platform === 'MacIntel' && maxTouchPoints > 1;
+    return isAppleMobile || isTouchMac;
+  }, []);
+
+  const iosTransitionEnabled = isIOS && !prefersReducedMotion;
+  const [iosTransitionPhase, setIosTransitionPhase] = useState<IosTransitionPhase>('idle');
+  const iosTransitionPhaseRef = useRef<IosTransitionPhase>('idle');
+  const pendingNavigationRef = useRef<(() => void) | null>(null);
+  const fadeOutTimeoutRef = useRef<number | null>(null);
+  const fadeInTimeoutRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    iosTransitionPhaseRef.current = iosTransitionPhase;
+  }, [iosTransitionPhase]);
+
+  const startNavigationTransition = useCallback(
+    (callback: () => void) => {
+      if (!iosTransitionEnabled) {
+        callback();
+        return;
+      }
+
+      pendingNavigationRef.current = callback;
+
+      if (iosTransitionPhaseRef.current === 'fade-out') {
+        return;
+      }
+
+      setIosTransitionPhase('fade-out');
+    },
+    [iosTransitionEnabled],
+  );
+
+  useEffect(() => {
+    if (!iosTransitionEnabled || typeof window === 'undefined') {
+      return;
+    }
+
+    if (iosTransitionPhase !== 'fade-out') {
+      return;
+    }
+
+    if (fadeOutTimeoutRef.current) {
+      window.clearTimeout(fadeOutTimeoutRef.current);
+    }
+
+    fadeOutTimeoutRef.current = window.setTimeout(() => {
+      pendingNavigationRef.current?.();
+      pendingNavigationRef.current = null;
+      setIosTransitionPhase('fade-in');
+    }, IOS_TRANSITION_MS);
+
+    return () => {
+      if (fadeOutTimeoutRef.current) {
+        window.clearTimeout(fadeOutTimeoutRef.current);
+        fadeOutTimeoutRef.current = null;
+      }
+    };
+  }, [iosTransitionEnabled, iosTransitionPhase]);
+
+  useEffect(() => {
+    if (!iosTransitionEnabled || typeof window === 'undefined') {
+      return;
+    }
+
+    if (iosTransitionPhase !== 'fade-in') {
+      return;
+    }
+
+    if (fadeInTimeoutRef.current) {
+      window.clearTimeout(fadeInTimeoutRef.current);
+    }
+
+    fadeInTimeoutRef.current = window.setTimeout(() => {
+      setIosTransitionPhase('idle');
+    }, IOS_TRANSITION_MS);
+
+    return () => {
+      if (fadeInTimeoutRef.current) {
+        window.clearTimeout(fadeInTimeoutRef.current);
+        fadeInTimeoutRef.current = null;
+      }
+    };
+  }, [iosTransitionEnabled, iosTransitionPhase]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    return () => {
+      if (fadeOutTimeoutRef.current) {
+        window.clearTimeout(fadeOutTimeoutRef.current);
+        fadeOutTimeoutRef.current = null;
+      }
+      if (fadeInTimeoutRef.current) {
+        window.clearTimeout(fadeInTimeoutRef.current);
+        fadeInTimeoutRef.current = null;
+      }
+    };
+  }, []);
 
   // Prefetch helpers for lazily loaded chunks (kept idempotent)
   const prefetchedTechniqueRef = useRef(false);
@@ -427,21 +543,25 @@ export default function App(): ReactElement {
         return;
       }
 
-      setRoute(next);
-      setActiveSlug(null);
+      const applyNavigation = () => {
+        setRoute(next);
+        setActiveSlug(null);
 
-      if (typeof window !== 'undefined') {
-        const state: HistoryState = { route: next };
-        if (options.replace) {
-          window.history.replaceState(state, '', path);
-        } else if (window.location.pathname !== path) {
-          window.history.pushState(state, '', path);
-        } else {
-          window.history.replaceState(state, '', path);
+        if (typeof window !== 'undefined') {
+          const state: HistoryState = { route: next };
+          if (options.replace) {
+            window.history.replaceState(state, '', path);
+          } else if (window.location.pathname !== path) {
+            window.history.pushState(state, '', path);
+          } else {
+            window.history.replaceState(state, '', path);
+          }
         }
-      }
+      };
+
+      startNavigationTransition(applyNavigation);
     },
-    [activeSlug, route],
+    [activeSlug, route, startNavigationTransition],
   );
 
   const goToFeedback = useCallback(
@@ -603,13 +723,16 @@ export default function App(): ReactElement {
     const syncFromLocation = (event?: PopStateEvent) => {
       const state = (event?.state as HistoryState | undefined) ?? (window.history.state as HistoryState | undefined);
       const { route: nextRoute, slug } = parseLocation(window.location.pathname, state);
-      setRoute(nextRoute);
-      setActiveSlug(slug);
+
+      startNavigationTransition(() => {
+        setRoute(nextRoute);
+        setActiveSlug(slug);
+      });
     };
 
     window.addEventListener('popstate', syncFromLocation);
     return () => window.removeEventListener('popstate', syncFromLocation);
-  }, []);
+  }, [startNavigationTransition]);
 
   useKeyboardShortcuts(openSearch);
 
@@ -1070,15 +1193,19 @@ export default function App(): ReactElement {
       finalPath = buildTechniqueUrl(slug, trainerId, entry);
     }
 
-    if (typeof window !== 'undefined') {
-      if (window.location.pathname !== finalPath) {
-        window.history.pushState(state, '', finalPath);
-      } else {
-        window.history.replaceState(state, '', finalPath);
+    const commitNavigation = () => {
+      if (typeof window !== 'undefined') {
+        if (window.location.pathname !== finalPath) {
+          window.history.pushState(state, '', finalPath);
+        } else {
+          window.history.replaceState(state, '', finalPath);
+        }
       }
-    }
 
-    setActiveSlug(slug);
+      setActiveSlug(slug);
+    };
+
+    startNavigationTransition(commitNavigation);
   };
 
   const openGlossaryTerm = (slug: string): void => {
@@ -1089,22 +1216,26 @@ export default function App(): ReactElement {
     };
     const finalSlug = slugRedirects[slug] || slug;
 
-    if (typeof window !== 'undefined') {
-      const encodedSlug = encodeURIComponent(finalSlug);
-      const glossaryPath = `/glossary/${encodedSlug}`;
-      // Push the current route into history state so the detail page knows where it was opened from
-      const state: HistoryState = { route, slug: finalSlug };
+    const encodedSlug = encodeURIComponent(finalSlug);
+    const glossaryPath = `/glossary/${encodedSlug}`;
+    // Push the current route into history state so the detail page knows where it was opened from
+    const state: HistoryState = { route, slug: finalSlug };
 
-      if (window.location.pathname !== glossaryPath) {
-        window.history.pushState(state, '', glossaryPath);
-      } else {
-        window.history.replaceState(state, '', glossaryPath);
+    const commitNavigation = () => {
+      if (typeof window !== 'undefined') {
+        if (window.location.pathname !== glossaryPath) {
+          window.history.pushState(state, '', glossaryPath);
+        } else {
+          window.history.replaceState(state, '', glossaryPath);
+        }
       }
-    }
 
-    // Mirror technique behavior: set active slug but keep `route` unchanged so the header/back label
-    // can still reflect the page the user opened the term from (e.g. bookmarks).
-    setActiveSlug(finalSlug);
+      // Mirror technique behavior: set active slug but keep `route` unchanged so the header/back label
+      // can still reflect the page the user opened the term from (e.g. bookmarks).
+      setActiveSlug(finalSlug);
+    };
+
+    startNavigationTransition(commitNavigation);
   };
 
   const closeTechnique = (): void => {
@@ -1485,21 +1616,36 @@ export default function App(): ReactElement {
         settingsButtonRef={settingsTriggerRef}
       />
 
-      <AnimatePresence mode="wait" initial={false}>
-        <motion.main
-          key={pageKey}
-          variants={pageMotion.variants}
-          initial="initial"
-          animate="animate"
-          exit="exit"
-          transition={pageMotion.transition}
-          className="flex-1"
-        >
-          {mainContent}
-        </motion.main>
+      <div className="relative flex-1">
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.main
+            key={pageKey}
+            variants={pageMotion.variants}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={pageMotion.transition}
+            className="flex-1"
+          >
+            {mainContent}
+          </motion.main>
+        </AnimatePresence>
+
+        <AnimatePresence initial={false}>
+          {iosTransitionEnabled && iosTransitionPhase !== 'idle' && (
+            <motion.div
+              key="ios-transition-overlay"
+              initial={{ opacity: iosTransitionPhase === 'fade-out' ? 0 : 1 }}
+              animate={{ opacity: iosTransitionPhase === 'fade-out' ? 1 : 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: IOS_TRANSITION_DURATION, ease: defaultEase }}
+              className="pointer-events-none absolute inset-0 ios-transition-overlay"
+            />
+          )}
+        </AnimatePresence>
 
         {/* Footer removed as requested */}
-      </AnimatePresence>
+      </div>
 
       
 
