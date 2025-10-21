@@ -8,7 +8,7 @@ import { roadmapItems } from '@shared/data/roadmap';
 import { classNames } from '@shared/utils/classNames';
 import { useMotionPreferences, defaultEase } from '@shared/components/ui/motion';
 import { getInitialThemeState } from '@shared/utils/theme';
-import { DynamicIcon, iconNames, type IconName as LucideIconName } from 'lucide-react/dynamic';
+import { DynamicIcon } from 'lucide-react/dynamic';
 
 type RoadmapPageProps = {
   copy: Copy;
@@ -22,13 +22,6 @@ const columnStatuses: ColumnStatus[] = ['planned', 'in-progress', 'launched'];
 // Convert camelCase or snake_case names to Lucide's kebab-case
 const toLucideName = (name?: string): string | undefined =>
   name?.replace(/([a-z0-9])([A-Z])/g, '$1-$2').replace(/_/g, '-').toLowerCase();
-
-// Validate against lucide's exported iconNames so TypeScript accepts the union
-const toSafeLucideName = (name?: string): LucideIconName | null => {
-  const kebab = toLucideName(name);
-  if (!kebab) return null;
-  return (iconNames as readonly string[]).includes(kebab) ? (kebab as LucideIconName) : null;
-};
 
 const statusAccent = (copy: Copy) =>
   ({
@@ -80,13 +73,6 @@ export const RoadmapPage = ({ copy, locale }: RoadmapPageProps): ReactElement =>
   const { prefersReducedMotion } = useMotionPreferences();
   const [isDark, setIsDark] = useState(getInitialThemeState);
   const [isMetaHovered, setIsMetaHovered] = useState(false);
-  const isIOS = useMemo(() => {
-    if (typeof navigator === 'undefined') return false;
-    const ua = navigator.userAgent || '';
-    const platform = (navigator as unknown as { platform?: string }).platform || '';
-    const iOSDevices = /(iPad|iPhone|iPod)/.test(ua) || /Mac/.test(platform) && 'ontouchend' in document;
-    return iOSDevices;
-  }, []);
 
   useEffect(() => {
     const checkDarkMode = () => {
@@ -142,17 +128,17 @@ export const RoadmapPage = ({ copy, locale }: RoadmapPageProps): ReactElement =>
               <motion.section
                 key={status}
                 initial={
-                  (prefersReducedMotion || isIOS)
+                  prefersReducedMotion
                     ? undefined
                     : { opacity: 0, y: 18 }
                 }
                 animate={
-                  (prefersReducedMotion || isIOS)
+                  prefersReducedMotion
                     ? undefined
                     : { opacity: 1, y: 0 }
                 }
                 transition={
-                  (prefersReducedMotion || isIOS)
+                  prefersReducedMotion
                     ? undefined
                     : { duration: 0.5, delay: index * 0.08, ease: defaultEase }
                 }
@@ -198,7 +184,6 @@ export const RoadmapPage = ({ copy, locale }: RoadmapPageProps): ReactElement =>
                       focusRingClass={config.focusRingClass}
                       hoverBorderClass={config.hoverBorderClass}
                       prefersReducedMotion={prefersReducedMotion}
-                      disableInViewAnimations={prefersReducedMotion || isIOS}
                       locale={locale}
                     />
                   ))}
@@ -255,7 +240,6 @@ type ArticleCardProps = {
   focusRingClass: string;
   hoverBorderClass: string;
   prefersReducedMotion: boolean;
-  disableInViewAnimations: boolean;
   locale: Locale;
 };
 
@@ -264,7 +248,7 @@ const ArticleCard = ({
   hoverRingClass,
   focusRingClass,
   hoverBorderClass,
-  disableInViewAnimations,
+  prefersReducedMotion,
   locale,
 }: ArticleCardProps): ReactElement => {
   const summary = selectSummary(item.summary, locale);
@@ -278,25 +262,21 @@ const ArticleCard = ({
         hoverRingClass,
         'hover:[box-shadow:var(--card-shadow)]',
       )}
-      initial={disableInViewAnimations ? undefined : { opacity: 0, y: 14 }}
-      animate={disableInViewAnimations ? undefined : { opacity: 1, y: 0 }}
-      whileInView={disableInViewAnimations ? undefined : { opacity: 1, y: 0 }}
-      viewport={disableInViewAnimations ? undefined : { once: true, amount: 0.3 }}
-      transition={disableInViewAnimations ? undefined : { duration: 0.45, ease: defaultEase }}
+      initial={prefersReducedMotion ? undefined : { opacity: 0, y: 14 }}
+      whileInView={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.3 }}
+      transition={prefersReducedMotion ? undefined : { duration: 0.45, ease: defaultEase }}
     >
       {/* Hover now affects only the frame via ring/border; no color overlays */}
 
       <div className="relative z-10 space-y-4">
         <div className="flex items-start gap-3">
-          {(() => {
-            const safe = toSafeLucideName(item.icon);
-            return safe ? (
-              <DynamicIcon
-                name={safe}
-                className="mt-0.5 h-5 w-5 text-[var(--color-text)]/75"
-              />
-            ) : null;
-          })()}
+          {item.icon ? (
+            <DynamicIcon
+              name={toLucideName(item.icon) || ''}
+              className="mt-0.5 h-5 w-5 text-[var(--color-text)]/75"
+            />
+          ) : null}
           <div className="space-y-1.5">
             <h3 className="text-lg font-medium tracking-tight">
               {selectTitle(item.title, locale)}
@@ -323,8 +303,10 @@ const ArticleCard = ({
 
 const MetaIcon = ({ iconName }: { iconName?: RoadmapIconName }): ReactElement | null => {
   if (!iconName) return null;
-  const safe = toSafeLucideName(iconName);
-  return safe ? (
-    <DynamicIcon name={safe} className="h-8 w-8 text-[var(--color-text)]/70" />
-  ) : null;
+  return (
+    <DynamicIcon
+      name={toLucideName(iconName) || ''}
+      className="h-8 w-8 text-[var(--color-text)]/70"
+    />
+  );
 };

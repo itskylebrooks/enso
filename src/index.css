@@ -90,13 +90,6 @@ body {
   color: var(--color-text);
 }
 
-.ios-transition-overlay {
-  background-color: var(--color-bg);
-  will-change: opacity;
-  z-index: 5;
-  backface-visibility: hidden;
-}
-
 .surface {
   background-color: var(--color-surface);
   transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
