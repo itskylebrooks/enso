@@ -196,7 +196,7 @@ export const Header = ({
                   <motion.div
                     ref={moreMenuRef}
                     initial={{ opacity: 0, y: 6, scale: 0.98 }}
-                    animate={{ opacity: 1, y: 0, scale: 1, transition: overlayMotion.panelTransition }}
+                    animate={{ opacity: 1, y: 0, scale: 1, transition: { duration: 0.2, ease: defaultEase } }}
                     exit={{ opacity: 0, y: -4, scale: 0.98, transition: { duration: 0.2, ease: defaultEase } }}
                     className="absolute right-0 mt-2 w-48 rounded-lg border-2 border-[var(--color-text)]/20 bg-[var(--color-surface)] shadow-xl ring-1 ring-black/5 z-30"
                     role="menu"
@@ -370,10 +370,10 @@ export const Header = ({
                         <motion.div
                           id="mobile-more-submenu"
                           initial={{ opacity: 0, y: -4, height: 0 }}
-                          animate={{ opacity: 1, y: 0, height: 'auto', transition: overlayMotion.panelTransition }}
-                          exit={{ opacity: 0, y: -4, height: 0, transition: { duration: 0.2, ease: defaultEase } }}
-                          className="overflow-hidden"
-                        >
+                        animate={{ opacity: 1, y: 0, height: 'auto', transition: { duration: 0.22, ease: defaultEase } }}
+                        exit={{ opacity: 0, y: -4, height: 0, transition: { duration: 0.2, ease: defaultEase } }}
+                        className="overflow-hidden"
+                      >
                           <ul className="p-2 pt-1">
                             <li>
                               <button
