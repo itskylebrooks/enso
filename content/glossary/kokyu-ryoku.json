@@ -5,12 +5,12 @@
   "jp": "呼吸力",
   "category": "philosophy",
   "def": {
-    "en": "Breath-generated power integrated through the body.",
-    "de": "Durch den Atem integrierte Kraft im ganzen Körper."
+    "en": "Breath-generated, whole-body power.",
+    "de": "Durch den Atem organisierte Ganzkörperkraft."
   },
   "literal": { "en": "breath + power", "de": "Atem + Kraft" },
   "notes": {
-    "en": "Elastic whole-body pressure, not arm strength.",
-    "de": "Elastischer Ganzkörperdruck, nicht Armkraft."
+    "en": "Not lung strength but the coordinated expansion/settling of the body—diaphragm, pelvic floor, back, and feet—so pressure travels through the skeleton without local strain. Feels elastic rather than muscular. Cultivated by kokyū-hō/dōsa (breath training), slow weapons suburi, and stable posture work. Avoid breath-holding/straining; timing the exhale on contact often clarifies the line.",
+    "de": "Nicht Lungenkraft, sondern koordinierte Expansion/Settling des Körpers – Zwerchfell, Beckenboden, Rücken und Füße –, sodass Druck über das Skelett läuft statt lokal zu verspannen. Fühlt sich elastisch, nicht muskulär an. Wird durch Kokyū-hō/Dōsa (Atemübungen), langsame Waffen-Suburi und Haltungsarbeit entwickelt. Kein Atemanhalten/Pressen; das Ausatmen beim Kontakt klärt oft die Linie."
   }
 }

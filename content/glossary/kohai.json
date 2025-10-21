@@ -5,12 +5,12 @@
   "jp": "後輩",
   "category": "etiquette",
   "def": {
-    "en": "Junior student; learns from seniors.",
-    "de": "Jüngerer Schüler; lernt von Älteren."
+    "en": "Junior student within the dojo community.",
+    "de": "Jüngerer Schüler innerhalb der Dojo-Gemeinschaft."
   },
   "literal": { "en": "later + companion", "de": "später + Gefährte" },
   "notes": {
-    "en": "Observe, listen, and ask respectfully.",
-    "de": "Beobachten, zuhören und respektvoll fragen."
+    "en": "Part of the senpai–kōhai relationship: kōhai learn by observing, asking respectfully, and caring for the space (e.g., cleaning, setting weapons). Responsibility is mutual—senpai model safety and clarity. Seniority is usually time-in-training, not personality or job title. Give feedback upward via the instructor when in doubt; etiquette should support learning, never excuse disrespect.",
+    "de": "Teil der Senpai–Kōhai-Beziehung: Kōhai lernen durch Beobachten, respektvolles Fragen und Sorge fürs Dojo (z. B. Putzen, Waffen richten). Verantwortung ist wechselseitig – Senpai geben Sicherheit und Klarheit vor. Seniorität ergibt sich meist aus Trainingszeit, nicht aus Persönlichkeit oder Beruf. Rückmeldungen an Ältere ggf. über die Lehrperson geben; Etikette soll Lernen stützen, nicht Respektlosigkeit rechtfertigen."
   }
 }
