@@ -291,11 +291,13 @@ export const SettingsModal = ({
                 >
                   <span className="sr-only">{copy.disableAnimations}</span>
                   <motion.span
-                    className="absolute left-1 top-1 h-7 w-7 rounded-full border bg-[var(--color-bg)] shadow-sm"
+                    className="absolute left-1 top-1 h-7 w-7 rounded-full border shadow-sm"
                     animate={{ x: animationsDisabled ? 28 : 0 }}
                     transition={toggleTransition}
                     style={{
-                      borderColor: animationsDisabled ? 'var(--color-bg)' : 'var(--color-border)',
+                      // Knob matches BG when toggle is ON (animations disabled), contrast when OFF
+                      backgroundColor: animationsDisabled ? 'var(--color-bg)' : 'var(--color-text)',
+                      borderColor: animationsDisabled ? 'var(--color-border)' : 'var(--color-bg)',
                     }}
                   />
                 </button>
