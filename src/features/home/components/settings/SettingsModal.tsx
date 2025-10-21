@@ -8,7 +8,7 @@ import { exportDB, parseIncomingDB, importData } from '@shared/services/storageS
 import { SectionTitle } from '@shared/components';
 import { useFocusTrap } from '@shared/hooks/useFocusTrap';
 import { useMotionPreferences } from '@shared/components/ui/motion';
-import { Info, SquareArrowOutUpRight, X } from 'lucide-react';
+import { Info, SquareArrowOutUpRight, X, Sun, Moon, Monitor } from 'lucide-react';
 // import version from package.json
 import pkg from '../../../../../package.json';
 
@@ -23,7 +23,6 @@ type SettingsModalProps = {
   onChangeLocale: (locale: Locale) => void;
   onChangeTheme: (theme: Theme | 'system') => void;
   onChangeDB: (db: DB) => void;
-  onNavigateToFeedback?: () => void;
   onNavigateToAbout?: () => void;
   clearButtonRef?: RefObject<HTMLButtonElement | null>;
   trapEnabled?: boolean;
@@ -40,7 +39,6 @@ export const SettingsModal = ({
   onChangeLocale,
   onChangeTheme,
   onChangeDB,
-  onNavigateToFeedback,
   onNavigateToAbout,
   clearButtonRef,
   trapEnabled = true,
@@ -74,7 +72,7 @@ export const SettingsModal = ({
     >
       <motion.div
         ref={dialogRef}
-        className="relative w-full max-w-md surface rounded-2xl border surface-border shadow-xl overflow-hidden"
+        className="relative w-full max-w-sm surface rounded-2xl border surface-border shadow-xl overflow-hidden"
         variants={overlayMotion.panel}
         initial="initial"
         animate="animate"
@@ -104,68 +102,121 @@ export const SettingsModal = ({
           </motion.button>
         </div>
         <div className="p-4 space-y-4">
-          <div>
-            <SectionTitle>{copy.language}</SectionTitle>
-            <div className="mt-2 flex gap-2">
-              <button
-                type="button"
-                onClick={() => onChangeLocale('en')}
-                className={classNames(
-                  'px-3 py-1.5 rounded-lg border text-sm transition-soft motion-ease',
-                  locale === 'en' ? 'btn-contrast' : 'btn-tonal surface-hover',
-                )}
-              >
-                EN
-              </button>
-              <button
-                type="button"
-                onClick={() => onChangeLocale('de')}
-                className={classNames(
-                  'px-3 py-1.5 rounded-lg border text-sm transition-soft motion-ease',
-                  locale === 'de' ? 'btn-contrast' : 'btn-tonal surface-hover',
-                )}
-              >
-                DE
-              </button>
+          {/* Two columns on most phones; stack only below ~400px */}
+          <div className="grid grid-cols-1 min-[350px]:grid-cols-2 gap-4">
+            <div>
+              <SectionTitle>{copy.language}</SectionTitle>
+              <div className="mt-2 inline-flex items-center gap-2 p-1 rounded-full border surface-border bg-[var(--color-surface)]">
+                <button
+                  type="button"
+                  onClick={() => onChangeLocale('en')}
+                  className={classNames(
+                    'relative h-10 w-10 rounded-full text-sm transition-soft motion-ease flex items-center justify-center',
+                    locale === 'en' ? 'text-[var(--color-text)]' : 'text-subtle',
+                  )}
+                  aria-pressed={locale === 'en'}
+                  aria-label="English"
+                >
+                  {locale === 'en' && (
+                    <motion.span
+                      layoutId="switchThumbLang"
+                      transition={toggleTransition}
+                      className="absolute inset-0 rounded-full border surface-border bg-[var(--color-surface-hover)]"
+                      aria-hidden
+                    />
+                  )}
+                  <span className="relative z-10 font-medium">EN</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onChangeLocale('de')}
+                  className={classNames(
+                    'relative h-10 w-10 rounded-full text-sm transition-soft motion-ease flex items-center justify-center',
+                    locale === 'de' ? 'text-[var(--color-text)]' : 'text-subtle',
+                  )}
+                  aria-pressed={locale === 'de'}
+                  aria-label="Deutsch"
+                >
+                  {locale === 'de' && (
+                    <motion.span
+                      layoutId="switchThumbLang"
+                      transition={toggleTransition}
+                      className="absolute inset-0 rounded-full border surface-border bg-[var(--color-surface-hover)]"
+                      aria-hidden
+                    />
+                  )}
+                  <span className="relative z-10 font-medium">DE</span>
+                </button>
+              </div>
+            </div>
+            <div>
+              <SectionTitle>{copy.theme}</SectionTitle>
+              <div className="mt-2 inline-flex items-center gap-2 p-1 rounded-full border surface-border bg-[var(--color-surface)]">
+                <button
+                  type="button"
+                  onClick={() => onChangeTheme('system')}
+                  className={classNames(
+                    'relative h-10 w-10 rounded-full transition-soft motion-ease flex items-center justify-center',
+                    isSystemTheme ? 'text-[var(--color-text)]' : 'text-subtle',
+                  )}
+                  aria-pressed={isSystemTheme}
+                  aria-label={(copy.system ?? 'System')}
+                >
+                  {isSystemTheme && (
+                    <motion.span
+                      layoutId="switchThumbTheme"
+                      transition={toggleTransition}
+                      className="absolute inset-0 rounded-full border surface-border bg-[var(--color-surface-hover)]"
+                      aria-hidden
+                    />
+                  )}
+                  <Monitor className="relative z-10 h-5 w-5" aria-hidden />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onChangeTheme('light')}
+                  className={classNames(
+                    'relative h-10 w-10 rounded-full transition-soft motion-ease flex items-center justify-center',
+                    !isSystemTheme && theme === 'light' ? 'text-[var(--color-text)]' : 'text-subtle',
+                  )}
+                  aria-pressed={!isSystemTheme && theme === 'light'}
+                  aria-label={copy.light}
+                >
+                  {!isSystemTheme && theme === 'light' && (
+                    <motion.span
+                      layoutId="switchThumbTheme"
+                      transition={toggleTransition}
+                      className="absolute inset-0 rounded-full border surface-border bg-[var(--color-surface-hover)]"
+                      aria-hidden
+                    />
+                  )}
+                  <Sun className="relative z-10 h-5 w-5" aria-hidden />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onChangeTheme('dark')}
+                  className={classNames(
+                    'relative h-10 w-10 rounded-full transition-soft motion-ease flex items-center justify-center',
+                    !isSystemTheme && theme === 'dark' ? 'text-[var(--color-text)]' : 'text-subtle',
+                  )}
+                  aria-pressed={!isSystemTheme && theme === 'dark'}
+                  aria-label={copy.dark}
+                >
+                  {!isSystemTheme && theme === 'dark' && (
+                    <motion.span
+                      layoutId="switchThumbTheme"
+                      transition={toggleTransition}
+                      className="absolute inset-0 rounded-full border surface-border bg-[var(--color-surface-hover)]"
+                      aria-hidden
+                    />
+                  )}
+                  <Moon className="relative z-10 h-5 w-5" aria-hidden />
+                </button>
+              </div>
             </div>
           </div>
           <div>
-            <SectionTitle>{copy.theme}</SectionTitle>
-            <div className="mt-2 flex gap-2">
-              <button
-                type="button"
-                onClick={() => onChangeTheme('system')}
-                className={classNames(
-                  'px-3 py-1.5 rounded-lg border text-sm transition-soft motion-ease',
-                  isSystemTheme ? 'btn-contrast' : 'btn-tonal surface-hover',
-                )}
-              >
-                {copy.system ?? 'System'}
-              </button>
-              <button
-                type="button"
-                onClick={() => onChangeTheme('light')}
-                className={classNames(
-                  'px-3 py-1.5 rounded-lg border text-sm transition-soft motion-ease',
-                  !isSystemTheme && theme === 'light' ? 'btn-contrast' : 'btn-tonal surface-hover',
-                )}
-              >
-                {copy.light}
-              </button>
-              <button
-                type="button"
-                onClick={() => onChangeTheme('dark')}
-                className={classNames(
-                  'px-3 py-1.5 rounded-lg border text-sm transition-soft motion-ease',
-                  !isSystemTheme && theme === 'dark' ? 'btn-contrast' : 'btn-tonal surface-hover',
-                )}
-              >
-                {copy.dark}
-              </button>
-            </div>
-          </div>
-          <div>
-            <SectionTitle>{copy.bookmarks}</SectionTitle>
+            <SectionTitle>{'Data'}</SectionTitle>
             <div className="mt-2 flex flex-wrap gap-2 items-center">
 
               <label className="px-3 py-2 text-sm rounded-xl border btn-tonal surface-hover transition-soft motion-ease cursor-pointer">
@@ -215,24 +266,7 @@ export const SettingsModal = ({
               </button>
             </div>
           </div>
-          <div>
-            <SectionTitle>{copy.feedback}</SectionTitle>
-            <div className="mt-2 flex flex-wrap gap-2 items-center">
-              <button
-                type="button"
-                onClick={onNavigateToFeedback}
-                className="px-3 py-2 text-sm rounded-xl border btn-tonal surface-hover transition-soft motion-ease"
-              >
-                {copy.feedbackInApp}
-              </button>
-              <a
-                href="mailto:itskylebrooks@icloud.com"
-                className="px-3 py-2 text-sm rounded-xl border btn-tonal surface-hover transition-soft motion-ease"
-              >
-                {copy.feedbackEmail}
-              </a>
-            </div>
-          </div>
+          {/* Feedback options removed from Settings — feedback handled on Feedback page */}
           {/* Footer: divider and single-line with centered name and icons */}
           <div className="-mx-4 mt-4">
             <div className="pt-4 border-t surface-border text-center text-xs text-muted px-4">

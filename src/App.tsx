@@ -1559,10 +1559,6 @@ export default function App(): ReactElement {
             onChangeLocale={handleLocaleChange}
             onChangeTheme={handleThemeChange}
             onChangeDB={handleDBChange}
-            onNavigateToFeedback={() => {
-              closeSettings();
-              navigateTo('feedback');
-            }}
             onNavigateToAbout={() => {
               closeSettings();
               navigateTo('about');

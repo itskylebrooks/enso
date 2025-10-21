@@ -2870,8 +2870,6 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
                     onClick={() => handleTypeChange(value)}
                     aria-pressed={isActive}
                     className={classNames(
-                      // Make bug report card visually centered and wider on md screens
-                      value === 'bugReport' ? 'md:col-span-2' : '',
                       'rounded-2xl border surface surface-border px-4 py-4 transition-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
                       isActive ? 'shadow-md' : 'shadow-sm surface-hover',
                     )}
@@ -2891,6 +2889,24 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
                   </motion.button>
                 );
               })}
+              {/* Email feedback card (opens mailto) placed to the right of Bug card on md screens */}
+              <a
+                href="mailto:itskylebrooks@icloud.com"
+                className={classNames(
+                  'rounded-2xl border surface surface-border px-4 py-4 transition-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] shadow-sm surface-hover',
+                )}
+                aria-label="Email feedback"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-subtle" aria-hidden>
+                    <Link className="w-5 h-5" />
+                  </span>
+                  <div className="space-y-1 text-left">
+                    <p className="font-medium text-[var(--color-text)]">Email feedback</p>
+                    <p className="text-sm text-subtle">itskylebrooks@icloud.com</p>
+                  </div>
+                </div>
+              </a>
             </div>
             <AnimatePresence initial={false} mode="popLayout">
               {selectedCard && (
