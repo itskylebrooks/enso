@@ -1,6 +1,13 @@
 import { parseTechnique } from '@shared/types/content';
-import { APP_NAME, DB_VERSION, LOCALE_KEY, STORAGE_KEY, THEME_KEY } from '../constants/storage';
-import { FILTERS_KEY } from '../constants/storage';
+import {
+  ANIMATION_PREFERENCE_KEY,
+  APP_NAME,
+  DB_VERSION,
+  FILTERS_KEY,
+  LOCALE_KEY,
+  STORAGE_KEY,
+  THEME_KEY,
+} from '../constants/storage';
 import type {
   BookmarkCollection,
   Collection,
@@ -371,6 +378,19 @@ export const saveTheme = (theme: Theme): void => {
 
 export const clearThemePreference = (): void => {
   removeLocalStorage(THEME_KEY);
+};
+
+export const loadAnimationsDisabled = (): boolean => {
+  const value = readLocalStorage(ANIMATION_PREFERENCE_KEY);
+  return value === '1' || value === 'true';
+};
+
+export const saveAnimationsDisabled = (disabled: boolean): void => {
+  if (disabled) {
+    writeLocalStorage(ANIMATION_PREFERENCE_KEY, '1');
+  } else {
+    removeLocalStorage(ANIMATION_PREFERENCE_KEY);
+  }
 };
 
 /**

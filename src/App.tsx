@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState, lazy, Suspense, type ReactElement } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence, MotionConfig } from 'motion/react';
 import { Header } from '@shared/components/layout/Header';
 import BreathingDot from '@shared/components/ui/BreathingDot';
 import { FilterPanel } from './features/search/components/FilterPanel';
@@ -25,7 +25,7 @@ const GlossaryPage = lazy(() => import('./features/glossary').then(m => ({ defau
 const GlossaryDetailPage = lazy(() => import('./features/glossary').then(m => ({ default: m.GlossaryDetailPage })));
 import { GlossaryFilterPanel, MobileGlossaryFilters, loadAllTerms } from './features/glossary';
 import { ConfirmClearModal } from './shared/components/dialogs/ConfirmClearDialog';
-import { useMotionPreferences } from '@shared/components/ui/motion';
+import { setAnimationsDisabled, useMotionPreferences } from '@shared/components/ui/motion';
 import { getCopy } from './shared/constants/i18n';
 import useLockBodyScroll from './shared/hooks/useLockBodyScroll';
 import { cameFromBackForwardNavigation, consumeBFCacheRestoreFlag, rememberScrollPosition } from './shared/utils/navigationLifecycle';
@@ -34,9 +34,11 @@ import {
   clearThemePreference,
   hasStoredTheme,
   loadDB,
+  loadAnimationsDisabled,
   loadLocale,
   loadTheme,
   saveDB,
+  saveAnimationsDisabled,
   saveLocale,
   saveTheme,
   loadFilters,
@@ -358,6 +360,11 @@ export default function App(): ReactElement {
   const [locale, setLocale] = useState<Locale>(() => loadLocale());
   const [theme, setTheme] = useState<Theme>(() => loadTheme());
   const [hasManualTheme, setHasManualTheme] = useState<boolean>(() => hasStoredTheme());
+  const [animationsDisabled, setAnimationsDisabledState] = useState<boolean>(() => {
+    const initial = loadAnimationsDisabled();
+    setAnimationsDisabled(initial);
+    return initial;
+  });
   const [db, setDB] = useState<DB>(() => loadDB());
   const [filters, setFilters] = useState<Filters>(() => {
     try {
@@ -387,6 +394,23 @@ export default function App(): ReactElement {
   // Detect if this render follows a back/forward restore and skip entrance
   // animations to avoid the brief re-appearance/flicker on iOS Safari.
   const skipEntranceAnimations = cameFromBackForwardNavigation();
+
+  useEffect(() => {
+    setAnimationsDisabled(animationsDisabled);
+  }, [animationsDisabled]);
+
+  useEffect(() => {
+    if (typeof document === 'undefined') {
+      return;
+    }
+
+    const root = document.documentElement;
+    const { body } = document;
+    root.classList.toggle('disable-animations', animationsDisabled);
+    if (body) {
+      body.classList.toggle('disable-animations', animationsDisabled);
+    }
+  }, [animationsDisabled]);
 
   // Prefetch helpers for lazily loaded chunks (kept idempotent)
   const prefetchedTechniqueRef = useRef(false);
@@ -985,6 +1009,12 @@ export default function App(): ReactElement {
     setTheme(next);
   };
 
+  const handleAnimationsPreferenceChange = (disabled: boolean): void => {
+    setAnimationsDisabledState(disabled);
+    setAnimationsDisabled(disabled);
+    saveAnimationsDisabled(disabled);
+  };
+
   const handleDBChange = (next: DB): void => {
     setDB(next);
   };
@@ -1492,93 +1522,101 @@ export default function App(): ReactElement {
   const pageKey = currentTechnique ? `technique-${currentTechnique.id}` : activeSlug ? `glossary-${activeSlug}` : route;
 
   return (
-    <div className="min-h-dvh flex flex-col app-bg">
-      <Header
-        copy={copy}
-        route={route}
-        onNavigate={navigateTo}
-        onSearch={openSearch}
-        onSettings={openSettings}
-        searchButtonRef={searchTriggerRef}
-        settingsButtonRef={settingsTriggerRef}
-      />
+    <MotionConfig reducedMotion={animationsDisabled ? 'always' : 'user'}>
+      <div className="min-h-dvh flex flex-col app-bg">
+        <Header
+          copy={copy}
+          route={route}
+          onNavigate={navigateTo}
+          onSearch={openSearch}
+          onSettings={openSettings}
+          searchButtonRef={searchTriggerRef}
+          settingsButtonRef={settingsTriggerRef}
+        />
 
-      <AnimatePresence mode={skipEntranceAnimations ? 'sync' : 'wait'} initial={!skipEntranceAnimations}>
-        <motion.main
-          key={pageKey}
-          variants={pageMotion.variants}
-          initial={skipEntranceAnimations ? 'animate' : 'initial'}
-          animate="animate"
-          exit={skipEntranceAnimations ? undefined : 'exit'}
-          transition={pageMotion.transition}
-          className="flex-1"
-          style={{ willChange: 'transform, opacity' }}
-        >
-          {mainContent}
-        </motion.main>
+        <AnimatePresence mode={skipEntranceAnimations ? 'sync' : 'wait'} initial={!skipEntranceAnimations}>
+          <motion.main
+            key={pageKey}
+            variants={pageMotion.variants}
+            initial={skipEntranceAnimations ? 'animate' : 'initial'}
+            animate="animate"
+            exit={skipEntranceAnimations ? undefined : 'exit'}
+            transition={pageMotion.transition}
+            className="flex-1"
+            style={{ willChange: 'transform, opacity' }}
+          >
+            {mainContent}
+          </motion.main>
 
-        {/* Footer removed as requested */}
-      </AnimatePresence>
+          {/* Footer removed as requested */}
+        </AnimatePresence>
 
-      
+        <AnimatePresence>
+          {searchOpen && (
+            <SearchOverlay
+              key="search-overlay"
+              copy={copy}
+              locale={locale}
+              techniques={db.techniques}
+              progress={db.progress}
+              glossaryProgress={db.glossaryProgress}
+              onClose={closeSearch}
+              onOpen={(slug) => {
+                openTechnique(slug);
+                closeSearch();
+              }}
+              onOpenGlossary={(slug) => {
+                openGlossaryTerm(slug);
+                closeSearch();
+              }}
+              onToggleTechniqueBookmark={(techniqueId: string) =>
+                updateProgress(techniqueId, {
+                  bookmarked: !(db.progress.find((p) => p.techniqueId === techniqueId)?.bookmarked),
+                })}
+              onToggleGlossaryBookmark={(termId: string) =>
+                updateGlossaryProgress(termId, {
+                  bookmarked: !(db.glossaryProgress.find((g) => g.termId === termId)?.bookmarked),
+                })}
+              openedBy={(openSearch as any).lastOpenedBy ?? 'mouse'}
+            />
+          )}
 
-      <AnimatePresence>
-        {searchOpen && (
-          <SearchOverlay
-            key="search-overlay"
-            copy={copy}
-            locale={locale}
-            techniques={db.techniques}
-            progress={db.progress}
-            glossaryProgress={db.glossaryProgress}
-            onClose={closeSearch}
-            onOpen={(slug) => {
-              openTechnique(slug);
-              closeSearch();
-            }}
-            onOpenGlossary={(slug) => {
-              openGlossaryTerm(slug);
-              closeSearch();
-            }}
-            onToggleTechniqueBookmark={(techniqueId: string) => updateProgress(techniqueId, { bookmarked: !(db.progress.find(p => p.techniqueId === techniqueId)?.bookmarked) })}
-            onToggleGlossaryBookmark={(termId: string) => updateGlossaryProgress(termId, { bookmarked: !(db.glossaryProgress.find(g => g.termId === termId)?.bookmarked) })}
-            openedBy={(openSearch as any).lastOpenedBy ?? 'mouse'}
-          />
-        )}
+          {settingsOpen && (
+            <SettingsModal
+              key="settings-modal"
+              copy={copy}
+              locale={locale}
+              theme={theme}
+              isSystemTheme={!hasManualTheme}
+              db={db}
+              animationsDisabled={animationsDisabled}
+              onClose={closeSettings}
+              onRequestClear={handleRequestClear}
+              onChangeLocale={handleLocaleChange}
+              onChangeTheme={handleThemeChange}
+              onChangeAnimations={handleAnimationsPreferenceChange}
+              onChangeDB={handleDBChange}
+              onNavigateToAbout={() => {
+                closeSettings();
+                navigateTo('about');
+              }}
+              clearButtonRef={settingsClearButtonRef}
+              trapEnabled={!confirmClearOpen}
+            />
+          )}
 
-        {settingsOpen && (
-          <SettingsModal
-            key="settings-modal"
-            copy={copy}
-            locale={locale}
-            theme={theme}
-            isSystemTheme={!hasManualTheme}
-            db={db}
-            onClose={closeSettings}
-            onRequestClear={handleRequestClear}
-            onChangeLocale={handleLocaleChange}
-            onChangeTheme={handleThemeChange}
-            onChangeDB={handleDBChange}
-            onNavigateToAbout={() => {
-              closeSettings();
-              navigateTo('about');
-            }}
-            clearButtonRef={settingsClearButtonRef}
-            trapEnabled={!confirmClearOpen}
-          />
-        )}
+          {confirmClearOpen && (
+            <ConfirmClearModal
+              key="confirm-clear"
+              copy={copy}
+              onCancel={handleCancelClear}
+              onConfirm={handleConfirmClear}
+            />
+          )}
+        </AnimatePresence>
 
-        {confirmClearOpen && (
-          <ConfirmClearModal
-            key="confirm-clear"
-            copy={copy}
-            onCancel={handleCancelClear}
-            onConfirm={handleConfirmClear}
-          />
-        )}
-      </AnimatePresence>
-
-  {toast && <Toast>{toast}</Toast>}
-    </div>
+        {toast && <Toast>{toast}</Toast>}
+      </div>
+    </MotionConfig>
   );
 }

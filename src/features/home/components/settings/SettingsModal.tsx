@@ -18,10 +18,12 @@ type SettingsModalProps = {
   theme: Theme;
   isSystemTheme: boolean;
   db: DB;
+  animationsDisabled: boolean;
   onClose: () => void;
   onRequestClear: () => void;
   onChangeLocale: (locale: Locale) => void;
   onChangeTheme: (theme: Theme | 'system') => void;
+  onChangeAnimations: (disabled: boolean) => void;
   onChangeDB: (db: DB) => void;
   onNavigateToAbout?: () => void;
   clearButtonRef?: RefObject<HTMLButtonElement | null>;
@@ -34,10 +36,12 @@ export const SettingsModal = ({
   theme,
   isSystemTheme,
   db,
+  animationsDisabled,
   onClose,
   onRequestClear,
   onChangeLocale,
   onChangeTheme,
+  onChangeAnimations,
   onChangeDB,
   onNavigateToAbout,
   clearButtonRef,
@@ -218,7 +222,6 @@ export const SettingsModal = ({
           <div>
             <SectionTitle>{'Data'}</SectionTitle>
             <div className="mt-2 flex flex-wrap gap-2 items-center">
-
               <label className="px-3 py-2 text-sm rounded-xl border btn-tonal surface-hover transition-soft motion-ease cursor-pointer">
                 {copy.import}
                 <input 
@@ -264,6 +267,39 @@ export const SettingsModal = ({
               >
                 {copy.clear}
               </button>
+            </div>
+          </div>
+          <div>
+            <SectionTitle>{copy.motionSettings}</SectionTitle>
+            <div className="mt-2 grid grid-cols-1 min-[350px]:grid-cols-2 items-center">
+              <div className="text-sm font-medium">{copy.disableAnimations}</div>
+              <div className="mt-2 min-[350px]:mt-0 flex items-center gap-2 w-[148px] justify-end">
+                <span className="text-xs font-medium uppercase tracking-wide text-muted">
+                  {animationsDisabled ? copy.disableAnimationsOn : copy.disableAnimationsOff}
+                </span>
+                <button
+                  type="button"
+                  role="switch"
+                  aria-checked={animationsDisabled}
+                  onClick={() => onChangeAnimations(!animationsDisabled)}
+                  className={classNames(
+                    'relative inline-flex h-9 w-16 items-center rounded-full border transition-soft motion-ease focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+                    animationsDisabled
+                      ? 'bg-[var(--color-text)] border-[var(--color-text)]'
+                      : 'bg-[var(--color-surface)] surface-border',
+                  )}
+                >
+                  <span className="sr-only">{copy.disableAnimations}</span>
+                  <motion.span
+                    className="absolute left-1 top-1 h-7 w-7 rounded-full border bg-[var(--color-bg)] shadow-sm"
+                    animate={{ x: animationsDisabled ? 28 : 0 }}
+                    transition={toggleTransition}
+                    style={{
+                      borderColor: animationsDisabled ? 'var(--color-bg)' : 'var(--color-border)',
+                    }}
+                  />
+                </button>
+              </div>
             </div>
           </div>
           {/* Feedback options removed from Settings — feedback handled on Feedback page */}

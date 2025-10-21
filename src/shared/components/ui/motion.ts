@@ -1,5 +1,28 @@
-import { useMemo, useCallback } from 'react';
+import { useMemo, useCallback, useSyncExternalStore } from 'react';
 import { useReducedMotion, type Transition, type Variants } from 'motion/react';
+
+type AnimationPreferenceListener = () => void;
+
+let animationsDisabledState = false;
+const animationListeners = new Set<AnimationPreferenceListener>();
+
+const subscribeToAnimationsDisabled = (listener: AnimationPreferenceListener): (() => void) => {
+  animationListeners.add(listener);
+  return () => {
+    animationListeners.delete(listener);
+  };
+};
+
+export const getAnimationsDisabled = (): boolean => animationsDisabledState;
+
+export const setAnimationsDisabled = (value: boolean): void => {
+  if (animationsDisabledState === value) return;
+  animationsDisabledState = value;
+  animationListeners.forEach((listener) => listener());
+};
+
+const useAnimationsDisabled = (): boolean =>
+  useSyncExternalStore(subscribeToAnimationsDisabled, getAnimationsDisabled, getAnimationsDisabled);
 
 export const defaultEase = [0.16, 1, 0.3, 1] as const; // Custom cubic-bezier for smoother motion
 export const springEase = { type: 'spring', damping: 20, stiffness: 300 } as const;
@@ -149,16 +172,23 @@ export const mediaVariants: Variants = {
 
 export const reducedMediaVariants = mediaVariants;
 
+const zeroTransition: Transition = { duration: 0 };
+
 export const useMotionPreferences = () => {
+  const animationsDisabled = useAnimationsDisabled();
   const prefersReducedMotionRaw = useReducedMotion();
-  const prefersReducedMotion = Boolean(prefersReducedMotionRaw);
+  const prefersReducedMotion = animationsDisabled || Boolean(prefersReducedMotionRaw);
 
   const pageMotion = useMemo(
     () => ({
       variants: prefersReducedMotion ? reducedPageVariants : pageVariants,
-      transition: prefersReducedMotion ? reducedPageTransition : pageTransition,
+      transition: animationsDisabled
+        ? zeroTransition
+        : prefersReducedMotion
+        ? reducedPageTransition
+        : pageTransition,
     }),
-    [prefersReducedMotion],
+    [animationsDisabled, prefersReducedMotion],
   );
 
   // Lightweight runtime UA check to detect Android devices. We only use this
@@ -166,22 +196,36 @@ export const useMotionPreferences = () => {
   // authoritative first.
   const isAndroid = typeof navigator !== 'undefined' && /android/i.test(navigator.userAgent);
 
-  const overlayMotion = useMemo(
-    () => ({
-      backdrop: prefersReducedMotion
-        ? reducedBackdropVariants
-        : isAndroid
-        ? androidBackdropVariants
-        : backdropVariants,
-      // Keep panel animations identical across platforms; only the backdrop
-      // differs on Android. This ensures the panel UX matches iPhone.
-      panel: prefersReducedMotion ? reducedPanelVariants : panelVariants,
-      transition: prefersReducedMotion ? reducedPageTransition : pageTransition,
-      panelTransition: prefersReducedMotion ? reducedPageTransition : springEase,
-      closeButton: prefersReducedMotion ? reducedCloseButtonVariants : closeButtonVariants,
-    }),
-    [prefersReducedMotion],
-  );
+  const overlayMotion = useMemo(() => {
+    // Keep blur even when animations are disabled by using the full backdrop
+    // variants with zero-duration transitions. Only switch to the reduced
+    // backdrop when the user explicitly prefers reduced motion.
+    const backdrop = prefersReducedMotion && !animationsDisabled
+      ? reducedBackdropVariants
+      : isAndroid
+      ? androidBackdropVariants
+      : backdropVariants;
+    const panel = prefersReducedMotion ? reducedPanelVariants : panelVariants;
+    const transition = animationsDisabled
+      ? zeroTransition
+      : prefersReducedMotion
+      ? reducedPageTransition
+      : pageTransition;
+    const panelTransition = animationsDisabled
+      ? zeroTransition
+      : prefersReducedMotion
+      ? reducedPageTransition
+      : springEase;
+    const closeButton = prefersReducedMotion ? reducedCloseButtonVariants : closeButtonVariants;
+
+    return {
+      backdrop,
+      panel,
+      transition,
+      panelTransition,
+      closeButton,
+    };
+  }, [animationsDisabled, prefersReducedMotion, isAndroid]);
 
   const listMotion = useMemo(
     () => ({
@@ -194,9 +238,13 @@ export const useMotionPreferences = () => {
   const mediaMotion = useMemo(
     () => ({
       variants: prefersReducedMotion ? reducedMediaVariants : mediaVariants,
-      transition: prefersReducedMotion ? reducedPageTransition : pageTransition,
+      transition: animationsDisabled
+        ? zeroTransition
+        : prefersReducedMotion
+        ? reducedPageTransition
+        : pageTransition,
     }),
-    [prefersReducedMotion],
+    [animationsDisabled, prefersReducedMotion],
   );
 
   const collapseMotion = useMemo(
@@ -204,27 +252,42 @@ export const useMotionPreferences = () => {
       // Use the same collapse animation across platforms so mobile panels
       // behave consistently. Only the backdrop animation is platform-specific.
       variants: prefersReducedMotion ? reducedCollapseVariants : reducedCollapseVariants,
-      transition: prefersReducedMotion ? reducedPageTransition : { duration: 0.25, ease: defaultEase },
+      transition: animationsDisabled
+        ? zeroTransition
+        : prefersReducedMotion
+        ? reducedPageTransition
+        : { duration: 0.25, ease: defaultEase },
     }),
-    [prefersReducedMotion],
+    [animationsDisabled, prefersReducedMotion],
   );
 
   const getItemTransition = useCallback(
-    (index: number): Transition =>
-      prefersReducedMotion
-        ? { duration: 0.05 }
-        : { delay: Math.min(index, 9) * 0.02, duration: 0.2, ease: defaultEase },
-    [prefersReducedMotion],
+    (index: number): Transition => {
+      if (animationsDisabled) {
+        return zeroTransition;
+      }
+      if (prefersReducedMotion) {
+        return { duration: 0.05 };
+      }
+      return { delay: Math.min(index, 9) * 0.02, duration: 0.2, ease: defaultEase };
+    },
+    [animationsDisabled, prefersReducedMotion],
   );
 
-  const toggleTransition: Transition = prefersReducedMotion
+  const toggleTransition: Transition = animationsDisabled
+    ? zeroTransition
+    : prefersReducedMotion
     ? { duration: 0.05 }
     : { duration: 0.15, ease: defaultEase };
-  const chipTransition: Transition = prefersReducedMotion
+
+  const chipTransition: Transition = animationsDisabled
+    ? zeroTransition
+    : prefersReducedMotion
     ? { duration: 0.05 }
     : { duration: 0.12, ease: defaultEase };
 
   return {
+    animationsDisabled,
     prefersReducedMotion,
     pageMotion,
     overlayMotion,
