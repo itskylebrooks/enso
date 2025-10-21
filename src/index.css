@@ -79,7 +79,7 @@
 
 body {
   margin: 0;
-  min-height: 100vh;
+  min-height: 100dvh;
   background-color: var(--color-bg);
   color: var(--color-text);
   transition: background-color 0.2s ease, color 0.2s ease;
@@ -198,6 +198,23 @@ button {
   transition-property: color, background-color, border-color, box-shadow, transform, opacity;
   transition-duration: var(--motion-duration-short);
   transition-timing-function: var(--motion-ease);
+}
+
+body.suppress-transitions *,
+body.suppress-transitions *::before,
+body.suppress-transitions *::after {
+  transition: none !important;
+  animation: none !important;
+}
+
+.min-h-dvh {
+  min-height: 100dvh;
+}
+
+@supports (min-height: 100svh) {
+  .min-h-dvh {
+    min-height: 100svh;
+  }
 }
 
 .motion-ease {
@@ -338,10 +355,16 @@ button {
 
 /* Utility to center a loader in the viewport (used for Suspense fallbacks) */
 .loader-center-viewport {
-  min-height: calc(100vh - 64px); /* leave room for header if present; tweak if needed */
+  min-height: calc(100dvh - 64px); /* leave room for header if present; tweak if needed */
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+@supports (min-height: 100svh) {
+  .loader-center-viewport {
+    min-height: calc(100svh - 64px);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

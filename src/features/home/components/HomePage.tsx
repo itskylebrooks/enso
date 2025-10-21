@@ -31,7 +31,7 @@ export const HomePage = ({
   const [isGratitudeHovered, setIsGratitudeHovered] = useState(false);
   
   return (
-    <div className="min-h-screen font-sans">
+    <div className="min-h-dvh font-sans">
       {/* Hero Section */}
       <section className="relative py-16 md:py-24">
         {/* Subtle background watermark */}

@@ -115,7 +115,7 @@ export const RoadmapPage = ({ copy, locale }: RoadmapPageProps): ReactElement =>
   // const updates = updatesFeed[locale] ?? updatesFeed.en; // removed usage
 
   return (
-    <section className="min-h-screen py-14 md:py-18 px-6 font-sans">
+    <section className="min-h-dvh py-14 md:py-18 px-6 font-sans">
       <div className="max-w-5xl mx-auto space-y-12 md:space-y-14">
         <header className="space-y-4 text-center md:text-left">
           <h1 className="text-3xl md:text-[2.5rem] leading-tight font-semibold tracking-tight">
@@ -151,6 +151,7 @@ export const RoadmapPage = ({ copy, locale }: RoadmapPageProps): ReactElement =>
                 }
                 className="space-y-4"
                 aria-labelledby={`roadmap-column-${status}`}
+                style={prefersReducedMotion ? undefined : { willChange: 'transform, opacity' }}
               >
                 <div
                   id={`roadmap-column-${status}`}

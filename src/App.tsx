@@ -28,6 +28,7 @@ import { ConfirmClearModal } from './shared/components/dialogs/ConfirmClearDialo
 import { useMotionPreferences } from '@shared/components/ui/motion';
 import { getCopy } from './shared/constants/i18n';
 import useLockBodyScroll from './shared/hooks/useLockBodyScroll';
+import { cameFromBackForwardNavigation, consumeBFCacheRestoreFlag, rememberScrollPosition } from './shared/utils/navigationLifecycle';
 import {
   clearDB,
   clearThemePreference,
@@ -383,6 +384,9 @@ export default function App(): ReactElement {
   const settingsTriggerRef = useRef<HTMLButtonElement | null>(null);
   const settingsClearButtonRef = useRef<HTMLButtonElement | null>(null);
   const toastTimeoutRef = useRef<number | null>(null);
+  // Detect if this render follows a back/forward restore and skip entrance
+  // animations to avoid the brief re-appearance/flicker on iOS Safari.
+  const skipEntranceAnimations = cameFromBackForwardNavigation();
 
   // Prefetch helpers for lazily loaded chunks (kept idempotent)
   const prefetchedTechniqueRef = useRef(false);
@@ -416,6 +420,7 @@ export default function App(): ReactElement {
 
   const navigateTo = useCallback(
     (next: AppRoute, options: { replace?: boolean } = {}) => {
+      rememberScrollPosition();
       const path = typeof window !== 'undefined' ? routeToPath(next) : '';
       const shouldSkip =
         !options.replace &&
@@ -612,6 +617,9 @@ export default function App(): ReactElement {
   }, []);
 
   useKeyboardShortcuts(openSearch);
+
+  // no-op placeholder: scroll/animation behavior is coordinated via
+  // navigationLifecycle and the skipEntranceAnimations flag above.
 
   // Idle prefetch both heavy chunks after initial render
   useEffect(() => {
@@ -982,6 +990,7 @@ export default function App(): ReactElement {
   };
 
   const openTechnique = (slug: string, trainerId?: string, entry?: EntryMode, skipExistenceCheck?: boolean): void => {
+    rememberScrollPosition();
     if (!skipExistenceCheck && !db.techniques.some((technique) => technique.slug === slug)) {
       return;
     }
@@ -1082,6 +1091,7 @@ export default function App(): ReactElement {
   };
 
   const openGlossaryTerm = (slug: string): void => {
+    rememberScrollPosition();
     // Handle backwards compatibility redirects
     const slugRedirects: Record<string, string> = {
       'irimi-omote': 'irimi',
@@ -1127,6 +1137,9 @@ export default function App(): ReactElement {
   // a new route, technique, or glossary term always starts at the top of the page.
   useEffect(() => {
     if (typeof window === 'undefined') return;
+    if (consumeBFCacheRestoreFlag()) {
+      return;
+    }
     // Use a micro task to ensure any route transition DOM updates happen first.
     // This is particularly helpful when used with animated transitions.
     Promise.resolve().then(() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' }));
@@ -1175,7 +1188,12 @@ export default function App(): ReactElement {
           </div>
         }
       >
-        <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={pageMotion.transition}>
+        <motion.div
+          initial={skipEntranceAnimations ? { opacity: 1, y: 0 } : { opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={pageMotion.transition}
+          style={{ willChange: 'transform, opacity' }}
+        >
         <TechniquePage
           technique={currentTechnique}
           progress={currentProgress ?? null}
@@ -1474,7 +1492,7 @@ export default function App(): ReactElement {
   const pageKey = currentTechnique ? `technique-${currentTechnique.id}` : activeSlug ? `glossary-${activeSlug}` : route;
 
   return (
-    <div className="min-h-screen flex flex-col app-bg">
+    <div className="min-h-dvh flex flex-col app-bg">
       <Header
         copy={copy}
         route={route}
@@ -1485,15 +1503,16 @@ export default function App(): ReactElement {
         settingsButtonRef={settingsTriggerRef}
       />
 
-      <AnimatePresence mode="wait" initial={false}>
+      <AnimatePresence mode={skipEntranceAnimations ? 'sync' : 'wait'} initial={!skipEntranceAnimations}>
         <motion.main
           key={pageKey}
           variants={pageMotion.variants}
-          initial="initial"
+          initial={skipEntranceAnimations ? 'animate' : 'initial'}
           animate="animate"
-          exit="exit"
+          exit={skipEntranceAnimations ? undefined : 'exit'}
           transition={pageMotion.transition}
           className="flex-1"
+          style={{ willChange: 'transform, opacity' }}
         >
           {mainContent}
         </motion.main>
