@@ -4,8 +4,8 @@
     "status": "in-progress",
     "title": { "en": "DAB exam program update", "de": "DAB‑Prüfungsprogramm‑Update" },
     "summary": {
-      "en": "All DAB techniques (5. Kyū → 1. Dan) added, phrasing aligned (Tori/Dori), taxonomy unified.",
-      "de": "Alle DAB‑Techniken (5. Kyū → 1. Dan) ergänzt, Formulierungen angeglichen (Tori/Dori) und Taxonomie vereinheitlicht."
+      "en": "All DAB techniques (5. Kyū → 1. Dan) added, taxonomy unified.",
+      "de": "Alle DAB‑Techniken (5. Kyū → 1. Dan) ergänzt und Taxonomie vereinheitlicht."
     },
     "version": "v1.1",
     "icon": "listCheck"
