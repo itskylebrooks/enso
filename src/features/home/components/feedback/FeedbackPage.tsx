@@ -2893,7 +2893,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
               <a
                 href="mailto:itskylebrooks@icloud.com"
                 className={classNames(
-                  'rounded-2xl border surface surface-border px-4 py-4 transition-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] shadow-sm surface-hover',
+                  'rounded-2xl border surface surface-border px-4 py-4 transition-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] shadow-sm surface-hover flex items-center min-h-[88px]',
                 )}
                 aria-label="Email feedback"
               >
