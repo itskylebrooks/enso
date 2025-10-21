@@ -146,6 +146,8 @@ export const messages = {
   footerPrivacy: 'Privacy Policy',
   footerLicense: 'License',
     guideLink: 'Guide',
+    more: 'More',
+    privacy: 'Privacy',
     viewGuideCta: 'Study Guide',
     // Homepage strings
     homeIdentityTagline: 'Your personal Aikidō library and study companion.',
@@ -752,6 +754,8 @@ export const messages = {
   footerPrivacy: 'Datenschutzerklärung',
   footerLicense: 'Lizenz',
     guideLink: 'Leitfaden',
+    more: 'Mehr',
+    privacy: 'Datenschutz',
     viewGuideCta: 'Leitfaden ansehen',
     // Homepage strings
     homeIdentityTagline: 'Deine persönliche Aikidō-Bibliothek und Studienbegleiter.',

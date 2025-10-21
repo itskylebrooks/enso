@@ -2,7 +2,7 @@ import { forwardRef, useState, useEffect, useRef, type PropsWithChildren, type R
 import { classNames } from '../../utils/classNames';
 import type { AppRoute } from '@shared/types';
 import type { Copy } from '@shared/constants/i18n';
-import { Search, Settings, Menu, Bookmark, PersonStanding, BookOpenText, Sprout } from 'lucide-react';
+import { Search, Settings, Menu, Bookmark, PersonStanding, BookOpenText, Sprout, ChevronDown, Milestone, MessageSquare, Info } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useMotionPreferences, defaultEase } from '../ui/motion';
 import { Logo } from '@shared/components';
@@ -27,10 +27,14 @@ export const Header = ({
   settingsButtonRef,
 }: HeaderProps): ReactElement => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [moreDesktopOpen, setMoreDesktopOpen] = useState(false);
+  const [moreMobileOpen, setMoreMobileOpen] = useState(false);
   const { overlayMotion, prefersReducedMotion } = useMotionPreferences();
   const isGuideActive = route === 'guide' || route === 'guideAdvanced' || route === 'guideDan';
   const menuRef = useRef<HTMLDivElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const moreMenuRef = useRef<HTMLDivElement>(null);
+  const moreButtonRef = useRef<HTMLButtonElement>(null);
 
   // Smoother mobile menu animation with slower exit
   const menuVariants = prefersReducedMotion
@@ -95,6 +99,38 @@ export const Header = ({
     };
   }, [menuOpen]);
 
+  // Close desktop "More" dropdown on outside click / Esc
+  useEffect(() => {
+    if (!moreDesktopOpen) return;
+
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
+      const target = event.target as Node | null;
+      if (!target) return;
+      if (moreMenuRef.current?.contains(target) || moreButtonRef.current?.contains(target)) {
+        return;
+      }
+      setMoreDesktopOpen(false);
+    };
+
+    const handleKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        setMoreDesktopOpen(false);
+        moreButtonRef.current?.focus();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+    window.addEventListener('keydown', handleKey);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+      window.removeEventListener('keydown', handleKey);
+    };
+  }, [moreDesktopOpen]);
+
   return (
     <header className="surface border-b surface-border sticky top-0 z-20 backdrop-blur">
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
@@ -142,12 +178,90 @@ export const Header = ({
                 <span>{copy.progress}</span>
               </span>
             </TabButton>
-            <TextButton ref={settingsButtonRef} onClick={onSettings}>
-              <span className="flex items-center gap-1">
-                <Settings className="w-5 h-5" />
-                <span>{copy.settings}</span>
-              </span>
-            </TextButton>
+            {/* Desktop More dropdown */}
+            <div className="relative">
+              <button
+                ref={moreButtonRef}
+                type="button"
+                onClick={() => setMoreDesktopOpen((v) => !v)}
+                className="px-3 py-1.5 rounded-lg text-sm border btn-tonal surface-hover inline-flex items-center gap-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+                aria-haspopup="menu"
+                aria-expanded={moreDesktopOpen}
+              >
+                <span>{copy.more}</span>
+                <ChevronDown className="w-4 h-4" />
+              </button>
+              <AnimatePresence>
+                {moreDesktopOpen && (
+                  <motion.div
+                    ref={moreMenuRef}
+                    initial={{ opacity: 0, y: 6, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1, transition: overlayMotion.panelTransition }}
+                    exit={{ opacity: 0, y: -4, scale: 0.98, transition: { duration: 0.2, ease: defaultEase } }}
+                    className="absolute right-0 mt-2 w-48 rounded-lg border-2 border-[var(--color-text)]/20 bg-[var(--color-surface)] shadow-xl ring-1 ring-black/5 z-30"
+                    role="menu"
+                  >
+                    <ul className="p-2">
+                      <li>
+                        <button
+                          ref={settingsButtonRef as any}
+                          type="button"
+                          onClick={() => {
+                            setMoreDesktopOpen(false);
+                            onSettings();
+                          }}
+                          className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
+                          role="menuitem"
+                        >
+                          <span className="flex items-center gap-2"><Settings className="w-4 h-4" />{copy.settings}</span>
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setMoreDesktopOpen(false);
+                            onNavigate('roadmap');
+                          }}
+                          className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
+                          role="menuitem"
+                        >
+                          <span className="flex items-center gap-2"><Milestone className="w-4 h-4" />{copy.roadmap}</span>
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setMoreDesktopOpen(false);
+                            onNavigate('feedback');
+                          }}
+                          className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
+                          role="menuitem"
+                        >
+                          <span className="flex items-center gap-2"><MessageSquare className="w-4 h-4" />{copy.feedback}</span>
+                        </button>
+                      </li>
+                      
+                      <li>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setMoreDesktopOpen(false);
+                            onNavigate('about');
+                          }}
+                          className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
+                          role="menuitem"
+                        >
+                          <span className="flex items-center gap-2"><Info className="w-4 h-4" />{copy.aboutLink}</span>
+                        </button>
+                      </li>
+                    </ul>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+            {/* Settings moved into More dropdown */}
           </div>
 
           {/* Mobile: hamburger + animated dropdown */}
@@ -178,7 +292,7 @@ export const Header = ({
                   variants={menuVariants}
                   className="absolute -right-3 mt-4 w-48 rounded-lg border-2 border-[var(--color-text)]/20 bg-[var(--color-surface)] shadow-xl ring-1 ring-black/5 z-30"
                 >
-                <ul className="p-2">
+                <ul className="px-2 pt-2 pb-2">
                   <li>
                     <button
                       type="button"
@@ -227,17 +341,97 @@ export const Header = ({
                       <span className="flex items-center gap-2"><Bookmark className="w-4 h-4" />{copy.progress}</span>
                     </button>
                   </li>
+                  
+                  {/* More trigger inside same list for consistent framing */}
                   <li>
                     <button
                       type="button"
-                      onClick={() => {
-                        setMenuOpen(false);
-                        onSettings();
-                      }}
-                      className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
+                      onClick={() => setMoreMobileOpen((v) => !v)}
+                      className={classNames(
+                        'w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)] flex items-center gap-2',
+                        moreMobileOpen ? 'bg-[var(--color-surface-hover)]' : undefined,
+                      )}
+                      aria-expanded={moreMobileOpen}
+                      aria-controls="mobile-more-submenu"
                     >
-                      <span className="flex items-center gap-2"><Settings className="w-4 h-4" />{copy.settings}</span>
+                      <motion.span
+                        initial={false}
+                        animate={{ rotate: moreMobileOpen ? 180 : 0 }}
+                        transition={{ duration: 0.2, ease: defaultEase }}
+                        className="inline-flex"
+                        aria-hidden
+                      >
+                        <ChevronDown className="w-4 h-4" />
+                      </motion.span>
+                      <span>{copy.more}</span>
                     </button>
+                    <AnimatePresence initial={false}>
+                      {moreMobileOpen && (
+                        <motion.div
+                          id="mobile-more-submenu"
+                          initial={{ opacity: 0, y: -4, height: 0 }}
+                          animate={{ opacity: 1, y: 0, height: 'auto', transition: overlayMotion.panelTransition }}
+                          exit={{ opacity: 0, y: -4, height: 0, transition: { duration: 0.2, ease: defaultEase } }}
+                          className="overflow-hidden"
+                        >
+                          <ul className="p-2 pt-1">
+                            <li>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setMenuOpen(false);
+                                  setMoreMobileOpen(false);
+                                  onSettings();
+                                }}
+                                className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
+                              >
+                                <span className="flex items-center gap-2"><Settings className="w-4 h-4" />{copy.settings}</span>
+                              </button>
+                            </li>
+                            <li>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setMenuOpen(false);
+                                  setMoreMobileOpen(false);
+                                  onNavigate('roadmap');
+                                }}
+                                className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
+                              >
+                                <span className="flex items-center gap-2"><Milestone className="w-4 h-4" />{copy.roadmap}</span>
+                              </button>
+                            </li>
+                            <li>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setMenuOpen(false);
+                                  setMoreMobileOpen(false);
+                                  onNavigate('feedback');
+                                }}
+                                className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
+                              >
+                                <span className="flex items-center gap-2"><MessageSquare className="w-4 h-4" />{copy.feedback}</span>
+                              </button>
+                            </li>
+                            
+                            <li>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setMenuOpen(false);
+                                  setMoreMobileOpen(false);
+                                  onNavigate('about');
+                                }}
+                                className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
+                              >
+                                <span className="flex items-center gap-2"><Info className="w-4 h-4" />{copy.aboutLink}</span>
+                              </button>
+                            </li>
+                          </ul>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </li>
                 </ul>
                 </motion.div>
