@@ -203,8 +203,7 @@ export const RoadmapPage = ({ copy, locale }: RoadmapPageProps): ReactElement =>
         {grouped.meta && (
           <motion.article
             initial={prefersReducedMotion ? undefined : { opacity: 0, y: 24 }}
-            whileInView={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.35 }}
+            animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
             transition={prefersReducedMotion ? undefined : { duration: 0.6, ease: defaultEase }}
             className="group relative overflow-hidden rounded-3xl surface border surface-border border-black/20 dark:border-white/18 px-6 py-8 md:px-10 md:py-12 text-center"
             onMouseEnter={() => setIsMetaHovered(true)}
@@ -270,8 +269,7 @@ const ArticleCard = ({
         'hover:[box-shadow:var(--card-shadow)]',
       )}
       initial={prefersReducedMotion ? undefined : { opacity: 0, y: 14 }}
-      whileInView={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.3 }}
+      animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
       transition={prefersReducedMotion ? undefined : { duration: 0.45, ease: defaultEase }}
     >
       {/* Hover now affects only the frame via ring/border; no color overlays */}
