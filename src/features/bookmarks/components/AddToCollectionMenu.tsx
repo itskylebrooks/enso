@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState, type ReactElement } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'motion/react';
 import type { Copy } from '../../../shared/constants/i18n';
-import { CheckIcon, FolderPlusIcon, FolderCheckIcon, PlusIcon } from '@shared/components/ui/icons';
+import { Check, FolderPlus, FolderCheck, Plus } from 'lucide-react';
 import { useMotionPreferences } from '@shared/components/ui/motion';
 import useLockBodyScroll from '../../../shared/hooks/useLockBodyScroll';
 
@@ -169,11 +169,7 @@ export const AddToCollectionMenu = ({ copy, collections, onToggle, onCreate, onO
         aria-expanded={open}
         aria-label={copy.collectionsAddTo}
       >
-        {hasCheckedCollections ? (
-          <FolderCheckIcon className="w-4 h-4" />
-        ) : (
-          <FolderPlusIcon className="w-4 h-4" />
-        )}
+        {hasCheckedCollections ? <FolderCheck className="w-4 h-4" /> : <FolderPlus className="w-4 h-4" />}
       </button>
       {open && createPortal(
         <AnimatePresence>
@@ -212,7 +208,7 @@ export const AddToCollectionMenu = ({ copy, collections, onToggle, onCreate, onO
                         {collection.icon && <span aria-hidden="true">{collection.icon}</span>}
                         <span className="truncate">{collection.name}</span>
                       </span>
-                      {collection.checked && <CheckIcon className="w-4 h-4" />}
+                      {collection.checked && <Check className="w-4 h-4" />}
                     </button>
                   </li>
                 ))}
@@ -231,7 +227,7 @@ export const AddToCollectionMenu = ({ copy, collections, onToggle, onCreate, onO
                       onCreate();
                     }}
                   >
-                    <PlusIcon className="w-4 h-4" />
+                    <Plus className="w-4 h-4" />
                     <span>{copy.collectionsNew}</span>
                   </button>
                 )}

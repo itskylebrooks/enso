@@ -19,7 +19,7 @@ import { StepsList } from './StepsList';
 import { UkePanel } from './UkePanel';
 import { MediaPanel } from './MediaPanel';
 import { NotesPanel } from './NotesPanel';
-import { FootprintsIcon } from '@shared/components/ui/icons';
+import { Footprints } from 'lucide-react';
 import { enrichTechniqueWithVariants } from '@shared/constants/variantMapping';
 import { getActiveVariant } from '@features/technique/store';
 import { parseTechniqueVariantParams, buildTechniqueUrlWithVariant } from '@shared/constants/urls';
@@ -523,7 +523,7 @@ export const TechniquePage = ({
               {activeVariant && activeVariant.steps && (
                 <section className="space-y-4" data-steps-section>
                   <header className="flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-subtle">
-                    <FootprintsIcon className="w-4 h-4" />
+                    <Footprints className="w-4 h-4" />
                     <span>{stepsLabel}</span>
                   </header>
                   <StepsList

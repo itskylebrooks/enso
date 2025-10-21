@@ -1,6 +1,6 @@
 import type { ReactElement } from 'react';
 import type { Copy } from '@shared/constants/i18n';
-import { MessageSquarePlusIcon } from '@shared/components/ui/icons';
+import { MessageSquarePlus } from 'lucide-react';
 
 export type NotesPanelProps = {
   commonMistakes?: string[];
@@ -49,7 +49,7 @@ export const NotesPanel = ({ commonMistakes, context, copy, onFeedbackClick }: N
             onClick={onFeedbackClick}
             className="w-full rounded-xl border surface-border bg-[var(--color-surface)]/80 p-4 sm:p-5 flex items-center gap-3 surface-hover transition-soft motion-ease"
           >
-            <MessageSquarePlusIcon className="shrink-0" />
+            <MessageSquarePlus className="shrink-0" />
             <span className="text-sm font-medium">{copy.feedback}</span>
           </button>
         )}

@@ -1,6 +1,6 @@
 import type { ReactElement } from 'react';
 import type { Copy } from '@shared/constants/i18n';
-import { HandshakeIcon } from '@shared/components/ui/icons';
+import { Handshake } from 'lucide-react';
 
 export type UkePanelProps = {
   role: string;
@@ -14,7 +14,7 @@ export const UkePanel = ({ role, notes, copy }: UkePanelProps): ReactElement => 
   return (
     <section className="space-y-3">
       <header className="flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-subtle">
-        <HandshakeIcon className="w-4 h-4" />
+        <Handshake className="w-4 h-4" />
            <span>{copy.uke}</span>
       </header>
       {role && <p className="text-sm leading-relaxed text-[var(--color-text)]">{role}</p>}

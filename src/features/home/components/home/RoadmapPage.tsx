@@ -9,17 +9,17 @@ import { classNames } from '@shared/utils/classNames';
 import { useMotionPreferences, defaultEase } from '@shared/components/ui/motion';
 import { getInitialThemeState } from '@shared/utils/theme';
 import {
-  PaletteIcon,
-  MessageSquarePlusIcon,
-  SplitSquareHorizontalIcon,
-  MapIcon,
-  ListCheckIcon,
-  GitBranchIcon,
-  CloudOffIcon,
-  HandshakeIcon,
-  SparklesIcon,
-  InfinityIcon,
-} from '@shared/components/ui/icons';
+  Palette,
+  MessageSquarePlus,
+  SplitSquareHorizontal,
+  Map,
+  ListCheck,
+  GitBranch,
+  CloudOff,
+  Handshake,
+  Sparkles,
+  Infinity as InfinitySymbol,
+} from 'lucide-react';
 
 type RoadmapPageProps = {
   copy: Copy;
@@ -31,16 +31,16 @@ type ColumnStatus = Exclude<RoadmapStatus, 'meta'>;
 const columnStatuses: ColumnStatus[] = ['planned', 'in-progress', 'launched'];
 
 const iconLookup: Partial<Record<RoadmapIconName, (props: { className?: string }) => ReactElement>> = {
-  palette: (props) => <PaletteIcon width={20} height={20} {...props} />,
-  messageSquarePlus: (props) => <MessageSquarePlusIcon width={20} height={20} {...props} />,
-  splitSquareHorizontal: (props) => <SplitSquareHorizontalIcon width={20} height={20} {...props} />,
-  map: (props) => <MapIcon width={20} height={20} {...props} />,
-  listCheck: (props) => <ListCheckIcon width={20} height={20} {...props} />,
-  gitBranch: (props) => <GitBranchIcon width={20} height={20} {...props} />,
-  cloudOff: (props) => <CloudOffIcon width={20} height={20} {...props} />,
-  handshake: (props) => <HandshakeIcon width={20} height={20} {...props} />,
-  sparkles: (props) => <SparklesIcon width={20} height={20} {...props} />,
-  infinity: (props) => <InfinityIcon width={20} height={20} {...props} />,
+  palette: (props) => <Palette size={20} {...props} />,
+  messageSquarePlus: (props) => <MessageSquarePlus size={20} {...props} />,
+  splitSquareHorizontal: (props) => <SplitSquareHorizontal size={20} {...props} />,
+  map: (props) => <Map size={20} {...props} />,
+  listCheck: (props) => <ListCheck size={20} {...props} />,
+  gitBranch: (props) => <GitBranch size={20} {...props} />,
+  cloudOff: (props) => <CloudOff size={20} {...props} />,
+  handshake: (props) => <Handshake size={20} {...props} />,
+  sparkles: (props) => <Sparkles size={20} {...props} />,
+  infinity: (props) => <InfinitySymbol size={20} {...props} />,
 };
 
 const statusAccent = (copy: Copy) =>

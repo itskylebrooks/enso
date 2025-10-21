@@ -7,7 +7,7 @@ import type { GlossaryTerm } from '../../../shared/types';
 import type { Locale } from '../../../shared/types';
 import type { Copy } from '../../../shared/constants/i18n';
 import { AddToCollectionMenu } from '../../../features/bookmarks/components/AddToCollectionMenu';
-import { BookmarkIcon, BookmarkCheckIcon } from '@shared/components/ui/icons';
+import { Bookmark, BookmarkCheck } from 'lucide-react';
 import { classNames } from '@shared/utils/classNames';
 import { getCategoryStyle, getCategoryLabel } from '../../../shared/styles/glossary';
 import { getInitialThemeState } from '@shared/utils/theme';
@@ -200,11 +200,7 @@ export const GlossaryDetailPage = ({
                   : 'surface hover:surface-hover',
               )}
             >
-              {isBookmarked ? (
-                <BookmarkCheckIcon className="w-4 h-4" />
-              ) : (
-                <BookmarkIcon className="w-4 h-4" />
-              )}
+              {isBookmarked ? <BookmarkCheck className="w-4 h-4" /> : <Bookmark className="w-4 h-4" />}
             </motion.button>
           </div>
         </div>

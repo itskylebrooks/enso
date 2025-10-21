@@ -2,7 +2,7 @@ import { forwardRef, useState, useEffect, useRef, type PropsWithChildren, type R
 import { classNames } from '../../utils/classNames';
 import type { AppRoute } from '@shared/types';
 import type { Copy } from '@shared/constants/i18n';
-import { SearchIcon, SettingsIcon, MenuIcon, BookmarkIcon, PersonStandingIcon, BookOpenTextIcon, SproutIcon } from '../ui/icons';
+import { Search, Settings, Menu, Bookmark, PersonStanding, BookOpenText, Sprout } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useMotionPreferences, defaultEase } from '../ui/motion';
 import { Logo } from '@shared/components';
@@ -114,37 +114,37 @@ export const Header = ({
           <div className="hidden md:flex items-center gap-2">
             <TextButton ref={searchButtonRef} onClick={() => onSearch?.('mouse')}>
               <span className="flex items-center gap-1">
-                <SearchIcon className="w-4 h-4" />
+                <Search className="w-4 h-4" />
                 <span>{copy.searchBtn}</span>
               </span>
             </TextButton>
             <TabButton active={isGuideActive} onClick={() => onNavigate('guide')}>
               <span className="flex items-center gap-1">
-                <SproutIcon className="w-4 h-4" />
+                <Sprout className="w-4 h-4" />
                 <span>{copy.guideLink}</span>
               </span>
             </TabButton>
             <TabButton active={route === 'library'} onClick={() => onNavigate('library')}>
               <span className="flex items-center gap-1">
-                <PersonStandingIcon className="w-4 h-4" />
+                <PersonStanding className="w-4 h-4" />
                 <span>{copy.library}</span>
               </span>
             </TabButton>
             <TabButton active={route === 'glossary'} onClick={() => onNavigate('glossary')}>
               <span className="flex items-center gap-1">
-                <BookOpenTextIcon className="w-4 h-4" />
+                <BookOpenText className="w-4 h-4" />
                 <span>{copy.glossary}</span>
               </span>
             </TabButton>
             <TabButton active={route === 'bookmarks'} onClick={() => onNavigate('bookmarks')}>
               <span className="flex items-center gap-1">
-                <BookmarkIcon className="w-4 h-4" />
+                <Bookmark className="w-4 h-4" />
                 <span>{copy.progress}</span>
               </span>
             </TabButton>
             <TextButton ref={settingsButtonRef} onClick={onSettings}>
               <span className="flex items-center gap-1">
-                <SettingsIcon className="w-5 h-5" />
+                <Settings className="w-5 h-5" />
                 <span>{copy.settings}</span>
               </span>
             </TextButton>
@@ -154,7 +154,7 @@ export const Header = ({
           <div className="md:hidden relative">
             <div className="flex items-center gap-2">
               <IconButton ref={searchButtonRef} onClick={() => onSearch?.('mouse')} label={copy.searchBtn}>
-                <SearchIcon className="w-5 h-5" />
+                <Search className="w-5 h-5" />
               </IconButton>
               <button
                 ref={menuButtonRef}
@@ -164,7 +164,7 @@ export const Header = ({
                 aria-expanded={menuOpen}
                 aria-label="Open menu"
               >
-                <MenuIcon className="w-5 h-5" />
+                <Menu className="w-5 h-5" />
               </button>
             </div>
 
@@ -188,7 +188,7 @@ export const Header = ({
                       }}
                       className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
                     >
-                      <span className="flex items-center gap-2"><SproutIcon className="w-4 h-4" />{copy.guideLink}</span>
+                      <span className="flex items-center gap-2"><Sprout className="w-4 h-4" />{copy.guideLink}</span>
                     </button>
                   </li>
                   <li>
@@ -200,7 +200,7 @@ export const Header = ({
                       }}
                       className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
                     >
-                      <span className="flex items-center gap-2"><PersonStandingIcon className="w-4 h-4" />{copy.library}</span>
+                      <span className="flex items-center gap-2"><PersonStanding className="w-4 h-4" />{copy.library}</span>
                     </button>
                   </li>
                   <li>
@@ -212,7 +212,7 @@ export const Header = ({
                       }}
                       className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
                     >
-                      <span className="flex items-center gap-2"><BookOpenTextIcon className="w-4 h-4" />{copy.glossary}</span>
+                      <span className="flex items-center gap-2"><BookOpenText className="w-4 h-4" />{copy.glossary}</span>
                     </button>
                   </li>
                   <li>
@@ -224,7 +224,7 @@ export const Header = ({
                       }}
                       className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
                     >
-                      <span className="flex items-center gap-2"><BookmarkIcon className="w-4 h-4" />{copy.progress}</span>
+                      <span className="flex items-center gap-2"><Bookmark className="w-4 h-4" />{copy.progress}</span>
                     </button>
                   </li>
                   <li>
@@ -236,7 +236,7 @@ export const Header = ({
                       }}
                       className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
                     >
-                      <span className="flex items-center gap-2"><SettingsIcon className="w-4 h-4" />{copy.settings}</span>
+                      <span className="flex items-center gap-2"><Settings className="w-4 h-4" />{copy.settings}</span>
                     </button>
                   </li>
                 </ul>

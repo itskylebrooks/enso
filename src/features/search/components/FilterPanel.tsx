@@ -9,7 +9,7 @@ import { getLevelLabel, getOrderedTaxonomyValues, getTaxonomyLabel, type Taxonom
 import { SectionTitle } from '../../../shared/components';
 import { useMotionPreferences } from '@shared/components/ui/motion';
 import { ENTRY_MODE_ORDER } from '../../../shared/constants/entryModes';
-import { ChevronDownIcon } from '@shared/components/ui/icons';
+import { ChevronDown, Undo2 } from 'lucide-react';
 
 type FilterPanelProps = {
   copy: Copy;
@@ -179,20 +179,7 @@ export const FilterPanel = ({
             aria-label={copy.resetFilters}
             className="text-subtle transition-colors duration-150 hover:text-[var(--color-text)]"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M9 14 4 9l5-5" />
-              <path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11" />
-            </svg>
+            <Undo2 className="h-4 w-4" aria-hidden />
           </button>
         )}
       </div>
@@ -287,7 +274,7 @@ const FilterSection = ({ title, options, selected, onSelect, available, isOpen =
           animate={{ rotate: isOpen ? 0 : -90 }}
           transition={{ duration: 0.2, ease: 'easeInOut' }}
         >
-          <ChevronDownIcon className="w-4 h-4" />
+          <ChevronDown className="w-4 h-4" />
         </motion.span>
       </button>
       <motion.div

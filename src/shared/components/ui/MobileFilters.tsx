@@ -9,7 +9,7 @@ import { getLevelLabel, getOrderedTaxonomyValues, getTaxonomyLabel, type Taxonom
 import { ENTRY_MODE_ORDER } from '@shared/constants/entryModes';
 import { SectionTitle } from '../index';
 import { useMotionPreferences } from './motion';
-import { PencilLineIcon, ChevronDownIcon } from './icons';
+import { ChevronDown, PencilLine } from 'lucide-react';
 
 type MobileFiltersProps = {
   copy: Copy;
@@ -227,7 +227,7 @@ export const MobileFilters = ({
             onFocus={onContributePrefetch}
             className="w-full inline-flex items-center justify-center gap-2 rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2 text-sm transition-soft hover-border-adaptive"
           >
-            <PencilLineIcon width={20} height={20} aria-hidden />
+            <PencilLine width={20} height={20} aria-hidden />
             {copy.feedbackAddTechniqueCta}
           </button>
         </div>
@@ -259,7 +259,7 @@ const FilterSection = ({ title, options, selected, onSelect, isOpen = false, onT
       >
         <SectionTitle><span className="text-sm">{title}</span></SectionTitle>
         <motion.span aria-hidden className="text-subtle" animate={{ rotate: isOpen ? 0 : -90 }} transition={{ duration: 0.2, ease: 'easeInOut' }}>
-          <ChevronDownIcon className="w-4 h-4" />
+          <ChevronDown className="w-4 h-4" />
         </motion.span>
       </button>
 

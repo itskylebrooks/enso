@@ -8,6 +8,7 @@ import { exportDB, parseIncomingDB, importData } from '@shared/services/storageS
 import { SectionTitle } from '@shared/components';
 import { useFocusTrap } from '@shared/hooks/useFocusTrap';
 import { useMotionPreferences } from '@shared/components/ui/motion';
+import { Info, SquareArrowOutUpRight, X } from 'lucide-react';
 // import version from package.json
 import pkg from '../../../../../package.json';
 
@@ -99,10 +100,7 @@ export const SettingsModal = ({
             transition={toggleTransition}
             aria-label="Close"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x-icon lucide-x" aria-hidden>
-              <path d="M18 6 6 18" />
-              <path d="m6 6 12 12" />
-            </svg>
+            <X className="h-5 w-5" aria-hidden />
           </motion.button>
         </div>
         <div className="p-4 space-y-4">
@@ -244,11 +242,7 @@ export const SettingsModal = ({
                 {/* Left icon */}
                 <div className="absolute left-4 inset-y-0 flex items-center">
                   <button type="button" onClick={onNavigateToAbout} className="text-current" aria-label="About">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-info" aria-hidden>
-                      <circle cx="12" cy="12" r="10" />
-                      <path d="M12 16v-4" />
-                      <path d="M12 8h.01" />
-                    </svg>
+                    <Info className="h-4 w-4" aria-hidden />
                   </button>
                 </div>
 
@@ -258,11 +252,7 @@ export const SettingsModal = ({
                 {/* Right icon */}
                 <div className="absolute right-4 inset-y-0 flex items-center">
                   <a href="https://itskylebrooks.vercel.app/" target="_blank" rel="noreferrer" className="text-current" aria-label="Kyle Brooks website">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-square-arrow-out-up-right" aria-hidden>
-                      <path d="M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6" />
-                      <path d="m21 3-9 9" />
-                      <path d="M15 3h6v6" />
-                    </svg>
+                    <SquareArrowOutUpRight className="h-4 w-4" aria-hidden />
                   </a>
                 </div>
               </div>

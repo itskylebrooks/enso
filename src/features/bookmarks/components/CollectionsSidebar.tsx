@@ -1,7 +1,7 @@
 import type { ReactElement } from 'react';
 import { AnimatePresence, motion, LayoutGroup } from 'motion/react';
 import type { Copy } from '../../../shared/constants/i18n';
-import { EditIcon, PencilIcon, PlusIcon, TrashIcon } from '@shared/components/ui/icons';
+import { TextCursorInput, Pencil, Plus, Trash } from 'lucide-react';
 import { useMotionPreferences } from '@shared/components/ui/motion';
 
 type SidebarCollection = {
@@ -51,7 +51,7 @@ export const CollectionsSidebar = ({
             className="p-2 rounded-lg border btn-tonal surface-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
             aria-label={copy.collectionsNew}
           >
-            <PlusIcon className="w-4 h-4" />
+            <Plus className="w-4 h-4" />
           </button>
           <button
             type="button"
@@ -62,7 +62,7 @@ export const CollectionsSidebar = ({
             aria-label={copy.collectionsEdit}
             aria-pressed={isEditing}
           >
-            <PencilIcon className="w-4 h-4" />
+            <Pencil className="w-4 h-4" />
           </button>
         </div>
       </div>
@@ -125,10 +125,10 @@ export const CollectionsSidebar = ({
                           key={`edit-actions-${collection.id}`}
                         >
                           <IconButton label={copy.collectionsRename} onClick={() => onRename(collection.id)}>
-                            <EditIcon className="w-4 h-4" />
+                            <TextCursorInput className="w-4 h-4" />
                           </IconButton>
                           <IconButton label={copy.collectionsDelete} onClick={() => onDelete(collection.id)}>
-                            <TrashIcon className="w-4 h-4" />
+                            <Trash className="w-4 h-4" />
                           </IconButton>
                         </motion.div>
                       )}

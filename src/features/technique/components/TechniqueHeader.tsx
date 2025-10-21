@@ -6,7 +6,7 @@ import type { Locale, Technique } from '@shared/types';
 import { EmphasizedName } from '@shared/components';
 import { LevelBadge } from '@shared/components';
 import { AddToCollectionMenu } from '@features/bookmarks/components/AddToCollectionMenu';
-import { BookmarkIcon, BookmarkCheckIcon } from '@shared/components/ui/icons';
+import { Bookmark, BookmarkCheck } from 'lucide-react';
 import { useMotionPreferences } from '@shared/components/ui/motion';
 import { classNames } from '@shared/utils/classNames';
 import { getCategoryStyle } from '@shared/styles/glossary';
@@ -217,7 +217,7 @@ export const TechniqueHeader = ({
                     animate={isBookmarked ? { scale: 1, opacity: 1 } : { scale: 0.86, opacity: 0.85 }}
                     transition={toggleTransition}
                   >
-                    {isBookmarked ? <BookmarkCheckIcon className="w-4 h-4" /> : <BookmarkIcon className="w-4 h-4" />}
+                    {isBookmarked ? <BookmarkCheck className="w-4 h-4" /> : <Bookmark className="w-4 h-4" />}
                   </motion.span>
                 </motion.button>
               </div>

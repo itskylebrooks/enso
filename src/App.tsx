@@ -62,7 +62,7 @@ import { unique, upsert } from './shared/utils/array';
 import { buildTechniqueUrl as buildUrl, parseTechniquePath, buildTechniqueUrlWithVariant } from '@shared/constants/urls';
 import { enrichTechniqueWithVariants } from '@shared/constants/variantMapping';
 import { ENTRY_MODE_ORDER, isEntryMode } from './shared/constants/entryModes';
-import { PencilLineIcon } from '@shared/components/ui/icons';
+import { PencilLine } from 'lucide-react';
 
 const defaultFilters: Filters = {};
 
@@ -1361,7 +1361,7 @@ export default function App(): ReactElement {
                     onFocus={prefetchFeedbackPage}
                     className="w-full inline-flex items-center justify-center gap-2 rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2 text-sm transition-soft hover-border-adaptive"
                   >
-                    <PencilLineIcon width={20} height={20} aria-hidden />
+                    <PencilLine width={20} height={20} aria-hidden />
                     {copy.feedbackAddTechniqueCta}
                   </button>
                 </div>

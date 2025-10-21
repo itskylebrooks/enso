@@ -7,15 +7,7 @@ import { classNames } from '@shared/utils/classNames';
 import { gradeOrder } from '@shared/utils/grades';
 import { getLevelLabel, getOrderedTaxonomyValues, getTaxonomyLabel } from '@shared/i18n/taxonomy';
 import { stripDiacritics, toSearchable } from '@shared/utils/text';
-import {
-  BadgePlusIcon,
-  BugIcon,
-  HeartPulseIcon,
-  LightbulbIcon,
-  RocketIcon,
-  PencilLineIcon,
-  LinkIcon,
-} from '@shared/components/ui/icons';
+import { BadgePlus, Bug, HeartPulse, Lightbulb, Rocket, PencilLine, Link } from 'lucide-react';
 import type { Copy, FeedbackPageCopy } from '@shared/constants/i18n';
 import { buildFeedbackPayloadV1, type NewTechniqueFormState } from '@shared/lib/buildFeedbackPayload';
 import type { FeedbackPayloadV1 } from '@shared/types/feedback';
@@ -1119,7 +1111,7 @@ const getMediaIcon = (type: MediaKind): ReactElement => {
     case 'image':
       return <span aria-hidden className="text-lg">🖼️</span>;
     default:
-      return <LinkIcon className="w-5 h-5" />;
+      return <Link className="w-5 h-5" />;
   }
 };
 
@@ -1351,27 +1343,27 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
   const cardContent = useMemo<Record<FeedbackType, { icon: ReactElement; title: string; description: string }>>(
     () => ({
       improveTechnique: {
-        icon: <RocketIcon className="w-5 h-5" aria-hidden />,
+        icon: <Rocket className="w-5 h-5" aria-hidden />,
         title: t.cards.improve.title,
         description: t.cards.improve.description,
       },
       addVariation: {
-        icon: <BadgePlusIcon className="w-5 h-5" aria-hidden />,
+        icon: <BadgePlus className="w-5 h-5" aria-hidden />,
         title: t.cards.variation.title,
         description: t.cards.variation.description,
       },
       newTechnique: {
-        icon: <PencilLineIcon className="w-5 h-5" aria-hidden />,
+        icon: <PencilLine className="w-5 h-5" aria-hidden />,
         title: t.cards.newTechnique.title,
         description: t.cards.newTechnique.description,
       },
       appFeedback: {
-        icon: <LightbulbIcon className="w-5 h-5" aria-hidden />,
+        icon: <Lightbulb className="w-5 h-5" aria-hidden />,
         title: t.cards.app.title,
         description: t.cards.app.description,
       },
       bugReport: {
-        icon: <BugIcon className="w-5 h-5" aria-hidden />,
+        icon: <Bug className="w-5 h-5" aria-hidden />,
         title: t.cards.bug.title,
         description: t.cards.bug.description,
       },
@@ -2849,7 +2841,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
           <header className="space-y-4">
             <div className="space-y-2">
               <h1 className="text-3xl font-semibold flex items-center gap-3">
-                <HeartPulseIcon className="w-7 h-7 text-[var(--color-text)]" aria-hidden />
+                <HeartPulse className="w-7 h-7 text-[var(--color-text)]" aria-hidden />
                 <span>{copy.feedbackTitle}</span>
               </h1>
               <p className="max-w-2xl text-sm text-muted">{t.heroSubtitle}</p>

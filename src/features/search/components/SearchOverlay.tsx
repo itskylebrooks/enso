@@ -4,7 +4,7 @@ import type { Copy } from '../../../shared/constants/i18n';
 import type { Locale, Technique, GlossaryTerm, Progress, GlossaryProgress } from '../../../shared/types';
 import { EmphasizedName } from '../../../shared/components';
 import { gradeLabel, getGradeStyle } from '@shared/styles/belts';
-import { SearchIcon, BookmarkIcon, BookmarkFilledIcon } from '@shared/components/ui/icons';
+import { Bookmark, Search, X } from 'lucide-react';
 import { useFocusTrap } from '../../../shared/hooks/useFocusTrap';
 import { buildSearchIndex, buildGlossarySearchIndex, matchSearch, normalizeSearchQuery } from '../indexer';
 import { scoreSearchResult, applyTieBreakers, type ScoredSearchResult } from '../scorer';
@@ -284,7 +284,7 @@ export const SearchOverlay = ({ copy, locale, techniques, progress, glossaryProg
           <div className="relative">
             <div className="relative flex items-center pl-3 pr-12 py-2">
               <span className="text-muted" aria-hidden>
-                <SearchIcon className="h-4 w-4" />
+                <Search className="h-4 w-4" />
               </span>
               <input
                 ref={inputRef}
@@ -305,7 +305,7 @@ export const SearchOverlay = ({ copy, locale, techniques, progress, glossaryProg
               transition={{ duration: 0.15 }}
               aria-label="Close"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-x"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+              <X className="h-6 w-6" aria-hidden />
               <span className="sr-only">Close</span>
             </motion.button>
           </div>
@@ -410,9 +410,9 @@ export const SearchOverlay = ({ copy, locale, techniques, progress, glossaryProg
                           className="p-1 -mt-1"
                         >
                           {progress.find(p => p.techniqueId === result.item.id && p.bookmarked) ? (
-                            <BookmarkFilledIcon className="w-4 h-4 text-subtle" />
+                            <Bookmark className="w-4 h-4 text-subtle" aria-hidden fill="currentColor" stroke="none" />
                           ) : (
-                            <BookmarkIcon className="w-4 h-4 text-subtle" />
+                            <Bookmark className="w-4 h-4 text-subtle" aria-hidden />
                           )}
                         </button>
                       </>
@@ -431,9 +431,9 @@ export const SearchOverlay = ({ copy, locale, techniques, progress, glossaryProg
                           className="p-1 -mt-1"
                         >
                           {glossaryProgress.find(g => g.termId === result.item.id && g.bookmarked) ? (
-                            <BookmarkFilledIcon className="w-4 h-4 text-subtle" />
+                            <Bookmark className="w-4 h-4 text-subtle" aria-hidden fill="currentColor" stroke="none" />
                           ) : (
-                            <BookmarkIcon className="w-4 h-4 text-subtle" />
+                            <Bookmark className="w-4 h-4 text-subtle" aria-hidden />
                           )}
                         </button>
                       </>

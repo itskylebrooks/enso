@@ -3,6 +3,7 @@ import { Fragment } from 'react';
 import type { Locale } from '@shared/types';
 import type { SayaNoUchiCell } from '@shared/types/exam';
 import { SAYA_NO_UCHI_COLUMNS, SAYA_NO_UCHI_ROWS } from '@shared/data/sayaNoUchiData';
+import { CircleCheck } from 'lucide-react';
 
 type SayaNoUchiMatrixProps = {
   locale: Locale;
@@ -10,31 +11,13 @@ type SayaNoUchiMatrixProps = {
   onCellClick: (slug: string, attackKey: string) => void;
 };
 
-const CheckIcon = (): ReactElement => (
-  <svg 
-    xmlns="http://www.w3.org/2000/svg" 
-    width="24" 
-    height="24" 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2" 
-    strokeLinecap="round" 
-    strokeLinejoin="round" 
-    className="lucide lucide-circle-check-icon lucide-circle-check inline-block"
-  >
-    <circle cx="12" cy="12" r="10"/>
-    <path d="m9 12 2 2 4-4"/>
-  </svg>
-);
-
 const SayaNoUchiCellComponent = ({ cell }: { cell: SayaNoUchiCell }): ReactElement | null => {
   if (cell.kind === 'empty') {
     return null;
   }
 
   if (cell.kind === 'check') {
-    return <CheckIcon />;
+    return <CircleCheck className="inline-block h-5 w-5" />;
   }
 
   return null;
