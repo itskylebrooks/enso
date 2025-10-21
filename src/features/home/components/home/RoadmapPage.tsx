@@ -73,6 +73,13 @@ export const RoadmapPage = ({ copy, locale }: RoadmapPageProps): ReactElement =>
   const { prefersReducedMotion } = useMotionPreferences();
   const [isDark, setIsDark] = useState(getInitialThemeState);
   const [isMetaHovered, setIsMetaHovered] = useState(false);
+  const isIOS = useMemo(() => {
+    if (typeof navigator === 'undefined') return false;
+    const ua = navigator.userAgent || '';
+    const platform = (navigator as unknown as { platform?: string }).platform || '';
+    const iOSDevices = /(iPad|iPhone|iPod)/.test(ua) || /Mac/.test(platform) && 'ontouchend' in document;
+    return iOSDevices;
+  }, []);
 
   useEffect(() => {
     const checkDarkMode = () => {
@@ -128,17 +135,17 @@ export const RoadmapPage = ({ copy, locale }: RoadmapPageProps): ReactElement =>
               <motion.section
                 key={status}
                 initial={
-                  prefersReducedMotion
+                  (prefersReducedMotion || isIOS)
                     ? undefined
                     : { opacity: 0, y: 18 }
                 }
                 animate={
-                  prefersReducedMotion
+                  (prefersReducedMotion || isIOS)
                     ? undefined
                     : { opacity: 1, y: 0 }
                 }
                 transition={
-                  prefersReducedMotion
+                  (prefersReducedMotion || isIOS)
                     ? undefined
                     : { duration: 0.5, delay: index * 0.08, ease: defaultEase }
                 }
@@ -184,6 +191,7 @@ export const RoadmapPage = ({ copy, locale }: RoadmapPageProps): ReactElement =>
                       focusRingClass={config.focusRingClass}
                       hoverBorderClass={config.hoverBorderClass}
                       prefersReducedMotion={prefersReducedMotion}
+                      disableInViewAnimations={prefersReducedMotion || isIOS}
                       locale={locale}
                     />
                   ))}
@@ -240,6 +248,7 @@ type ArticleCardProps = {
   focusRingClass: string;
   hoverBorderClass: string;
   prefersReducedMotion: boolean;
+  disableInViewAnimations: boolean;
   locale: Locale;
 };
 
@@ -249,6 +258,7 @@ const ArticleCard = ({
   focusRingClass,
   hoverBorderClass,
   prefersReducedMotion,
+  disableInViewAnimations,
   locale,
 }: ArticleCardProps): ReactElement => {
   const summary = selectSummary(item.summary, locale);
@@ -262,10 +272,11 @@ const ArticleCard = ({
         hoverRingClass,
         'hover:[box-shadow:var(--card-shadow)]',
       )}
-      initial={prefersReducedMotion ? undefined : { opacity: 0, y: 14 }}
-      whileInView={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.3 }}
-      transition={prefersReducedMotion ? undefined : { duration: 0.45, ease: defaultEase }}
+      initial={disableInViewAnimations ? undefined : { opacity: 0, y: 14 }}
+      animate={disableInViewAnimations ? undefined : { opacity: 1, y: 0 }}
+      whileInView={disableInViewAnimations ? undefined : { opacity: 1, y: 0 }}
+      viewport={disableInViewAnimations ? undefined : { once: true, amount: 0.3 }}
+      transition={disableInViewAnimations ? undefined : { duration: 0.45, ease: defaultEase }}
     >
       {/* Hover now affects only the frame via ring/border; no color overlays */}
 
