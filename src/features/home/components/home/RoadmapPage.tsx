@@ -8,18 +8,7 @@ import { roadmapItems } from '@shared/data/roadmap';
 import { classNames } from '@shared/utils/classNames';
 import { useMotionPreferences, defaultEase } from '@shared/components/ui/motion';
 import { getInitialThemeState } from '@shared/utils/theme';
-import {
-  Palette,
-  MessageSquarePlus,
-  SplitSquareHorizontal,
-  Map,
-  ListCheck,
-  GitBranch,
-  CloudOff,
-  Handshake,
-  Sparkles,
-  Infinity as InfinitySymbol,
-} from 'lucide-react';
+import { DynamicIcon } from 'lucide-react/dynamic';
 
 type RoadmapPageProps = {
   copy: Copy;
@@ -30,18 +19,9 @@ type ColumnStatus = Exclude<RoadmapStatus, 'meta'>;
 
 const columnStatuses: ColumnStatus[] = ['planned', 'in-progress', 'launched'];
 
-const iconLookup: Partial<Record<RoadmapIconName, (props: { className?: string }) => ReactElement>> = {
-  palette: (props) => <Palette size={20} {...props} />,
-  messageSquarePlus: (props) => <MessageSquarePlus size={20} {...props} />,
-  splitSquareHorizontal: (props) => <SplitSquareHorizontal size={20} {...props} />,
-  map: (props) => <Map size={20} {...props} />,
-  listCheck: (props) => <ListCheck size={20} {...props} />,
-  gitBranch: (props) => <GitBranch size={20} {...props} />,
-  cloudOff: (props) => <CloudOff size={20} {...props} />,
-  handshake: (props) => <Handshake size={20} {...props} />,
-  sparkles: (props) => <Sparkles size={20} {...props} />,
-  infinity: (props) => <InfinitySymbol size={20} {...props} />,
-};
+// Convert camelCase or snake_case names to Lucide's kebab-case
+const toLucideName = (name?: string): string | undefined =>
+  name?.replace(/([a-z0-9])([A-Z])/g, '$1-$2').replace(/_/g, '-').toLowerCase();
 
 const statusAccent = (copy: Copy) =>
   ({
@@ -236,7 +216,7 @@ export const RoadmapPage = ({ copy, locale }: RoadmapPageProps): ReactElement =>
             />
             <div className="relative z-10 space-y-4">
               <div className="flex justify-center">
-                <MetaIcon iconName={grouped.meta.icon} />
+                      <MetaIcon iconName={grouped.meta.icon} />
               </div>
               <h2 id="roadmap-meta-title" className="text-2xl md:text-3xl font-semibold tracking-tight">
                 {selectTitle(grouped.meta.title as RoadmapItem['title'], locale)}
@@ -271,7 +251,6 @@ const ArticleCard = ({
   prefersReducedMotion,
   locale,
 }: ArticleCardProps): ReactElement => {
-  const Icon = item.icon ? iconLookup[item.icon] : undefined;
   const summary = selectSummary(item.summary, locale);
 
   return (
@@ -292,7 +271,12 @@ const ArticleCard = ({
 
       <div className="relative z-10 space-y-4">
         <div className="flex items-start gap-3">
-          {Icon ? <Icon className="mt-0.5 h-5 w-5 text-[var(--color-text)]/75" /> : null}
+          {item.icon ? (
+            <DynamicIcon
+              name={toLucideName(item.icon) || ''}
+              className="mt-0.5 h-5 w-5 text-[var(--color-text)]/75"
+            />
+          ) : null}
           <div className="space-y-1.5">
             <h3 className="text-lg font-medium tracking-tight">
               {selectTitle(item.title, locale)}
@@ -319,7 +303,10 @@ const ArticleCard = ({
 
 const MetaIcon = ({ iconName }: { iconName?: RoadmapIconName }): ReactElement | null => {
   if (!iconName) return null;
-  const Icon = iconLookup[iconName];
-  if (!Icon) return null;
-  return <Icon className="h-8 w-8 text-[var(--color-text)]/70" />;
+  return (
+    <DynamicIcon
+      name={toLucideName(iconName) || ''}
+      className="h-8 w-8 text-[var(--color-text)]/70"
+    />
+  );
 };

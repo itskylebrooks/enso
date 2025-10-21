@@ -1,16 +1,7 @@
 export type RoadmapStatus = 'planned' | 'in-progress' | 'launched' | 'meta';
 
-export type RoadmapIconName =
-  | 'palette'
-  | 'messageSquarePlus'
-  | 'splitSquareHorizontal'
-  | 'map'
-  | 'listCheck'
-  | 'gitBranch'
-  | 'cloudOff'
-  | 'handshake'
-  | 'sparkles'
-  | 'infinity';
+// Allow any Lucide icon name coming from content
+export type RoadmapIconName = string;
 
 export type RoadmapItem = {
   id: string;
