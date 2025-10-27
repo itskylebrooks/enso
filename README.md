@@ -301,10 +301,6 @@ This will check:
 - **Trainer IDs**: `kebab-case` (e.g., `max-mustermann`, `alfred-haase`)
 - **Dojo IDs**: `kebab-case` or abbreviation (e.g., `bsv`, `example-dojo`)
 
-## Status
-
-**v0.9.0 (Beta)** — Core experience is stable and usable. The Feedback page now ships with full in-app submission flows. Content currently focuses on a curated set of techniques to demonstrate depth (variations, versions) rather than breadth.
-
 ## Highlights
 
 - **Library** — Filterable, searchable list of techniques.
@@ -318,17 +314,6 @@ This will check:
 - **Bilingual UI** — **English** and **Deutsch** toggle.
 - **Theme** — Light/Dark mode.
 - **Privacy** — Local-first storage; export/import available for bookmarks/collections.
-
-## Roadmap (next)
-
-- **1.0**
-  - Complete **all 5th kyū techniques** with full variations (direction, hanmi, weapon, version).
-  - **Exam program tables** (Saya-no-Uchi and weapon tables) with clickable cells → technique pages.
-  - Share/print **Collections** (read-only link; clean print layout).
-- **Later**
-  - Advanced search chips (Exact / Close / Fuzzy).
-  - Optional PWA/offline.
-  - Optional trainer pages and contribution flow.
 
 ## Tech Stack
 
@@ -389,96 +374,6 @@ GITHUB_REPO=enso-feedback # Repository to receive feedback issues (accepts "owne
 ```
 
 Mirror the same variables in your Vercel project (Production / Preview / Development) before deploying the API route.
-
-## Project Structure (high level)
-
-```
-src/
-├─ App.tsx
-├─ main.tsx
-├─ index.css
-├─ ErrorBoundary.tsx
-├─ features/
-│  ├─ bookmarks/
-│  │  ├─ components/
-│  │  │  ├─ AddToCollectionMenu.tsx
-│  │  │  ├─ BookmarksView.tsx
-│  │  │  ├─ CollectionsSidebar.tsx
-│  │  │  ├─ GlossaryBookmarkCard.tsx
-│  │  │  └─ progress/
-│  │  └─ store.ts
-│  ├─ glossary/
-│  │  ├─ components/
-│  │  ├─ loader.ts
-│  │  └─ store.ts
-│  ├─ home/
-│  │  ├─ components/
-│  │  │  ├─ feedback/
-│  │  │  ├─ guide/
-│  │  │  ├─ home/
-│  │  │  ├─ settings/
-│  │  │  ├─ HomePage.tsx
-│  │  │  └─ QuoteRotator.tsx
-│  │  └─ index.ts
-│  ├─ search/
-│  │  ├─ components/
-│  │  ├─ indexer.ts
-│  │  ├─ lib.ts
-│  │  ├─ scorer.ts
-│  │  └─ store.ts
-│  └─ technique/
-│     ├─ components/
-│     │  ├─ Library.tsx
-│     │  ├─ TechniqueCard.tsx
-│     │  ├─ TechniquePage.tsx
-│     │  ├─ TechniqueToolbar.tsx
-│     │  └─ ...
-│     ├─ entryPref.ts
-│     └─ store.ts
-├─ generated/
-│  └─ (build outputs: compiled JSON → TS)
-└─ shared/
-   ├─ components/
-   │  ├─ dialogs/
-   │  ├─ layout/
-   │  ├─ media/
-   │  ├─ ui/
-   │  │  ├─ icons.tsx
-   │  │  ├─ motion.ts
-   │  │  ├─ modals/
-   │  │  ├─ Chip.tsx
-   │  │  ├─ Segmented.tsx
-   │  │  ├─ Select.tsx
-   │  │  └─ ...
-   │  ├─ EmphasizedName.tsx
-   │  ├─ LevelBadge.tsx
-   │  ├─ Logo.tsx
-   │  └─ SectionTitle.tsx
-   ├─ constants/
-   │  ├─ i18n.ts
-   │  ├─ storage.ts
-   │  ├─ urls.ts
-   │  ├─ variantMapping.ts
-   │  └─ versionLabels.ts
-   ├─ data/
-   │  ├─ belts.ts
-   │  └─ quotes.ts
-   ├─ hooks/
-   ├─ i18n/
-   ├─ services/
-   ├─ store/
-   ├─ styles/
-   ├─ types/
-   │  └─ content.ts (was schema.ts)
-   └─ utils/
-      ├─ migrations/
-      ├─ array.ts
-      ├─ classNames.ts
-      ├─ format.ts
-      └─ text.ts
-```
-
-**Path aliases** (`@features/*`, `@shared/*`, `@generated/*`, `@content/*`) are configured in `tsconfig.app.json` and `vite.config.ts` for cleaner imports.
 
 ## Data Model (techniques) — v2 (overview)
 
