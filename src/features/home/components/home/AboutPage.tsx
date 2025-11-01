@@ -11,8 +11,8 @@ type AboutPageProps = {
 };
 
 export const AboutPage = ({ copy }: AboutPageProps): ReactElement => (
-  <section className="py-12 px-6 font-sans">
-    <div className="max-w-3xl mx-auto space-y-10">
+  <section className="py-12 font-sans">
+    <div className="container max-w-4xl mx-auto px-4 md:px-6 space-y-10">
       {/* Main Title */}
       <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-center">
         {copy.aboutTitle}
