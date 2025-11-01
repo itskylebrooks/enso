@@ -217,33 +217,56 @@ export const Header = ({
         </a>
         <nav className="flex items-center gap-2">
           <div className="hidden md:flex items-center gap-2">
-            <TabButton active={isGuideActive} onClick={() => onNavigate('guide')}>
-              <span className="flex items-center gap-1">
-                <Compass className="w-4 h-4" />
-                <span>{copy.guideLink}</span>
-              </span>
-            </TabButton>
-            <TabButton active={route === 'library'} onClick={() => onNavigate('library')}>
-              <span className="flex items-center gap-1">
-                <LibraryBig className="w-4 h-4" />
-                <span>{copy.library}</span>
-              </span>
-            </TabButton>
-            <TabButton active={route === 'glossary'} onClick={() => onNavigate('glossary')}>
-              <span className="flex items-center gap-1">
-                <BookOpenText className="w-4 h-4" />
-                <span>{copy.glossary}</span>
-              </span>
-            </TabButton>
             <button
-              ref={searchButtonRef}
               type="button"
-              onClick={() => onSearch?.('mouse')}
-              className="px-3 py-2 rounded-lg border btn-tonal surface-hover inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
-              aria-label={copy.searchBtn}
+              onClick={() => onNavigate('guide')}
+              className={classNames(
+                'px-3 py-2 rounded-lg border inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+                isGuideActive ? 'btn-contrast' : 'btn-tonal surface-hover',
+              )}
+              aria-pressed={isGuideActive}
+              aria-current={isGuideActive ? 'page' : undefined}
+              aria-label={copy.guideLink}
             >
-              <Search className="w-4 h-4" />
+              <Compass className="w-4 h-4" />
             </button>
+            <button
+              type="button"
+              onClick={() => onNavigate('library')}
+              className={classNames(
+                'px-3 py-2 rounded-lg border inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+                route === 'library' ? 'btn-contrast' : 'btn-tonal surface-hover',
+              )}
+              aria-pressed={route === 'library'}
+              aria-current={route === 'library' ? 'page' : undefined}
+              aria-label={copy.library}
+            >
+              <LibraryBig className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => onNavigate('glossary')}
+              className={classNames(
+                'px-3 py-2 rounded-lg border inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+                route === 'glossary' ? 'btn-contrast' : 'btn-tonal surface-hover',
+              )}
+              aria-pressed={route === 'glossary'}
+              aria-current={route === 'glossary' ? 'page' : undefined}
+              aria-label={copy.glossary}
+            >
+              <BookOpenText className="w-4 h-4" />
+            </button>
+            <div className="ml-4">
+              <button
+                ref={searchButtonRef}
+                type="button"
+                onClick={() => onSearch?.('mouse')}
+                className="px-3 py-2 rounded-lg border btn-tonal surface-hover inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+                aria-label={copy.searchBtn}
+              >
+                <Search className="w-4 h-4" />
+              </button>
+            </div>
             <button
               type="button"
               onClick={() => onNavigate('bookmarks')}
@@ -532,21 +555,6 @@ export const Header = ({
 };
 
 type ButtonProps = PropsWithChildren<{ active?: boolean; label?: string; onClick: () => void }>;
-
-const TabButton = ({ active = false, children, onClick }: ButtonProps): ReactElement => (
-  <button
-    type="button"
-    onClick={onClick}
-    className={classNames(
-      'px-3 py-1.5 rounded-lg text-sm border',
-      active ? 'btn-contrast' : 'btn-tonal surface-hover',
-    )}
-    aria-pressed={active}
-    aria-current={active ? 'page' : undefined}
-  >
-    {children}
-  </button>
-);
 
 const TextButton = forwardRef<HTMLButtonElement, ButtonProps>(({ children, onClick }, ref) => (
   <button
