@@ -202,7 +202,7 @@ export const Header = ({
       animate={{ y: isMobile && !isVisible ? -80 : 0 }}
       transition={{ duration: 0.3, ease: 'easeInOut' }}
     >
-      <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div className="max-w-4xl mx-auto px-4 md:px-6 py-3 flex items-center justify-between">
         <a
           href="/"
           onClick={(event) => {
