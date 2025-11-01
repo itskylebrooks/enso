@@ -217,12 +217,6 @@ export const Header = ({
         </a>
         <nav className="flex items-center gap-2">
           <div className="hidden md:flex items-center gap-2">
-            <TextButton ref={searchButtonRef} onClick={() => onSearch?.('mouse')}>
-              <span className="flex items-center gap-1">
-                <Search className="w-4 h-4" />
-                <span>{copy.searchBtn}</span>
-              </span>
-            </TextButton>
             <TabButton active={isGuideActive} onClick={() => onNavigate('guide')}>
               <span className="flex items-center gap-1">
                 <Sprout className="w-4 h-4" />
@@ -241,24 +235,48 @@ export const Header = ({
                 <span>{copy.glossary}</span>
               </span>
             </TabButton>
-            <TabButton active={route === 'bookmarks'} onClick={() => onNavigate('bookmarks')}>
-              <span className="flex items-center gap-1">
-                <Bookmark className="w-4 h-4" />
-                <span>{copy.progress}</span>
-              </span>
-            </TabButton>
+            <button
+              ref={searchButtonRef}
+              type="button"
+              onClick={() => onSearch?.('mouse')}
+              className="px-3 py-2 rounded-lg border btn-tonal surface-hover inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+              aria-label={copy.searchBtn}
+            >
+              <Search className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => onNavigate('bookmarks')}
+              className={classNames(
+                'px-3 py-2 rounded-lg border inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+                route === 'bookmarks' ? 'btn-contrast' : 'btn-tonal surface-hover',
+              )}
+              aria-pressed={route === 'bookmarks'}
+              aria-current={route === 'bookmarks' ? 'page' : undefined}
+              aria-label={copy.progress}
+            >
+              <Bookmark className="w-4 h-4" />
+            </button>
             {/* Desktop More dropdown */}
             <div className="relative">
               <button
                 ref={moreButtonRef}
                 type="button"
                 onClick={() => setMoreDesktopOpen((v) => !v)}
-                className="px-3 py-1.5 rounded-lg text-sm border btn-tonal surface-hover inline-flex items-center gap-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+                className="px-3 py-2 rounded-lg border btn-tonal surface-hover inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
                 aria-haspopup="menu"
                 aria-expanded={moreDesktopOpen}
+                aria-label={copy.more}
               >
-                <span>{copy.more}</span>
-                <ChevronDown className="w-4 h-4" />
+                <motion.span
+                  initial={false}
+                  animate={{ rotate: moreDesktopOpen ? 180 : 0 }}
+                  transition={{ duration: 0.2, ease: defaultEase }}
+                  className="inline-flex"
+                  aria-hidden
+                >
+                  <ChevronDown className="w-4 h-4" />
+                </motion.span>
               </button>
               <AnimatePresence>
                 {moreDesktopOpen && (
