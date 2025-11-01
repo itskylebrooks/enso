@@ -1,15 +1,12 @@
-import { useCallback, useEffect, useMemo, useRef, useState, lazy, Suspense, type ReactElement } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactElement } from 'react';
 import { motion, AnimatePresence, MotionConfig } from 'motion/react';
 import { Header } from '@shared/components/layout/Header';
-import BreathingDot from '@shared/components/ui/BreathingDot';
 import { FilterPanel } from './features/search/components/FilterPanel';
 import { Library } from '@features/technique/components/Library';
-// Lazy-load heavy pages to keep initial bundle small
-const BookmarksView = lazy(() => import('./features/bookmarks/components/BookmarksView').then(m => ({ default: m.BookmarksView })));
+import { BookmarksView } from './features/bookmarks/components/BookmarksView';
 import { SearchOverlay } from './features/search/components/SearchOverlay';
 import { SettingsModal } from '@features/home/components/settings/SettingsModal';
-// Lazy-load heavy pages to reduce initial bundle size
-const TechniquePage = lazy(() => import('@features/technique/components/TechniquePage').then(m => ({ default: m.TechniquePage })));
+import { TechniquePage } from '@features/technique/components/TechniquePage';
 import { type CollectionOption } from '@features/technique/components/TechniqueHeader';
 import { Toast } from '@shared/components/ui/Toast';
 import { MobileFilters } from '@shared/components/ui/MobileFilters';
@@ -19,10 +16,9 @@ import { AdvancedPrograms } from '@features/home/components/home/AdvancedProgram
 import { DanOverview } from '@features/home/components/home/DanOverview';
 import { GuidePage } from '@features/home/components/home/GuidePage';
 import { RoadmapPage } from '@features/home/components/home/RoadmapPage';
-const FeedbackPage = lazy(() => import('@features/home/components/feedback/FeedbackPage').then(m => ({ default: m.FeedbackPage })));
+import { FeedbackPage } from '@features/home/components/feedback/FeedbackPage';
 import type { FeedbackType } from '@features/home/components/feedback/FeedbackPage';
-const GlossaryPage = lazy(() => import('./features/glossary').then(m => ({ default: m.GlossaryPage })));
-const GlossaryDetailPage = lazy(() => import('./features/glossary').then(m => ({ default: m.GlossaryDetailPage })));
+import { GlossaryPage, GlossaryDetailPage } from './features/glossary';
 import { GlossaryFilterPanel, MobileGlossaryFilters, loadAllTerms } from './features/glossary';
 import { ConfirmClearModal } from './shared/components/dialogs/ConfirmClearDialog';
 import { setAnimationsDisabled, useMotionPreferences } from '@shared/components/ui/motion';
@@ -1211,73 +1207,57 @@ export default function App(): ReactElement {
 
   if (currentTechnique) {
     mainContent = (
-      <Suspense
-        fallback={
-          <div className="loader-center-viewport">
-            <BreathingDot label={copy.loading} size={96} />
-          </div>
-        }
+      <motion.div
+        initial={skipEntranceAnimations ? { opacity: 1, y: 0 } : { opacity: 0, y: 6 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={pageMotion.transition}
+        style={{ willChange: 'transform, opacity' }}
       >
-        <motion.div
-          initial={skipEntranceAnimations ? { opacity: 1, y: 0 } : { opacity: 0, y: 6 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={pageMotion.transition}
-          style={{ willChange: 'transform, opacity' }}
-        >
-        <TechniquePage
-          technique={currentTechnique}
-          progress={currentProgress ?? null}
-          copy={copy}
-          locale={locale}
-          backLabel={techniqueBackLabel}
-          onBack={() => closeTechnique()}
-          onToggleBookmark={() => toggleBookmark(currentTechnique, currentProgress ?? null)}
-          collections={db.collections}
-          bookmarkCollections={db.bookmarkCollections}
-          onAssignToCollection={(collectionId) => assignToCollection(currentTechnique.id, collectionId)}
-          onRemoveFromCollection={(collectionId) => removeFromCollection(currentTechnique.id, collectionId)}
-          onOpenGlossary={openGlossaryTerm}
-          onFeedbackClick={() => goToFeedback()}
-          onCreateCollection={createCollection}
-        />
-        </motion.div>
-      </Suspense>
+      <TechniquePage
+        technique={currentTechnique}
+        progress={currentProgress ?? null}
+        copy={copy}
+        locale={locale}
+        backLabel={techniqueBackLabel}
+        onBack={() => closeTechnique()}
+        onToggleBookmark={() => toggleBookmark(currentTechnique, currentProgress ?? null)}
+        collections={db.collections}
+        bookmarkCollections={db.bookmarkCollections}
+        onAssignToCollection={(collectionId) => assignToCollection(currentTechnique.id, collectionId)}
+        onRemoveFromCollection={(collectionId) => removeFromCollection(currentTechnique.id, collectionId)}
+        onOpenGlossary={openGlossaryTerm}
+        onFeedbackClick={() => goToFeedback()}
+        onCreateCollection={createCollection}
+      />
+      </motion.div>
     );
   } else if (currentGlossaryTerm) {
     // Render glossary detail when an active glossary term is set, regardless of current route
     mainContent = (
-      <Suspense
-        fallback={
-          <div className="loader-center-viewport">
-            <BreathingDot label={copy.loading} size={96} />
-          </div>
-        }
-      >
-        <GlossaryDetailPage
-          slug={activeSlug!}
-          copy={copy}
-          locale={locale}
-          backLabel={glossaryBackLabel}
-          // Back should navigate to the route the user came from (stored in history state) —
-          // when opened from bookmarks the current `route` will still be 'bookmarks', so navigate there.
-          onBack={() => navigateTo(route, { replace: true })}
-          isBookmarked={Boolean(currentGlossaryProgress?.bookmarked)}
-          onToggleBookmark={() => updateGlossaryProgress(activeSlug!, { bookmarked: !currentGlossaryProgress?.bookmarked })}
-          collections={glossaryCollectionOptions}
-          onToggleCollection={(collectionId, nextChecked) => {
-            if (nextChecked) {
-              assignGlossaryToCollection(activeSlug!, collectionId);
-            } else {
-              removeGlossaryFromCollection(activeSlug!, collectionId);
-            }
-          }}
-          onNavigateToGlossaryWithFilter={(category) => {
-            setGlossaryFilters({ category });
-            prefetchGlossary();
-            navigateTo('glossary');
-          }}
-        />
-      </Suspense>
+      <GlossaryDetailPage
+        slug={activeSlug!}
+        copy={copy}
+        locale={locale}
+        backLabel={glossaryBackLabel}
+        // Back should navigate to the route the user came from (stored in history state) —
+        // when opened from bookmarks the current `route` will still be 'bookmarks', so navigate there.
+        onBack={() => navigateTo(route, { replace: true })}
+        isBookmarked={Boolean(currentGlossaryProgress?.bookmarked)}
+        onToggleBookmark={() => updateGlossaryProgress(activeSlug!, { bookmarked: !currentGlossaryProgress?.bookmarked })}
+        collections={glossaryCollectionOptions}
+        onToggleCollection={(collectionId, nextChecked) => {
+          if (nextChecked) {
+            assignGlossaryToCollection(activeSlug!, collectionId);
+          } else {
+            removeGlossaryFromCollection(activeSlug!, collectionId);
+          }
+        }}
+        onNavigateToGlossaryWithFilter={(category) => {
+          setGlossaryFilters({ category });
+          prefetchGlossary();
+          navigateTo('glossary');
+        }}
+      />
     );
   } else if (techniqueNotFound) {
     mainContent = (
@@ -1345,24 +1325,16 @@ export default function App(): ReactElement {
     );
   } else if (route === 'feedback') {
     mainContent = (
-      <Suspense
-        fallback={
-          <div className="loader-center-viewport">
-            <BreathingDot label={copy.loading} size={96} />
-          </div>
-        }
-      >
-        <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={pageMotion.transition}>
-        <FeedbackPage
-          copy={copy}
-          locale={locale}
-          techniques={db.techniques}
-          onBack={() => navigateTo('library')}
-          initialType={feedbackInitialType}
-          onConsumeInitialType={() => setFeedbackInitialType(null)}
-        />
-        </motion.div>
-      </Suspense>
+      <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={pageMotion.transition}>
+      <FeedbackPage
+        copy={copy}
+        locale={locale}
+        techniques={db.techniques}
+        onBack={() => navigateTo('library')}
+        initialType={feedbackInitialType}
+        onConsumeInitialType={() => setFeedbackInitialType(null)}
+      />
+      </motion.div>
     );
   } else {
     mainContent = (
@@ -1429,58 +1401,54 @@ export default function App(): ReactElement {
         )}
 
         {route === 'bookmarks' && (
-  <Suspense fallback={<div className="loader-center-viewport"><BreathingDot label={copy.loading} size={96} /></div>}>
-            <BookmarksView
-            copy={copy}
-            locale={locale}
-            techniques={db.techniques}
-            glossaryTerms={glossaryTerms}
-            progress={db.progress}
-            glossaryProgress={db.glossaryProgress}
-            collections={db.collections}
-            bookmarkCollections={db.bookmarkCollections}
-            glossaryBookmarkCollections={db.glossaryBookmarkCollections}
-            selectedCollectionId={selectedCollectionId}
-            onSelectCollection={(id) => setSelectedCollectionId(id)}
-            onCreateCollection={createCollection}
-            onRenameCollection={renameCollection}
-            onDeleteCollection={deleteCollection}
-            onAssign={assignToCollection}
-            onUnassign={removeFromCollection}
-            onAssignGlossary={assignGlossaryToCollection}
-            onUnassignGlossary={removeGlossaryFromCollection}
-            onOpenTechnique={openTechnique}
-            onOpenGlossaryTerm={(slug) => openGlossaryTerm(slug)}
-            />
-          </Suspense>
+          <BookmarksView
+          copy={copy}
+          locale={locale}
+          techniques={db.techniques}
+          glossaryTerms={glossaryTerms}
+          progress={db.progress}
+          glossaryProgress={db.glossaryProgress}
+          collections={db.collections}
+          bookmarkCollections={db.bookmarkCollections}
+          glossaryBookmarkCollections={db.glossaryBookmarkCollections}
+          selectedCollectionId={selectedCollectionId}
+          onSelectCollection={(id) => setSelectedCollectionId(id)}
+          onCreateCollection={createCollection}
+          onRenameCollection={renameCollection}
+          onDeleteCollection={deleteCollection}
+          onAssign={assignToCollection}
+          onUnassign={removeFromCollection}
+          onAssignGlossary={assignGlossaryToCollection}
+          onUnassignGlossary={removeGlossaryFromCollection}
+          onOpenTechnique={openTechnique}
+          onOpenGlossaryTerm={(slug) => openGlossaryTerm(slug)}
+          />
         )}
 
         {route === 'glossary' && (
           <>
             {activeSlug ? (
-              <Suspense fallback={<div className="loader-center-viewport"><BreathingDot label={copy.loading} size={96} /></div>}>
-                <GlossaryDetailPage
-                  slug={activeSlug}
-                  copy={copy}
-                  locale={locale}
-                  backLabel={glossaryBackLabel}
-                  onBack={() => navigateTo('glossary', { replace: true })}
-                  isBookmarked={Boolean(currentGlossaryProgress?.bookmarked)}
-                  onToggleBookmark={() => updateGlossaryProgress(activeSlug, { bookmarked: !currentGlossaryProgress?.bookmarked })}
-                  collections={glossaryCollectionOptions}
-                  onToggleCollection={(collectionId, nextChecked) => {
-                    if (nextChecked) {
-                      assignGlossaryToCollection(activeSlug, collectionId);
-                    } else {
-                      removeGlossaryFromCollection(activeSlug, collectionId);
-                    }
-                  }}
-                  onNavigateToGlossaryWithFilter={(category) => {
-                    setGlossaryFilters({ category });
-                    navigateTo('glossary');
-                  }}
-                />
-              </Suspense>
+              <GlossaryDetailPage
+                slug={activeSlug}
+                copy={copy}
+                locale={locale}
+                backLabel={glossaryBackLabel}
+                onBack={() => navigateTo('glossary', { replace: true })}
+                isBookmarked={Boolean(currentGlossaryProgress?.bookmarked)}
+                onToggleBookmark={() => updateGlossaryProgress(activeSlug, { bookmarked: !currentGlossaryProgress?.bookmarked })}
+                collections={glossaryCollectionOptions}
+                onToggleCollection={(collectionId, nextChecked) => {
+                  if (nextChecked) {
+                    assignGlossaryToCollection(activeSlug, collectionId);
+                  } else {
+                    removeGlossaryFromCollection(activeSlug, collectionId);
+                  }
+                }}
+                onNavigateToGlossaryWithFilter={(category) => {
+                  setGlossaryFilters({ category });
+                  navigateTo('glossary');
+                }}
+              />
             ) : (
               <>
                 <div className="md:hidden">
@@ -1501,14 +1469,12 @@ export default function App(): ReactElement {
                     />
                   </aside>
                   <section>
-                    <Suspense fallback={<div className="loader-center-viewport"><BreathingDot label={copy.loading} size={96} /></div>}>
-                      <GlossaryPage
-                      locale={locale}
-                      copy={copy}
-                      filters={glossaryFilters}
-                      onOpenTerm={openGlossaryTerm}
-                      />
-                    </Suspense>
+                    <GlossaryPage
+                    locale={locale}
+                    copy={copy}
+                    filters={glossaryFilters}
+                    onOpenTerm={openGlossaryTerm}
+                    />
                   </section>
                 </div>
               </>
