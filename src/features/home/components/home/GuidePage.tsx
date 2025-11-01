@@ -267,8 +267,8 @@ export const GuidePage = ({
       };
 
   return (
-    <section className="py-12 px-5 md:px-8">
-      <div className="max-w-4xl mx-auto space-y-10">
+    <section className="py-12">
+      <div className="container max-w-4xl mx-auto px-4 md:px-6 space-y-10">
 
         {/* Movements & Stances */}
         <motion.article className="space-y-4" {...animationProps}>
