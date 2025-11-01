@@ -10,17 +10,31 @@ import { Logo } from '@shared/components';
 // Hook to detect scroll direction and manage smart sticky header for mobile
 const useSmartSticky = () => {
   const [isVisible, setIsVisible] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
   const lastScrollY = useRef(0);
   const headerRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    // Only apply smart sticky behavior on mobile (below md breakpoint)
+    // Check if mobile on mount and on resize
     const mediaQuery = window.matchMedia('(max-width: 768px)');
     
-    if (!mediaQuery.matches) {
-      setIsVisible(true);
-      return;
-    }
+    const handleMediaChange = (e: MediaQueryListEvent | MediaQueryList) => {
+      setIsMobile(e.matches);
+      if (!e.matches) {
+        setIsVisible(true);
+      }
+    };
+
+    setIsMobile(mediaQuery.matches);
+    mediaQuery.addEventListener('change', handleMediaChange);
+
+    return () => {
+      mediaQuery.removeEventListener('change', handleMediaChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isMobile) return;
 
     let ticking = false;
 
@@ -51,9 +65,9 @@ const useSmartSticky = () => {
 
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [isMobile]);
 
-  return { isVisible, headerRef };
+  return { isVisible, headerRef, isMobile };
 };
 
 type HeaderProps = {
@@ -79,7 +93,7 @@ export const Header = ({
   const [moreDesktopOpen, setMoreDesktopOpen] = useState(false);
   const [moreMobileOpen, setMoreMobileOpen] = useState(false);
   const { overlayMotion, prefersReducedMotion } = useMotionPreferences();
-  const { isVisible, headerRef } = useSmartSticky();
+  const { isVisible, headerRef, isMobile } = useSmartSticky();
   const isGuideActive = route === 'guide' || route === 'guideAdvanced' || route === 'guideDan';
   const menuRef = useRef<HTMLDivElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
@@ -184,8 +198,8 @@ export const Header = ({
   return (
     <motion.header 
       ref={headerRef}
-      className="surface border-b surface-border sticky top-0 z-20 backdrop-blur md:static"
-      animate={{ y: isVisible ? 0 : -80 }}
+      className="surface border-b surface-border sticky top-0 z-20 backdrop-blur"
+      animate={{ y: isMobile && !isVisible ? -80 : 0 }}
       transition={{ duration: 0.3, ease: 'easeInOut' }}
     >
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
