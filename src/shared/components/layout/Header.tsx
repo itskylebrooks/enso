@@ -7,6 +7,55 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useMotionPreferences, defaultEase } from '../ui/motion';
 import { Logo } from '@shared/components';
 
+// Hook to detect scroll direction and manage smart sticky header for mobile
+const useSmartSticky = () => {
+  const [isVisible, setIsVisible] = useState(true);
+  const lastScrollY = useRef(0);
+  const headerRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    // Only apply smart sticky behavior on mobile (below md breakpoint)
+    const mediaQuery = window.matchMedia('(max-width: 768px)');
+    
+    if (!mediaQuery.matches) {
+      setIsVisible(true);
+      return;
+    }
+
+    let ticking = false;
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const currentScrollY = window.scrollY;
+          
+          // Scrolling down - hide header
+          if (currentScrollY > lastScrollY.current && currentScrollY > 50) {
+            setIsVisible(false);
+          } 
+          // Scrolling up - show header
+          else if (currentScrollY < lastScrollY.current) {
+            setIsVisible(true);
+          }
+          // Near top - always show
+          else if (currentScrollY < 50) {
+            setIsVisible(true);
+          }
+
+          lastScrollY.current = currentScrollY;
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  return { isVisible, headerRef };
+};
+
 type HeaderProps = {
   copy: Copy;
   route: AppRoute;
@@ -30,6 +79,7 @@ export const Header = ({
   const [moreDesktopOpen, setMoreDesktopOpen] = useState(false);
   const [moreMobileOpen, setMoreMobileOpen] = useState(false);
   const { overlayMotion, prefersReducedMotion } = useMotionPreferences();
+  const { isVisible, headerRef } = useSmartSticky();
   const isGuideActive = route === 'guide' || route === 'guideAdvanced' || route === 'guideDan';
   const menuRef = useRef<HTMLDivElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
@@ -132,7 +182,12 @@ export const Header = ({
   }, [moreDesktopOpen]);
 
   return (
-    <header className="surface border-b surface-border sticky top-0 z-20 backdrop-blur">
+    <motion.header 
+      ref={headerRef}
+      className="surface border-b surface-border sticky top-0 z-20 backdrop-blur md:static"
+      animate={{ y: isVisible ? 0 : -80 }}
+      transition={{ duration: 0.3, ease: 'easeInOut' }}
+    >
       <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
         <a
           href="/"
@@ -440,7 +495,7 @@ export const Header = ({
           </div>
         </nav>
       </div>
-    </header>
+    </motion.header>
   );
 };
 
