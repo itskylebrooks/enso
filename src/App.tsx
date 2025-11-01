@@ -408,34 +408,18 @@ export default function App(): ReactElement {
     }
   }, [animationsDisabled]);
 
-  // Prefetch helpers for lazily loaded chunks (kept idempotent)
-  const prefetchedTechniqueRef = useRef(false);
-  const prefetchedFeedbackRef = useRef(false);
-  const prefetchedGlossaryRef = useRef(false);
-  const prefetchedBookmarksRef = useRef(false);
+  // Prefetch helpers - no longer needed since pages are statically imported
   const prefetchTechniquePage = useCallback(() => {
-    if (!prefetchedTechniqueRef.current) {
-      prefetchedTechniqueRef.current = true;
-      void import('@features/technique/components/TechniquePage');
-    }
+    // No-op: TechniquePage is now statically imported
   }, []);
   const prefetchFeedbackPage = useCallback(() => {
-    if (!prefetchedFeedbackRef.current) {
-      prefetchedFeedbackRef.current = true;
-      void import('@features/home/components/feedback/FeedbackPage');
-    }
+    // No-op: FeedbackPage is now statically imported
   }, []);
   const prefetchGlossary = useCallback(() => {
-    if (!prefetchedGlossaryRef.current) {
-      prefetchedGlossaryRef.current = true;
-      void import('./features/glossary');
-    }
+    // No-op: GlossaryPage is now statically imported
   }, []);
   const prefetchBookmarks = useCallback(() => {
-    if (!prefetchedBookmarksRef.current) {
-      prefetchedBookmarksRef.current = true;
-      void import('./features/bookmarks/components/BookmarksView');
-    }
+    // No-op: BookmarksView is now statically imported
   }, []);
 
   const navigateTo = useCallback(
