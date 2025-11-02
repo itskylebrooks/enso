@@ -4,7 +4,7 @@ import type { ChangeEvent } from 'react';
 import type { Copy } from '@shared/constants/i18n';
 import type { DB, Locale, Theme } from '@shared/types';
 import { classNames } from '@shared/utils/classNames';
-import { exportDB, parseIncomingDB, importData } from '@shared/services/storageService';
+import { exportDB, parseIncomingDB, importData, saveDB } from '@shared/services/storageService';
 import { SectionTitle } from '@shared/components';
 import { useFocusTrap } from '@shared/hooks/useFocusTrap';
 import { useMotionPreferences } from '@shared/components/ui/motion';
@@ -280,6 +280,9 @@ export const SettingsModal = ({
                       try {
                         const importedData = parseIncomingDB(String(reader.result));
                         const mergedDB = importData(db, importedData);
+                        // Save the merged DB directly to localStorage before reloading
+                        // This ensures data persists before the page reload happens
+                        saveDB(mergedDB);
                         onChangeDB(mergedDB);
                         // Reload the page to apply imported preferences
                         window.location.reload();
