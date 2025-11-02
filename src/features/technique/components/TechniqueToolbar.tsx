@@ -182,7 +182,7 @@ export const TechniqueToolbar = ({
       aria-label="Technique variant selector"
     >
       {/* Hanmi select - always show */}
-      <fieldset className="flex-1 sm:flex-initial sm:min-w-[200px]">
+      <fieldset className="flex-1 sm:flex-initial sm:min-w-[160px]">
         <legend className="sr-only">{labels.hanmi}</legend>
         <Select
           options={hanmiOptions}
@@ -193,7 +193,7 @@ export const TechniqueToolbar = ({
       </fieldset>
 
       {/* Direction select */}
-      <fieldset className="flex-1 sm:flex-initial sm:min-w-[200px]">
+      <fieldset className="flex-1 sm:flex-initial sm:min-w-[140px]">
         <legend className="sr-only">{labels.direction}</legend>
         <Select
           options={directionOptions}
@@ -204,7 +204,7 @@ export const TechniqueToolbar = ({
       </fieldset>
 
       {/* Version select */}
-      <fieldset className="flex-1 sm:flex-initial sm:min-w-[240px]">
+      <fieldset className="flex-1 sm:flex-initial sm:min-w-[200px]">
         <legend className="sr-only">{labels.version}</legend>
         <Select
           options={versionOptions}
@@ -216,7 +216,7 @@ export const TechniqueToolbar = ({
       </fieldset>
 
       {/* Weapon select */}
-      <fieldset className="flex-1 sm:flex-initial sm:min-w-[200px]">
+      <fieldset className="flex-1 sm:flex-initial sm:min-w-[140px]">
         <legend className="sr-only">{labels.weapon}</legend>
         <Select
           options={weaponOptions}
