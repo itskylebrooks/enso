@@ -505,6 +505,8 @@ export const exportDB = (db: DB): string => {
       collections: exportCollections,
       bookmarkCollections: exportBookmarkCollections,
       glossaryBookmarkCollections: exportGlossaryBookmarkCollections,
+      animationsDisabled: loadAnimationsDisabled(),
+      pageLabelsEnabled: loadPageLabelsEnabled(),
     },
     null,
     2,
@@ -517,6 +519,8 @@ export const parseIncomingDB = (raw: string): {
   collections?: Array<{ name: string; icon?: string | null }>;
   bookmarkCollections?: Array<{ techniqueId: string; collectionName: string }>;
   glossaryBookmarkCollections?: Array<{ termId: string; collectionName: string }>;
+  animationsDisabled?: boolean;
+  pageLabelsEnabled?: boolean;
 } => {
   const parsed = JSON.parse(raw) as {
     appName?: string;
@@ -525,6 +529,8 @@ export const parseIncomingDB = (raw: string): {
     collections?: Array<{ name: string; icon?: string | null }>;
     bookmarkCollections?: Array<{ techniqueId: string; collectionName: string }>;
     glossaryBookmarkCollections?: Array<{ termId: string; collectionName: string }>;
+    animationsDisabled?: boolean;
+    pageLabelsEnabled?: boolean;
   };
   
   if (!parsed || typeof parsed !== 'object') {
@@ -541,6 +547,8 @@ export const parseIncomingDB = (raw: string): {
     collections: Array.isArray(parsed.collections) ? parsed.collections : [],
     bookmarkCollections: Array.isArray(parsed.bookmarkCollections) ? parsed.bookmarkCollections : [],
     glossaryBookmarkCollections: Array.isArray(parsed.glossaryBookmarkCollections) ? parsed.glossaryBookmarkCollections : [],
+    animationsDisabled: typeof parsed.animationsDisabled === 'boolean' ? parsed.animationsDisabled : undefined,
+    pageLabelsEnabled: typeof parsed.pageLabelsEnabled === 'boolean' ? parsed.pageLabelsEnabled : undefined,
   };
 };
 
@@ -639,6 +647,14 @@ export const importData = (currentDB: DB, importedData: ReturnType<typeof parseI
     })
     .filter((entry): entry is GlossaryBookmarkCollection => Boolean(entry));
 
+  // Restore preferences if they were included in the export
+  if (typeof importedData.animationsDisabled === 'boolean') {
+    saveAnimationsDisabled(importedData.animationsDisabled);
+  }
+  if (typeof importedData.pageLabelsEnabled === 'boolean') {
+    savePageLabelsEnabled(importedData.pageLabelsEnabled);
+  }
+
   return {
     ...currentDB,
     progress: updatedProgress,
@@ -653,6 +669,9 @@ export const clearDB = (): DB => {
   if (isBrowser) {
     window.localStorage.removeItem(STORAGE_KEY);
   }
+  // Reset preferences to defaults (animations OFF, page labels ON)
+  saveAnimationsDisabled(false);
+  savePageLabelsEnabled(true);
   return buildDefaultDB();
 };
 

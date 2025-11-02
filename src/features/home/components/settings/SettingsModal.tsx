@@ -200,20 +200,6 @@ export const SettingsModal = ({
               <div className="mt-2 flex flex-wrap gap-2">
                 <button
                   type="button"
-                  onClick={() => onChangeAnimations(false)}
-                  className={classNames(
-                    'px-3 py-2 text-sm rounded-xl border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
-                    !animationsDisabled 
-                      ? 'btn-contrast' 
-                      : 'btn-tonal surface-hover',
-                  )}
-                  aria-pressed={!animationsDisabled}
-                  aria-label={copy.disableAnimationsOff}
-                >
-                  {copy.disableAnimationsOff}
-                </button>
-                <button
-                  type="button"
                   onClick={() => onChangeAnimations(true)}
                   className={classNames(
                     'px-3 py-2 text-sm rounded-xl border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
@@ -222,6 +208,20 @@ export const SettingsModal = ({
                       : 'btn-tonal surface-hover',
                   )}
                   aria-pressed={animationsDisabled}
+                  aria-label={copy.disableAnimationsOff}
+                >
+                  {copy.disableAnimationsOff}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onChangeAnimations(false)}
+                  className={classNames(
+                    'px-3 py-2 text-sm rounded-xl border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+                    !animationsDisabled 
+                      ? 'btn-contrast' 
+                      : 'btn-tonal surface-hover',
+                  )}
+                  aria-pressed={!animationsDisabled}
                   aria-label={copy.disableAnimationsOn}
                 >
                   {copy.disableAnimationsOn}
@@ -281,8 +281,8 @@ export const SettingsModal = ({
                         const importedData = parseIncomingDB(String(reader.result));
                         const mergedDB = importData(db, importedData);
                         onChangeDB(mergedDB);
-                        // Close settings modal and show success
-                        onClose();
+                        // Reload the page to apply imported preferences
+                        window.location.reload();
                       } catch (error) {
                         const reason = error instanceof Error ? error.message : 'Unknown error';
                         window.alert(`Import failed: ${reason}`);

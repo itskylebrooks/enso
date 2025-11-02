@@ -553,6 +553,9 @@ export default function App(): ReactElement {
 
   const handleConfirmClear = useCallback(() => {
     setDB(clearDB());
+    // Reload preferences after clearing (clearDB resets them to defaults)
+    setAnimationsDisabledState(loadAnimationsDisabled());
+    setPageLabelsEnabledState(loadPageLabelsEnabled());
     handleCancelClear();
     showToast(copy.toastDataCleared);
   }, [copy.toastDataCleared, handleCancelClear, setDB, showToast]);
