@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState, type ReactElement } 
 import { motion, AnimatePresence, MotionConfig } from 'motion/react';
 import { Header } from '@shared/components/layout/Header';
 import { FilterPanel } from './features/search/components/FilterPanel';
+import { ExpandableFilterBar } from '@shared/components/ui/ExpandableFilterBar';
 import { Library } from '@features/technique/components/Library';
 import { BookmarksView } from './features/bookmarks/components/BookmarksView';
 import { SearchOverlay } from './features/search/components/SearchOverlay';
@@ -1322,7 +1323,7 @@ export default function App(): ReactElement {
     );
   } else {
     mainContent = (
-      <div className="max-w-6xl mx-auto px-4 py-4 space-y-4">
+      <div className="container max-w-4xl mx-auto px-4 md:px-6 py-4 space-y-4">
         {route === 'library' && (
           <>
             <div className="md:hidden">
@@ -1342,49 +1343,50 @@ export default function App(): ReactElement {
               />
             </div>
             {/* Mobile CTA removed here — now rendered inside the MobileFilters panel */}
-            <div className="grid md:grid-cols-[16rem,1fr] gap-6">
-              <aside className="hidden md:block surface border surface-border rounded-2xl p-3 h-max sticky top-20">
-                <FilterPanel
-                  copy={copy}
-                  locale={locale}
-                  filters={filters}
-                  categories={categories}
-                  attacks={attacks}
-                  stances={stances}
-                  weapons={weapons}
-                  levels={gradeOrder}
-                  trainers={trainers}
-                  onChange={setFilters}
-                />
-                {/* Desktop CTA under filter panel */}
-                <div className="mt-3">
-                  <button
-                    type="button"
-                    onClick={() => goToFeedback('newTechnique')}
-                    onMouseEnter={prefetchFeedbackPage}
-                    onFocus={prefetchFeedbackPage}
-                    className="w-full inline-flex items-center justify-center gap-2 rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2 text-sm transition-soft hover-border-adaptive"
-                  >
-                    <PencilLine width={20} height={20} aria-hidden />
-                    {copy.feedbackAddTechniqueCta}
-                  </button>
-                </div>
-              </aside>
-              <section>
-                {/* Button moved to under filters (desktop) and above grid (mobile) */}
-                <Library
-                  copy={copy}
-                  locale={locale}
-                  techniques={filteredTechniques}
-                  progress={db.progress}
-                  onOpen={openTechnique}
-                />
-              </section>
+            <div className="relative">
+            <ExpandableFilterBar label={copy.filters}>
+              <FilterPanel
+                copy={copy}
+                locale={locale}
+                filters={filters}
+                categories={categories}
+                attacks={attacks}
+                stances={stances}
+                weapons={weapons}
+                levels={gradeOrder}
+                trainers={trainers}
+                onChange={setFilters}
+              />
+              {/* Desktop CTA under filter panel */}
+              <div className="mt-3">
+                <button
+                  type="button"
+                  onClick={() => goToFeedback('newTechnique')}
+                  onMouseEnter={prefetchFeedbackPage}
+                  onFocus={prefetchFeedbackPage}
+                  className="w-full inline-flex items-center justify-center gap-2 rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2 text-sm transition-soft hover-border-adaptive"
+                >
+                  <PencilLine width={20} height={20} aria-hidden />
+                  {copy.feedbackAddTechniqueCta}
+                </button>
+              </div>
+            </ExpandableFilterBar>
+            <section>
+              {/* Button moved to under filters (desktop) and above grid (mobile) */}
+              <Library
+                copy={copy}
+                locale={locale}
+                techniques={filteredTechniques}
+                progress={db.progress}
+                onOpen={openTechnique}
+              />
+            </section>
             </div>
           </>
         )}
 
         {route === 'bookmarks' && (
+          <div className="relative">
           <BookmarksView
           copy={copy}
           locale={locale}
@@ -1407,6 +1409,7 @@ export default function App(): ReactElement {
           onOpenTechnique={openTechnique}
           onOpenGlossaryTerm={(slug) => openGlossaryTerm(slug)}
           />
+          </div>
         )}
 
         {route === 'glossary' && (
@@ -1443,23 +1446,23 @@ export default function App(): ReactElement {
                     onChange={setGlossaryFilters}
                   />
                 </div>
-                <div className="grid md:grid-cols-[16rem,1fr] gap-6">
-                  <aside className="hidden md:block surface border surface-border rounded-2xl p-3 h-max sticky top-20">
-                    <GlossaryFilterPanel
-                      copy={copy}
-                      filters={glossaryFilters}
-                      categories={glossaryCategories}
-                      onChange={setGlossaryFilters}
-                    />
-                  </aside>
-                  <section>
-                    <GlossaryPage
-                    locale={locale}
+                <div className="relative">
+                <ExpandableFilterBar label={copy.filters}>
+                  <GlossaryFilterPanel
                     copy={copy}
                     filters={glossaryFilters}
-                    onOpenTerm={openGlossaryTerm}
-                    />
-                  </section>
+                    categories={glossaryCategories}
+                    onChange={setGlossaryFilters}
+                  />
+                </ExpandableFilterBar>
+                <section>
+                  <GlossaryPage
+                  locale={locale}
+                  copy={copy}
+                  filters={glossaryFilters}
+                  onOpenTerm={openGlossaryTerm}
+                  />
+                </section>
                 </div>
               </>
             )}

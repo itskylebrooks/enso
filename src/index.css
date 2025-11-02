@@ -421,3 +421,12 @@ body.suppress-transitions *::after {
   white-space: nowrap;
   line-height: 1;
 }
+
+/* Vertical writing mode for filter bar labels */
+.writing-mode-vertical {
+  writing-mode: vertical-rl;
+  -webkit-writing-mode: vertical-rl;
+  text-orientation: mixed;
+  -webkit-text-orientation: mixed;
+  transform: rotate(180deg);
+}
