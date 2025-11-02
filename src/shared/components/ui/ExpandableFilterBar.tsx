@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { SlidersHorizontal } from 'lucide-react';
+import { useMotionPreferences } from './motion';
 
 type ExpandableFilterBarProps = {
   children: ReactNode;
@@ -9,6 +10,7 @@ type ExpandableFilterBarProps = {
 
 export const ExpandableFilterBar = ({ children, label = 'Filters' }: ExpandableFilterBarProps): ReactNode => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const { animationsDisabled } = useMotionPreferences();
 
   return (
     <>
@@ -42,7 +44,7 @@ export const ExpandableFilterBar = ({ children, label = 'Filters' }: ExpandableF
               initial={{ opacity: 0, scale: 0.95, x: -10 }}
               animate={{ opacity: 1, scale: 1, x: 0 }}
               exit={{ opacity: 0, scale: 0.95, x: -10 }}
-              transition={{ duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+              transition={{ duration: animationsDisabled ? 0 : 0.2, ease: [0.4, 0, 0.2, 1] }}
             >
               {children}
             </motion.div>
