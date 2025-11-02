@@ -1,30 +1,26 @@
 import { useEffect } from 'react';
 
-// Lock body scrolling while `locked` is true. Preserves scroll position and restores on unlock.
+// Lock body scrolling while `locked` is true.
 export default function useLockBodyScroll(locked: boolean): void {
   useEffect(() => {
-    if (typeof document === 'undefined') return;
+    if (typeof document === 'undefined' || !locked) return;
 
-  const body = document.body;
+    const body = document.body;
+    const originalOverflow = body.style.overflow;
+    const originalPaddingRight = body.style.paddingRight;
 
-    if (!locked) return;
+    // Calculate scrollbar width to prevent layout shift
+    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
 
-    const scrollY = window.scrollY || window.pageYOffset;
-    // Apply styles to lock scroll and preserve visual position
-    body.style.position = 'fixed';
-    body.style.top = `-${scrollY}px`;
-    body.style.left = '0';
-    body.style.right = '0';
+    // Lock scroll and compensate for scrollbar
     body.style.overflow = 'hidden';
+    if (scrollbarWidth > 0) {
+      body.style.paddingRight = `${scrollbarWidth}px`;
+    }
 
     return () => {
-      // restore
-      body.style.position = '';
-      body.style.top = '';
-      body.style.left = '';
-      body.style.right = '';
-      body.style.overflow = '';
-      window.scrollTo(0, scrollY);
+      body.style.overflow = originalOverflow;
+      body.style.paddingRight = originalPaddingRight;
     };
   }, [locked]);
 }
