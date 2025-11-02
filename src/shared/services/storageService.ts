@@ -4,6 +4,7 @@ import {
   APP_NAME,
   DB_VERSION,
   FILTERS_KEY,
+  FILTER_PANEL_PINNED_KEY,
   LOCALE_KEY,
   PAGE_LABELS_KEY,
   STORAGE_KEY,
@@ -696,4 +697,18 @@ export const saveFilters = (filters: unknown): void => {
 
 export const clearFilters = (): void => {
   removeLocalStorage(FILTERS_KEY);
+};
+
+// Filter panel pinned state helpers
+export const loadFilterPanelPinned = (): boolean => {
+  const value = readLocalStorage(FILTER_PANEL_PINNED_KEY);
+  return value === '1' || value === 'true';
+};
+
+export const saveFilterPanelPinned = (pinned: boolean): void => {
+  if (pinned) {
+    writeLocalStorage(FILTER_PANEL_PINNED_KEY, '1');
+  } else {
+    removeLocalStorage(FILTER_PANEL_PINNED_KEY);
+  }
 };

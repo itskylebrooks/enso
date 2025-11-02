@@ -1,9 +1,9 @@
 import type { ReactElement } from 'react';
 import type { Copy } from '../../../shared/constants/i18n';
 import type { GlossaryTerm } from '../../../shared/types';
-import { SectionTitle } from '../../../shared/components';
 import { classNames } from '@shared/utils/classNames';
-import { Undo2 } from 'lucide-react';
+import { usePinButton } from '@shared/components/ui';
+import { Undo2, Pin, PinOff } from 'lucide-react';
 
 type GlossaryFilters = {
   category?: GlossaryTerm['category'];
@@ -46,21 +46,35 @@ export const GlossaryFilterPanel = ({
   };
 
   const hasActiveFilters = filters.category;
+  const pinButtonContext = usePinButton();
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <SectionTitle>{copy.filters}</SectionTitle>
-        {hasActiveFilters && (
-          <button
-            type="button"
-            onClick={handleReset}
-            aria-label={copy.resetFilters}
-            className="text-subtle transition-colors duration-150 hover:text-[var(--color-text)]"
-          >
-            <Undo2 className="h-4 w-4" aria-hidden />
-          </button>
-        )}
+      <div className="flex items-center justify-between gap-2">
+        <h2 className="text-sm font-semibold tracking-wide uppercase text-subtle">{copy.filters}</h2>
+        <div className="flex items-center gap-2">
+          {hasActiveFilters && (
+            <button
+              type="button"
+              onClick={handleReset}
+              aria-label={copy.resetFilters}
+              className="p-1.5 rounded-lg hover:bg-[var(--color-surface-hover)] text-subtle hover:text-[var(--color-text)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+            >
+              <Undo2 className="h-4 w-4" aria-hidden />
+            </button>
+          )}
+          {pinButtonContext && (
+            <button
+              type="button"
+              onClick={pinButtonContext.togglePin}
+              className="p-1.5 rounded-lg hover:bg-[var(--color-surface-hover)] text-subtle hover:text-[var(--color-text)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+              aria-label={pinButtonContext.isPinned ? "Unpin panel" : "Pin panel"}
+              title={pinButtonContext.isPinned ? "Unpin panel" : "Pin panel"}
+            >
+              {pinButtonContext.isPinned ? <PinOff className="w-4 h-4" aria-hidden /> : <Pin className="w-4 h-4" aria-hidden />}
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="space-y-2">

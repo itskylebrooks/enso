@@ -8,8 +8,9 @@ import { gradePalette } from '../../../shared/styles/belts';
 import { getLevelLabel, getOrderedTaxonomyValues, getTaxonomyLabel, type TaxonomyType } from '../../../shared/i18n/taxonomy';
 import { SectionTitle } from '../../../shared/components';
 import { useMotionPreferences } from '@shared/components/ui/motion';
+import { usePinButton } from '@shared/components/ui';
 import { ENTRY_MODE_ORDER } from '../../../shared/constants/entryModes';
-import { ChevronDown, Undo2 } from 'lucide-react';
+import { ChevronDown, Undo2, Pin, PinOff } from 'lucide-react';
 
 type FilterPanelProps = {
   copy: Copy;
@@ -167,21 +168,35 @@ export const FilterPanel = ({
   }, [filters.category, filters.attack, filters.stance, filters.weapon, filters.level, filters.trainer]);
 
   const handleReset = (): void => onChange({});
+  const pinButtonContext = usePinButton();
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <SectionTitle>{copy.filters}</SectionTitle>
-        {hasActiveFilters && (
-          <button
-            type="button"
-            onClick={handleReset}
-            aria-label={copy.resetFilters}
-            className="text-subtle transition-colors duration-150 hover:text-[var(--color-text)]"
-          >
-            <Undo2 className="h-4 w-4" aria-hidden />
-          </button>
-        )}
+      <div className="flex items-center justify-between gap-2">
+        <h2 className="text-sm font-semibold tracking-wide uppercase text-subtle">{copy.filters}</h2>
+        <div className="flex items-center gap-2">
+          {hasActiveFilters && (
+            <button
+              type="button"
+              onClick={handleReset}
+              aria-label={copy.resetFilters}
+              className="p-1.5 rounded-lg hover:bg-[var(--color-surface-hover)] text-subtle hover:text-[var(--color-text)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+            >
+              <Undo2 className="h-4 w-4" aria-hidden />
+            </button>
+          )}
+          {pinButtonContext && (
+            <button
+              type="button"
+              onClick={pinButtonContext.togglePin}
+              className="p-1.5 rounded-lg hover:bg-[var(--color-surface-hover)] text-subtle hover:text-[var(--color-text)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+              aria-label={pinButtonContext.isPinned ? "Unpin panel" : "Pin panel"}
+              title={pinButtonContext.isPinned ? "Unpin panel" : "Pin panel"}
+            >
+              {pinButtonContext.isPinned ? <PinOff className="w-4 h-4" aria-hidden /> : <Pin className="w-4 h-4" aria-hidden />}
+            </button>
+          )}
+        </div>
       </div>
 
       <FilterSection

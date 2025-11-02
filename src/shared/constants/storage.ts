@@ -4,5 +4,6 @@ export const LOCALE_KEY = 'enso-locale';
 export const FILTERS_KEY = 'enso-filters-v1';
 export const ANIMATION_PREFERENCE_KEY = 'enso-animations-disabled';
 export const PAGE_LABELS_KEY = 'enso-page-labels-enabled';
+export const FILTER_PANEL_PINNED_KEY = 'enso-filter-panel-pinned';
 export const DB_VERSION = 5;
 export const APP_NAME = 'enso';

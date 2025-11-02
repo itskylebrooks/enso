@@ -1,7 +1,8 @@
 import type { ReactElement } from 'react';
 import { AnimatePresence, motion, LayoutGroup } from 'motion/react';
 import type { Copy } from '../../../shared/constants/i18n';
-import { TextCursorInput, Pencil, Plus, Trash } from 'lucide-react';
+import { TextCursorInput, Pencil, Plus, Trash, Pin, PinOff } from 'lucide-react';
+import { usePinButton } from '@shared/components/ui';
 // Removed motion preferences for static collection list in filter panel
 
 type SidebarCollection = {
@@ -38,6 +39,7 @@ export const CollectionsSidebar = ({
   isEditing,
   onToggleEdit,
 }: CollectionsSidebarProps): ReactElement => {
+  const pinButtonContext = usePinButton();
 
   return (
     <div className="space-y-4" aria-label={copy.collectionsTitle}>
@@ -63,6 +65,17 @@ export const CollectionsSidebar = ({
           >
             <Pencil className="w-4 h-4" />
           </button>
+          {pinButtonContext && (
+            <button
+              type="button"
+              onClick={pinButtonContext.togglePin}
+              className="p-2 rounded-lg border btn-tonal surface-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+              aria-label={pinButtonContext.isPinned ? "Unpin panel" : "Pin panel"}
+              title={pinButtonContext.isPinned ? "Unpin panel" : "Pin panel"}
+            >
+              {pinButtonContext.isPinned ? <PinOff className="w-4 h-4" /> : <Pin className="w-4 h-4" />}
+            </button>
+          )}
         </div>
       </div>
 
