@@ -295,6 +295,7 @@ export const SearchOverlay = ({ copy, locale, techniques, progress, glossaryProg
                 placeholder={copy.search}
                 autoComplete="off"
                 spellCheck={false}
+                maxLength={60}
                 className="ml-2 h-10 flex-1 bg-transparent text-base text-[color:var(--color-text)] placeholder:text-subtle focus:outline-none"
               />
             </div>
