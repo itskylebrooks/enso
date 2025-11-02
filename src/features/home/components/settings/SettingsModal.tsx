@@ -308,36 +308,35 @@ export const SettingsModal = ({
           {/* Footer: divider and single-line with centered name and icons */}
           <div className="-mx-4 mt-4">
             <div className="pt-4 border-t surface-border text-center text-xs text-muted px-4">
-                {/* Single centered row with version · author and icons at edges */}
-                <div className="relative leading-snug flex items-center justify-center">
-                  {/* Left icon */}
+                {/* Wrapper for both footer lines with icons centered vertically between them */}
+                <div className="relative flex flex-col">
+                  {/* Left and right icons positioned absolutely, centered vertically in the entire footer */}
                   <div className="absolute left-4 inset-y-0 flex items-center">
                     <button type="button" onClick={onNavigateToAbout} className="text-current" aria-label="About">
                       <Info className="h-4 w-4" aria-hidden />
                     </button>
                   </div>
 
-                  {/* Center text: version · author on one line */}
-                  <div className="flex items-center gap-2">
-                    <span className="truncate">Enso {pkg.version}</span>
-                    <span className="text-muted">·</span>
-                    <span className="truncate">Kyle Brooks</span>
-                  </div>
-
-                  {/* Right icon */}
                   <div className="absolute right-4 inset-y-0 flex items-center">
                     <a href="https://itskylebrooks.vercel.app/" target="_blank" rel="noreferrer" className="text-current" aria-label="Kyle Brooks website">
                       <SquareArrowOutUpRight className="h-4 w-4" aria-hidden />
                     </a>
                   </div>
-                </div>
 
-              {/* Legal links */}
-              <div className="flex items-center justify-center gap-2.5 leading-snug mt-1">
-                <a className="underline" href="https://itskylebrooks.vercel.app/imprint" target="_blank" rel="noopener noreferrer">{(copy as unknown as Record<string, string>).footerImprint ?? 'Imprint'}</a>
-                <a className="underline" href="https://itskylebrooks.vercel.app/privacy" target="_blank" rel="noopener noreferrer">{(copy as unknown as Record<string, string>).footerPrivacy ?? 'Privacy Policy'}</a>
-                <a className="underline" href="https://itskylebrooks.vercel.app/license" target="_blank" rel="noopener noreferrer">{(copy as unknown as Record<string, string>).footerLicense ?? 'License'}</a>
-              </div>
+                  {/* Center text: version · author on one line */}
+                  <div className="leading-snug flex items-center justify-center gap-2">
+                    <span className="truncate">Enso {pkg.version}</span>
+                    <span className="text-muted">·</span>
+                    <span className="truncate">Kyle Brooks</span>
+                  </div>
+
+                  {/* Legal links */}
+                  <div className="flex items-center justify-center gap-2.5 leading-snug mt-1">
+                    <a className="underline" href="https://itskylebrooks.vercel.app/imprint" target="_blank" rel="noopener noreferrer">{(copy as unknown as Record<string, string>).footerImprint ?? 'Imprint'}</a>
+                    <a className="underline" href="https://itskylebrooks.vercel.app/privacy" target="_blank" rel="noopener noreferrer">{(copy as unknown as Record<string, string>).footerPrivacy ?? 'Privacy Policy'}</a>
+                    <a className="underline" href="https://itskylebrooks.vercel.app/license" target="_blank" rel="noopener noreferrer">{(copy as unknown as Record<string, string>).footerLicense ?? 'License'}</a>
+                  </div>
+                </div>
             </div>
           </div>
         </div>
