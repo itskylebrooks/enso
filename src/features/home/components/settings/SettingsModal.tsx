@@ -110,111 +110,81 @@ export const SettingsModal = ({
           <div className="grid grid-cols-1 min-[350px]:grid-cols-2 gap-4">
             <div>
               <SectionTitle>{copy.language}</SectionTitle>
-              <div className="mt-2 inline-flex items-center gap-2 p-1 rounded-full border surface-border bg-[var(--color-surface)]">
+              <div className="mt-2 flex flex-wrap gap-2">
                 <button
                   type="button"
                   onClick={() => onChangeLocale('en')}
                   className={classNames(
-                    'relative h-10 w-10 rounded-full text-sm transition-soft motion-ease flex items-center justify-center',
-                    locale === 'en' ? 'text-[var(--color-text)]' : 'text-subtle',
+                    'px-3 py-2 text-sm rounded-xl border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+                    locale === 'en' 
+                      ? 'btn-contrast' 
+                      : 'btn-tonal surface-hover',
                   )}
                   aria-pressed={locale === 'en'}
                   aria-label="English"
                 >
-                  {locale === 'en' && (
-                    <motion.span
-                      layoutId="switchThumbLang"
-                      transition={toggleTransition}
-                      className="absolute inset-0 rounded-full border surface-border bg-[var(--color-surface-hover)]"
-                      aria-hidden
-                    />
-                  )}
-                  <span className="relative z-10 font-medium">EN</span>
+                  EN
                 </button>
                 <button
                   type="button"
                   onClick={() => onChangeLocale('de')}
                   className={classNames(
-                    'relative h-10 w-10 rounded-full text-sm transition-soft motion-ease flex items-center justify-center',
-                    locale === 'de' ? 'text-[var(--color-text)]' : 'text-subtle',
+                    'px-3 py-2 text-sm rounded-xl border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+                    locale === 'de' 
+                      ? 'btn-contrast' 
+                      : 'btn-tonal surface-hover',
                   )}
                   aria-pressed={locale === 'de'}
                   aria-label="Deutsch"
                 >
-                  {locale === 'de' && (
-                    <motion.span
-                      layoutId="switchThumbLang"
-                      transition={toggleTransition}
-                      className="absolute inset-0 rounded-full border surface-border bg-[var(--color-surface-hover)]"
-                      aria-hidden
-                    />
-                  )}
-                  <span className="relative z-10 font-medium">DE</span>
+                  DE
                 </button>
               </div>
             </div>
             <div>
               <SectionTitle>{copy.theme}</SectionTitle>
-              <div className="mt-2 inline-flex items-center gap-2 p-1 rounded-full border surface-border bg-[var(--color-surface)]">
+              <div className="mt-2 flex flex-wrap gap-2">
                 <button
                   type="button"
                   onClick={() => onChangeTheme('system')}
                   className={classNames(
-                    'relative h-10 w-10 rounded-full transition-soft motion-ease flex items-center justify-center',
-                    isSystemTheme ? 'text-[var(--color-text)]' : 'text-subtle',
+                    'p-2 rounded-xl border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+                    isSystemTheme 
+                      ? 'btn-contrast' 
+                      : 'btn-tonal surface-hover',
                   )}
                   aria-pressed={isSystemTheme}
                   aria-label={(copy.system ?? 'System')}
                 >
-                  {isSystemTheme && (
-                    <motion.span
-                      layoutId="switchThumbTheme"
-                      transition={toggleTransition}
-                      className="absolute inset-0 rounded-full border surface-border bg-[var(--color-surface-hover)]"
-                      aria-hidden
-                    />
-                  )}
-                  <Monitor className="relative z-10 h-5 w-5" aria-hidden />
+                  <Monitor className="h-5 w-5" aria-hidden />
                 </button>
                 <button
                   type="button"
                   onClick={() => onChangeTheme('light')}
                   className={classNames(
-                    'relative h-10 w-10 rounded-full transition-soft motion-ease flex items-center justify-center',
-                    !isSystemTheme && theme === 'light' ? 'text-[var(--color-text)]' : 'text-subtle',
+                    'p-2 rounded-xl border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+                    !isSystemTheme && theme === 'light' 
+                      ? 'btn-contrast' 
+                      : 'btn-tonal surface-hover',
                   )}
                   aria-pressed={!isSystemTheme && theme === 'light'}
                   aria-label={copy.light}
                 >
-                  {!isSystemTheme && theme === 'light' && (
-                    <motion.span
-                      layoutId="switchThumbTheme"
-                      transition={toggleTransition}
-                      className="absolute inset-0 rounded-full border surface-border bg-[var(--color-surface-hover)]"
-                      aria-hidden
-                    />
-                  )}
-                  <Sun className="relative z-10 h-5 w-5" aria-hidden />
+                  <Sun className="h-5 w-5" aria-hidden />
                 </button>
                 <button
                   type="button"
                   onClick={() => onChangeTheme('dark')}
                   className={classNames(
-                    'relative h-10 w-10 rounded-full transition-soft motion-ease flex items-center justify-center',
-                    !isSystemTheme && theme === 'dark' ? 'text-[var(--color-text)]' : 'text-subtle',
+                    'p-2 rounded-xl border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+                    !isSystemTheme && theme === 'dark' 
+                      ? 'btn-contrast' 
+                      : 'btn-tonal surface-hover',
                   )}
                   aria-pressed={!isSystemTheme && theme === 'dark'}
                   aria-label={copy.dark}
                 >
-                  {!isSystemTheme && theme === 'dark' && (
-                    <motion.span
-                      layoutId="switchThumbTheme"
-                      transition={toggleTransition}
-                      className="absolute inset-0 rounded-full border surface-border bg-[var(--color-surface-hover)]"
-                      aria-hidden
-                    />
-                  )}
-                  <Moon className="relative z-10 h-5 w-5" aria-hidden />
+                  <Moon className="h-5 w-5" aria-hidden />
                 </button>
               </div>
             </div>
@@ -273,33 +243,34 @@ export const SettingsModal = ({
             <SectionTitle>{copy.motionSettings}</SectionTitle>
             <div className="mt-2 grid grid-cols-1 min-[350px]:grid-cols-2 items-center">
               <div className="text-sm font-medium">{copy.disableAnimations}</div>
-              <div className="mt-2 min-[350px]:mt-0 flex items-center gap-2 w-[148px] justify-end">
-                <span className="text-xs font-medium uppercase tracking-wide text-muted">
-                  {animationsDisabled ? copy.disableAnimationsOn : copy.disableAnimationsOff}
-                </span>
+              <div className="mt-2 min-[350px]:mt-0 flex items-center gap-2 justify-start min-[350px]:justify-end">
                 <button
                   type="button"
-                  role="switch"
-                  aria-checked={animationsDisabled}
-                  onClick={() => onChangeAnimations(!animationsDisabled)}
+                  onClick={() => onChangeAnimations(false)}
                   className={classNames(
-                    'relative inline-flex h-9 w-16 items-center rounded-full border transition-soft motion-ease focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
-                    animationsDisabled
-                      ? 'bg-[var(--color-text)] border-[var(--color-text)]'
-                      : 'bg-[var(--color-surface)] surface-border',
+                    'px-3 py-2 text-sm rounded-xl border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+                    !animationsDisabled 
+                      ? 'btn-contrast' 
+                      : 'btn-tonal surface-hover',
                   )}
+                  aria-pressed={!animationsDisabled}
+                  aria-label={copy.disableAnimationsOff}
                 >
-                  <span className="sr-only">{copy.disableAnimations}</span>
-                  <motion.span
-                    className="absolute left-1 top-1 h-7 w-7 rounded-full border shadow-sm"
-                    animate={{ x: animationsDisabled ? 28 : 0 }}
-                    transition={toggleTransition}
-                    style={{
-                      // Knob matches BG when toggle is ON (animations disabled), contrast when OFF
-                      backgroundColor: animationsDisabled ? 'var(--color-bg)' : 'var(--color-text)',
-                      borderColor: animationsDisabled ? 'var(--color-border)' : 'var(--color-bg)',
-                    }}
-                  />
+                  {copy.disableAnimationsOff}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onChangeAnimations(true)}
+                  className={classNames(
+                    'px-3 py-2 text-sm rounded-xl border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+                    animationsDisabled 
+                      ? 'btn-contrast' 
+                      : 'btn-tonal surface-hover',
+                  )}
+                  aria-pressed={animationsDisabled}
+                  aria-label={copy.disableAnimationsOn}
+                >
+                  {copy.disableAnimationsOn}
                 </button>
               </div>
             </div>
