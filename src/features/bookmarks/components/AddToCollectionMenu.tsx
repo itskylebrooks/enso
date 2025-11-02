@@ -100,7 +100,8 @@ export const AddToCollectionMenu = ({ copy, collections, onToggle, onCreate, onO
     };
 
     const handleScroll = () => {
-      updatePosition();
+      // Close the menu when scrolling starts
+      setOpen(false);
     };
 
     const handleResize = () => {
