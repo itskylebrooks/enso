@@ -58,22 +58,21 @@ export const backdropVariants: Variants = {
   },
 };
 
-// Android-friendly backdrop: avoid backdrop-filter (expensive) and animate
-// backgroundColor opacity instead. This keeps visual separation but is much
-// cheaper on many Android devices.
+// Android-optimized backdrop: Remove blur entirely for maximum performance.
+// Uses a darker semi-transparent background that visually approximates the
+// blur effect while being much cheaper to composite during animations.
 export const androidBackdropVariants: Variants = {
   initial: {
     opacity: 0,
-    backgroundColor: 'rgba(0,0,0,0)',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
   },
   animate: {
     opacity: 1,
-    backgroundColor: 'rgba(0,0,0,0.32)',
-    willChange: 'background-color, opacity',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
   },
   exit: {
     opacity: 0,
-    backgroundColor: 'rgba(0,0,0,0)',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
   },
 };
 
@@ -88,6 +87,14 @@ export const panelVariants: Variants = {
   initial: { opacity: 0, y: 20, scale: 0.95 },
   animate: { opacity: 1, y: 0, scale: 1 },
   exit: { opacity: 0, y: -10, scale: 0.98 },
+};
+
+// Android-optimized panel: Simpler animation without scale transforms
+// which can cause expensive repaints when combined with backdrop effects.
+export const androidPanelVariants: Variants = {
+  initial: { opacity: 0, y: 12 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -8 },
 };
 
 // Hint that transforms and opacity will change to allow the browser to
@@ -205,16 +212,26 @@ export const useMotionPreferences = () => {
       : isAndroid
       ? androidBackdropVariants
       : backdropVariants;
-    const panel = prefersReducedMotion ? reducedPanelVariants : panelVariants;
+    const panel = prefersReducedMotion 
+      ? reducedPanelVariants 
+      : isAndroid
+      ? androidPanelVariants
+      : panelVariants;
+    
+    // Android gets significantly faster transitions for lag-free performance
     const transition = animationsDisabled
       ? zeroTransition
       : prefersReducedMotion
       ? reducedPageTransition
+      : isAndroid
+      ? { duration: 0.15, ease: defaultEase }
       : pageTransition;
     const panelTransition = animationsDisabled
       ? zeroTransition
       : prefersReducedMotion
       ? reducedPageTransition
+      : isAndroid
+      ? { duration: 0.16, ease: defaultEase }
       : springEase;
     const closeButton = prefersReducedMotion ? reducedCloseButtonVariants : closeButtonVariants;
 
