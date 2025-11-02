@@ -118,10 +118,10 @@ export const RoadmapPage = ({ copy, locale }: RoadmapPageProps): ReactElement =>
     <section className="min-h-dvh py-14 md:py-18 font-sans">
       <div className="container max-w-4xl mx-auto px-4 md:px-6 space-y-12 md:space-y-14">
         <header className="space-y-4 text-center md:text-left">
-          <h1 className="text-3xl md:text-[2.5rem] leading-tight font-semibold tracking-tight">
+          <h1 className="text-2xl md:text-3xl leading-tight font-semibold tracking-tight">
             {copy.roadmapTitle}
           </h1>
-          <p className="text-base md:text-lg text-subtle max-w-3xl">
+          <p className="text-sm md:text-base text-subtle max-w-3xl">
             {copy.roadmapSummary}
           </p>
         </header>
@@ -225,10 +225,10 @@ export const RoadmapPage = ({ copy, locale }: RoadmapPageProps): ReactElement =>
               <div className="flex justify-center">
                       <MetaIcon iconName={grouped.meta.icon} />
               </div>
-              <h2 id="roadmap-meta-title" className="text-2xl md:text-3xl font-semibold tracking-tight">
+              <h2 id="roadmap-meta-title" className="text-lg md:text-xl font-semibold tracking-tight">
                 {selectTitle(grouped.meta.title as RoadmapItem['title'], locale)}
               </h2>
-              <p className="text-base md:text-lg text-subtle max-w-2xl mx-auto">
+              <p className="text-sm md:text-base text-subtle max-w-2xl mx-auto">
                 {selectSummary(grouped.meta.summary, locale)}
               </p>
             </div>
@@ -284,7 +284,7 @@ const ArticleCard = ({
             />
           ) : null}
           <div className="space-y-1.5">
-            <h3 className="text-lg font-medium tracking-tight">
+            <h3 className="text-base font-medium tracking-tight leading-snug hyphens-auto break-words" style={{ hyphens: 'auto', wordBreak: 'break-word' }}>
               {selectTitle(item.title, locale)}
             </h3>
             {item.version && (
