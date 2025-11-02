@@ -1,0 +1,19 @@
+{
+  "id": "aikijutsu",
+  "slug": "aikijutsu",
+  "romaji": "Aiki-jūjutsu",
+  "jp": "合気柔術",
+  "category": "other",
+  "def": {
+    "en": "Classical jūjutsu using ‘aiki’ to control and finish; source for much of Aikidō.",
+    "de": "Klassisches Jūjutsu mit „Aiki“ zur Kontrolle und zum Abschluss; Quelle vieler Aikidō-Techniken."
+  },
+  "literal": {
+    "en": "harmonize + energy + gentle/flexible + art/technique",
+    "de": "harmonisieren + Energie + sanft/flexibel + Kunst/Technik"
+  },
+  "notes": {
+    "en": "Historically tied to Daitō-ryū; emphasizes direct structure control, atemi, joint locks, and decisive pins—often in kata-based study with weapon awareness. Circles tend to be smaller and finishes harsher than modern Aikidō, though curricula vary widely by ryū. The label also appears as Aiki-jutsu (合気術) in some lines; usage depends on school and period. Core principle is shared: connect to the center (aiki), break balance (kuzushi), then resolve cleanly.",
+    "de": "Historisch mit Daitō-ryū verbunden; betont direkte Strukturkontrolle, Atemi, Gelenkhebel und eindeutige Fixierungen – häufig im Kata-Training mit Waffenbezug. Kreise sind meist kleiner und Abschlüsse „härter“ als im modernen Aikidō, doch Inhalte variieren stark je nach Ryū. Der Begriff erscheint teils auch als Aiki-jutsu (合気術); die Verwendung hängt von Schule und Epoche ab. Gemeinsames Prinzip: an das Zentrum „anknüpfen“ (Aiki), Gleichgewicht brechen (Kuzushi) und klar auflösen."
+  }
+}
