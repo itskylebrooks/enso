@@ -19,11 +19,13 @@ type SettingsModalProps = {
   isSystemTheme: boolean;
   db: DB;
   animationsDisabled: boolean;
+  pageLabelsEnabled: boolean;
   onClose: () => void;
   onRequestClear: () => void;
   onChangeLocale: (locale: Locale) => void;
   onChangeTheme: (theme: Theme | 'system') => void;
   onChangeAnimations: (disabled: boolean) => void;
+  onChangePageLabels: (enabled: boolean) => void;
   onChangeDB: (db: DB) => void;
   onNavigateToAbout?: () => void;
   clearButtonRef?: RefObject<HTMLButtonElement | null>;
@@ -37,11 +39,13 @@ export const SettingsModal = ({
   isSystemTheme,
   db,
   animationsDisabled,
+  pageLabelsEnabled,
   onClose,
   onRequestClear,
   onChangeLocale,
   onChangeTheme,
   onChangeAnimations,
+  onChangePageLabels,
   onChangeDB,
   onNavigateToAbout,
   clearButtonRef,
@@ -189,6 +193,75 @@ export const SettingsModal = ({
               </div>
             </div>
           </div>
+          {/* Motion and Page Labels on left and right */}
+          <div className="grid grid-cols-1 min-[350px]:grid-cols-2 gap-4">
+            <div>
+              <SectionTitle>{copy.motionSettings}</SectionTitle>
+              <div className="mt-2 flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => onChangeAnimations(false)}
+                  className={classNames(
+                    'px-3 py-2 text-sm rounded-xl border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+                    !animationsDisabled 
+                      ? 'btn-contrast' 
+                      : 'btn-tonal surface-hover',
+                  )}
+                  aria-pressed={!animationsDisabled}
+                  aria-label={copy.disableAnimationsOff}
+                >
+                  {copy.disableAnimationsOff}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onChangeAnimations(true)}
+                  className={classNames(
+                    'px-3 py-2 text-sm rounded-xl border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+                    animationsDisabled 
+                      ? 'btn-contrast' 
+                      : 'btn-tonal surface-hover',
+                  )}
+                  aria-pressed={animationsDisabled}
+                  aria-label={copy.disableAnimationsOn}
+                >
+                  {copy.disableAnimationsOn}
+                </button>
+              </div>
+            </div>
+            <div>
+              <SectionTitle>{copy.pageLabels}</SectionTitle>
+              <div className="mt-2 flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => onChangePageLabels(false)}
+                  className={classNames(
+                    'px-3 py-2 text-sm rounded-xl border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+                    !pageLabelsEnabled 
+                      ? 'btn-contrast' 
+                      : 'btn-tonal surface-hover',
+                  )}
+                  aria-pressed={!pageLabelsEnabled}
+                  aria-label="Off"
+                >
+                  Off
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onChangePageLabels(true)}
+                  className={classNames(
+                    'px-3 py-2 text-sm rounded-xl border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+                    pageLabelsEnabled 
+                      ? 'btn-contrast' 
+                      : 'btn-tonal surface-hover',
+                  )}
+                  aria-pressed={pageLabelsEnabled}
+                  aria-label="On"
+                >
+                  On
+                </button>
+              </div>
+            </div>
+          </div>
           <div>
             <SectionTitle>{'Data'}</SectionTitle>
             <div className="mt-2 flex flex-wrap gap-2 items-center">
@@ -237,42 +310,6 @@ export const SettingsModal = ({
               >
                 {copy.clear}
               </button>
-            </div>
-          </div>
-          <div>
-            <SectionTitle>{copy.motionSettings}</SectionTitle>
-            <div className="mt-2 grid grid-cols-1 min-[350px]:grid-cols-2 items-center">
-              <div className="text-sm font-medium">{copy.disableAnimations}</div>
-              <div className="mt-2 min-[350px]:mt-0 flex items-center gap-2 justify-start min-[350px]:justify-end">
-                <button
-                  type="button"
-                  onClick={() => onChangeAnimations(false)}
-                  className={classNames(
-                    'px-3 py-2 text-sm rounded-xl border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
-                    !animationsDisabled 
-                      ? 'btn-contrast' 
-                      : 'btn-tonal surface-hover',
-                  )}
-                  aria-pressed={!animationsDisabled}
-                  aria-label={copy.disableAnimationsOff}
-                >
-                  {copy.disableAnimationsOff}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => onChangeAnimations(true)}
-                  className={classNames(
-                    'px-3 py-2 text-sm rounded-xl border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
-                    animationsDisabled 
-                      ? 'btn-contrast' 
-                      : 'btn-tonal surface-hover',
-                  )}
-                  aria-pressed={animationsDisabled}
-                  aria-label={copy.disableAnimationsOn}
-                >
-                  {copy.disableAnimationsOn}
-                </button>
-              </div>
             </div>
           </div>
           {/* Feedback options removed from Settings — feedback handled on Feedback page */}

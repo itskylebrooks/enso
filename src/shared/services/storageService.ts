@@ -5,6 +5,7 @@ import {
   DB_VERSION,
   FILTERS_KEY,
   LOCALE_KEY,
+  PAGE_LABELS_KEY,
   STORAGE_KEY,
   THEME_KEY,
 } from '../constants/storage';
@@ -390,6 +391,23 @@ export const saveAnimationsDisabled = (disabled: boolean): void => {
     writeLocalStorage(ANIMATION_PREFERENCE_KEY, '1');
   } else {
     removeLocalStorage(ANIMATION_PREFERENCE_KEY);
+  }
+};
+
+export const loadPageLabelsEnabled = (): boolean => {
+  const value = readLocalStorage(PAGE_LABELS_KEY);
+  // Default to true (enabled) if no preference is stored
+  if (value === null || value === undefined || value === '') {
+    return true;
+  }
+  return value === '0' ? false : true;
+};
+
+export const savePageLabelsEnabled = (enabled: boolean): void => {
+  if (enabled) {
+    removeLocalStorage(PAGE_LABELS_KEY);
+  } else {
+    writeLocalStorage(PAGE_LABELS_KEY, '0');
   }
 };
 

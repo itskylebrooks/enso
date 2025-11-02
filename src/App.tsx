@@ -34,10 +34,12 @@ import {
   loadAnimationsDisabled,
   loadLocale,
   loadTheme,
+  loadPageLabelsEnabled,
   saveDB,
   saveAnimationsDisabled,
   saveLocale,
   saveTheme,
+  savePageLabelsEnabled,
   loadFilters,
   saveFilters,
   clearFilters,
@@ -362,6 +364,7 @@ export default function App(): ReactElement {
     setAnimationsDisabled(initial);
     return initial;
   });
+  const [pageLabelsEnabled, setPageLabelsEnabledState] = useState<boolean>(() => loadPageLabelsEnabled());
   const [db, setDB] = useState<DB>(() => loadDB());
   const [filters, setFilters] = useState<Filters>(() => {
     try {
@@ -996,6 +999,11 @@ export default function App(): ReactElement {
     saveAnimationsDisabled(disabled);
   };
 
+  const handlePageLabelsChange = (enabled: boolean): void => {
+    setPageLabelsEnabledState(enabled);
+    savePageLabelsEnabled(enabled);
+  };
+
   const handleDBChange = (next: DB): void => {
     setDB(next);
   };
@@ -1480,6 +1488,7 @@ export default function App(): ReactElement {
         <Header
           copy={copy}
           route={route}
+          pageLabelsEnabled={pageLabelsEnabled}
           onNavigate={navigateTo}
           onSearch={openSearch}
           onSettings={openSettings}
@@ -1543,11 +1552,13 @@ export default function App(): ReactElement {
               isSystemTheme={!hasManualTheme}
               db={db}
               animationsDisabled={animationsDisabled}
+              pageLabelsEnabled={pageLabelsEnabled}
               onClose={closeSettings}
               onRequestClear={handleRequestClear}
               onChangeLocale={handleLocaleChange}
               onChangeTheme={handleThemeChange}
               onChangeAnimations={handleAnimationsPreferenceChange}
+              onChangePageLabels={handlePageLabelsChange}
               onChangeDB={handleDBChange}
               onNavigateToAbout={() => {
                 closeSettings();

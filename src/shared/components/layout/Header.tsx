@@ -73,6 +73,7 @@ const useSmartSticky = () => {
 type HeaderProps = {
   copy: Copy;
   route: AppRoute;
+  pageLabelsEnabled: boolean;
   onNavigate: (route: AppRoute, options?: { replace?: boolean }) => void;
   onSearch: (method?: 'keyboard' | 'mouse') => void;
   onSettings: () => void;
@@ -83,6 +84,7 @@ type HeaderProps = {
 export const Header = ({
   copy,
   route,
+  pageLabelsEnabled,
   onNavigate,
   onSearch,
   onSettings,
@@ -221,40 +223,43 @@ export const Header = ({
             type="button"
             onClick={() => onNavigate('guide')}
             className={classNames(
-              'px-3 py-2 rounded-lg border inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+              'px-3 py-2 rounded-lg border inline-flex items-center gap-2 justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
               isGuideActive ? 'btn-contrast' : 'btn-tonal surface-hover',
             )}
             aria-pressed={isGuideActive}
             aria-current={isGuideActive ? 'page' : undefined}
             aria-label={copy.guideLink}
           >
-            <Compass className="w-4 h-4" />
+            <Compass className="w-4 h-4 shrink-0" />
+            {pageLabelsEnabled && <span className="text-sm">{copy.guideLink}</span>}
           </button>
           <button
             type="button"
             onClick={() => onNavigate('library')}
             className={classNames(
-              'px-3 py-2 rounded-lg border inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+              'px-3 py-2 rounded-lg border inline-flex items-center gap-2 justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
               route === 'library' ? 'btn-contrast' : 'btn-tonal surface-hover',
             )}
             aria-pressed={route === 'library'}
             aria-current={route === 'library' ? 'page' : undefined}
             aria-label={copy.library}
           >
-            <LibraryBig className="w-4 h-4" />
+            <LibraryBig className="w-4 h-4 shrink-0" />
+            {pageLabelsEnabled && <span className="text-sm">{copy.library}</span>}
           </button>
           <button
             type="button"
             onClick={() => onNavigate('glossary')}
             className={classNames(
-              'px-3 py-2 rounded-lg border inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+              'px-3 py-2 rounded-lg border inline-flex items-center gap-2 justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
               route === 'glossary' ? 'btn-contrast' : 'btn-tonal surface-hover',
             )}
             aria-pressed={route === 'glossary'}
             aria-current={route === 'glossary' ? 'page' : undefined}
             aria-label={copy.glossary}
           >
-            <BookOpenText className="w-4 h-4" />
+            <BookOpenText className="w-4 h-4 shrink-0" />
+            {pageLabelsEnabled && <span className="text-sm">{copy.glossary}</span>}
           </button>
         </div>
         <nav className="flex items-center gap-2">
