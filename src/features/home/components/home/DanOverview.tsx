@@ -22,8 +22,8 @@ export const DanOverview = ({ locale }: Props): ReactElement => {
       };
 
   return (
-    <section className="py-12 px-5 md:px-8">
-  <div className="max-w-4xl mx-auto space-y-8">
+    <section className="py-12">
+  <div className="container max-w-4xl mx-auto px-4 md:px-6 space-y-8">
         <motion.header className="space-y-2" {...animationProps}>
           <h1 className="text-2xl font-semibold leading-tight">{copy.danOverviewTitle}</h1>
           <p className="text-sm text-subtle leading-relaxed">{copy.danOverviewLead}</p>

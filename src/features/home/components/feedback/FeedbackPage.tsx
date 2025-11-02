@@ -2825,8 +2825,8 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
 
   return (
     <>
-      <main className="py-12 px-5 md:px-8">
-        <div className="mx-auto max-w-4xl space-y-8">
+      <main className="py-12">
+        <div className="container max-w-4xl mx-auto px-4 md:px-6 space-y-8">
           {onBack && (
             <button
               type="button"
