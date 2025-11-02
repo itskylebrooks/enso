@@ -458,7 +458,7 @@ export const BookmarksView = ({
 
           {sortedVisibleItems.length === 0 && (
             <motion.div
-              className="col-span-full flex items-center justify-center py-6 text-sm text-subtle text-center border border-dashed border-[var(--color-border)] rounded-2xl"
+              className="col-span-full flex items-center justify-center py-6 text-sm text-subtle text-center border border-dashed border-[var(--color-border)] rounded-2xl mt-6 md:mt-0"
               variants={listMotion.item}
               transition={getItemTransition(0)}
             >
