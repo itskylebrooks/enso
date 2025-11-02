@@ -344,6 +344,7 @@ export const BookmarksView = ({
           onToggleEdit={() => setEditing((value) => !value)}
         />
       </div>
+      <div className="relative">
       <ExpandableFilterBar label={copy.bookmarks}>
         <CollectionsSidebar
           copy={copy}
@@ -467,6 +468,7 @@ export const BookmarksView = ({
           )}
   </motion.div>
         </section>
+      </div>
 
       <AnimatePresence>
         {dialog?.type === 'create' && (

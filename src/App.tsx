@@ -1397,7 +1397,6 @@ export default function App(): ReactElement {
         )}
 
         {route === 'bookmarks' && (
-          <div className="relative">
           <BookmarksView
           copy={copy}
           locale={locale}
@@ -1420,7 +1419,6 @@ export default function App(): ReactElement {
           onOpenTechnique={openTechnique}
           onOpenGlossaryTerm={(slug) => openGlossaryTerm(slug)}
           />
-          </div>
         )}
 
         {route === 'glossary' && (
