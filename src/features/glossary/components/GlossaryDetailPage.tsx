@@ -129,7 +129,7 @@ export const GlossaryDetailPage = ({
 
   return (
     <motion.main
-      className="mx-auto max-w-3xl px-4 sm:px-6 py-8 space-y-8"
+      className="mx-auto max-w-4xl px-4 sm:px-6 py-8 space-y-8"
       variants={pageMotion.variants}
       initial="initial"
       animate="animate"
