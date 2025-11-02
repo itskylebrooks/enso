@@ -73,7 +73,6 @@ const useSmartSticky = () => {
 type HeaderProps = {
   copy: Copy;
   route: AppRoute;
-  pageLabelsEnabled: boolean;
   onNavigate: (route: AppRoute, options?: { replace?: boolean }) => void;
   onSearch: (method?: 'keyboard' | 'mouse') => void;
   onSettings: () => void;
@@ -84,7 +83,6 @@ type HeaderProps = {
 export const Header = ({
   copy,
   route,
-  pageLabelsEnabled,
   onNavigate,
   onSearch,
   onSettings,
@@ -231,7 +229,7 @@ export const Header = ({
             aria-label={copy.guideLink}
           >
             <Compass className="w-4 h-4 shrink-0" />
-            {pageLabelsEnabled && <span className="text-sm">{copy.guideLink}</span>}
+            <span className="text-sm">{copy.guideLink}</span>
           </button>
           <button
             type="button"
@@ -245,7 +243,7 @@ export const Header = ({
             aria-label={copy.library}
           >
             <LibraryBig className="w-4 h-4 shrink-0" />
-            {pageLabelsEnabled && <span className="text-sm">{copy.library}</span>}
+            <span className="text-sm">{copy.library}</span>
           </button>
           <button
             type="button"
@@ -259,7 +257,7 @@ export const Header = ({
             aria-label={copy.glossary}
           >
             <BookOpenText className="w-4 h-4 shrink-0" />
-            {pageLabelsEnabled && <span className="text-sm">{copy.glossary}</span>}
+            <span className="text-sm">{copy.glossary}</span>
           </button>
         </div>
         <nav className="flex items-center gap-2">

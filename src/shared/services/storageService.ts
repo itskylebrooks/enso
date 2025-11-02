@@ -6,7 +6,6 @@ import {
   FILTERS_KEY,
   FILTER_PANEL_PINNED_KEY,
   LOCALE_KEY,
-  PAGE_LABELS_KEY,
   STORAGE_KEY,
   THEME_KEY,
 } from '../constants/storage';
@@ -395,23 +394,6 @@ export const saveAnimationsDisabled = (disabled: boolean): void => {
   }
 };
 
-export const loadPageLabelsEnabled = (): boolean => {
-  const value = readLocalStorage(PAGE_LABELS_KEY);
-  // Default to true (enabled) if no preference is stored
-  if (value === null || value === undefined || value === '') {
-    return true;
-  }
-  return value === '0' ? false : true;
-};
-
-export const savePageLabelsEnabled = (enabled: boolean): void => {
-  if (enabled) {
-    removeLocalStorage(PAGE_LABELS_KEY);
-  } else {
-    writeLocalStorage(PAGE_LABELS_KEY, '0');
-  }
-};
-
 /**
  * Detects the user's browser language preference.
  * Returns 'de' if any German locale is detected, otherwise 'en'.
@@ -507,7 +489,6 @@ export const exportDB = (db: DB): string => {
       bookmarkCollections: exportBookmarkCollections,
       glossaryBookmarkCollections: exportGlossaryBookmarkCollections,
       animationsDisabled: loadAnimationsDisabled(),
-      pageLabelsEnabled: loadPageLabelsEnabled(),
     },
     null,
     2,
@@ -521,7 +502,6 @@ export const parseIncomingDB = (raw: string): {
   bookmarkCollections?: Array<{ techniqueId: string; collectionName: string }>;
   glossaryBookmarkCollections?: Array<{ termId: string; collectionName: string }>;
   animationsDisabled?: boolean;
-  pageLabelsEnabled?: boolean;
 } => {
   const parsed = JSON.parse(raw) as {
     appName?: string;
@@ -531,7 +511,6 @@ export const parseIncomingDB = (raw: string): {
     bookmarkCollections?: Array<{ techniqueId: string; collectionName: string }>;
     glossaryBookmarkCollections?: Array<{ termId: string; collectionName: string }>;
     animationsDisabled?: boolean;
-    pageLabelsEnabled?: boolean;
   };
   
   if (!parsed || typeof parsed !== 'object') {
@@ -549,7 +528,6 @@ export const parseIncomingDB = (raw: string): {
     bookmarkCollections: Array.isArray(parsed.bookmarkCollections) ? parsed.bookmarkCollections : [],
     glossaryBookmarkCollections: Array.isArray(parsed.glossaryBookmarkCollections) ? parsed.glossaryBookmarkCollections : [],
     animationsDisabled: typeof parsed.animationsDisabled === 'boolean' ? parsed.animationsDisabled : undefined,
-    pageLabelsEnabled: typeof parsed.pageLabelsEnabled === 'boolean' ? parsed.pageLabelsEnabled : undefined,
   };
 };
 
@@ -652,9 +630,6 @@ export const importData = (currentDB: DB, importedData: ReturnType<typeof parseI
   if (typeof importedData.animationsDisabled === 'boolean') {
     saveAnimationsDisabled(importedData.animationsDisabled);
   }
-  if (typeof importedData.pageLabelsEnabled === 'boolean') {
-    savePageLabelsEnabled(importedData.pageLabelsEnabled);
-  }
 
   return {
     ...currentDB,
@@ -670,9 +645,8 @@ export const clearDB = (): DB => {
   if (isBrowser) {
     window.localStorage.removeItem(STORAGE_KEY);
   }
-  // Reset preferences to defaults (animations OFF, page labels ON)
+  // Reset preferences to defaults (animations OFF)
   saveAnimationsDisabled(false);
-  savePageLabelsEnabled(true);
   return buildDefaultDB();
 };
 
