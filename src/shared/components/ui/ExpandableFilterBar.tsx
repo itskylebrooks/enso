@@ -31,6 +31,29 @@ export const ExpandableFilterBar = ({ children, label = 'Filters' }: ExpandableF
     setIsInitialMount(false);
   }, []);
 
+  // Check viewport width and auto-unpin if panel doesn't fit
+  useEffect(() => {
+    const checkViewportWidth = () => {
+      // Panel width is 16rem (256px), we need at least ~900px to comfortably fit it
+      // with content (accounting for margins and content area)
+      const minWidth = 900;
+      const viewportWidth = window.innerWidth;
+
+      if (viewportWidth < minWidth && isPinned) {
+        setIsPinned(false);
+      }
+    };
+
+    // Check on mount
+    checkViewportWidth();
+
+    // Check on resize
+    window.addEventListener('resize', checkViewportWidth);
+    return () => {
+      window.removeEventListener('resize', checkViewportWidth);
+    };
+  }, [isPinned]);
+
   // Save pinned state to localStorage when it changes
   useEffect(() => {
     saveFilterPanelPinned(isPinned);
