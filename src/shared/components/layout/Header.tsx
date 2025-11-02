@@ -202,7 +202,7 @@ export const Header = ({
       animate={{ y: isMobile && !isVisible ? -80 : 0 }}
       transition={{ duration: 0.3, ease: 'easeInOut' }}
     >
-      <div className="max-w-4xl mx-auto px-4 md:px-6 py-3 flex items-center justify-between">
+      <div className="max-w-4xl mx-auto px-4 md:px-6 py-3 flex items-center justify-between relative">
         <a
           href="/"
           onClick={(event) => {
@@ -215,47 +215,50 @@ export const Header = ({
           <Logo className="shrink-0" />
           <div className="font-semibold tracking-tight">{copy.app}</div>
         </a>
+        {/* Centered nav (desktop): Guide / Library / Glossary */}
+        <div className="absolute left-1/2 transform -translate-x-1/2 hidden md:flex items-center gap-2 inset-y-0">
+          <button
+            type="button"
+            onClick={() => onNavigate('guide')}
+            className={classNames(
+              'px-3 py-2 rounded-lg border inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+              isGuideActive ? 'btn-contrast' : 'btn-tonal surface-hover',
+            )}
+            aria-pressed={isGuideActive}
+            aria-current={isGuideActive ? 'page' : undefined}
+            aria-label={copy.guideLink}
+          >
+            <Compass className="w-4 h-4" />
+          </button>
+          <button
+            type="button"
+            onClick={() => onNavigate('library')}
+            className={classNames(
+              'px-3 py-2 rounded-lg border inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+              route === 'library' ? 'btn-contrast' : 'btn-tonal surface-hover',
+            )}
+            aria-pressed={route === 'library'}
+            aria-current={route === 'library' ? 'page' : undefined}
+            aria-label={copy.library}
+          >
+            <LibraryBig className="w-4 h-4" />
+          </button>
+          <button
+            type="button"
+            onClick={() => onNavigate('glossary')}
+            className={classNames(
+              'px-3 py-2 rounded-lg border inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+              route === 'glossary' ? 'btn-contrast' : 'btn-tonal surface-hover',
+            )}
+            aria-pressed={route === 'glossary'}
+            aria-current={route === 'glossary' ? 'page' : undefined}
+            aria-label={copy.glossary}
+          >
+            <BookOpenText className="w-4 h-4" />
+          </button>
+        </div>
         <nav className="flex items-center gap-2">
           <div className="hidden md:flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => onNavigate('guide')}
-              className={classNames(
-                'px-3 py-2 rounded-lg border inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
-                isGuideActive ? 'btn-contrast' : 'btn-tonal surface-hover',
-              )}
-              aria-pressed={isGuideActive}
-              aria-current={isGuideActive ? 'page' : undefined}
-              aria-label={copy.guideLink}
-            >
-              <Compass className="w-4 h-4" />
-            </button>
-            <button
-              type="button"
-              onClick={() => onNavigate('library')}
-              className={classNames(
-                'px-3 py-2 rounded-lg border inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
-                route === 'library' ? 'btn-contrast' : 'btn-tonal surface-hover',
-              )}
-              aria-pressed={route === 'library'}
-              aria-current={route === 'library' ? 'page' : undefined}
-              aria-label={copy.library}
-            >
-              <LibraryBig className="w-4 h-4" />
-            </button>
-            <button
-              type="button"
-              onClick={() => onNavigate('glossary')}
-              className={classNames(
-                'px-3 py-2 rounded-lg border inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
-                route === 'glossary' ? 'btn-contrast' : 'btn-tonal surface-hover',
-              )}
-              aria-pressed={route === 'glossary'}
-              aria-current={route === 'glossary' ? 'page' : undefined}
-              aria-label={copy.glossary}
-            >
-              <BookOpenText className="w-4 h-4" />
-            </button>
             <div className="ml-4">
               <button
                 ref={searchButtonRef}
