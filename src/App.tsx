@@ -1248,6 +1248,7 @@ export default function App(): ReactElement {
             removeGlossaryFromCollection(activeSlug!, collectionId);
           }
         }}
+        onCreateCollection={createCollection}
         onNavigateToGlossaryWithFilter={(category) => {
           setGlossaryFilters({ category });
           prefetchGlossary();
@@ -1440,6 +1441,7 @@ export default function App(): ReactElement {
                     removeGlossaryFromCollection(activeSlug, collectionId);
                   }
                 }}
+                onCreateCollection={createCollection}
                 onNavigateToGlossaryWithFilter={(category) => {
                   setGlossaryFilters({ category });
                   navigateTo('glossary');

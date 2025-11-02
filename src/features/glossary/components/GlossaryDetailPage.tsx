@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { ReactElement } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { loadTermBySlug } from '../loader';
 import { useMotionPreferences } from '@shared/components/ui/motion';
 import type { GlossaryTerm } from '../../../shared/types';
@@ -12,6 +12,7 @@ import { classNames } from '@shared/utils/classNames';
 import { getCategoryStyle, getCategoryLabel } from '../../../shared/styles/glossary';
 import { getInitialThemeState } from '@shared/utils/theme';
 import BreathingDot from '@shared/components/ui/BreathingDot';
+import { NameModal } from '@shared/components/ui/modals/NameModal';
 
 export type CollectionOption = {
   id: string;
@@ -30,6 +31,7 @@ type GlossaryDetailPageProps = {
   onToggleBookmark: () => void;
   collections: CollectionOption[];
   onToggleCollection: (collectionId: string, nextChecked: boolean) => void;
+  onCreateCollection?: (name: string) => string | null;
   onNavigateToGlossaryWithFilter?: (category: GlossaryTerm['category']) => void;
 };
 
@@ -47,13 +49,28 @@ export const GlossaryDetailPage = ({
   onToggleBookmark, 
   collections, 
   onToggleCollection,
+  onCreateCollection,
   onNavigateToGlossaryWithFilter,
 }: GlossaryDetailPageProps): ReactElement => {
   const [term, setTerm] = useState<GlossaryTerm | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isDark, setIsDark] = useState(getInitialThemeState);
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const { pageMotion } = useMotionPreferences();
+
+  const openCreateDialog = () => setDialogOpen(true);
+  const closeCreateDialog = () => setDialogOpen(false);
+
+  const handleCreate = (name: string) => {
+    if (!onCreateCollection) return closeCreateDialog();
+    const newId = onCreateCollection(name);
+    closeCreateDialog();
+    if (newId && term) {
+      // Assign the current glossary term to the newly created collection
+      onToggleCollection(newId, true);
+    }
+  };
 
   useEffect(() => {
     // Check if dark mode is active
@@ -184,6 +201,7 @@ export const GlossaryDetailPage = ({
             copy={copy}
             collections={collections}
             onToggle={(collectionId, nextChecked) => onToggleCollection(collectionId, nextChecked)}
+            onCreate={openCreateDialog}
           />
           <div className="inline-flex rounded-lg border surface-border overflow-hidden">
             <motion.button
@@ -241,6 +259,22 @@ export const GlossaryDetailPage = ({
           </div>
         </section>
       )}
+
+      <AnimatePresence>
+        {dialogOpen && (
+          <NameModal
+            key="glossary-create-collection"
+            strings={{
+              title: copy.collectionsNew,
+              nameLabel: copy.collectionsNameLabel,
+              confirmLabel: copy.collectionsCreateAction,
+              cancelLabel: copy.collectionsCancel,
+            }}
+            onCancel={closeCreateDialog}
+            onConfirm={(name) => handleCreate(name)}
+          />
+        )}
+      </AnimatePresence>
     </motion.main>
   );
 };
