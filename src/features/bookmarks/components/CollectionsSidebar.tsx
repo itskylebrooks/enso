@@ -2,7 +2,7 @@ import type { ReactElement } from 'react';
 import { AnimatePresence, motion, LayoutGroup } from 'motion/react';
 import type { Copy } from '../../../shared/constants/i18n';
 import { TextCursorInput, Pencil, Plus, Trash } from 'lucide-react';
-import { useMotionPreferences } from '@shared/components/ui/motion';
+// Removed motion preferences for static collection list in filter panel
 
 type SidebarCollection = {
   id: string;
@@ -38,7 +38,6 @@ export const CollectionsSidebar = ({
   isEditing,
   onToggleEdit,
 }: CollectionsSidebarProps): ReactElement => {
-  const { listMotion, prefersReducedMotion } = useMotionPreferences();
 
   return (
     <div className="space-y-4" aria-label={copy.collectionsTitle}>
@@ -91,13 +90,11 @@ export const CollectionsSidebar = ({
           <AnimatePresence initial={false}>
             <motion.ul
               className="space-y-1 text-sm"
-              variants={listMotion.container}
-              initial="hidden"
-              animate="show"
-              layout
+              // Disable entrance animation when the filter panel opens
+              initial={false}
             >
               {collections.map((collection) => (
-                <motion.li key={collection.id} layout variants={listMotion.item} transition={prefersReducedMotion ? { duration: 0.05 } : undefined}>
+                <motion.li key={collection.id}>
                   <div className="relative flex items-center gap-2">
                     <motion.div 
                       className="flex-1 min-w-0"
@@ -139,8 +136,6 @@ export const CollectionsSidebar = ({
               {collections.length === 0 && (
                 <motion.li
                   className="text-xs text-subtle px-2 py-1"
-                  variants={listMotion.item}
-                  transition={prefersReducedMotion ? { duration: 0.05 } : undefined}
                 >
                   {copy.collectionsNone}
                 </motion.li>
