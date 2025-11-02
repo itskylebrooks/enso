@@ -334,11 +334,11 @@ export const SettingsModal = ({
                     </a>
                   </div>
 
-                  {/* Center text: version · author on one line */}
+                  {/* Center text: author · version on one line */}
                   <div className="leading-snug flex items-center justify-center gap-2">
-                    <span className="truncate">Enso {pkg.version}</span>
-                    <span className="text-muted">·</span>
                     <span className="truncate">Kyle Brooks</span>
+                    <span className="text-muted">·</span>
+                    <span className="truncate">Enso {pkg.version}</span>
                   </div>
 
                   {/* Legal links */}
