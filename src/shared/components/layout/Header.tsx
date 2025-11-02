@@ -316,7 +316,7 @@ export const Header = ({
                     initial={{ opacity: 0, y: 6, scale: 0.98 }}
                     animate={{ opacity: 1, y: 0, scale: 1, transition: { duration: 0.2, ease: defaultEase } }}
                     exit={{ opacity: 0, y: -4, scale: 0.98, transition: { duration: 0.2, ease: defaultEase } }}
-                    className="absolute right-0 mt-2 w-48 rounded-lg border surface-border bg-[var(--color-surface)] shadow-xl z-30"
+                    className="absolute right-0 mt-2 w-48 rounded-lg border surface-border bg-[var(--color-surface)] panel-shadow z-30"
                     role="menu"
                   >
                     <ul className="p-2">
@@ -408,7 +408,7 @@ export const Header = ({
                   animate="animate"
                   exit="exit"
                   variants={menuVariants}
-                  className="absolute -right-3 mt-4 w-48 rounded-lg border surface-border bg-[var(--color-surface)] shadow-xl z-30"
+                  className="absolute -right-3 mt-4 w-48 rounded-lg border surface-border bg-[var(--color-surface)] panel-shadow z-30"
                 >
                 <ul className="px-2 pt-2 pb-2">
                   <li>

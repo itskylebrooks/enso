@@ -181,7 +181,7 @@ export const AddToCollectionMenu = ({ copy, collections, onToggle, onCreate, onO
             initial="initial"
             animate="animate"
             exit="exit"
-            className="fixed w-56 rounded-lg border surface surface-border shadow-lg z-50 overflow-hidden"
+            className="fixed w-56 rounded-lg border surface surface-border panel-shadow z-50 overflow-hidden"
             style={{ 
               top: position.top, 
               left: position.left

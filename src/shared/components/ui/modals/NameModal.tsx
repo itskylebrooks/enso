@@ -69,7 +69,7 @@ export const NameModal = ({ strings, initialName = '', onCancel, onConfirm }: Na
     >
       <motion.div
         ref={dialogRef}
-        className="relative w-full max-w-xs sm:max-w-sm surface rounded-xl border surface-border shadow-xl p-5"
+        className="relative w-full max-w-xs sm:max-w-sm surface rounded-xl border surface-border panel-shadow p-5"
         variants={overlayMotion.panel}
         initial="initial"
         animate="animate"

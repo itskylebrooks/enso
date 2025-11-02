@@ -336,6 +336,14 @@ body.suppress-transitions *::after {
   box-shadow: var(--card-shadow);
 }
 
+/* Panel shadow utility for filter panels and sidebars that adapts to dark mode.
+   - always shows the adaptive shadow (not just on hover)
+   - uses the same shadow system as cards for consistency
+*/
+.panel-shadow {
+  box-shadow: var(--card-shadow);
+}
+
 /* Breathing dot loader: single dot that grows/shrinks at a 1s cadence.
    - Uses CSS custom properties to adapt to light/dark mode
    - Respects prefers-reduced-motion
