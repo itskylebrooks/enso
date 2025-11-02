@@ -83,7 +83,7 @@ export const ExpandableFilterBar = ({ children, label = 'Filters' }: ExpandableF
       <AnimatePresence mode="wait" initial={!isInitialMount}>
         {isPinned ? (
           /* Pinned Panel - Always visible, right edge aligned with filter button's right edge */
-          <aside key="pinned" className="hidden md:block sticky top-24 z-30 float-left -ml-16" style={{ left: '-3.5rem' }}>
+          <aside key="pinned" className="hidden lg:block sticky top-24 z-30 float-left -ml-16" style={{ left: '-3.5rem' }}>
             {/* Invisible spacer to match the collapsed button size */}
             <div className="opacity-0 pointer-events-none surface border surface-border rounded-xl px-2.5 py-4 flex flex-col items-center gap-3">
               <SlidersHorizontal className="w-4 h-4" aria-hidden />
@@ -106,7 +106,7 @@ export const ExpandableFilterBar = ({ children, label = 'Filters' }: ExpandableF
           /* Collapsed Bar - sticky positioning to stay visible during scroll */
           <motion.aside
             key="unpinned"
-            className="hidden md:block sticky top-24 z-30 float-left -ml-16"
+            className="hidden lg:block sticky top-24 z-30 float-left -ml-16"
             style={{ left: '-3.5rem' }}
             onMouseEnter={() => setIsExpanded(true)}
             onMouseLeave={() => setIsExpanded(false)}

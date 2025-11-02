@@ -1337,7 +1337,7 @@ export default function App(): ReactElement {
       <div className="container max-w-4xl mx-auto px-4 md:px-6 py-4 space-y-4">
         {route === 'library' && (
           <>
-            <div className="md:hidden">
+            <div className="lg:hidden">
               <MobileFilters
                 copy={copy}
                 locale={locale}
@@ -1449,7 +1449,7 @@ export default function App(): ReactElement {
               />
             ) : (
               <>
-                <div className="md:hidden">
+                <div className="lg:hidden">
                   <MobileGlossaryFilters
                     copy={copy}
                     filters={glossaryFilters}

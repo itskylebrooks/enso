@@ -324,7 +324,7 @@ export const BookmarksView = ({
 
   return (
     <>
-      <div className="md:hidden">
+      <div className="lg:hidden">
         <MobileCollections
           copy={copy}
           collections={orderedCollections.map((collection) => ({
