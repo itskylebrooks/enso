@@ -22,18 +22,28 @@ export const usePinButton = (): FilterBarContextValue | null => {
 
 export const ExpandableFilterBar = ({ children, label = 'Filters' }: ExpandableFilterBarProps): ReactNode => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isPinned, setIsPinned] = useState(false);
+  const [isPinned, setIsPinned] = useState(() => loadFilterPanelPinned());
   const { animationsDisabled } = useMotionPreferences();
-
-  // Load pinned state from localStorage on mount
-  useEffect(() => {
-    setIsPinned(loadFilterPanelPinned());
-  }, []);
 
   // Save pinned state to localStorage when it changes
   useEffect(() => {
     saveFilterPanelPinned(isPinned);
+    // Dispatch a custom event to notify other instances
+    window.dispatchEvent(new CustomEvent('filter-panel-pin-changed', { detail: { isPinned } }));
   }, [isPinned]);
+
+  // Listen for pin state changes from other instances
+  useEffect(() => {
+    const handlePinChange = (event: Event) => {
+      const customEvent = event as CustomEvent<{ isPinned: boolean }>;
+      setIsPinned(customEvent.detail.isPinned);
+    };
+
+    window.addEventListener('filter-panel-pin-changed', handlePinChange);
+    return () => {
+      window.removeEventListener('filter-panel-pin-changed', handlePinChange);
+    };
+  }, []);
 
   const togglePin = () => {
     setIsPinned((prev) => !prev);
