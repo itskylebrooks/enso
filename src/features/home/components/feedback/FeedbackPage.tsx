@@ -38,7 +38,7 @@ type StepItem = {
   text: string;
 };
 
-type MediaKind = 'youtube' | 'vimeo' | 'image' | 'link';
+type MediaKind = 'youtube' | 'gumlet' | 'image' | 'link';
 
 type MediaEntry = {
   id: string;
@@ -326,7 +326,7 @@ const escapeInline = (value: string): string => {
 const summarizeMedia = (media?: MediaEntry[]) =>
   (media ?? [])
     .map((item) => ({
-      type: item.type === 'vimeo' ? 'link' : item.type,
+      type: item.type === 'gumlet' ? 'link' : item.type,
       url: item.url,
       title: item.title,
     }))
@@ -865,13 +865,12 @@ const detectMedia = (rawUrl: string): MediaEntry | null => {
     };
   }
 
-  const vimeoMatch = url.match(/vimeo\.com\/(\d+)/);
-  if (vimeoMatch) {
+  const gumletMatch = url.match(/play\.gumlet\.io\/embed\/([\w]+)/);
+  if (gumletMatch) {
     return {
       id: createId(),
       url,
-      type: 'vimeo',
-      embedUrl: `https://player.vimeo.com/video/${vimeoMatch[1]}`,
+      type: 'gumlet',
     };
   }
 
@@ -1106,7 +1105,7 @@ type MediaManagerProps = {
 const getMediaIcon = (type: MediaKind): ReactElement => {
   switch (type) {
     case 'youtube':
-    case 'vimeo':
+    case 'gumlet':
       return <span aria-hidden className="text-lg">▶</span>;
     case 'image':
       return <span aria-hidden className="text-lg">🖼️</span>;

@@ -6,14 +6,13 @@ type MediaEmbedProps = {
 };
 
 export const MediaEmbed = ({ media }: MediaEmbedProps): ReactElement => {
-  if (media.type === 'youtube' || media.type === 'vimeo') {
-    const title = media.type === 'youtube' ? 'YouTube' : 'Vimeo';
+  if (media.type === 'youtube') {
     return (
       <div className="aspect-video w-full overflow-hidden rounded-xl border surface-border surface">
         <iframe
           className="h-full w-full"
           src={media.url}
-          title={title}
+          title="YouTube"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
           loading="lazy"
