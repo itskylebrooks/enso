@@ -73,6 +73,10 @@
             {
               "type": "youtube",
               "url": "https://www.youtube-nocookie.com/embed/zTsuuTjkQgc"
+            },
+            {
+              "type": "gumlet-dab",
+              "url": "https://play.gumlet.io/embed/6908d0d4aa9e79860d89fe9c?background=false&autoplay=false&loop=false&disableControls=false"
             }
           ]
         }
