@@ -33,7 +33,7 @@
       "type": "image/png"
     },
     {
-      "src": "/favicon.svg",
+      "src": "/icons/favicon.svg",
       "sizes": "any",
       "type": "image/svg+xml"
     }

@@ -8,6 +8,7 @@ import { exportDB, parseIncomingDB, importData, saveDB } from '@shared/services/
 import { SectionTitle } from '@shared/components';
 import { useFocusTrap } from '@shared/hooks/useFocusTrap';
 import { useMotionPreferences } from '@shared/components/ui/motion';
+import { usePwaInstall } from '@shared/hooks/usePwaInstall';
 import { Info, SquareArrowOutUpRight, X, Sun, Moon, Monitor } from 'lucide-react';
 // import version from package.json
 import pkg from '../../../../../package.json';
@@ -49,6 +50,7 @@ export const SettingsModal = ({
 }: SettingsModalProps): ReactElement => {
   const dialogRef = useRef<HTMLDivElement>(null);
   const { overlayMotion, toggleTransition, prefersReducedMotion } = useMotionPreferences();
+  const { isInstalled } = usePwaInstall();
 
   useFocusTrap(trapEnabled, dialogRef, onClose);
 
@@ -228,7 +230,7 @@ export const SettingsModal = ({
               <SectionTitle>{copy.installPwa}</SectionTitle>
               <div className="mt-2 flex items-center min-h-[40px]">
                 <p className="text-xs text-muted">
-                  {copy.installPwaUnavailable}
+                  {isInstalled ? (copy.installPwaInstalled || 'Installed!') : copy.installPwaUnavailable}
                 </p>
               </div>
             </div>

@@ -12,7 +12,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'favicon.ico', 'fonts/**/*.woff2', 'icons/*.png'],
+      includeAssets: ['icons/favicon.svg', 'icons/favicon.ico', 'fonts/**/*.woff2', 'icons/*.png'],
       manifest: {
         name: 'Enso',
         short_name: 'Enso',
@@ -48,7 +48,7 @@ export default defineConfig({
             type: 'image/png'
           },
           {
-            src: '/favicon.svg',
+            src: '/icons/favicon.svg',
             sizes: 'any',
             type: 'image/svg+xml'
           }
