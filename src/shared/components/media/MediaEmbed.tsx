@@ -22,6 +22,21 @@ export const MediaEmbed = ({ media }: MediaEmbedProps): ReactElement => {
     );
   }
 
+  if (media.type === 'gumlet') {
+    return (
+      <div className="aspect-video w-full overflow-hidden rounded-xl border surface-border surface">
+        <iframe
+          className="h-full w-full"
+          src={media.url}
+          title="Gumlet video player"
+          allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen"
+          allowFullScreen
+          loading="lazy"
+        />
+      </div>
+    );
+  }
+
   if (media.type === 'image') {
     return (
       <figure className="w-full overflow-hidden rounded-xl border surface-border surface">
