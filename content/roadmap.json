@@ -22,6 +22,17 @@
     "icon": "wrench"
   },
   {
+    "id": "pwa-advanced",
+    "status": "launched",
+    "title": { "en": "PWA install & advanced offline", "de": "PWA‑Installation & erweiterter Offline‑Modus" },
+    "summary": {
+      "en": "Full PWA install prompt and broader caching strategy for Guide/Glossary.",
+      "de": "Vollständige PWA‑Installation und breiteres Caching für Guide/Glossar."
+    },
+    "version": "v1.0.8",
+    "icon": "download"
+  },
+  {
     "id": "roadmap-board",
     "status": "launched",
     "title": { "en": "Roadmap & updates board", "de": "Roadmap‑ und Update‑Tafel" },
@@ -141,17 +152,6 @@
     },
     "version": "v1.9",
     "icon": "map"
-  },
-  {
-    "id": "pwa-advanced",
-    "status": "planned",
-    "title": { "en": "PWA install & advanced offline", "de": "PWA‑Installation & erweiterter Offline‑Modus" },
-    "summary": {
-      "en": "Full PWA install prompt and broader caching strategy for Guide/Glossary.",
-      "de": "Vollständige PWA‑Installation und breiteres Caching für Guide/Glossar."
-    },
-    "version": "v2.0",
-    "icon": "download"
   },
   {
     "id": "magic-phrase-sync",
