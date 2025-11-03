@@ -314,6 +314,7 @@ This will check:
 - **Bilingual UI** — **English** and **Deutsch** toggle.
 - **Theme** — Light/Dark mode.
 - **Privacy** — Local-first storage; export/import available for bookmarks/collections.
+- **PWA Support** — Install Enso as an app for offline access and a native experience (Settings → Install PWA).
 
 ## Tech Stack
 
@@ -322,9 +323,20 @@ This will check:
 - **Zustand** (client state)
 - **Local-first storage** (via app storage service; export/import for bookmarks)
 - **Framer Motion (Motion)** for subtle animations
+- **PWA** (Progressive Web App with offline support via `vite-plugin-pwa`)
 - Simple **i18n dictionaries** (no heavy framework)
 
 > Fonts: **IBM Plex Sans** (SIL Open Font License 1.1).
+
+### PWA Features
+
+Enso is a fully installable Progressive Web App:
+- **Offline Mode** — All content cached for offline access
+- **Auto-update** — Service worker updates automatically on new deployments
+- **Install Prompt** — Install button in Settings when available
+- **Native Feel** — Standalone display mode on mobile and desktop
+
+See [PWA.md](./PWA.md) for complete implementation details.
 
 ## Getting Started
 

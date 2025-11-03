@@ -8,7 +8,8 @@ import { exportDB, parseIncomingDB, importData, saveDB } from '@shared/services/
 import { SectionTitle } from '@shared/components';
 import { useFocusTrap } from '@shared/hooks/useFocusTrap';
 import { useMotionPreferences } from '@shared/components/ui/motion';
-import { Info, SquareArrowOutUpRight, X, Sun, Moon, Monitor } from 'lucide-react';
+import { usePwaInstall } from '@shared/hooks/usePwaInstall';
+import { Info, SquareArrowOutUpRight, X, Sun, Moon, Monitor, Download } from 'lucide-react';
 // import version from package.json
 import pkg from '../../../../../package.json';
 
@@ -49,6 +50,7 @@ export const SettingsModal = ({
 }: SettingsModalProps): ReactElement => {
   const dialogRef = useRef<HTMLDivElement>(null);
   const { overlayMotion, toggleTransition, prefersReducedMotion } = useMotionPreferences();
+  const { isInstallable, isInstalled, install } = usePwaInstall();
 
   useFocusTrap(trapEnabled, dialogRef, onClose);
 
@@ -189,38 +191,62 @@ export const SettingsModal = ({
               </div>
             </div>
           </div>
-          {/* Motion settings (full width) */}
-          <div>
-            <SectionTitle>{copy.motionSettings}</SectionTitle>
-            <div className="mt-2 flex flex-wrap gap-2">
-              <button
-                type="button"
-                onClick={() => onChangeAnimations(true)}
-                className={classNames(
-                  'px-3 py-2 text-sm rounded-xl border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
-                  animationsDisabled 
-                    ? 'btn-contrast' 
-                    : 'btn-tonal surface-hover',
-                )}
-                aria-pressed={animationsDisabled}
-                aria-label={copy.disableAnimationsOff}
-              >
-                {copy.disableAnimationsOff}
-              </button>
-              <button
-                type="button"
-                onClick={() => onChangeAnimations(false)}
-                className={classNames(
-                  'px-3 py-2 text-sm rounded-xl border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
-                  !animationsDisabled 
-                    ? 'btn-contrast' 
-                    : 'btn-tonal surface-hover',
-                )}
-                aria-pressed={!animationsDisabled}
-                aria-label={copy.disableAnimationsOn}
-              >
-                {copy.disableAnimationsOn}
-              </button>
+          {/* Two columns: Motion settings and PWA install */}
+          <div className="grid grid-cols-1 min-[350px]:grid-cols-2 gap-4">
+            <div>
+              <SectionTitle>{copy.motionSettings}</SectionTitle>
+              <div className="mt-2 flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => onChangeAnimations(true)}
+                  className={classNames(
+                    'px-3 py-2 text-sm rounded-xl border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+                    animationsDisabled 
+                      ? 'btn-contrast' 
+                      : 'btn-tonal surface-hover',
+                  )}
+                  aria-pressed={animationsDisabled}
+                  aria-label={copy.disableAnimationsOff}
+                >
+                  {copy.disableAnimationsOff}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onChangeAnimations(false)}
+                  className={classNames(
+                    'px-3 py-2 text-sm rounded-xl border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+                    !animationsDisabled 
+                      ? 'btn-contrast' 
+                      : 'btn-tonal surface-hover',
+                  )}
+                  aria-pressed={!animationsDisabled}
+                  aria-label={copy.disableAnimationsOn}
+                >
+                  {copy.disableAnimationsOn}
+                </button>
+              </div>
+            </div>
+            <div>
+              <SectionTitle>{copy.installPwa}</SectionTitle>
+              <div className="mt-2 flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={install}
+                  disabled={!isInstallable || isInstalled}
+                  className={classNames(
+                    'px-3 py-2 text-sm rounded-xl border inline-flex items-center justify-center gap-2 transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+                    isInstalled
+                      ? 'btn-contrast cursor-default'
+                      : isInstallable
+                        ? 'btn-tonal surface-hover'
+                        : 'btn-tonal opacity-50 cursor-not-allowed'
+                  )}
+                  aria-label={isInstalled ? copy.installPwaInstalled : copy.installPwaButton}
+                >
+                  <Download className="h-4 w-4" aria-hidden />
+                  {isInstalled ? copy.installPwaInstalled : copy.installPwaButton}
+                </button>
+              </div>
             </div>
           </div>
           <div>
