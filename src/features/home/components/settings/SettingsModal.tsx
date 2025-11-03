@@ -8,8 +8,7 @@ import { exportDB, parseIncomingDB, importData, saveDB } from '@shared/services/
 import { SectionTitle } from '@shared/components';
 import { useFocusTrap } from '@shared/hooks/useFocusTrap';
 import { useMotionPreferences } from '@shared/components/ui/motion';
-import { usePwaInstall } from '@shared/hooks/usePwaInstall';
-import { Info, SquareArrowOutUpRight, X, Sun, Moon, Monitor, Download } from 'lucide-react';
+import { Info, SquareArrowOutUpRight, X, Sun, Moon, Monitor } from 'lucide-react';
 // import version from package.json
 import pkg from '../../../../../package.json';
 
@@ -50,7 +49,6 @@ export const SettingsModal = ({
 }: SettingsModalProps): ReactElement => {
   const dialogRef = useRef<HTMLDivElement>(null);
   const { overlayMotion, toggleTransition, prefersReducedMotion } = useMotionPreferences();
-  const { isInstallable, isInstalled, install } = usePwaInstall();
 
   useFocusTrap(trapEnabled, dialogRef, onClose);
 
@@ -228,24 +226,10 @@ export const SettingsModal = ({
             </div>
             <div>
               <SectionTitle>{copy.installPwa}</SectionTitle>
-              <div className="mt-2 flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  onClick={install}
-                  disabled={!isInstallable || isInstalled}
-                  className={classNames(
-                    'px-3 py-2 text-sm rounded-xl border inline-flex items-center justify-center gap-2 transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
-                    isInstalled
-                      ? 'btn-contrast cursor-default'
-                      : isInstallable
-                        ? 'btn-tonal surface-hover'
-                        : 'btn-tonal opacity-50 cursor-not-allowed'
-                  )}
-                  aria-label={isInstalled ? copy.installPwaInstalled : copy.installPwaButton}
-                >
-                  <Download className="h-4 w-4" aria-hidden />
-                  {isInstalled ? copy.installPwaInstalled : copy.installPwaButton}
-                </button>
+              <div className="mt-2 flex items-center min-h-[40px]">
+                <p className="text-xs text-muted">
+                  {copy.installPwaUnavailable}
+                </p>
               </div>
             </div>
           </div>
