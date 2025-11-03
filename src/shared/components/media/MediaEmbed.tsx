@@ -52,8 +52,16 @@ export const MediaEmbed = ({ media, locale = 'en' }: MediaEmbedProps): ReactElem
             loading="lazy"
           />
         </div>
-        <p className="text-xs text-subtle whitespace-pre-line">
+        <p className="text-xs text-subtle text-center">
           {copy.mediaDabAttribution}
+          <a
+            href="https://creativecommons.org/licenses/by/3.0/de/"
+            target="_blank"
+            rel="noreferrer noopener"
+            className="underline underline-offset-2 hover:text-[var(--color-text)]"
+          >
+            {copy.mediaDabLicense}
+          </a>
         </p>
       </div>
     );
