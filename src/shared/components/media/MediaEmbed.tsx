@@ -1,11 +1,14 @@
 import type { ReactElement } from 'react';
-import type { MediaItem } from '@shared/types';
+import type { MediaItem, Locale } from '@shared/types';
+import { getCopy } from '@shared/constants/i18n';
 
 type MediaEmbedProps = {
   media: MediaItem;
+  locale?: Locale;
 };
 
-export const MediaEmbed = ({ media }: MediaEmbedProps): ReactElement => {
+export const MediaEmbed = ({ media, locale = 'en' }: MediaEmbedProps): ReactElement => {
+  const copy = getCopy(locale);
   if (media.type === 'youtube') {
     return (
       <div className="aspect-video w-full overflow-hidden rounded-xl border surface-border surface">
@@ -32,6 +35,26 @@ export const MediaEmbed = ({ media }: MediaEmbedProps): ReactElement => {
           allowFullScreen
           loading="lazy"
         />
+      </div>
+    );
+  }
+
+  if (media.type === 'gumlet-dab') {
+    return (
+      <div className="space-y-2">
+        <div className="aspect-video w-full overflow-hidden rounded-xl border surface-border surface">
+          <iframe
+            className="h-full w-full"
+            src={media.url}
+            title="Gumlet video player"
+            allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture; fullscreen"
+            allowFullScreen
+            loading="lazy"
+          />
+        </div>
+        <p className="text-xs text-subtle whitespace-pre-line">
+          {copy.mediaDabAttribution}
+        </p>
       </div>
     );
   }

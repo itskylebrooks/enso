@@ -8,9 +8,10 @@ import { useMotionPreferences } from '@shared/components/ui/motion';
 export type MediaPanelProps = {
   media?: MediaItem[] | null;
   copy: Copy;
+  locale?: 'en' | 'de';
 };
 
-export const MediaPanel = ({ media, copy }: MediaPanelProps): ReactElement => {
+export const MediaPanel = ({ media, copy, locale = 'en' }: MediaPanelProps): ReactElement => {
   const { mediaMotion } = useMotionPreferences();
 
   return (
@@ -27,7 +28,7 @@ export const MediaPanel = ({ media, copy }: MediaPanelProps): ReactElement => {
           <p className="text-sm text-muted leading-relaxed">{copy.mediaEmpty}</p>
         )}
         {(media || []).map((item, index) => (
-          <MediaEmbed key={`${item.url}-${index}`} media={item} />
+          <MediaEmbed key={`${item.url}-${index}`} media={item} locale={locale} />
         ))}
       </motion.div>
     </section>

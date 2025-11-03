@@ -1,6 +1,6 @@
 export type Locale = 'en' | 'de';
 
-export type MediaType = 'youtube' | 'gumlet' | 'link' | 'image';
+export type MediaType = 'youtube' | 'gumlet' | 'gumlet-dab' | 'link' | 'image';
 
 export type Grade =
   | 'kyu5' | 'kyu4' | 'kyu3' | 'kyu2' | 'kyu1'

@@ -542,7 +542,7 @@ export const TechniquePage = ({
             </div>
             <div className="space-y-8">
               {activeVariant?.media && activeVariant.media.length > 0 && (
-                <MediaPanel media={activeVariant.media} copy={copy} />
+                <MediaPanel media={activeVariant.media} copy={copy} locale={locale} />
               )}
               {(activeVariant?.commonMistakes || activeVariant?.context) && (
                 <NotesPanel

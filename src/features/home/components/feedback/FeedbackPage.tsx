@@ -38,7 +38,7 @@ type StepItem = {
   text: string;
 };
 
-type MediaKind = 'youtube' | 'gumlet' | 'image' | 'link';
+type MediaKind = 'youtube' | 'gumlet' | 'gumlet-dab' | 'image' | 'link';
 
 type MediaEntry = {
   id: string;
@@ -326,7 +326,7 @@ const escapeInline = (value: string): string => {
 const summarizeMedia = (media?: MediaEntry[]) =>
   (media ?? [])
     .map((item) => ({
-      type: item.type === 'gumlet' ? 'link' : item.type,
+      type: (item.type === 'gumlet' || item.type === 'gumlet-dab') ? 'link' : item.type,
       url: item.url,
       title: item.title,
     }))
@@ -1106,6 +1106,7 @@ const getMediaIcon = (type: MediaKind): ReactElement => {
   switch (type) {
     case 'youtube':
     case 'gumlet':
+    case 'gumlet-dab':
       return <span aria-hidden className="text-lg">▶</span>;
     case 'image':
       return <span aria-hidden className="text-lg">🖼️</span>;

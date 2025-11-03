@@ -15,7 +15,7 @@ const gradeValues = [
 ] as const;
 
 const mediaSchema = z.object({
-  type: z.enum(['youtube', 'gumlet', 'link']),
+  type: z.enum(['youtube', 'gumlet', 'gumlet-dab', 'link']),
   url: z.string().min(1, 'media url must not be empty'),
   title: z.string().optional(),
 });
