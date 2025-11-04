@@ -11,17 +11,6 @@
     "icon": "listCheck"
   },
   {
-  "id": "practice-page",
-  "status": "planned",
-  "title": { "en": "Practice page", "de": "Trainingsseite" },
-  "summary": {
-    "en": "A companion to the Guide and Library — warm-ups, conditioning, and mindful exercises that keep body and mind ready for keiko.",
-    "de": "Ein Begleiter zu Guide und Bibliothek – Aufwärmen, Konditionierung und achtsame Übungen, die Körper und Geist für Keiko bereiten."
-  },
-  "version": "v2.0",
-  "icon": "dumbbell"
-  },
-  {
     "id": "v1-2-refactor",
     "status": "in-progress",
     "title": { "en": "Refactor & polish", "de": "Refactor & Feinschliff" },
@@ -99,15 +88,15 @@
     "icon": "sparkles"
   },
   {
-    "id": "technique-graph",
-    "status": "planned",
-    "title": { "en": "Technique connection diagram", "de": "Technik‑Verbindungsdiagramm" },
-    "summary": {
-      "en": "Interactive tree/radial view to visualize relations by attack, entry or family.",
-      "de": "Interaktive Baum‑/Radialansicht, um Beziehungen nach Angriff, Einstieg oder Familie zu visualisieren."
-    },
-    "version": "v1.3",
-    "icon": "gitBranch"
+  "id": "practice-page",
+  "status": "planned",
+  "title": { "en": "Practice page", "de": "Trainingsseite" },
+  "summary": {
+    "en": "A companion to the Guide and Library — warm-ups, conditioning, and mindful exercises that keep body and mind ready for keiko.",
+    "de": "Ein Begleiter zu Guide und Bibliothek – Aufwärmen, Konditionierung und achtsame Übungen, die Körper und Geist für Keiko bereiten."
+  },
+  "version": "v1.3",
+  "icon": "dumbbell"
   },
   {
     "id": "intro-guide",
@@ -121,6 +110,28 @@
     "icon": "bookOpen"
   },
   {
+    "id": "local-progress",
+    "status": "planned",
+    "title": { "en": "Local study progress", "de": "Lokaler Lernfortschritt" },
+    "summary": {
+      "en": "Mark techniques as studied or needs work; export with bookmarks.",
+      "de": "Techniken als gelernt oder „braucht Arbeit“ markieren; mit Lesezeichen exportieren."
+    },
+    "version": "v1.5",
+    "icon": "checkSquare"
+  },
+  {
+    "id": "technique-graph",
+    "status": "planned",
+    "title": { "en": "Technique connection diagram", "de": "Technik‑Verbindungsdiagramm" },
+    "summary": {
+      "en": "Interactive tree/radial view to visualize relations by attack, entry or family.",
+      "de": "Interaktive Baum‑/Radialansicht, um Beziehungen nach Angriff, Einstieg oder Familie zu visualisieren."
+    },
+    "version": "v1.6",
+    "icon": "gitBranch"
+  },
+  {
     "id": "glossary-visuals",
     "status": "planned",
     "title": { "en": "Glossary visuals", "de": "Glossar‑Visualisierungen" },
@@ -128,7 +139,7 @@
       "en": "Add minimalist line art for key terms (stances, grips, weapons).",
       "de": "Minimalistische Line‑Art für Schlüsselbegriffe (Stände, Griffe, Waffen)."
     },
-    "version": "v1.5",
+    "version": "v1.7",
     "icon": "palette"
   },
   {
@@ -139,19 +150,8 @@
       "en": "Two versions side by side with synced scroll (Steps, Uke, Mistakes).",
       "de": "Zwei Varianten nebeneinander mit synchronem Scrollen (Schritte, Uke, Fehler)."
     },
-    "version": "v1.7",
-    "icon": "splitSquareHorizontal"
-  },
-  {
-    "id": "local-progress",
-    "status": "planned",
-    "title": { "en": "Local study progress", "de": "Lokaler Lernfortschritt" },
-    "summary": {
-      "en": "Mark techniques as studied or needs work; export with bookmarks.",
-      "de": "Techniken als gelernt oder „braucht Arbeit“ markieren; mit Lesezeichen exportieren."
-    },
     "version": "v1.8",
-    "icon": "checkSquare"
+    "icon": "splitSquareHorizontal"
   },
   {
     "id": "dojo-map",
@@ -172,7 +172,7 @@
       "en": "Share bookmarks/progress via a short, human‑readable phrase that encodes a snapshot.",
       "de": "Lesezeichen/Fortschritt per kurzer, gut lesbarer Phrase als kodierter Snapshot teilen."
     },
-    "version": "v2.1",
+    "version": "v2.0",
     "icon": "key"
   },
   {
