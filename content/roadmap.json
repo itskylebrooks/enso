@@ -4,11 +4,22 @@
     "status": "in-progress",
     "title": { "en": "DAB exam program update", "de": "DAB‑Prüfungsprogramm‑Update" },
     "summary": {
-      "en": "All DAB techniques (5. Kyū → 1. Dan) added, taxonomy unified.",
-      "de": "Alle DAB‑Techniken (5. Kyū → 1. Dan) ergänzt und Taxonomie vereinheitlicht."
+      "en": "All techniques for 5th & 4th kyu (yellow & orange belts) added.",
+      "de": "Alle Techniken für 5. und 4. Kyū (gelbe und orange Gürtel) ergänzt."
     },
     "version": "v1.1",
     "icon": "listCheck"
+  },
+  {
+  "id": "practice-page",
+  "status": "planned",
+  "title": { "en": "Practice page", "de": "Trainingsseite" },
+  "summary": {
+    "en": "A companion to the Guide and Library — warm-ups, conditioning, and mindful exercises that keep body and mind ready for keiko.",
+    "de": "Ein Begleiter zu Guide und Bibliothek – Aufwärmen, Konditionierung und achtsame Übungen, die Körper und Geist für Keiko bereiten."
+  },
+  "version": "v2.0",
+  "icon": "dumbbell"
   },
   {
     "id": "v1-2-refactor",
