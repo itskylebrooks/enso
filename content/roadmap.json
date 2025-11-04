@@ -1,6 +1,6 @@
 [
   {
-    "id": "exam-program-update",
+    "id": "exam-program-update-1",
     "status": "in-progress",
     "title": { "en": "DAB exam program update", "de": "DAB‑Prüfungsprogramm‑Update" },
     "summary": {
@@ -132,6 +132,17 @@
     "icon": "gitBranch"
   },
   {
+    "id": "exam-program-update-2",
+    "status": "planned",
+    "title": { "en": "DAB exam program update", "de": "DAB‑Prüfungsprogramm‑Update" },
+    "summary": {
+      "en": "All techniques for 3rd & 2nd kyu (green & blue belts) added.",
+      "de": "Alle Techniken für 3. und 2. Kyū (grüne und blaue Gürtel) ergänzt."
+    },
+    "version": "v1.7",
+    "icon": "listCheck"
+  },
+  {
     "id": "glossary-visuals",
     "status": "planned",
     "title": { "en": "Glossary visuals", "de": "Glossar‑Visualisierungen" },
@@ -139,7 +150,7 @@
       "en": "Add minimalist line art for key terms (stances, grips, weapons).",
       "de": "Minimalistische Line‑Art für Schlüsselbegriffe (Stände, Griffe, Waffen)."
     },
-    "version": "v1.7",
+    "version": "v1.8",
     "icon": "palette"
   },
   {
@@ -150,7 +161,7 @@
       "en": "Two versions side by side with synced scroll (Steps, Uke, Mistakes).",
       "de": "Zwei Varianten nebeneinander mit synchronem Scrollen (Schritte, Uke, Fehler)."
     },
-    "version": "v1.8",
+    "version": "v1.9",
     "icon": "splitSquareHorizontal"
   },
   {
@@ -161,7 +172,7 @@
       "en": "Static JSON + OpenStreetMap; simple filters for federation and city.",
       "de": "Statisches JSON + OpenStreetMap; einfache Filter für Verband und Stadt."
     },
-    "version": "v1.9",
+    "version": "v2.0",
     "icon": "map"
   },
   {
@@ -172,7 +183,7 @@
       "en": "Share bookmarks/progress via a short, human‑readable phrase that encodes a snapshot.",
       "de": "Lesezeichen/Fortschritt per kurzer, gut lesbarer Phrase als kodierter Snapshot teilen."
     },
-    "version": "v2.0",
+    "version": "v2.1",
     "icon": "key"
   },
   {
