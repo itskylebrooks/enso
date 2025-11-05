@@ -9,7 +9,7 @@ import { SectionTitle } from '@shared/components';
 import { useFocusTrap } from '@shared/hooks/useFocusTrap';
 import { useMotionPreferences } from '@shared/components/ui/motion';
 import { usePwaInstall } from '@shared/hooks/usePwaInstall';
-import { Info, SquareArrowOutUpRight, X, Sun, Moon, Monitor } from 'lucide-react';
+import { Info, SquareArrowOutUpRight, X, Sun, Moon, Monitor, Download, Check } from 'lucide-react';
 // import version from package.json
 import pkg from '../../../../../package.json';
 
@@ -50,7 +50,7 @@ export const SettingsModal = ({
 }: SettingsModalProps): ReactElement => {
   const dialogRef = useRef<HTMLDivElement>(null);
   const { overlayMotion, toggleTransition, prefersReducedMotion } = useMotionPreferences();
-  const { isInstalled } = usePwaInstall();
+  const { isInstalled, isInstallable, install } = usePwaInstall(copy);
 
   useFocusTrap(trapEnabled, dialogRef, onClose);
 
@@ -229,9 +229,32 @@ export const SettingsModal = ({
             <div>
               <SectionTitle>{copy.installPwa}</SectionTitle>
               <div className="mt-2 flex items-center min-h-[40px]">
-                <p className="text-xs text-muted">
-                  {isInstalled ? (copy.installPwaInstalled || 'Installed!') : copy.installPwaUnavailable}
-                </p>
+                <button
+                  type="button"
+                  onClick={isInstalled || !isInstallable ? undefined : install}
+                  disabled={isInstalled || !isInstallable}
+                  className={classNames(
+                    'px-3 py-2 text-sm rounded-xl border inline-flex items-center gap-2 transition-soft motion-ease',
+                    isInstalled
+                      ? 'btn-tonal opacity-50 cursor-not-allowed'
+                      : isInstallable
+                      ? 'btn-contrast focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]'
+                      : 'btn-tonal opacity-50 cursor-not-allowed'
+                  )}
+                  aria-label={isInstalled ? copy.installPwaInstalled : copy.installPwaButton}
+                >
+                  {isInstalled ? (
+                    <>
+                      <Check className="h-4 w-4" aria-hidden />
+                      {copy.installPwaInstalled}
+                    </>
+                  ) : (
+                    <>
+                      <Download className="h-4 w-4" aria-hidden />
+                      {copy.installPwaButton}
+                    </>
+                  )}
+                </button>
               </div>
             </div>
           </div>
