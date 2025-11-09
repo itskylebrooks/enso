@@ -20,11 +20,19 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Declare supported color schemes so browsers/extensions know we handle them */
+html {
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
 :root {
   font-family: 'IBM Plex Sans', sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  color-scheme: light;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -51,7 +59,6 @@
 }
 
 .dark {
-  color-scheme: dark;
   --color-bg: #000000;
   --color-text: #ffffff;
   --color-surface: #0b0b0b;
