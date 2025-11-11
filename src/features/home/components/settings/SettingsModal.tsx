@@ -325,7 +325,7 @@ export const SettingsModal = ({
                   </div>
 
                   <div className="absolute right-4 inset-y-0 flex items-center">
-                    <a href="https://itskylebrooks.vercel.app/" target="_blank" rel="noreferrer" className="text-current" aria-label="Kyle Brooks website">
+                    <a href="https://itskylebrooks.tech/" target="_blank" rel="noreferrer" className="text-current" aria-label="Kyle Brooks website">
                       <SquareArrowOutUpRight className="h-4 w-4" aria-hidden />
                     </a>
                   </div>
