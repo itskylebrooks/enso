@@ -2891,7 +2891,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
               })}
               {/* Email feedback card (opens mailto) placed to the right of Bug card on md screens */}
               <a
-                href="mailto:itskylebrooks@icloud.com"
+                href="mailto:feedback@itskylebrooks.tech"
                 className={classNames(
                   'rounded-2xl border surface surface-border px-4 py-4 transition-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] shadow-sm surface-hover flex items-center min-h-[88px]',
                 )}
