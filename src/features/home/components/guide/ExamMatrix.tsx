@@ -1,10 +1,11 @@
 import type { ReactElement } from 'react';
-import { useState, Fragment } from 'react';
+import { useEffect, useState, Fragment } from 'react';
 import type { Locale } from '@shared/types';
 import type { GradeCell } from '@shared/types/exam';
 import { ATTACK_COLUMNS, MATRIX_ROWS, KATAME_ROWS } from '@shared/data/examMatrixData';
 import { getGradeStyle } from '@shared/styles/belts';
 import type { Copy } from '@shared/constants/i18n';
+import { MoveHorizontal } from 'lucide-react';
 
 type ExamMatrixProps = {
   locale: Locale;
@@ -70,6 +71,29 @@ const GradeCellComponent = ({ cell, isDark }: { cell: GradeCell; isDark: boolean
 
 export const ExamMatrix = ({ locale, copy, isDark, onCellClick }: ExamMatrixProps): ReactElement => {
   const [focusedCell, setFocusedCell] = useState<{ row: number; col: number } | null>(null);
+  const [isFullWidth, setIsFullWidth] = useState<boolean>(false);
+
+  // Restore width mode from session (defaults to page-width)
+  useEffect(() => {
+    try {
+      const saved = sessionStorage.getItem('examMatrixWidthMode');
+      setIsFullWidth(saved === 'full');
+    } catch {
+      // no-op
+    }
+  }, []);
+
+  const toggleWidth = () => {
+    setIsFullWidth((prev) => {
+      const next = !prev;
+      try {
+        sessionStorage.setItem('examMatrixWidthMode', next ? 'full' : 'page');
+      } catch {
+        // no-op
+      }
+      return next;
+    });
+  };
 
   const allRows = [...MATRIX_ROWS, ...KATAME_ROWS];
   const insertKatameSeparator = MATRIX_ROWS.length;
@@ -121,8 +145,38 @@ export const ExamMatrix = ({ locale, copy, isDark, onCellClick }: ExamMatrixProp
       <p className="text-sm text-subtle leading-relaxed">{copy.examMatrixLead}</p>
 
       {/* Table container with horizontal scroll on small screens */}
-      <div className="overflow-x-auto rounded-xl border surface-border shadow-sm">
-        <table role="grid" className="w-full border-collapse text-sm">
+      <div className={
+        isFullWidth ? 'md:relative md:left-1/2 md:-ml-[50vw] md:w-screen' : ''
+      }>
+        <div className={
+          isFullWidth
+            ? 'relative md:max-w-[calc(100vw-48px)] md:mx-auto md:flex md:justify-center'
+            : 'relative'
+        }>
+          {/* Framed card around the table */}
+          <div
+            className={
+              isFullWidth
+                ? 'relative inline-block rounded-xl border surface-border surface overflow-hidden shadow-sm'
+                : 'relative rounded-xl border surface-border surface overflow-hidden shadow-sm'
+            }
+          >
+            {/* Inner scroll container (collapsed mode) */}
+            <div className={isFullWidth ? '' : 'overflow-x-auto'}>
+          {/* Top-left width toggle (desktop only) */}
+          <button
+            type="button"
+            onClick={toggleWidth}
+            className="hidden md:inline-flex items-center justify-center gap-1 absolute top-2 left-2 z-20 px-2 py-1.5 rounded-lg border btn-tonal surface-hover text-xs focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+            aria-pressed={isFullWidth}
+            aria-label={isFullWidth ? (locale === 'de' ? 'Auf Seitenbreite begrenzen' : 'Constrain to page width') : (locale === 'de' ? 'Auf volle Breite erweitern' : 'Expand to full width')}
+            title={isFullWidth ? (locale === 'de' ? 'Auf Seitenbreite begrenzen' : 'Constrain to page width') : (locale === 'de' ? 'Auf volle Breite erweitern' : 'Expand to full width')}
+          >
+            <MoveHorizontal className="w-4 h-4" aria-hidden />
+            <span className="sr-only">{isFullWidth ? 'Page width' : 'Full width'}</span>
+          </button>
+
+              <table role="grid" className={`${isFullWidth ? 'w-max' : 'w-full'} border-collapse text-sm`}>
           <thead>
             <tr className="surface border-b surface-border">
               <th className="md:sticky left-0 surface z-10 px-3 py-1 text-left font-semibold text-xs uppercase tracking-wide border-r surface-border" style={{ minWidth: '220px', width: '220px' }}>
@@ -222,7 +276,10 @@ export const ExamMatrix = ({ locale, copy, isDark, onCellClick }: ExamMatrixProp
               );
             })}
           </tbody>
-        </table>
+              </table>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
