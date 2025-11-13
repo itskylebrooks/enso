@@ -6,6 +6,8 @@ import { ATTACK_COLUMNS, MATRIX_ROWS, KATAME_ROWS } from '@shared/data/examMatri
 import { getGradeStyle } from '@shared/styles/belts';
 import type { Copy } from '@shared/constants/i18n';
 import { MoveHorizontal } from 'lucide-react';
+import { motion } from 'motion/react';
+import { defaultEase } from '@shared/components/ui/motion';
 
 type ExamMatrixProps = {
   locale: Locale;
@@ -145,16 +147,18 @@ export const ExamMatrix = ({ locale, copy, isDark, onCellClick }: ExamMatrixProp
       <p className="text-sm text-subtle leading-relaxed">{copy.examMatrixLead}</p>
 
       {/* Table container with horizontal scroll on small screens */}
-      <div className={
+      <motion.div layout transition={{ duration: 0.24, ease: defaultEase }} className={
         isFullWidth ? 'md:relative md:left-1/2 md:-ml-[50vw] md:w-screen' : ''
       }>
-        <div className={
+        <motion.div layout transition={{ duration: 0.24, ease: defaultEase }} className={
           isFullWidth
             ? 'relative md:max-w-[calc(100vw-48px)] md:mx-auto md:flex md:justify-center'
             : 'relative'
         }>
           {/* Framed card around the table */}
-          <div
+          <motion.div
+            layout
+            transition={{ duration: 0.24, ease: defaultEase }}
             className={
               isFullWidth
                 ? 'relative inline-block rounded-xl border surface-border surface overflow-hidden shadow-sm'
@@ -278,9 +282,9 @@ export const ExamMatrix = ({ locale, copy, isDark, onCellClick }: ExamMatrixProp
           </tbody>
               </table>
             </div>
-          </div>
-        </div>
-      </div>
+          </motion.div>
+        </motion.div>
+      </motion.div>
     </div>
   );
 };
