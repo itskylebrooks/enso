@@ -1,485 +1,196 @@
-# Enso — Aikidō study companion (v0.9.0)
+# Enso — Aikidō Study Companion
 
-*A clean, bilingual (EN/DE) catalog of Aikidō techniques with fast search, versions by trainer, and personal study tools.*
+A calm, bilingual (EN/DE) Progressive Web App for studying Aikidō: searchable techniques, glossary terms, exam guides, and local-first bookmarks.
 
-> “Your personal Aikidō library and study companion.”
+![Desktop Library Page](./public/images/library-page.png)
 
-#> **Why this shape?** It scales to many trainers and weapon contexts without duplicating whole techniques, and it keeps steps as concise cues rather than long essays.
+**Local-first:** no accounts • bookmarks & preferences stay on your device
 
-## Adding New Techniques
+## Table of contents
 
-Techniques are stored as JSON files in `/content/techniques/`. Each file represents one technique with multiple versions (Standard, trainer-specific) and entry variations (irimi/tenkan).
+- [What you can do](#what-you-can-do)
+- [Features](#features)
+- [Content model](#content-model)
+- [Tech stack](#tech-stack)
+- [Getting started](#getting-started)
+- [Project structure](#project-structure)
+- [Content workflow](#content-workflow)
+- [Feedback → GitHub Issues](#feedback--github-issues)
+- [Contributing](#contributing)
+- [License](#license)
 
-### Template Structure
+## What you can do
 
-Create a new file: `/content/techniques/attack-technique-direction.json`
+- Find techniques quickly (filters + spotlight search)
+- Learn from a consistent technique layout: Steps, Uke, Common Mistakes, Context, Media
+- Compare entries/stances/variants without splitting into dozens of pages
+- Browse a clean glossary (terms, attacks, etiquette, philosophy)
+- Save techniques/terms to bookmark collections for your training goals
+- Use exam/program guides as a quick reference before class
 
-```json
-{
-  "id": "t-unique-id",
-  "slug": "attack-technique-direction",
-  "name": {
-    "en": "Attack Technique Name (Direction)",
-    "de": "Attack Technique Name (Direction)"
-  },
-  "jp": "日本語名",
-  "category": "throw",
-  "attack": "katate-tori",
-  "weapon": "empty-hand",
-  "level": "kyu5",
-  "summary": {
-    "en": "Brief English description of what this technique is and its purpose.",
-    "de": "Kurze deutsche Beschreibung der Technik und ihres Zwecks."
-  },
-  "tags": [
-    "technique-name",
-    "direction",
-    "category",
-    "attack"
-  ],
-  "versions": [
-    {
-  "id": "v-base",
-      "hanmi": "ai-hanmi",
-      "stepsByEntry": {
-        "irimi": {
-          "en": [
-            "Receive the attack softly; align posture.",
-            "Step off-line (irimi) and establish connection.",
-            "Guide partner's energy through the technique.",
-            "Complete movement maintaining control.",
-            "Finish with safe ukemi and zanshin."
-          ],
-          "de": [
-            "Nimm den Angriff weich an; richte die Haltung aus.",
-            "Tritt von der Linie (Irimi) und etabliere Verbindung.",
-            "Führe die Energie des Partners durch die Technik.",
-            "Vollende die Bewegung mit Kontrolle.",
-            "Beende mit sicherem Ukemi und Zanshin."
-          ]
-        },
-        "tenkan": {
-          "en": [
-            "Receive the attack softly; align posture.",
-            "Turn (tenkan) and blend with partner's energy.",
-            "Maintain connection while pivoting.",
-            "Execute the technique from the new angle.",
-            "Guide to safe ukemi and maintain zanshin."
-          ],
-          "de": [
-            "Nimm den Angriff weich an; richte die Haltung aus.",
-            "Drehe (Tenkan) und verschmelze mit der Energie.",
-            "Halte Verbindung beim Drehen.",
-            "Führe die Technik aus dem neuen Winkel aus.",
-            "Führe in sicheres Ukemi und halte Zanshin."
-          ]
-        }
-      },
-      "uke": {
-        "role": {
-          "en": "Provide a committed attack and follow the lead with appropriate resistance.",
-          "de": "Greife engagiert an und folge der Führung mit angemessenem Widerstand."
-        },
-        "notes": {
-          "en": [
-            "Maintain realistic attack energy",
-            "Stay connected throughout the movement",
-            "Take safe ukemi when balance is broken"
-          ],
-          "de": [
-            "Realistische Angriffsenergie beibehalten",
-            "Verbindung während der Bewegung halten",
-            "Sicheres Ukemi nehmen wenn Gleichgewicht bricht"
-          ]
-        }
-      },
-      "media": [],
-      "commonMistakes": {
-        "en": [
-          "Using upper body strength instead of whole body movement",
-          "Breaking posture during execution",
-          "Losing connection with partner"
-        ],
-        "de": [
-          "Oberkörperkraft statt Ganzkörperbewegung verwenden",
-          "Haltung während Ausführung verlieren",
-          "Verbindung zum Partner verlieren"
-        ]
-      },
-      "context": {
-        "en": "Context about when and how this variation is practiced, important principles to remember.",
-        "de": "Kontext darüber, wann und wie diese Variation geübt wird, wichtige Prinzipien zum Merken."
-      }
-    },
-    {
-      "id": "v-mustermann",
-      "trainerId": "max-mustermann",
-      "dojoId": "example-dojo",
-      "hanmi": "ai-hanmi",
-      "stepsByEntry": {
-        "irimi": {
-          "en": [
-            "Start in ai-hanmi; receive the attack.",
-            "Enter with strong irimi emphasizing hip rotation.",
-            "Control partner's center throughout movement.",
-            "Execute technique with whole body power.",
-            "Guide to completion with precision and zanshin."
-          ],
-          "de": [
-            "Beginne in Ai-Hanmi; empfange den Angriff.",
-            "Trete mit starkem Irimi ein, betone Hüftrotation.",
-            "Kontrolliere das Zentrum des Partners während der Bewegung.",
-            "Führe Technik mit Ganzkörperkraft aus.",
-            "Führe zur Vollendung mit Präzision und Zanshin."
-          ]
-        }
-      },
-      "uke": {
-        "role": {
-          "en": "Grab with intent from ai-hanmi. Follow the entry without resistance and receive the throw safely.",
-          "de": "Greife entschlossen aus Ai-Hanmi. Folge dem Eintritt ohne Widerstand und nimm den Wurf sicher an."
-        },
-        "notes": {
-          "en": [
-            "Maintain firm but not rigid grip",
-            "Move with the technique",
-            "Prepare for appropriate ukemi"
-          ],
-          "de": [
-            "Festen aber nicht starren Griff halten",
-            "Mit der Technik mitgehen",
-            "Auf passendes Ukemi vorbereiten"
-          ]
-        }
-      },
-      "commonMistakes": {
-        "en": [
-          "Weak entry creating too much distance",
-          "Relying on arm strength",
-          "Losing postural control"
-        ],
-        "de": [
-          "Schwacher Eintritt erzeugt zu viel Abstand",
-          "Sich auf Armkraft verlassen",
-          "Haltungskontrolle verlieren"
-        ]
-      },
-      "context": {
-        "en": "Max Mustermann's interpretation emphasizes strong entry and hip-driven movement, maintaining center control throughout.",
-        "de": "Max Mustermanns Interpretation betont starken Eintritt und hüftgetriebene Bewegung, Zentrumskontrolle durchgehend beibehaltend."
-      },
-      "media": [
-        {
-          "type": "youtube",
-          "url": "https://www.youtube-nocookie.com/embed/VIDEO_ID",
-          "title": "Technique Name - Max Mustermann"
-        }
-      ]
-    }
-  ]
-}
-```
+## Features
 
-### Field Explanations
+### Techniques
 
-#### Core Metadata
+- Technique library with filters (attack, level/grade, weapon, stance/hanmi, etc.)
+- Technique pages with structured sections:
+  - **Steps** (by entry: irimi/tenkan/omote/ura)
+  - **Uke** role + safety notes
+  - **Common Mistakes**
+  - **Context** (when/why)
+  - **Media** (links, optional)
+- Variant-friendly modeling (base + versions/lines + entry modes) to avoid duplicated pages
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `id` | string | ✅ | Unique identifier (e.g., "t-shn-katatetori-omote") |
-| `slug` | string | ✅ | URL-friendly name (e.g., "katate-tori-shiho-nage-omote") |
-| `name` | Localized | ✅ | Technique name in EN/DE |
-| `jp` | string | ❌ | Japanese name (romaji or kanji) |
-| `category` | enum | ✅ | One of: `throw`, `control`, `pin`, `other` |
-| `attack` | string | ✅ | Attack type (e.g., "katate-tori", "shomen-uchi") |
-| `weapon` | string | ✅ | Weapon context: `empty-hand`, `bokken`, `jo`, `tanto` |
-| `level` | string | ❌ | Belt level for filtering (e.g., "kyu5", "kyu4", "kyu3") |
-| `summary` | Localized | ✅ | Brief description of the technique |
-| `tags` | string[] | ✅ | Alternative names for search |
+### Search
 
-#### Versions Structure
+- Spotlight-style search overlay
+- Weighted ranking across techniques, glossary, and collections
+- Keyboard-friendly navigation
 
-Each technique has multiple **versions** - different interpretations by trainers or dojos. The first version should always be the standard one:
+### Glossary
 
-```json
-"versions": [
-  {
-  "id": "v-base",        // Required: Always start with base version
-    "hanmi": "ai-hanmi",       // Required: "ai-hanmi" or "gyaku-hanmi"
-    "stepsByEntry": { ... },   // Required: Steps for irimi and/or tenkan
-    "uke": { ... },           // Required: Uke's role and notes
-    "media": [],              // Optional: Video/image references
-    "commonMistakes": { ... },// Optional: Things to avoid
-    "context": { ... }        // Optional: When/how to use
-  },
-  {
-    "id": "v-mustermann",     // Trainer-specific version
-    "trainerId": "max-mustermann",  // Links to trainer profile
-    "dojoId": "example-dojo",       // Links to dojo
-    "hanmi": "ai-hanmi",
-    // ... same structure as above
-  }
-]
-```
+- Filterable term list + detail pages
+- Short definitions + optional literal translation and longer notes
+- EN/DE copy for every term
 
-**Important**: Version IDs must start with `v-` prefix (e.g., `v-base`, `v-mustermann`, `v-haase`).
+### Bookmarks & collections
 
-#### Steps By Entry
+- Bookmark techniques and glossary terms
+- Organize into collections
+- Track personal progress over time
 
-Each version contains `stepsByEntry` - an object with steps for different entry types:
+### Guides
 
-```json
-"stepsByEntry": {
-  "irimi": {              // Entering/direct entry
-    "en": [ "step 1", "step 2", ... ],
-    "de": [ "Schritt 1", "Schritt 2", ... ]
-  },
-  "tenkan": {             // Turning/pivoting entry
-    "en": [ "step 1", "step 2", ... ],
-    "de": [ "Schritt 1", "Schritt 2", ... ]
-  }
-}
-```
+- Exam/program pages and matrices (kyū/dan and weapon basics)
+- Roadmap view for structured progression
 
-**Entry Types:**
-- `irimi` — Direct entering movement
-- `tenkan` — Turning/pivoting movement
+### PWA
 
-You can include one or both entry types. Each should have 4-8 clear, actionable steps.
+- Installable Progressive Web App
+- Designed for fast, readable use on mobile before training
 
-#### Hanmi (Stance)
+## Content model
 
-Each version specifies the **hanmi** (stance relationship):
-- `ai-hanmi` — Same stance (both partners have same foot forward)
-- `gyaku-hanmi` — Opposite stance (opposite feet forward)
+Enso is **content-driven**.
 
-#### Additional Content
+- Canonical content lives in `content/` as JSON.
+- The app consumes typed content in `src/shared/types/`.
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| `uke` | Object | ✅ | Guidance for the attacking partner |
-| `uke.role` | Localized<string> | ✅ | Brief description of uke's role |
-| `uke.notes` | Localized<string[]> | ✅ | Specific tips for uke (can be empty array) |
-| `media` | Array | ✅ | Video/image references (can be empty array) |
-| `commonMistakes` | Localized<string[]> | ✅ | Things to avoid (can be empty) |
-| `context` | Localized<string> | ✅ | When/how to practice (can be empty string) |
+Main content areas:
 
-**Note**: Even if empty, these fields should be present in the JSON for consistency.
+- Techniques: `content/techniques/*.json`
+- Glossary terms: `content/glossary/*.json`
+- Trainers / dojos: `content/trainers.json`, `content/dojos.json`
+- Quotes / roadmap: `content/quotes.json`, `content/quotes-de.json`, `content/roadmap.json`
 
-### Complete Example
+### Technique JSON (concept)
 
-See `/content/techniques/katate-tori-kaiten-nage-soto.json` for a real working example with both standard and trainer-specific versions.
+Techniques are modeled around:
 
-### Validation
+- Core metadata (name, category, attack, weapon, grade)
+- Multiple **versions** (e.g., base + trainer/dojo interpretations)
+- Steps grouped by **entry mode** (`irimi`, `tenkan`, `omote`, `ura`)
 
-After creating your JSON file, run the content validator:
+See `src/shared/types/content.ts` (and related types) for the current canonical shape.
+
+### Glossary JSON (concept)
+
+Glossary terms include:
+
+- `romaji`, optional `jp`
+- short definition (EN/DE)
+- optional literal translation and longer notes
+
+## Tech stack
+
+- React + TypeScript + Vite
+- Tailwind CSS
+- Zustand (client state + local persistence via `storageService`)
+- Framer Motion (subtle UI motion)
+- PWA manifest + install support
+- Vercel (hosting) + serverless API route for feedback
+
+## Getting started
 
 ```bash
-pnpm run build:content
-```
-
-This will check:
-- ✅ Valid JSON syntax
-- ✅ Required fields present
-- ✅ Correct field types
-- ✅ Valid enum values
-- ✅ Unique IDs and slugs
-
-### Tips for Writing Techniques
-
-1. **Steps**: Keep to 4-8 clear, actionable cues per entry type — not essays
-2. **Common Mistakes**: Help students avoid typical errors
-3. **Context**: Explain when you'd use irimi vs tenkan for this technique
-4. **Uke guidance**: Include notes for the attacking partner's role
-5. **Media**: Add video links only if high quality and relevant (use youtube-nocookie.com URLs)
-
-### Naming Conventions
-
-- **IDs**: `t-abbreviation-attack-technique` (e.g., `t-shn-katatetori-omote`, `t1`, `t8`)
-- **Slugs**: `kebab-case` matching common usage (e.g., `katate-tori-shiho-nage-omote`)
-- **Version IDs**: `v-base` (required first), then `v-trainername` (e.g., `v-haase`, `v-mustermann`)
-- **Trainer IDs**: `kebab-case` (e.g., `max-mustermann`, `alfred-haase`)
-- **Dojo IDs**: `kebab-case` or abbreviation (e.g., `bsv`, `example-dojo`)
-
-## Highlights
-
-- **Library** — Filterable, searchable list of techniques.
-- **Technique pages** — Concise *Summary*, *Key Points*, *Common Mistakes*, *Context*, and *Steps*.
-- **Variations toolbar** — Choose **Direction** (Irimi / Tenkan / Omote / Ura), **Hanmi** (Ai / Gyaku), **Weapon** (Empty / Bokken / Jō / Tantō), and **Version** (trainer/dojo) from a single, scalable toolbar.
-- **Bookmarks & Collections** — Save techniques and organize them into belt-oriented or custom collections.
-- **Guide** — Movements, stances, etiquette, principles, and **exam program** (exam tables complete; more techniques coming).
-- **Glossary** — Core Aikidō terms with EN/DE definitions (clickable from tags).
-- **Search** — Diacritic-insensitive, field-weighted ranking; grouped results (Terms / Techniques / Collections).
-- **Feedback page** — Guided forms for improvements, new variations/techniques, app ideas, or bug reports with autosave, live summaries, and JSON preview/export.
-- **Bilingual UI** — **English** and **Deutsch** toggle.
-- **Theme** — Light/Dark mode.
-- **Privacy** — Local-first storage; export/import available for bookmarks/collections.
-- **PWA Support** — Install Enso as an app for offline access and a native experience (Settings → Install PWA).
-
-## Tech Stack
-
-- **React + TypeScript + Vite**
-- **Tailwind CSS**
-- **Zustand** (client state)
-- **Local-first storage** (via app storage service; export/import for bookmarks)
-- **Framer Motion (Motion)** for subtle animations
-- **PWA** (Progressive Web App with offline support via `vite-plugin-pwa`)
-- Simple **i18n dictionaries** (no heavy framework)
-
-> Fonts: **IBM Plex Sans** (SIL Open Font License 1.1).
-
-### PWA Features
-
-Enso is a fully installable Progressive Web App:
-- **Offline Mode** — All content cached for offline access
-- **Auto-update** — Service worker updates automatically on new deployments
-- **Install Prompt** — Install button in Settings when available
-- **Native Feel** — Standalone display mode on mobile and desktop
-
-See [PWA.md](./PWA.md) for complete implementation details.
-
-## Getting Started
-
-### Prerequisites
-- Node 18+ (or 20+)
-- **pnpm** recommended
-
-### Setup
-```bash
-pnpm i
+pnpm install
 pnpm dev
 # open http://localhost:5173
 ```
 
-### Build & Preview
+Build + preview:
+
 ```bash
 pnpm build
 pnpm preview
 ```
 
-### Lint (optional)
+## Project structure
+
+High-level layout:
+
+- `src/`
+  - `features/`
+    - `technique/` — library + technique pages + toolbar
+    - `search/` — indexer + scorer + overlay UI
+    - `glossary/` — glossary pages, filters, detail views
+    - `bookmarks/` — collections + bookmark UI + local progress
+    - `home/` — landing, guides, roadmap, settings, feedback
+  - `shared/`
+    - `services/storageService.ts` — local persistence
+    - `store/` — app-wide state
+    - `types/` — content + app types
+    - `components/` — reusable UI (modals, toasts, selects, layout)
+- `content/` — canonical JSON + assets
+- `scripts/build-content.ts` — content build/validation utility
+- `api/feedback.ts` — serverless endpoint for feedback submissions
+- `public/` — fonts, icons, `manifest.json`
+
+## Content workflow
+
+1) Edit JSON in `content/` (techniques or glossary).
+2) Validate/build content:
+
 ```bash
-pnpm lint
+pnpm run build
+# or run the content script directly if needed
+# node scripts/build-content.ts
 ```
 
-### Feedback Page & GitHub Integration
+Notes:
 
-The in-app **Feedback** route (Settings → Feedback, technique footer button, or the Library CTA) sends every submission to `/api/feedback`. The page covers five flows: improve an existing technique, add a variation/version, propose a new technique, share general app feedback, or report a bug.
+- Keep EN/DE fields in sync.
+- Prefer concise, actionable steps (4–8 cues per entry).
+- Media is link-based (no uploads).
 
-Key behaviour:
-- Drafts autosave to `localStorage` (`enso.feedbackDraft`) so contributors can leave and return without losing work.
-- Each form shows a live summary panel (with duplicate detection for new techniques) plus a JSON preview and `Download JSON report` action for manual backups.
-- Navigation hints can preselect a card (the Library CTA jumps straight into “Propose a new technique”), otherwise visitors land on the picker.
-- Media links are normalised, YouTube/Vimeo previews are detected automatically, and contributors must opt-in to publishing via the consent toggle.
-- Submissions call `/api/feedback`, which validates payloads with Zod, enforces request size limits, and optionally opens a GitHub issue when credentials exist.
+## Feedback → GitHub Issues
 
-During local development the API responds with `{ ok: true, warning: 'github_not_configured' }` if no repository is configured—this still clears the active form so you can test the UX.
+Enso includes an in-app feedback flow that posts to `/api/feedback`.
 
-Implementation lives in `src/features/home/components/feedback/FeedbackPage.tsx`, with shared payload builders in `src/shared/lib/buildFeedbackPayload.ts` and the server entry in `api/feedback.ts`.
+- Payloads are validated server-side
+- When GitHub credentials are configured, submissions can open a labeled GitHub Issue
 
-To wire GitHub issues, add a `.env.local` file (git-ignored) and configure the target repository:
+Local dev without GitHub configured should still let you test the UX (the API can respond with a warning).
 
-```
-GITHUB_TOKEN=***          # Fine-grained PAT, Issues: Read & Write, scoped to the target repo
+To enable issue creation, add a `.env.local` (git-ignored) and set:
+
+```bash
+GITHUB_TOKEN=***
 GITHUB_OWNER=your-user-or-org
-GITHUB_REPO=enso-feedback # Repository to receive feedback issues (accepts "owner/repo" form too)
+GITHUB_REPO=your-repo
 ```
 
-Mirror the same variables in your Vercel project (Production / Preview / Development) before deploying the API route.
-
-## Data Model (techniques) — v2 (overview)
-
-Each technique contains core metadata, a catalog of available **versions** (trainers/dojo), and **variants** (content for a specific combination of direction/weapon/hanmi/version).
-
-```ts
-type Direction = 'irimi' | 'tenkan' | 'omote' | 'ura';
-type Hanmi = 'ai' | 'gyaku';
-type Weapon = 'empty' | 'bokken' | 'jo' | 'tanto';
-
-type VersionMeta = {
-  id: string;           // "haase-bsv"
-  label: string;        // "Alfred Haase (BSV)"
-  dojo?: string;        // optional
-  trainerId?: string;   // optional
-};
-
-type VariantKey = {
-  direction: Direction;
-  hanmi: Hanmi;
-  weapon: Weapon;
-  versionId?: string | null;  // null/undefined => Standard
-};
-
-type Localized<T> = { en: T; de: T };
-
-type TechniqueVariant = {
-  key: VariantKey;
-  steps: Localized<string[]>;           // concise skeleton (4–6 cues)
-  commonMistakes?: Localized<string[]>;
-  context?: Localized<string>;
-  uke?: {
-    role: Localized<string>;
-    notes?: Localized<string[]>;
-  };
-  media?: Array<{ type: 'youtube'|'vimeo'|'url'; url: string; title?: string }>;
-};
-
-type Technique = {
-  id: string;
-  slug: string;
-  name: Localized<string>;
-  jp?: string;
-  category: 'throw'|'control'|'pin'|'other';
-  attack: string;               // e.g. 'katate-tori'
-  level?: string;               // belt tag for filtering (display-only)
-  summary: Localized<string>;
-  tags: string[];               // searchable aliases
-  versions: VersionMeta[];      // catalog of trainers/lines
-  variants: TechniqueVariant[]; // content per combination
-};
-```
-
-> **Why this shape?** It scales to many trainers and weapon contexts without duplicating whole techniques, and it keeps steps as concise cues rather than long essays.
-
-## UX Conventions
-
-- **Toolbar** over technique content with four selectors:
-  - **Direction** (segmented)
-  - **Hanmi** (select)
-  - **Weapon** (select)
-  - **Version** (select; searchable; grouped by dojo)
-- **URL params** reflect the active selection (shareable deep links).
-- **Empty combination** → gentle “no content yet” message (notes/media may still show).
-- **Search** highlights matches and groups by entity (Glossary / Techniques / Collections).
-- **Accessibility**: keyboard-navigable controls, visible focus states, readable contrast.
-
-## Content & Legal
-
-- **Unofficial**: This site is an **unofficial study aid**. Requirements vary by dojo/federation.
-- **Accuracy**: *All mistakes are mine; trainers have not formally approved the descriptions yet.*
-- **Exam programs**: Tables in Enso are **reformatted** from public curricula in a new design; we do **not** republish copyrighted PDFs/images.
-- **Logos/marks**: Dojo/federation logos remain trademarks of their owners.
-- **Fonts**: IBM Plex Sans — SIL Open Font License 1.1.
-
-### German (Kurzfassung)
-- **Inoffiziell**: Enso ist eine **inoffizielle Lernhilfe**. Prüfungsinhalte können je nach Dojo/Verband abweichen.  
-- **Hinweis**: *Alle Fehler liegen bei mir; Trainer:innen haben die Inhalte noch nicht offiziell freigegeben.*  
-- **Prüfungstabellen**: Neu gestaltet, keine Weiterveröffentlichung von fremden PDFs/Bildern.  
+Then mirror the same variables in Vercel.
 
 ## Contributing
 
-Right now we’re prioritizing stability and content quality.  
-- **Bugs / suggestions**: Settings → Feedback (in-app forms submit via `/api/feedback` + optional GitHub issues).  
-- Pull requests are welcome once v1.0 lands and the content model is frozen.
+PRs and content improvements are welcome.
+
+- Keep changes small and reviewable
+- Follow existing TypeScript types (single source of truth)
+- Prefer structured content (JSON) over freeform text
+- If you add new glossary/technique files, keep IDs/slugs stable and unique
 
 ## License
 
-Code: The source code in this repository is licensed under the MIT License (see `LICENSE`).
-
-Content: Text, images and other original website content are licensed under the Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0). See: https://creativecommons.org/licenses/by-nc/4.0/
-
-Fonts: IBM Plex Sans — SIL Open Font License 1.1.
-
-Notes:
-- Third-party logos, marks and some media may be subject to their owners' trademarks and/or separate licenses. The project does not relicense those assets.
-- If you redistribute content from this site please respect the non-commercial clause of the CC BY-NC 4.0 license and retain attribution.
+Original work by Kyle Brooks. See `LICENSE` and `NOTICE`.
