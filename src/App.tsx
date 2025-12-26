@@ -306,7 +306,7 @@ function applyFilters(techniques: Technique[], filters: Filters): Technique[] {
         return false;
       }
 
-  const requiredEntry: EntryMode = filters.stance;
+      const requiredEntry: EntryMode = filters.stance;
       const hasEntryMode = technique.versions.some((version) => Boolean(version.stepsByEntry?.[requiredEntry]));
       if (!hasEntryMode) return false;
     }
@@ -678,7 +678,7 @@ export default function App(): ReactElement {
     const allCategories: ('movement' | 'stance' | 'attack' | 'etiquette' | 'philosophy' | 'other')[] = [
       'movement', 'stance', 'attack', 'etiquette', 'philosophy', 'other'
     ];
-    
+
     const copy = getCopy(locale);
     const getCategoryLabel = (category: 'movement' | 'stance' | 'attack' | 'etiquette' | 'philosophy' | 'other'): string => {
       const labels = {
@@ -691,8 +691,8 @@ export default function App(): ReactElement {
       };
       return labels[category];
     };
-    
-    return allCategories.sort((a, b) => 
+
+    return allCategories.sort((a, b) =>
       getCategoryLabel(a).localeCompare(getCategoryLabel(b), locale, {
         sensitivity: 'accent',
         caseFirst: 'upper'
@@ -855,10 +855,10 @@ export default function App(): ReactElement {
         prev.collections.map((collection) =>
           collection.id === id
             ? {
-                ...collection,
-                name: sanitizeCollectionName(trimmed),
-                updatedAt: now,
-              }
+              ...collection,
+              name: sanitizeCollectionName(trimmed),
+              updatedAt: now,
+            }
             : collection,
         ),
       ),
@@ -1162,33 +1162,33 @@ export default function App(): ReactElement {
     route === 'bookmarks'
       ? copy.backToBookmarks
       : route === 'home'
-      ? copy.backToHome
-      : route === 'about'
-      ? copy.backToAbout
-      : route === 'roadmap'
-      ? copy.backToRoadmap
-      : route === 'guide'
-      ? copy.backToGuide
-      : route === 'glossary'
-      ? copy.backToGlossary
-      : route === 'feedback'
-      ? copy.backToFeedback
-      : copy.backToLibrary;
+        ? copy.backToHome
+        : route === 'about'
+          ? copy.backToAbout
+          : route === 'roadmap'
+            ? copy.backToRoadmap
+            : route === 'guide'
+              ? copy.backToGuide
+              : route === 'glossary'
+                ? copy.backToGlossary
+                : route === 'feedback'
+                  ? copy.backToFeedback
+                  : copy.backToLibrary;
 
   const glossaryBackLabel =
     route === 'bookmarks'
       ? copy.backToBookmarks
       : route === 'home'
-      ? copy.backToHome
-      : route === 'about'
-      ? copy.backToAbout
-      : route === 'roadmap'
-      ? copy.backToRoadmap
-      : route === 'guide'
-      ? copy.backToGuide
-      : route === 'feedback'
-      ? copy.backToFeedback
-      : copy.backToGlossary;
+        ? copy.backToHome
+        : route === 'about'
+          ? copy.backToAbout
+          : route === 'roadmap'
+            ? copy.backToRoadmap
+            : route === 'guide'
+              ? copy.backToGuide
+              : route === 'feedback'
+                ? copy.backToFeedback
+                : copy.backToGlossary;
 
   let mainContent: ReactElement;
 
@@ -1200,22 +1200,22 @@ export default function App(): ReactElement {
         transition={pageMotion.transition}
         style={{ willChange: 'transform, opacity' }}
       >
-      <TechniquePage
-        technique={currentTechnique}
-        progress={currentProgress ?? null}
-        copy={copy}
-        locale={locale}
-        backLabel={techniqueBackLabel}
-        onBack={() => closeTechnique()}
-        onToggleBookmark={() => toggleBookmark(currentTechnique, currentProgress ?? null)}
-        collections={db.collections}
-        bookmarkCollections={db.bookmarkCollections}
-        onAssignToCollection={(collectionId) => assignToCollection(currentTechnique.id, collectionId)}
-        onRemoveFromCollection={(collectionId) => removeFromCollection(currentTechnique.id, collectionId)}
-        onOpenGlossary={openGlossaryTerm}
-        onFeedbackClick={() => goToFeedback()}
-        onCreateCollection={createCollection}
-      />
+        <TechniquePage
+          technique={currentTechnique}
+          progress={currentProgress ?? null}
+          copy={copy}
+          locale={locale}
+          backLabel={techniqueBackLabel}
+          onBack={() => closeTechnique()}
+          onToggleBookmark={() => toggleBookmark(currentTechnique, currentProgress ?? null)}
+          collections={db.collections}
+          bookmarkCollections={db.bookmarkCollections}
+          onAssignToCollection={(collectionId) => assignToCollection(currentTechnique.id, collectionId)}
+          onRemoveFromCollection={(collectionId) => removeFromCollection(currentTechnique.id, collectionId)}
+          onOpenGlossary={openGlossaryTerm}
+          onFeedbackClick={() => goToFeedback()}
+          onCreateCollection={createCollection}
+        />
       </motion.div>
     );
   } else if (currentGlossaryTerm) {
@@ -1314,14 +1314,14 @@ export default function App(): ReactElement {
   } else if (route === 'feedback') {
     mainContent = (
       <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={pageMotion.transition}>
-      <FeedbackPage
-        copy={copy}
-        locale={locale}
-        techniques={db.techniques}
-        onBack={() => navigateTo('library')}
-        initialType={feedbackInitialType}
-        onConsumeInitialType={() => setFeedbackInitialType(null)}
-      />
+        <FeedbackPage
+          copy={copy}
+          locale={locale}
+          techniques={db.techniques}
+          onBack={() => navigateTo('library')}
+          initialType={feedbackInitialType}
+          onConsumeInitialType={() => setFeedbackInitialType(null)}
+        />
       </motion.div>
     );
   } else {
@@ -1347,69 +1347,69 @@ export default function App(): ReactElement {
             </div>
             {/* Mobile CTA removed here — now rendered inside the MobileFilters panel */}
             <div className="relative">
-            <ExpandableFilterBar label={copy.filters}>
-              <FilterPanel
-                copy={copy}
-                locale={locale}
-                filters={filters}
-                categories={categories}
-                attacks={attacks}
-                stances={stances}
-                weapons={weapons}
-                levels={gradeOrder}
-                trainers={trainers}
-                onChange={setFilters}
-              />
-              {/* Desktop CTA under filter panel */}
-              <div className="mt-3">
-                <button
-                  type="button"
-                  onClick={() => goToFeedback('newTechnique')}
-                  onMouseEnter={prefetchFeedbackPage}
-                  onFocus={prefetchFeedbackPage}
-                  className="w-full inline-flex items-center justify-center gap-2 rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2 text-sm transition-soft hover-border-adaptive"
-                >
-                  <PencilLine width={20} height={20} aria-hidden />
-                  {copy.feedbackAddTechniqueCta}
-                </button>
-              </div>
-            </ExpandableFilterBar>
-            <section>
-              {/* Button moved to under filters (desktop) and above grid (mobile) */}
-              <Library
-                copy={copy}
-                locale={locale}
-                techniques={filteredTechniques}
-                progress={db.progress}
-                onOpen={openTechnique}
-              />
-            </section>
+              <ExpandableFilterBar label={copy.filters}>
+                <FilterPanel
+                  copy={copy}
+                  locale={locale}
+                  filters={filters}
+                  categories={categories}
+                  attacks={attacks}
+                  stances={stances}
+                  weapons={weapons}
+                  levels={gradeOrder}
+                  trainers={trainers}
+                  onChange={setFilters}
+                />
+                {/* Desktop CTA under filter panel */}
+                <div className="mt-3">
+                  <button
+                    type="button"
+                    onClick={() => goToFeedback('newTechnique')}
+                    onMouseEnter={prefetchFeedbackPage}
+                    onFocus={prefetchFeedbackPage}
+                    className="w-full inline-flex items-center justify-center gap-2 rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2 text-sm transition-soft hover-border-adaptive"
+                  >
+                    <PencilLine width={20} height={20} aria-hidden />
+                    {copy.feedbackAddTechniqueCta}
+                  </button>
+                </div>
+              </ExpandableFilterBar>
+              <section>
+                {/* Button moved to under filters (desktop) and above grid (mobile) */}
+                <Library
+                  copy={copy}
+                  locale={locale}
+                  techniques={filteredTechniques}
+                  progress={db.progress}
+                  onOpen={openTechnique}
+                />
+              </section>
             </div>
           </>
         )}
 
         {route === 'bookmarks' && (
           <BookmarksView
-          copy={copy}
-          locale={locale}
-          techniques={db.techniques}
-          glossaryTerms={glossaryTerms}
-          progress={db.progress}
-          glossaryProgress={db.glossaryProgress}
-          collections={db.collections}
-          bookmarkCollections={db.bookmarkCollections}
-          glossaryBookmarkCollections={db.glossaryBookmarkCollections}
-          selectedCollectionId={selectedCollectionId}
-          onSelectCollection={(id) => setSelectedCollectionId(id)}
-          onCreateCollection={createCollection}
-          onRenameCollection={renameCollection}
-          onDeleteCollection={deleteCollection}
-          onAssign={assignToCollection}
-          onUnassign={removeFromCollection}
-          onAssignGlossary={assignGlossaryToCollection}
-          onUnassignGlossary={removeGlossaryFromCollection}
-          onOpenTechnique={openTechnique}
-          onOpenGlossaryTerm={(slug) => openGlossaryTerm(slug)}
+            copy={copy}
+            locale={locale}
+            techniques={db.techniques}
+            glossaryTerms={glossaryTerms}
+            progress={db.progress}
+            glossaryProgress={db.glossaryProgress}
+            collections={db.collections}
+            bookmarkCollections={db.bookmarkCollections}
+            glossaryBookmarkCollections={db.glossaryBookmarkCollections}
+            selectedCollectionId={selectedCollectionId}
+            onSelectCollection={(id) => setSelectedCollectionId(id)}
+            onCreateCollection={createCollection}
+            onRenameCollection={renameCollection}
+            onDeleteCollection={deleteCollection}
+            onAssign={assignToCollection}
+            onUnassign={removeFromCollection}
+            onAssignGlossary={assignGlossaryToCollection}
+            onUnassignGlossary={removeGlossaryFromCollection}
+            onOpenTechnique={openTechnique}
+            onOpenGlossaryTerm={(slug) => openGlossaryTerm(slug)}
           />
         )}
 
@@ -1449,22 +1449,22 @@ export default function App(): ReactElement {
                   />
                 </div>
                 <div className="relative">
-                <ExpandableFilterBar label={copy.filters}>
-                  <GlossaryFilterPanel
-                    copy={copy}
-                    filters={glossaryFilters}
-                    categories={glossaryCategories}
-                    onChange={setGlossaryFilters}
-                  />
-                </ExpandableFilterBar>
-                <section>
-                  <GlossaryPage
-                  locale={locale}
-                  copy={copy}
-                  filters={glossaryFilters}
-                  onOpenTerm={openGlossaryTerm}
-                  />
-                </section>
+                  <ExpandableFilterBar label={copy.filters}>
+                    <GlossaryFilterPanel
+                      copy={copy}
+                      filters={glossaryFilters}
+                      categories={glossaryCategories}
+                      onChange={setGlossaryFilters}
+                    />
+                  </ExpandableFilterBar>
+                  <section>
+                    <GlossaryPage
+                      locale={locale}
+                      copy={copy}
+                      filters={glossaryFilters}
+                      onOpenTerm={openGlossaryTerm}
+                    />
+                  </section>
                 </div>
               </>
             )}
@@ -1551,10 +1551,7 @@ export default function App(): ReactElement {
               onChangeTheme={handleThemeChange}
               onChangeAnimations={handleAnimationsPreferenceChange}
               onChangeDB={handleDBChange}
-              onNavigateToAbout={() => {
-                closeSettings();
-                navigateTo('about');
-              }}
+
               clearButtonRef={settingsClearButtonRef}
               trapEnabled={!confirmClearOpen}
             />
