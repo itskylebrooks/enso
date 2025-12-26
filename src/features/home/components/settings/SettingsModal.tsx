@@ -9,7 +9,7 @@ import { SectionTitle } from '@shared/components';
 import { useFocusTrap } from '@shared/hooks/useFocusTrap';
 import { useMotionPreferences } from '@shared/components/ui/motion';
 import { usePwaInstall } from '@shared/hooks/usePwaInstall';
-import { Info, SquareArrowOutUpRight, X, Sun, Moon, Monitor, Download, Check } from 'lucide-react';
+import { Linkedin, User, X, Sun, Moon, Monitor, Download, Check } from 'lucide-react';
 // import version from package.json
 import pkg from '../../../../../package.json';
 
@@ -26,7 +26,6 @@ type SettingsModalProps = {
   onChangeTheme: (theme: Theme | 'system') => void;
   onChangeAnimations: (disabled: boolean) => void;
   onChangeDB: (db: DB) => void;
-  onNavigateToAbout?: () => void;
   clearButtonRef?: RefObject<HTMLButtonElement | null>;
   trapEnabled?: boolean;
 };
@@ -44,7 +43,6 @@ export const SettingsModal = ({
   onChangeTheme,
   onChangeAnimations,
   onChangeDB,
-  onNavigateToAbout,
   clearButtonRef,
   trapEnabled = true,
 }: SettingsModalProps): ReactElement => {
@@ -107,52 +105,21 @@ export const SettingsModal = ({
             <X className="h-5 w-5" aria-hidden />
           </motion.button>
         </div>
-        <div className="p-4 space-y-4">
-          {/* Two columns: Language and Theme */}
-          <div className="grid grid-cols-1 min-[350px]:grid-cols-2 gap-4">
-            <div>
-              <SectionTitle>{copy.language}</SectionTitle>
-              <div className="mt-2 flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  onClick={() => onChangeLocale('en')}
-                  className={classNames(
-                    'px-3 py-2 text-sm rounded-xl border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
-                    locale === 'en' 
-                      ? 'btn-contrast' 
-                      : 'btn-tonal surface-hover',
-                  )}
-                  aria-pressed={locale === 'en'}
-                  aria-label="English"
-                >
-                  EN
-                </button>
-                <button
-                  type="button"
-                  onClick={() => onChangeLocale('de')}
-                  className={classNames(
-                    'px-3 py-2 text-sm rounded-xl border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
-                  locale === 'de' 
-                      ? 'btn-contrast' 
-                      : 'btn-tonal surface-hover',
-                  )}
-                  aria-pressed={locale === 'de'}
-                  aria-label="Deutsch"
-                >
-                  DE
-                </button>
+        <div className="p-4 space-y-3">
+          {/* Theme */}
+          <div>
+            <div className="grid grid-cols-2 gap-2 items-center">
+              <div>
+                <SectionTitle muted={false}>{copy.theme}</SectionTitle>
               </div>
-            </div>
-            <div>
-              <SectionTitle>{copy.theme}</SectionTitle>
-              <div className="mt-2 flex flex-wrap gap-2">
+              <div className="flex gap-2">
                 <button
                   type="button"
                   onClick={() => onChangeTheme('system')}
                   className={classNames(
-                    'p-2 rounded-xl border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
-                    isSystemTheme 
-                      ? 'btn-contrast' 
+                    'flex-1 p-2 rounded-lg border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+                    isSystemTheme
+                      ? 'btn-contrast'
                       : 'btn-tonal surface-hover',
                   )}
                   aria-pressed={isSystemTheme}
@@ -164,9 +131,9 @@ export const SettingsModal = ({
                   type="button"
                   onClick={() => onChangeTheme('light')}
                   className={classNames(
-                    'p-2 rounded-xl border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
-                    !isSystemTheme && theme === 'light' 
-                      ? 'btn-contrast' 
+                    'flex-1 p-2 rounded-lg border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+                    !isSystemTheme && theme === 'light'
+                      ? 'btn-contrast'
                       : 'btn-tonal surface-hover',
                   )}
                   aria-pressed={!isSystemTheme && theme === 'light'}
@@ -178,9 +145,9 @@ export const SettingsModal = ({
                   type="button"
                   onClick={() => onChangeTheme('dark')}
                   className={classNames(
-                    'p-2 rounded-xl border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
-                    !isSystemTheme && theme === 'dark' 
-                      ? 'btn-contrast' 
+                    'flex-1 p-2 rounded-lg border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+                    !isSystemTheme && theme === 'dark'
+                      ? 'btn-contrast'
                       : 'btn-tonal surface-hover',
                   )}
                   aria-pressed={!isSystemTheme && theme === 'dark'}
@@ -191,18 +158,98 @@ export const SettingsModal = ({
               </div>
             </div>
           </div>
-          {/* Two columns: Motion settings and PWA install */}
-          <div className="grid grid-cols-1 min-[350px]:grid-cols-2 gap-4">
-            <div>
-              <SectionTitle>{copy.motionSettings}</SectionTitle>
-              <div className="mt-2 flex flex-wrap gap-2">
+          <div className="border-t surface-border" />
+
+          {/* Install App */}
+          <div>
+            <div className="grid grid-cols-3 gap-2 items-center">
+              <div className="col-span-2">
+                <SectionTitle muted={false}>{copy.installPwa}</SectionTitle>
+              </div>
+              <button
+                type="button"
+                onClick={isInstalled || !isInstallable ? undefined : install}
+                disabled={isInstalled || !isInstallable}
+                className={classNames(
+                  'col-span-1 w-full px-3 py-2 text-sm rounded-lg border inline-flex items-center justify-center gap-2 transition-soft motion-ease',
+                  isInstalled
+                    ? 'btn-tonal opacity-50 cursor-not-allowed'
+                    : isInstallable
+                      ? 'btn-contrast focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]'
+                      : 'btn-tonal opacity-50 cursor-not-allowed'
+                )}
+                aria-label={isInstalled ? 'Installed' : 'Install'}
+              >
+                {isInstalled ? (
+                  <>
+                    <Check className="h-4 w-4" aria-hidden />
+                    Installed
+                  </>
+                ) : (
+                  <>
+                    <Download className="h-4 w-4" aria-hidden />
+                    Install
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+          <div className="border-t surface-border" />
+
+          {/* Language */}
+          <div>
+            <div className="grid grid-cols-3 gap-2 items-center">
+              <div className="col-span-2">
+                <SectionTitle muted={false}>{copy.language}</SectionTitle>
+              </div>
+              <div className="col-span-1 flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => onChangeLocale('en')}
+                  className={classNames(
+                    'flex-1 px-3 py-2 text-sm rounded-lg border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+                    locale === 'en'
+                      ? 'btn-contrast'
+                      : 'btn-tonal surface-hover',
+                  )}
+                  aria-pressed={locale === 'en'}
+                  aria-label="English"
+                >
+                  EN
+                </button>
+                <button
+                  type="button"
+                  onClick={() => onChangeLocale('de')}
+                  className={classNames(
+                    'flex-1 px-3 py-2 text-sm rounded-lg border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+                    locale === 'de'
+                      ? 'btn-contrast'
+                      : 'btn-tonal surface-hover',
+                  )}
+                  aria-pressed={locale === 'de'}
+                  aria-label="Deutsch"
+                >
+                  DE
+                </button>
+              </div>
+            </div>
+          </div>
+          <div className="border-t surface-border" />
+
+          {/* Animations */}
+          <div>
+            <div className="grid grid-cols-3 gap-2 items-center">
+              <div className="col-span-2">
+                <SectionTitle muted={false}>{copy.motionSettings}</SectionTitle>
+              </div>
+              <div className="col-span-1 flex gap-2">
                 <button
                   type="button"
                   onClick={() => onChangeAnimations(true)}
                   className={classNames(
-                    'px-3 py-2 text-sm rounded-xl border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
-                    animationsDisabled 
-                      ? 'btn-contrast' 
+                    'flex-1 px-3 py-2 text-sm rounded-lg border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+                    animationsDisabled
+                      ? 'btn-contrast'
                       : 'btn-tonal surface-hover',
                   )}
                   aria-pressed={animationsDisabled}
@@ -214,9 +261,9 @@ export const SettingsModal = ({
                   type="button"
                   onClick={() => onChangeAnimations(false)}
                   className={classNames(
-                    'px-3 py-2 text-sm rounded-xl border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
-                    !animationsDisabled 
-                      ? 'btn-contrast' 
+                    'flex-1 px-3 py-2 text-sm rounded-lg border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+                    !animationsDisabled
+                      ? 'btn-contrast'
                       : 'btn-tonal surface-hover',
                   )}
                   aria-pressed={!animationsDisabled}
@@ -226,47 +273,25 @@ export const SettingsModal = ({
                 </button>
               </div>
             </div>
-            <div>
-              <SectionTitle>{copy.installPwa}</SectionTitle>
-              <div className="mt-2 flex items-center min-h-[40px]">
-                <button
-                  type="button"
-                  onClick={isInstalled || !isInstallable ? undefined : install}
-                  disabled={isInstalled || !isInstallable}
-                  className={classNames(
-                    'px-3 py-2 text-sm rounded-xl border inline-flex items-center gap-2 transition-soft motion-ease',
-                    isInstalled
-                      ? 'btn-tonal opacity-50 cursor-not-allowed'
-                      : isInstallable
-                      ? 'btn-contrast focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]'
-                      : 'btn-tonal opacity-50 cursor-not-allowed'
-                  )}
-                  aria-label={isInstalled ? copy.installPwaInstalled : copy.installPwaButton}
-                >
-                  {isInstalled ? (
-                    <>
-                      <Check className="h-4 w-4" aria-hidden />
-                      {copy.installPwaInstalled}
-                    </>
-                  ) : (
-                    <>
-                      <Download className="h-4 w-4" aria-hidden />
-                      {copy.installPwaButton}
-                    </>
-                  )}
-                </button>
-              </div>
-            </div>
           </div>
+          <div className="border-t surface-border" />
+
+          {/* Data */}
           <div>
-            <SectionTitle>{'Data'}</SectionTitle>
-            <div className="mt-2 flex flex-wrap gap-2 items-center">
-              <label className="px-3 py-2 text-sm rounded-xl border btn-tonal surface-hover transition-soft motion-ease cursor-pointer">
-                {copy.import}
-                <input 
-                  type="file" 
+            <SectionTitle muted={false}>{copy.data}</SectionTitle>
+            <div className="mt-2 grid grid-cols-3 gap-2">
+              {/* Import */}
+              <label className="w-full flex items-center justify-center gap-1.5 rounded-lg h-10 px-3 text-xs font-medium border btn-tonal surface-hover transition-soft motion-ease cursor-pointer">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-folder-input-icon lucide-folder-input">
+                  <path d="M2 9V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H20a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-1" />
+                  <path d="M2 13h10" />
+                  <path d="m9 16 3-3-3-3" />
+                </svg>
+                <span>{copy.import}</span>
+                <input
+                  type="file"
                   accept="application/json,.json"
-                  className="hidden" 
+                  className="hidden"
                   onChange={(event: ChangeEvent<HTMLInputElement>) => {
                     const [file] = event.target.files ?? [];
                     if (!file) return;
@@ -294,56 +319,80 @@ export const SettingsModal = ({
                   }}
                 />
               </label>
-              <button
-                type="button"
-                onClick={handleExport}
-                className="px-3 py-2 text-sm rounded-xl border btn-tonal surface-hover transition-soft motion-ease"
-              >
-                {copy.export}
-              </button>
+
+              {/* Reset (center) */}
               <button
                 type="button"
                 ref={clearButtonRef}
                 onClick={onRequestClear}
-                className="px-3 py-2 text-sm rounded-xl border btn-tonal surface-hover transition-soft motion-ease"
+                className="w-full flex items-center justify-center gap-1.5 rounded-lg h-10 px-3 text-xs font-medium border border-red-500/50 text-red-600 dark:text-red-400 hover:bg-red-500/10 transition-soft motion-ease"
               >
-                {copy.clear}
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-eraser-icon lucide-eraser">
+                  <path d="M21 21H8a2 2 0 0 1-1.42-.587l-3.994-3.999a2 2 0 0 1 0-2.828l10-10a2 2 0 0 1 2.829 0l5.999 6a2 2 0 0 1 0 2.828L12.834 21" />
+                  <path d="m5.082 11.09 8.828 8.828" />
+                </svg>
+                <span>{copy.clear}</span>
+              </button>
+
+              {/* Export */}
+              <button
+                type="button"
+                onClick={handleExport}
+                className="w-full flex items-center justify-center gap-1.5 rounded-lg h-10 px-3 text-xs font-medium border btn-tonal surface-hover transition-soft motion-ease"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-folder-output-icon lucide-folder-output">
+                  <path d="M2 7.5V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H20a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-1.5" />
+                  <path d="M2 13h10" />
+                  <path d="m5 10-3 3 3 3" />
+                </svg>
+                <span>{copy.export}</span>
               </button>
             </div>
           </div>
-          {/* Feedback options removed from Settings — feedback handled on Feedback page */}
           {/* Footer: divider and single-line with centered name and icons */}
           <div className="-mx-4 mt-4">
             <div className="pt-4 border-t surface-border text-center text-xs text-muted px-4">
-                {/* Wrapper for both footer lines with icons centered vertically between them */}
-                <div className="relative flex flex-col">
-                  {/* Left and right icons positioned absolutely, centered vertically in the entire footer */}
-                  <div className="absolute left-4 inset-y-0 flex items-center">
-                    <button type="button" onClick={onNavigateToAbout} className="text-current" aria-label="About">
-                      <Info className="h-4 w-4" aria-hidden />
-                    </button>
-                  </div>
-
-                  <div className="absolute right-4 inset-y-0 flex items-center">
-                    <a href="https://itskylebrooks.tech/" target="_blank" rel="noreferrer" className="text-current" aria-label="Kyle Brooks website">
-                      <SquareArrowOutUpRight className="h-4 w-4" aria-hidden />
-                    </a>
-                  </div>
-
-                  {/* Center text: author · version on one line */}
-                  <div className="leading-snug flex items-center justify-center gap-2">
-                    <span className="truncate">Kyle Brooks</span>
-                    <span className="text-muted">·</span>
-                    <span className="truncate">Enso {pkg.version}</span>
-                  </div>
-
-                  {/* Legal links */}
-                  <div className="flex items-center justify-center gap-2.5 leading-snug mt-1">
-                    <a className="underline" href="https://itskylebrooks.vercel.app/imprint" target="_blank" rel="noopener noreferrer">{(copy as unknown as Record<string, string>).footerImprint ?? 'Imprint'}</a>
-                    <a className="underline" href="https://itskylebrooks.vercel.app/privacy" target="_blank" rel="noopener noreferrer">{(copy as unknown as Record<string, string>).footerPrivacy ?? 'Privacy Policy'}</a>
-                    <a className="underline" href="https://itskylebrooks.vercel.app/license" target="_blank" rel="noopener noreferrer">{(copy as unknown as Record<string, string>).footerLicense ?? 'License'}</a>
-                  </div>
+              {/* Wrapper for both footer lines with icons centered vertically between them */}
+              <div className="relative flex flex-col">
+                {/* Left and right icons positioned absolutely, centered vertically in the entire footer */}
+                <div className="absolute left-4 inset-y-0 flex items-center">
+                  <a
+                    href="https://www.linkedin.com/in/itskylebrooks/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Kyle Brooks on LinkedIn"
+                    className="text-current opacity-90 hover:opacity-75 transition-opacity"
+                  >
+                    <Linkedin className="h-5 w-5" aria-hidden />
+                  </a>
                 </div>
+
+                <div className="absolute right-4 inset-y-0 flex items-center">
+                  <a
+                    href="https://itskylebrooks.tech/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Kyle Brooks personal website"
+                    className="text-current opacity-90 hover:opacity-75 transition-opacity"
+                  >
+                    <User className="h-5 w-5" aria-hidden />
+                  </a>
+                </div>
+
+                {/* Center text: author • version on one line */}
+                <div className="leading-snug flex items-center justify-center gap-2">
+                  <span className="truncate font-medium text-strong">Kyle Brooks</span>
+                  <span>•</span>
+                  <span className="truncate">Enso {pkg.version}</span>
+                </div>
+
+                {/* Legal links */}
+                <div className="flex items-center justify-center gap-2.5 leading-snug mt-1">
+                  <a className="underline" href="https://itskylebrooks.vercel.app/imprint" target="_blank" rel="noopener noreferrer">{(copy as unknown as Record<string, string>).footerImprint ?? 'Imprint'}</a>
+                  <a className="underline" href="https://itskylebrooks.vercel.app/privacy" target="_blank" rel="noopener noreferrer">{(copy as unknown as Record<string, string>).footerPrivacy ?? 'Privacy Policy'}</a>
+                  <a className="underline" href="https://itskylebrooks.vercel.app/license" target="_blank" rel="noopener noreferrer">{(copy as unknown as Record<string, string>).footerLicense ?? 'License'}</a>
+                </div>
+              </div>
             </div>
           </div>
         </div>
