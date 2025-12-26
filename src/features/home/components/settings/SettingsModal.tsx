@@ -361,7 +361,7 @@ export const SettingsModal = ({
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Kyle Brooks on LinkedIn"
-                    className="text-current opacity-90 hover:opacity-75 transition-opacity"
+                    className="text-current opacity-90"
                   >
                     <Linkedin className="h-5 w-5" aria-hidden />
                   </a>
@@ -373,7 +373,7 @@ export const SettingsModal = ({
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Kyle Brooks personal website"
-                    className="text-current opacity-90 hover:opacity-75 transition-opacity"
+                    className="text-current opacity-90"
                   >
                     <User className="h-5 w-5" aria-hidden />
                   </a>
