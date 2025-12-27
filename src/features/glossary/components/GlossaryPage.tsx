@@ -5,6 +5,7 @@ import { loadAllTerms } from '../loader';
 import { useGlossaryStore } from '../store';
 import { useMotionPreferences } from '@shared/components/ui/motion';
 import { GlossaryCard } from './GlossaryCard.tsx';
+import { useIncrementalList } from '@shared/hooks/useIncrementalList';
 import type { Locale } from '../../../shared/types';
 import type { Copy } from '../../../shared/constants/i18n';
 
@@ -54,6 +55,12 @@ export const GlossaryPage = ({ locale, copy, filters = {}, onOpenTerm }: Glossar
     return a.romaji.localeCompare(b.romaji, 'en', { sensitivity: 'base' });
   });
 
+  const termsKey = filteredTerms.map(t => t.id).join(',');
+  const { visibleItems: visibleTerms, hasMore, loadMore } = useIncrementalList(filteredTerms, {
+    pageSize: 18,
+    resetKey: termsKey,
+  });
+
   if (!mounted) {
     return <div className="max-w-4xl mx-auto px-4 py-8" />;
   }
@@ -78,9 +85,6 @@ export const GlossaryPage = ({ locale, copy, filters = {}, onOpenTerm }: Glossar
     );
   }
 
-  // Create a stable key for animation
-  const termsKey = filteredTerms.map(t => t.id).join(',');
-
   return (
     <>
       {filteredTerms.length === 0 ? (
@@ -94,11 +98,10 @@ export const GlossaryPage = ({ locale, copy, filters = {}, onOpenTerm }: Glossar
           key={termsKey}
           className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
           variants={listMotion.container}
-          initial="hidden"
+          initial={false}
           animate="show"
-          layout
         >
-          {filteredTerms.map((term, index) => (
+          {visibleTerms.map((term, index) => (
             <GlossaryCard
               key={term.id}
               term={term}
@@ -111,6 +114,17 @@ export const GlossaryPage = ({ locale, copy, filters = {}, onOpenTerm }: Glossar
               prefersReducedMotion={prefersReducedMotion}
             />
           ))}
+          {hasMore && (
+            <div className="col-span-full flex justify-center">
+              <button
+                type="button"
+                onClick={loadMore}
+                className="inline-flex items-center justify-center rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2 text-sm transition-soft hover-border-adaptive"
+              >
+                {copy.loadMore}
+              </button>
+            </div>
+          )}
         </motion.div>
       )}
     </>

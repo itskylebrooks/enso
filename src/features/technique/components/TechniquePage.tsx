@@ -12,7 +12,7 @@ import type {
 } from '@shared/types';
 import { getTaxonomyLabel, taxonomyLabels, expandWithSynonyms, normalizeTaxonomyValue } from '@shared/i18n/taxonomy';
 import { stripDiacritics } from '@shared/utils/text';
-import { useMotionPreferences, defaultEase } from '@shared/components/ui/motion';
+import { useMotionPreferences } from '@shared/components/ui/motion';
 import { TechniqueHeader, type CollectionOption } from './TechniqueHeader';
 import { TechniqueToolbar, type TechniqueToolbarValue } from './TechniqueToolbar';
 import { StepsList } from './StepsList';
@@ -220,7 +220,7 @@ export const TechniquePage = ({
 }: TechniquePageProps): ReactElement => {
   const tags = useMemo(() => buildTags(technique, locale), [technique, locale]);
   const summary = technique.summary[locale] || technique.summary.en;
-  const { prefersReducedMotion } = useMotionPreferences();
+  const { prefersReducedMotion, pageMotion } = useMotionPreferences();
 
   // Enrich technique with variants if not already present
   const enrichedTechnique = useMemo(() => enrichTechniqueWithVariants(technique), [technique]);
@@ -447,12 +447,10 @@ export const TechniquePage = ({
     }
   };
 
-  const motionInitial = prefersReducedMotion ? undefined : { opacity: 0, y: 18 };
-  const motionAnimate = prefersReducedMotion ? undefined : { opacity: 1, y: 0 };
-  const motionExit = prefersReducedMotion ? undefined : { opacity: 0, y: -18 };
-  const variantMotionTransition = prefersReducedMotion
-    ? { duration: 0.05 }
-    : { duration: 0.18, ease: defaultEase };
+  const motionInitial = prefersReducedMotion ? undefined : { opacity: 0 };
+  const motionAnimate = prefersReducedMotion ? undefined : { opacity: 1 };
+  const motionExit = prefersReducedMotion ? undefined : { opacity: 0 };
+  const variantMotionTransition = pageMotion.transition;
 
   const stepsLabel = copy.steps;
 

@@ -25,12 +25,13 @@ const useAnimationsDisabled = (): boolean =>
   useSyncExternalStore(subscribeToAnimationsDisabled, getAnimationsDisabled, getAnimationsDisabled);
 
 export const defaultEase = [0.16, 1, 0.3, 1] as const; // Custom cubic-bezier for smoother motion
+export const pageEase = [0.4, 0, 0.2, 1] as const;
 export const springEase = { type: 'spring', damping: 20, stiffness: 300 } as const;
 
 export const pageVariants: Variants = {
-  initial: { opacity: 0, y: 8 },
-  animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -8 },
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  exit: { opacity: 0 },
 };
 
 export const reducedPageVariants: Variants = {
@@ -39,7 +40,7 @@ export const reducedPageVariants: Variants = {
   exit: { opacity: 0 },
 };
 
-export const pageTransition: Transition = { duration: 0.25, ease: defaultEase };
+export const pageTransition: Transition = { duration: 0.2, ease: pageEase };
 export const reducedPageTransition: Transition = { duration: 0.05 };
 
 // Enhanced backdrop with synchronized blur animation
@@ -114,7 +115,7 @@ export const reducedPanelVariants: Variants = {
 export const listContainerVariants: Variants = {
   hidden: {},
   show: {
-    transition: { staggerChildren: 0.02, delayChildren: 0 },
+    transition: { staggerChildren: 0 },
   },
 };
 
@@ -126,12 +127,12 @@ export const reducedListContainerVariants: Variants = {
 };
 
 export const listItemVariants: Variants = {
-  hidden: { opacity: 0, y: 6 },
-  show: { opacity: 1, y: 0 },
+  hidden: { opacity: 1 },
+  show: { opacity: 1 },
 };
 
 export const reducedListItemVariants: Variants = {
-  hidden: { opacity: 0 },
+  hidden: { opacity: 1 },
   show: { opacity: 1 },
 };
 
@@ -279,14 +280,14 @@ export const useMotionPreferences = () => {
   );
 
   const getItemTransition = useCallback(
-    (index: number): Transition => {
+    (_index: number): Transition => {
       if (animationsDisabled) {
         return zeroTransition;
       }
       if (prefersReducedMotion) {
         return { duration: 0.05 };
       }
-      return { delay: Math.min(index, 9) * 0.02, duration: 0.2, ease: defaultEase };
+      return { duration: 0.18, ease: defaultEase };
     },
     [animationsDisabled, prefersReducedMotion],
   );

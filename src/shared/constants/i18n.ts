@@ -4,6 +4,7 @@ export const messages = {
   en: {
     app: 'Enso',
     loading: 'Loading…',
+    loadMore: 'Load more',
     search: 'Search techniques…',
     filters: 'Filters',
     resetFilters: 'Reset filters',
@@ -635,6 +636,7 @@ export const messages = {
   de: {
     app: 'Enso',
     loading: 'Wird geladen…',
+    loadMore: 'Mehr laden',
     search: 'Techniken suchen…',
     filters: 'Filter',
     resetFilters: 'Filter zurücksetzen',

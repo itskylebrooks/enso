@@ -24,7 +24,7 @@ export const AdvancedPrograms = ({ locale, onOpenTechnique }: Props): ReactEleme
     : {
         initial: 'hidden' as const,
         animate: 'show' as const,
-        variants: { hidden: { opacity: 0, y: 14 }, show: { opacity: 1, y: 0 } },
+        variants: { hidden: { opacity: 0 }, show: { opacity: 1 } },
         transition: { duration: 0.24 },
       };
 

@@ -86,6 +86,7 @@ export const GlossaryCard = ({
       onClick={handleActivate}
       onKeyDown={handleKeyDown}
       className="surface border surface-border rounded-2xl p-4 flex flex-col gap-3 text-left card-hover-shadow"
+      initial={false}
       variants={variants}
       transition={getTransition(motionIndex)}
   /* Hover and tap motion removed to disable hover effects completely */

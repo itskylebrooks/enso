@@ -1196,10 +1196,10 @@ export default function App(): ReactElement {
   if (currentTechnique) {
     mainContent = (
       <motion.div
-        initial={skipEntranceAnimations ? { opacity: 1, y: 0 } : { opacity: 0, y: 6 }}
-        animate={{ opacity: 1, y: 0 }}
+        initial={skipEntranceAnimations ? { opacity: 1 } : { opacity: 0 }}
+        animate={{ opacity: 1 }}
         transition={pageMotion.transition}
-        style={{ willChange: 'transform, opacity' }}
+        style={{ willChange: 'opacity' }}
       >
         <TechniquePage
           technique={currentTechnique}
@@ -1314,7 +1314,12 @@ export default function App(): ReactElement {
     );
   } else if (route === 'feedback') {
     mainContent = (
-      <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={pageMotion.transition}>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={pageMotion.transition}
+        style={{ willChange: 'opacity' }}
+      >
         <FeedbackPage
           copy={copy}
           locale={locale}
@@ -1499,7 +1504,7 @@ export default function App(): ReactElement {
             exit={skipEntranceAnimations ? undefined : 'exit'}
             transition={pageMotion.transition}
             className="flex-1 pb-24 md:pb-0"
-            style={{ willChange: 'transform, opacity' }}
+            style={{ willChange: 'opacity' }}
           >
             {mainContent}
           </motion.main>

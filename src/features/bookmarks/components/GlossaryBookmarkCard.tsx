@@ -85,6 +85,7 @@ export const GlossaryBookmarkCard = ({
         `relative surface border surface-border rounded-2xl p-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] flex flex-col gap-3 text-left card-hover-shadow` +
         (isDimmed ? ' pointer-events-none opacity-70 blur-card' : '')
       }
+      initial={false}
       variants={variants}
       transition={getTransition(motionIndex)}
   /* Hover and tap motion removed to disable hover effects completely */

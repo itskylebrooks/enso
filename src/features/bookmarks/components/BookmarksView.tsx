@@ -20,6 +20,7 @@ import { NameModal } from '@shared/components/ui/modals/NameModal';
 import { ConfirmModal } from '@shared/components/ui/modals/ConfirmModal';
 import { MobileCollections } from '@shared/components/ui/MobileCollections';
 import { ExpandableFilterBar } from '@shared/components/ui/ExpandableFilterBar';
+import { useIncrementalList } from '@shared/hooks/useIncrementalList';
 
 type SelectedCollectionId = 'all' | 'ungrouped' | string;
 
@@ -256,6 +257,16 @@ export const BookmarksView = ({
     );
   }, [visibleTechniques, visibleGlossaryTerms, locale]);
 
+  const sortedKey = useMemo(
+    () => sortedVisibleItems.map(item => `${item.type}-${item.id}`).join(','),
+    [sortedVisibleItems],
+  );
+
+  const { visibleItems: visibleBookmarks, hasMore, loadMore } = useIncrementalList(sortedVisibleItems, {
+    pageSize: 18,
+    resetKey: `${selectedCollectionId}-${sortedKey}`,
+  });
+
   const collectionCounts = useMemo(() => {
     const map = new Map<string, number>();
     orderedCollections.forEach((collection) => {
@@ -368,14 +379,13 @@ export const BookmarksView = ({
 
       <section>
           <motion.div
-            key={`${selectedCollectionId}-${sortedVisibleItems.map(item => `${item.type}-${item.id}`).join(',')}`}
+            key={`${selectedCollectionId}-${sortedKey}`}
             className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 min-h-[280px]"
             variants={listMotion.container}
-            initial="hidden"
+            initial={false}
             animate="show"
-            layout
           >
-            {sortedVisibleItems.map((item, index) => {
+            {visibleBookmarks.map((item, index) => {
             if (item.type === 'technique') {
               const technique = item.item;
               const assignedCollections = membershipByTechnique.get(technique.id) ?? new Set<string>();
@@ -456,6 +466,18 @@ export const BookmarksView = ({
               );
             }
           })}
+
+          {hasMore && (
+            <div className="col-span-full flex justify-center">
+              <button
+                type="button"
+                onClick={loadMore}
+                className="inline-flex items-center justify-center rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2 text-sm transition-soft hover-border-adaptive"
+              >
+                {copy.loadMore}
+              </button>
+            </div>
+          )}
 
           {sortedVisibleItems.length === 0 && (
             <motion.div

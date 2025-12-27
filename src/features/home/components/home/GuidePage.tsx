@@ -180,8 +180,8 @@ const youtubeTitles: Record<Locale, { heading: string; lead: string }> = {
 };
 
 const sectionVariants = {
-  hidden: { opacity: 0, y: 14 },
-  show: { opacity: 1, y: 0 },
+  hidden: { opacity: 0 },
+  show: { opacity: 1 },
 };
 
 export const GuidePage = ({ 

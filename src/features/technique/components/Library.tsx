@@ -4,6 +4,7 @@ import type { Locale, Progress, Technique } from '@shared/types';
 import type { Copy } from '@shared/constants/i18n';
 import { TechniqueCard } from './TechniqueCard';
 import { useMotionPreferences } from '@shared/components/ui/motion';
+import { useIncrementalList } from '@shared/hooks/useIncrementalList';
 
 const buildProgressMap = (entries: Progress[]): Record<string, Progress> =>
   Object.fromEntries(entries.map((entry) => [entry.techniqueId, entry]));
@@ -22,17 +23,20 @@ export const Library = ({ copy, locale, techniques, progress, onOpen }: LibraryP
 
   // Create a stable key that changes when technique IDs change to force remount on filter changes
   const techniqueKey = techniques.map(t => t.id).join(',');
+  const { visibleItems: visibleTechniques, hasMore, loadMore } = useIncrementalList(techniques, {
+    pageSize: 18,
+    resetKey: techniqueKey,
+  });
 
   return (
     <motion.div
       key={techniqueKey}
       className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
       variants={listMotion.container}
-      initial="hidden"
+      initial={false}
       animate="show"
-      layout
     >
-      {techniques.map((technique, index) => (
+      {visibleTechniques.map((technique, index) => (
         <TechniqueCard
           key={technique.id}
           technique={technique}
@@ -46,6 +50,17 @@ export const Library = ({ copy, locale, techniques, progress, onOpen }: LibraryP
           prefersReducedMotion={prefersReducedMotion}
         />
       ))}
+      {hasMore && (
+        <div className="col-span-full flex justify-center">
+          <button
+            type="button"
+            onClick={loadMore}
+            className="inline-flex items-center justify-center rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2 text-sm transition-soft hover-border-adaptive"
+          >
+            {copy.loadMore}
+          </button>
+        </div>
+      )}
       {techniques.length === 0 && (
         <motion.div 
           className="col-span-full text-sm text-muted"

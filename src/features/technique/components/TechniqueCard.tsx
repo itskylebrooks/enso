@@ -79,6 +79,7 @@ export const TechniqueCard = ({
         `surface border surface-border rounded-2xl p-4 flex flex-col gap-3 text-left card-hover-shadow` +
         (isDimmed ? ' pointer-events-none opacity-70 blur-card' : '')
       }
+      initial={false}
       variants={variants}
       transition={getTransition(motionIndex)}
   /* Hover and tap motion removed to disable hover effects completely */
