@@ -40,7 +40,7 @@ export const reducedPageVariants: Variants = {
   exit: { opacity: 0 },
 };
 
-export const pageTransition: Transition = { duration: 0.2, ease: pageEase };
+export const pageTransition: Transition = { duration: 0.16, ease: pageEase };
 export const reducedPageTransition: Transition = { duration: 0.05 };
 
 // Enhanced backdrop with synchronized blur animation
