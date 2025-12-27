@@ -12,9 +12,10 @@ import { getCopy } from '@shared/constants/i18n';
 type Props = {
   locale: Locale;
   onOpenTechnique: (slug: string, trainerId?: string, entry?: EntryMode, skipExistenceCheck?: boolean) => void;
+  onBack: () => void;
 };
 
-export const AdvancedPrograms = ({ locale, onOpenTechnique }: Props): ReactElement => {
+export const AdvancedPrograms = ({ locale, onOpenTechnique, onBack }: Props): ReactElement => {
   const [isDark] = useState(getInitialThemeState);
   const i18nCopy = getCopy(locale);
   const { prefersReducedMotion } = useMotionPreferences();
@@ -31,6 +32,14 @@ export const AdvancedPrograms = ({ locale, onOpenTechnique }: Props): ReactEleme
   return (
     <section className="py-12">
       <div className="container max-w-4xl mx-auto px-4 md:px-6 space-y-10">
+        <button
+          type="button"
+          onClick={onBack}
+          className="text-sm text-subtle hover:text-[var(--color-text)] transition flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] rounded"
+        >
+          <span aria-hidden>←</span>
+          <span>{i18nCopy.backToGuide}</span>
+        </button>
 
         <motion.article className="space-y-4" {...animationProps}>
           <header className="space-y-2">

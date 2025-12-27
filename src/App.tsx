@@ -1316,12 +1316,14 @@ export default function App(): ReactElement {
       <AdvancedPrograms
         locale={locale}
         onOpenTechnique={openTechnique}
+        onBack={() => navigateTo('guide')}
       />
     );
   } else if (route === 'guideDan') {
     mainContent = (
       <DanOverview
         locale={locale}
+        onBack={() => navigateTo('guide')}
       />
     );
   } else if (guideRouteToGrade(route)) {
