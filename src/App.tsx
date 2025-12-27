@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactElement } from 'react';
 import { motion, AnimatePresence, MotionConfig } from 'motion/react';
 import { Header } from '@shared/components/layout/Header';
+import { MobileTabBar } from '@shared/components/layout/MobileTabBar';
 import { FilterPanel } from './features/search/components/FilterPanel';
 import { ExpandableFilterBar } from '@shared/components/ui/ExpandableFilterBar';
 import { Library } from '@features/technique/components/Library';
@@ -1497,7 +1498,7 @@ export default function App(): ReactElement {
             animate="animate"
             exit={skipEntranceAnimations ? undefined : 'exit'}
             transition={pageMotion.transition}
-            className="flex-1"
+            className="flex-1 pb-24 md:pb-0"
             style={{ willChange: 'transform, opacity' }}
           >
             {mainContent}
@@ -1566,6 +1567,8 @@ export default function App(): ReactElement {
             />
           )}
         </AnimatePresence>
+
+        <MobileTabBar copy={copy} route={route} onNavigate={navigateTo} />
 
         {toast && <Toast>{toast}</Toast>}
       </div>
