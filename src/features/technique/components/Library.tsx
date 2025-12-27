@@ -31,7 +31,7 @@ export const Library = ({ copy, locale, techniques, progress, onOpen }: LibraryP
   return (
     <motion.div
       key={techniqueKey}
-      className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+      className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 no-select"
       variants={listMotion.container}
       initial={false}
       animate="show"

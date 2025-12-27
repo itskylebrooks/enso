@@ -131,7 +131,7 @@ export const Header = ({
   }, [moreDesktopOpen]);
 
   return (
-    <motion.header className="surface border-b surface-border sticky top-0 z-20 backdrop-blur">
+    <motion.header className="surface border-b surface-border sticky top-0 z-20 backdrop-blur no-select">
       <div className="max-w-4xl mx-auto px-4 md:px-6 py-3 flex items-center justify-between relative">
         <a
           href="/"

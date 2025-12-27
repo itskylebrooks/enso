@@ -266,7 +266,7 @@ export const SearchOverlay = ({ copy, locale, techniques, progress, glossaryProg
     >
       <motion.div
         ref={dialogRef}
-        className="relative w-full max-w-xl"
+        className="relative w-full max-w-xl no-select"
         variants={overlayMotion.panel}
         initial="initial"
         animate="animate"

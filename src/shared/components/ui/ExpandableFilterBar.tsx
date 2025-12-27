@@ -93,7 +93,7 @@ export const ExpandableFilterBar = ({ children, label = 'Filters' }: ExpandableF
             </div>
             {/* Pinned panel overlaying - right edge aligned with animation */}
             <motion.div
-              className="absolute right-0 top-0 w-64 surface border surface-border rounded-2xl p-3 panel-shadow max-h-[calc(100vh-7rem)] overflow-y-auto"
+              className="absolute right-0 top-0 w-64 surface border surface-border rounded-2xl p-3 panel-shadow max-h-[calc(100vh-7rem)] overflow-y-auto no-select"
               initial={isInitialMount ? false : { opacity: 0, scale: 0.95, x: -10 }}
               animate={{ opacity: 1, scale: 1, x: 0 }}
               exit={{ opacity: 0, scale: 0.95, x: -10 }}
@@ -133,7 +133,7 @@ export const ExpandableFilterBar = ({ children, label = 'Filters' }: ExpandableF
             <AnimatePresence>
               {isExpanded && (
                 <motion.div
-                  className="absolute left-0 top-0 w-64 surface border surface-border rounded-2xl p-3 panel-shadow max-h-[calc(100vh-7rem)] overflow-y-auto"
+                  className="absolute left-0 top-0 w-64 surface border surface-border rounded-2xl p-3 panel-shadow max-h-[calc(100vh-7rem)] overflow-y-auto no-select"
                   initial={{ opacity: 0, scale: 0.95, x: -10 }}
                   animate={{ opacity: 1, scale: 1, x: 0 }}
                   exit={{ opacity: 0, scale: 0.95, x: -10 }}

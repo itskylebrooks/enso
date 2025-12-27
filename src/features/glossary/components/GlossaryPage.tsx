@@ -62,12 +62,12 @@ export const GlossaryPage = ({ locale, copy, filters = {}, onOpenTerm }: Glossar
   });
 
   if (!mounted) {
-    return <div className="max-w-4xl mx-auto px-4 py-8" />;
+    return <div className="max-w-4xl mx-auto px-4 py-8 no-select" />;
   }
 
   if (loading) {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-8">
+      <div className="max-w-4xl mx-auto px-4 py-8 no-select">
         <div className="text-center">
           <p className="text-muted">Loading glossary...</p>
         </div>
@@ -77,7 +77,7 @@ export const GlossaryPage = ({ locale, copy, filters = {}, onOpenTerm }: Glossar
 
   if (error) {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-8">
+      <div className="max-w-4xl mx-auto px-4 py-8 no-select">
         <div className="text-center">
           <p className="text-red-600 dark:text-red-400">{error}</p>
         </div>
@@ -88,7 +88,7 @@ export const GlossaryPage = ({ locale, copy, filters = {}, onOpenTerm }: Glossar
   return (
     <>
       {filteredTerms.length === 0 ? (
-        <div className="text-center py-12">
+        <div className="text-center py-12 no-select">
           <p className="text-muted">
             {terms.length === 0 ? 'No glossary terms available yet.' : 'No terms found for the selected filters.'}
           </p>
@@ -96,7 +96,7 @@ export const GlossaryPage = ({ locale, copy, filters = {}, onOpenTerm }: Glossar
       ) : (
         <motion.div
           key={termsKey}
-          className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+          className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 no-select"
           variants={listMotion.container}
           initial={false}
           animate="show"

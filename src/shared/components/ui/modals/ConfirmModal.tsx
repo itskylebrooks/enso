@@ -51,7 +51,7 @@ export const ConfirmModal = ({ strings, onCancel, onConfirm }: ConfirmModalProps
     >
       <motion.div
         ref={dialogRef}
-        className="relative w-full max-w-xs sm:max-w-sm surface rounded-xl border surface-border panel-shadow p-5 space-y-4"
+        className="relative w-full max-w-xs sm:max-w-sm surface rounded-xl border surface-border panel-shadow p-5 space-y-4 no-select"
         variants={overlayMotion.panel}
         initial="initial"
         animate="animate"

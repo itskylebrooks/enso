@@ -49,7 +49,7 @@ export const GlossaryFilterPanel = ({
   const pinButtonContext = usePinButton();
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 no-select">
       <div className="flex items-center justify-between gap-2">
         <h2 className="text-sm font-semibold tracking-wide uppercase text-subtle">{copy.filters}</h2>
         <div className="flex items-center gap-2">

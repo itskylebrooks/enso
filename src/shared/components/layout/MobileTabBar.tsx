@@ -50,7 +50,7 @@ export const MobileTabBar = ({ copy, route, onNavigate }: MobileTabBarProps): Re
 
   return (
     <motion.nav
-      className="fixed left-0 right-0 z-30 flex justify-center px-4 pb-[env(safe-area-inset-bottom)] md:hidden"
+      className="fixed left-0 right-0 z-30 flex justify-center px-4 pb-[env(safe-area-inset-bottom)] md:hidden no-select"
       animate={{ bottom: isCompact ? '0.75rem' : '1.25rem' }}
       initial={false}
       transition={layoutTransition}

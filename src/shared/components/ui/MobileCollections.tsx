@@ -45,7 +45,7 @@ export const MobileCollections = ({
   const { listMotion, prefersReducedMotion } = useMotionPreferences();
 
   return (
-    <div className="rounded-2xl border surface-border bg-[var(--color-surface)] p-4 space-y-4" aria-label={copy.collectionsTitle}>
+    <div className="rounded-2xl border surface-border bg-[var(--color-surface)] p-4 space-y-4 no-select" aria-label={copy.collectionsTitle}>
       <div className="flex items-center justify-between gap-2">
         <h2 className="text-sm font-semibold tracking-wide uppercase text-subtle">{copy.collectionsTitle}</h2>
         <div className="flex items-center gap-2">

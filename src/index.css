@@ -92,6 +92,19 @@ body {
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
+.no-select {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.no-select input,
+.no-select textarea,
+.no-select select,
+.no-select [contenteditable='true'] {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
 .app-bg {
   background-color: var(--color-bg);
   color: var(--color-text);

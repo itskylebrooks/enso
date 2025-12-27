@@ -76,7 +76,7 @@ export const SettingsModal = ({
     >
       <motion.div
         ref={dialogRef}
-        className="relative w-full max-w-sm surface rounded-2xl border surface-border panel-shadow overflow-hidden"
+        className="relative w-full max-w-sm surface rounded-2xl border surface-border panel-shadow overflow-hidden no-select"
         variants={overlayMotion.panel}
         initial="initial"
         animate="animate"

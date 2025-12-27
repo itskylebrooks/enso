@@ -115,7 +115,7 @@ export const RoadmapPage = ({ copy, locale }: RoadmapPageProps): ReactElement =>
   // const updates = updatesFeed[locale] ?? updatesFeed.en; // removed usage
 
   return (
-    <section className="min-h-dvh py-14 md:py-18 font-sans">
+    <section className="min-h-dvh py-14 md:py-18 font-sans no-select">
       <div className="container max-w-4xl mx-auto px-4 md:px-6 space-y-12 md:space-y-14">
         <header className="space-y-4 text-center md:text-left">
           <h1 className="text-2xl md:text-3xl leading-tight font-semibold tracking-tight">

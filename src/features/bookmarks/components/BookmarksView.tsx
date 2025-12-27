@@ -335,7 +335,8 @@ export const BookmarksView = ({
 
   return (
     <>
-      <div className="lg:hidden">
+      <div className="no-select">
+        <div className="lg:hidden">
         <MobileCollections
           copy={copy}
           collections={orderedCollections.map((collection) => ({
@@ -354,30 +355,30 @@ export const BookmarksView = ({
           isEditing={editing}
           onToggleEdit={() => setEditing((value) => !value)}
         />
-      </div>
-      <div className="relative">
-      <ExpandableFilterBar label={copy.bookmarks}>
-        <CollectionsSidebar
-          copy={copy}
-          collections={orderedCollections.map((collection) => ({
-            id: collection.id,
-            name: collection.name,
-            icon: collection.icon ?? null,
-            count: collectionCounts.get(collection.id) ?? 0,
-          }))}
-          selectedId={selectedCollectionId}
-          allCount={allCount}
-          ungroupedCount={ungroupedCount}
-          onSelect={handleCollectionSelect}
-          onCreate={openCreateModal}
-          onRename={openRenameModal}
-          onDelete={openDeleteModal}
-          isEditing={editing}
-          onToggleEdit={() => setEditing((value) => !value)}
-        />
-      </ExpandableFilterBar>
+        </div>
+        <div className="relative">
+        <ExpandableFilterBar label={copy.bookmarks}>
+          <CollectionsSidebar
+            copy={copy}
+            collections={orderedCollections.map((collection) => ({
+              id: collection.id,
+              name: collection.name,
+              icon: collection.icon ?? null,
+              count: collectionCounts.get(collection.id) ?? 0,
+            }))}
+            selectedId={selectedCollectionId}
+            allCount={allCount}
+            ungroupedCount={ungroupedCount}
+            onSelect={handleCollectionSelect}
+            onCreate={openCreateModal}
+            onRename={openRenameModal}
+            onDelete={openDeleteModal}
+            isEditing={editing}
+            onToggleEdit={() => setEditing((value) => !value)}
+          />
+        </ExpandableFilterBar>
 
-      <section>
+        <section>
           <motion.div
             key={`${selectedCollectionId}-${sortedKey}`}
             className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 min-h-[280px]"
@@ -490,6 +491,7 @@ export const BookmarksView = ({
           )}
   </motion.div>
         </section>
+        </div>
       </div>
 
       <AnimatePresence>
