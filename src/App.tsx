@@ -526,7 +526,7 @@ export default function App(): ReactElement {
   }, []);
 
   const navigateTo = useCallback(
-    (next: AppRoute, options: { replace?: boolean } = {}) => {
+    (next: AppRoute, options: { replace?: boolean; sourceRoute?: AppRoute } = {}) => {
       rememberScrollPosition();
       const path = typeof window !== 'undefined' ? routeToPath(next) : '';
       const shouldSkip =
@@ -544,6 +544,9 @@ export default function App(): ReactElement {
 
       if (typeof window !== 'undefined') {
         const state: HistoryState = { route: next };
+        if (options.sourceRoute) {
+          state.sourceRoute = options.sourceRoute;
+        }
         if (options.replace) {
           window.history.replaceState(state, '', path);
         } else if (window.location.pathname !== path) {
@@ -1110,8 +1113,9 @@ export default function App(): ReactElement {
     }
 
     const sourceRoute = options?.originRoute ?? route;
-    if (options?.originRoute && options.originRoute !== route) {
-      setRoute(options.originRoute);
+    const tabRoute = sourceRoute === 'bookmarks' ? 'library' : sourceRoute;
+    if (tabRoute !== route) {
+      setRoute(tabRoute);
     }
 
     // If the caller didn't pass explicit trainer/entry params, try to apply
@@ -1119,7 +1123,7 @@ export default function App(): ReactElement {
     // version/variation (direction/weapon/version). Fallback to the
     // legacy trainer/entry URL shape when no matching variant is found.
     let finalPath: string;
-    let state: HistoryState = { route: sourceRoute, slug, trainerId, entry };
+    let state: HistoryState = { route: tabRoute, slug, trainerId, entry, sourceRoute };
 
     const shouldAutoApplyFilters = !trainerId && !entry && (filters.trainer || filters.stance || filters.weapon);
 
@@ -1183,11 +1187,11 @@ export default function App(): ReactElement {
             versionId: found.key.versionId,
           });
           // store state for history (also include trainer/entry for back navigation)
-          state = { route: sourceRoute, slug, trainerId: filters.trainer, entry: (filters.stance as EntryMode) ?? undefined };
+          state = { route: tabRoute, slug, trainerId: filters.trainer, entry: (filters.stance as EntryMode) ?? undefined, sourceRoute };
         } else {
           // fallback to legacy path with trainer/entry if available
           finalPath = buildTechniqueUrl(slug, filters.trainer ?? undefined, (filters.stance as any) ?? undefined);
-          state = { route: sourceRoute, slug, trainerId: filters.trainer, entry: (filters.stance as EntryMode) ?? undefined };
+          state = { route: tabRoute, slug, trainerId: filters.trainer, entry: (filters.stance as EntryMode) ?? undefined, sourceRoute };
         }
       } else {
         // technique not found in DB (edge case) - fallback to basic path
@@ -1217,12 +1221,13 @@ export default function App(): ReactElement {
       'tenkan-ura': 'tenkan',
     };
     const finalSlug = slugRedirects[slug] || slug;
+    const nextRoute = route === 'home' || route === 'bookmarks' ? 'glossary' : route;
 
     if (typeof window !== 'undefined') {
       const encodedSlug = encodeURIComponent(finalSlug);
       const glossaryPath = `/glossary/${encodedSlug}`;
       // Push the current route into history state so the detail page knows where it was opened from
-      const state: HistoryState = { route, slug: finalSlug };
+      const state: HistoryState = { route: nextRoute, slug: finalSlug, sourceRoute: route };
 
       if (window.location.pathname !== glossaryPath) {
         window.history.pushState(state, '', glossaryPath);
@@ -1231,8 +1236,11 @@ export default function App(): ReactElement {
       }
     }
 
-    // Mirror technique behavior: set active slug but keep `route` unchanged so the header/back label
-    // can still reflect the page the user opened the term from (e.g. bookmarks).
+    // Mirror technique behavior: set active slug but keep `route` unchanged unless coming from home,
+    // where we want the glossary tab highlighted.
+    if (route === 'home' || route === 'bookmarks') {
+      setRoute('glossary');
+    }
     setActiveSlug(finalSlug);
   };
 
@@ -1245,46 +1253,48 @@ export default function App(): ReactElement {
     navigateTo('guide');
   }, [navigateTo]);
 
-  const navigateToGuideGrade = useCallback((grade: Grade) => {
+  const navigateToGuideGrade = useCallback((grade: Grade, sourceRoute?: AppRoute) => {
     switch (grade) {
       case 'kyu5':
-        navigateTo('guideKyu5');
+        navigateTo('guideKyu5', { sourceRoute });
         break;
       case 'kyu4':
-        navigateTo('guideKyu4');
+        navigateTo('guideKyu4', { sourceRoute });
         break;
       case 'kyu3':
-        navigateTo('guideKyu3');
+        navigateTo('guideKyu3', { sourceRoute });
         break;
       case 'kyu2':
-        navigateTo('guideKyu2');
+        navigateTo('guideKyu2', { sourceRoute });
         break;
       case 'kyu1':
-        navigateTo('guideKyu1');
+        navigateTo('guideKyu1', { sourceRoute });
         break;
       case 'dan1':
-        navigateTo('guideDan1');
+        navigateTo('guideDan1', { sourceRoute });
         break;
       case 'dan2':
-        navigateTo('guideDan2');
+        navigateTo('guideDan2', { sourceRoute });
         break;
       case 'dan3':
-        navigateTo('guideDan3');
+        navigateTo('guideDan3', { sourceRoute });
         break;
       case 'dan4':
-        navigateTo('guideDan4');
+        navigateTo('guideDan4', { sourceRoute });
         break;
       case 'dan5':
-        navigateTo('guideDan5');
+        navigateTo('guideDan5', { sourceRoute });
         break;
       default:
-        navigateTo('guide');
+        navigateTo('guide', { sourceRoute });
         break;
     }
   }, [navigateTo]);
 
+  const techniqueHistoryState = typeof window !== 'undefined' ? (window.history.state as HistoryState | null) : null;
+  const techniqueBackRoute = techniqueHistoryState?.sourceRoute ?? route;
   const closeTechnique = (): void => {
-    navigateTo(route, { replace: true });
+    navigateTo(techniqueBackRoute, { replace: true });
   };
 
   // focus/confident toggles removed — using bookmark only now
@@ -1321,44 +1331,54 @@ export default function App(): ReactElement {
   }, [route, activeSlug, currentTechnique?.id, skipEntranceAnimations, animationsDisabled, flushScrollToTop]);
 
   const techniqueBackLabel =
-    route === 'bookmarks'
+    techniqueBackRoute === 'bookmarks'
       ? copy.backToBookmarks
-      : route === 'home'
+      : techniqueBackRoute === 'home'
         ? copy.backToHome
-        : route === 'about'
+        : techniqueBackRoute === 'about'
           ? copy.backToAbout
-          : route === 'roadmap'
+          : techniqueBackRoute === 'roadmap'
             ? copy.backToRoadmap
-            : route === 'guide'
+            : techniqueBackRoute === 'guide'
               ? copy.backToGuide
-              : route === 'glossary'
+              : techniqueBackRoute === 'glossary'
                 ? copy.backToGlossary
-                : route === 'feedback'
+                : techniqueBackRoute === 'feedback'
                   ? copy.backToFeedback
                   : copy.backToLibrary;
 
+  const glossaryHistoryState = typeof window !== 'undefined' ? (window.history.state as HistoryState | null) : null;
+  const glossaryBackRoute = glossaryHistoryState?.sourceRoute ?? route;
   const glossaryBackLabel =
-    route === 'bookmarks'
+    glossaryBackRoute === 'bookmarks'
       ? copy.backToBookmarks
-      : route === 'home'
+      : glossaryBackRoute === 'home'
         ? copy.backToHome
-        : route === 'about'
+        : glossaryBackRoute === 'about'
           ? copy.backToAbout
-          : route === 'roadmap'
+          : glossaryBackRoute === 'roadmap'
             ? copy.backToRoadmap
-            : route === 'guide'
+            : glossaryBackRoute === 'guide'
               ? copy.backToGuide
-              : route === 'feedback'
+              : glossaryBackRoute === 'feedback'
       ? copy.backToFeedback
       : copy.backToGlossary;
 
   const guideHistoryState = typeof window !== 'undefined' ? (window.history.state as HistoryState | null) : null;
-  const guideBackLabel = guideHistoryState?.sourceSlug ? copy.backToTechnique : copy.backToGuide;
+  const guideBackLabel = guideHistoryState?.sourceSlug
+    ? copy.backToTechnique
+    : guideHistoryState?.sourceRoute === 'home'
+      ? copy.backToHome
+      : copy.backToGuide;
   const handleGuideBack = (): void => {
     if (guideHistoryState?.sourceSlug) {
       openTechnique(guideHistoryState.sourceSlug, undefined, undefined, true, {
         originRoute: guideHistoryState.sourceRoute ?? 'library',
       });
+      return;
+    }
+    if (guideHistoryState?.sourceRoute === 'home') {
+      navigateTo('home');
       return;
     }
     navigateTo('guide');
@@ -1405,7 +1425,7 @@ export default function App(): ReactElement {
         backLabel={glossaryBackLabel}
         // Back should navigate to the route the user came from (stored in history state) —
         // when opened from bookmarks the current `route` will still be 'bookmarks', so navigate there.
-        onBack={() => navigateTo(route, { replace: true })}
+        onBack={() => navigateTo(glossaryBackRoute, { replace: true })}
         isBookmarked={Boolean(currentGlossaryProgress?.bookmarked)}
         onToggleBookmark={() => updateGlossaryProgress(activeSlug!, { bookmarked: !currentGlossaryProgress?.bookmarked })}
         collections={glossaryCollectionOptions}
@@ -1445,7 +1465,7 @@ export default function App(): ReactElement {
         glossaryTerms={glossaryTerms}
         onOpenGlossaryTerm={openGlossaryTerm}
         pinnedBeltGrade={pinnedBeltGrade}
-        onOpenPinnedBeltGrade={navigateToGuideGrade}
+        onOpenPinnedBeltGrade={(grade) => navigateToGuideGrade(grade, 'home')}
         beltPromptDismissed={beltPromptDismissed}
         onOpenGuideFromPrompt={handleOpenGuideFromPrompt}
       />
