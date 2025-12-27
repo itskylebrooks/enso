@@ -342,6 +342,10 @@ body.suppress-transitions *::after {
   transform: none;
   box-shadow: var(--card-shadow);
 }
+.card-hover-shadow.is-toggled {
+  transform: none;
+  box-shadow: var(--card-shadow);
+}
 
 /* Panel shadow utility for filter panels and sidebars that adapts to dark mode.
    - always shows the adaptive shadow (not just on hover)
@@ -406,6 +410,48 @@ body.suppress-transitions *::after {
   .card-hover-shadow:hover {
     transform: none;
     box-shadow: none;
+  }
+}
+
+@media (hover: none) and (pointer: coarse) {
+  :root {
+    --color-surface-hover: var(--color-surface);
+    --color-border-hover: var(--color-border);
+  }
+
+  .surface-hover:hover,
+  .btn-tonal:hover:not(:disabled) {
+    background-color: var(--color-surface) !important;
+  }
+
+  .btn-contrast:hover:not(:disabled) {
+    box-shadow: none !important;
+    transform: none !important;
+    filter: none !important;
+    opacity: inherit !important;
+  }
+
+  .hover-border-adaptive:hover,
+  .hover-border-contrast:hover {
+    border-color: var(--color-border) !important;
+  }
+
+  .motion-lift:hover,
+  .jump-on-hover:hover,
+  .shake-on-hover:hover,
+  .card-hover-shadow:hover {
+    box-shadow: none !important;
+    transform: none !important;
+  }
+
+  .pill-adaptive:hover {
+    background-color: var(--pill-bg) !important;
+  }
+
+  a:hover,
+  [role='button']:hover {
+    text-decoration: none !important;
+    opacity: inherit !important;
   }
 }
 

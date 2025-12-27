@@ -1,10 +1,11 @@
-import type { ReactElement } from 'react';
-import { useState } from 'react';
+import type { ReactElement, MouseEvent } from 'react';
+import { useEffect, useState } from 'react';
 import type { Copy } from '../../../shared/constants/i18n';
 import type { Locale } from '../../../shared/types';
 import { Logo, SakuraFlower } from '../../../shared/components';
 import { QuoteRotator } from './QuoteRotator';
 import { getAllQuotes } from '@shared/data/quotes';
+import { classNames } from '@shared/utils/classNames';
 
 type HomePageProps = {
   copy: Copy;
@@ -29,6 +30,25 @@ export const HomePage = ({
 }: HomePageProps): ReactElement => {
   const quotes = getAllQuotes(locale);
   const [isGratitudeHovered, setIsGratitudeHovered] = useState(false);
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+  const [isGratitudeActive, setIsGratitudeActive] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return;
+    const mediaQuery = window.matchMedia('(hover: none) and (pointer: coarse)');
+    const updateTouchState = () => setIsTouchDevice(mediaQuery.matches);
+    updateTouchState();
+    mediaQuery.addEventListener('change', updateTouchState);
+    return () => mediaQuery.removeEventListener('change', updateTouchState);
+  }, []);
+
+  const shouldToggleCard = (event: MouseEvent<HTMLElement>) => {
+    if (!isTouchDevice) return false;
+    const target = event.target as HTMLElement | null;
+    return !target?.closest('button, a, input, select, textarea, [role="button"]');
+  };
+
+  const gratitudeActive = isTouchDevice ? isGratitudeActive : isGratitudeHovered;
   
   return (
     <div className="min-h-dvh font-sans">
@@ -173,17 +193,27 @@ export const HomePage = ({
 
         {/* Dojo Credit Card */}
         <section 
-          className="rounded-2xl border surface-border surface card-hover-shadow p-6 md:p-8 relative overflow-hidden"
-          onMouseEnter={() => setIsGratitudeHovered(true)}
-          onMouseLeave={() => setIsGratitudeHovered(false)}
+          className={classNames(
+            'rounded-2xl border surface-border surface card-hover-shadow p-6 md:p-8 relative overflow-hidden',
+            isTouchDevice && isGratitudeActive && 'is-toggled',
+          )}
+          onMouseEnter={() => {
+            if (!isTouchDevice) setIsGratitudeHovered(true);
+          }}
+          onMouseLeave={() => {
+            if (!isTouchDevice) setIsGratitudeHovered(false);
+          }}
+          onClick={(event) => {
+            if (shouldToggleCard(event)) setIsGratitudeActive((prev) => !prev);
+          }}
         >
           {/* Sakura Flowers Background */}
-          <div className={`absolute inset-0 pointer-events-none transition-opacity duration-500 ${isGratitudeHovered ? 'opacity-10' : 'opacity-0'}`}>
+          <div className={`absolute inset-0 pointer-events-none transition-opacity duration-500 ${gratitudeActive ? 'opacity-10' : 'opacity-0'}`}>
             {/* Top right sakura */}
             <SakuraFlower 
               className="absolute -top-8 -right-8 w-28 h-28 transition-all duration-500 ease-out"
               style={{
-                transform: isGratitudeHovered 
+                transform: gratitudeActive 
                   ? 'rotate(15deg) scale(1) translate(0, 0)' 
                   : 'rotate(45deg) scale(0.7) translate(10px, 10px)',
               }}
@@ -192,7 +222,7 @@ export const HomePage = ({
             <SakuraFlower 
               className="absolute top-8 -left-6 w-20 h-20 transition-all duration-500 delay-100 ease-out"
               style={{
-                transform: isGratitudeHovered 
+                transform: gratitudeActive 
                   ? 'rotate(-20deg) scale(1) translate(0, 0)' 
                   : 'rotate(-50deg) scale(0.6) translate(-8px, 8px)',
               }}
@@ -201,7 +231,7 @@ export const HomePage = ({
             <SakuraFlower 
               className="absolute -bottom-6 right-12 w-18 h-18 transition-all duration-500 delay-200 ease-out"
               style={{
-                transform: isGratitudeHovered 
+                transform: gratitudeActive 
                   ? 'rotate(30deg) scale(1) translate(0, 0)' 
                   : 'rotate(60deg) scale(0.5) translate(6px, -6px)',
               }}
