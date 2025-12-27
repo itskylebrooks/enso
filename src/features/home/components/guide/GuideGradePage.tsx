@@ -18,9 +18,10 @@ export const GuideGradePage = ({ copy, locale, grade, onBack }: GuideGradePagePr
     <button
       type="button"
       onClick={onBack}
-      className="text-sm underline underline-offset-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] rounded"
+      className="text-sm text-subtle hover:text-[var(--color-text)] transition flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] rounded"
     >
-      {copy.backToGuide}
+      <span aria-hidden>←</span>
+      <span>{copy.backToGuide}</span>
     </button>
     <div className="rounded-2xl border surface-border surface p-6 text-center space-y-2">
       <h1 className="text-2xl font-semibold">{gradeLabel(grade, locale)}</h1>
