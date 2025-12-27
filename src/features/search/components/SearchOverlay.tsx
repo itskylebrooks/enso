@@ -266,7 +266,7 @@ export const SearchOverlay = ({ copy, locale, techniques, progress, glossaryProg
     >
       <motion.div
         ref={dialogRef}
-        className="relative w-full max-w-xl no-select"
+        className="relative w-full max-w-[92vw] sm:max-w-[640px] no-select"
         variants={overlayMotion.panel}
         initial="initial"
         animate="animate"
@@ -280,7 +280,7 @@ export const SearchOverlay = ({ copy, locale, techniques, progress, glossaryProg
         <h2 id="search-title" className="sr-only">
           {copy.searchBtn}
         </h2>
-        <div className="w-[640px] max-w-[92vw] rounded-2xl border surface surface-border p-3 panel-shadow">
+        <div className="w-full rounded-2xl border surface surface-border p-3 panel-shadow">
           <div className="relative">
             <div className="relative flex items-center pl-3 pr-12 py-2">
               <span className="text-muted" aria-hidden>
