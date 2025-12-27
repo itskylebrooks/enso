@@ -152,6 +152,12 @@ export type AppRoute =
   | 'guide'
   | 'guideAdvanced'
   | 'guideDan'
+  | 'guideKyu5'
+  | 'guideKyu4'
+  | 'guideKyu3'
+  | 'guideKyu2'
+  | 'guideKyu1'
+  | 'guideDan1'
   | 'glossary'
   | 'feedback';
 

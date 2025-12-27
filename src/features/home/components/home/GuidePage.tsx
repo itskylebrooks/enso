@@ -1,7 +1,7 @@
 import { motion } from 'motion/react';
 import type { ReactElement } from 'react';
 import { useEffect, useState } from 'react';
-import type { Collection, EntryMode, Grade, Locale } from '@shared/types';
+import type { EntryMode, Grade, Locale } from '@shared/types';
 import { gradeOrder } from '@shared/utils/grades';
 import { gradeLabel, getGradeStyle } from '@shared/styles/belts';
 import { useMotionPreferences, defaultEase } from '@shared/components/ui/motion';
@@ -11,31 +11,18 @@ import { ExamMatrix } from '../guide/ExamMatrix';
 
 type GuidePageProps = {
   locale: Locale;
-  collections: Collection[];
-  onNavigateToGlossaryWithMovementFilter: () => void;
-  onCreateCollectionWithGrade: (name: string, grade: Grade) => string | null;
-  onNavigateToBookmarks: (collectionId: string) => void;
+  onNavigateToGuideGrade: (grade: Grade) => void;
   onOpenTechnique: (slug: string, trainerId?: string, entry?: EntryMode, skipExistenceCheck?: boolean) => void;
   onNavigateToAdvanced: () => void;
   onNavigateToDan: () => void;
 };
 
-type TermEntry = {
-  term: string;
-  detail: string;
-};
-
 type GuideContent = {
   headings: {
-    movements: string;
     philosophy: string;
     belts: string;
     etiquette: string;
   };
-
-  movementsLead: string;
-  movementHighlights: TermEntry[];
-  movementsCtaLabel: string;
 
   philosophyLead: string;
   philosophyPoints: string[];
@@ -52,21 +39,10 @@ type GuideContent = {
 const content: Record<Locale, GuideContent> = {
   en: {
     headings: {
-      movements: 'Basic movements & stances',
-  philosophy: 'Aikidō principles',
+      philosophy: 'Aikidō principles',
       belts: 'Belt grades & colors',
       etiquette: 'Dōjō etiquette & safety',
     },
-
-    movementsLead:
-      'These are the movement tools you will use constantly. Practice them slowly, then smoothly.',
-    movementHighlights: [
-      { term: 'Kamae (hanmi)', detail: 'ready posture: relaxed shoulders, soft knees, centered' },
-      { term: 'Irimi', detail: 'decisive entering step that closes distance' },
-      { term: 'Tenkan', detail: 'pivot/turn that leads uke past your center' },
-      { term: 'Ukemi', detail: 'safe falling/rolling; protect neck, move with the throw' },
-    ],
-    movementsCtaLabel: 'See all movement terms',
 
     philosophyLead:
       'Aikidō favors blending over collision. You cultivate center, timing, and compassion while maintaining effectiveness.',
@@ -114,21 +90,10 @@ const content: Record<Locale, GuideContent> = {
 
   de: {
     headings: {
-      movements: 'Grundbewegungen & Stände',
-  philosophy: 'Aikidō‑Prinzipien',
+      philosophy: 'Aikidō‑Prinzipien',
       belts: 'Gürtelgrade & Farben',
       etiquette: 'Dōjō‑Etikette & Sicherheit',
     },
-
-    movementsLead:
-      'Diese Bewegungen nutzt du ständig. Übe sie ruhig und präzise, dann fließend.',
-    movementHighlights: [
-      { term: 'Kamae (hanmi)', detail: 'Bereitschaftshaltung: Schultern weich, Knie locker, Zentrum stabil' },
-      { term: 'Irimi', detail: 'entschlossenes Eintreten, das Distanz schließt' },
-      { term: 'Tenkan', detail: 'Drehung, die Uke an deinem Zentrum vorbeiführt' },
-      { term: 'Ukemi', detail: 'sicheres Fallen/Rollen; Nacken schützen, mit der Technik gehen' },
-    ],
-    movementsCtaLabel: 'Alle Bewegungen im Glossar',
 
     philosophyLead:
       'Aikidō bevorzugt das Führen statt das Kollisionen. Entwickle Zentrum, Timing und Mitgefühl – bei voller Wirksamkeit.',
@@ -186,10 +151,7 @@ const sectionVariants = {
 
 export const GuidePage = ({ 
   locale, 
-  collections,
-  onNavigateToGlossaryWithMovementFilter,
-  onCreateCollectionWithGrade,
-  onNavigateToBookmarks,
+  onNavigateToGuideGrade,
   onOpenTechnique,
   onNavigateToAdvanced,
   onNavigateToDan,
@@ -236,26 +198,7 @@ export const GuidePage = ({
   }, []);
 
   const handleBeltClick = (grade: Grade) => {
-    const label = gradeLabel(grade, locale);
-    const collectionName = locale === 'en' 
-      ? `Exam Program – ${label}`
-      : `Prüfungsprogramm – ${label}`;
-
-    // Check if collection already exists
-    const existingCollection = collections.find(
-      (c) => c.name.toLowerCase() === collectionName.toLowerCase()
-    );
-
-    if (existingCollection) {
-      // Navigate to existing collection
-      onNavigateToBookmarks(existingCollection.id);
-    } else {
-      // Create new collection with all techniques of this grade and navigate to it
-      const newCollectionId = onCreateCollectionWithGrade(collectionName, grade);
-      if (newCollectionId) {
-        onNavigateToBookmarks(newCollectionId);
-      }
-    }
+    onNavigateToGuideGrade(grade);
   };
   const animationProps = prefersReducedMotion
     ? {}
@@ -269,31 +212,6 @@ export const GuidePage = ({
   return (
     <section className="py-12">
       <div className="container max-w-4xl mx-auto px-4 md:px-6 space-y-10">
-
-        {/* Movements & Stances */}
-        <motion.article className="space-y-4" {...animationProps}>
-          <header className="space-y-2">
-            <h2 className="text-xl font-semibold leading-tight">{copy.headings.movements}</h2>
-            <p className="text-sm text-subtle leading-relaxed">{copy.movementsLead}</p>
-          </header>
-          <dl className="flex flex-col gap-3">
-            {copy.movementHighlights.map(({ term, detail }) => (
-              <div key={term} className="flex flex-col">
-                <dt className="font-semibold text-base leading-tight text-[var(--color-text)]">{term}</dt>
-                <dd className="text-neutral-400 text-sm mt-1 leading-relaxed">{detail}</dd>
-              </div>
-            ))}
-          </dl>
-          <div>
-            <button
-              type="button"
-              onClick={onNavigateToGlossaryWithMovementFilter}
-              className="inline-flex items-center rounded-xl border surface-border bg-[var(--color-surface)]/70 px-4 py-2 text-sm font-medium hover:bg-[var(--color-surface)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
-            >
-              {copy.movementsCtaLabel} →
-            </button>
-          </div>
-        </motion.article>
 
         {/* Philosophy */}
         <motion.article className="space-y-4" {...animationProps}>

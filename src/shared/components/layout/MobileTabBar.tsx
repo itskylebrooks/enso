@@ -19,7 +19,16 @@ export const MobileTabBar = ({ copy, route, onNavigate }: MobileTabBarProps): Re
   const { prefersReducedMotion } = useMotionPreferences();
   const { isVisible, isMobile } = useSmartSticky();
   const isCompact = isMobile && !isVisible;
-  const isGuideActive = route === 'guide' || route === 'guideAdvanced' || route === 'guideDan';
+  const isGuideActive =
+    route === 'guide' ||
+    route === 'guideAdvanced' ||
+    route === 'guideDan' ||
+    route === 'guideKyu5' ||
+    route === 'guideKyu4' ||
+    route === 'guideKyu3' ||
+    route === 'guideKyu2' ||
+    route === 'guideKyu1' ||
+    route === 'guideDan1';
   const activeTab: MobileTab | null = isGuideActive ? 'guide' : route === 'library' ? 'library' : route === 'glossary' ? 'glossary' : null;
 
   const tabs: Array<{ id: MobileTab; label: string; icon: ReactElement }> = [

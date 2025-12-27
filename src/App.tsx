@@ -17,6 +17,7 @@ import { AboutPage } from '@features/home/components/home/AboutPage';
 import { AdvancedPrograms } from '@features/home/components/home/AdvancedPrograms';
 import { DanOverview } from '@features/home/components/home/DanOverview';
 import { GuidePage } from '@features/home/components/home/GuidePage';
+import { GuideGradePage } from '@features/home/components/guide/GuideGradePage';
 import { RoadmapPage } from '@features/home/components/home/RoadmapPage';
 import { FeedbackPage } from '@features/home/components/feedback/FeedbackPage';
 import type { FeedbackType } from '@features/home/components/feedback/FeedbackPage';
@@ -97,6 +98,18 @@ const routeToPath = (route: AppRoute): string => {
       return '/guide/advanced';
     case 'guideDan':
       return '/guide/dan';
+    case 'guideKyu5':
+      return '/guide/5-kyu';
+    case 'guideKyu4':
+      return '/guide/4-kyu';
+    case 'guideKyu3':
+      return '/guide/3-kyu';
+    case 'guideKyu2':
+      return '/guide/2-kyu';
+    case 'guideKyu1':
+      return '/guide/1-kyu';
+    case 'guideDan1':
+      return '/guide/1-dan';
     case 'feedback':
       return '/feedback';
     case 'library':
@@ -116,6 +129,24 @@ type TechniqueParams = {
   entry?: EntryMode;
 };
 
+const guideRouteToGrade = (route: AppRoute): Grade | null => {
+  switch (route) {
+    case 'guideKyu5':
+      return 'kyu5';
+    case 'guideKyu4':
+      return 'kyu4';
+    case 'guideKyu3':
+      return 'kyu3';
+    case 'guideKyu2':
+      return 'kyu2';
+    case 'guideKyu1':
+      return 'kyu1';
+    case 'guideDan1':
+      return 'dan1';
+    default:
+      return null;
+  }
+};
 
 
 const getGlossarySlugFromPath = (pathname: string): string | null => {
@@ -177,6 +208,20 @@ const parseLocation = (
 
   if (pathname === '/guide/dan') {
     return { route: 'guideDan', slug: null };
+  }
+
+  const guideGradeMatch = /^\/guide\/(\d+)-(kyu|dan)$/.exec(pathname);
+  if (guideGradeMatch) {
+    const [, number, type] = guideGradeMatch;
+    if (type === 'kyu') {
+      if (number === '5') return { route: 'guideKyu5', slug: null };
+      if (number === '4') return { route: 'guideKyu4', slug: null };
+      if (number === '3') return { route: 'guideKyu3', slug: null };
+      if (number === '2') return { route: 'guideKyu2', slug: null };
+      if (number === '1') return { route: 'guideKyu1', slug: null };
+    } else if (type === 'dan' && number === '1') {
+      return { route: 'guideDan1', slug: null };
+    }
   }
 
   if (pathname === '/feedback') {
@@ -801,51 +846,6 @@ export default function App(): ReactElement {
     return id;
   };
 
-  const createCollectionWithGrade = (name: string, grade: Grade): string | null => {
-    const collectionId = createCollection(name);
-    if (!collectionId) return null;
-
-    // Find all techniques matching this grade
-    const matchingTechniques = db.techniques.filter((technique) => technique.level === grade);
-    const now = Date.now();
-
-    setDB((prev) => {
-      // Create bookmark collection entries for all matching techniques
-      const newBookmarkCollections = matchingTechniques.map((technique) => ({
-        id: generateId(),
-        techniqueId: technique.id,
-        collectionId,
-        createdAt: now,
-      }));
-
-      // Auto-bookmark all these techniques
-      const techniqueIds = new Set(matchingTechniques.map((t) => t.id));
-      const nextProgress = prev.progress.map((p) =>
-        techniqueIds.has(p.techniqueId) && !p.bookmarked
-          ? { ...p, bookmarked: true, updatedAt: now }
-          : p
-      );
-
-      // Add progress entries for techniques that don't have them yet
-      const existingProgressIds = new Set(prev.progress.map((p) => p.techniqueId));
-      const newProgressEntries = matchingTechniques
-        .filter((t) => !existingProgressIds.has(t.id))
-        .map((technique) => ({
-          techniqueId: technique.id,
-          bookmarked: true,
-          updatedAt: now,
-        }));
-
-      return {
-        ...prev,
-        progress: [...nextProgress, ...newProgressEntries],
-        bookmarkCollections: [...prev.bookmarkCollections, ...newBookmarkCollections],
-      };
-    });
-
-    return collectionId;
-  };
-
   const renameCollection = (id: string, name: string): void => {
     const trimmed = name.trim();
     if (!trimmed) return;
@@ -1301,21 +1301,43 @@ export default function App(): ReactElement {
         locale={locale}
       />
     );
+  } else if (guideRouteToGrade(route)) {
+    const grade = guideRouteToGrade(route) as Grade;
+    mainContent = (
+      <GuideGradePage
+        copy={copy}
+        locale={locale}
+        grade={grade}
+        onBack={() => navigateTo('guide')}
+      />
+    );
   } else if (route === 'guide') {
     mainContent = (
       <GuidePage
         locale={locale}
-        collections={db.collections}
-        onNavigateToGlossaryWithMovementFilter={() => {
-          setGlossaryFilters({ category: 'movement' });
-          prefetchGlossary();
-          navigateTo('glossary');
-        }}
-        onCreateCollectionWithGrade={createCollectionWithGrade}
-        onNavigateToBookmarks={(collectionId) => {
-          setSelectedCollectionId(collectionId);
-          prefetchBookmarks();
-          navigateTo('bookmarks');
+        onNavigateToGuideGrade={(grade) => {
+          switch (grade) {
+            case 'kyu5':
+              navigateTo('guideKyu5');
+              break;
+            case 'kyu4':
+              navigateTo('guideKyu4');
+              break;
+            case 'kyu3':
+              navigateTo('guideKyu3');
+              break;
+            case 'kyu2':
+              navigateTo('guideKyu2');
+              break;
+            case 'kyu1':
+              navigateTo('guideKyu1');
+              break;
+            case 'dan1':
+              navigateTo('guideDan1');
+              break;
+            default:
+              navigateTo('guide');
+          }
         }}
         onOpenTechnique={openTechnique}
         onNavigateToAdvanced={() => navigateTo('guideAdvanced')}

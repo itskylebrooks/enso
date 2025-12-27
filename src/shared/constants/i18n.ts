@@ -547,7 +547,7 @@ export const messages = {
     categoryPhilosophy: 'Philosophy',
     categoryOther: 'Other',
     // Guide page
-    beltExamProgramNote: 'Click on a belt to open its exam program collection. You can save techniques there and use it as your study guide.',
+    beltExamProgramNote: 'Tap a belt to open its dedicated guide page.',
     examMatrixTitle: 'Exam Program of the German Aikido Federation (5th Kyū → 1st Dan)',
     examMatrixLead: 'Numbers show the grade where a variation is examined. Click a technique or cell to see details. Scroll left/right to see the whole table.',
     examMatrixLegendTitle: 'Legend',
@@ -1177,7 +1177,7 @@ export const messages = {
     categoryPhilosophy: 'Philosophie',
     categoryOther: 'Andere',
     // Guide page
-    beltExamProgramNote: 'Klicke auf einen Gürtel, um das Prüfungsprogramm zu öffnen. Du kannst dort Techniken speichern und es als Lernhilfe nutzen.',
+    beltExamProgramNote: 'Tippe auf einen Gürtel, um die passende Leitfadenseite zu öffnen.',
     examMatrixTitle: 'Prüfungsprogramm des Deutschen Aikido-Bundes (5. Kyū → 1. Dan)',
     examMatrixLead: 'Zahlen zeigen den Prüfungsgrad für die jeweilige Variante. Technik oder Feld anklicken für Details. Links/rechts scrollen, um die ganze Tabelle zu sehen.',
     examMatrixLegendTitle: 'Legende',

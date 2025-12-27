@@ -29,7 +29,16 @@ export const Header = ({
   const [moreDesktopOpen, setMoreDesktopOpen] = useState(false);
   const [moreMobileOpen, setMoreMobileOpen] = useState(false);
   const { overlayMotion, prefersReducedMotion } = useMotionPreferences();
-  const isGuideActive = route === 'guide' || route === 'guideAdvanced' || route === 'guideDan';
+  const isGuideActive =
+    route === 'guide' ||
+    route === 'guideAdvanced' ||
+    route === 'guideDan' ||
+    route === 'guideKyu5' ||
+    route === 'guideKyu4' ||
+    route === 'guideKyu3' ||
+    route === 'guideKyu2' ||
+    route === 'guideKyu1' ||
+    route === 'guideDan1';
   const moreMenuRef = useRef<HTMLDivElement>(null);
   const moreButtonRef = useRef<HTMLButtonElement>(null);
   const moreMobileMenuRef = useRef<HTMLDivElement>(null);
