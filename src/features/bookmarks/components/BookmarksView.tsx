@@ -335,7 +335,7 @@ export const BookmarksView = ({
 
   return (
     <>
-      <div className="no-select">
+      <div className="no-select space-y-4 lg:space-y-0">
         <div className="lg:hidden">
         <MobileCollections
           copy={copy}
