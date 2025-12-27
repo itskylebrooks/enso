@@ -3,18 +3,21 @@ import type { Quote } from '@shared/data/quotes';
 
 interface QuoteRotatorProps {
   quotes: Quote[];
+  onQuoteChange?: (quote: Quote) => void;
 }
 
-export const QuoteRotator = ({ quotes }: QuoteRotatorProps): ReactElement => {
+export const QuoteRotator = ({ quotes, onQuoteChange }: QuoteRotatorProps): ReactElement => {
   const [currentQuote, setCurrentQuote] = useState<Quote | null>(null);
 
   useEffect(() => {
     if (quotes.length > 0) {
       // Pick a random quote on mount
       const randomIndex = Math.floor(Math.random() * quotes.length);
-      setCurrentQuote(quotes[randomIndex]);
+      const nextQuote = quotes[randomIndex];
+      setCurrentQuote(nextQuote);
+      onQuoteChange?.(nextQuote);
     }
-  }, [quotes]);
+  }, [quotes, onQuoteChange]);
 
   if (quotes.length === 0 || !currentQuote) {
     return <div className="text-subtle">No quotes available</div>;

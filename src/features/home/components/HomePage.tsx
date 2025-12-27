@@ -1,10 +1,10 @@
 import type { ReactElement, MouseEvent } from 'react';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Copy } from '../../../shared/constants/i18n';
 import type { GlossaryTerm, Grade, Locale } from '../../../shared/types';
 import { SakuraFlower } from '../../../shared/components';
 import { QuoteRotator } from './QuoteRotator';
-import { getAllQuotes } from '@shared/data/quotes';
+import { getAllQuotes, type Quote } from '@shared/data/quotes';
 import { classNames } from '@shared/utils/classNames';
 import { getCategoryLabel, getCategoryStyle } from '../../../shared/styles/glossary';
 import { getGradeStyle, gradeLabel } from '@shared/styles/belts';
@@ -46,6 +46,9 @@ export const HomePage = ({
   const [isGratitudeHovered, setIsGratitudeHovered] = useState(false);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
   const [isGratitudeActive, setIsGratitudeActive] = useState(false);
+  const [currentQuote, setCurrentQuote] = useState<Quote | null>(null);
+  const [quoteCopied, setQuoteCopied] = useState(false);
+  const copyTimeoutRef = useRef<number | null>(null);
   const termToLearn = useMemo(() => {
     if (!glossaryTerms.length) return null;
     const randomIndex = Math.floor(Math.random() * glossaryTerms.length);
@@ -61,10 +64,48 @@ export const HomePage = ({
     return () => mediaQuery.removeEventListener('change', updateTouchState);
   }, []);
 
+  useEffect(() => {
+    return () => {
+      if (copyTimeoutRef.current) {
+        window.clearTimeout(copyTimeoutRef.current);
+      }
+    };
+  }, []);
+
   const shouldToggleCard = (event: MouseEvent<HTMLElement>) => {
     if (!isTouchDevice) return false;
     const target = event.target as HTMLElement | null;
     return !target?.closest('button, a, input, select, textarea, [role="button"]');
+  };
+
+  const handleCopyQuote = async () => {
+    if (!currentQuote) return;
+    const textToCopy = `"${currentQuote.quote}" — ${currentQuote.author}`;
+
+    try {
+      if (navigator?.clipboard?.writeText) {
+        await navigator.clipboard.writeText(textToCopy);
+      } else {
+        const textarea = document.createElement('textarea');
+        textarea.value = textToCopy;
+        textarea.style.position = 'fixed';
+        textarea.style.opacity = '0';
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        textarea.remove();
+      }
+      setQuoteCopied(true);
+      if (copyTimeoutRef.current) {
+        window.clearTimeout(copyTimeoutRef.current);
+      }
+      copyTimeoutRef.current = window.setTimeout(() => {
+        setQuoteCopied(false);
+        copyTimeoutRef.current = null;
+      }, 1600);
+    } catch {
+      // noop
+    }
   };
 
   const gratitudeActive = isTouchDevice ? isGratitudeActive : isGratitudeHovered;
@@ -172,14 +213,18 @@ export const HomePage = ({
           })()}
 
           {/* Random Quote Card */}
-          <section className="rounded-2xl border surface-border surface card-hover-shadow p-6 md:p-8">
+          <button
+            type="button"
+            onClick={handleCopyQuote}
+            className="rounded-2xl border surface-border surface card-hover-shadow p-6 md:p-8 text-left focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] flex flex-col justify-start"
+          >
             <div className="space-y-4">
               <h2 className="text-lg md:text-xl font-semibold">
-                {copy.homeQuoteOfMomentTitle}
+                {quoteCopied ? copy.homeQuoteCopiedTitle : copy.homeQuoteOfMomentTitle}
               </h2>
-              <QuoteRotator quotes={quotes} />
+              <QuoteRotator quotes={quotes} onQuoteChange={setCurrentQuote} />
             </div>
-          </section>
+          </button>
         </div>
 
         {/* Dojo Credit Card */}
