@@ -389,6 +389,7 @@ export default function App(): ReactElement {
   const settingsTriggerRef = useRef<HTMLButtonElement | null>(null);
   const settingsClearButtonRef = useRef<HTMLButtonElement | null>(null);
   const toastTimeoutRef = useRef<number | null>(null);
+  const pendingScrollToTopRef = useRef(false);
   // Detect if this render follows a back/forward restore and skip entrance
   // animations to avoid the brief re-appearance/flicker on iOS Safari.
   const skipEntranceAnimations = cameFromBackForwardNavigation();
@@ -1146,6 +1147,14 @@ export default function App(): ReactElement {
 
   const techniqueNotFound = Boolean(activeSlug) && !currentTechnique && route !== 'glossary';
 
+  const flushScrollToTop = useCallback(() => {
+    if (typeof window === 'undefined') return;
+    if (!pendingScrollToTopRef.current) return;
+    pendingScrollToTopRef.current = false;
+    // Use a micro task to ensure any route transition DOM updates happen first.
+    Promise.resolve().then(() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' }));
+  }, []);
+
   // Ensure we scroll to the top whenever navigation changes to a new page or detail view.
   // This guarantees that if the user was scrolled down on the previous page, opening
   // a new route, technique, or glossary term always starts at the top of the page.
@@ -1154,10 +1163,11 @@ export default function App(): ReactElement {
     if (consumeBFCacheRestoreFlag()) {
       return;
     }
-    // Use a micro task to ensure any route transition DOM updates happen first.
-    // This is particularly helpful when used with animated transitions.
-    Promise.resolve().then(() => window.scrollTo({ top: 0, left: 0, behavior: 'auto' }));
-  }, [route, activeSlug, currentTechnique?.id]);
+    pendingScrollToTopRef.current = true;
+    if (skipEntranceAnimations || animationsDisabled) {
+      flushScrollToTop();
+    }
+  }, [route, activeSlug, currentTechnique?.id, skipEntranceAnimations, animationsDisabled, flushScrollToTop]);
 
   const techniqueBackLabel =
     route === 'bookmarks'
@@ -1495,7 +1505,11 @@ export default function App(): ReactElement {
           settingsButtonRef={settingsTriggerRef}
         />
 
-        <AnimatePresence mode={skipEntranceAnimations ? 'sync' : 'wait'} initial={!skipEntranceAnimations}>
+        <AnimatePresence
+          mode={skipEntranceAnimations ? 'sync' : 'wait'}
+          initial={!skipEntranceAnimations}
+          onExitComplete={flushScrollToTop}
+        >
           <motion.main
             key={pageKey}
             variants={pageMotion.variants}
