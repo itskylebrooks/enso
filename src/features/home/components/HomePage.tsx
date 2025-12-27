@@ -32,6 +32,8 @@ type HomePageProps = {
   onOpenGlossaryTerm: (slug: string) => void;
   pinnedBeltGrade: Grade | null;
   onOpenPinnedBeltGrade: (grade: Grade) => void;
+  beltPromptDismissed: boolean;
+  onOpenGuideFromPrompt: () => void;
 };
 
 export const HomePage = ({
@@ -41,6 +43,8 @@ export const HomePage = ({
   onOpenGlossaryTerm,
   pinnedBeltGrade,
   onOpenPinnedBeltGrade,
+  beltPromptDismissed,
+  onOpenGuideFromPrompt,
 }: HomePageProps): ReactElement => {
   const quotes = getAllQuotes(locale);
   const [isGratitudeHovered, setIsGratitudeHovered] = useState(false);
@@ -113,6 +117,52 @@ export const HomePage = ({
   return (
     <div className="min-h-dvh font-sans">
       <div className="container max-w-4xl mx-auto px-4 md:px-6 pt-8 md:pt-12 space-y-8 md:space-y-6 pb-16 md:pb-24">
+        {!pinnedBeltGrade && !beltPromptDismissed && (() => {
+          const beltColors = Array.from({ length: 5 }, () => 'var(--belt-prompt-stripe)');
+          return (
+            <button
+              type="button"
+              onClick={onOpenGuideFromPrompt}
+              className="w-full rounded-2xl border surface-border surface card-hover-shadow p-6 md:p-8 text-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] relative overflow-hidden"
+            >
+              <span
+                aria-hidden
+                className="absolute left-0 top-1/2 h-4 w-[160%] -translate-y-1/2 -translate-x-[43%] -rotate-[65deg] md:left-0 md:top-1/2 md:h-5 md:w-[200%] md:-translate-y-1/2 md:-translate-x-[45%] md:-rotate-45 overflow-hidden"
+              >
+                <span className="absolute inset-0 grid grid-cols-5">
+                  {beltColors.map((color, index) => (
+                    <span
+                      key={`belt-stripe-left-${color}-${index}`}
+                      className="bg-[var(--belt-prompt-stripe)]"
+                    />
+                  ))}
+                </span>
+              </span>
+              <span
+                aria-hidden
+                className="absolute right-0 top-1/2 h-4 w-[160%] -translate-y-1/2 translate-x-[43%] rotate-[65deg] md:right-0 md:top-1/2 md:h-5 md:w-[200%] md:-translate-y-1/2 md:translate-x-[45%] md:rotate-45 overflow-hidden"
+              >
+                <span className="absolute inset-0 grid grid-cols-5">
+                  {beltColors.map((color, index) => (
+                    <span
+                      key={`belt-stripe-right-${color}-${index}`}
+                      className="bg-[var(--belt-prompt-stripe)]"
+                    />
+                  ))}
+                </span>
+              </span>
+              <div className="relative z-10 space-y-2">
+                <h2 className="text-lg md:text-xl font-semibold">
+                  {copy.homePinBeltPromptTitle}
+                </h2>
+                <p className="text-sm text-subtle">
+                  {copy.homePinBeltPromptBody}
+                </p>
+              </div>
+            </button>
+          );
+        })()}
+
         {pinnedBeltGrade && (() => {
           const beltStyle = getGradeStyle(pinnedBeltGrade);
           const beltTitle = gradeLabel(pinnedBeltGrade, locale);
@@ -150,7 +200,7 @@ export const HomePage = ({
                       {Array.from({ length: Math.max(danCount, 1) }).map((_, index) => (
                         <span
                           key={`dan-mark-left-${index}`}
-                          className="h-2.5 w-2.5 rounded-full bg-[#9ca3af] dark:bg-[#6b7280]"
+                        className="h-2.5 w-2.5 rounded-full bg-[var(--belt-prompt-stripe)]"
                         />
                       ))}
                     </div>
@@ -158,7 +208,7 @@ export const HomePage = ({
                       {Array.from({ length: Math.max(danCount, 1) }).map((_, index) => (
                         <span
                           key={`dan-mark-right-${index}`}
-                          className="h-2.5 w-2.5 rounded-full bg-[#9ca3af] dark:bg-[#6b7280]"
+                        className="h-2.5 w-2.5 rounded-full bg-[var(--belt-prompt-stripe)]"
                         />
                       ))}
                     </div>

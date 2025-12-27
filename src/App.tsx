@@ -45,6 +45,8 @@ import {
   clearFilters,
   loadPinnedBeltGrade,
   savePinnedBeltGrade,
+  loadBeltPromptDismissed,
+  saveBeltPromptDismissed,
 } from './shared/services/storageService';
 import type {
   AppRoute,
@@ -479,6 +481,7 @@ export default function App(): ReactElement {
   const [glossaryTerms, setGlossaryTerms] = useState<GlossaryTerm[]>([]);
   const [feedbackInitialType, setFeedbackInitialType] = useState<FeedbackType | null>(null);
   const [pinnedBeltGrade, setPinnedBeltGrade] = useState<Grade | null>(() => loadPinnedBeltGrade());
+  const [beltPromptDismissed, setBeltPromptDismissed] = useState<boolean>(() => loadBeltPromptDismissed());
 
   const copy = getCopy(locale);
   const { pageMotion } = useMotionPreferences();
@@ -722,6 +725,10 @@ export default function App(): ReactElement {
   useEffect(() => {
     savePinnedBeltGrade(pinnedBeltGrade);
   }, [pinnedBeltGrade]);
+
+  useEffect(() => {
+    saveBeltPromptDismissed(beltPromptDismissed);
+  }, [beltPromptDismissed]);
 
   // Persist filters to local storage so they survive reloads/navigation
   useEffect(() => {
@@ -1233,6 +1240,11 @@ export default function App(): ReactElement {
     setPinnedBeltGrade((current) => (current === grade ? null : grade));
   }, []);
 
+  const handleOpenGuideFromPrompt = useCallback(() => {
+    setBeltPromptDismissed(true);
+    navigateTo('guide');
+  }, [navigateTo]);
+
   const navigateToGuideGrade = useCallback((grade: Grade) => {
     switch (grade) {
       case 'kyu5':
@@ -1434,6 +1446,8 @@ export default function App(): ReactElement {
         onOpenGlossaryTerm={openGlossaryTerm}
         pinnedBeltGrade={pinnedBeltGrade}
         onOpenPinnedBeltGrade={navigateToGuideGrade}
+        beltPromptDismissed={beltPromptDismissed}
+        onOpenGuideFromPrompt={handleOpenGuideFromPrompt}
       />
     );
   } else if (route === 'roadmap') {

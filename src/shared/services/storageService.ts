@@ -5,6 +5,7 @@ import {
   DB_VERSION,
   FILTERS_KEY,
   FILTER_PANEL_PINNED_KEY,
+  HOME_BELT_PROMPT_DISMISSED_KEY,
   HOME_PINNED_BELT_KEY,
   LOCALE_KEY,
   STORAGE_KEY,
@@ -647,6 +648,8 @@ export const clearDB = (): DB => {
   if (isBrowser) {
     window.localStorage.removeItem(STORAGE_KEY);
   }
+  removeLocalStorage(HOME_PINNED_BELT_KEY);
+  removeLocalStorage(HOME_BELT_PROMPT_DISMISSED_KEY);
   // Reset preferences to defaults (animations OFF)
   saveAnimationsDisabled(false);
   return buildDefaultDB();
@@ -699,5 +702,18 @@ export const savePinnedBeltGrade = (grade: Grade | null): void => {
     writeLocalStorage(HOME_PINNED_BELT_KEY, grade);
   } else {
     removeLocalStorage(HOME_PINNED_BELT_KEY);
+  }
+};
+
+export const loadBeltPromptDismissed = (): boolean => {
+  const value = readLocalStorage(HOME_BELT_PROMPT_DISMISSED_KEY);
+  return value === '1' || value === 'true';
+};
+
+export const saveBeltPromptDismissed = (dismissed: boolean): void => {
+  if (dismissed) {
+    writeLocalStorage(HOME_BELT_PROMPT_DISMISSED_KEY, '1');
+  } else {
+    removeLocalStorage(HOME_BELT_PROMPT_DISMISSED_KEY);
   }
 };

@@ -46,6 +46,7 @@ html.dark {
   --color-border-hover: rgba(0, 0, 0, 0.15);
   --color-muted: #4b5563;
   --color-subtle: #6b7280;
+  --belt-prompt-stripe: #9ca3af;
 
   --glossary-movement-bg: #dbeafe;
   --glossary-movement-fg: #1e40af;
@@ -80,6 +81,7 @@ html.dark {
   --color-border-hover: rgba(255, 255, 255, 0.25);
   --color-muted: rgba(255, 255, 255, 0.72);
   --color-subtle: rgba(255, 255, 255, 0.62);
+  --belt-prompt-stripe: #3c4048;
 
   --glossary-movement-bg: rgba(30, 58, 138, 0.3);
   --glossary-movement-fg: #93c5fd;
