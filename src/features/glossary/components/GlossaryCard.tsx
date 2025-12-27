@@ -1,11 +1,9 @@
 import type { KeyboardEvent, ReactElement } from 'react';
-import { useState, useEffect } from 'react';
 import { motion, type Variants, type Transition } from 'motion/react';
 import type { GlossaryTerm } from '../../../shared/types';
 import type { Locale } from '../../../shared/types';
 import type { Copy } from '../../../shared/constants/i18n';
 import { getCategoryStyle, getCategoryLabel } from '../../../shared/styles/glossary';
-import { getInitialThemeState } from '@shared/utils/theme';
 
 type MotionProps = {
   variants: Variants;
@@ -40,31 +38,9 @@ export const GlossaryCard = ({
   getTransition,
   // prefersReducedMotion removed (no hover motion)
 }: GlossaryCardProps): ReactElement => {
-  const [isDark, setIsDark] = useState(getInitialThemeState);
-
-  useEffect(() => {
-    // Check if dark mode is active
-    const checkDarkMode = () => {
-      const html = document.documentElement;
-      setIsDark(html.classList.contains('dark'));
-    };
-
-    // Initial check
-    checkDarkMode();
-
-    // Watch for theme changes
-    const observer = new MutationObserver(checkDarkMode);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['class']
-    });
-
-    return () => observer.disconnect();
-  }, []);
-
   const definition = term.def[locale] || term.def.en;
   const categoryLabel = getCategoryLabel(term.category, copy);
-  const categoryStyle = getCategoryStyle(term.category, isDark);
+  const categoryStyle = getCategoryStyle(term.category);
   
   const handleActivate = () => {
     onSelect(term.slug);
@@ -99,7 +75,7 @@ export const GlossaryCard = ({
           {term.jp && <div className="text-xs text-subtle truncate">{term.jp}</div>}
         </div>
         <span 
-          className="text-xs font-medium px-2 py-1 rounded-full shrink-0"
+          className="glossary-tag text-xs font-medium px-2 py-1 rounded-full shrink-0"
           style={{
             backgroundColor: categoryStyle.backgroundColor,
             color: categoryStyle.color,

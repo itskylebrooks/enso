@@ -47,6 +47,19 @@ html.dark {
   --color-muted: #4b5563;
   --color-subtle: #6b7280;
 
+  --glossary-movement-bg: #dbeafe;
+  --glossary-movement-fg: #1e40af;
+  --glossary-stance-bg: #dcfce7;
+  --glossary-stance-fg: #15803d;
+  --glossary-attack-bg: #fee2e2;
+  --glossary-attack-fg: #dc2626;
+  --glossary-etiquette-bg: #f3e8ff;
+  --glossary-etiquette-fg: #7c3aed;
+  --glossary-philosophy-bg: #fef3c7;
+  --glossary-philosophy-fg: #d97706;
+  --glossary-other-bg: #f3f4f6;
+  --glossary-other-fg: #374151;
+
   /* Card shadow colors adapt to light/dark mode. In light mode use a dark shadow; in dark mode use a light (subtle) shadow */
   --card-shadow-color: 15, 23, 42; /* rgb components for dark shadow */
   --card-shadow-alpha: 0.12; /* default alpha for light mode */
@@ -67,6 +80,19 @@ html.dark {
   --color-border-hover: rgba(255, 255, 255, 0.25);
   --color-muted: rgba(255, 255, 255, 0.72);
   --color-subtle: rgba(255, 255, 255, 0.62);
+
+  --glossary-movement-bg: rgba(30, 58, 138, 0.3);
+  --glossary-movement-fg: #93c5fd;
+  --glossary-stance-bg: rgba(20, 83, 45, 0.3);
+  --glossary-stance-fg: #86efac;
+  --glossary-attack-bg: rgba(127, 29, 29, 0.3);
+  --glossary-attack-fg: #fca5a5;
+  --glossary-etiquette-bg: rgba(88, 28, 135, 0.3);
+  --glossary-etiquette-fg: #c4b5fd;
+  --glossary-philosophy-bg: rgba(120, 53, 15, 0.3);
+  --glossary-philosophy-fg: #fcd34d;
+  --glossary-other-bg: rgba(17, 24, 39, 0.5);
+  --glossary-other-fg: #d1d5db;
 
   /* In dark mode, use a light/white layered shadow with slightly higher alpha so it remains visible */
   --card-shadow-color: 255, 255, 255;
@@ -103,6 +129,17 @@ body {
 .no-select [contenteditable='true'] {
   -webkit-user-select: text;
   user-select: text;
+}
+
+.glossary-tag {
+  transition: opacity 0.1s ease;
+  will-change: opacity;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .glossary-tag--interactive:hover {
+    opacity: 0.8;
+  }
 }
 
 .app-bg {

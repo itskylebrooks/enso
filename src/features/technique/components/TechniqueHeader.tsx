@@ -1,5 +1,4 @@
 import type { ReactElement } from 'react';
-import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import type { Copy } from '@shared/constants/i18n';
 import type { Locale, Technique } from '@shared/types';
@@ -11,7 +10,6 @@ import { useMotionPreferences } from '@shared/components/ui/motion';
 import { classNames } from '@shared/utils/classNames';
 import { getCategoryStyle } from '@shared/styles/glossary';
 import type { GlossaryTerm } from '@shared/types';
-import { getInitialThemeState } from '@shared/utils/theme';
 
 export type CollectionOption = {
   id: string;
@@ -54,27 +52,6 @@ export const TechniqueHeader = ({
   onTagClick,
 }: TechniqueHeaderProps): ReactElement => {
   const { toggleTransition, prefersReducedMotion } = useMotionPreferences();
-  const [isDark, setIsDark] = useState(getInitialThemeState);
-
-  useEffect(() => {
-    // Check if dark mode is active
-    const checkDarkMode = () => {
-      const html = document.documentElement;
-      setIsDark(html.classList.contains('dark'));
-    };
-
-    // Initial check
-    checkDarkMode();
-
-    // Watch for theme changes
-    const observer = new MutationObserver(checkDarkMode);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['class']
-    });
-
-    return () => observer.disconnect();
-  }, []);
 
   // Map tag to glossary category for appropriate styling
   const getTagCategory = (tag: string): GlossaryTerm['category'] => {
@@ -149,14 +126,14 @@ export const TechniqueHeader = ({
                   // Category tags should use the 'other' / grey palette in glossary
                   // Stance tags should use the 'stance' (green) palette
                   const tagCategory = tag.kind === 'category' ? 'other' : tag.kind === 'stance' ? 'stance' : getTagCategory(displayLabel);
-                  const categoryStyle = getCategoryStyle(tagCategory, isDark);
+                  const categoryStyle = getCategoryStyle(tagCategory);
 
                   return onTagClick ? (
                     <button
                       key={`${tag.label}-${tag.kind}`}
                       type="button"
                       onClick={() => onTagClick(displayLabel)}
-                      className="rounded-lg px-2 py-1 text-xs uppercase tracking-wide hover:opacity-80 transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+                      className="glossary-tag glossary-tag--interactive rounded-lg px-2 py-1 text-xs uppercase tracking-wide focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
                       style={{
                         backgroundColor: categoryStyle.backgroundColor,
                         color: categoryStyle.color,
@@ -167,7 +144,7 @@ export const TechniqueHeader = ({
                   ) : (
                     <span
                       key={`${tag.label}-${tag.kind}`}
-                      className="rounded-lg px-2 py-1 text-xs uppercase tracking-wide"
+                      className="glossary-tag rounded-lg px-2 py-1 text-xs uppercase tracking-wide"
                       style={{
                         backgroundColor: categoryStyle.backgroundColor,
                         color: categoryStyle.color,

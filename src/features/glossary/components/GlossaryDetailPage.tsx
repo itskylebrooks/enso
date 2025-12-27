@@ -10,7 +10,6 @@ import { AddToCollectionMenu } from '../../../features/bookmarks/components/AddT
 import { Bookmark, BookmarkCheck } from 'lucide-react';
 import { classNames } from '@shared/utils/classNames';
 import { getCategoryStyle, getCategoryLabel } from '../../../shared/styles/glossary';
-import { getInitialThemeState } from '@shared/utils/theme';
 import BreathingDot from '@shared/components/ui/BreathingDot';
 import { NameModal } from '@shared/components/ui/modals/NameModal';
 
@@ -55,7 +54,6 @@ export const GlossaryDetailPage = ({
   const [term, setTerm] = useState<GlossaryTerm | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isDark, setIsDark] = useState(getInitialThemeState);
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const { pageMotion } = useMotionPreferences();
 
@@ -71,26 +69,6 @@ export const GlossaryDetailPage = ({
       onToggleCollection(newId, true);
     }
   };
-
-  useEffect(() => {
-    // Check if dark mode is active
-    const checkDarkMode = () => {
-      const html = document.documentElement;
-      setIsDark(html.classList.contains('dark'));
-    };
-
-    // Initial check
-    checkDarkMode();
-
-    // Watch for theme changes
-    const observer = new MutationObserver(checkDarkMode);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['class']
-    });
-
-    return () => observer.disconnect();
-  }, []);
 
   useEffect(() => {
     const loadTerm = async () => {
@@ -142,7 +120,7 @@ export const GlossaryDetailPage = ({
   const literal = term.literal?.[locale] || term.literal?.en;
   const notes = term.notes?.[locale] || term.notes?.en;
   const categoryLabel = getCategoryLabel(term.category, copy);
-  const categoryStyle = getCategoryStyle(term.category, isDark);
+  const categoryStyle = getCategoryStyle(term.category);
 
   return (
     <motion.main
@@ -184,7 +162,7 @@ export const GlossaryDetailPage = ({
               type="button"
               onClick={() => onNavigateToGlossaryWithFilter?.(term.category)}
               aria-label={`Show ${categoryLabel} in glossary`}
-              className="rounded-lg px-2 py-1 text-xs uppercase tracking-wide hover:opacity-80 transition-opacity focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+              className="glossary-tag glossary-tag--interactive rounded-lg px-2 py-1 text-xs uppercase tracking-wide focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
               style={{
                 backgroundColor: categoryStyle.backgroundColor,
                 color: categoryStyle.color,

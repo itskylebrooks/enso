@@ -1,11 +1,9 @@
 import type { KeyboardEvent, ReactElement } from 'react';
-import { useState, useEffect } from 'react';
 import { motion, type Variants, type Transition } from 'motion/react';
 import type { GlossaryTerm, GlossaryProgress } from '../../../shared/types';
 import type { Locale } from '../../../shared/types';
 import type { Copy } from '../../../shared/constants/i18n';
 import { getCategoryStyle, getCategoryLabel } from '../../../shared/styles/glossary';
-import { getInitialThemeState } from '@shared/utils/theme';
 
 type MotionProps = {
   variants: Variants;
@@ -38,31 +36,9 @@ export const GlossaryBookmarkCard = ({
   isDimmed = false,
   actionSlot,
 }: GlossaryBookmarkCardProps): ReactElement => {
-  const [isDark, setIsDark] = useState(getInitialThemeState);
-
-  useEffect(() => {
-    // Check if dark mode is active
-    const checkDarkMode = () => {
-      const html = document.documentElement;
-      setIsDark(html.classList.contains('dark'));
-    };
-
-    // Initial check
-    checkDarkMode();
-
-    // Watch for theme changes
-    const observer = new MutationObserver(checkDarkMode);
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['class']
-    });
-
-    return () => observer.disconnect();
-  }, []);
-
   const definition = term.def[locale] || term.def.en;
   const categoryLabel = getCategoryLabel(term.category, copy);
-  const categoryStyle = getCategoryStyle(term.category, isDark);
+  const categoryStyle = getCategoryStyle(term.category);
   
   const handleActivate = () => {
     onSelect(term.slug);
@@ -111,7 +87,7 @@ export const GlossaryBookmarkCard = ({
       {/* Category label at bottom */}
       <div className="mt-auto flex justify-end pt-1">
         <span 
-          className="text-xs font-medium px-2 py-1 rounded-full"
+          className="glossary-tag text-xs font-medium px-2 py-1 rounded-full"
           style={{
             backgroundColor: categoryStyle.backgroundColor,
             color: categoryStyle.color,
