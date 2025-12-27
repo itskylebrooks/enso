@@ -12,11 +12,15 @@ type AboutPageProps = {
 
 export const AboutPage = ({ copy }: AboutPageProps): ReactElement => (
   <section className="py-12 font-sans">
-    <div className="container max-w-4xl mx-auto px-4 md:px-6 space-y-10">
-      {/* Main Title */}
-      <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-center">
-        {copy.aboutTitle}
-      </h1>
+    <div className="container max-w-4xl mx-auto px-4 md:px-6 space-y-8">
+      <header className="space-y-2">
+        <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-center">
+          {copy.aboutTitle}
+        </h1>
+        <p className="text-base md:text-lg text-subtle text-center">
+          {copy.homeIdentityTagline}
+        </p>
+      </header>
 
       {/* Disclaimer Section (moved to top) */}
       <div className="space-y-4">
