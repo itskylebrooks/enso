@@ -1,37 +1,56 @@
 import type { ReactElement, MouseEvent } from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import type { Copy } from '../../../shared/constants/i18n';
-import type { Locale } from '../../../shared/types';
-import { Logo, SakuraFlower } from '../../../shared/components';
+import type { GlossaryTerm, Grade, Locale } from '../../../shared/types';
+import { SakuraFlower } from '../../../shared/components';
 import { QuoteRotator } from './QuoteRotator';
 import { getAllQuotes } from '@shared/data/quotes';
 import { classNames } from '@shared/utils/classNames';
+import { getCategoryLabel, getCategoryStyle } from '../../../shared/styles/glossary';
+import { getGradeStyle, gradeLabel } from '@shared/styles/belts';
+
+const truncateDefinition = (text: string, maxLength: number = 140): string => {
+  if (text.length <= maxLength) return text;
+  const truncated = text.slice(0, maxLength);
+  const lastSpace = truncated.lastIndexOf(' ');
+  return lastSpace > 0 ? `${truncated.slice(0, lastSpace)}...` : `${truncated}...`;
+};
+
+const toRgba = (hex: string, alpha: number): string => {
+  const normalized = hex.replace('#', '');
+  if (normalized.length !== 6) return hex;
+  const r = parseInt(normalized.slice(0, 2), 16);
+  const g = parseInt(normalized.slice(2, 4), 16);
+  const b = parseInt(normalized.slice(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+};
 
 type HomePageProps = {
   copy: Copy;
   locale: Locale;
-  onOpenLibrary: () => void;
-  onViewBookmarks: () => void;
-  onViewGuide: () => void;
-  onViewRoadmap: () => void;
-  onViewGlossary: () => void;
-  onViewAbout: () => void;
+  glossaryTerms: GlossaryTerm[];
+  onOpenGlossaryTerm: (slug: string) => void;
+  pinnedBeltGrade: Grade | null;
+  onOpenPinnedBeltGrade: (grade: Grade) => void;
 };
 
 export const HomePage = ({
   copy,
   locale,
-  onOpenLibrary,
-  onViewBookmarks,
-  onViewGuide,
-  onViewRoadmap,
-  onViewGlossary,
-  onViewAbout,
+  glossaryTerms,
+  onOpenGlossaryTerm,
+  pinnedBeltGrade,
+  onOpenPinnedBeltGrade,
 }: HomePageProps): ReactElement => {
   const quotes = getAllQuotes(locale);
   const [isGratitudeHovered, setIsGratitudeHovered] = useState(false);
   const [isTouchDevice, setIsTouchDevice] = useState(false);
   const [isGratitudeActive, setIsGratitudeActive] = useState(false);
+  const termToLearn = useMemo(() => {
+    if (!glossaryTerms.length) return null;
+    const randomIndex = Math.floor(Math.random() * glossaryTerms.length);
+    return glossaryTerms[randomIndex] ?? null;
+  }, [glossaryTerms]);
 
   useEffect(() => {
     if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return;
@@ -52,117 +71,106 @@ export const HomePage = ({
   
   return (
     <div className="min-h-dvh font-sans">
-      {/* Hero Section */}
-      <section className="relative py-16 md:py-24">
-        {/* Subtle background watermark */}
-        <div
-          className="absolute inset-0 opacity-[0.07] pointer-events-none"
-          style={{
-            backgroundImage: 'radial-gradient(circle at center, rgba(255,255,255,0.3) 0%, transparent 70%)',
-            backgroundSize: '600px 600px',
-            backgroundPosition: 'center center',
-            backgroundRepeat: 'no-repeat',
-          }}
-        />
-        
-        <div className="container max-w-4xl mx-auto px-4 md:px-6 relative">
-          <div className="text-center space-y-6">
-            <div className="flex justify-center">
-              <Logo className="w-20 h-20 md:w-24 md:h-24" />
-            </div>
-            <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">
-              {copy.app}
-            </h1>
-            <p className="mt-3 text-base md:text-lg text-subtle max-w-xl mx-auto">
-              {copy.homeIdentityTagline}
-            </p>
-            <p className="mt-2 text-xs md:text-sm text-subtle flex items-center justify-center gap-2">
-              <span>{copy.homeActiveDevNote}</span>
-              <button
-                type="button"
-                onClick={onViewRoadmap}
-                className="underline underline-offset-4 hover:opacity-80 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] rounded"
-                aria-label="Open Roadmap"
-              >
-                {copy.homeActiveDevRoadmapCta}
-              </button>
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <div className="container max-w-4xl mx-auto px-4 md:px-6 space-y-8 md:space-y-12 pb-16 md:pb-24">
-  {/* Quick Guide Card */}
-  <section className="rounded-2xl border surface-border surface card-hover-shadow p-6 md:p-8">
-          <div className="space-y-6">
-            <div className="text-center space-y-2">
-              <div className="text-xs uppercase tracking-widest text-subtle">
-                {copy.homeQuickGuideTitle}
+      <div className="container max-w-4xl mx-auto px-4 md:px-6 pt-8 md:pt-12 space-y-8 md:space-y-6 pb-16 md:pb-24">
+        {pinnedBeltGrade && (() => {
+          const beltStyle = getGradeStyle(pinnedBeltGrade);
+          const beltTitle = gradeLabel(pinnedBeltGrade, locale);
+          const isDanBelt = pinnedBeltGrade.startsWith('dan');
+          const beltLineColor = isDanBelt ? undefined : toRgba(beltStyle.backgroundColor, 0.35);
+          const danCount = isDanBelt ? Number(pinnedBeltGrade.replace('dan', '')) : 0;
+          return (
+            <button
+              type="button"
+              onClick={() => onOpenPinnedBeltGrade(pinnedBeltGrade)}
+              className="w-full rounded-2xl border-2 surface surface-border card-hover-shadow p-6 md:p-8 text-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] relative overflow-hidden"
+            >
+              {!isDanBelt && (
+                <>
+                  <span
+                    aria-hidden
+                    className="absolute left-0 top-1/2 h-4 w-[160%] -translate-y-1/2 -translate-x-[43%] -rotate-[65deg] md:left-0 md:top-1/2 md:h-5 md:w-[200%] md:-translate-y-1/2 md:-translate-x-[45%] md:-rotate-45"
+                    style={beltLineColor ? { backgroundColor: beltLineColor } : undefined}
+                  />
+                  <span
+                    aria-hidden
+                    className="absolute right-0 top-1/2 h-4 w-[160%] -translate-y-1/2 translate-x-[43%] rotate-[65deg] md:right-0 md:top-1/2 md:h-5 md:w-[200%] md:-translate-y-1/2 md:translate-x-[45%] md:rotate-45"
+                    style={beltLineColor ? { backgroundColor: beltLineColor } : undefined}
+                  />
+                </>
+              )}
+              <div className="relative z-10 space-y-2">
+                <p className="text-sm uppercase tracking-[0.2em] text-subtle">
+                  {copy.homePinnedBeltNotice}
+                </p>
+                <h2 className="text-lg md:text-xl font-semibold">{beltTitle}</h2>
+                {isDanBelt && (
+                  <>
+                    <div className="absolute left-4 inset-y-0 flex flex-col justify-center gap-2" aria-hidden>
+                      {Array.from({ length: Math.max(danCount, 1) }).map((_, index) => (
+                        <span
+                          key={`dan-mark-left-${index}`}
+                          className="h-2.5 w-2.5 rounded-full bg-[#9ca3af] dark:bg-[#6b7280]"
+                        />
+                      ))}
+                    </div>
+                    <div className="absolute right-4 inset-y-0 flex flex-col justify-center gap-2" aria-hidden>
+                      {Array.from({ length: Math.max(danCount, 1) }).map((_, index) => (
+                        <span
+                          key={`dan-mark-right-${index}`}
+                          className="h-2.5 w-2.5 rounded-full bg-[#9ca3af] dark:bg-[#6b7280]"
+                        />
+                      ))}
+                    </div>
+                  </>
+                )}
+                <p className="text-sm text-subtle">{copy.homePinnedBeltCta}</p>
               </div>
-              <h2 className="text-lg md:text-xl font-semibold">
-                {copy.homeQuickGuideSubtitle}
-              </h2>
-            </div>
+            </button>
+          );
+        })()}
 
-            {/* Step Chips */}
-            <div className="flex flex-col md:flex-row md:flex-wrap justify-center gap-3 md:gap-4 max-w-3xl mx-auto">
-              <div className="inline-flex items-center gap-2 rounded-full border surface-border px-3 py-1.5 text-sm text-subtle">
-                <span className="font-semibold">1</span>
-                <span>{copy.homeQuickGuideStep1}</span>
-              </div>
-              <div className="inline-flex items-center gap-2 rounded-full border surface-border px-3 py-1.5 text-sm text-subtle">
-                <span className="font-semibold">2</span>
-                <span>{copy.homeQuickGuideStep2}</span>
-              </div>
-              <div className="inline-flex items-center gap-2 rounded-full border surface-border px-3 py-1.5 text-sm text-subtle">
-                <span className="font-semibold">3</span>
-                <span>{copy.homeQuickGuideStep3}</span>
-              </div>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex flex-wrap gap-3 justify-center mt-6 max-w-2xl mx-auto">
-              <button
-                type="button"
-                onClick={onOpenLibrary}
-                className="h-12 px-5 rounded-xl border-2 btn-tonal surface-hover transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] focus:outline-none"
-              >
-                {copy.library}
-              </button>
-              <button
-                type="button"
-                onClick={onViewGuide}
-                className="h-12 px-5 rounded-xl border btn-tonal surface-hover transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] focus:outline-none"
-              >
-                {copy.guide}
-              </button>
-              <button
-                type="button"
-                onClick={onViewBookmarks}
-                className="h-12 px-5 rounded-xl border btn-tonal surface-hover transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] focus:outline-none"
-              >
-                {copy.bookmarks}
-              </button>
-              <button
-                type="button"
-                onClick={onViewGlossary}
-                className="h-12 px-5 rounded-xl border btn-tonal surface-hover transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] focus:outline-none"
-              >
-                {copy.glossary}
-              </button>
-              <button
-                type="button"
-                onClick={onViewAbout}
-                className="h-12 px-5 rounded-xl border btn-tonal surface-hover transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] focus:outline-none"
-              >
-                {copy.aboutLink}
-              </button>
-            </div>
-          </div>
-        </section>
-
-        {/* Two Column Cards: Quote & Historical Note */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {termToLearn && (() => {
+            const definition = termToLearn.def[locale] || termToLearn.def.en;
+            const categoryLabel = getCategoryLabel(termToLearn.category, copy);
+            const categoryStyle = getCategoryStyle(termToLearn.category);
+            const ariaLabel = `${termToLearn.romaji} – ${definition}`;
+            const truncatedDefinition = truncateDefinition(definition, 140);
+
+            return (
+              <button
+                type="button"
+                onClick={() => onOpenGlossaryTerm(termToLearn.slug)}
+                className="rounded-2xl border surface-border surface card-hover-shadow p-6 md:p-8 text-left focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] flex flex-col justify-start"
+                aria-label={ariaLabel}
+              >
+                <div className="space-y-4">
+                  <h2 className="text-lg md:text-xl font-semibold">
+                    {copy.homeTermToLearnTitle}
+                  </h2>
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0 space-y-1">
+                      <h3 className="text-base font-semibold leading-tight">{termToLearn.romaji}</h3>
+                      {termToLearn.jp && <div className="text-xs text-subtle truncate">{termToLearn.jp}</div>}
+                    </div>
+                    <span
+                      className="glossary-tag text-xs font-medium px-2 py-1 rounded-full shrink-0"
+                      style={{
+                        backgroundColor: categoryStyle.backgroundColor,
+                        color: categoryStyle.color,
+                      }}
+                    >
+                      {categoryLabel}
+                    </span>
+                  </div>
+                  <p className="text-sm text-muted leading-relaxed">
+                    {truncatedDefinition}
+                  </p>
+                </div>
+              </button>
+            );
+          })()}
+
           {/* Random Quote Card */}
           <section className="rounded-2xl border surface-border surface card-hover-shadow p-6 md:p-8">
             <div className="space-y-4">
@@ -170,23 +178,6 @@ export const HomePage = ({
                 {copy.homeQuoteOfMomentTitle}
               </h2>
               <QuoteRotator quotes={quotes} />
-            </div>
-          </section>
-
-          {/* Historical Note Card */}
-          <section className="rounded-2xl border surface-border surface card-hover-shadow p-6 md:p-8">
-            <div className="space-y-4">
-              <h2 className="text-lg md:text-xl font-semibold">
-                {copy.homeHistoricalNoteTitle}
-              </h2>
-              <div className="space-y-4 text-sm md:text-base leading-6 md:leading-7 text-subtle">
-                <p>
-                  {copy.homeHistoricalNotePart1}
-                </p>
-                <p>
-                  {copy.homeHistoricalNotePart2}
-                </p>
-              </div>
             </div>
           </section>
         </div>

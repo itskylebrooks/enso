@@ -43,6 +43,8 @@ import {
   loadFilters,
   saveFilters,
   clearFilters,
+  loadPinnedBeltGrade,
+  savePinnedBeltGrade,
 } from './shared/services/storageService';
 import type {
   AppRoute,
@@ -112,6 +114,14 @@ const routeToPath = (route: AppRoute): string => {
       return '/guide/1-kyu';
     case 'guideDan1':
       return '/guide/1-dan';
+    case 'guideDan2':
+      return '/guide/2-dan';
+    case 'guideDan3':
+      return '/guide/3-dan';
+    case 'guideDan4':
+      return '/guide/4-dan';
+    case 'guideDan5':
+      return '/guide/5-dan';
     case 'feedback':
       return '/feedback';
     case 'library':
@@ -145,6 +155,14 @@ const guideRouteToGrade = (route: AppRoute): Grade | null => {
       return 'kyu1';
     case 'guideDan1':
       return 'dan1';
+    case 'guideDan2':
+      return 'dan2';
+    case 'guideDan3':
+      return 'dan3';
+    case 'guideDan4':
+      return 'dan4';
+    case 'guideDan5':
+      return 'dan5';
     default:
       return null;
   }
@@ -164,6 +182,14 @@ const gradeToGuideRoute = (grade: Grade): AppRoute | null => {
       return 'guideKyu1';
     case 'dan1':
       return 'guideDan1';
+    case 'dan2':
+      return 'guideDan2';
+    case 'dan3':
+      return 'guideDan3';
+    case 'dan4':
+      return 'guideDan4';
+    case 'dan5':
+      return 'guideDan5';
     default:
       return null;
   }
@@ -240,8 +266,12 @@ const parseLocation = (
       if (number === '3') return { route: 'guideKyu3', slug: null };
       if (number === '2') return { route: 'guideKyu2', slug: null };
       if (number === '1') return { route: 'guideKyu1', slug: null };
-    } else if (type === 'dan' && number === '1') {
-      return { route: 'guideDan1', slug: null };
+    } else if (type === 'dan') {
+      if (number === '1') return { route: 'guideDan1', slug: null };
+      if (number === '2') return { route: 'guideDan2', slug: null };
+      if (number === '3') return { route: 'guideDan3', slug: null };
+      if (number === '4') return { route: 'guideDan4', slug: null };
+      if (number === '5') return { route: 'guideDan5', slug: null };
     }
   }
 
@@ -448,6 +478,7 @@ export default function App(): ReactElement {
   const [toast, setToast] = useState<string | null>(null);
   const [glossaryTerms, setGlossaryTerms] = useState<GlossaryTerm[]>([]);
   const [feedbackInitialType, setFeedbackInitialType] = useState<FeedbackType | null>(null);
+  const [pinnedBeltGrade, setPinnedBeltGrade] = useState<Grade | null>(() => loadPinnedBeltGrade());
 
   const copy = getCopy(locale);
   const { pageMotion } = useMotionPreferences();
@@ -687,6 +718,10 @@ export default function App(): ReactElement {
   useEffect(() => {
     saveDB(db);
   }, [db]);
+
+  useEffect(() => {
+    savePinnedBeltGrade(pinnedBeltGrade);
+  }, [pinnedBeltGrade]);
 
   // Persist filters to local storage so they survive reloads/navigation
   useEffect(() => {
@@ -1194,6 +1229,48 @@ export default function App(): ReactElement {
     setActiveSlug(finalSlug);
   };
 
+  const togglePinnedBeltGrade = useCallback((grade: Grade) => {
+    setPinnedBeltGrade((current) => (current === grade ? null : grade));
+  }, []);
+
+  const navigateToGuideGrade = useCallback((grade: Grade) => {
+    switch (grade) {
+      case 'kyu5':
+        navigateTo('guideKyu5');
+        break;
+      case 'kyu4':
+        navigateTo('guideKyu4');
+        break;
+      case 'kyu3':
+        navigateTo('guideKyu3');
+        break;
+      case 'kyu2':
+        navigateTo('guideKyu2');
+        break;
+      case 'kyu1':
+        navigateTo('guideKyu1');
+        break;
+      case 'dan1':
+        navigateTo('guideDan1');
+        break;
+      case 'dan2':
+        navigateTo('guideDan2');
+        break;
+      case 'dan3':
+        navigateTo('guideDan3');
+        break;
+      case 'dan4':
+        navigateTo('guideDan4');
+        break;
+      case 'dan5':
+        navigateTo('guideDan5');
+        break;
+      default:
+        navigateTo('guide');
+        break;
+    }
+  }, [navigateTo]);
+
   const closeTechnique = (): void => {
     navigateTo(route, { replace: true });
   };
@@ -1353,12 +1430,10 @@ export default function App(): ReactElement {
       <HomePage
         copy={copy}
         locale={locale}
-        onOpenLibrary={() => navigateTo('library')}
-        onViewBookmarks={() => navigateTo('bookmarks')}
-        onViewGuide={() => navigateTo('guide')}
-        onViewGlossary={() => navigateTo('glossary')}
-        onViewRoadmap={() => navigateTo('roadmap')}
-        onViewAbout={() => navigateTo('about')}
+        glossaryTerms={glossaryTerms}
+        onOpenGlossaryTerm={openGlossaryTerm}
+        pinnedBeltGrade={pinnedBeltGrade}
+        onOpenPinnedBeltGrade={navigateToGuideGrade}
       />
     );
   } else if (route === 'roadmap') {
@@ -1389,36 +1464,15 @@ export default function App(): ReactElement {
         grade={grade}
         backLabel={guideBackLabel}
         onBack={handleGuideBack}
+        pinnedBeltGrade={pinnedBeltGrade}
+        onTogglePin={togglePinnedBeltGrade}
       />
     );
   } else if (route === 'guide') {
     mainContent = (
       <GuidePage
         locale={locale}
-        onNavigateToGuideGrade={(grade) => {
-          switch (grade) {
-            case 'kyu5':
-              navigateTo('guideKyu5');
-              break;
-            case 'kyu4':
-              navigateTo('guideKyu4');
-              break;
-            case 'kyu3':
-              navigateTo('guideKyu3');
-              break;
-            case 'kyu2':
-              navigateTo('guideKyu2');
-              break;
-            case 'kyu1':
-              navigateTo('guideKyu1');
-              break;
-            case 'dan1':
-              navigateTo('guideDan1');
-              break;
-            default:
-              navigateTo('guide');
-          }
-        }}
+        onNavigateToGuideGrade={navigateToGuideGrade}
         onOpenTechnique={openTechnique}
         onNavigateToAdvanced={() => navigateTo('guideAdvanced')}
         onNavigateToDan={() => navigateTo('guideDan')}

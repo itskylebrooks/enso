@@ -5,6 +5,7 @@ import {
   DB_VERSION,
   FILTERS_KEY,
   FILTER_PANEL_PINNED_KEY,
+  HOME_PINNED_BELT_KEY,
   LOCALE_KEY,
   STORAGE_KEY,
   THEME_KEY,
@@ -15,6 +16,7 @@ import type {
   DB,
   GlossaryBookmarkCollection,
   GlossaryProgress,
+  Grade,
   Locale,
   Progress,
   StepsByEntry,
@@ -684,5 +686,18 @@ export const saveFilterPanelPinned = (pinned: boolean): void => {
     writeLocalStorage(FILTER_PANEL_PINNED_KEY, '1');
   } else {
     removeLocalStorage(FILTER_PANEL_PINNED_KEY);
+  }
+};
+
+export const loadPinnedBeltGrade = (): Grade | null => {
+  const value = readLocalStorage(HOME_PINNED_BELT_KEY);
+  return typeof value === 'string' && value.length > 0 ? (value as Grade) : null;
+};
+
+export const savePinnedBeltGrade = (grade: Grade | null): void => {
+  if (grade) {
+    writeLocalStorage(HOME_PINNED_BELT_KEY, grade);
+  } else {
+    removeLocalStorage(HOME_PINNED_BELT_KEY);
   }
 };
