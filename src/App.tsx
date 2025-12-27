@@ -82,6 +82,8 @@ type HistoryState = {
   slug?: string;
   trainerId?: string;
   entry?: EntryMode;
+  sourceRoute?: AppRoute;
+  sourceSlug?: string;
 };
 
 const routeToPath = (route: AppRoute): string => {
@@ -526,6 +528,36 @@ export default function App(): ReactElement {
         setFeedbackInitialType(type);
       }
       navigateTo('feedback');
+    },
+    [navigateTo],
+  );
+
+  const openGuideGrade = useCallback(
+    (grade: Grade, source?: { route: AppRoute; slug: string }) => {
+      const nextRoute = gradeToGuideRoute(grade);
+      if (!nextRoute) {
+        navigateTo('guide');
+        return;
+      }
+
+      rememberScrollPosition();
+      setRoute(nextRoute);
+      setActiveSlug(null);
+
+      if (typeof window !== 'undefined') {
+        const path = routeToPath(nextRoute);
+        const state: HistoryState = { route: nextRoute };
+        if (source) {
+          state.sourceRoute = source.route;
+          state.sourceSlug = source.slug;
+        }
+
+        if (window.location.pathname !== path) {
+          window.history.pushState(state, '', path);
+        } else {
+          window.history.replaceState(state, '', path);
+        }
+      }
     },
     [navigateTo],
   );
@@ -1023,10 +1055,21 @@ export default function App(): ReactElement {
     setDB(next);
   };
 
-  const openTechnique = (slug: string, trainerId?: string, entry?: EntryMode, skipExistenceCheck?: boolean): void => {
+  const openTechnique = (
+    slug: string,
+    trainerId?: string,
+    entry?: EntryMode,
+    skipExistenceCheck?: boolean,
+    options?: { originRoute?: AppRoute },
+  ): void => {
     rememberScrollPosition();
     if (!skipExistenceCheck && !db.techniques.some((technique) => technique.slug === slug)) {
       return;
+    }
+
+    const sourceRoute = options?.originRoute ?? route;
+    if (options?.originRoute && options.originRoute !== route) {
+      setRoute(options.originRoute);
     }
 
     // If the caller didn't pass explicit trainer/entry params, try to apply
@@ -1034,7 +1077,7 @@ export default function App(): ReactElement {
     // version/variation (direction/weapon/version). Fallback to the
     // legacy trainer/entry URL shape when no matching variant is found.
     let finalPath: string;
-    let state: HistoryState = { route, slug, trainerId, entry };
+    let state: HistoryState = { route: sourceRoute, slug, trainerId, entry };
 
     const shouldAutoApplyFilters = !trainerId && !entry && (filters.trainer || filters.stance || filters.weapon);
 
@@ -1098,11 +1141,11 @@ export default function App(): ReactElement {
             versionId: found.key.versionId,
           });
           // store state for history (also include trainer/entry for back navigation)
-          state = { route, slug, trainerId: filters.trainer, entry: (filters.stance as EntryMode) ?? undefined };
+          state = { route: sourceRoute, slug, trainerId: filters.trainer, entry: (filters.stance as EntryMode) ?? undefined };
         } else {
           // fallback to legacy path with trainer/entry if available
           finalPath = buildTechniqueUrl(slug, filters.trainer ?? undefined, (filters.stance as any) ?? undefined);
-          state = { route, slug, trainerId: filters.trainer, entry: (filters.stance as EntryMode) ?? undefined };
+          state = { route: sourceRoute, slug, trainerId: filters.trainer, entry: (filters.stance as EntryMode) ?? undefined };
         }
       } else {
         // technique not found in DB (edge case) - fallback to basic path
@@ -1217,8 +1260,20 @@ export default function App(): ReactElement {
             : route === 'guide'
               ? copy.backToGuide
               : route === 'feedback'
-                ? copy.backToFeedback
-                : copy.backToGlossary;
+      ? copy.backToFeedback
+      : copy.backToGlossary;
+
+  const guideHistoryState = typeof window !== 'undefined' ? (window.history.state as HistoryState | null) : null;
+  const guideBackLabel = guideHistoryState?.sourceSlug ? copy.backToTechnique : copy.backToGuide;
+  const handleGuideBack = (): void => {
+    if (guideHistoryState?.sourceSlug) {
+      openTechnique(guideHistoryState.sourceSlug, undefined, undefined, true, {
+        originRoute: guideHistoryState.sourceRoute ?? 'library',
+      });
+      return;
+    }
+    navigateTo('guide');
+  };
 
   let mainContent: ReactElement;
 
@@ -1244,8 +1299,7 @@ export default function App(): ReactElement {
           onRemoveFromCollection={(collectionId) => removeFromCollection(currentTechnique.id, collectionId)}
           onOpenGlossary={openGlossaryTerm}
           onOpenGuideGrade={(grade) => {
-            const nextRoute = gradeToGuideRoute(grade);
-            navigateTo(nextRoute ?? 'guide');
+            openGuideGrade(grade, { route, slug: currentTechnique.slug });
           }}
           onFeedbackClick={() => goToFeedback()}
           onCreateCollection={createCollection}
@@ -1333,7 +1387,8 @@ export default function App(): ReactElement {
         copy={copy}
         locale={locale}
         grade={grade}
-        onBack={() => navigateTo('guide')}
+        backLabel={guideBackLabel}
+        onBack={handleGuideBack}
       />
     );
   } else if (route === 'guide') {
