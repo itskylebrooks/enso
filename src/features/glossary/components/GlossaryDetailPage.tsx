@@ -124,83 +124,85 @@ export const GlossaryDetailPage = ({
 
   return (
     <motion.main
-      className="mx-auto max-w-4xl px-4 sm:px-6 py-8 space-y-8"
+      className="mx-auto max-w-4xl px-4 sm:px-6 py-8 space-y-6"
       variants={pageMotion.variants}
       initial="initial"
       animate="animate"
       transition={pageMotion.transition}
     >
-      {/* Back navigation */}
-      <div className="flex items-center">
-        <a
-          href="/"
-          aria-label={backLabel ?? copy.backToGlossary}
-          onClick={(event) => {
-            event.preventDefault();
-            onBack();
-          }}
-          className="text-sm text-subtle hover:text-[var(--color-text)] transition flex items-center gap-2"
-        >
-          <span aria-hidden>←</span>
-          <span>{backLabel ?? copy.backToGlossary}</span>
-        </a>
-      </div>
+      <div className="space-y-4">
+        {/* Back navigation */}
+        <div className="flex items-center">
+          <a
+            href="/"
+            aria-label={backLabel ?? copy.backToGlossary}
+            onClick={(event) => {
+              event.preventDefault();
+              onBack();
+            }}
+            className="text-sm text-subtle hover:text-[var(--color-text)] transition flex items-center gap-2"
+          >
+            <span aria-hidden>←</span>
+            <span>{backLabel ?? copy.backToGlossary}</span>
+          </a>
+        </div>
 
-      {/* Term header - centered and focused */}
-      <header className="text-center space-y-4 pb-6 border-b surface-border">
-        <div className="space-y-3">
-          <h1 className="text-3xl font-semibold leading-tight" title={term.romaji}>
-            {term.romaji}
-          </h1>
-          {term.jp && (
-            <div className="text-sm text-subtle">
-              {term.jp}
+        {/* Term header - centered and focused */}
+        <header className="text-center space-y-4 pb-6 border-b surface-border">
+          <div className="space-y-3">
+            <h1 className="text-3xl font-semibold leading-tight" title={term.romaji}>
+              {term.romaji}
+            </h1>
+            {term.jp && (
+              <div className="text-sm text-subtle">
+                {term.jp}
+              </div>
+            )}
+            <div className="flex justify-center">
+              <button
+                type="button"
+                onClick={() => onNavigateToGlossaryWithFilter?.(term.category)}
+                aria-label={`Show ${categoryLabel} in glossary`}
+                className="glossary-tag glossary-tag--interactive rounded-lg px-2 py-1 text-xs uppercase tracking-wide focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+                style={{
+                  backgroundColor: categoryStyle.backgroundColor,
+                  color: categoryStyle.color,
+                }}
+              >
+                {categoryLabel}
+              </button>
             </div>
-          )}
-          <div className="flex justify-center">
-            <button
-              type="button"
-              onClick={() => onNavigateToGlossaryWithFilter?.(term.category)}
-              aria-label={`Show ${categoryLabel} in glossary`}
-              className="glossary-tag glossary-tag--interactive rounded-lg px-2 py-1 text-xs uppercase tracking-wide focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
-              style={{
-                backgroundColor: categoryStyle.backgroundColor,
-                color: categoryStyle.color,
-              }}
-            >
-              {categoryLabel}
-            </button>
           </div>
-        </div>
-        
-        {/* Bookmark controls */}
-        <div className="flex justify-center gap-2">
-          <AddToCollectionMenu
-            copy={copy}
-            collections={collections}
-            onToggle={(collectionId, nextChecked) => onToggleCollection(collectionId, nextChecked)}
-            onCreate={openCreateDialog}
-          />
-          <div className="inline-flex rounded-lg border surface-border overflow-hidden">
-            <motion.button
-              type="button"
-              onClick={onToggleBookmark}
-              aria-pressed={isBookmarked}
-              aria-label={copy.bookmark}
-              transition={{ duration: 0.15 }}
-              whileTap={{ scale: 0.96 }}
-              className={classNames(
-                'p-2 text-sm flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] transition-colors duration-150',
-                isBookmarked
-                  ? 'bg-[var(--color-text)] text-[var(--color-bg)]'
-                  : 'surface hover:surface-hover',
-              )}
-            >
-              {isBookmarked ? <BookmarkCheck className="w-4 h-4" /> : <Bookmark className="w-4 h-4" />}
-            </motion.button>
+          
+          {/* Bookmark controls */}
+          <div className="flex justify-center gap-2">
+            <AddToCollectionMenu
+              copy={copy}
+              collections={collections}
+              onToggle={(collectionId, nextChecked) => onToggleCollection(collectionId, nextChecked)}
+              onCreate={openCreateDialog}
+            />
+            <div className="inline-flex rounded-lg border surface-border overflow-hidden">
+              <motion.button
+                type="button"
+                onClick={onToggleBookmark}
+                aria-pressed={isBookmarked}
+                aria-label={copy.bookmark}
+                transition={{ duration: 0.15 }}
+                whileTap={{ scale: 0.96 }}
+                className={classNames(
+                  'p-2 text-sm flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] transition-colors duration-150',
+                  isBookmarked
+                    ? 'bg-[var(--color-text)] text-[var(--color-bg)]'
+                    : 'surface hover:surface-hover',
+                )}
+              >
+                {isBookmarked ? <BookmarkCheck className="w-4 h-4" /> : <Bookmark className="w-4 h-4" />}
+              </motion.button>
+            </div>
           </div>
-        </div>
-      </header>
+        </header>
+      </div>
 
       {/* Definition section */}
       <section className="prose prose-sm max-w-none dark:prose-invert">

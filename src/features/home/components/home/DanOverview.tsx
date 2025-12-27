@@ -24,20 +24,23 @@ export const DanOverview = ({ locale, onBack }: Props): ReactElement => {
 
   return (
     <section className="py-12">
-  <div className="container max-w-4xl mx-auto px-4 md:px-6 space-y-8">
-        <button
-          type="button"
-          onClick={onBack}
-          className="text-sm text-subtle hover:text-[var(--color-text)] transition flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] rounded"
-        >
-          <span aria-hidden>←</span>
-          <span>{copy.backToGuide}</span>
-        </button>
-        <motion.header className="space-y-2" {...animationProps}>
-          <h1 className="text-2xl font-semibold leading-tight">{copy.danOverviewTitle}</h1>
-          <p className="text-sm text-subtle leading-relaxed">{copy.danOverviewLead}</p>
-  </motion.header>
-  <hr className="border-t surface-border my-6" />
+      <div className="container max-w-4xl mx-auto px-4 md:px-6 space-y-6">
+        <div className="space-y-3">
+          <button
+            type="button"
+            onClick={onBack}
+            className="text-sm text-subtle hover:text-[var(--color-text)] transition flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] rounded"
+          >
+            <span aria-hidden>←</span>
+            <span>{copy.backToGuide}</span>
+          </button>
+          <motion.header className="space-y-2" {...animationProps}>
+            <h1 className="text-2xl font-semibold leading-tight">{copy.danOverviewTitle}</h1>
+            <p className="text-sm text-subtle leading-relaxed">{copy.danOverviewLead}</p>
+          </motion.header>
+        </div>
+
+        <hr className="border-t surface-border my-6" />
 
   <motion.article className="prose max-w-none space-y-6" {...animationProps}>
           {/* What this page is */}

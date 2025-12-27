@@ -31,21 +31,23 @@ export const AdvancedPrograms = ({ locale, onOpenTechnique, onBack }: Props): Re
 
   return (
     <section className="py-12">
-      <div className="container max-w-4xl mx-auto px-4 md:px-6 space-y-10">
-        <button
-          type="button"
-          onClick={onBack}
-          className="text-sm text-subtle hover:text-[var(--color-text)] transition flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] rounded"
-        >
-          <span aria-hidden>←</span>
-          <span>{i18nCopy.backToGuide}</span>
-        </button>
-
-        <motion.article className="space-y-4" {...animationProps}>
-          <header className="space-y-2">
+      <div className="container max-w-4xl mx-auto px-4 md:px-6 space-y-8">
+        <div className="space-y-3">
+          <button
+            type="button"
+            onClick={onBack}
+            className="text-sm text-subtle hover:text-[var(--color-text)] transition flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] rounded"
+          >
+            <span aria-hidden>←</span>
+            <span>{i18nCopy.backToGuide}</span>
+          </button>
+          <motion.header className="space-y-2" {...animationProps}>
             <h1 className="text-2xl font-semibold leading-tight">{i18nCopy.advancedProgramsTitle}</h1>
             <p className="text-sm text-subtle leading-relaxed">{i18nCopy.advancedProgramsLead}</p>
-          </header>
+          </motion.header>
+        </div>
+
+        <motion.article className="space-y-4" {...animationProps}>
           <hr className="border-t surface-border my-6" />
 
           <header className="space-y-2">
