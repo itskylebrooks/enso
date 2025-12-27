@@ -116,7 +116,7 @@ export const HomePage = ({
   
   return (
     <div className="min-h-dvh font-sans">
-      <div className="container max-w-4xl mx-auto px-4 md:px-6 pt-8 md:pt-12 space-y-8 md:space-y-6 pb-16 md:pb-24">
+      <div className="container max-w-4xl mx-auto px-4 md:px-6 pt-6 space-y-6 pb-16 md:pb-24">
         {!pinnedBeltGrade && !beltPromptDismissed && (() => {
           const beltColors = Array.from({ length: 5 }, () => 'var(--belt-prompt-stripe)');
           return (
