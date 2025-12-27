@@ -5,6 +5,7 @@ import type {
   BookmarkCollection,
   Collection,
   Direction,
+  Grade,
   WeaponKind,
   Locale,
   Progress,
@@ -104,6 +105,7 @@ type TechniquePageProps = {
   onAssignToCollection: (collectionId: string) => void;
   onRemoveFromCollection: (collectionId: string) => void;
   onOpenGlossary?: (slug: string) => void;
+  onOpenGuideGrade?: (grade: Grade) => void;
   onVariantChange?: (direction: Direction, weapon: WeaponKind, versionId?: string | null) => void;
   onFeedbackClick?: () => void;
   onCreateCollection?: (name: string) => string | null;
@@ -214,6 +216,7 @@ export const TechniquePage = ({
   onAssignToCollection,
   onRemoveFromCollection,
   onOpenGlossary,
+  onOpenGuideGrade,
   onVariantChange,
   onFeedbackClick,
   onCreateCollection,
@@ -494,6 +497,7 @@ export const TechniquePage = ({
         onToggleCollection={handleCollectionToggle}
         onCreateCollection={openCreateDialog}
         onTagClick={onOpenGlossary ? handleTagClick : undefined}
+        onLevelClick={onOpenGuideGrade}
       />
 
       {/* New Toolbar */}

@@ -1,7 +1,7 @@
 import type { ReactElement } from 'react';
 import { motion } from 'motion/react';
 import type { Copy } from '@shared/constants/i18n';
-import type { Locale, Technique } from '@shared/types';
+import type { Grade, Locale, Technique } from '@shared/types';
 import { EmphasizedName } from '@shared/components';
 import { LevelBadge } from '@shared/components';
 import { AddToCollectionMenu } from '@features/bookmarks/components/AddToCollectionMenu';
@@ -10,6 +10,7 @@ import { useMotionPreferences } from '@shared/components/ui/motion';
 import { classNames } from '@shared/utils/classNames';
 import { getCategoryStyle } from '@shared/styles/glossary';
 import type { GlossaryTerm } from '@shared/types';
+import { gradeLabel } from '@shared/utils/grades';
 
 export type CollectionOption = {
   id: string;
@@ -34,6 +35,7 @@ export type TechniqueHeaderProps = {
   onToggleCollection: (collectionId: string, nextChecked: boolean) => void;
   onCreateCollection?: () => void;
   onTagClick?: (tag: string) => void;
+  onLevelClick?: (level: Grade) => void;
 };
 
 export const TechniqueHeader = ({
@@ -50,8 +52,10 @@ export const TechniqueHeader = ({
   onToggleCollection,
   onCreateCollection,
   onTagClick,
+  onLevelClick,
 }: TechniqueHeaderProps): ReactElement => {
   const { toggleTransition, prefersReducedMotion } = useMotionPreferences();
+  const levelLabel = gradeLabel(technique.level, locale);
 
   // Map tag to glossary category for appropriate styling
   const getTagCategory = (tag: string): GlossaryTerm['category'] => {
@@ -160,11 +164,33 @@ export const TechniqueHeader = ({
         </div>
         <div className="flex flex-col sm:flex-col items-end justify-between w-full sm:w-auto">
           <div className="hidden sm:block">
-            <LevelBadge locale={locale} level={technique.level} />
+            {onLevelClick ? (
+              <button
+                type="button"
+                onClick={() => onLevelClick(technique.level)}
+                aria-label={levelLabel}
+                className="rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] transition-opacity hover:opacity-80"
+              >
+                <LevelBadge locale={locale} level={technique.level} />
+              </button>
+            ) : (
+              <LevelBadge locale={locale} level={technique.level} />
+            )}
           </div>
           <div className="flex justify-between w-full items-center mt-2 sm:mt-0 sm:justify-end gap-2">
             <div className="sm:hidden">
-              <LevelBadge locale={locale} level={technique.level} />
+              {onLevelClick ? (
+                <button
+                  type="button"
+                  onClick={() => onLevelClick(technique.level)}
+                  aria-label={levelLabel}
+                  className="rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] transition-opacity hover:opacity-80"
+                >
+                  <LevelBadge locale={locale} level={technique.level} />
+                </button>
+              ) : (
+                <LevelBadge locale={locale} level={technique.level} />
+              )}
             </div>
             <div className="flex gap-2">
               <AddToCollectionMenu

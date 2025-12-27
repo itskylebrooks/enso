@@ -148,6 +148,25 @@ const guideRouteToGrade = (route: AppRoute): Grade | null => {
   }
 };
 
+const gradeToGuideRoute = (grade: Grade): AppRoute | null => {
+  switch (grade) {
+    case 'kyu5':
+      return 'guideKyu5';
+    case 'kyu4':
+      return 'guideKyu4';
+    case 'kyu3':
+      return 'guideKyu3';
+    case 'kyu2':
+      return 'guideKyu2';
+    case 'kyu1':
+      return 'guideKyu1';
+    case 'dan1':
+      return 'guideDan1';
+    default:
+      return null;
+  }
+};
+
 
 const getGlossarySlugFromPath = (pathname: string): string | null => {
   const match = /^\/glossary\/([^/?#]+)/.exec(pathname);
@@ -1224,6 +1243,10 @@ export default function App(): ReactElement {
           onAssignToCollection={(collectionId) => assignToCollection(currentTechnique.id, collectionId)}
           onRemoveFromCollection={(collectionId) => removeFromCollection(currentTechnique.id, collectionId)}
           onOpenGlossary={openGlossaryTerm}
+          onOpenGuideGrade={(grade) => {
+            const nextRoute = gradeToGuideRoute(grade);
+            navigateTo(nextRoute ?? 'guide');
+          }}
           onFeedbackClick={() => goToFeedback()}
           onCreateCollection={createCollection}
         />
