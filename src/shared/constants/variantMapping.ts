@@ -6,6 +6,7 @@
 import type {
   Direction,
   Localized,
+  MediaItem,
   Technique,
   TechniqueVariant,
   TechniqueVersionMeta,
@@ -84,10 +85,8 @@ export const convertToVariants = (technique: Technique): TechniqueVariant[] => {
         context: version.context as Localized<string> | undefined,
         // Prefer per-entry media if present (new shape), otherwise fallback to version.media
         media:
-          (version as { mediaByEntry?: Record<string, unknown[]> }).mediaByEntry &&
-          (version as { mediaByEntry?: Record<string, unknown[]> }).mediaByEntry[direction]
-            ? (version as { mediaByEntry?: Record<string, unknown[]> }).mediaByEntry[direction]
-            : version.media,
+          (version as { mediaByEntry?: Record<string, MediaItem[]> }).mediaByEntry?.[direction] ??
+          version.media,
       };
 
       variants.push(variant);

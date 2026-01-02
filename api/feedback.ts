@@ -88,26 +88,22 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
 
   const contentType = req.headers['content-type'] || '';
   if (!contentType.toLowerCase().includes('application/json')) {
-    res
-      .status(415)
-      .json({
-        ok: false,
-        code: 'format',
-        message: 'Content-Type must be application/json',
-        requestId,
-      });
+    res.status(415).json({
+      ok: false,
+      code: 'format',
+      message: 'Content-Type must be application/json',
+      requestId,
+    });
     return;
   }
 
   if (!validateOrigin(req)) {
-    res
-      .status(403)
-      .json({
-        ok: false,
-        code: 'origin',
-        message: 'Cross-origin requests are not allowed',
-        requestId,
-      });
+    res.status(403).json({
+      ok: false,
+      code: 'origin',
+      message: 'Cross-origin requests are not allowed',
+      requestId,
+    });
     return;
   }
 
@@ -133,15 +129,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
 
   const result = FeedbackSchema.safeParse(parsed);
   if (!result.success) {
-    res
-      .status(400)
-      .json({
-        ok: false,
-        code: 'validation',
-        message: 'Invalid feedback payload',
-        requestId,
-        issues: result.error.issues,
-      });
+    res.status(400).json({
+      ok: false,
+      code: 'validation',
+      message: 'Invalid feedback payload',
+      requestId,
+      issues: result.error.issues,
+    });
     return;
   }
 
@@ -225,15 +219,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
     const ghText = await ghResp.text();
     if (!ghResp.ok) {
       console.error('GitHub API error', ghResp.status, ghText);
-      res
-        .status(502)
-        .json({
-          ok: false,
-          code: 'github',
-          message: 'Failed to create GitHub issue',
-          requestId,
-          details: ghText,
-        });
+      res.status(502).json({
+        ok: false,
+        code: 'github',
+        message: 'Failed to create GitHub issue',
+        requestId,
+        details: ghText,
+      });
       return;
     }
 

@@ -1,3 +1,4 @@
+import type { Copy } from '../constants/i18n';
 import type { GlossaryTerm } from '../types';
 
 export const getCategoryStyle = (
@@ -7,10 +8,7 @@ export const getCategoryStyle = (
   color: `var(--glossary-${category}-fg)`,
 });
 
-export const getCategoryLabel = (
-  category: GlossaryTerm['category'],
-  copy: Record<string, string>,
-): string => {
+export const getCategoryLabel = (category: GlossaryTerm['category'], copy: Copy): string => {
   const labels: Record<GlossaryTerm['category'], string> = {
     movement: copy.categoryMovement,
     stance: copy.categoryStance,

@@ -25,10 +25,20 @@ export async function loadAllTerms(): Promise<GlossaryTerm[]> {
 
   for (const [filePath, module] of Object.entries(modules)) {
     try {
-      const termData = (module as Record<string, unknown>).default || module;
+      const termData = ((module as Record<string, unknown>).default || module) as Record<
+        string,
+        unknown
+      >;
 
       // Validate that we have required fields
-      if (!termData.id || !termData.slug || !termData.romaji || !termData.def) {
+      if (
+        typeof termData !== 'object' ||
+        termData === null ||
+        !termData.id ||
+        !termData.slug ||
+        !termData.romaji ||
+        !termData.def
+      ) {
         console.warn(`Invalid glossary term in ${filePath}:`, termData);
         continue;
       }

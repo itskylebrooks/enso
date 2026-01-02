@@ -280,15 +280,19 @@ export const useMotionPreferences = () => {
     [animationsDisabled, prefersReducedMotion],
   );
 
-  const getItemTransition = useCallback((): Transition => {
-    if (animationsDisabled) {
-      return zeroTransition;
-    }
-    if (prefersReducedMotion) {
-      return { duration: 0.05 };
-    }
-    return { duration: 0.18, ease: defaultEase };
-  }, [animationsDisabled, prefersReducedMotion]);
+  const getItemTransition = useCallback(
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    (_index: number): Transition => {
+      if (animationsDisabled) {
+        return zeroTransition;
+      }
+      if (prefersReducedMotion) {
+        return { duration: 0.05 };
+      }
+      return { duration: 0.18, ease: defaultEase };
+    },
+    [animationsDisabled, prefersReducedMotion],
+  );
 
   const toggleTransition: Transition = animationsDisabled
     ? zeroTransition

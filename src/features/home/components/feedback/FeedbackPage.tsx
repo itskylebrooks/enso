@@ -960,7 +960,7 @@ const loadDraft = (): FeedbackDraft => {
 
     // Parse as any to support legacy draft shapes (backwards compatibility)
     // and avoid strict property checks during migration.
-    const parsed: Record<string, unknown> = JSON.parse(stored);
+    const parsed = JSON.parse(stored) as Partial<FeedbackDraft> & Record<string, unknown>;
 
     const selectedType = feedbackTypeOrder.includes(parsed.selectedType as FeedbackType)
       ? (parsed.selectedType as FeedbackType)
@@ -984,11 +984,18 @@ const loadDraft = (): FeedbackDraft => {
           }),
         ),
         media: (improveTechnique.media ?? []).map(
-          (item: { id?: string; url: string; type: string; embedUrl?: string }) => ({
+          (item: {
+            id?: string;
+            url: string;
+            type: string;
+            embedUrl?: string;
+            title?: string;
+          }) => ({
             id: item.id || createId(),
             url: item.url,
-            type: item.type,
+            type: item.type as MediaKind,
             embedUrl: item.embedUrl,
+            title: item.title,
           }),
         ),
         consent: Boolean(improveTechnique.consent),
@@ -998,12 +1005,17 @@ const loadDraft = (): FeedbackDraft => {
         relatedTechniqueId: addVariation.relatedTechniqueId ?? null,
         direction: isVariationDirection(addVariation.direction)
           ? addVariation.direction
-          : isVariationDirection(addVariation?.variationName)
-            ? (addVariation.variationName as VariationForm['direction'])
+          : isVariationDirection((addVariation as { variationName?: string })?.variationName)
+            ? ((addVariation as { variationName?: string })
+                .variationName as VariationForm['direction'])
             : '',
         stance: sanitizeHanmi(addVariation.stance),
-        trainer: ensureString(addVariation.trainer ?? addVariation.credit),
-        summary: ensureString(addVariation.summary ?? addVariation.description ?? ''),
+        trainer: ensureString(
+          addVariation.trainer ?? (addVariation as { credit?: string })?.credit,
+        ),
+        summary: ensureString(
+          addVariation.summary ?? (addVariation as { description?: string })?.description ?? '',
+        ),
         categoryTags: Array.isArray(addVariation.categoryTags)
           ? addVariation.categoryTags.filter(isCategoryTag)
           : [],
@@ -1024,14 +1036,16 @@ const loadDraft = (): FeedbackDraft => {
             }) => ({
               id: item?.id || createId(),
               url: item?.url || '',
-              type: item?.type || 'link',
+              type: (item?.type || 'link') as MediaKind,
               embedUrl: item?.embedUrl,
               title: item?.title ?? '',
             }),
           )
           .filter((item: { url: string }) => item.url),
         context: ensureString(addVariation.context),
-        creditName: ensureString(addVariation.creditName ?? addVariation.credit ?? ''),
+        creditName: ensureString(
+          addVariation.creditName ?? (addVariation as { credit?: string })?.credit ?? '',
+        ),
         trainerCredit: ensureString(addVariation.trainerCredit ?? ''),
         markAsBase: Boolean(addVariation.markAsBase),
         consent: Boolean(addVariation.consent),
@@ -1048,7 +1062,9 @@ const loadDraft = (): FeedbackDraft => {
       newTechnique: {
         ...defaultNewTechniqueForm(),
         name: ensureString(newTechnique.name),
-        jpName: ensureString(newTechnique.jpName ?? newTechnique.jp?.kanji ?? ''),
+        jpName: ensureString(
+          newTechnique.jpName ?? (newTechnique as { jp?: { kanji?: string } })?.jp?.kanji ?? '',
+        ),
         attack: typeof newTechnique.attack === 'string' ? newTechnique.attack : null,
         category: typeof newTechnique.category === 'string' ? newTechnique.category : null,
         weapon: typeof newTechnique.weapon === 'string' ? newTechnique.weapon : null,
@@ -1072,18 +1088,27 @@ const loadDraft = (): FeedbackDraft => {
             }) => ({
               id: item?.id || createId(),
               url: item?.url || '',
-              type: item?.type || 'link',
+              type: (item?.type || 'link') as MediaKind,
               embedUrl: item?.embedUrl,
               title: item?.title ?? '',
             }),
           )
           .filter((item: { url: string }) => item.url),
         sources: ensureString(newTechnique.sources),
-        creditName: ensureString(newTechnique.creditName ?? newTechnique.contributor?.name ?? ''),
-        trainerCredit: ensureString(
-          newTechnique.trainerCredit ?? newTechnique.lineage?.dojoOrTrainer ?? '',
+        creditName: ensureString(
+          newTechnique.creditName ??
+            (newTechnique as { contributor?: { name?: string } })?.contributor?.name ??
+            '',
         ),
-        markAsBase: newTechnique.markAsBase ?? newTechnique.lineage?.markAsBase ?? true,
+        trainerCredit: ensureString(
+          newTechnique.trainerCredit ??
+            (newTechnique as { lineage?: { dojoOrTrainer?: string } })?.lineage?.dojoOrTrainer ??
+            '',
+        ),
+        markAsBase:
+          newTechnique.markAsBase ??
+          (newTechnique as { lineage?: { markAsBase?: boolean } })?.lineage?.markAsBase ??
+          true,
         consent: Boolean(newTechnique.consent),
       },
     } satisfies FeedbackDraft;

@@ -32,7 +32,8 @@ const baseColors: Record<Grade, string> = {
 };
 
 // Default text color for belt labels (app-wide requirement): always white.
-const getTextColorAlwaysWhite = (): string => '#FFFFFF';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const getTextColorAlwaysWhite = (_grade: Grade): string => '#FFFFFF';
 
 // Adaptive text color used only by the Guide page table (ExamMatrix).
 // Preserves previous contrast logic: dan belts always white; kyu belts

@@ -20,6 +20,7 @@ import type {
   GlossaryProgress,
   Grade,
   Locale,
+  MediaType,
   Progress,
   StepsByEntry,
   Technique,
@@ -85,7 +86,7 @@ const normalizeVersion = (version: TechniqueVersion): TechniqueVersion => {
     context: version.context ? normalizeLocalizedString(version.context) : undefined,
     media: Array.isArray(version.media)
       ? version.media.map((item: { type: string; url?: string; title?: string }) => ({
-          type: item.type,
+          type: item.type as MediaType,
           url: (item.url ?? '').trim(),
           title: typeof item.title === 'string' ? item.title.trim() : undefined,
         }))
@@ -94,12 +95,12 @@ const normalizeVersion = (version: TechniqueVersion): TechniqueVersion => {
     mediaByEntry: (() => {
       const mediaObj = (version.stepsByEntry as Record<string, unknown>)?.media;
       if (!mediaObj || typeof mediaObj !== 'object') return undefined;
-      const out: Record<string, Array<{ type: string; url: string; title?: string }>> = {};
+      const out: Record<string, Array<{ type: MediaType; url: string; title?: string }>> = {};
       ['irimi', 'tenkan', 'omote', 'ura'].forEach((k) => {
-        const arr = mediaObj[k];
+        const arr = (mediaObj as Record<string, unknown>)[k];
         if (Array.isArray(arr)) {
           out[k] = arr.map((m: { type: string; url?: string; title?: string }) => ({
-            type: m.type,
+            type: m.type as MediaType,
             url: (m.url ?? '').trim(),
             title: typeof m.title === 'string' ? m.title.trim() : undefined,
           }));

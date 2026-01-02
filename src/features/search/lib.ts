@@ -1,5 +1,5 @@
 import type Fuse from 'fuse.js';
-import type { IFuseOptions } from 'fuse.js';
+import type { FuseResult, IFuseOptions } from 'fuse.js';
 import type { Locale, TechniqueV2 } from '../../shared/types';
 
 export type SearchDoc = {
@@ -16,7 +16,7 @@ export type SearchDoc = {
   aliases?: string[];
 };
 
-export type SearchHit = Fuse.FuseResult<SearchDoc>;
+export type SearchHit = FuseResult<SearchDoc>;
 
 type SearchIndex = {
   fuse: Fuse<SearchDoc>;

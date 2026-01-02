@@ -93,7 +93,7 @@ export const buildSearchIndex = (techniques: Technique[]): SearchEntry[] =>
 
       // Index version-level media (if any)
       if (Array.isArray((version as { media?: Array<{ title?: string; url?: string }> }).media)) {
-        (version as { media?: Array<{ title?: string; url?: string }> }).media.forEach((media) => {
+        (version as { media?: Array<{ title?: string; url?: string }> }).media?.forEach((media) => {
           pushToken(tokens, media.title);
           pushToken(tokens, media.url);
         });
