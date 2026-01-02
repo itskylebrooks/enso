@@ -48,7 +48,9 @@ export const MobileGlossaryFilters = ({
   return (
     <div className="rounded-2xl border surface-border bg-[var(--color-surface)] p-4 space-y-4">
       <div className="flex items-center justify-between">
-        <span className="text-sm font-semibold uppercase tracking-[0.2em] text-subtle">{copy.filters}</span>
+        <span className="text-sm font-semibold uppercase tracking-[0.2em] text-subtle">
+          {copy.filters}
+        </span>
         {hasActiveFilters && (
           <button
             type="button"

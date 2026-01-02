@@ -51,7 +51,9 @@ export const GlossaryFilterPanel = ({
   return (
     <div className="space-y-6 no-select">
       <div className="flex items-center justify-between gap-2">
-        <h2 className="text-sm font-semibold tracking-wide uppercase text-subtle">{copy.filters}</h2>
+        <h2 className="text-sm font-semibold tracking-wide uppercase text-subtle">
+          {copy.filters}
+        </h2>
         <div className="flex items-center gap-2">
           {hasActiveFilters && (
             <button
@@ -68,10 +70,14 @@ export const GlossaryFilterPanel = ({
               type="button"
               onClick={pinButtonContext.togglePin}
               className="p-1.5 rounded-lg hover:bg-[var(--color-surface-hover)] text-subtle hover:text-[var(--color-text)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
-              aria-label={pinButtonContext.isPinned ? "Unpin panel" : "Pin panel"}
-              title={pinButtonContext.isPinned ? "Unpin panel" : "Pin panel"}
+              aria-label={pinButtonContext.isPinned ? 'Unpin panel' : 'Pin panel'}
+              title={pinButtonContext.isPinned ? 'Unpin panel' : 'Pin panel'}
             >
-              {pinButtonContext.isPinned ? <PinOff className="w-4 h-4" aria-hidden /> : <Pin className="w-4 h-4" aria-hidden />}
+              {pinButtonContext.isPinned ? (
+                <PinOff className="w-4 h-4" aria-hidden />
+              ) : (
+                <Pin className="w-4 h-4" aria-hidden />
+              )}
             </button>
           )}
         </div>

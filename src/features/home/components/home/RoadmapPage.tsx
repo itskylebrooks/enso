@@ -27,32 +27,34 @@ const toLucideName = (name?: string): LucideIconName | undefined => {
     .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
     .replace(/_/g, '-')
     .toLowerCase();
-  return (iconNames as readonly string[]).includes(candidate) ? (candidate as LucideIconName) : undefined;
+  return (iconNames as readonly string[]).includes(candidate)
+    ? (candidate as LucideIconName)
+    : undefined;
 };
 
 const statusAccent = (copy: Copy) =>
   ({
     planned: {
       label: copy.roadmapStatusPlanned,
-      tagClass:
-        'bg-[#e9d5ff] font-semibold dark:bg-[rgba(129,140,248,0.18)] dark:text-[#d9c9ff]',
-      hoverRingClass: 'hover:ring-2 hover:ring-offset-2 hover:ring-[#a855f7]/35 hover:ring-offset-transparent',
+      tagClass: 'bg-[#e9d5ff] font-semibold dark:bg-[rgba(129,140,248,0.18)] dark:text-[#d9c9ff]',
+      hoverRingClass:
+        'hover:ring-2 hover:ring-offset-2 hover:ring-[#a855f7]/35 hover:ring-offset-transparent',
       focusRingClass: 'focus-visible:ring-[#a855f7]/40 focus-visible:border-[#a855f7]/65',
       hoverBorderClass: 'hover:border-[#7c3aed]/75 dark:hover:border-[#c084fc]/75',
     },
     'in-progress': {
       label: copy.roadmapStatusInProgress,
-      tagClass:
-        'bg-[#fde68a] font-semibold dark:bg-[rgba(253,224,71,0.16)] dark:text-[#facc15]',
-      hoverRingClass: 'hover:ring-2 hover:ring-offset-2 hover:ring-[#f59e0b]/35 hover:ring-offset-transparent',
+      tagClass: 'bg-[#fde68a] font-semibold dark:bg-[rgba(253,224,71,0.16)] dark:text-[#facc15]',
+      hoverRingClass:
+        'hover:ring-2 hover:ring-offset-2 hover:ring-[#f59e0b]/35 hover:ring-offset-transparent',
       focusRingClass: 'focus-visible:ring-[#f59e0b]/38 focus-visible:border-[#f59e0b]/60',
       hoverBorderClass: 'hover:border-[#f59e0b]/70 dark:hover:border-[#fbbf24]/70',
     },
     launched: {
       label: copy.roadmapStatusLaunched,
-      tagClass:
-        'bg-[#a7f3d0] font-semibold dark:bg-[rgba(16,185,129,0.18)] dark:text-[#6ee7b7]',
-      hoverRingClass: 'hover:ring-2 hover:ring-offset-2 hover:ring-[#10b981]/35 hover:ring-offset-transparent',
+      tagClass: 'bg-[#a7f3d0] font-semibold dark:bg-[rgba(16,185,129,0.18)] dark:text-[#6ee7b7]',
+      hoverRingClass:
+        'hover:ring-2 hover:ring-offset-2 hover:ring-[#10b981]/35 hover:ring-offset-transparent',
       focusRingClass: 'focus-visible:ring-[#10b981]/36 focus-visible:border-[#10b981]/58',
       hoverBorderClass: 'hover:border-[#10b981]/70 dark:hover:border-[#34d399]/70',
     },
@@ -71,10 +73,10 @@ const cardBaseClass =
   'group relative overflow-hidden rounded-2xl surface border surface-border border-black/20 dark:border-white/18 px-5 py-6 transition-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2';
 
 const selectSummary = (summary: RoadmapItem['summary'], locale: Locale): string =>
-  locale === 'de' ? summary.de ?? summary.en : summary.en;
+  locale === 'de' ? (summary.de ?? summary.en) : summary.en;
 
 const selectTitle = (title: RoadmapItem['title'], locale: Locale): string =>
-  typeof title === 'string' ? title : (locale === 'de' ? title.de ?? title.en : title.en);
+  typeof title === 'string' ? title : locale === 'de' ? (title.de ?? title.en) : title.en;
 
 export const RoadmapPage = ({ copy, locale }: RoadmapPageProps): ReactElement => {
   const { prefersReducedMotion } = useMotionPreferences();
@@ -121,9 +123,7 @@ export const RoadmapPage = ({ copy, locale }: RoadmapPageProps): ReactElement =>
           <h1 className="text-2xl md:text-3xl leading-tight font-semibold tracking-tight">
             {copy.roadmapTitle}
           </h1>
-          <p className="text-sm md:text-base text-subtle max-w-3xl">
-            {copy.roadmapSummary}
-          </p>
+          <p className="text-sm md:text-base text-subtle max-w-3xl">{copy.roadmapSummary}</p>
         </header>
 
         <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
@@ -134,16 +134,8 @@ export const RoadmapPage = ({ copy, locale }: RoadmapPageProps): ReactElement =>
             return (
               <motion.section
                 key={status}
-                initial={
-                  prefersReducedMotion
-                    ? undefined
-                    : { opacity: 0 }
-                }
-                animate={
-                  prefersReducedMotion
-                    ? undefined
-                    : { opacity: 1 }
-                }
+                initial={prefersReducedMotion ? undefined : { opacity: 0 }}
+                animate={prefersReducedMotion ? undefined : { opacity: 1 }}
                 transition={
                   prefersReducedMotion
                     ? undefined
@@ -223,9 +215,12 @@ export const RoadmapPage = ({ copy, locale }: RoadmapPageProps): ReactElement =>
             />
             <div className="relative z-10 space-y-4">
               <div className="flex justify-center">
-                      <MetaIcon iconName={grouped.meta.icon} />
+                <MetaIcon iconName={grouped.meta.icon} />
               </div>
-              <h2 id="roadmap-meta-title" className="text-lg md:text-xl font-semibold tracking-tight">
+              <h2
+                id="roadmap-meta-title"
+                className="text-lg md:text-xl font-semibold tracking-tight"
+              >
                 {selectTitle(grouped.meta.title as RoadmapItem['title'], locale)}
               </h2>
               <p className="text-sm md:text-base text-subtle max-w-2xl mx-auto">
@@ -284,20 +279,19 @@ const ArticleCard = ({
             />
           ) : null}
           <div className="space-y-1.5">
-            <h3 className="text-base font-medium tracking-tight leading-snug hyphens-auto break-words" style={{ hyphens: 'auto', wordBreak: 'break-word' }}>
+            <h3
+              className="text-base font-medium tracking-tight leading-snug hyphens-auto break-words"
+              style={{ hyphens: 'auto', wordBreak: 'break-word' }}
+            >
               {selectTitle(item.title, locale)}
             </h3>
             {item.version && (
-              <div className="text-xs uppercase tracking-[0.3em] text-subtle">
-                {item.version}
-              </div>
+              <div className="text-xs uppercase tracking-[0.3em] text-subtle">{item.version}</div>
             )}
           </div>
         </div>
 
-        <p className="text-sm text-subtle leading-relaxed">
-          {summary}
-        </p>
+        <p className="text-sm text-subtle leading-relaxed">{summary}</p>
 
         {/* Roadmap cards: omit badges like planned/community/new */}
 

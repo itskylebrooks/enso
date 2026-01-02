@@ -29,7 +29,13 @@ export const MobileTabBar = ({ copy, route, onNavigate }: MobileTabBarProps): Re
     route === 'guideKyu2' ||
     route === 'guideKyu1' ||
     route === 'guideDan1';
-  const activeTab: MobileTab | null = isGuideActive ? 'guide' : route === 'library' ? 'library' : route === 'glossary' ? 'glossary' : null;
+  const activeTab: MobileTab | null = isGuideActive
+    ? 'guide'
+    : route === 'library'
+      ? 'library'
+      : route === 'glossary'
+        ? 'glossary'
+        : null;
 
   const tabs: Array<{ id: MobileTab; label: string; icon: ReactElement }> = [
     {
@@ -85,7 +91,9 @@ export const MobileTabBar = ({ copy, route, onNavigate }: MobileTabBarProps): Re
               aria-current={isActive ? 'page' : undefined}
               className={classNames(
                 'relative flex flex-col items-center justify-center rounded-full px-2 font-medium leading-tight text-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
-                isCompact ? 'h-11 w-14 gap-0.5 py-1 text-[10px]' : 'h-14 w-20 gap-1 py-1.5 text-[11px]',
+                isCompact
+                  ? 'h-11 w-14 gap-0.5 py-1 text-[10px]'
+                  : 'h-14 w-20 gap-1 py-1.5 text-[11px]',
               )}
               style={{ transform: 'translate3d(0, 0, 0)', willChange: 'transform' }}
               transition={layoutTransition}

@@ -5,7 +5,12 @@ import type { Copy } from '@shared/constants/i18n';
 import type { Filters, Grade, Locale } from '@shared/types';
 import { classNames } from '../../utils/classNames';
 import { gradePalette } from '@shared/styles/belts';
-import { getLevelLabel, getOrderedTaxonomyValues, getTaxonomyLabel, type TaxonomyType } from '@shared/i18n/taxonomy';
+import {
+  getLevelLabel,
+  getOrderedTaxonomyValues,
+  getTaxonomyLabel,
+  type TaxonomyType,
+} from '@shared/i18n/taxonomy';
 import { ENTRY_MODE_ORDER } from '@shared/constants/entryModes';
 import { SectionTitle } from '../index';
 import { useMotionPreferences } from './motion';
@@ -34,17 +39,15 @@ type Option = {
   trailing?: ReactElement;
 };
 
-const buildTaxonomyOptions = (
-  locale: Locale,
-  type: TaxonomyType,
-  values: string[],
-): Option[] => {
+const buildTaxonomyOptions = (locale: Locale, type: TaxonomyType, values: string[]): Option[] => {
   const ordered = getOrderedTaxonomyValues(type);
   const known = new Set(ordered);
   const extras = values.filter((value) => value && !known.has(value));
   const entries = [...ordered, ...extras];
   const options = entries.map((value) => ({ value, label: getTaxonomyLabel(locale, type, value) }));
-  return options.sort((a, b) => a.label.localeCompare(b.label, locale, { sensitivity: 'accent', caseFirst: 'upper' }));
+  return options.sort((a, b) =>
+    a.label.localeCompare(b.label, locale, { sensitivity: 'accent', caseFirst: 'upper' }),
+  );
 };
 
 const buildEntryModeOptions = (locale: Locale, values: string[]): Option[] => {
@@ -70,7 +73,10 @@ const buildTrainerOptions = (locale: Locale, values: string[]): Option[] => {
   const hasBase = values.includes('base-forms');
   if (hasBase) {
     const filtered = options.filter((o) => o.value !== 'base-forms');
-    return [{ value: 'base-forms', label: locale === 'de' ? 'Grundformen' : 'Base forms' }, ...filtered.sort((a, b) => a.label.localeCompare(b.label, locale))];
+    return [
+      { value: 'base-forms', label: locale === 'de' ? 'Grundformen' : 'Base forms' },
+      ...filtered.sort((a, b) => a.label.localeCompare(b.label, locale)),
+    ];
   }
 
   return options.sort((a, b) => a.label.localeCompare(b.label, locale));
@@ -103,12 +109,27 @@ export const MobileFilters = ({
 
   const toggleOpen = (key: SectionKey): void => setOpen((prev) => ({ ...prev, [key]: !prev[key] }));
 
-  const normalizedStances = useMemo(() => (stances.length > 0 ? stances : ENTRY_MODE_ORDER), [stances]);
+  const normalizedStances = useMemo(
+    () => (stances.length > 0 ? stances : ENTRY_MODE_ORDER),
+    [stances],
+  );
 
-  const categoryOptions = useMemo(() => buildTaxonomyOptions(locale, 'category', categories), [categories, locale]);
-  const attackOptions = useMemo(() => buildTaxonomyOptions(locale, 'attack', attacks), [attacks, locale]);
-  const stanceOptions = useMemo(() => buildEntryModeOptions(locale, normalizedStances), [normalizedStances, locale]);
-  const weaponOptions = useMemo(() => buildTaxonomyOptions(locale, 'weapon', weapons), [weapons, locale]);
+  const categoryOptions = useMemo(
+    () => buildTaxonomyOptions(locale, 'category', categories),
+    [categories, locale],
+  );
+  const attackOptions = useMemo(
+    () => buildTaxonomyOptions(locale, 'attack', attacks),
+    [attacks, locale],
+  );
+  const stanceOptions = useMemo(
+    () => buildEntryModeOptions(locale, normalizedStances),
+    [normalizedStances, locale],
+  );
+  const weaponOptions = useMemo(
+    () => buildTaxonomyOptions(locale, 'weapon', weapons),
+    [weapons, locale],
+  );
   const trainerOptions = useMemo(() => buildTrainerOptions(locale, trainers), [trainers, locale]);
   const levelOptions = useMemo<Option[]>(
     () =>
@@ -145,7 +166,14 @@ export const MobileFilters = ({
       level: prev.level || Boolean(filters.level),
       trainer: prev.trainer || Boolean(filters.trainer),
     }));
-  }, [filters.category, filters.attack, filters.stance, filters.weapon, filters.level, filters.trainer]);
+  }, [
+    filters.category,
+    filters.attack,
+    filters.stance,
+    filters.weapon,
+    filters.level,
+    filters.trainer,
+  ]);
 
   const handleReset = (): void => onChange({});
 
@@ -245,7 +273,14 @@ type FilterSectionProps = {
   onToggle?: () => void;
 };
 
-const FilterSection = ({ title, options, selected, onSelect, isOpen = false, onToggle }: FilterSectionProps): ReactElement => {
+const FilterSection = ({
+  title,
+  options,
+  selected,
+  onSelect,
+  isOpen = false,
+  onToggle,
+}: FilterSectionProps): ReactElement => {
   const { collapseMotion } = useMotionPreferences();
 
   return (
@@ -257,13 +292,26 @@ const FilterSection = ({ title, options, selected, onSelect, isOpen = false, onT
         className="flex w-full items-center justify-between text-left rounded-lg px-3 py-2 bg-[var(--color-surface)]/0 hover:bg-[var(--color-surface-hover)] focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] touch-manipulation"
         style={{ minHeight: 40 }}
       >
-        <SectionTitle><span className="text-sm">{title}</span></SectionTitle>
-        <motion.span aria-hidden className="text-subtle" animate={{ rotate: isOpen ? 0 : -90 }} transition={{ duration: 0.2, ease: 'easeInOut' }}>
+        <SectionTitle>
+          <span className="text-sm">{title}</span>
+        </SectionTitle>
+        <motion.span
+          aria-hidden
+          className="text-subtle"
+          animate={{ rotate: isOpen ? 0 : -90 }}
+          transition={{ duration: 0.2, ease: 'easeInOut' }}
+        >
           <ChevronDown className="w-4 h-4" />
         </motion.span>
       </button>
 
-      <motion.div className="overflow-hidden" initial={false} animate={isOpen ? 'open' : 'closed'} variants={collapseMotion.variants} transition={collapseMotion.transition}>
+      <motion.div
+        className="overflow-hidden"
+        initial={false}
+        animate={isOpen ? 'open' : 'closed'}
+        variants={collapseMotion.variants}
+        transition={collapseMotion.transition}
+      >
         <div className="pt-3">
           <OptionList options={options} selected={selected} onSelect={onSelect} />
         </div>

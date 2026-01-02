@@ -22,8 +22,6 @@ type GlossaryBookmarkCardProps = {
   actionSlot?: ReactElement;
 } & MotionProps;
 
-
-
 export const GlossaryBookmarkCard = ({
   term,
   locale,
@@ -39,7 +37,7 @@ export const GlossaryBookmarkCard = ({
   const definition = term.def[locale] || term.def.en;
   const categoryLabel = getCategoryLabel(term.category, copy);
   const categoryStyle = getCategoryStyle(term.category);
-  
+
   const handleActivate = () => {
     onSelect(term.slug);
   };
@@ -64,9 +62,9 @@ export const GlossaryBookmarkCard = ({
       initial={false}
       variants={variants}
       transition={getTransition(motionIndex)}
-  /* Hover and tap motion removed to disable hover effects completely */
-  animate={isDimmed ? {} : {}}
-    >      
+      /* Hover and tap motion removed to disable hover effects completely */
+      animate={isDimmed ? {} : {}}
+    >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 space-y-1">
           <h3 className="text-base font-medium leading-snug line-clamp-2" title={term.romaji}>
@@ -74,19 +72,15 @@ export const GlossaryBookmarkCard = ({
           </h3>
           {term.jp && <div className="text-xs text-subtle truncate">{term.jp}</div>}
         </div>
-        <div className="flex items-center gap-2">
-          {actionSlot}
-        </div>
+        <div className="flex items-center gap-2">{actionSlot}</div>
       </div>
 
       {/* Definition */}
-      <p className="text-sm text-muted leading-relaxed">
-        {definition}
-      </p>
+      <p className="text-sm text-muted leading-relaxed">{definition}</p>
 
       {/* Category label at bottom */}
       <div className="mt-auto flex justify-end pt-1">
-        <span 
+        <span
           className="glossary-tag text-xs font-medium px-2 py-1 rounded-full"
           style={{
             backgroundColor: categoryStyle.backgroundColor,

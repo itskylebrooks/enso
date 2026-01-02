@@ -13,8 +13,6 @@ type CollectionOption = {
   count: number;
 };
 
-
-
 type MobileCollectionsProps = {
   copy: Copy;
   collections: CollectionOption[];
@@ -45,9 +43,14 @@ export const MobileCollections = ({
   const { listMotion, prefersReducedMotion } = useMotionPreferences();
 
   return (
-    <div className="rounded-2xl border surface-border bg-[var(--color-surface)] p-4 space-y-4 no-select" aria-label={copy.collectionsTitle}>
+    <div
+      className="rounded-2xl border surface-border bg-[var(--color-surface)] p-4 space-y-4 no-select"
+      aria-label={copy.collectionsTitle}
+    >
       <div className="flex items-center justify-between gap-2">
-        <h2 className="text-sm font-semibold tracking-wide uppercase text-subtle">{copy.collectionsTitle}</h2>
+        <h2 className="text-sm font-semibold tracking-wide uppercase text-subtle">
+          {copy.collectionsTitle}
+        </h2>
         <div className="flex items-center gap-2">
           <button
             type="button"
@@ -101,12 +104,17 @@ export const MobileCollections = ({
               layout
             >
               {collections.map((collection) => (
-                <motion.li key={collection.id} layout variants={listMotion.item} transition={prefersReducedMotion ? { duration: 0.05 } : undefined}>
+                <motion.li
+                  key={collection.id}
+                  layout
+                  variants={listMotion.item}
+                  transition={prefersReducedMotion ? { duration: 0.05 } : undefined}
+                >
                   <div className="relative flex items-center gap-2">
-                    <motion.div 
+                    <motion.div
                       className="flex-1 min-w-0"
-                      animate={{ 
-                        paddingRight: isEditing ? "4.5rem" : "0rem" 
+                      animate={{
+                        paddingRight: isEditing ? '4.5rem' : '0rem',
                       }}
                       transition={{ duration: 0.15 }}
                     >
@@ -128,10 +136,16 @@ export const MobileCollections = ({
                           transition={{ duration: 0.15 }}
                           key={`edit-actions-${collection.id}`}
                         >
-                          <IconButton label={copy.collectionsRename} onClick={() => onRename(collection.id)}>
+                          <IconButton
+                            label={copy.collectionsRename}
+                            onClick={() => onRename(collection.id)}
+                          >
                             <TextCursorInput className="w-4 h-4" />
                           </IconButton>
-                          <IconButton label={copy.collectionsDelete} onClick={() => onDelete(collection.id)}>
+                          <IconButton
+                            label={copy.collectionsDelete}
+                            onClick={() => onDelete(collection.id)}
+                          >
                             <Trash className="w-4 h-4" />
                           </IconButton>
                         </motion.div>
@@ -165,7 +179,13 @@ type SidebarButtonProps = {
   onClick: () => void;
 };
 
-const SidebarButton = ({ active, label, icon, count, onClick }: SidebarButtonProps): ReactElement => (
+const SidebarButton = ({
+  active,
+  label,
+  icon,
+  count,
+  onClick,
+}: SidebarButtonProps): ReactElement => (
   <button
     type="button"
     onClick={onClick}
@@ -176,7 +196,11 @@ const SidebarButton = ({ active, label, icon, count, onClick }: SidebarButtonPro
     aria-current={active ? 'page' : undefined}
   >
     <span className="flex items-center gap-2 min-w-0 flex-1 overflow-hidden">
-      {icon && <span aria-hidden="true" className="flex-shrink-0">{icon}</span>}
+      {icon && (
+        <span aria-hidden="true" className="flex-shrink-0">
+          {icon}
+        </span>
+      )}
       <span className="truncate min-w-0">{label}</span>
     </span>
     <span className="text-xs font-medium text-subtle flex-shrink-0">{count}</span>

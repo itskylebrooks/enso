@@ -20,17 +20,22 @@ type GlossaryPageProps = {
   onOpenTerm: (slug: string) => void;
 };
 
-export const GlossaryPage = ({ locale, copy, filters = {}, onOpenTerm }: GlossaryPageProps): ReactElement => {
+export const GlossaryPage = ({
+  locale,
+  copy,
+  filters = {},
+  onOpenTerm,
+}: GlossaryPageProps): ReactElement => {
   const { terms, loading, error, setTerms, setLoading, setError } = useGlossaryStore();
   const { listMotion, getItemTransition, prefersReducedMotion } = useMotionPreferences();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
-    
+
     const loadTerms = async () => {
       if (terms.length > 0) return; // Already loaded
-      
+
       setLoading(true);
       try {
         const loadedTerms = await loadAllTerms();
@@ -45,18 +50,24 @@ export const GlossaryPage = ({ locale, copy, filters = {}, onOpenTerm }: Glossar
   }, [terms.length, setTerms, setLoading, setError]);
 
   // Apply filters and sort alphabetically
-  const filteredTerms = terms.filter(term => {
-    if (filters.category && term.category !== filters.category) {
-      return false;
-    }
-    return true;
-  }).sort((a, b) => {
-    // Sort all terms alphabetically by romaji, regardless of category
-    return a.romaji.localeCompare(b.romaji, 'en', { sensitivity: 'base' });
-  });
+  const filteredTerms = terms
+    .filter((term) => {
+      if (filters.category && term.category !== filters.category) {
+        return false;
+      }
+      return true;
+    })
+    .sort((a, b) => {
+      // Sort all terms alphabetically by romaji, regardless of category
+      return a.romaji.localeCompare(b.romaji, 'en', { sensitivity: 'base' });
+    });
 
-  const termsKey = filteredTerms.map(t => t.id).join(',');
-  const { visibleItems: visibleTerms, hasMore, loadMore } = useIncrementalList(filteredTerms, {
+  const termsKey = filteredTerms.map((t) => t.id).join(',');
+  const {
+    visibleItems: visibleTerms,
+    hasMore,
+    loadMore,
+  } = useIncrementalList(filteredTerms, {
     pageSize: 18,
     resetKey: termsKey,
   });
@@ -90,7 +101,9 @@ export const GlossaryPage = ({ locale, copy, filters = {}, onOpenTerm }: Glossar
       {filteredTerms.length === 0 ? (
         <div className="text-center py-12 no-select">
           <p className="text-muted">
-            {terms.length === 0 ? 'No glossary terms available yet.' : 'No terms found for the selected filters.'}
+            {terms.length === 0
+              ? 'No glossary terms available yet.'
+              : 'No terms found for the selected filters.'}
           </p>
         </div>
       ) : (

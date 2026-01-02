@@ -8,7 +8,13 @@ type ChipProps = {
   active?: boolean;
 } & HTMLMotionProps<'button'>;
 
-export const Chip = ({ label, active = false, className, disabled, ...buttonProps }: ChipProps): ReactElement => {
+export const Chip = ({
+  label,
+  active = false,
+  className,
+  disabled,
+  ...buttonProps
+}: ChipProps): ReactElement => {
   const prefersReducedMotion = useReducedMotion();
 
   return (

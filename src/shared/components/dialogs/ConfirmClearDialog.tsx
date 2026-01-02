@@ -11,15 +11,15 @@ type ConfirmClearModalProps = {
   onConfirm: () => void;
 };
 
-export const ConfirmClearModal = ({ copy, onCancel, onConfirm }: ConfirmClearModalProps): ReactElement | null => {
+export const ConfirmClearModal = ({
+  copy,
+  onCancel,
+  onConfirm,
+}: ConfirmClearModalProps): ReactElement | null => {
   const [value, setValue] = useState('');
   const dialogRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const {
-    overlayMotion,
-    toggleTransition,
-    prefersReducedMotion,
-  } = useMotionPreferences();
+  const { overlayMotion, toggleTransition, prefersReducedMotion } = useMotionPreferences();
 
   useFocusTrap(true, dialogRef, onCancel);
 
@@ -56,9 +56,7 @@ export const ConfirmClearModal = ({ copy, onCancel, onConfirm }: ConfirmClearMod
         <h2 id="confirm-clear-title" className="text-lg font-semibold">
           {copy.confirmClearTitle}
         </h2>
-        <p className="text-sm text-subtle leading-relaxed">
-          {copy.confirmClearBody}
-        </p>
+        <p className="text-sm text-subtle leading-relaxed">{copy.confirmClearBody}</p>
         <label className="text-sm text-left space-y-2">
           <span>{copy.confirmClearLabel}</span>
           <input

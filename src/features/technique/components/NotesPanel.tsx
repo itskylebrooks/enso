@@ -9,7 +9,12 @@ export type NotesPanelProps = {
   onFeedbackClick?: () => void;
 };
 
-export const NotesPanel = ({ commonMistakes, context, copy, onFeedbackClick }: NotesPanelProps): ReactElement => {
+export const NotesPanel = ({
+  commonMistakes,
+  context,
+  copy,
+  onFeedbackClick,
+}: NotesPanelProps): ReactElement => {
   const cards: Array<{
     title: string;
     items?: string[];
@@ -23,7 +28,10 @@ export const NotesPanel = ({ commonMistakes, context, copy, onFeedbackClick }: N
     <section className="space-y-3">
       <div className="space-y-3">
         {cards.map((card) => (
-          <article key={card.title} className="rounded-xl border surface-border bg-[var(--color-surface)]/80 p-4 sm:p-5 space-y-3">
+          <article
+            key={card.title}
+            className="rounded-xl border surface-border bg-[var(--color-surface)]/80 p-4 sm:p-5 space-y-3"
+          >
             <h3 className="text-xs uppercase tracking-[0.3em] text-subtle">{card.title}</h3>
             {card.items && card.items.length > 0 && (
               <ul className="space-y-2 text-sm leading-relaxed text-muted">
@@ -41,7 +49,7 @@ export const NotesPanel = ({ commonMistakes, context, copy, onFeedbackClick }: N
             )}
           </article>
         ))}
-        
+
         {/* Feedback Button */}
         {onFeedbackClick && (
           <button

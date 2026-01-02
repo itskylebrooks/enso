@@ -3,47 +3,47 @@ import type { SayaNoUchiColumn, SayaNoUchiRow } from '../types/exam';
 // Column definitions for Saya no Uchi program
 export const SAYA_NO_UCHI_COLUMNS: SayaNoUchiColumn[] = [
   // Tachi Waza section
-  { 
-    key: 'katate_tori_ai_hanmi', 
+  {
+    key: 'katate_tori_ai_hanmi',
     label: { en: 'Katate-tori Ai-hanmi', de: 'Katate-tori Ai-hanmi' },
-    section: 'tachi_waza'
+    section: 'tachi_waza',
   },
-  { 
-    key: 'katate_tori_gyaku_hanmi', 
+  {
+    key: 'katate_tori_gyaku_hanmi',
     label: { en: 'Katate-tori Gyaku-hanmi', de: 'Katate-tori Gyaku-hanmi' },
-    section: 'tachi_waza'
+    section: 'tachi_waza',
   },
-  { 
-    key: 'kata_tori', 
+  {
+    key: 'kata_tori',
     label: { en: 'Kata-tori', de: 'Kata-tori' },
-    section: 'tachi_waza'
+    section: 'tachi_waza',
   },
-  { 
-    key: 'ushiro_ryokata_tori', 
+  {
+    key: 'ushiro_ryokata_tori',
     label: { en: 'Ushiro-ryōkata-tori', de: 'Ushiro-ryōkata-tori' },
-    section: 'tachi_waza'
+    section: 'tachi_waza',
   },
-  { 
-    key: 'ushiro_ryote_tori', 
+  {
+    key: 'ushiro_ryote_tori',
     label: { en: 'Ushiro-ryōte-tori', de: 'Ushiro-ryōte-tori' },
-    section: 'tachi_waza'
+    section: 'tachi_waza',
   },
-  { 
-    key: 'ushiro_eri_tori', 
+  {
+    key: 'ushiro_eri_tori',
     label: { en: 'Ushiro-eri-tori', de: 'Ushiro-eri-tori' },
-    section: 'tachi_waza'
+    section: 'tachi_waza',
   },
   // Hanmi Hantachi section
-  { 
-    key: 'hanmi_hantachi_katate_tori_gyaku_hanmi', 
+  {
+    key: 'hanmi_hantachi_katate_tori_gyaku_hanmi',
     label: { en: 'Katate-tori Gyaku-hanmi', de: 'Katate-tori Gyaku-hanmi' },
-    section: 'hanmi_hantachi'
+    section: 'hanmi_hantachi',
   },
   // Buki Waza section
-  { 
-    key: 'ken_tai_jo_saya_no_uchi', 
+  {
+    key: 'ken_tai_jo_saya_no_uchi',
     label: { en: 'Ken Tai Jo Saya-no-Uchi', de: 'Ken Tai Jo Saya-no-Uchi' },
-    section: 'buki_waza'
+    section: 'buki_waza',
   },
 ];
 

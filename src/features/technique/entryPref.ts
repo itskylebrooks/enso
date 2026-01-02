@@ -117,7 +117,7 @@ export function updateURLEntry(mode: EntryMode): void {
  * 2. Per-technique preference
  * 3. Global preference
  * 4. Default 'irimi'
- * 
+ *
  * @param search - The URL search string
  * @param techniqueId - The ID of the technique
  * @returns EntryMode - The resolved entry mode

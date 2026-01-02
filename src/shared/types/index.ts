@@ -3,8 +3,16 @@ export type Locale = 'en' | 'de';
 export type MediaType = 'youtube' | 'gumlet' | 'gumlet-dab' | 'link' | 'image';
 
 export type Grade =
-  | 'kyu5' | 'kyu4' | 'kyu3' | 'kyu2' | 'kyu1'
-  | 'dan1' | 'dan2' | 'dan3' | 'dan4' | 'dan5';
+  | 'kyu5'
+  | 'kyu4'
+  | 'kyu3'
+  | 'kyu2'
+  | 'kyu1'
+  | 'dan1'
+  | 'dan2'
+  | 'dan3'
+  | 'dan4'
+  | 'dan5';
 
 export type EntryMode = 'irimi' | 'tenkan' | 'omote' | 'ura';
 
@@ -41,14 +49,14 @@ export type Version = TechniqueVersion;
 
 // New types for toolbar-based variant system
 export type TechniqueVersionMeta = {
-  id: string;           // stable slug: e.g., "haase-bsv"
-  label: string;        // "Alfred Haase (BSV)"
-  dojo?: string;        // "BSV"
-  trainerId?: string;   // "alfred-haase"
+  id: string; // stable slug: e.g., "haase-bsv"
+  label: string; // "Alfred Haase (BSV)"
+  dojo?: string; // "BSV"
+  trainerId?: string; // "alfred-haase"
 };
 
 export type TechniqueVariantKey = {
-  hanmi: Hanmi;              // Required hanmi
+  hanmi: Hanmi; // Required hanmi
   direction: Direction;
   weapon: WeaponKind;
   versionId?: string | null; // undefined or null => standard
@@ -90,8 +98,8 @@ export type TechniqueV2 = {
   tags: string[];
   versions: TechniqueVersion[];
   // New fields for toolbar-based variant system (optional for migration)
-  versionsMeta?: TechniqueVersionMeta[];  // catalog of available version authors
-  variants?: TechniqueVariant[];          // content per (direction, weapon, version)
+  versionsMeta?: TechniqueVersionMeta[]; // catalog of available version authors
+  variants?: TechniqueVariant[]; // content per (direction, weapon, version)
 };
 
 export type Technique = TechniqueV2;
@@ -175,14 +183,14 @@ export type Filters = {
 };
 
 export type GlossaryTerm = {
-  id: string;        // stable id, same as file name without .json
-  slug: string;      // url-safe slug (unique)
-  romaji: string;    // e.g., "tenkan"
-  jp?: string;       // kanji, e.g., "転換"
+  id: string; // stable id, same as file name without .json
+  slug: string; // url-safe slug (unique)
+  romaji: string; // e.g., "tenkan"
+  jp?: string; // kanji, e.g., "転換"
   category: 'movement' | 'stance' | 'attack' | 'etiquette' | 'philosophy' | 'other';
-  def: { en: string; de: string };       // short definition (1–2 lines)
-  literal?: { en: string; de: string };  // word-by-word translation (optional)
-  notes?: { en: string; de: string };    // longer text (optional)
+  def: { en: string; de: string }; // short definition (1–2 lines)
+  literal?: { en: string; de: string }; // word-by-word translation (optional)
+  notes?: { en: string; de: string }; // longer text (optional)
 };
 
 export type Trainer = {

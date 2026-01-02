@@ -1,17 +1,36 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactElement, type KeyboardEvent } from 'react';
+import {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  type ReactElement,
+  type KeyboardEvent,
+} from 'react';
 import { motion } from 'motion/react';
 import type { Copy } from '../../../shared/constants/i18n';
-import type { Locale, Technique, GlossaryTerm, Progress, GlossaryProgress } from '../../../shared/types';
+import type {
+  Locale,
+  Technique,
+  GlossaryTerm,
+  Progress,
+  GlossaryProgress,
+} from '../../../shared/types';
 import { EmphasizedName } from '../../../shared/components';
 import { gradeLabel, getGradeStyle } from '@shared/styles/belts';
 import { Bookmark, Search, X } from 'lucide-react';
 import { useFocusTrap } from '../../../shared/hooks/useFocusTrap';
-import { buildSearchIndex, buildGlossarySearchIndex, matchSearch, normalizeSearchQuery } from '../indexer';
+import {
+  buildSearchIndex,
+  buildGlossarySearchIndex,
+  matchSearch,
+  normalizeSearchQuery,
+} from '../indexer';
 import { scoreSearchResult, applyTieBreakers, type ScoredSearchResult } from '../scorer';
 import { useMotionPreferences } from '@shared/components/ui/motion';
 import { loadAllTerms } from '../../glossary/loader';
 
-type SearchResult = 
+type SearchResult =
   | { type: 'technique'; item: Technique }
   | { type: 'glossary'; item: GlossaryTerm };
 
@@ -32,7 +51,19 @@ type SearchOverlayProps = {
   openedBy?: 'keyboard' | 'mouse';
 };
 
-export const SearchOverlay = ({ copy, locale, techniques, progress, glossaryProgress, onClose, onOpen, onOpenGlossary, onToggleTechniqueBookmark, onToggleGlossaryBookmark, openedBy }: SearchOverlayProps): ReactElement => {
+export const SearchOverlay = ({
+  copy,
+  locale,
+  techniques,
+  progress,
+  glossaryProgress,
+  onClose,
+  onOpen,
+  onOpenGlossary,
+  onToggleTechniqueBookmark,
+  onToggleGlossaryBookmark,
+  openedBy,
+}: SearchOverlayProps): ReactElement => {
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [glossaryTerms, setGlossaryTerms] = useState<GlossaryTerm[]>([]);
@@ -42,9 +73,7 @@ export const SearchOverlay = ({ copy, locale, techniques, progress, glossaryProg
   const dialogRef = useRef<HTMLDivElement>(null);
   const resultsContainerRef = useRef<HTMLDivElement>(null);
   const resultRefs = useRef<(HTMLButtonElement | null)[]>([]);
-  const {
-    overlayMotion,
-  } = useMotionPreferences();
+  const { overlayMotion } = useMotionPreferences();
 
   // When opened via keyboard shortcut, ignore pointer hover changes until the
   // user actually uses the mouse (mousemove or mousedown). This prevents the
@@ -104,21 +133,17 @@ export const SearchOverlay = ({ copy, locale, techniques, progress, glossaryProg
         'katate-tori-irimi-nage',
       ];
 
-      const glossaryOrder = [
-        'onegai-shimasu',
-        'kamae',
-        'uke',
-      ];
+      const glossaryOrder = ['onegai-shimasu', 'kamae', 'uke'];
 
       const recentTechniques: SearchResult[] = techniqueOrder
-        .map(slug => techniques.find(t => t.slug === slug))
+        .map((slug) => techniques.find((t) => t.slug === slug))
         .filter(Boolean)
-        .map(item => ({ type: 'technique', item: item as Technique }));
+        .map((item) => ({ type: 'technique', item: item as Technique }));
 
       const someGlossaryTerms: SearchResult[] = glossaryOrder
-        .map(slug => glossaryTerms.find(g => g.slug === slug))
+        .map((slug) => glossaryTerms.find((g) => g.slug === slug))
         .filter(Boolean)
-        .map(item => ({ type: 'glossary', item: item as GlossaryTerm }));
+        .map((item) => ({ type: 'glossary', item: item as GlossaryTerm }));
 
       return [...recentTechniques, ...someGlossaryTerms];
     }
@@ -127,14 +152,22 @@ export const SearchOverlay = ({ copy, locale, techniques, progress, glossaryProg
     const allTechniqueResults: ScoredSearchResult[] = techniqueIndex
       .filter((entry) => matchSearch(entry.haystack, normalizedQuery))
       .map((entry) => {
-        const score = scoreSearchResult({ type: 'technique', item: entry.technique }, normalizedQuery, locale);
+        const score = scoreSearchResult(
+          { type: 'technique', item: entry.technique },
+          normalizedQuery,
+          locale,
+        );
         return { type: 'technique', item: entry.technique, score };
       });
-    
+
     const allGlossaryResults: ScoredSearchResult[] = glossaryIndex
       .filter((entry) => matchSearch(entry.haystack, normalizedQuery))
       .map((entry) => {
-        const score = scoreSearchResult({ type: 'glossary', item: entry.term }, normalizedQuery, locale);
+        const score = scoreSearchResult(
+          { type: 'glossary', item: entry.term },
+          normalizedQuery,
+          locale,
+        );
         return { type: 'glossary', item: entry.term, score };
       });
 
@@ -143,19 +176,17 @@ export const SearchOverlay = ({ copy, locale, techniques, progress, glossaryProg
     allResults.sort(applyTieBreakers);
 
     // Limit results and remove score for return type compatibility
-    return allResults
-      .slice(0, 20)
-      .map(result => ({
-        type: result.type,
-        item: result.item
-      })) as SearchResult[];
+    return allResults.slice(0, 20).map((result) => ({
+      type: result.type,
+      item: result.item,
+    })) as SearchResult[];
   }, [techniqueIndex, glossaryIndex, normalizedQuery, techniques, glossaryTerms, query, locale]);
 
   // Reset selection when results change
   useEffect(() => {
     // Clear refs when results change
     resultRefs.current = [];
-    
+
     if (results.length === 0) {
       setSelectedIndex(-1);
     } else if (selectedIndex >= results.length || selectedIndex === -1) {
@@ -168,10 +199,10 @@ export const SearchOverlay = ({ copy, locale, techniques, progress, glossaryProg
     if (selectedIndex >= 0 && resultRefs.current[selectedIndex] && resultsContainerRef.current) {
       const selectedElement = resultRefs.current[selectedIndex];
       const container = resultsContainerRef.current;
-      
+
       if (selectedElement) {
         const elementRect = selectedElement.getBoundingClientRect();
-        
+
         setHighlightPosition({
           y: selectedElement.offsetTop,
           height: elementRect.height,
@@ -189,14 +220,14 @@ export const SearchOverlay = ({ copy, locale, techniques, progress, glossaryProg
         if (itemTop < containerVisibleTop) {
           container.scrollTo({
             top: itemTop - 8, // 8px padding from top
-            behavior: 'smooth'
+            behavior: 'smooth',
           });
         }
         // Check if item is below visible area
         else if (itemBottom > containerVisibleBottom) {
           container.scrollTo({
             top: itemBottom - containerHeight + 8, // 8px padding from bottom
-            behavior: 'smooth'
+            behavior: 'smooth',
           });
         }
       }
@@ -212,17 +243,17 @@ export const SearchOverlay = ({ copy, locale, techniques, progress, glossaryProg
       const { scrollTop, scrollHeight, clientHeight } = container;
       const isScrollable = scrollHeight > clientHeight;
       const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1; // 1px tolerance
-      
+
       // Show fade only if scrollable AND not at bottom
       setHasMoreContent(isScrollable && !isAtBottom);
     };
 
     // Initial check
     updateScrollState();
-    
+
     // Update on scroll
     container.addEventListener('scroll', updateScrollState, { passive: true });
-    
+
     return () => container.removeEventListener('scroll', updateScrollState);
   }, [results]);
 
@@ -311,152 +342,187 @@ export const SearchOverlay = ({ copy, locale, techniques, progress, glossaryProg
             </motion.button>
           </div>
           <div className="border-t surface-border mt-2 pt-3 relative">
-          <div ref={resultsContainerRef} className="max-h-[50vh] sm:max-h-[60vh] overflow-y-auto relative scrollbar-hide">
-            {/* Animated background highlight */}
-            {results.length > 0 && selectedIndex >= 0 && (
-              <motion.div
-                className="absolute rounded-xl pointer-events-none z-0"
-                animate={{
-                  y: highlightPosition.y,
-                  opacity: 1,
-                }}
-                initial={{
-                  y: 0,
-                  opacity: 0,
-                }}
-                transition={{
-                  type: "spring",
-                  stiffness: 400,
-                  damping: 40,
-                  mass: 0.8,
-                }}
-                style={{
-                  backgroundColor: 'var(--color-surface-hover)',
-                  width: 'calc(100% - 0px)',
-                  height: highlightPosition.height || 64,
-                  left: 0,
-                  top: 0,
-                }}
-              />
-            )}
-            
-            {results.length > 0 ? (
-              results.map((result, index) => (
-                <button
-                  key={result.type === 'technique' ? result.item.id : result.item.id}
-                  ref={(el) => { resultRefs.current[index] = el; }}
-                  type="button"
-                  onClick={(event) => {
-                    const openInNewTab = event.metaKey || event.ctrlKey;
-                    if (result.type === 'technique') {
-                      onOpen(result.item.slug);
-                    } else {
-                      onOpenGlossary(result.item.slug);
-                    }
-                    if (!openInNewTab) {
-                      onClose();
-                    }
+            <div
+              ref={resultsContainerRef}
+              className="max-h-[50vh] sm:max-h-[60vh] overflow-y-auto relative scrollbar-hide"
+            >
+              {/* Animated background highlight */}
+              {results.length > 0 && selectedIndex >= 0 && (
+                <motion.div
+                  className="absolute rounded-xl pointer-events-none z-0"
+                  animate={{
+                    y: highlightPosition.y,
+                    opacity: 1,
                   }}
-                  onMouseEnter={() => {
-                    if (!pointerEnabled) return;
-                    setSelectedIndex(index);
+                  initial={{
+                    y: 0,
+                    opacity: 0,
                   }}
-                  className="relative flex w-full items-baseline justify-between gap-4 rounded-xl px-3 py-3 text-left transition-colors z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--color-text)]"
-                  title={result.type === 'technique' ? result.item.name[locale] : result.item.romaji}
-                >
-                  <div className="min-w-0 flex-1">
-                    {result.type === 'technique' ? (
-                      <>
-                        <div className="truncate text-sm font-semibold text-[color:var(--color-text)]">
-                          <EmphasizedName name={result.item.name[locale]} />
-                        </div>
+                  transition={{
+                    type: 'spring',
+                    stiffness: 400,
+                    damping: 40,
+                    mass: 0.8,
+                  }}
+                  style={{
+                    backgroundColor: 'var(--color-surface-hover)',
+                    width: 'calc(100% - 0px)',
+                    height: highlightPosition.height || 64,
+                    left: 0,
+                    top: 0,
+                  }}
+                />
+              )}
+
+              {results.length > 0 ? (
+                results.map((result, index) => (
+                  <button
+                    key={result.type === 'technique' ? result.item.id : result.item.id}
+                    ref={(el) => {
+                      resultRefs.current[index] = el;
+                    }}
+                    type="button"
+                    onClick={(event) => {
+                      const openInNewTab = event.metaKey || event.ctrlKey;
+                      if (result.type === 'technique') {
+                        onOpen(result.item.slug);
+                      } else {
+                        onOpenGlossary(result.item.slug);
+                      }
+                      if (!openInNewTab) {
+                        onClose();
+                      }
+                    }}
+                    onMouseEnter={() => {
+                      if (!pointerEnabled) return;
+                      setSelectedIndex(index);
+                    }}
+                    className="relative flex w-full items-baseline justify-between gap-4 rounded-xl px-3 py-3 text-left transition-colors z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--color-text)]"
+                    title={
+                      result.type === 'technique' ? result.item.name[locale] : result.item.romaji
+                    }
+                  >
+                    <div className="min-w-0 flex-1">
+                      {result.type === 'technique' ? (
+                        <>
+                          <div className="truncate text-sm font-semibold text-[color:var(--color-text)]">
+                            <EmphasizedName name={result.item.name[locale]} />
+                          </div>
                           <div className="mt-1 text-xs font-medium text-subtle truncate mb-1">
                             {result.item.summary?.[locale] ?? result.item.summary?.en}
                           </div>
-                      </>
-                    ) : (
-                      <>
-                        <div className="flex items-center gap-2 mb-1">
-                          <div className="truncate text-sm font-semibold text-[color:var(--color-text)]">
-                            {result.item.romaji}
+                        </>
+                      ) : (
+                        <>
+                          <div className="flex items-center gap-2 mb-1">
+                            <div className="truncate text-sm font-semibold text-[color:var(--color-text)]">
+                              {result.item.romaji}
+                            </div>
                           </div>
-                        </div>
-                        <div className="text-xs font-medium text-subtle truncate mb-1">
-                          {result.item.def[locale] || result.item.def.en}
-                        </div>
-                        {/* Japanese name intentionally omitted in search results */}
-                      </>
-                    )}
-                  </div>
-                  {/* Right-side label: technique belt or glossary label */}
-                  <div className="flex-shrink-0 ml-3 w-14 flex flex-col items-center gap-2">
-                    {result.type === 'technique' ? (
-                      <>
-                        <span
-                          className="text-[0.65rem] font-medium px-2 py-0.5 rounded-full"
-                          style={(() => {
-                            const style = getGradeStyle(result.item.level);
-                            return { backgroundColor: style.backgroundColor, color: style.color };
-                          })()}
-                        >
-                          {gradeLabel(result.item.level, locale)}
-                        </span>
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            onToggleTechniqueBookmark?.(result.item.id);
-                          }}
-                          aria-label={progress.find(p => p.techniqueId === result.item.id && p.bookmarked) ? 'Unbookmark' : 'Bookmark'}
-                          className="p-1 -mt-1"
-                        >
-                          {progress.find(p => p.techniqueId === result.item.id && p.bookmarked) ? (
-                            <Bookmark className="w-4 h-4 text-subtle" aria-hidden fill="currentColor" stroke="none" />
-                          ) : (
-                            <Bookmark className="w-4 h-4 text-subtle" aria-hidden />
-                          )}
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <span
-                          className="text-[0.65rem] font-medium px-2 py-0.5 rounded-full"
-                          style={{ backgroundColor: '#474747', color: '#FFFFFF' }}
-                        >
-                          Glossary
-                        </span>
-                        <button
-                          type="button"
-                          onClick={(e) => { e.stopPropagation(); onToggleGlossaryBookmark?.(result.item.id); }}
-                          aria-label={glossaryProgress.find(g => g.termId === result.item.id && g.bookmarked) ? 'Unbookmark' : 'Bookmark'}
-                          className="p-1 -mt-1"
-                        >
-                          {glossaryProgress.find(g => g.termId === result.item.id && g.bookmarked) ? (
-                            <Bookmark className="w-4 h-4 text-subtle" aria-hidden fill="currentColor" stroke="none" />
-                          ) : (
-                            <Bookmark className="w-4 h-4 text-subtle" aria-hidden />
-                          )}
-                        </button>
-                      </>
-                    )}
-                  </div>
-                </button>
-              ))
-            ) : (
-              <div className="px-3 py-6 text-sm text-subtle">
-                {query.trim().length === 0 ? 'Start typing to search...' : 'No results'}
-              </div>
+                          <div className="text-xs font-medium text-subtle truncate mb-1">
+                            {result.item.def[locale] || result.item.def.en}
+                          </div>
+                          {/* Japanese name intentionally omitted in search results */}
+                        </>
+                      )}
+                    </div>
+                    {/* Right-side label: technique belt or glossary label */}
+                    <div className="flex-shrink-0 ml-3 w-14 flex flex-col items-center gap-2">
+                      {result.type === 'technique' ? (
+                        <>
+                          <span
+                            className="text-[0.65rem] font-medium px-2 py-0.5 rounded-full"
+                            style={(() => {
+                              const style = getGradeStyle(result.item.level);
+                              return { backgroundColor: style.backgroundColor, color: style.color };
+                            })()}
+                          >
+                            {gradeLabel(result.item.level, locale)}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onToggleTechniqueBookmark?.(result.item.id);
+                            }}
+                            aria-label={
+                              progress.find((p) => p.techniqueId === result.item.id && p.bookmarked)
+                                ? 'Unbookmark'
+                                : 'Bookmark'
+                            }
+                            className="p-1 -mt-1"
+                          >
+                            {progress.find(
+                              (p) => p.techniqueId === result.item.id && p.bookmarked,
+                            ) ? (
+                              <Bookmark
+                                className="w-4 h-4 text-subtle"
+                                aria-hidden
+                                fill="currentColor"
+                                stroke="none"
+                              />
+                            ) : (
+                              <Bookmark className="w-4 h-4 text-subtle" aria-hidden />
+                            )}
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <span
+                            className="text-[0.65rem] font-medium px-2 py-0.5 rounded-full"
+                            style={{ backgroundColor: '#474747', color: '#FFFFFF' }}
+                          >
+                            Glossary
+                          </span>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onToggleGlossaryBookmark?.(result.item.id);
+                            }}
+                            aria-label={
+                              glossaryProgress.find(
+                                (g) => g.termId === result.item.id && g.bookmarked,
+                              )
+                                ? 'Unbookmark'
+                                : 'Bookmark'
+                            }
+                            className="p-1 -mt-1"
+                          >
+                            {glossaryProgress.find(
+                              (g) => g.termId === result.item.id && g.bookmarked,
+                            ) ? (
+                              <Bookmark
+                                className="w-4 h-4 text-subtle"
+                                aria-hidden
+                                fill="currentColor"
+                                stroke="none"
+                              />
+                            ) : (
+                              <Bookmark className="w-4 h-4 text-subtle" aria-hidden />
+                            )}
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  </button>
+                ))
+              ) : (
+                <div className="px-3 py-6 text-sm text-subtle">
+                  {query.trim().length === 0 ? 'Start typing to search...' : 'No results'}
+                </div>
+              )}
+            </div>
+
+            {/* Fade gradient to indicate scrollable content */}
+            {hasMoreContent && (
+              <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-[var(--color-surface)] from-0% via-[var(--color-surface)]/80 via-40% to-transparent pointer-events-none z-10" />
             )}
           </div>
-          
-          {/* Fade gradient to indicate scrollable content */}
-          {hasMoreContent && (
-            <div className="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-[var(--color-surface)] from-0% via-[var(--color-surface)]/80 via-40% to-transparent pointer-events-none z-10" />
-          )}
-          
-          </div>
           <div className="mt-2 px-3 pb-1 pt-2 text-xs text-subtle text-center">
-            <span className="hidden sm:inline">Use ↑↓ to navigate • Enter to select • Esc to close</span>
+            <span className="hidden sm:inline">
+              Use ↑↓ to navigate • Enter to select • Esc to close
+            </span>
             <span className="sm:hidden">Scroll to see more results</span>
           </div>
         </div>

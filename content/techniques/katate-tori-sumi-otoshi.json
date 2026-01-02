@@ -14,15 +14,7 @@
     "en": "Corner drop from a single-hand grab. Connect at uke’s wrist–elbow, move to the dead spot behind them, lower your center (often to a knee), and draw a diagonal ‘corner’ line that drops uke with space for ukemi.",
     "de": "Eckenwurf aus Einhandgriff. Verbindung an Ukes Handgelenk–Ellbogen, in den toten Winkel hinter ihn gehen, das Zentrum senken (oft auf ein Knie) und die diagonale „Ecke“ zeichnen, die Uke mit Platz für Ukemi fallen lässt."
   },
-  "tags": [
-    "sumi-otoshi",
-    "隅落とし",
-    "throw",
-    "katate-tori",
-    "irimi",
-    "tenkan",
-    "kuzushi"
-  ],
+  "tags": ["sumi-otoshi", "隅落とし", "throw", "katate-tori", "irimi", "tenkan", "kuzushi"],
   "versions": [
     {
       "id": "v-base",

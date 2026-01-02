@@ -5,7 +5,12 @@ import type { Copy } from '../../../shared/constants/i18n';
 import type { Filters, Grade, Locale } from '../../../shared/types';
 import { classNames } from '@shared/utils/classNames';
 import { gradePalette } from '../../../shared/styles/belts';
-import { getLevelLabel, getOrderedTaxonomyValues, getTaxonomyLabel, type TaxonomyType } from '../../../shared/i18n/taxonomy';
+import {
+  getLevelLabel,
+  getOrderedTaxonomyValues,
+  getTaxonomyLabel,
+  type TaxonomyType,
+} from '../../../shared/i18n/taxonomy';
 import { SectionTitle } from '../../../shared/components';
 import { useMotionPreferences } from '@shared/components/ui/motion';
 import { usePinButton } from '@shared/components/ui';
@@ -31,32 +36,30 @@ type Option = {
   trailing?: ReactNode;
 };
 
-const buildTaxonomyOptions = (
-  locale: Locale,
-  type: TaxonomyType,
-  values: string[],
-): Option[] => {
+const buildTaxonomyOptions = (locale: Locale, type: TaxonomyType, values: string[]): Option[] => {
   const ordered = getOrderedTaxonomyValues(type);
   const known = new Set(ordered);
   const extras = values.filter((value) => value && !known.has(value));
   const entries = [...ordered, ...extras];
   const options = entries.map((value) => ({ value, label: getTaxonomyLabel(locale, type, value) }));
-  
+
   // Sort all taxonomy types alphabetically by label (requested by user)
-  return options.sort((a, b) => a.label.localeCompare(b.label, locale, {
-    sensitivity: 'accent',
-    caseFirst: 'upper'
-  }));
+  return options.sort((a, b) =>
+    a.label.localeCompare(b.label, locale, {
+      sensitivity: 'accent',
+      caseFirst: 'upper',
+    }),
+  );
 };
 
 const buildEntryModeOptions = (locale: Locale, values: string[]): Option[] => {
   const entryModeLabels: Record<string, string> = {
-    'irimi': locale === 'de' ? 'Irimi' : 'Irimi',
-    'tenkan': locale === 'de' ? 'Tenkan' : 'Tenkan',
-    'omote': locale === 'de' ? 'Omote' : 'Omote',
-    'ura': locale === 'de' ? 'Ura' : 'Ura',
+    irimi: locale === 'de' ? 'Irimi' : 'Irimi',
+    tenkan: locale === 'de' ? 'Tenkan' : 'Tenkan',
+    omote: locale === 'de' ? 'Omote' : 'Omote',
+    ura: locale === 'de' ? 'Ura' : 'Ura',
   };
-  
+
   return values.map((value) => ({
     value,
     label: entryModeLabels[value] || value,
@@ -68,7 +71,7 @@ const buildTrainerOptions = (locale: Locale, values: string[]): Option[] => {
   const formatTrainerName = (trainerId: string): string => {
     return trainerId
       .split('-')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(' ');
   };
 
@@ -83,7 +86,10 @@ const buildTrainerOptions = (locale: Locale, values: string[]): Option[] => {
   if (hasBase) {
     // ensure 'base-forms' sits at the top of the list and do not let it be re-sorted
     const filtered = options.filter((o) => o.value !== 'base-forms');
-    return [{ value: 'base-forms', label: locale === 'de' ? 'Grundformen' : 'Base forms' }, ...filtered.sort((a, b) => a.label.localeCompare(b.label, locale))];
+    return [
+      { value: 'base-forms', label: locale === 'de' ? 'Grundformen' : 'Base forms' },
+      ...filtered.sort((a, b) => a.label.localeCompare(b.label, locale)),
+    ];
   }
 
   return options.sort((a, b) => a.label.localeCompare(b.label, locale));
@@ -121,14 +127,29 @@ export const FilterPanel = ({
     () => (stances.length > 0 ? stances : ENTRY_MODE_ORDER),
     [stances],
   );
-  const availableStanceSet = useMemo(() => new Set(normalizedStances.filter(Boolean)), [normalizedStances]);
+  const availableStanceSet = useMemo(
+    () => new Set(normalizedStances.filter(Boolean)),
+    [normalizedStances],
+  );
   const availableWeaponSet = useMemo(() => new Set(weapons.filter(Boolean)), [weapons]);
   const availableTrainerSet = useMemo(() => new Set(trainers.filter(Boolean)), [trainers]);
 
-  const categoryOptions = useMemo(() => buildTaxonomyOptions(locale, 'category', categories), [categories, locale]);
-  const attackOptions = useMemo(() => buildTaxonomyOptions(locale, 'attack', attacks), [attacks, locale]);
-  const stanceOptions = useMemo(() => buildEntryModeOptions(locale, normalizedStances), [normalizedStances, locale]);
-  const weaponOptions = useMemo(() => buildTaxonomyOptions(locale, 'weapon', weapons), [weapons, locale]);
+  const categoryOptions = useMemo(
+    () => buildTaxonomyOptions(locale, 'category', categories),
+    [categories, locale],
+  );
+  const attackOptions = useMemo(
+    () => buildTaxonomyOptions(locale, 'attack', attacks),
+    [attacks, locale],
+  );
+  const stanceOptions = useMemo(
+    () => buildEntryModeOptions(locale, normalizedStances),
+    [normalizedStances, locale],
+  );
+  const weaponOptions = useMemo(
+    () => buildTaxonomyOptions(locale, 'weapon', weapons),
+    [weapons, locale],
+  );
   const trainerOptions = useMemo(() => buildTrainerOptions(locale, trainers), [trainers, locale]);
   const levelOptions = useMemo<Option[]>(
     () =>
@@ -165,7 +186,14 @@ export const FilterPanel = ({
       level: prev.level || Boolean(filters.level),
       trainer: prev.trainer || Boolean(filters.trainer),
     }));
-  }, [filters.category, filters.attack, filters.stance, filters.weapon, filters.level, filters.trainer]);
+  }, [
+    filters.category,
+    filters.attack,
+    filters.stance,
+    filters.weapon,
+    filters.level,
+    filters.trainer,
+  ]);
 
   const handleReset = (): void => onChange({});
   const pinButtonContext = usePinButton();
@@ -173,7 +201,9 @@ export const FilterPanel = ({
   return (
     <div className="space-y-6 no-select">
       <div className="flex items-center justify-between gap-2">
-        <h2 className="text-sm font-semibold tracking-wide uppercase text-subtle">{copy.filters}</h2>
+        <h2 className="text-sm font-semibold tracking-wide uppercase text-subtle">
+          {copy.filters}
+        </h2>
         <div className="flex items-center gap-2">
           {hasActiveFilters && (
             <button
@@ -190,10 +220,14 @@ export const FilterPanel = ({
               type="button"
               onClick={pinButtonContext.togglePin}
               className="p-1.5 rounded-lg hover:bg-[var(--color-surface-hover)] text-subtle hover:text-[var(--color-text)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
-              aria-label={pinButtonContext.isPinned ? "Unpin panel" : "Pin panel"}
-              title={pinButtonContext.isPinned ? "Unpin panel" : "Pin panel"}
+              aria-label={pinButtonContext.isPinned ? 'Unpin panel' : 'Pin panel'}
+              title={pinButtonContext.isPinned ? 'Unpin panel' : 'Pin panel'}
             >
-              {pinButtonContext.isPinned ? <PinOff className="w-4 h-4" aria-hidden /> : <Pin className="w-4 h-4" aria-hidden />}
+              {pinButtonContext.isPinned ? (
+                <PinOff className="w-4 h-4" aria-hidden />
+              ) : (
+                <Pin className="w-4 h-4" aria-hidden />
+              )}
             </button>
           )}
         </div>
@@ -271,7 +305,15 @@ type FilterSectionProps = {
   onToggle?: () => void;
 };
 
-const FilterSection = ({ title, options, selected, onSelect, available, isOpen = false, onToggle }: FilterSectionProps): ReactNode => {
+const FilterSection = ({
+  title,
+  options,
+  selected,
+  onSelect,
+  available,
+  isOpen = false,
+  onToggle,
+}: FilterSectionProps): ReactNode => {
   const { collapseMotion } = useMotionPreferences();
 
   return (
@@ -300,7 +342,12 @@ const FilterSection = ({ title, options, selected, onSelect, available, isOpen =
         transition={collapseMotion.transition}
       >
         <div className="pt-3">
-          <OptionList options={options} selected={selected} onSelect={onSelect} available={available} />
+          <OptionList
+            options={options}
+            selected={selected}
+            onSelect={onSelect}
+            available={available}
+          />
         </div>
       </motion.div>
     </section>

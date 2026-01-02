@@ -14,18 +14,10 @@
     "en": "Outside turning throw from a single-hand grab. Blend on the outside line, guide the elbow, turn under the arm, and cut a broad arc to project with clear space for ukemi.",
     "de": "Außenrotationswurf aus Einhandgriff. Auf der Außenlinie führen, Ellbogen leiten, unter dem Arm drehen und mit weitem Bogen projizieren – mit freier Bahn für Ukemi."
   },
-  "tags": [
-    "kaiten-nage",
-    "回転投げ",
-    "soto",
-    "throw",
-    "katate-tori",
-    "irimi",
-    "tenkan"
-  ],
+  "tags": ["kaiten-nage", "回転投げ", "soto", "throw", "katate-tori", "irimi", "tenkan"],
   "versions": [
     {
-  "id": "v-base",
+      "id": "v-base",
       "hanmi": "gyaku-hanmi",
       "stepsByEntry": {
         "irimi": {
@@ -119,7 +111,7 @@
       }
     },
     {
-  "id": "v-base",
+      "id": "v-base",
       "hanmi": "ai-hanmi",
       "stepsByEntry": {
         "irimi": {

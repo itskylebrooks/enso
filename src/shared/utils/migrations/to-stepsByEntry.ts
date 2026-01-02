@@ -35,7 +35,8 @@ export function migrateVersionToStepsByEntry(version: TechniqueVersion): Techniq
   const migrated: StepsByEntry = {};
 
   ENTRY_MODE_ORDER.forEach((mode) => {
-    const legacyKey = `steps${mode.charAt(0).toUpperCase()}${mode.slice(1)}` as keyof typeof legacyVersion;
+    const legacyKey =
+      `steps${mode.charAt(0).toUpperCase()}${mode.slice(1)}` as keyof typeof legacyVersion;
     const legacySteps = legacyVersion[legacyKey] as LocalizedSteps | undefined;
     if (legacySteps) {
       migrated[mode] = legacySteps;
@@ -57,8 +58,8 @@ export function migrateVersionToStepsByEntry(version: TechniqueVersion): Techniq
  * Migrates a complete technique object, upgrading all versions that need migration.
  */
 export function migrateTechniqueToStepsByEntry(technique: Technique): Technique {
-  const needsMigration = technique.versions.some(v => !v.stepsByEntry);
-  
+  const needsMigration = technique.versions.some((v) => !v.stepsByEntry);
+
   if (!needsMigration) {
     return technique;
   }

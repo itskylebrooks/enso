@@ -35,23 +35,24 @@ const localizedStringArray = z.object({
   de: z.array(z.string().min(1)),
 });
 
-const stepsByEntrySchema = z.object({
-  irimi: localizedStringArray.optional(),
-  tenkan: localizedStringArray.optional(),
-  omote: localizedStringArray.optional(),
-  ura: localizedStringArray.optional(),
-  media: z
-    .object({
-      irimi: z.array(mediaSchema).optional(),
-      tenkan: z.array(mediaSchema).optional(),
-      omote: z.array(mediaSchema).optional(),
-      ura: z.array(mediaSchema).optional(),
-    })
-    .optional(),
-}).refine(
-  (data) => Boolean(data.irimi || data.tenkan || data.omote || data.ura),
-  { message: 'At least one entry type must be provided' }
-);
+const stepsByEntrySchema = z
+  .object({
+    irimi: localizedStringArray.optional(),
+    tenkan: localizedStringArray.optional(),
+    omote: localizedStringArray.optional(),
+    ura: localizedStringArray.optional(),
+    media: z
+      .object({
+        irimi: z.array(mediaSchema).optional(),
+        tenkan: z.array(mediaSchema).optional(),
+        omote: z.array(mediaSchema).optional(),
+        ura: z.array(mediaSchema).optional(),
+      })
+      .optional(),
+  })
+  .refine((data) => Boolean(data.irimi || data.tenkan || data.omote || data.ura), {
+    message: 'At least one entry type must be provided',
+  });
 
 const versionSchema = z
   .object({
@@ -75,15 +76,14 @@ const versionSchema = z
       if (value.stepsByEntry.irimi.en.length !== value.stepsByEntry.irimi.de.length) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
-          message: 'stepsByEntry.irimi.en and stepsByEntry.irimi.de must contain the same number of entries',
+          message:
+            'stepsByEntry.irimi.en and stepsByEntry.irimi.de must contain the same number of entries',
           path: ['stepsByEntry', 'irimi'],
         });
       }
     }
 
-    const ensureMatchingLengths = (
-      entryKey: 'irimi' | 'tenkan' | 'omote' | 'ura',
-    ) => {
+    const ensureMatchingLengths = (entryKey: 'irimi' | 'tenkan' | 'omote' | 'ura') => {
       const entry = value.stepsByEntry[entryKey];
       if (!entry) return;
       if (entry.en.length !== entry.de.length) {

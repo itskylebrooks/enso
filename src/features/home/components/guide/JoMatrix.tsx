@@ -32,8 +32,8 @@ const JoCellComponent = ({ cell }: { cell: JoCell }): ReactElement | null => {
 
 export const JoMatrix = ({ locale, onCellClick, copy }: JoMatrixProps): ReactElement => {
   // Group columns by section
-  const joNageWazaCols = JO_COLUMNS.filter(col => col.section === 'jo_nage_waza');
-  const joToriCols = JO_COLUMNS.filter(col => col.section === 'jo_tori');
+  const joNageWazaCols = JO_COLUMNS.filter((col) => col.section === 'jo_nage_waza');
+  const joToriCols = JO_COLUMNS.filter((col) => col.section === 'jo_tori');
 
   return (
     <div className="space-y-4">
@@ -43,17 +43,20 @@ export const JoMatrix = ({ locale, onCellClick, copy }: JoMatrixProps): ReactEle
           <thead>
             {/* Section header row */}
             <tr className="surface border-b-2 surface-border">
-              <th className="md:sticky left-0 surface z-10 px-3 py-2 text-left font-semibold text-xs uppercase tracking-wide border-r surface-border" style={{ minWidth: '160px', width: '160px' }}>
+              <th
+                className="md:sticky left-0 surface z-10 px-3 py-2 text-left font-semibold text-xs uppercase tracking-wide border-r surface-border"
+                style={{ minWidth: '160px', width: '160px' }}
+              >
                 {/* Empty corner cell */}
               </th>
-              <th 
-                colSpan={joNageWazaCols.length} 
+              <th
+                colSpan={joNageWazaCols.length}
                 className="px-3 py-2 text-center font-bold text-xs uppercase tracking-wide border-r-2 surface-border"
               >
                 {locale === 'en' ? 'Jō Nage Waza' : 'Jō Nage Waza'}
               </th>
-              <th 
-                colSpan={joToriCols.length} 
+              <th
+                colSpan={joToriCols.length}
                 className="px-3 py-2 text-center font-bold text-xs uppercase tracking-wide"
               >
                 {locale === 'en' ? 'Jō Tori' : 'Jō Tori'}
@@ -61,13 +64,17 @@ export const JoMatrix = ({ locale, onCellClick, copy }: JoMatrixProps): ReactEle
             </tr>
             {/* Column header row */}
             <tr className="surface border-b surface-border">
-              <th className="md:sticky left-0 surface z-10 px-3 py-1 text-left font-semibold text-xs uppercase tracking-wide border-r surface-border" style={{ minWidth: '160px', width: '160px' }}>
+              <th
+                className="md:sticky left-0 surface z-10 px-3 py-1 text-left font-semibold text-xs uppercase tracking-wide border-r surface-border"
+                style={{ minWidth: '160px', width: '160px' }}
+              >
                 {locale === 'en' ? 'Technique' : 'Technik'}
               </th>
               {JO_COLUMNS.map((col, idx) => {
-                const isLastInSection = col.section === 'jo_nage_waza' && idx === joNageWazaCols.length - 1;
+                const isLastInSection =
+                  col.section === 'jo_nage_waza' && idx === joNageWazaCols.length - 1;
                 const isBoldSeparator = isLastInSection;
-                
+
                 return (
                   <th
                     key={col.key}
@@ -102,14 +109,17 @@ export const JoMatrix = ({ locale, onCellClick, copy }: JoMatrixProps): ReactEle
                     {JO_COLUMNS.map((col, colIndex) => {
                       const cell = row.cells[col.key];
                       const isEmpty = cell.kind === 'empty';
-                      const isLastInSection = col.section === 'jo_nage_waza' && colIndex === joNageWazaCols.length - 1;
+                      const isLastInSection =
+                        col.section === 'jo_nage_waza' && colIndex === joNageWazaCols.length - 1;
                       const isBoldSeparator = isLastInSection;
 
                       return (
                         <td
                           key={col.key}
                           className={`px-2 py-1 text-center transition-colors ${
-                            isBoldSeparator ? 'border-r-2 surface-border' : 'border-r surface-border'
+                            isBoldSeparator
+                              ? 'border-r-2 surface-border'
+                              : 'border-r surface-border'
                           } ${
                             isEmpty ? '' : 'cursor-pointer hover:bg-[var(--color-surface-hover)]'
                           }`}
@@ -131,22 +141,32 @@ export const JoMatrix = ({ locale, onCellClick, copy }: JoMatrixProps): ReactEle
 
       {/* Legend */}
       <div className="mt-4 space-y-2">
-        <h3 className="text-sm font-semibold uppercase tracking-wide text-subtle">{copy.joTechniquesLegendTitle}</h3>
+        <h3 className="text-sm font-semibold uppercase tracking-wide text-subtle">
+          {copy.joTechniquesLegendTitle}
+        </h3>
         <ul className="space-y-1 text-sm leading-relaxed">
           <li className="flex gap-2">
-            <span aria-hidden className="text-base">•</span>
+            <span aria-hidden className="text-base">
+              •
+            </span>
             <span>{copy.joTechniquesLegend1}</span>
           </li>
           <li className="flex gap-2">
-            <span aria-hidden className="text-base">•</span>
+            <span aria-hidden className="text-base">
+              •
+            </span>
             <span>{copy.joTechniquesLegend2}</span>
           </li>
           <li className="flex gap-2">
-            <span aria-hidden className="text-base">•</span>
+            <span aria-hidden className="text-base">
+              •
+            </span>
             <span>{copy.joTechniquesLegend3}</span>
           </li>
           <li className="flex gap-2">
-            <span aria-hidden className="text-base">•</span>
+            <span aria-hidden className="text-base">
+              •
+            </span>
             <span>{copy.joTechniquesLegend4}</span>
           </li>
         </ul>

@@ -28,9 +28,7 @@ export const QuoteRotator = ({ quotes, onQuoteChange }: QuoteRotatorProps): Reac
       <blockquote className="text-sm md:text-base leading-6 md:leading-7 text-subtle italic">
         "{currentQuote.quote}"
       </blockquote>
-      <figcaption className="text-sm text-subtle">
-        — {currentQuote.author}
-      </figcaption>
+      <figcaption className="text-sm text-subtle">— {currentQuote.author}</figcaption>
     </div>
   );
 };

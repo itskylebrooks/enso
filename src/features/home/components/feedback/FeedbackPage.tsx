@@ -999,8 +999,8 @@ const loadDraft = (): FeedbackDraft => {
         direction: isVariationDirection(addVariation.direction)
           ? addVariation.direction
           : isVariationDirection(addVariation?.variationName)
-          ? (addVariation.variationName as VariationForm['direction'])
-          : '',
+            ? (addVariation.variationName as VariationForm['direction'])
+            : '',
         stance: sanitizeHanmi(addVariation.stance),
         trainer: ensureString(addVariation.trainer ?? addVariation.credit),
         summary: ensureString(addVariation.summary ?? addVariation.description ?? ''),
@@ -1757,14 +1757,14 @@ export const FeedbackPage = ({
     selectedCard === 'improveTechnique'
       ? isImproveReady
       : selectedCard === 'addVariation'
-      ? isVariationReady
-      : selectedCard === 'newTechnique'
-      ? isNewTechniqueReady
-      : selectedCard === 'appFeedback'
-      ? isAppFeedbackReady
-      : selectedCard === 'bugReport'
-      ? isBugReportReady
-      : false;
+        ? isVariationReady
+        : selectedCard === 'newTechnique'
+          ? isNewTechniqueReady
+          : selectedCard === 'appFeedback'
+            ? isAppFeedbackReady
+            : selectedCard === 'bugReport'
+              ? isBugReportReady
+              : false;
   // Prevent submitting while already submitting or after a successful submit.
   const canSubmit =
     isSubmitEnabled && submissionState !== 'submitting' && submissionState !== 'success';
@@ -1872,8 +1872,8 @@ export const FeedbackPage = ({
     if (selectedCard === 'newTechnique') {
       const form = draft.newTechnique;
       const entriesLabel = form.entries
-        ? (t.newTechnique.entryLabels as Record<string, string>)[form.entries] ??
-          String(form.entries)
+        ? ((t.newTechnique.entryLabels as Record<string, string>)[form.entries] ??
+          String(form.entries))
         : t.summary.notSpecified;
       const hanmiLabel = form.hanmi
         ? t.newTechnique.hanmiOptions[form.hanmi]
@@ -1978,15 +1978,15 @@ export const FeedbackPage = ({
     selectedCard === 'improveTechnique'
       ? draft.improveTechnique.consent
       : selectedCard === 'addVariation'
-      ? draft.addVariation.consent
-      : selectedCard === 'newTechnique'
-      ? draft.newTechnique.consent
-      : null;
+        ? draft.addVariation.consent
+        : selectedCard === 'newTechnique'
+          ? draft.newTechnique.consent
+          : null;
 
   const consentWarningText =
     selectedCard === 'newTechnique'
       ? t.newTechnique.warnings.consentMissing
-      : t.shared.validation?.consentMissing ?? t.newTechnique.warnings.consentMissing;
+      : (t.shared.validation?.consentMissing ?? t.newTechnique.warnings.consentMissing);
 
   const handleConsentChange = (checked: boolean) => {
     if (selectedCard === 'improveTechnique') {
@@ -2095,14 +2095,14 @@ export const FeedbackPage = ({
       selectedCard === 'newTechnique'
         ? 'new-technique-v1'
         : selectedCard === 'addVariation'
-        ? 'variation'
-        : selectedCard === 'improveTechnique'
-        ? 'improve'
-        : selectedCard === 'bugReport'
-        ? 'bug'
-        : selectedCard === 'appFeedback'
-        ? 'app'
-        : 'unknown';
+          ? 'variation'
+          : selectedCard === 'improveTechnique'
+            ? 'improve'
+            : selectedCard === 'bugReport'
+              ? 'bug'
+              : selectedCard === 'appFeedback'
+                ? 'app'
+                : 'unknown';
     const ts = new Date();
     const pad = (n: number) => String(n).padStart(2, '0');
     const timestamp = `${ts.getFullYear()}${pad(ts.getMonth() + 1)}${pad(ts.getDate())}-${pad(

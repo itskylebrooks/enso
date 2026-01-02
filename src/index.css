@@ -65,7 +65,9 @@ html.dark {
   --card-shadow-color: 15, 23, 42; /* rgb components for dark shadow */
   --card-shadow-alpha: 0.12; /* default alpha for light mode */
   /* Layered shadow for better depth: larger soft shadow + smaller mid shadow */
-  --card-shadow: 0 14px 44px -12px rgba(var(--card-shadow-color), var(--card-shadow-alpha)), 0 6px 18px -8px rgba(var(--card-shadow-color), 0.08);
+  --card-shadow:
+    0 14px 44px -12px rgba(var(--card-shadow-color), var(--card-shadow-alpha)),
+    0 6px 18px -8px rgba(var(--card-shadow-color), 0.08);
 
   /* Unified focus halo (adapts to theme) */
   --focus-halo-color: rgba(0, 0, 0, 0.55);
@@ -100,7 +102,10 @@ html.dark {
   --card-shadow-color: 255, 255, 255;
   --card-shadow-alpha: 0.16;
   /* Add a stronger near shadow for dark mode so lift is visible on black backgrounds */
-  --card-shadow: 0 12px 36px -8px rgba(var(--card-shadow-color), var(--card-shadow-alpha)), 0 6px 18px -4px rgba(var(--card-shadow-color), 0.12), 0 2px 6px -2px rgba(var(--card-shadow-color), 0.06);
+  --card-shadow:
+    0 12px 36px -8px rgba(var(--card-shadow-color), var(--card-shadow-alpha)),
+    0 6px 18px -4px rgba(var(--card-shadow-color), 0.12),
+    0 2px 6px -2px rgba(var(--card-shadow-color), 0.06);
 
   /* In dark mode use a light halo with similar perceived thickness */
   --focus-halo-color: rgba(255, 255, 255, 0.6);
@@ -117,7 +122,9 @@ body {
   min-height: 100dvh;
   background-color: var(--color-bg);
   color: var(--color-text);
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
 }
 
 .no-select {
@@ -151,7 +158,10 @@ body {
 
 .surface {
   background-color: var(--color-surface);
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .surface-hover:hover {
@@ -182,7 +192,10 @@ body {
   background-color: var(--color-surface);
   border-color: var(--color-border);
   color: var(--color-text);
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .btn-tonal:hover:not(:disabled) {
@@ -198,7 +211,10 @@ body {
   background-color: var(--color-text);
   color: var(--color-bg);
   border-color: var(--color-text);
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
 }
 
 .btn-contrast:hover:not(:disabled) {
@@ -218,8 +234,8 @@ body {
 }
 
 /* Ensure native checkboxes/radios use theme color (not blue) */
-input[type="checkbox"],
-input[type="radio"] {
+input[type='checkbox'],
+input[type='radio'] {
   accent-color: var(--color-text);
 }
 
@@ -338,7 +354,7 @@ body.suppress-transitions *::after {
 .scrollbar-hide {
   /* Firefox */
   scrollbar-width: none;
-  
+
   /* Webkit browsers (Chrome, Safari, Edge) */
   -ms-overflow-style: none;
 }
@@ -349,9 +365,10 @@ body.suppress-transitions *::after {
 
 /* Unified, animated focus halo for inputs/selects */
 .focus-halo {
-  transition: border-color var(--motion-duration-short) var(--motion-ease),
-              box-shadow var(--motion-duration-short) var(--motion-ease),
-              background-color var(--motion-duration-short) var(--motion-ease);
+  transition:
+    border-color var(--motion-duration-short) var(--motion-ease),
+    box-shadow var(--motion-duration-short) var(--motion-ease),
+    background-color var(--motion-duration-short) var(--motion-ease);
 }
 
 .focus-halo:focus,
@@ -364,9 +381,16 @@ body.suppress-transitions *::after {
 
 /* Shake animation */
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-6px); }
-  75% { transform: translateX(6px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-6px);
+  }
+  75% {
+    transform: translateX(6px);
+  }
 }
 
 .shake-on-hover:hover {
@@ -387,7 +411,10 @@ body.suppress-transitions *::after {
    - respects prefers-reduced-motion
 */
 .card-hover-shadow {
-  transition: transform 180ms var(--motion-ease), box-shadow 180ms var(--motion-ease), border-color 180ms var(--motion-ease);
+  transition:
+    transform 180ms var(--motion-ease),
+    box-shadow 180ms var(--motion-ease),
+    border-color 180ms var(--motion-ease);
 }
 .card-hover-shadow:hover {
   /* Only show adaptive shadow on hover. No translation to keep cards stationary. */
@@ -418,16 +445,27 @@ body.suppress-transitions *::after {
   background-color: color-mix(in srgb, var(--color-bg) 60%, var(--color-text) 40%);
   opacity: 0.98;
   /* Larger soft shadow that adapts subtly to theme via --card-shadow-color */
-  box-shadow: 0 40px 120px -48px rgba(var(--card-shadow-color), 0.18), inset 0 2px 0 rgba(255,255,255,0.02);
+  box-shadow:
+    0 40px 120px -48px rgba(var(--card-shadow-color), 0.18),
+    inset 0 2px 0 rgba(255, 255, 255, 0.02);
   transform-origin: center;
   animation: breathing 1s ease-in-out infinite;
   display: inline-block;
 }
 
 @keyframes breathing {
-  0% { transform: scale(0.86); opacity: 0.85; }
-  50% { transform: scale(1.18); opacity: 1; }
-  100% { transform: scale(0.86); opacity: 0.85; }
+  0% {
+    transform: scale(0.86);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.18);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.86);
+    opacity: 0.85;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -441,7 +479,9 @@ body.suppress-transitions *::after {
 .dark .breathing-dot {
   /* In dark mode, mix the background and text too, but favor a lighter tone so the dot is visible */
   background-color: color-mix(in srgb, var(--color-bg) 62%, var(--color-text) 38%);
-  box-shadow: 0 48px 140px -60px rgba(255,255,255,0.06), inset 0 2px 0 rgba(255,255,255,0.02);
+  box-shadow:
+    0 48px 140px -60px rgba(255, 255, 255, 0.06),
+    inset 0 2px 0 rgba(255, 255, 255, 0.02);
 }
 
 /* Utility to center a loader in the viewport (used for Suspense fallbacks) */
@@ -510,7 +550,9 @@ body.suppress-transitions *::after {
 /* Adaptive pill that reads inline CSS variables for bg and hover bg */
 .pill-adaptive {
   background-color: var(--pill-bg);
-  transition: background-color 180ms var(--motion-ease), color 160ms var(--motion-ease);
+  transition:
+    background-color 180ms var(--motion-ease),
+    color 160ms var(--motion-ease);
 }
 .pill-adaptive:hover {
   background-color: var(--pill-bg-hover);

@@ -14,17 +14,10 @@
     "en": "A hip throw from a two-handed wrist grab. Tori blends with uke's forward energy, entering to the side and using the hip as a fulcrum to project uke forward in a large, circular motion.",
     "de": "Ein Hüftwurf aus einem beidhändigen Handgelenkgriff. Tori verschmilzt mit Ukes Vorwärtsenergie, tritt zur Seite ein und nutzt die Hüfte als Drehpunkt, um Uke in einer großen, kreisförmigen Bewegung nach vorne zu werfen."
   },
-  "tags": [
-    "koshi-nage",
-    "腰投げ",
-    "throw",
-    "ryote-tori",
-    "irimi",
-    "hip throw"
-  ],
+  "tags": ["koshi-nage", "腰投げ", "throw", "ryote-tori", "irimi", "hip throw"],
   "versions": [
     {
-  "id": "v-base",
+      "id": "v-base",
       "hanmi": "ai-hanmi",
       "stepsByEntry": {
         "irimi": {
@@ -138,7 +131,7 @@
           ]
         }
       },
-        "media": [
+      "media": [
         {
           "type": "youtube",
           "url": "https://www.youtube-nocookie.com/embed/8EzPsCrFMyg?si=86FatcLB2iH_ruhV"

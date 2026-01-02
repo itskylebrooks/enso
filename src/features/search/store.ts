@@ -33,7 +33,7 @@ export const useSpotlightStore = create<SpotlightState>((set, get) => ({
   lastActiveElement: null,
   openWithHotkey: (initial, source = 'hotkey') => {
     const shouldResetQuery = source === 'slash' || initial === '';
-    const nextQuery = shouldResetQuery ? initial ?? '' : initial ?? get().query;
+    const nextQuery = shouldResetQuery ? (initial ?? '') : (initial ?? get().query);
     const prior = captureActiveElement();
     set({
       open: true,
@@ -72,6 +72,8 @@ export const useSpotlightStore = create<SpotlightState>((set, get) => ({
     }
   },
   setSelectedIndex: (value) => {
-    set((state) => ({ selectedIndex: typeof value === 'function' ? value(state.selectedIndex) : value }));
+    set((state) => ({
+      selectedIndex: typeof value === 'function' ? value(state.selectedIndex) : value,
+    }));
   },
 }));

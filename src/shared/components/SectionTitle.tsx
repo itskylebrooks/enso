@@ -9,7 +9,7 @@ export const SectionTitle = ({ children, muted = true }: SectionTitleProps): Rea
   <h3
     className={classNames(
       'text-[0.6875rem] font-medium tracking-[0.18em] uppercase',
-      muted && 'text-muted'
+      muted && 'text-muted',
     )}
     style={{ fontVariant: 'small-caps', letterSpacing: '0.18em' }}
   >

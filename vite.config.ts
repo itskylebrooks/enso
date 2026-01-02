@@ -1,10 +1,10 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import path from 'path'
-import { fileURLToPath } from 'url'
-import { VitePWA } from 'vite-plugin-pwa'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { VitePWA } from 'vite-plugin-pwa';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -28,31 +28,31 @@ export default defineConfig({
             src: '/icons/web-app-manifest-192x192.png',
             sizes: '192x192',
             type: 'image/png',
-            purpose: 'any'
+            purpose: 'any',
           },
           {
             src: '/icons/web-app-manifest-512x512.png',
             sizes: '512x512',
             type: 'image/png',
-            purpose: 'any'
+            purpose: 'any',
           },
           {
             src: '/icons/web-app-manifest-512x512.png',
             sizes: '512x512',
             type: 'image/png',
-            purpose: 'maskable'
+            purpose: 'maskable',
           },
           {
             src: '/icons/apple-touch-icon.png',
             sizes: '180x180',
-            type: 'image/png'
+            type: 'image/png',
           },
           {
             src: '/icons/favicon.svg',
             sizes: 'any',
-            type: 'image/svg+xml'
-          }
-        ]
+            type: 'image/svg+xml',
+          },
+        ],
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,png,svg,json,woff2}'],
@@ -62,8 +62,8 @@ export default defineConfig({
             handler: 'NetworkFirst',
             options: {
               cacheName: 'enso-pages',
-              networkTimeoutSeconds: 10
-            }
+              networkTimeoutSeconds: 10,
+            },
           },
           {
             urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp)$/,
@@ -72,13 +72,13 @@ export default defineConfig({
               cacheName: 'enso-images',
               expiration: {
                 maxEntries: 60,
-                maxAgeSeconds: 30 * 24 * 60 * 60 // 30 days
-              }
-            }
-          }
-        ]
-      }
-    })
+                maxAgeSeconds: 30 * 24 * 60 * 60, // 30 days
+              },
+            },
+          },
+        ],
+      },
+    }),
   ],
   // Dev-only prebundling to speed up cold starts. Does not affect prod output.
   optimizeDeps: {
@@ -112,4 +112,4 @@ export default defineConfig({
       '@content': path.resolve(__dirname, './content'),
     },
   },
-})
+});

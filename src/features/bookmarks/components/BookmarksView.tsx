@@ -168,7 +168,10 @@ export const BookmarksView = ({
   const ungroupedIds = useMemo(() => {
     const set = new Set<string>();
     bookmarkedIds.forEach((techniqueId) => {
-      if (!membershipByTechnique.has(techniqueId) || membershipByTechnique.get(techniqueId)?.size === 0) {
+      if (
+        !membershipByTechnique.has(techniqueId) ||
+        membershipByTechnique.get(techniqueId)?.size === 0
+      ) {
         set.add(techniqueId);
       }
     });
@@ -178,7 +181,10 @@ export const BookmarksView = ({
   const ungroupedGlossaryIds = useMemo(() => {
     const set = new Set<string>();
     bookmarkedGlossaryIds.forEach((termId) => {
-      if (!glossaryMembershipByTerm.has(termId) || glossaryMembershipByTerm.get(termId)?.size === 0) {
+      if (
+        !glossaryMembershipByTerm.has(termId) ||
+        glossaryMembershipByTerm.get(termId)?.size === 0
+      ) {
         set.add(termId);
       }
     });
@@ -194,8 +200,6 @@ export const BookmarksView = ({
     () => glossaryTerms.filter((term) => bookmarkedGlossaryIds.has(term.id)),
     [glossaryTerms, bookmarkedGlossaryIds],
   );
-
-
 
   const visibleTechniqueIds = useMemo(() => {
     if (selectedCollectionId === 'all') {
@@ -219,7 +223,12 @@ export const BookmarksView = ({
     }
 
     return glossaryMembershipByCollection.get(selectedCollectionId) ?? new Set<string>();
-  }, [selectedCollectionId, allBookmarkedGlossaryTerms, ungroupedGlossaryIds, glossaryMembershipByCollection]);
+  }, [
+    selectedCollectionId,
+    allBookmarkedGlossaryTerms,
+    ungroupedGlossaryIds,
+    glossaryMembershipByCollection,
+  ]);
 
   const visibleTechniques = useMemo(
     () => allBookmarkedTechniques.filter((technique) => visibleTechniqueIds.has(technique.id)),
@@ -233,36 +242,40 @@ export const BookmarksView = ({
 
   // Combined and sorted list of both techniques and glossary terms
   const sortedVisibleItems = useMemo(() => {
-    const techniqueItems = visibleTechniques.map(technique => ({
+    const techniqueItems = visibleTechniques.map((technique) => ({
       type: 'technique' as const,
       item: technique,
       name: technique.name[locale] || technique.name.en,
-      id: technique.id
+      id: technique.id,
     }));
-    
-    const glossaryItems = visibleGlossaryTerms.map(term => ({
+
+    const glossaryItems = visibleGlossaryTerms.map((term) => ({
       type: 'glossary' as const,
       item: term,
       name: term.romaji,
-      id: term.id
+      id: term.id,
     }));
 
     const combined = [...techniqueItems, ...glossaryItems];
-    
-    return combined.sort((a, b) => 
+
+    return combined.sort((a, b) =>
       a.name.localeCompare(b.name, locale, {
         sensitivity: 'accent',
-        caseFirst: 'upper'
-      })
+        caseFirst: 'upper',
+      }),
     );
   }, [visibleTechniques, visibleGlossaryTerms, locale]);
 
   const sortedKey = useMemo(
-    () => sortedVisibleItems.map(item => `${item.type}-${item.id}`).join(','),
+    () => sortedVisibleItems.map((item) => `${item.type}-${item.id}`).join(','),
     [sortedVisibleItems],
   );
 
-  const { visibleItems: visibleBookmarks, hasMore, loadMore } = useIncrementalList(sortedVisibleItems, {
+  const {
+    visibleItems: visibleBookmarks,
+    hasMore,
+    loadMore,
+  } = useIncrementalList(sortedVisibleItems, {
     pageSize: 18,
     resetKey: `${selectedCollectionId}-${sortedKey}`,
   });
@@ -279,8 +292,6 @@ export const BookmarksView = ({
 
   const allCount = bookmarkedIds.size + bookmarkedGlossaryIds.size;
   const ungroupedCount = ungroupedIds.size + ungroupedGlossaryIds.size;
-
-
 
   const emptyStateMessage = useMemo(() => {
     if (selectedCollectionId === 'all') {
@@ -337,28 +348,7 @@ export const BookmarksView = ({
     <>
       <div className="no-select space-y-4 lg:space-y-0">
         <div className="lg:hidden">
-        <MobileCollections
-          copy={copy}
-          collections={orderedCollections.map((collection) => ({
-            id: collection.id,
-            name: collection.name,
-            icon: collection.icon ?? null,
-            count: collectionCounts.get(collection.id) ?? 0,
-          }))}
-          selectedId={selectedCollectionId}
-          allCount={allCount}
-          ungroupedCount={ungroupedCount}
-          onSelect={handleCollectionSelect}
-          onCreate={openCreateModal}
-          onRename={openRenameModal}
-          onDelete={openDeleteModal}
-          isEditing={editing}
-          onToggleEdit={() => setEditing((value) => !value)}
-        />
-        </div>
-        <div className="relative">
-        <ExpandableFilterBar label={copy.bookmarks}>
-          <CollectionsSidebar
+          <MobileCollections
             copy={copy}
             collections={orderedCollections.map((collection) => ({
               id: collection.id,
@@ -376,121 +366,148 @@ export const BookmarksView = ({
             isEditing={editing}
             onToggleEdit={() => setEditing((value) => !value)}
           />
-        </ExpandableFilterBar>
+        </div>
+        <div className="relative">
+          <ExpandableFilterBar label={copy.bookmarks}>
+            <CollectionsSidebar
+              copy={copy}
+              collections={orderedCollections.map((collection) => ({
+                id: collection.id,
+                name: collection.name,
+                icon: collection.icon ?? null,
+                count: collectionCounts.get(collection.id) ?? 0,
+              }))}
+              selectedId={selectedCollectionId}
+              allCount={allCount}
+              ungroupedCount={ungroupedCount}
+              onSelect={handleCollectionSelect}
+              onCreate={openCreateModal}
+              onRename={openRenameModal}
+              onDelete={openDeleteModal}
+              isEditing={editing}
+              onToggleEdit={() => setEditing((value) => !value)}
+            />
+          </ExpandableFilterBar>
 
-        <section>
-          <motion.div
-            key={`${selectedCollectionId}-${sortedKey}`}
-            className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 min-h-[280px]"
-            variants={listMotion.container}
-            initial={false}
-            animate="show"
-          >
-            {visibleBookmarks.map((item, index) => {
-            if (item.type === 'technique') {
-              const technique = item.item;
-              const assignedCollections = membershipByTechnique.get(technique.id) ?? new Set<string>();
-              return (
-                <TechniqueCard
-                  key={technique.id}
-                  technique={technique}
-                  locale={locale}
-                  progress={progressById[technique.id]}
-                  copy={copy}
-                  onSelect={onOpenTechnique}
-                  motionIndex={index}
-                  variants={listMotion.item}
-                  getTransition={getItemTransition}
-                  prefersReducedMotion={prefersReducedMotion}
-                  isDimmed={activeCardId === technique.id}
-                  actionSlot={
-                    <AddToCollectionMenu
-                      copy={copy}
-                      collections={orderedCollections.map((collection) => ({
-                        id: collection.id,
-                        name: collection.name,
-                        icon: collection.icon ?? null,
-                        checked: assignedCollections.has(collection.id),
-                      }))}
-                      onToggle={(collectionId, nextChecked) => {
-                        if (nextChecked) {
-                          onAssign(technique.id, collectionId);
-                        } else {
-                          onUnassign(technique.id, collectionId);
-                        }
-                      }}
-                      onCreate={openCreateModal}
-                      onOpen={() => setActiveCardId(technique.id)}
-                      onClose={() => setActiveCardId((cur) => (cur === technique.id ? null : cur))}
-                    />
-                  }
-                />
-              );
-            } else {
-              const term = item.item;
-              const assignedCollections = glossaryMembershipByTerm.get(term.id) ?? new Set<string>();
-              return (
-                <GlossaryBookmarkCard
-                  key={`glossary-${term.id}`}
-                  term={term}
-                  locale={locale}
-                  progress={glossaryProgressById[term.id]}
-                  copy={copy}
-                  onSelect={onOpenGlossaryTerm}
-                  motionIndex={index}
-                  variants={listMotion.item}
-                  getTransition={getItemTransition}
-                  prefersReducedMotion={prefersReducedMotion}
-                  isDimmed={activeCardId === `glossary-${term.id}`}
-                  actionSlot={
-                    <AddToCollectionMenu
-                      copy={copy}
-                      collections={orderedCollections.map((collection) => ({
-                        id: collection.id,
-                        name: collection.name,
-                        icon: collection.icon ?? null,
-                        checked: assignedCollections.has(collection.id),
-                      }))}
-                      onToggle={(collectionId, nextChecked) => {
-                        if (nextChecked) {
-                          onAssignGlossary(term.id, collectionId);
-                        } else {
-                          onUnassignGlossary(term.id, collectionId);
-                        }
-                      }}
-                      onCreate={openCreateModal}
-                      onOpen={() => setActiveCardId(`glossary-${term.id}`)}
-                      onClose={() => setActiveCardId((cur) => (cur === `glossary-${term.id}` ? null : cur))}
-                    />
-                  }
-                />
-              );
-            }
-          })}
-
-          {hasMore && (
-            <div className="col-span-full flex justify-center">
-              <button
-                type="button"
-                onClick={loadMore}
-                className="inline-flex items-center justify-center rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2 text-sm transition-soft hover-border-adaptive"
-              >
-                {copy.loadMore}
-              </button>
-            </div>
-          )}
-
-          {sortedVisibleItems.length === 0 && (
+          <section>
             <motion.div
-              className="col-span-full flex items-center justify-center py-6 text-sm text-subtle text-center border border-dashed border-[var(--color-border)] rounded-2xl mt-6 md:mt-0"
-              variants={listMotion.item}
-              transition={getItemTransition(0)}
+              key={`${selectedCollectionId}-${sortedKey}`}
+              className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 min-h-[280px]"
+              variants={listMotion.container}
+              initial={false}
+              animate="show"
             >
-              <div className="max-w-lg px-4">{emptyStateMessage}</div>
+              {visibleBookmarks.map((item, index) => {
+                if (item.type === 'technique') {
+                  const technique = item.item;
+                  const assignedCollections =
+                    membershipByTechnique.get(technique.id) ?? new Set<string>();
+                  return (
+                    <TechniqueCard
+                      key={technique.id}
+                      technique={technique}
+                      locale={locale}
+                      progress={progressById[technique.id]}
+                      copy={copy}
+                      onSelect={onOpenTechnique}
+                      motionIndex={index}
+                      variants={listMotion.item}
+                      getTransition={getItemTransition}
+                      prefersReducedMotion={prefersReducedMotion}
+                      isDimmed={activeCardId === technique.id}
+                      actionSlot={
+                        <AddToCollectionMenu
+                          copy={copy}
+                          collections={orderedCollections.map((collection) => ({
+                            id: collection.id,
+                            name: collection.name,
+                            icon: collection.icon ?? null,
+                            checked: assignedCollections.has(collection.id),
+                          }))}
+                          onToggle={(collectionId, nextChecked) => {
+                            if (nextChecked) {
+                              onAssign(technique.id, collectionId);
+                            } else {
+                              onUnassign(technique.id, collectionId);
+                            }
+                          }}
+                          onCreate={openCreateModal}
+                          onOpen={() => setActiveCardId(technique.id)}
+                          onClose={() =>
+                            setActiveCardId((cur) => (cur === technique.id ? null : cur))
+                          }
+                        />
+                      }
+                    />
+                  );
+                } else {
+                  const term = item.item;
+                  const assignedCollections =
+                    glossaryMembershipByTerm.get(term.id) ?? new Set<string>();
+                  return (
+                    <GlossaryBookmarkCard
+                      key={`glossary-${term.id}`}
+                      term={term}
+                      locale={locale}
+                      progress={glossaryProgressById[term.id]}
+                      copy={copy}
+                      onSelect={onOpenGlossaryTerm}
+                      motionIndex={index}
+                      variants={listMotion.item}
+                      getTransition={getItemTransition}
+                      prefersReducedMotion={prefersReducedMotion}
+                      isDimmed={activeCardId === `glossary-${term.id}`}
+                      actionSlot={
+                        <AddToCollectionMenu
+                          copy={copy}
+                          collections={orderedCollections.map((collection) => ({
+                            id: collection.id,
+                            name: collection.name,
+                            icon: collection.icon ?? null,
+                            checked: assignedCollections.has(collection.id),
+                          }))}
+                          onToggle={(collectionId, nextChecked) => {
+                            if (nextChecked) {
+                              onAssignGlossary(term.id, collectionId);
+                            } else {
+                              onUnassignGlossary(term.id, collectionId);
+                            }
+                          }}
+                          onCreate={openCreateModal}
+                          onOpen={() => setActiveCardId(`glossary-${term.id}`)}
+                          onClose={() =>
+                            setActiveCardId((cur) => (cur === `glossary-${term.id}` ? null : cur))
+                          }
+                        />
+                      }
+                    />
+                  );
+                }
+              })}
+
+              {hasMore && (
+                <div className="col-span-full flex justify-center">
+                  <button
+                    type="button"
+                    onClick={loadMore}
+                    className="inline-flex items-center justify-center rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2 text-sm transition-soft hover-border-adaptive"
+                  >
+                    {copy.loadMore}
+                  </button>
+                </div>
+              )}
+
+              {sortedVisibleItems.length === 0 && (
+                <motion.div
+                  className="col-span-full flex items-center justify-center py-6 text-sm text-subtle text-center border border-dashed border-[var(--color-border)] rounded-2xl mt-6 md:mt-0"
+                  variants={listMotion.item}
+                  transition={getItemTransition(0)}
+                >
+                  <div className="max-w-lg px-4">{emptyStateMessage}</div>
+                </motion.div>
+              )}
             </motion.div>
-          )}
-  </motion.div>
-        </section>
+          </section>
         </div>
       </div>
 

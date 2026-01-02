@@ -14,18 +14,10 @@
     "en": "The first control, a fundamental pin from a single wrist grab. Tori enters, controls uke's elbow and wrist to break their balance, and guides them to the mat to apply an arm pin.",
     "de": "Der erste Festhalter, eine grundlegende Technik aus einem einhändigen Handgelenkgriff. Tori tritt ein, kontrolliert Ukes Ellbogen und Handgelenk, um sein Gleichgewicht zu brechen, und führt ihn zu Boden, um einen Armhebel anzusetzen."
   },
-  "tags": [
-    "ikkyo",
-    "一教",
-    "ude osae",
-    "pin",
-    "katate-tori",
-    "irimi",
-    "tenkan"
-  ],
+  "tags": ["ikkyo", "一教", "ude osae", "pin", "katate-tori", "irimi", "tenkan"],
   "versions": [
     {
-  "id": "v-base",
+      "id": "v-base",
       "hanmi": "gyaku-hanmi",
       "stepsByEntry": {
         "irimi": {
@@ -113,7 +105,7 @@
       }
     },
     {
-  "id": "v-base",
+      "id": "v-base",
       "hanmi": "ai-hanmi",
       "stepsByEntry": {
         "irimi": {

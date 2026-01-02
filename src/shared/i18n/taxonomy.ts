@@ -100,9 +100,16 @@ export const searchSynonyms: Record<string, string[]> = Object.fromEntries([
   addSynonyms('shomen-tsuki', ['shōmen-tsuki', 'shomen tsuki', '正面突き', 'tsuki']),
   addSynonyms('yokomen-uchi', ['yokomen uchi', '横面打ち', 'yokomen']),
   addSynonyms('ushiro-ryote-tori', ['ushiro ryote tori', '後ろ両手取り', 'ushiro-ryōte-tori']),
-  addSynonyms('ushiro-ryokata-tori', ['ushiro ryokata tori', '後ろ両肩取り', 'ushiro-ryōkata-tori']),
+  addSynonyms('ushiro-ryokata-tori', [
+    'ushiro ryokata tori',
+    '後ろ両肩取り',
+    'ushiro-ryōkata-tori',
+  ]),
   addSynonyms('ushiro-eri-tori', ['ushiro eri tori', '後ろ襟取り']),
-  addSynonyms('ushiro-katate-tori-kubi-shime', ['ushiro katate tori kubishime', '後ろ片手取り首絞め']),
+  addSynonyms('ushiro-katate-tori-kubi-shime', [
+    'ushiro katate tori kubishime',
+    '後ろ片手取り首絞め',
+  ]),
   addSynonyms('irimi', ['入身', 'omote', '表', 'front stance', 'omote waza', 'irimi waza']),
   addSynonyms('tenkan', ['転換', 'ura', '裏', 'rear stance', 'ura waza', 'turning', 'tenkan waza']),
   addSynonyms('empty-hand', ['empty hand', 'taijutsu', '体術']),
@@ -116,4 +123,5 @@ export const expandWithSynonyms = (value: string): string[] => {
   return [...base, ...synonymList.map((entry) => entry.toLowerCase())];
 };
 
-export const normalizeTaxonomyValue = (value: string): string => stripDiacritics(value.toLowerCase());
+export const normalizeTaxonomyValue = (value: string): string =>
+  stripDiacritics(value.toLowerCase());

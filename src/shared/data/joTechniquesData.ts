@@ -3,70 +3,70 @@ import type { JoColumn, JoRow } from '../types/exam';
 // Column definitions for Jō Techniques program
 export const JO_COLUMNS: JoColumn[] = [
   // Jo Nage Waza section
-  { 
-    key: 'jo_ryote_tori_double', 
-    label: { 
-      en: 'Jō Ryōte-tori (1)', 
-      de: 'Jō Ryōte-tori (1)' 
+  {
+    key: 'jo_ryote_tori_double',
+    label: {
+      en: 'Jō Ryōte-tori (1)',
+      de: 'Jō Ryōte-tori (1)',
     },
-    section: 'jo_nage_waza'
+    section: 'jo_nage_waza',
   },
-  { 
-    key: 'jo_ryote_tori_gyaku', 
-    label: { 
-      en: 'Jō Ryōte-tori (2)', 
-      de: 'Jō Ryōte-tori (2)' 
+  {
+    key: 'jo_ryote_tori_gyaku',
+    label: {
+      en: 'Jō Ryōte-tori (2)',
+      de: 'Jō Ryōte-tori (2)',
     },
-    section: 'jo_nage_waza'
+    section: 'jo_nage_waza',
   },
-  { 
-    key: 'jo_katate_tori', 
-    label: { 
-      en: 'Jō Katate-tori (3)', 
-      de: 'Jō Katate-tori (3)' 
+  {
+    key: 'jo_katate_tori',
+    label: {
+      en: 'Jō Katate-tori (3)',
+      de: 'Jō Katate-tori (3)',
     },
-    section: 'jo_nage_waza'
+    section: 'jo_nage_waza',
   },
-  { 
-    key: 'jo_katate_ryote_tori', 
-    label: { 
-      en: 'Jō Katate Ryōte-tori (4)', 
-      de: 'Jō Katate Ryōte-tori (4)' 
+  {
+    key: 'jo_katate_ryote_tori',
+    label: {
+      en: 'Jō Katate Ryōte-tori (4)',
+      de: 'Jō Katate Ryōte-tori (4)',
     },
-    section: 'jo_nage_waza'
+    section: 'jo_nage_waza',
   },
   // Jo Tori section
-  { 
-    key: 'jo_tsuki', 
-    label: { 
-      en: 'Jō Tsuki', 
-      de: 'Jō Tsuki' 
+  {
+    key: 'jo_tsuki',
+    label: {
+      en: 'Jō Tsuki',
+      de: 'Jō Tsuki',
     },
-    section: 'jo_tori'
+    section: 'jo_tori',
   },
-  { 
-    key: 'jo_yokomen_uchi', 
-    label: { 
-      en: 'Jō Yokomen-uchi', 
-      de: 'Jō Yokomen-uchi' 
+  {
+    key: 'jo_yokomen_uchi',
+    label: {
+      en: 'Jō Yokomen-uchi',
+      de: 'Jō Yokomen-uchi',
     },
-    section: 'jo_tori'
+    section: 'jo_tori',
   },
-  { 
-    key: 'jo_shomen_uchi', 
-    label: { 
-      en: 'Jō Shōmen-uchi', 
-      de: 'Jō Shōmen-uchi' 
+  {
+    key: 'jo_shomen_uchi',
+    label: {
+      en: 'Jō Shōmen-uchi',
+      de: 'Jō Shōmen-uchi',
     },
-    section: 'jo_tori'
+    section: 'jo_tori',
   },
-  { 
-    key: 'jo_morote_awase_tsuki', 
-    label: { 
-      en: 'Jō Morote Awase Tsuki', 
-      de: 'Jō Morote Awase Tsuki' 
+  {
+    key: 'jo_morote_awase_tsuki',
+    label: {
+      en: 'Jō Morote Awase Tsuki',
+      de: 'Jō Morote Awase Tsuki',
     },
-    section: 'jo_tori'
+    section: 'jo_tori',
   },
 ];
 

@@ -46,7 +46,9 @@ export const ProgressList = ({ items, locale, copy, onOpen }: ProgressListProps)
                 <div className="leading-snug line-clamp-2" title={label}>
                   <EmphasizedName name={label} />
                 </div>
-                {technique.jp && <div className="text-[10px] text-subtle truncate">{technique.jp}</div>}
+                {technique.jp && (
+                  <div className="text-[10px] text-subtle truncate">{technique.jp}</div>
+                )}
               </div>
               <div className="flex items-center gap-2 shrink-0">
                 <LevelBadge locale={locale} level={technique.level} />

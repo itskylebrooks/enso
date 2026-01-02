@@ -17,13 +17,23 @@ type LibraryProps = {
   onOpen: (slug: string) => void;
 };
 
-export const Library = ({ copy, locale, techniques, progress, onOpen }: LibraryProps): ReactElement => {
+export const Library = ({
+  copy,
+  locale,
+  techniques,
+  progress,
+  onOpen,
+}: LibraryProps): ReactElement => {
   const progressById = buildProgressMap(progress);
   const { listMotion, getItemTransition, prefersReducedMotion } = useMotionPreferences();
 
   // Create a stable key that changes when technique IDs change to force remount on filter changes
-  const techniqueKey = techniques.map(t => t.id).join(',');
-  const { visibleItems: visibleTechniques, hasMore, loadMore } = useIncrementalList(techniques, {
+  const techniqueKey = techniques.map((t) => t.id).join(',');
+  const {
+    visibleItems: visibleTechniques,
+    hasMore,
+    loadMore,
+  } = useIncrementalList(techniques, {
     pageSize: 18,
     resetKey: techniqueKey,
   });
@@ -62,7 +72,7 @@ export const Library = ({ copy, locale, techniques, progress, onOpen }: LibraryP
         </div>
       )}
       {techniques.length === 0 && (
-        <motion.div 
+        <motion.div
           className="col-span-full text-sm text-muted"
           variants={listMotion.item}
           transition={getItemTransition(0)}

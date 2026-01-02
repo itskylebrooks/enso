@@ -25,9 +25,9 @@ const SayaNoUchiCellComponent = ({ cell }: { cell: SayaNoUchiCell }): ReactEleme
 
 export const SayaNoUchiMatrix = ({ locale, onCellClick }: SayaNoUchiMatrixProps): ReactElement => {
   // Group columns by section
-  const tachiWazaCols = SAYA_NO_UCHI_COLUMNS.filter(col => col.section === 'tachi_waza');
-  const hanmiHantachiCols = SAYA_NO_UCHI_COLUMNS.filter(col => col.section === 'hanmi_hantachi');
-  const bukiWazaCols = SAYA_NO_UCHI_COLUMNS.filter(col => col.section === 'buki_waza');
+  const tachiWazaCols = SAYA_NO_UCHI_COLUMNS.filter((col) => col.section === 'tachi_waza');
+  const hanmiHantachiCols = SAYA_NO_UCHI_COLUMNS.filter((col) => col.section === 'hanmi_hantachi');
+  const bukiWazaCols = SAYA_NO_UCHI_COLUMNS.filter((col) => col.section === 'buki_waza');
 
   return (
     <div className="space-y-4">
@@ -37,23 +37,26 @@ export const SayaNoUchiMatrix = ({ locale, onCellClick }: SayaNoUchiMatrixProps)
           <thead>
             {/* Section header row */}
             <tr className="surface border-b-2 surface-border">
-              <th className="md:sticky left-0 surface z-10 px-3 py-2 text-left font-semibold text-xs uppercase tracking-wide border-r surface-border" style={{ minWidth: '160px', width: '160px' }}>
+              <th
+                className="md:sticky left-0 surface z-10 px-3 py-2 text-left font-semibold text-xs uppercase tracking-wide border-r surface-border"
+                style={{ minWidth: '160px', width: '160px' }}
+              >
                 {/* Empty corner cell */}
               </th>
-              <th 
-                colSpan={tachiWazaCols.length} 
+              <th
+                colSpan={tachiWazaCols.length}
                 className="px-3 py-2 text-center font-bold text-xs uppercase tracking-wide border-r-2 surface-border"
               >
                 {locale === 'en' ? 'Tachi Waza' : 'Tachi Waza'}
               </th>
-              <th 
-                colSpan={hanmiHantachiCols.length} 
+              <th
+                colSpan={hanmiHantachiCols.length}
                 className="px-3 py-2 text-center font-bold text-xs uppercase tracking-wide border-r-2 surface-border"
               >
                 {locale === 'en' ? 'Hanmi Hantachi' : 'Hanmi Hantachi'}
               </th>
-              <th 
-                colSpan={bukiWazaCols.length} 
+              <th
+                colSpan={bukiWazaCols.length}
                 className="px-3 py-2 text-center font-bold text-xs uppercase tracking-wide"
               >
                 {locale === 'en' ? 'Buki Waza' : 'Buki Waza'}
@@ -61,15 +64,19 @@ export const SayaNoUchiMatrix = ({ locale, onCellClick }: SayaNoUchiMatrixProps)
             </tr>
             {/* Column header row */}
             <tr className="surface border-b surface-border">
-              <th className="md:sticky left-0 surface z-10 px-3 py-1 text-left font-semibold text-xs uppercase tracking-wide border-r surface-border" style={{ minWidth: '160px', width: '160px' }}>
+              <th
+                className="md:sticky left-0 surface z-10 px-3 py-1 text-left font-semibold text-xs uppercase tracking-wide border-r surface-border"
+                style={{ minWidth: '160px', width: '160px' }}
+              >
                 {locale === 'en' ? 'Technique' : 'Technik'}
               </th>
               {SAYA_NO_UCHI_COLUMNS.map((col, idx) => {
-                const isLastInSection = 
+                const isLastInSection =
                   (col.section === 'tachi_waza' && idx === tachiWazaCols.length - 1) ||
-                  (col.section === 'hanmi_hantachi' && idx === tachiWazaCols.length + hanmiHantachiCols.length - 1);
+                  (col.section === 'hanmi_hantachi' &&
+                    idx === tachiWazaCols.length + hanmiHantachiCols.length - 1);
                 const isBoldSeparator = isLastInSection;
-                
+
                 return (
                   <th
                     key={col.key}
@@ -104,16 +111,19 @@ export const SayaNoUchiMatrix = ({ locale, onCellClick }: SayaNoUchiMatrixProps)
                     {SAYA_NO_UCHI_COLUMNS.map((col, colIndex) => {
                       const cell = row.cells[col.key];
                       const isEmpty = cell.kind === 'empty';
-                      const isLastInSection = 
+                      const isLastInSection =
                         (col.section === 'tachi_waza' && colIndex === tachiWazaCols.length - 1) ||
-                        (col.section === 'hanmi_hantachi' && colIndex === tachiWazaCols.length + hanmiHantachiCols.length - 1);
+                        (col.section === 'hanmi_hantachi' &&
+                          colIndex === tachiWazaCols.length + hanmiHantachiCols.length - 1);
                       const isBoldSeparator = isLastInSection;
 
                       return (
                         <td
                           key={col.key}
                           className={`px-2 py-1 text-center transition-colors ${
-                            isBoldSeparator ? 'border-r-2 surface-border' : 'border-r surface-border'
+                            isBoldSeparator
+                              ? 'border-r-2 surface-border'
+                              : 'border-r surface-border'
                           } ${
                             isEmpty ? '' : 'cursor-pointer hover:bg-[var(--color-surface-hover)]'
                           }`}

@@ -32,7 +32,10 @@ export const TantoMatrix = ({ locale, onCellClick }: TantoMatrixProps): ReactEle
           <thead>
             {/* Column header row */}
             <tr className="surface border-b surface-border">
-              <th className="md:sticky left-0 surface z-10 px-3 py-1 text-left font-semibold text-xs uppercase tracking-wide border-r surface-border" style={{ minWidth: '160px', width: '160px' }}>
+              <th
+                className="md:sticky left-0 surface z-10 px-3 py-1 text-left font-semibold text-xs uppercase tracking-wide border-r surface-border"
+                style={{ minWidth: '160px', width: '160px' }}
+              >
                 {locale === 'en' ? 'Technique' : 'Technik'}
               </th>
               {TANTO_COLUMNS.map((col) => {

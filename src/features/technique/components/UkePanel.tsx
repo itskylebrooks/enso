@@ -15,15 +15,18 @@ export const UkePanel = ({ role, notes, copy }: UkePanelProps): ReactElement => 
     <section className="space-y-3">
       <header className="flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-subtle">
         <Handshake className="w-4 h-4" />
-           <span>{copy.uke}</span>
+        <span>{copy.uke}</span>
       </header>
       {role && <p className="text-sm leading-relaxed text-[var(--color-text)]">{role}</p>}
       {notes.length > 0 && (
         <div className="space-y-3">
           <ul className="space-y-2">
             {notes.map((note, index) => (
-              <li key={index} className="text-sm leading-relaxed text-[var(--color-text)] flex gap-2">
-                   <span className="text-subtle shrink-0">•</span>
+              <li
+                key={index}
+                className="text-sm leading-relaxed text-[var(--color-text)] flex gap-2"
+              >
+                <span className="text-subtle shrink-0">•</span>
                 <span>{note}</span>
               </li>
             ))}

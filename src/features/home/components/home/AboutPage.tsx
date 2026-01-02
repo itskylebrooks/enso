@@ -3,7 +3,11 @@ import type { Copy } from '@shared/constants/i18n';
 
 // Import the author photo as a bundled URL so production builds include the asset.
 // Vite deprecated `as: 'url'` in favor of `{ query: '?url', import: 'default' }`.
-const imageModules = import.meta.glob('/content/*.{jpg,jpeg,png,webp}', { query: '?url', import: 'default', eager: true }) as Record<string, string>;
+const imageModules = import.meta.glob('/content/*.{jpg,jpeg,png,webp}', {
+  query: '?url',
+  import: 'default',
+  eager: true,
+}) as Record<string, string>;
 const authorPhotoUrl = imageModules['/content/Lehrgang-2024-09.jpeg'];
 
 type AboutPageProps = {
@@ -17,9 +21,7 @@ export const AboutPage = ({ copy }: AboutPageProps): ReactElement => (
         <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-center">
           {copy.aboutTitle}
         </h1>
-        <p className="text-base md:text-lg text-subtle text-center">
-          {copy.homeIdentityTagline}
-        </p>
+        <p className="text-base md:text-lg text-subtle text-center">{copy.homeIdentityTagline}</p>
       </header>
 
       {/* Disclaimer Section (moved to top) */}
@@ -49,9 +51,7 @@ export const AboutPage = ({ copy }: AboutPageProps): ReactElement => (
 
       {/* Features Section */}
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold">
-          {copy.aboutFeaturesTitle}
-        </h2>
+        <h2 className="text-xl font-semibold">{copy.aboutFeaturesTitle}</h2>
         <ul className="space-y-2 pl-1">
           <li className="text-base leading-relaxed flex items-start">
             <span className="mr-3 mt-1.5 h-1.5 w-1.5 rounded-full bg-current flex-shrink-0" />
@@ -74,12 +74,8 @@ export const AboutPage = ({ copy }: AboutPageProps): ReactElement => (
 
       {/* Privacy Section */}
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold">
-          {copy.aboutPrivacyTitle}
-        </h2>
-        <p className="text-base leading-relaxed">
-          {copy.aboutPrivacyIntro}
-        </p>
+        <h2 className="text-xl font-semibold">{copy.aboutPrivacyTitle}</h2>
+        <p className="text-base leading-relaxed">{copy.aboutPrivacyIntro}</p>
         <ul className="space-y-2 pl-1">
           <li className="text-base leading-relaxed flex items-start">
             <span className="mr-3 mt-1.5 h-1.5 w-1.5 rounded-full bg-current flex-shrink-0" />
@@ -104,7 +100,12 @@ export const AboutPage = ({ copy }: AboutPageProps): ReactElement => (
                 return (
                   <span>
                     {parts[0]}
-                    <a href={repoUrl} target="_blank" rel="noreferrer noopener" className="underline">
+                    <a
+                      href={repoUrl}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      className="underline"
+                    >
                       GitHub
                     </a>
                     {parts[1] ?? ''}
@@ -118,12 +119,8 @@ export const AboutPage = ({ copy }: AboutPageProps): ReactElement => (
 
       {/* Technical Section */}
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold">
-          {copy.aboutTechTitle}
-        </h2>
-        <p className="text-base leading-relaxed">
-          {copy.aboutTechIntro}
-        </p>
+        <h2 className="text-xl font-semibold">{copy.aboutTechTitle}</h2>
+        <p className="text-base leading-relaxed">{copy.aboutTechIntro}</p>
         <ul className="space-y-2 pl-1">
           <li className="text-base leading-relaxed flex items-start">
             <span className="mr-3 mt-1.5 h-1.5 w-1.5 rounded-full bg-current flex-shrink-0" />
@@ -146,9 +143,7 @@ export const AboutPage = ({ copy }: AboutPageProps): ReactElement => (
 
       {/* Vision Section */}
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold">
-          {copy.aboutVisionTitle}
-        </h2>
+        <h2 className="text-xl font-semibold">{copy.aboutVisionTitle}</h2>
         {copy.aboutVision.split('\n').map((paragraph, index) => (
           <p key={index} className="text-base leading-relaxed">
             {paragraph}
@@ -158,9 +153,7 @@ export const AboutPage = ({ copy }: AboutPageProps): ReactElement => (
 
       {/* Author Section */}
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold">
-          {copy.aboutAuthorTitle}
-        </h2>
+        <h2 className="text-xl font-semibold">{copy.aboutAuthorTitle}</h2>
 
         {/* Photo centered, but title and text use the page width */}
         <div>

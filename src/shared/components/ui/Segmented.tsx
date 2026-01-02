@@ -33,10 +33,7 @@ export const Segmented = <T extends string = string>({
     <div
       role="tablist"
       aria-label={ariaLabel}
-      className={classNames(
-        'inline-flex flex-wrap gap-2',
-        className
-      )}
+      className={classNames('inline-flex flex-wrap gap-2', className)}
     >
       {options.map((option) => {
         const isSelected = option.value === value;
@@ -63,8 +60,8 @@ export const Segmented = <T extends string = string>({
               isSelected
                 ? 'bg-[var(--color-text)] text-[var(--color-bg)] border-transparent'
                 : isDisabled
-                ? 'bg-[var(--color-surface)] text-[var(--color-text-muted)] border-adaptive cursor-not-allowed opacity-50'
-                : 'bg-[var(--color-surface)] text-subtle border-adaptive hover:text-[var(--color-text)]',
+                  ? 'bg-[var(--color-surface)] text-[var(--color-text-muted)] border-adaptive cursor-not-allowed opacity-50'
+                  : 'bg-[var(--color-surface)] text-subtle border-adaptive hover:text-[var(--color-text)]',
               option.className,
             )}
           >

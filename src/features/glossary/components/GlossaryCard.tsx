@@ -19,8 +19,6 @@ type GlossaryCardProps = {
   motionIndex: number;
 } & MotionProps;
 
-
-
 const truncateDefinition = (text: string, maxLength: number = 120): string => {
   if (text.length <= maxLength) return text;
   const truncated = text.slice(0, maxLength);
@@ -41,7 +39,7 @@ export const GlossaryCard = ({
   const definition = term.def[locale] || term.def.en;
   const categoryLabel = getCategoryLabel(term.category, copy);
   const categoryStyle = getCategoryStyle(term.category);
-  
+
   const handleActivate = () => {
     onSelect(term.slug);
   };
@@ -65,7 +63,7 @@ export const GlossaryCard = ({
       initial={false}
       variants={variants}
       transition={getTransition(motionIndex)}
-  /* Hover and tap motion removed to disable hover effects completely */
+      /* Hover and tap motion removed to disable hover effects completely */
       aria-label={ariaLabel}
     >
       {/* Header with romaji and badges */}
@@ -74,7 +72,7 @@ export const GlossaryCard = ({
           <h3 className="text-base font-semibold leading-tight">{term.romaji}</h3>
           {term.jp && <div className="text-xs text-subtle truncate">{term.jp}</div>}
         </div>
-        <span 
+        <span
           className="glossary-tag text-xs font-medium px-2 py-1 rounded-full shrink-0"
           style={{
             backgroundColor: categoryStyle.backgroundColor,

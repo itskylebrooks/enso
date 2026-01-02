@@ -2,13 +2,13 @@
   {
     "id": "bsv",
     "name": "BSV",
-    "city": "Hamburg", 
+    "city": "Hamburg",
     "country": "DE"
   },
   {
     "id": "dab",
     "name": "DAB",
-    "city": "Berlin", 
+    "city": "Berlin",
     "country": "DE"
   }
 ]

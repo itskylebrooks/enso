@@ -16,22 +16,22 @@ export type AttackKey =
   | 'yoko_tsuki_soto';
 
 export type GradeCell =
-  | { kind: 'kyu'; kyu: 5 | 4 | 3 | 2 | 1 }       // shows 5, 4, 3, 2, 1
-  | { kind: 'dan'; dan: 1 }                        // shows '1.D.'
-  | { kind: 'count'; value: 1 | 2 | 3 | 4 }        // cyan count cells
-  | { kind: 'dot' }                                // small brown dot
-  | { kind: 'empty' };                             // empty cell
+  | { kind: 'kyu'; kyu: 5 | 4 | 3 | 2 | 1 } // shows 5, 4, 3, 2, 1
+  | { kind: 'dan'; dan: 1 } // shows '1.D.'
+  | { kind: 'count'; value: 1 | 2 | 3 | 4 } // cyan count cells
+  | { kind: 'dot' } // small brown dot
+  | { kind: 'empty' }; // empty cell
 
 export type MatrixRow = {
-  id: string;                                      // slug for technique
-  label: { en: string; de: string };               // row header text
+  id: string; // slug for technique
+  label: { en: string; de: string }; // row header text
   cells: Partial<Record<AttackKey, GradeCell>>;
 };
 
 export type AttackColumn = {
   key: AttackKey;
   label: { en: string; de: string };
-  short?: string;                                  // optional short label for mobile
+  short?: string; // optional short label for mobile
 };
 
 // Saya no Uchi Program types
@@ -48,12 +48,12 @@ export type SayaNoUchiAttackKey =
 export type SayaNoUchiSection = 'tachi_waza' | 'hanmi_hantachi' | 'buki_waza';
 
 export type SayaNoUchiCell =
-  | { kind: 'check' }                              // checkmark icon
-  | { kind: 'empty' };                             // empty cell
+  | { kind: 'check' } // checkmark icon
+  | { kind: 'empty' }; // empty cell
 
 export type SayaNoUchiRow = {
-  id: string;                                      // slug for technique
-  label: { en: string; de: string };               // row header text
+  id: string; // slug for technique
+  label: { en: string; de: string }; // row header text
   cells: Record<SayaNoUchiAttackKey, SayaNoUchiCell>;
 };
 
@@ -77,12 +77,12 @@ export type JoAttackKey =
 export type JoSection = 'jo_nage_waza' | 'jo_tori';
 
 export type JoCell =
-  | { kind: 'check' }                              // checkmark icon
-  | { kind: 'empty' };                             // empty cell
+  | { kind: 'check' } // checkmark icon
+  | { kind: 'empty' }; // empty cell
 
 export type JoRow = {
-  id: string;                                      // slug for technique
-  label: { en: string; de: string };               // row header text
+  id: string; // slug for technique
+  label: { en: string; de: string }; // row header text
   cells: Record<JoAttackKey, JoCell>;
 };
 
@@ -104,12 +104,12 @@ export type TantoAttackKey =
   | 'sode_tori_tanto_yoko_tsuki_soto';
 
 export type TantoCell =
-  | { kind: 'check' }                              // checkmark icon
-  | { kind: 'empty' };                             // empty cell
+  | { kind: 'check' } // checkmark icon
+  | { kind: 'empty' }; // empty cell
 
 export type TantoRow = {
-  id: string;                                      // slug for technique
-  label: { en: string; de: string };               // row header text
+  id: string; // slug for technique
+  label: { en: string; de: string }; // row header text
   cells: Record<TantoAttackKey, TantoCell>;
 };
 

@@ -22,7 +22,12 @@ async function validateTechniques(): Promise<void> {
       try {
         const raw = await readFile(filePath, 'utf8');
         const json = JSON.parse(raw);
-        const slug = json?.slug ?? filePath.split('/').pop()?.replace(/\.json$/i, '');
+        const slug =
+          json?.slug ??
+          filePath
+            .split('/')
+            .pop()
+            ?.replace(/\.json$/i, '');
         if (typeof slug !== 'string' || slug.length === 0) {
           throw new Error('Missing slug');
         }

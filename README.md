@@ -148,8 +148,8 @@ High-level layout:
 
 ## Content workflow
 
-1) Edit JSON in `content/` (techniques or glossary).
-2) Validate/build content:
+1. Edit JSON in `content/` (techniques or glossary).
+2. Validate/build content:
 
 ```bash
 pnpm run build

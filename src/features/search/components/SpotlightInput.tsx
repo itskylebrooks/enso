@@ -15,7 +15,17 @@ export type SpotlightInputProps = {
 
 export const SpotlightInput = forwardRef<HTMLInputElement, SpotlightInputProps>(
   (
-    { value, placeholder, label, clearLabel, listboxId, activeOptionId, onChange, onKeyDown, onClear },
+    {
+      value,
+      placeholder,
+      label,
+      clearLabel,
+      listboxId,
+      activeOptionId,
+      onChange,
+      onKeyDown,
+      onClear,
+    },
     ref,
   ): ReactElement => (
     <div className="relative flex items-center rounded-xl border surface surface-border pl-3 pr-2 py-2 shadow-inner transition-soft">

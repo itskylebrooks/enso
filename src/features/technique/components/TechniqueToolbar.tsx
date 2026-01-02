@@ -17,7 +17,11 @@ export type TechniqueToolbarProps = {
   value: TechniqueToolbarValue;
   onChange: (value: TechniqueToolbarValue) => void;
   // Function to check if a specific combo is available
-  isComboAvailable?: (direction: Direction, weapon: WeaponKind, versionId: string | null) => boolean;
+  isComboAvailable?: (
+    direction: Direction,
+    weapon: WeaponKind,
+    versionId: string | null,
+  ) => boolean;
   labels: {
     hanmi: string;
     direction: string;
@@ -57,110 +61,98 @@ export const TechniqueToolbar = ({
   hasBaseVersion,
 }: TechniqueToolbarProps): ReactElement => {
   // Hanmi options
-  const hanmiOptions: SelectOption<Hanmi>[] = useMemo(
-    () => {
-      const labelMap: Record<Hanmi, string> = {
-        'ai-hanmi': labels.aiHanmi,
-        'gyaku-hanmi': labels.gyakuHanmi,
-      };
+  const hanmiOptions: SelectOption<Hanmi>[] = useMemo(() => {
+    const labelMap: Record<Hanmi, string> = {
+      'ai-hanmi': labels.aiHanmi,
+      'gyaku-hanmi': labels.gyakuHanmi,
+    };
 
-      return HANMI_ORDER.map((hanmi) => {
-        return {
-          value: hanmi,
-          label: labelMap[hanmi],
-          disabled: !hanmisAvailable.includes(hanmi),
-        };
-      });
-    },
-    [hanmisAvailable, labels]
-  );
+    return HANMI_ORDER.map((hanmi) => {
+      return {
+        value: hanmi,
+        label: labelMap[hanmi],
+        disabled: !hanmisAvailable.includes(hanmi),
+      };
+    });
+  }, [hanmisAvailable, labels]);
 
   // Direction options
-  const directionOptions: SelectOption<Direction>[] = useMemo(
-    () => {
-      const labelMap: Record<Direction, string> = {
-        irimi: labels.irimi,
-        tenkan: labels.tenkan,
-        omote: labels.omote,
-        ura: labels.ura,
-      };
+  const directionOptions: SelectOption<Direction>[] = useMemo(() => {
+    const labelMap: Record<Direction, string> = {
+      irimi: labels.irimi,
+      tenkan: labels.tenkan,
+      omote: labels.omote,
+      ura: labels.ura,
+    };
 
-      return DIRECTION_ORDER.map((dir) => {
-        return {
-          value: dir,
-          label: labelMap[dir],
-          disabled: !directionsAvailable.includes(dir),
-        };
-      });
-    },
-    [directionsAvailable, labels]
-  );
+    return DIRECTION_ORDER.map((dir) => {
+      return {
+        value: dir,
+        label: labelMap[dir],
+        disabled: !directionsAvailable.includes(dir),
+      };
+    });
+  }, [directionsAvailable, labels]);
 
   // Weapon options
-  const weaponOptions: SelectOption<WeaponKind>[] = useMemo(
-    () => {
-      const labelMap: Record<WeaponKind, string> = {
-        empty: labels.emptyHand,
-        bokken: labels.bokken,
-        jo: labels.jo,
-        tanto: labels.tanto,
+  const weaponOptions: SelectOption<WeaponKind>[] = useMemo(() => {
+    const labelMap: Record<WeaponKind, string> = {
+      empty: labels.emptyHand,
+      bokken: labels.bokken,
+      jo: labels.jo,
+      tanto: labels.tanto,
+    };
+
+    const weaponOrder: WeaponKind[] = ['empty', 'bokken', 'jo', 'tanto'];
+
+    return weaponOrder.map((weapon) => {
+      return {
+        value: weapon,
+        label: labelMap[weapon],
+        disabled: !weaponsAvailable.includes(weapon),
       };
-
-      const weaponOrder: WeaponKind[] = ['empty', 'bokken', 'jo', 'tanto'];
-
-      return weaponOrder.map((weapon) => {
-        return {
-          value: weapon,
-          label: labelMap[weapon],
-          disabled: !weaponsAvailable.includes(weapon),
-        };
-      });
-    },
-    [weaponsAvailable, labels]
-  );
+    });
+  }, [weaponsAvailable, labels]);
 
   // Version options
-  const versionOptions: SelectOption<string>[] = useMemo(
-    () => {
-      // Optionally pin the "Base" option at the top only when a base version exists
-      const options: SelectOption<string>[] = [];
-      if (hasBaseVersion) {
-        options.push({ value: '__base__', label: labels.standard });
-      }
+  const versionOptions: SelectOption<string>[] = useMemo(() => {
+    // Optionally pin the "Base" option at the top only when a base version exists
+    const options: SelectOption<string>[] = [];
+    if (hasBaseVersion) {
+      options.push({ value: '__base__', label: labels.standard });
+    }
 
-      // Add all other versions (no grouping, no dojo labels)
-      versions.forEach((version) => {
-        options.push({
-          value: version.id,
-          label: version.label,
-        });
+    // Add all other versions (no grouping, no dojo labels)
+    versions.forEach((version) => {
+      options.push({
+        value: version.id,
+        label: version.label,
       });
+    });
 
-      return options;
-    },
-    [versions, labels.standard, hasBaseVersion]
-  );
+    return options;
+  }, [versions, labels.standard, hasBaseVersion]);
 
   // Handlers
   const handleHanmiChange = useCallback(
     (hanmi: Hanmi) => {
       onChange({ ...value, hanmi });
     },
-    [value, onChange]
+    [value, onChange],
   );
 
   const handleDirectionChange = useCallback(
     (direction: Direction) => {
       onChange({ ...value, direction });
     },
-    [value, onChange]
+    [value, onChange],
   );
 
   const handleWeaponChange = useCallback(
     (weapon: WeaponKind) => {
       onChange({ ...value, weapon });
     },
-    [value, onChange]
+    [value, onChange],
   );
 
   const handleVersionChange = useCallback(
@@ -170,10 +162,11 @@ export const TechniqueToolbar = ({
         versionId: versionId === '__base__' ? null : versionId,
       });
     },
-    [value, onChange]
+    [value, onChange],
   );
 
-  const selectedVersionId = value.versionId ?? (hasBaseVersion ? '__base__' : (versions[0]?.id ?? ''));
+  const selectedVersionId =
+    value.versionId ?? (hasBaseVersion ? '__base__' : (versions[0]?.id ?? ''));
 
   return (
     <div

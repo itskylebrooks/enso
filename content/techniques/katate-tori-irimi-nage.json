@@ -14,16 +14,10 @@
     "en": "Entering throw from a single-hand wrist grab. Turn the seized palm up, enter decisively to the inside, align shoulder and head in one arc, and project forward with clear space for ukemi.",
     "de": "Einstiegswurf aus Einhandgriff. Gefasste Handfläche öffnen, entschlossen auf der Innenseite eintreten, Schulter und Kopf in einem Bogen ausrichten und vorwärts projizieren – mit freier Bahn für Ukemi."
   },
-  "tags": [
-    "irimi-nage",
-    "入身投げ",
-    "throw",
-    "katate-tori",
-    "irimi"
-  ],
+  "tags": ["irimi-nage", "入身投げ", "throw", "katate-tori", "irimi"],
   "versions": [
     {
-  "id": "v-base",
+      "id": "v-base",
       "hanmi": "ai-hanmi",
       "stepsByEntry": {
         "irimi": {
@@ -93,7 +87,7 @@
       }
     },
     {
-  "id": "v-base",
+      "id": "v-base",
       "hanmi": "gyaku-hanmi",
       "stepsByEntry": {
         "irimi": {

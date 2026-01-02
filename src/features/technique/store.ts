@@ -37,7 +37,9 @@ export const useTechniqueViewStore = create<TechniqueViewState>()(
     }),
     {
       name: 'enso-technique-view',
-      storage: createJSONStorage(() => (typeof window === 'undefined' ? noopStorage : window.localStorage)),
+      storage: createJSONStorage(() =>
+        typeof window === 'undefined' ? noopStorage : window.localStorage,
+      ),
       partialize: (state) => ({ lastViewedVersion: state.lastViewedVersion }),
     },
   ),

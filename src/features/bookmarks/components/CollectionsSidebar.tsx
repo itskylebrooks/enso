@@ -44,7 +44,9 @@ export const CollectionsSidebar = ({
   return (
     <div className="space-y-4 no-select" aria-label={copy.collectionsTitle}>
       <div className="flex items-center justify-between gap-2">
-        <h2 className="text-sm font-semibold tracking-wide uppercase text-subtle">{copy.collectionsTitle}</h2>
+        <h2 className="text-sm font-semibold tracking-wide uppercase text-subtle">
+          {copy.collectionsTitle}
+        </h2>
         <div className="flex items-center gap-2">
           <button
             type="button"
@@ -70,10 +72,14 @@ export const CollectionsSidebar = ({
               type="button"
               onClick={pinButtonContext.togglePin}
               className="p-2 rounded-lg border btn-tonal surface-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
-              aria-label={pinButtonContext.isPinned ? "Unpin panel" : "Pin panel"}
-              title={pinButtonContext.isPinned ? "Unpin panel" : "Pin panel"}
+              aria-label={pinButtonContext.isPinned ? 'Unpin panel' : 'Pin panel'}
+              title={pinButtonContext.isPinned ? 'Unpin panel' : 'Pin panel'}
             >
-              {pinButtonContext.isPinned ? <PinOff className="w-4 h-4" /> : <Pin className="w-4 h-4" />}
+              {pinButtonContext.isPinned ? (
+                <PinOff className="w-4 h-4" />
+              ) : (
+                <Pin className="w-4 h-4" />
+              )}
             </button>
           )}
         </div>
@@ -109,10 +115,10 @@ export const CollectionsSidebar = ({
               {collections.map((collection) => (
                 <motion.li key={collection.id}>
                   <div className="relative flex items-center gap-2">
-                    <motion.div 
+                    <motion.div
                       className="flex-1 min-w-0"
-                      animate={{ 
-                        paddingRight: isEditing ? "4.5rem" : "0rem" 
+                      animate={{
+                        paddingRight: isEditing ? '4.5rem' : '0rem',
                       }}
                       transition={{ duration: 0.15 }}
                     >
@@ -134,10 +140,16 @@ export const CollectionsSidebar = ({
                           transition={{ duration: 0.15 }}
                           key={`edit-actions-${collection.id}`}
                         >
-                          <IconButton label={copy.collectionsRename} onClick={() => onRename(collection.id)}>
+                          <IconButton
+                            label={copy.collectionsRename}
+                            onClick={() => onRename(collection.id)}
+                          >
                             <TextCursorInput className="w-4 h-4" />
                           </IconButton>
-                          <IconButton label={copy.collectionsDelete} onClick={() => onDelete(collection.id)}>
+                          <IconButton
+                            label={copy.collectionsDelete}
+                            onClick={() => onDelete(collection.id)}
+                          >
                             <Trash className="w-4 h-4" />
                           </IconButton>
                         </motion.div>
@@ -147,9 +159,7 @@ export const CollectionsSidebar = ({
                 </motion.li>
               ))}
               {collections.length === 0 && (
-                <motion.li
-                  className="text-xs text-subtle px-2 py-1"
-                >
+                <motion.li className="text-xs text-subtle px-2 py-1">
                   {copy.collectionsNone}
                 </motion.li>
               )}
@@ -169,7 +179,13 @@ type SidebarButtonProps = {
   onClick: () => void;
 };
 
-const SidebarButton = ({ active, label, icon, count, onClick }: SidebarButtonProps): ReactElement => (
+const SidebarButton = ({
+  active,
+  label,
+  icon,
+  count,
+  onClick,
+}: SidebarButtonProps): ReactElement => (
   <button
     type="button"
     onClick={onClick}
@@ -180,7 +196,11 @@ const SidebarButton = ({ active, label, icon, count, onClick }: SidebarButtonPro
     aria-current={active ? 'page' : undefined}
   >
     <span className="flex items-center gap-2 min-w-0 flex-1 overflow-hidden">
-      {icon && <span aria-hidden="true" className="flex-shrink-0">{icon}</span>}
+      {icon && (
+        <span aria-hidden="true" className="flex-shrink-0">
+          {icon}
+        </span>
+      )}
       <span className="truncate min-w-0">{label}</span>
     </span>
     <span className="text-xs font-medium text-subtle flex-shrink-0">{count}</span>

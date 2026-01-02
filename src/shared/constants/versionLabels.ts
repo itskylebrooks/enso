@@ -18,32 +18,30 @@ type Dojo = {
 // For now, hardcode the data from our registry files
 const TRAINERS: Trainer[] = [
   {
-    id: "alfred-haase",
-    name: "Alfred Haase", 
-    dojoId: "bsv"
-  }
-  ,
+    id: 'alfred-haase',
+    name: 'Alfred Haase',
+    dojoId: 'bsv',
+  },
   {
-    id: "hubert-luhmann",
-    name: "Hubert Luhmann",
-    dojoId: "dab"
-  }
+    id: 'hubert-luhmann',
+    name: 'Hubert Luhmann',
+    dojoId: 'dab',
+  },
 ];
 
 const DOJOS: Dojo[] = [
   {
-    id: "bsv",
-    name: "BSV",
-    city: "Hamburg",
-    country: "DE"
-  }
-  ,
+    id: 'bsv',
+    name: 'BSV',
+    city: 'Hamburg',
+    country: 'DE',
+  },
   {
-    id: "dab",
-    name: "DAB",
-    city: "Hamburg",
-    country: "DE"
-  }
+    id: 'dab',
+    name: 'DAB',
+    city: 'Hamburg',
+    country: 'DE',
+  },
 ];
 
 /**
@@ -60,9 +58,9 @@ export function generateVersionLabel(version: TechniqueVersion): string {
 
   // If both trainerId and dojoId exist, generate "Trainer (Dojo)" format
   if (version.trainerId && version.dojoId) {
-    const trainer = TRAINERS.find(t => t.id === version.trainerId);
-    const dojo = DOJOS.find(d => d.id === version.dojoId);
-    
+    const trainer = TRAINERS.find((t) => t.id === version.trainerId);
+    const dojo = DOJOS.find((d) => d.id === version.dojoId);
+
     if (trainer && dojo) {
       return `${trainer.name} (${dojo.name})`;
     }
@@ -70,12 +68,12 @@ export function generateVersionLabel(version: TechniqueVersion): string {
 
   // If only trainerId exists
   if (version.trainerId) {
-    const trainer = TRAINERS.find(t => t.id === version.trainerId);
+    const trainer = TRAINERS.find((t) => t.id === version.trainerId);
     if (trainer) {
       return trainer.name;
     }
   }
 
   // Default to "Base"
-  return "Base";
+  return 'Base';
 }

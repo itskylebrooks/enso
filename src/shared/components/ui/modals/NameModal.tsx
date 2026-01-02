@@ -21,7 +21,12 @@ type NameModalProps = {
 
 const maxNameLength = 40;
 
-export const NameModal = ({ strings, initialName = '', onCancel, onConfirm }: NameModalProps): ReactElement | null => {
+export const NameModal = ({
+  strings,
+  initialName = '',
+  onCancel,
+  onConfirm,
+}: NameModalProps): ReactElement | null => {
   const dialogRef = useRef<HTMLDivElement>(null);
   const nameInputRef = useRef<HTMLInputElement>(null);
   const { overlayMotion, toggleTransition, prefersReducedMotion } = useMotionPreferences();

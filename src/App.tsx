@@ -916,20 +916,22 @@ export default function App(): ReactElement {
 
   const currentTechnique = useMemo(
     () =>
-      activeSlug ? db.techniques.find((technique) => technique.slug === activeSlug) ?? null : null,
+      activeSlug
+        ? (db.techniques.find((technique) => technique.slug === activeSlug) ?? null)
+        : null,
     [db.techniques, activeSlug],
   );
 
   const currentProgress = useMemo(
     () =>
       currentTechnique
-        ? db.progress.find((entry) => entry.techniqueId === currentTechnique.id) ?? null
+        ? (db.progress.find((entry) => entry.techniqueId === currentTechnique.id) ?? null)
         : null,
     [db.progress, currentTechnique],
   );
 
   const currentGlossaryTerm = useMemo(
-    () => (activeSlug ? glossaryTerms.find((term) => term.slug === activeSlug) ?? null : null),
+    () => (activeSlug ? (glossaryTerms.find((term) => term.slug === activeSlug) ?? null) : null),
     [glossaryTerms, activeSlug],
   );
 
@@ -1451,18 +1453,18 @@ export default function App(): ReactElement {
     techniqueBackRoute === 'bookmarks'
       ? copy.backToBookmarks
       : techniqueBackRoute === 'home'
-      ? copy.backToHome
-      : techniqueBackRoute === 'about'
-      ? copy.backToAbout
-      : techniqueBackRoute === 'roadmap'
-      ? copy.backToRoadmap
-      : techniqueBackRoute === 'guide'
-      ? copy.backToGuide
-      : techniqueBackRoute === 'glossary'
-      ? copy.backToGlossary
-      : techniqueBackRoute === 'feedback'
-      ? copy.backToFeedback
-      : copy.backToLibrary;
+        ? copy.backToHome
+        : techniqueBackRoute === 'about'
+          ? copy.backToAbout
+          : techniqueBackRoute === 'roadmap'
+            ? copy.backToRoadmap
+            : techniqueBackRoute === 'guide'
+              ? copy.backToGuide
+              : techniqueBackRoute === 'glossary'
+                ? copy.backToGlossary
+                : techniqueBackRoute === 'feedback'
+                  ? copy.backToFeedback
+                  : copy.backToLibrary;
 
   const glossaryHistoryState =
     typeof window !== 'undefined' ? (window.history.state as HistoryState | null) : null;
@@ -1471,24 +1473,24 @@ export default function App(): ReactElement {
     glossaryBackRoute === 'bookmarks'
       ? copy.backToBookmarks
       : glossaryBackRoute === 'home'
-      ? copy.backToHome
-      : glossaryBackRoute === 'about'
-      ? copy.backToAbout
-      : glossaryBackRoute === 'roadmap'
-      ? copy.backToRoadmap
-      : glossaryBackRoute === 'guide'
-      ? copy.backToGuide
-      : glossaryBackRoute === 'feedback'
-      ? copy.backToFeedback
-      : copy.backToGlossary;
+        ? copy.backToHome
+        : glossaryBackRoute === 'about'
+          ? copy.backToAbout
+          : glossaryBackRoute === 'roadmap'
+            ? copy.backToRoadmap
+            : glossaryBackRoute === 'guide'
+              ? copy.backToGuide
+              : glossaryBackRoute === 'feedback'
+                ? copy.backToFeedback
+                : copy.backToGlossary;
 
   const guideHistoryState =
     typeof window !== 'undefined' ? (window.history.state as HistoryState | null) : null;
   const guideBackLabel = guideHistoryState?.sourceSlug
     ? copy.backToTechnique
     : guideHistoryState?.sourceRoute === 'home'
-    ? copy.backToHome
-    : copy.backToGuide;
+      ? copy.backToHome
+      : copy.backToGuide;
   const handleGuideBack = (): void => {
     if (guideHistoryState?.sourceSlug) {
       openTechnique(guideHistoryState.sourceSlug, undefined, undefined, true, {
@@ -1807,8 +1809,8 @@ export default function App(): ReactElement {
   const pageKey = currentTechnique
     ? `technique-${currentTechnique.id}`
     : activeSlug
-    ? `glossary-${activeSlug}`
-    : route;
+      ? `glossary-${activeSlug}`
+      : route;
 
   return (
     <MotionConfig reducedMotion={animationsDisabled ? 'always' : 'user'}>

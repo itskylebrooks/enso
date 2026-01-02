@@ -42,22 +42,27 @@ export const Select = <T extends string = string>({
   const selectedOption = options.find((opt) => opt.value === value);
 
   // Filter options based on search query
-  const filteredOptions = searchable && searchQuery
-    ? options.filter((opt) =>
-        typeof opt.label === 'string' &&
-        opt.label.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    : options;
+  const filteredOptions =
+    searchable && searchQuery
+      ? options.filter(
+          (opt) =>
+            typeof opt.label === 'string' &&
+            opt.label.toLowerCase().includes(searchQuery.toLowerCase()),
+        )
+      : options;
 
   // Group options by group property
-  const groupedOptions = filteredOptions.reduce((acc, option) => {
-    const group = option.group || '';
-    if (!acc[group]) {
-      acc[group] = [];
-    }
-    acc[group].push(option);
-    return acc;
-  }, {} as Record<string, SelectOption<T>[]>);
+  const groupedOptions = filteredOptions.reduce(
+    (acc, option) => {
+      const group = option.group || '';
+      if (!acc[group]) {
+        acc[group] = [];
+      }
+      acc[group].push(option);
+      return acc;
+    },
+    {} as Record<string, SelectOption<T>[]>,
+  );
 
   const groups = Object.keys(groupedOptions).sort((a, b) => {
     // Empty string (no group) comes first
@@ -122,9 +127,7 @@ export const Select = <T extends string = string>({
       if (!isOpen) {
         setIsOpen(true);
       } else {
-        setHighlightedIndex((prev) => 
-          prev < filteredOptions.length - 1 ? prev + 1 : prev
-        );
+        setHighlightedIndex((prev) => (prev < filteredOptions.length - 1 ? prev + 1 : prev));
       }
       return;
     }
@@ -173,21 +176,17 @@ export const Select = <T extends string = string>({
           'w-full px-4 py-2.5 rounded-xl border border-adaptive hover-border-adaptive bg-[var(--color-surface)]',
           'text-left text-sm transition-colors',
           'focus-halo focus:outline-none',
-          'flex items-center justify-between gap-2'
+          'flex items-center justify-between gap-2',
         )}
       >
         <span className="flex items-center gap-2 flex-1 min-w-0">
-          {selectedOption?.icon && (
-            <span className="flex-shrink-0">{selectedOption.icon}</span>
-          )}
-          <span className="truncate">
-            {selectedOption?.label || placeholder || 'Select…'}
-          </span>
+          {selectedOption?.icon && <span className="flex-shrink-0">{selectedOption.icon}</span>}
+          <span className="truncate">{selectedOption?.label || placeholder || 'Select…'}</span>
         </span>
         <ChevronDown
           className={classNames(
             'w-4 h-4 text-subtle transition-transform flex-shrink-0',
-            isOpen && 'rotate-180'
+            isOpen && 'rotate-180',
           )}
         />
       </button>
@@ -207,7 +206,7 @@ export const Select = <T extends string = string>({
               'bg-[var(--color-surface)] rounded-xl border border-adaptive',
               'shadow-2xl shadow-black/20',
               'max-h-[min(400px,50vh)] overflow-auto',
-              'py-2'
+              'py-2',
             )}
           >
             {searchable && (
@@ -234,16 +233,14 @@ export const Select = <T extends string = string>({
                     'bg-[var(--color-bg)] border border-adaptive',
                     'text-sm text-[var(--color-text)]',
                     'focus-halo focus:outline-none',
-                    'placeholder:text-muted'
+                    'placeholder:text-muted',
                   )}
                 />
               </div>
             )}
 
             {filteredOptions.length === 0 ? (
-              <div className="px-4 py-3 text-sm text-muted text-center">
-                No options found
-              </div>
+              <div className="px-4 py-3 text-sm text-muted text-center">No options found</div>
             ) : (
               groups.map((groupName) => (
                 <div key={groupName}>
@@ -272,13 +269,13 @@ export const Select = <T extends string = string>({
                           'flex items-center gap-3',
                           isHighlighted && !option.disabled && 'bg-white/5',
                           isSelected && 'text-[var(--color-text)] font-medium',
-                          !isSelected && !option.disabled && 'text-subtle hover:text-[var(--color-text)]',
-                          option.disabled && 'opacity-50 cursor-not-allowed'
+                          !isSelected &&
+                            !option.disabled &&
+                            'text-subtle hover:text-[var(--color-text)]',
+                          option.disabled && 'opacity-50 cursor-not-allowed',
                         )}
                       >
-                        {option.icon && (
-                          <span className="flex-shrink-0">{option.icon}</span>
-                        )}
+                        {option.icon && <span className="flex-shrink-0">{option.icon}</span>}
                         <span className="flex-1 min-w-0 truncate">{option.label}</span>
                         {isSelected && <Check className="w-4 h-4 flex-shrink-0" aria-hidden />}
                       </button>

@@ -34,19 +34,15 @@ type GlossaryDetailPageProps = {
   onNavigateToGlossaryWithFilter?: (category: GlossaryTerm['category']) => void;
 };
 
-
-
-
-
-export const GlossaryDetailPage = ({ 
-  slug, 
-  copy, 
-  locale, 
-  onBack, 
+export const GlossaryDetailPage = ({
+  slug,
+  copy,
+  locale,
+  onBack,
   backLabel,
-  isBookmarked, 
-  onToggleBookmark, 
-  collections, 
+  isBookmarked,
+  onToggleBookmark,
+  collections,
   onToggleCollection,
   onCreateCollection,
   onNavigateToGlossaryWithFilter,
@@ -74,7 +70,7 @@ export const GlossaryDetailPage = ({
     const loadTerm = async () => {
       setLoading(true);
       setError(null);
-      
+
       try {
         const loadedTerm = await loadTermBySlug(slug);
         if (loadedTerm) {
@@ -105,11 +101,7 @@ export const GlossaryDetailPage = ({
     return (
       <div className="max-w-5xl mx-auto px-6 py-10 space-y-4 text-center">
         <p className="text-lg font-semibold">Term not found.</p>
-        <button
-          type="button"
-          onClick={onBack}
-          className="text-sm underline"
-        >
+        <button type="button" onClick={onBack} className="text-sm underline">
           {backLabel ?? copy.backToGlossary}
         </button>
       </div>
@@ -153,11 +145,7 @@ export const GlossaryDetailPage = ({
             <h1 className="text-3xl font-semibold leading-tight" title={term.romaji}>
               {term.romaji}
             </h1>
-            {term.jp && (
-              <div className="text-sm text-subtle">
-                {term.jp}
-              </div>
-            )}
+            {term.jp && <div className="text-sm text-subtle">{term.jp}</div>}
             <div className="flex justify-center">
               <button
                 type="button"
@@ -173,13 +161,15 @@ export const GlossaryDetailPage = ({
               </button>
             </div>
           </div>
-          
+
           {/* Bookmark controls */}
           <div className="flex justify-center gap-2">
             <AddToCollectionMenu
               copy={copy}
               collections={collections}
-              onToggle={(collectionId, nextChecked) => onToggleCollection(collectionId, nextChecked)}
+              onToggle={(collectionId, nextChecked) =>
+                onToggleCollection(collectionId, nextChecked)
+              }
               onCreate={openCreateDialog}
             />
             <div className="inline-flex rounded-lg border surface-border overflow-hidden">
@@ -197,7 +187,11 @@ export const GlossaryDetailPage = ({
                     : 'surface hover:surface-hover',
                 )}
               >
-                {isBookmarked ? <BookmarkCheck className="w-4 h-4" /> : <Bookmark className="w-4 h-4" />}
+                {isBookmarked ? (
+                  <BookmarkCheck className="w-4 h-4" />
+                ) : (
+                  <Bookmark className="w-4 h-4" />
+                )}
               </motion.button>
             </div>
           </div>
@@ -216,7 +210,9 @@ export const GlossaryDetailPage = ({
       {literal && (
         <section className="prose prose-sm max-w-none dark:prose-invert">
           <div className="text-center space-y-4">
-            <h2 className="text-xs uppercase tracking-[0.3em] text-subtle italic text-[var(--color-text)]">Literal Translation</h2>
+            <h2 className="text-xs uppercase tracking-[0.3em] text-subtle italic text-[var(--color-text)]">
+              Literal Translation
+            </h2>
             <p className="text-base italic text-[var(--color-text)] leading-relaxed">{literal}</p>
           </div>
         </section>
@@ -228,13 +224,14 @@ export const GlossaryDetailPage = ({
           <div className="space-y-4">
             <h2 className="text-xs uppercase tracking-[0.3em] text-subtle text-center">Notes</h2>
             <div className="space-y-3">
-              {notes.split('\n').map((paragraph, index) => (
-                paragraph.trim() && (
-                  <p key={index} className="text-base leading-relaxed text-center">
-                    {paragraph.trim()}
-                  </p>
-                )
-              ))}
+              {notes.split('\n').map(
+                (paragraph, index) =>
+                  paragraph.trim() && (
+                    <p key={index} className="text-base leading-relaxed text-center">
+                      {paragraph.trim()}
+                    </p>
+                  ),
+              )}
             </div>
           </div>
         </section>

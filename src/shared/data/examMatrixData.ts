@@ -11,7 +11,10 @@ export const ATTACK_COLUMNS: AttackColumn[] = [
   { key: 'ushiro_kakae_tori', label: { en: 'Ushiro-kakae-tori', de: 'Ushiro-kakae-tori' } },
   { key: 'ushiro_ryote_tori', label: { en: 'Ushiro-ryōte-tori', de: 'Ushiro-ryōte-tori' } },
   { key: 'ushiro_eri_tori', label: { en: 'Ushiro-eri-tori', de: 'Ushiro-eri-tori' } },
-  { key: 'ushiro_katate_tori_kubi_shime', label: { en: 'Ushiro-katate-tori / kubi-shime', de: 'Ushiro-katate-tori / kubi-shime' } },
+  {
+    key: 'ushiro_katate_tori_kubi_shime',
+    label: { en: 'Ushiro-katate-tori / kubi-shime', de: 'Ushiro-katate-tori / kubi-shime' },
+  },
   { key: 'ushiro_kubi_shime', label: { en: 'Ushiro-kubi-shime', de: 'Ushiro-kubi-shime' } },
   { key: 'yokomen_uchi', label: { en: 'Yokomen-uchi', de: 'Yokomen-uchi' } },
   { key: 'shomen_uchi', label: { en: 'Shōmen-uchi', de: 'Shōmen-uchi' } },

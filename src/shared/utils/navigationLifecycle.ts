@@ -35,7 +35,10 @@ const getLocationKey = (): string => {
 
 let didRestoreFromBFCache = false;
 
-const detectNavigationEntry = (): PerformanceNavigationTiming | PerformanceNavigation | undefined => {
+const detectNavigationEntry = ():
+  | PerformanceNavigationTiming
+  | PerformanceNavigation
+  | undefined => {
   if (typeof performance === 'undefined') return undefined;
   if ('getEntriesByType' in performance) {
     const entries = performance.getEntriesByType('navigation');
@@ -109,7 +112,8 @@ export const setupNavigationLifecycle = (): void => {
   window.requestAnimationFrame(cacheCurrentScrollPosition);
 };
 
-export const cameFromBackForwardNavigation = (): boolean => initialNavigationWasBackForward || didRestoreFromBFCache;
+export const cameFromBackForwardNavigation = (): boolean =>
+  initialNavigationWasBackForward || didRestoreFromBFCache;
 
 export const consumeBFCacheRestoreFlag = (): boolean => {
   const wasRestored = didRestoreFromBFCache;
@@ -120,4 +124,3 @@ export const consumeBFCacheRestoreFlag = (): boolean => {
 export const rememberScrollPosition = (): void => {
   cacheCurrentScrollPosition();
 };
-

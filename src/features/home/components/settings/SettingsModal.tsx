@@ -61,8 +61,6 @@ export const SettingsModal = ({
     URL.revokeObjectURL(anchor.href);
   };
 
-
-
   return (
     <motion.div
       className="fixed inset-0 z-40 flex items-center justify-center px-4 sm:px-0 bg-black/45"
@@ -118,12 +116,10 @@ export const SettingsModal = ({
                   onClick={() => onChangeTheme('system')}
                   className={classNames(
                     'flex-1 p-2 rounded-lg border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
-                    isSystemTheme
-                      ? 'btn-contrast'
-                      : 'btn-tonal surface-hover',
+                    isSystemTheme ? 'btn-contrast' : 'btn-tonal surface-hover',
                   )}
                   aria-pressed={isSystemTheme}
-                  aria-label={(copy.system ?? 'System')}
+                  aria-label={copy.system ?? 'System'}
                 >
                   <Monitor className="h-5 w-5" aria-hidden />
                 </button>
@@ -146,9 +142,7 @@ export const SettingsModal = ({
                   onClick={() => onChangeTheme('dark')}
                   className={classNames(
                     'flex-1 p-2 rounded-lg border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
-                    !isSystemTheme && theme === 'dark'
-                      ? 'btn-contrast'
-                      : 'btn-tonal surface-hover',
+                    !isSystemTheme && theme === 'dark' ? 'btn-contrast' : 'btn-tonal surface-hover',
                   )}
                   aria-pressed={!isSystemTheme && theme === 'dark'}
                   aria-label={copy.dark}
@@ -176,7 +170,7 @@ export const SettingsModal = ({
                     ? 'btn-tonal opacity-50 cursor-not-allowed'
                     : isInstallable
                       ? 'btn-contrast focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]'
-                      : 'btn-tonal opacity-50 cursor-not-allowed'
+                      : 'btn-tonal opacity-50 cursor-not-allowed',
                 )}
                 aria-label={isInstalled ? 'Installed' : 'Install'}
               >
@@ -208,9 +202,7 @@ export const SettingsModal = ({
                   onClick={() => onChangeLocale('en')}
                   className={classNames(
                     'flex-1 px-3 py-2 text-sm rounded-lg border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
-                    locale === 'en'
-                      ? 'btn-contrast'
-                      : 'btn-tonal surface-hover',
+                    locale === 'en' ? 'btn-contrast' : 'btn-tonal surface-hover',
                   )}
                   aria-pressed={locale === 'en'}
                   aria-label="English"
@@ -222,9 +214,7 @@ export const SettingsModal = ({
                   onClick={() => onChangeLocale('de')}
                   className={classNames(
                     'flex-1 px-3 py-2 text-sm rounded-lg border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
-                    locale === 'de'
-                      ? 'btn-contrast'
-                      : 'btn-tonal surface-hover',
+                    locale === 'de' ? 'btn-contrast' : 'btn-tonal surface-hover',
                   )}
                   aria-pressed={locale === 'de'}
                   aria-label="Deutsch"
@@ -248,9 +238,7 @@ export const SettingsModal = ({
                   onClick={() => onChangeAnimations(true)}
                   className={classNames(
                     'flex-1 px-3 py-2 text-sm rounded-lg border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
-                    animationsDisabled
-                      ? 'btn-contrast'
-                      : 'btn-tonal surface-hover',
+                    animationsDisabled ? 'btn-contrast' : 'btn-tonal surface-hover',
                   )}
                   aria-pressed={animationsDisabled}
                   aria-label={copy.disableAnimationsOff}
@@ -262,9 +250,7 @@ export const SettingsModal = ({
                   onClick={() => onChangeAnimations(false)}
                   className={classNames(
                     'flex-1 px-3 py-2 text-sm rounded-lg border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
-                    !animationsDisabled
-                      ? 'btn-contrast'
-                      : 'btn-tonal surface-hover',
+                    !animationsDisabled ? 'btn-contrast' : 'btn-tonal surface-hover',
                   )}
                   aria-pressed={!animationsDisabled}
                   aria-label={copy.disableAnimationsOn}
@@ -282,7 +268,18 @@ export const SettingsModal = ({
             <div className="mt-2 grid grid-cols-3 gap-2">
               {/* Import */}
               <label className="w-full flex items-center justify-center gap-1.5 rounded-lg h-10 px-3 text-xs font-medium border btn-tonal surface-hover transition-soft motion-ease cursor-pointer">
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-folder-input-icon lucide-folder-input">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-folder-input-icon lucide-folder-input"
+                >
                   <path d="M2 9V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H20a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-1" />
                   <path d="M2 13h10" />
                   <path d="m9 16 3-3-3-3" />
@@ -327,7 +324,18 @@ export const SettingsModal = ({
                 onClick={onRequestClear}
                 className="w-full flex items-center justify-center gap-1.5 rounded-lg h-10 px-3 text-xs font-medium border border-red-500/50 text-red-600 dark:text-red-400 hover:bg-red-500/10 transition-soft motion-ease"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-eraser-icon lucide-eraser">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-eraser-icon lucide-eraser"
+                >
                   <path d="M21 21H8a2 2 0 0 1-1.42-.587l-3.994-3.999a2 2 0 0 1 0-2.828l10-10a2 2 0 0 1 2.829 0l5.999 6a2 2 0 0 1 0 2.828L12.834 21" />
                   <path d="m5.082 11.09 8.828 8.828" />
                 </svg>
@@ -340,7 +348,18 @@ export const SettingsModal = ({
                 onClick={handleExport}
                 className="w-full flex items-center justify-center gap-1.5 rounded-lg h-10 px-3 text-xs font-medium border btn-tonal surface-hover transition-soft motion-ease"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-folder-output-icon lucide-folder-output">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-folder-output-icon lucide-folder-output"
+                >
                   <path d="M2 7.5V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H20a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-1.5" />
                   <path d="M2 13h10" />
                   <path d="m5 10-3 3 3 3" />
@@ -388,16 +407,36 @@ export const SettingsModal = ({
 
                 {/* Legal links */}
                 <div className="flex items-center justify-center gap-2.5 leading-snug mt-1">
-                  <a className="underline" href="https://itskylebrooks.vercel.app/imprint" target="_blank" rel="noopener noreferrer">{(copy as unknown as Record<string, string>).footerImprint ?? 'Imprint'}</a>
-                  <a className="underline" href="https://itskylebrooks.vercel.app/privacy" target="_blank" rel="noopener noreferrer">{(copy as unknown as Record<string, string>).footerPrivacy ?? 'Privacy Policy'}</a>
-                  <a className="underline" href="https://itskylebrooks.vercel.app/license" target="_blank" rel="noopener noreferrer">{(copy as unknown as Record<string, string>).footerLicense ?? 'License'}</a>
+                  <a
+                    className="underline"
+                    href="https://itskylebrooks.vercel.app/imprint"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {(copy as unknown as Record<string, string>).footerImprint ?? 'Imprint'}
+                  </a>
+                  <a
+                    className="underline"
+                    href="https://itskylebrooks.vercel.app/privacy"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {(copy as unknown as Record<string, string>).footerPrivacy ?? 'Privacy Policy'}
+                  </a>
+                  <a
+                    className="underline"
+                    href="https://itskylebrooks.vercel.app/license"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {(copy as unknown as Record<string, string>).footerLicense ?? 'License'}
+                  </a>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </motion.div>
-
     </motion.div>
   );
 };

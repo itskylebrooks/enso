@@ -18,7 +18,11 @@ type ConfirmModalProps = {
   onConfirm: () => void;
 };
 
-export const ConfirmModal = ({ strings, onCancel, onConfirm }: ConfirmModalProps): ReactElement | null => {
+export const ConfirmModal = ({
+  strings,
+  onCancel,
+  onConfirm,
+}: ConfirmModalProps): ReactElement | null => {
   const dialogRef = useRef<HTMLDivElement>(null);
   const { overlayMotion, toggleTransition, prefersReducedMotion } = useMotionPreferences();
 

@@ -193,8 +193,8 @@ export const useMotionPreferences = () => {
       transition: animationsDisabled
         ? zeroTransition
         : prefersReducedMotion
-        ? reducedPageTransition
-        : pageTransition,
+          ? reducedPageTransition
+          : pageTransition,
     }),
     [animationsDisabled, prefersReducedMotion],
   );
@@ -212,29 +212,29 @@ export const useMotionPreferences = () => {
       prefersReducedMotion && !animationsDisabled
         ? reducedBackdropVariants
         : isAndroid
-        ? androidBackdropVariants
-        : backdropVariants;
+          ? androidBackdropVariants
+          : backdropVariants;
     const panel = prefersReducedMotion
       ? reducedPanelVariants
       : isAndroid
-      ? androidPanelVariants
-      : panelVariants;
+        ? androidPanelVariants
+        : panelVariants;
 
     // Android gets significantly faster transitions for lag-free performance
     const transition = animationsDisabled
       ? zeroTransition
       : prefersReducedMotion
-      ? reducedPageTransition
-      : isAndroid
-      ? { duration: 0.15, ease: defaultEase }
-      : pageTransition;
+        ? reducedPageTransition
+        : isAndroid
+          ? { duration: 0.15, ease: defaultEase }
+          : pageTransition;
     const panelTransition = animationsDisabled
       ? zeroTransition
       : prefersReducedMotion
-      ? reducedPageTransition
-      : isAndroid
-      ? { duration: 0.16, ease: defaultEase }
-      : springEase;
+        ? reducedPageTransition
+        : isAndroid
+          ? { duration: 0.16, ease: defaultEase }
+          : springEase;
     const closeButton = prefersReducedMotion ? reducedCloseButtonVariants : closeButtonVariants;
 
     return {
@@ -260,8 +260,8 @@ export const useMotionPreferences = () => {
       transition: animationsDisabled
         ? zeroTransition
         : prefersReducedMotion
-        ? reducedPageTransition
-        : pageTransition,
+          ? reducedPageTransition
+          : pageTransition,
     }),
     [animationsDisabled, prefersReducedMotion],
   );
@@ -274,8 +274,8 @@ export const useMotionPreferences = () => {
       transition: animationsDisabled
         ? zeroTransition
         : prefersReducedMotion
-        ? reducedPageTransition
-        : { duration: 0.25, ease: defaultEase },
+          ? reducedPageTransition
+          : { duration: 0.25, ease: defaultEase },
     }),
     [animationsDisabled, prefersReducedMotion],
   );
@@ -293,14 +293,14 @@ export const useMotionPreferences = () => {
   const toggleTransition: Transition = animationsDisabled
     ? zeroTransition
     : prefersReducedMotion
-    ? { duration: 0.05 }
-    : { duration: 0.15, ease: defaultEase };
+      ? { duration: 0.05 }
+      : { duration: 0.15, ease: defaultEase };
 
   const chipTransition: Transition = animationsDisabled
     ? zeroTransition
     : prefersReducedMotion
-    ? { duration: 0.05 }
-    : { duration: 0.12, ease: defaultEase };
+      ? { duration: 0.05 }
+      : { duration: 0.12, ease: defaultEase };
 
   return {
     animationsDisabled,

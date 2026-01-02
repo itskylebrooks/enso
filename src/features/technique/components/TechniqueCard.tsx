@@ -82,20 +82,21 @@ export const TechniqueCard = ({
       initial={false}
       variants={variants}
       transition={getTransition(motionIndex)}
-  /* Hover and tap motion removed to disable hover effects completely */
-  animate={isDimmed ? {} : {}}
+      /* Hover and tap motion removed to disable hover effects completely */
+      animate={isDimmed ? {} : {}}
       title={technique.name[locale]}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 space-y-1">
-          <div className="text-base font-medium leading-snug line-clamp-2" title={technique.name[locale]}>
+          <div
+            className="text-base font-medium leading-snug line-clamp-2"
+            title={technique.name[locale]}
+          >
             <EmphasizedName name={technique.name[locale]} />
           </div>
           {technique.jp && <div className="text-xs text-subtle truncate">{technique.jp}</div>}
         </div>
-        <div className="flex items-center gap-2">
-          {actionSlot}
-        </div>
+        <div className="flex items-center gap-2">{actionSlot}</div>
       </div>
 
       <p className="text-sm text-muted leading-relaxed">
@@ -105,9 +106,15 @@ export const TechniqueCard = ({
       <div className="mt-auto flex items-end justify-between gap-4 pt-1">
         <div className="flex flex-wrap items-center gap-2 text-xs font-medium uppercase tracking-wide text-subtle">
           {entryLabels.map((label) => (
-            <span key={label} className="rounded-sm bg-black/5 px-2 py-0.5 dark:bg-white/10">{label}</span>
+            <span key={label} className="rounded-sm bg-black/5 px-2 py-0.5 dark:bg-white/10">
+              {label}
+            </span>
           ))}
-          {weaponLabel && <span className="rounded-sm bg-black/5 px-2 py-0.5 dark:bg-white/10">{weaponLabel}</span>}
+          {weaponLabel && (
+            <span className="rounded-sm bg-black/5 px-2 py-0.5 dark:bg-white/10">
+              {weaponLabel}
+            </span>
+          )}
         </div>
         <div className="shrink-0 self-end">
           <LevelBadge locale={locale} level={technique.level} />

@@ -42,7 +42,7 @@ export const DanOverview = ({ locale, onBack }: Props): ReactElement => {
 
         <hr className="border-t surface-border my-6" />
 
-  <motion.article className="prose max-w-none space-y-6" {...animationProps}>
+        <motion.article className="prose max-w-none space-y-6" {...animationProps}>
           {/* What this page is */}
           <div>
             <h2 className="text-lg font-semibold mb-3">{copy.danOverviewWhatTitle}</h2>
@@ -109,9 +109,17 @@ export const DanOverview = ({ locale, onBack }: Props): ReactElement => {
           {/* 2nd Dan */}
           <div>
             <h2 className="text-xl font-semibold mb-3">{copy.danOverview2Title}</h2>
-            <p className="text-base leading-relaxed mb-4"><span className="font-semibold">{copy.danOverviewLabelAdmission}:</span> {copy.danOverview2Admission.split(':').slice(1).join(':').trim()}</p>
-            <p className="text-base leading-relaxed mb-4"><span className="font-semibold">{copy.danOverviewLabelTheory}:</span> {copy.danOverview2Theory}</p>
-            <p className="text-base leading-relaxed mb-2"><span className="font-semibold">{copy.danOverviewLabelPractical}:</span></p>
+            <p className="text-base leading-relaxed mb-4">
+              <span className="font-semibold">{copy.danOverviewLabelAdmission}:</span>{' '}
+              {copy.danOverview2Admission.split(':').slice(1).join(':').trim()}
+            </p>
+            <p className="text-base leading-relaxed mb-4">
+              <span className="font-semibold">{copy.danOverviewLabelTheory}:</span>{' '}
+              {copy.danOverview2Theory}
+            </p>
+            <p className="text-base leading-relaxed mb-2">
+              <span className="font-semibold">{copy.danOverviewLabelPractical}:</span>
+            </p>
             <ul className="space-y-2 mt-3">
               <li className="text-base leading-relaxed flex gap-2">
                 <span className="shrink-0">•</span>
@@ -135,8 +143,13 @@ export const DanOverview = ({ locale, onBack }: Props): ReactElement => {
           {/* 3rd Dan */}
           <div>
             <h2 className="text-xl font-semibold mb-3">{copy.danOverview3Title}</h2>
-            <p className="text-base leading-relaxed mb-4"><span className="font-semibold">Admission:</span> {copy.danOverview3Admission.split(':').slice(1).join(':').trim()}</p>
-            <p className="text-base leading-relaxed mb-2"><span className="font-semibold">Practical:</span></p>
+            <p className="text-base leading-relaxed mb-4">
+              <span className="font-semibold">Admission:</span>{' '}
+              {copy.danOverview3Admission.split(':').slice(1).join(':').trim()}
+            </p>
+            <p className="text-base leading-relaxed mb-2">
+              <span className="font-semibold">Practical:</span>
+            </p>
             <ul className="space-y-2 mt-3">
               <li className="text-base leading-relaxed flex gap-2">
                 <span className="shrink-0">•</span>
@@ -160,8 +173,13 @@ export const DanOverview = ({ locale, onBack }: Props): ReactElement => {
           {/* 4th Dan */}
           <div>
             <h2 className="text-xl font-semibold mb-3">{copy.danOverview4Title}</h2>
-            <p className="text-base leading-relaxed mb-4"><span className="font-semibold">{copy.danOverviewLabelAdmission}:</span> {copy.danOverview4Admission.split(':').slice(1).join(':').trim()}</p>
-            <p className="text-base leading-relaxed mb-2"><span className="font-semibold">{copy.danOverviewLabelPractical}:</span></p>
+            <p className="text-base leading-relaxed mb-4">
+              <span className="font-semibold">{copy.danOverviewLabelAdmission}:</span>{' '}
+              {copy.danOverview4Admission.split(':').slice(1).join(':').trim()}
+            </p>
+            <p className="text-base leading-relaxed mb-2">
+              <span className="font-semibold">{copy.danOverviewLabelPractical}:</span>
+            </p>
             <ul className="space-y-2 mt-3">
               <li className="text-base leading-relaxed flex gap-2">
                 <span className="shrink-0">•</span>
@@ -185,9 +203,17 @@ export const DanOverview = ({ locale, onBack }: Props): ReactElement => {
           {/* 5th Dan */}
           <div>
             <h2 className="text-xl font-semibold mb-3">{copy.danOverview5Title}</h2>
-            <p className="text-base leading-relaxed mb-4"><span className="font-semibold">{copy.danOverviewLabelAdmission}:</span> {copy.danOverview5Admission.split(':').slice(1).join(':').trim()}</p>
-            <p className="text-base leading-relaxed mb-4"><span className="font-semibold">{copy.danOverviewLabelWritten}:</span> {copy.danOverview5Written.split(':').slice(1).join(':').trim()}</p>
-            <p className="text-base leading-relaxed mb-2"><span className="font-semibold">{copy.danOverviewLabelPractical}:</span></p>
+            <p className="text-base leading-relaxed mb-4">
+              <span className="font-semibold">{copy.danOverviewLabelAdmission}:</span>{' '}
+              {copy.danOverview5Admission.split(':').slice(1).join(':').trim()}
+            </p>
+            <p className="text-base leading-relaxed mb-4">
+              <span className="font-semibold">{copy.danOverviewLabelWritten}:</span>{' '}
+              {copy.danOverview5Written.split(':').slice(1).join(':').trim()}
+            </p>
+            <p className="text-base leading-relaxed mb-2">
+              <span className="font-semibold">{copy.danOverviewLabelPractical}:</span>
+            </p>
             <ul className="space-y-2 mt-3">
               <li className="text-base leading-relaxed flex gap-2">
                 <span className="shrink-0">•</span>

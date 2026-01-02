@@ -14,18 +14,10 @@
     "en": "Four-directions throw from a single-hand wrist grab. Blend, control the wrist/shoulder line, turn the axis, and cut a broad arc to project with safe ukemi.",
     "de": "Vier-Richtungen-Wurf aus Einhandgriff. Führen, Handgelenk/Schulter-Linie kontrollieren, Achse drehen und mit weitem Bogen projizieren – mit sicherem Ukemi."
   },
-  "tags": [
-    "shiho-nage",
-    "shihonage",
-    "四方投げ",
-    "throw",
-    "katate-tori",
-    "irimi",
-    "tenkan"
-  ],
+  "tags": ["shiho-nage", "shihonage", "四方投げ", "throw", "katate-tori", "irimi", "tenkan"],
   "versions": [
     {
-  "id": "v-base",
+      "id": "v-base",
       "hanmi": "ai-hanmi",
       "stepsByEntry": {
         "irimi": {
@@ -159,7 +151,7 @@
       }
     },
     {
-  "id": "v-base",
+      "id": "v-base",
       "hanmi": "gyaku-hanmi",
       "stepsByEntry": {
         "irimi": {

@@ -43,7 +43,10 @@ const sanitizeArr = (arr?: (string | null)[] | null) => {
   return out.length ? out : ['EMPTY'];
 };
 
-export function buildFeedbackPayloadV1(form: NewTechniqueFormState, opts: { locale: 'en' | 'de'; entityId?: string }): FeedbackPayloadV1 {
+export function buildFeedbackPayloadV1(
+  form: NewTechniqueFormState,
+  opts: { locale: 'en' | 'de'; entityId?: string },
+): FeedbackPayloadV1 {
   const { locale, entityId } = opts;
 
   const nameVal = sanitize(form.contributorName ?? '');

@@ -14,7 +14,14 @@ const FeedbackSchema = z
   .object({
     name: z.string().trim().min(1).max(80),
     email: z.string().trim().email().max(320).optional(),
-    category: z.enum(['suggestion', 'bug', 'edit', 'new-version', 'new-variation', 'new-technique']),
+    category: z.enum([
+      'suggestion',
+      'bug',
+      'edit',
+      'new-version',
+      'new-variation',
+      'new-technique',
+    ]),
     entityType: z.enum(['technique', 'glossary', 'exam', 'guide', 'other']),
     entityId: z.string().trim().max(256).optional(),
     locale: z.enum(['en', 'de']).optional(),
@@ -50,7 +57,11 @@ const readRequestBody = async (req: VercelRequest): Promise<string> => {
 };
 
 const escapeInline = (value: string): string => {
-  const normalized = value.replace(/\r/g, '').split('\n').map((line) => line.trim()).join(' ');
+  const normalized = value
+    .replace(/\r/g, '')
+    .split('\n')
+    .map((line) => line.trim())
+    .join(' ');
   return ['*', '[', ']', '`'].reduce((acc, ch) => acc.split(ch).join(`\\${ch}`), normalized);
 };
 
@@ -77,12 +88,26 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
 
   const contentType = req.headers['content-type'] || '';
   if (!contentType.toLowerCase().includes('application/json')) {
-    res.status(415).json({ ok: false, code: 'format', message: 'Content-Type must be application/json', requestId });
+    res
+      .status(415)
+      .json({
+        ok: false,
+        code: 'format',
+        message: 'Content-Type must be application/json',
+        requestId,
+      });
     return;
   }
 
   if (!validateOrigin(req)) {
-    res.status(403).json({ ok: false, code: 'origin', message: 'Cross-origin requests are not allowed', requestId });
+    res
+      .status(403)
+      .json({
+        ok: false,
+        code: 'origin',
+        message: 'Cross-origin requests are not allowed',
+        requestId,
+      });
     return;
   }
 
@@ -90,7 +115,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
   try {
     raw = await readRequestBody(req);
   } catch (error) {
-    const message = (error as Error).message === 'PAYLOAD_TOO_LARGE' ? 'Payload too large' : 'Failed to read body';
+    const message =
+      (error as Error).message === 'PAYLOAD_TOO_LARGE'
+        ? 'Payload too large'
+        : 'Failed to read body';
     res.status(413).json({ ok: false, code: 'size', message, requestId });
     return;
   }
@@ -105,7 +133,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
 
   const result = FeedbackSchema.safeParse(parsed);
   if (!result.success) {
-    res.status(400).json({ ok: false, code: 'validation', message: 'Invalid feedback payload', requestId, issues: result.error.issues });
+    res
+      .status(400)
+      .json({
+        ok: false,
+        code: 'validation',
+        message: 'Invalid feedback payload',
+        requestId,
+        issues: result.error.issues,
+      });
     return;
   }
 
@@ -189,16 +225,28 @@ export default async function handler(req: VercelRequest, res: VercelResponse): 
     const ghText = await ghResp.text();
     if (!ghResp.ok) {
       console.error('GitHub API error', ghResp.status, ghText);
-      res.status(502).json({ ok: false, code: 'github', message: 'Failed to create GitHub issue', requestId, details: ghText });
+      res
+        .status(502)
+        .json({
+          ok: false,
+          code: 'github',
+          message: 'Failed to create GitHub issue',
+          requestId,
+          details: ghText,
+        });
       return;
     }
 
     const ghJson = JSON.parse(ghText);
-    res.status(201).json({ ok: true, requestId, issueNumber: ghJson.number, issueUrl: ghJson.html_url });
+    res
+      .status(201)
+      .json({ ok: true, requestId, issueNumber: ghJson.number, issueUrl: ghJson.html_url });
     return;
   } catch (err) {
     console.error('GitHub fetch failed', err);
-    res.status(502).json({ ok: false, code: 'github_fetch', message: 'Failed to contact GitHub', requestId });
+    res
+      .status(502)
+      .json({ ok: false, code: 'github_fetch', message: 'Failed to contact GitHub', requestId });
     return;
   }
 }

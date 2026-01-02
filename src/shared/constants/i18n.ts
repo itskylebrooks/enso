@@ -28,7 +28,8 @@ export const messages = {
     collectionsConfirmDeleteTitle: 'Delete collection?',
     collectionsConfirmDeleteBody: 'Items remain bookmarked but will be ungrouped.',
     collectionsAddTo: 'Add to Collection',
-    collectionsEmptyAll: 'No bookmarks yet. Browse the Library and tap the icon to save techniques.',
+    collectionsEmptyAll:
+      'No bookmarks yet. Browse the Library and tap the icon to save techniques.',
     collectionsEmptyCollection: 'Nothing here yet. Add items from the menu on each card.',
     collectionsEmptyUngrouped: 'Everything’s filed. Neat.',
     collectionsNone: 'No collections yet.',
@@ -114,23 +115,28 @@ export const messages = {
     installPwaButton: 'Install',
     installPwaInstalled: 'Installed',
     installPwaUnavailable: 'Use browser menu or address bar to install.',
-    installPwaIosInstructions: 'To install Enso on iOS:\n\n1. Tap the Share button (square with arrow) at the bottom\n2. Scroll down and tap "Add to Home Screen"\n3. Tap "Add" in the top right',
-    installPwaSafariInstructions: 'To install Enso on Safari:\n\n1. Click the Share button in the toolbar\n2. Scroll down and click "Add to Dock"\n\nAlternatively, use File → Add to Dock from the menu bar.',
+    installPwaIosInstructions:
+      'To install Enso on iOS:\n\n1. Tap the Share button (square with arrow) at the bottom\n2. Scroll down and tap "Add to Home Screen"\n3. Tap "Add" in the top right',
+    installPwaSafariInstructions:
+      'To install Enso on Safari:\n\n1. Click the Share button in the toolbar\n2. Scroll down and click "Add to Dock"\n\nAlternatively, use File → Add to Dock from the menu bar.',
     pageLabels: 'Page labels',
     pageLabelsDescription: 'Show labels next to icons in Library, Guide, and Glossary headers.',
     searchBtn: 'Search',
     bookmark: 'Bookmark',
     confirmClearTitle: 'Clear all data?',
-    confirmClearBody: 'This removes your local progress and notes from this device. Type CLEAR to confirm.',
+    confirmClearBody:
+      'This removes your local progress and notes from this device. Type CLEAR to confirm.',
     confirmClearLabel: 'Type CLEAR to proceed',
     confirmClearAction: 'Erase local data',
     confirmClearCancel: 'Cancel',
     toastDataCleared: 'Data cleared.',
-    homeTagline: 'Track your dojo curriculum, stay focused on key techniques, and keep your data with you offline.',
+    homeTagline:
+      'Track your dojo curriculum, stay focused on key techniques, and keep your data with you offline.',
     openLibraryCta: 'Open Library',
     viewProgressCta: 'View Bookmarks',
     aboutTitle: 'About Enso',
-    aboutIntro: 'Enso is built to help students explore techniques, learn terminology, and connect with the spirit of Aikidō through a clean, modern, and distraction-free experience.',
+    aboutIntro:
+      'Enso is built to help students explore techniques, learn terminology, and connect with the spirit of Aikidō through a clean, modern, and distraction-free experience.',
     aboutFeaturesTitle: 'With Enso, you can:',
     aboutFeature1: 'Browse, search, and filter techniques.',
     aboutFeature2: 'Save bookmarks and organize them into collections.',
@@ -142,22 +148,28 @@ export const messages = {
     aboutPrivacy2: 'Everything is stored locally in your browser.',
     aboutPrivacy3: 'You can export and import your data whenever you wish.',
     aboutPrivacy4: 'Enso is open source — the code is available on GitHub.',
-    aboutTechTitle: 'How it\'s Built',
+    aboutTechTitle: "How it's Built",
     aboutTechIntro: 'Enso is a modern web app, built with:',
     aboutTech1: 'React + TypeScript',
     aboutTech2: 'Tailwind CSS for design',
     aboutTech3: 'Vite for speed and simplicity',
     aboutTech4: 'Local-first storage (no servers required)',
     aboutDisclaimerTitle: 'Disclaimer',
-    aboutDisclaimer: 'All technique descriptions and notes here are my personal interpretations as a student.\nThey have not been formally reviewed or approved by my teachers. Any mistakes are mine alone.\nPlease use Enso only as a study aid, and always train under the guidance of a qualified instructor.',
+    aboutDisclaimer:
+      'All technique descriptions and notes here are my personal interpretations as a student.\nThey have not been formally reviewed or approved by my teachers. Any mistakes are mine alone.\nPlease use Enso only as a study aid, and always train under the guidance of a qualified instructor.',
     aboutVisionTitle: 'Vision',
-    aboutVision: 'Enso will continue to grow: expanding the library, adding kata pages, historical context, and eventually inviting contributions from different dojos and trainers.\nThe goal is to honor the harmony at the heart of Aikidō, while providing a trustworthy, privacy-friendly study resource for everyone.',
+    aboutVision:
+      'Enso will continue to grow: expanding the library, adding kata pages, historical context, and eventually inviting contributions from different dojos and trainers.\nThe goal is to honor the harmony at the heart of Aikidō, while providing a trustworthy, privacy-friendly study resource for everyone.',
     // Author / About the author
     aboutAuthorTitle: 'Author',
-    aboutAuthorPart1: 'I’m Kyle Brooks (officially Kirill Bobrov), a software development student and Aikidō practitioner based in Hamburg, Germany.',
-    aboutAuthorPart2: 'I began practicing Aikidō in August 2022, and I built Enso in October 2025 — combining my love for mindful movement and clean digital design. What started as a small study aid slowly became a way to preserve what I learn, and to share the calm, connected spirit of Aikidō through modern technology.',
-    aboutAuthorPart3: 'The photo below was taken during an Aikidō Lehrgang led by Werner Lättig at the WSV Walddörfer Sportverein in November 2024 — a quiet moment that reminds me why I practice: harmony, focus, and gratitude.',
-    aboutAuthorPart4: 'Outside the dojo, I study Software Systems Development at the University of Hamburg, and I build with React, TypeScript, and local-first principles. Enso is where those two paths meet — code and budō — where simplicity becomes practice, and practice becomes clarity.',
+    aboutAuthorPart1:
+      'I’m Kyle Brooks (officially Kirill Bobrov), a software development student and Aikidō practitioner based in Hamburg, Germany.',
+    aboutAuthorPart2:
+      'I began practicing Aikidō in August 2022, and I built Enso in October 2025 — combining my love for mindful movement and clean digital design. What started as a small study aid slowly became a way to preserve what I learn, and to share the calm, connected spirit of Aikidō through modern technology.',
+    aboutAuthorPart3:
+      'The photo below was taken during an Aikidō Lehrgang led by Werner Lättig at the WSV Walddörfer Sportverein in November 2024 — a quiet moment that reminds me why I practice: harmony, focus, and gratitude.',
+    aboutAuthorPart4:
+      'Outside the dojo, I study Software Systems Development at the University of Hamburg, and I build with React, TypeScript, and local-first principles. Enso is where those two paths meet — code and budō — where simplicity becomes practice, and practice becomes clarity.',
     aboutLink: 'About',
     portfolio: 'Portfolio',
     iconsBy: 'Icons by',
@@ -183,16 +195,21 @@ export const messages = {
     homeSpotlightSubtitle: 'Quote of the day',
     homeQuoteOfMomentTitle: 'Quote of the Moment',
     homeHistoricalNoteTitle: 'Historical Note',
-    homeHistoricalNotePart1: 'Aikidō was founded in Japan in the early 20th century by Morihei Ueshiba (1883–1969).',
-    homeHistoricalNotePart2: 'It blends martial tradition with a philosophy of harmony, redirecting force rather than opposing it.',
+    homeHistoricalNotePart1:
+      'Aikidō was founded in Japan in the early 20th century by Morihei Ueshiba (1883–1969).',
+    homeHistoricalNotePart2:
+      'It blends martial tradition with a philosophy of harmony, redirecting force rather than opposing it.',
     homeDojoCreditTitle: 'With Gratitude',
     homeDojoCreditSubtitle: 'With gratitude:',
-    homeDojoCreditPart1: 'To my teachers Joachim Eiselen and Markus Möller, my warm community at WSV (Walddörfer Sportverein), and BSV (Bramfelder Sportverein), who always welcome me kindly as a guest — especially Karen and Stefan Jakuszeit, and Alfred Haase.',
-    homeDojoCreditPart2: 'Thank you for inspiring me, for helping me enjoy every training, and for reminding me how Aikidō lets us leave everything else behind by focusing on harmony.',
+    homeDojoCreditPart1:
+      'To my teachers Joachim Eiselen and Markus Möller, my warm community at WSV (Walddörfer Sportverein), and BSV (Bramfelder Sportverein), who always welcome me kindly as a guest — especially Karen and Stefan Jakuszeit, and Alfred Haase.',
+    homeDojoCreditPart2:
+      'Thank you for inspiring me, for helping me enjoy every training, and for reminding me how Aikidō lets us leave everything else behind by focusing on harmony.',
     // Roadmap
     roadmapPulseLabel: 'purpose',
     roadmapTitle: 'Roadmap & updates',
-    roadmapSummary: "Enso's pulse — the work that is planned, in motion, and freshly launched. Quiet signals instead of a corporate changelog.",
+    roadmapSummary:
+      "Enso's pulse — the work that is planned, in motion, and freshly launched. Quiet signals instead of a corporate changelog.",
     roadmapStatusPlanned: 'planned',
     roadmapStatusInProgress: 'in progress',
     roadmapStatusLaunched: 'recently launched',
@@ -204,10 +221,12 @@ export const messages = {
     // Feedback
     feedback: 'Feedback',
     feedbackTitle: 'Feedback & Contributions (Beta)',
-    feedbackDescription: 'Help Enso grow by improving what’s here or adding your own insight. Whether it’s a small correction or a full variation — your Aikidō knowledge matters.',
+    feedbackDescription:
+      'Help Enso grow by improving what’s here or adding your own insight. Whether it’s a small correction or a full variation — your Aikidō knowledge matters.',
     feedbackAddTechniqueCta: 'Contribute technique',
     feedbackPage: {
-      heroSubtitle: 'Help Enso grow by improving what’s here or adding your own insight. Whether it’s a small correction or a full variation — your Aikidō knowledge matters.',
+      heroSubtitle:
+        'Help Enso grow by improving what’s here or adding your own insight. Whether it’s a small correction or a full variation — your Aikidō knowledge matters.',
       headings: {
         type: '1. Feedback type selector',
         dynamic: '2. Dynamic form',
@@ -515,7 +534,8 @@ export const messages = {
           summaryRemaining: '{remaining} characters left',
           summaryExceeded: 'Over by {remaining} characters',
           slugPreview: 'Slug builds from attack, name, and entry selection.',
-          unusualCombo: 'This attack/weapon combination is uncommon. Double-check it or note the exception in context.',
+          unusualCombo:
+            'This attack/weapon combination is uncommon. Double-check it or note the exception in context.',
         },
         mediaRestrictions: '',
         warnings: {
@@ -528,7 +548,8 @@ export const messages = {
           noneHint: 'No duplicates detected so far.',
           switch: 'Switch to “New version / variation”',
         },
-        consentLabelUpdated: 'By submitting, you agree your contribution may appear in the Enso database.',
+        consentLabelUpdated:
+          'By submitting, you agree your contribution may appear in the Enso database.',
         lineageHelp: 'Uncheck if this technique belongs to a specific trainer/dojo lineage.',
 
         errors: {
@@ -551,7 +572,8 @@ export const messages = {
     // Guide page
     beltExamProgramNote: 'Tap a belt to open its dedicated guide page.',
     examMatrixTitle: 'Exam Program of the German Aikido Federation (5th Kyū → 1st Dan)',
-    examMatrixLead: 'Numbers show the grade where a variation is examined. Click a technique or cell to see details. Scroll left/right to see the whole table.',
+    examMatrixLead:
+      'Numbers show the grade where a variation is examined. Click a technique or cell to see details. Scroll left/right to see the whole table.',
     examMatrixLegendTitle: 'Legend',
     examMatrixLegendKyu: 'Kyū grades (5–1)',
     examMatrixLegendDan: '1st Dan',
@@ -561,40 +583,53 @@ export const messages = {
     examMatrixSectionNage: 'Nage-waza',
     examMatrixSectionKatameShort: 'Katame-waza',
     sayaNoUchiTitle: 'Saya no Uchi Program',
-    sayaNoUchiLead: 'This table shows the relationship between attacks and techniques in the Saya no Uchi program. Icons indicate where a technique is applied against a specific attack. Click on a technique or cell to view details and variations. Scroll left/right to see the complete table.',
+    sayaNoUchiLead:
+      'This table shows the relationship between attacks and techniques in the Saya no Uchi program. Icons indicate where a technique is applied against a specific attack. Click on a technique or cell to view details and variations. Scroll left/right to see the complete table.',
     joTechniquesTitle: 'Weapons Techniques: Staff (Jō)',
-    joTechniquesLead: 'This table shows how staff techniques (jō-waza) connect to common attacks. It highlights core forms such as strikes, thrusts, and defensive movements, and their applications in paired practice. Click a technique or cell to explore step-by-step details and variations. Scroll left/right to view the full table.',
+    joTechniquesLead:
+      'This table shows how staff techniques (jō-waza) connect to common attacks. It highlights core forms such as strikes, thrusts, and defensive movements, and their applications in paired practice. Click a technique or cell to explore step-by-step details and variations. Scroll left/right to view the full table.',
     joTechniquesLegendTitle: 'Attack Descriptions',
     joTechniquesLegend1: 'Jō Ryōte-tori (1): Double grip of staff tip',
     joTechniquesLegend2: 'Jō Ryōte-tori (2): Alternating grip',
     joTechniquesLegend3: 'Jō Katate-tori (3): Nage one-handed',
     joTechniquesLegend4: 'Jō Katate Ryōte-tori (4): Nage one-handed',
     tantoTechniquesTitle: 'Weapons Techniques: Knife (Tantō)',
-    tantoTechniquesLead: 'This table shows knife techniques (tantō-waza), focusing on defense against armed attacks and safe disarming methods. The icons indicate which defenses apply to each attack. Click on a technique or cell to see explanations and possible variations. Scroll left/right to explore the complete set.',
+    tantoTechniquesLead:
+      'This table shows knife techniques (tantō-waza), focusing on defense against armed attacks and safe disarming methods. The icons indicate which defenses apply to each attack. Click on a technique or cell to see explanations and possible variations. Scroll left/right to explore the complete set.',
     // Advanced programs page/link
     advancedProgramsTitle: 'Advanced programs & Dan overview',
-    advancedProgramsLead: 'Quick links to advanced weapons programs (1st Dan+) and a concise Dan overview — use these to explore weapons tables and higher-grade requirements.',
+    advancedProgramsLead:
+      'Quick links to advanced weapons programs (1st Dan+) and a concise Dan overview — use these to explore weapons tables and higher-grade requirements.',
     advancedProgramsCta: 'View Advanced Programs',
     danOverviewTitle: 'Dan Overview (DAB)',
-    danOverviewLead: 'A concise summary of 2nd–5th Dan requirements under the Deutscher Aikido-Bund (DAB). For weapons tables see Advanced Programs.',
+    danOverviewLead:
+      'A concise summary of 2nd–5th Dan requirements under the Deutscher Aikido-Bund (DAB). For weapons tables see Advanced Programs.',
     danOverviewCta: 'View Dan Overview',
     // Dan overview structured content (split into many message keys for clean rendering)
     danOverviewWhatTitle: 'What this page is',
-    danOverviewWhatP1: 'A concise summary of requirements for 2nd–5th Dan under the Deutscher Aikido-Bund (DAB).',
-    danOverviewWhatP2: 'For Kyū → 1st Dan tables, see Guide. For weapons programs (Saya no Uchi, Jō, Tantō), see Advanced Programs.',
+    danOverviewWhatP1:
+      'A concise summary of requirements for 2nd–5th Dan under the Deutscher Aikido-Bund (DAB).',
+    danOverviewWhatP2:
+      'For Kyū → 1st Dan tables, see Guide. For weapons programs (Saya no Uchi, Jō, Tantō), see Advanced Programs.',
 
     danOverviewGeneralTitle: 'General eligibility (applies to all exams)',
-    danOverviewGeneralLi1: 'Maintain active training in the 24 months prior to exam (including national/Dan seminars).',
-    danOverviewGeneralLi2: 'Respect minimum preparation time since last grade: 2 → 3 → 4 → 5 years (for 2nd–5th Dan).',
-    danOverviewGeneralLi3: "From 3rd Dan, teaching competence (trainer license) is expected; from 4th Dan, clear embodiment of Aikidō principles.",
+    danOverviewGeneralLi1:
+      'Maintain active training in the 24 months prior to exam (including national/Dan seminars).',
+    danOverviewGeneralLi2:
+      'Respect minimum preparation time since last grade: 2 → 3 → 4 → 5 years (for 2nd–5th Dan).',
+    danOverviewGeneralLi3:
+      'From 3rd Dan, teaching competence (trainer license) is expected; from 4th Dan, clear embodiment of Aikidō principles.',
     danOverviewGeneralLi4: 'Uke for the exam should be at least 2nd Kyū.',
-    danOverviewGeneralLi5: 'Before the specific Dan content, examiners review relevant previous programs.',
+    danOverviewGeneralLi5:
+      'Before the specific Dan content, examiners review relevant previous programs.',
 
     danOverviewAtAGlanceTitle: 'At a glance (typical DAB minima)',
     danOverviewAtAGlance2: '2nd Dan: min. prep 2 years after 1st Dan.',
     danOverviewAtAGlance3: '3rd Dan: min. prep 3 years after 2nd Dan; trainer license required.',
-    danOverviewAtAGlance4: '4th Dan: min. prep 4 years after 3rd Dan; trainer license; emphasis on values & teaching.',
-    danOverviewAtAGlance5: '5th Dan: min. prep 5 years after 4th Dan; trainer license; written thesis required.',
+    danOverviewAtAGlance4:
+      '4th Dan: min. prep 4 years after 3rd Dan; trainer license; emphasis on values & teaching.',
+    danOverviewAtAGlance5:
+      '5th Dan: min. prep 5 years after 4th Dan; trainer license; written thesis required.',
     danOverviewLabelAdmission: 'Admission',
     danOverviewLabelTheory: 'Theory (teaching demo)',
     danOverviewLabelPractical: 'Practical',
@@ -602,38 +637,50 @@ export const messages = {
 
     danOverview2Title: '2nd Dan — Focus on control, structure & teaching basics',
     danOverview2Admission: 'Admission: ≥2 years since 1st Dan; recent seminar participation.',
-    danOverview2Theory: 'Theory (teaching demo): Present a methodical sequence (or whole-method) to teach one technique from the 1st-Dan syllabus to a defined group (youth/adults). Short principle recap (Ai/Ki/Do, Irimi/Tenkan, Ma-ai, Kuzushi, Ukemi, etc.). (~20 min; holders of a valid trainer license are exempt.)',
+    danOverview2Theory:
+      'Theory (teaching demo): Present a methodical sequence (or whole-method) to teach one technique from the 1st-Dan syllabus to a defined group (youth/adults). Short principle recap (Ai/Ki/Do, Irimi/Tenkan, Ma-ai, Kuzushi, Ukemi, etc.). (~20 min; holders of a valid trainer license are exempt.)',
     danOverview2PracticalLi1: 'Aiki-no-kata (Katame-waza in Seiza): seated control forms.',
-    danOverview2PracticalLi2: 'Hanmi-hantachi (Za-ho): 8 set techniques vs. grabs (e.g. Shiho-nage, Kaiten-nage, Tenchi-nage, Sumi-otoshi, Ude-kime-nage, Ude-osae/Ikkyo).',
-    danOverview2PracticalLi3: 'Aiki-jō-jutsu: ≥6 basic jō applications + ≥6 jō defenses vs. varied attacks.',
+    danOverview2PracticalLi2:
+      'Hanmi-hantachi (Za-ho): 8 set techniques vs. grabs (e.g. Shiho-nage, Kaiten-nage, Tenchi-nage, Sumi-otoshi, Ude-kime-nage, Ude-osae/Ikkyo).',
+    danOverview2PracticalLi3:
+      'Aiki-jō-jutsu: ≥6 basic jō applications + ≥6 jō defenses vs. varied attacks.',
     danOverview2PracticalLi4: 'Jiyū-waza: free defense vs. one unarmed attacker (kakari-geiko).',
 
     danOverview3Title: '3rd Dan — Focus on standing kata, knife defense & spontaneity',
     danOverview3Admission: 'Admission: ≥3 years since 2nd Dan; trainer license; active seminars.',
-    danOverview3PracticalLi1: 'Aiki-no-kata (Nage-waza, 3rd Kata): 12 specified standing techniques.',
-    danOverview3PracticalLi2: 'Hanmi-hantachi: 8 self-selected seated-vs-standing techniques vs. strikes.',
-    danOverview3PracticalLi3: 'Aiki-tanken-jutsu (Tantō defense): ≥8 techniques covering common strike patterns and combined scenarios.',
+    danOverview3PracticalLi1:
+      'Aiki-no-kata (Nage-waza, 3rd Kata): 12 specified standing techniques.',
+    danOverview3PracticalLi2:
+      'Hanmi-hantachi: 8 self-selected seated-vs-standing techniques vs. strikes.',
+    danOverview3PracticalLi3:
+      'Aiki-tanken-jutsu (Tantō defense): ≥8 techniques covering common strike patterns and combined scenarios.',
     danOverview3PracticalLi4: 'Jiyū-waza: free defense vs. two unarmed attackers (ju-no-geiko).',
 
     danOverview4Title: '4th Dan — Focus on combinations, counters & sword work',
-    danOverview4Admission: 'Admission: ≥4 years since 3rd Dan; trainer license; demonstrable values & teaching engagement.',
+    danOverview4Admission:
+      'Admission: ≥4 years since 3rd Dan; trainer license; demonstrable values & teaching engagement.',
     danOverview4PracticalLi1: 'Aiki-no-kata: form against armed attacks.',
-    danOverview4PracticalLi2: 'Renzoku-waza / Kaeshi-waza: 7 set pairings demonstrating follow-ups/counters.',
+    danOverview4PracticalLi2:
+      'Renzoku-waza / Kaeshi-waza: 7 set pairings demonstrating follow-ups/counters.',
     danOverview4PracticalLi3: 'Aiki-ken-jutsu: 7 basic defenses vs. bokken (katana) attacks.',
     danOverview4PracticalLi4: 'Jiyū-waza: free defense vs. two unarmed attackers (kakari-geiko).',
 
     danOverview5Title: '5th Dan — Focus on mastery, reflection & creative presentation',
     danOverview5Admission: 'Admission: ≥5 years since 4th Dan; trainer license.',
-    danOverview5Written: 'Written thesis: in-depth topic (technical/pedagogical/spiritual); must be passed (≥2/3 points) before the practical exam.',
+    danOverview5Written:
+      'Written thesis: in-depth topic (technical/pedagogical/spiritual); must be passed (≥2/3 points) before the practical exam.',
     danOverview5PracticalLi1: 'Review: complete program up to 4th Dan.',
-    danOverview5PracticalLi2: 'Free forms: personal presentation of Aikidō elements/principles (e.g., original kata/sequence).',
+    danOverview5PracticalLi2:
+      'Free forms: personal presentation of Aikidō elements/principles (e.g., original kata/sequence).',
     danOverview5PracticalLi3: 'Renzoku/Kaeshi (free): 8 combinations, two in each variant.',
-    danOverview5PracticalLi4: 'Aiki-bu-jutsu: 7 advanced controls vs. armed attacker (jō / tantō / katana).',
+    danOverview5PracticalLi4:
+      'Aiki-bu-jutsu: 7 advanced controls vs. armed attacker (jō / tantō / katana).',
     danOverview5PracticalLi5: 'Morote-waza: 6 forms vs. two simultaneous attackers.',
     danOverview5PracticalLi6: 'Jiyū-waza: free defense vs. three unarmed attackers (kakari-geiko).',
 
     danOverviewUkemiTitle: 'Note on ukemi',
-    danOverviewUkemiP1: 'With each grade, ukemi must be safer, more adaptable, and more spontaneous to enable dynamic practice.',
+    danOverviewUkemiP1:
+      'With each grade, ukemi must be safer, more adaptable, and more spontaneous to enable dynamic practice.',
   },
   de: {
     app: 'Enso',
@@ -659,10 +706,13 @@ export const messages = {
     collectionsDelete: 'Löschen',
     collectionsEdit: 'Sammlungen bearbeiten',
     collectionsConfirmDeleteTitle: 'Sammlung löschen?',
-    collectionsConfirmDeleteBody: 'Einträge bleiben als Lesezeichen gespeichert, werden aber nicht mehr zugeordnet.',
+    collectionsConfirmDeleteBody:
+      'Einträge bleiben als Lesezeichen gespeichert, werden aber nicht mehr zugeordnet.',
     collectionsAddTo: 'Zur Sammlung hinzufügen',
-    collectionsEmptyAll: 'Noch keine Lesezeichen. Durchstöbere die Bibliothek und tippe das Icon zum Speichern.',
-    collectionsEmptyCollection: 'Hier ist noch nichts. Füge Einträge über das Menü auf den Karten hinzu.',
+    collectionsEmptyAll:
+      'Noch keine Lesezeichen. Durchstöbere die Bibliothek und tippe das Icon zum Speichern.',
+    collectionsEmptyCollection:
+      'Hier ist noch nichts. Füge Einträge über das Menü auf den Karten hinzu.',
     collectionsEmptyUngrouped: 'Alles sortiert. Schön.',
     collectionsNone: 'Noch keine Sammlungen.',
     collectionsNameLabel: 'Name',
@@ -738,7 +788,8 @@ export const messages = {
     clear: 'Löschen',
     motionSettings: 'Animationen',
     disableAnimations: 'Animationen deaktivieren',
-    disableAnimationsDescription: 'Schaltet alle Übergänge und Bewegungseffekte in der gesamten Anwendung aus.',
+    disableAnimationsDescription:
+      'Schaltet alle Übergänge und Bewegungseffekte in der gesamten Anwendung aus.',
     disableAnimationsOn: 'An',
     disableAnimationsOff: 'Aus',
     installPwa: 'App installieren',
@@ -747,23 +798,28 @@ export const messages = {
     installPwaButton: 'Installieren',
     installPwaInstalled: 'Installiert',
     installPwaUnavailable: 'Nutze das Browsermenü oder die Adressleiste zum Installieren.',
-    installPwaIosInstructions: 'So installierst du Enso auf iOS:\n\n1. Tippe auf den Teilen-Button (Quadrat mit Pfeil) unten\n2. Scrolle nach unten und tippe auf „Zum Home-Bildschirm"\n3. Tippe oben rechts auf „Hinzufügen"',
-    installPwaSafariInstructions: 'So installierst du Enso in Safari:\n\n1. Klicke auf den Teilen-Button in der Symbolleiste\n2. Scrolle nach unten und klicke auf „Zum Dock hinzufügen"\n\nAlternativ: Datei → Zum Dock hinzufügen im Menü.',
+    installPwaIosInstructions:
+      'So installierst du Enso auf iOS:\n\n1. Tippe auf den Teilen-Button (Quadrat mit Pfeil) unten\n2. Scrolle nach unten und tippe auf „Zum Home-Bildschirm"\n3. Tippe oben rechts auf „Hinzufügen"',
+    installPwaSafariInstructions:
+      'So installierst du Enso in Safari:\n\n1. Klicke auf den Teilen-Button in der Symbolleiste\n2. Scrolle nach unten und klicke auf „Zum Dock hinzufügen"\n\nAlternativ: Datei → Zum Dock hinzufügen im Menü.',
     pageLabels: 'Seitenlabels',
     pageLabelsDescription: 'Zeige Labels neben Icons in Bibliothek, Leitfaden und Glossar.',
     searchBtn: 'Suche',
     bookmark: 'Lesezeichen',
     confirmClearTitle: 'Alle Daten löschen?',
-    confirmClearBody: 'Dadurch werden deine lokalen Fortschritte und Notizen auf diesem Gerät entfernt. Tippe CLEAR zur Bestätigung.',
+    confirmClearBody:
+      'Dadurch werden deine lokalen Fortschritte und Notizen auf diesem Gerät entfernt. Tippe CLEAR zur Bestätigung.',
     confirmClearLabel: 'CLEAR eingeben',
     confirmClearAction: 'Lokale Daten l\u00f6schen',
     confirmClearCancel: 'Abbrechen',
     toastDataCleared: 'Daten gelöscht.',
-    homeTagline: 'Verwalte dein Dojo-Curriculum, fokussiere wichtige Techniken und behalte deine Daten offline bei dir.',
+    homeTagline:
+      'Verwalte dein Dojo-Curriculum, fokussiere wichtige Techniken und behalte deine Daten offline bei dir.',
     openLibraryCta: 'Bibliothek öffnen',
     viewProgressCta: 'Lesezeichen ansehen',
     aboutTitle: 'Über Enso',
-    aboutIntro: 'Enso wurde entwickelt, um Schüler:innen zu helfen, Techniken zu erkunden, Begriffe zu lernen und mit dem Geist des Aikidō in einer klaren, modernen und ablenkungsfreien Umgebung verbunden zu bleiben.',
+    aboutIntro:
+      'Enso wurde entwickelt, um Schüler:innen zu helfen, Techniken zu erkunden, Begriffe zu lernen und mit dem Geist des Aikidō in einer klaren, modernen und ablenkungsfreien Umgebung verbunden zu bleiben.',
     aboutFeaturesTitle: 'Mit Enso kannst du:',
     aboutFeature1: 'Techniken durchsuchen, filtern und speichern.',
     aboutFeature2: 'Lesezeichen in eigenen Sammlungen organisieren.',
@@ -782,15 +838,21 @@ export const messages = {
     aboutTech3: 'Vite für Geschwindigkeit und Einfachheit',
     aboutTech4: 'Local-first Speicher (kein Server notwendig)',
     aboutDisclaimerTitle: 'Hinweis',
-    aboutDisclaimer: 'Alle Technikbeschreibungen und Notizen sind meine persönlichen Interpretationen als Schüler.\nSie wurden nicht offiziell von meinen Lehrer:innen überprüft oder freigegeben. Alle Fehler liegen bei mir.\nBitte nutze Enso nur als Lernhilfe und trainiere stets unter Anleitung einer qualifizierten Lehrkraft.',
+    aboutDisclaimer:
+      'Alle Technikbeschreibungen und Notizen sind meine persönlichen Interpretationen als Schüler.\nSie wurden nicht offiziell von meinen Lehrer:innen überprüft oder freigegeben. Alle Fehler liegen bei mir.\nBitte nutze Enso nur als Lernhilfe und trainiere stets unter Anleitung einer qualifizierten Lehrkraft.',
     aboutVisionTitle: 'Vision',
-    aboutVision: 'Enso wird weiter wachsen: mit einer größeren Bibliothek, Katas, historischem Kontext und Beiträgen von verschiedenen Dojos und Trainer:innen.\nZiel ist es, die Harmonie des Aikidō zu bewahren und eine vertrauenswürdige, datenschutzfreundliche Lernressource für alle zu schaffen.',
+    aboutVision:
+      'Enso wird weiter wachsen: mit einer größeren Bibliothek, Katas, historischem Kontext und Beiträgen von verschiedenen Dojos und Trainer:innen.\nZiel ist es, die Harmonie des Aikidō zu bewahren und eine vertrauenswürdige, datenschutzfreundliche Lernressource für alle zu schaffen.',
     // Autor / Über den Autor
     aboutAuthorTitle: 'Autor',
-    aboutAuthorPart1: 'Ich bin Kyle Brooks (offiziell Kirill Bobrov), Student für Software Systems Development und Aikidō-Praktizierender in Hamburg.',
-    aboutAuthorPart2: 'Mit Aikidō habe ich im August 2022 begonnen, und Enso entstand im Oktober 2025 — aus meiner Liebe zu achtsamer Bewegung und klarer digitaler Gestaltung. Was als kleines Lernhilfsmittel begann, wurde nach und nach zu einer Möglichkeit, mein Wissen zu bewahren und den ruhigen, verbindenden Geist des Aikidō mit moderner Technologie zu teilen.',
-    aboutAuthorPart3: 'Das Foto unten entstand während eines Aikidō-Lehrgangs mit Werner Lättig im WSV Walddörfer Sportverein im November 2024 — ein stiller Moment, der mich daran erinnert, warum ich übe: Harmonie, Konzentration und Dankbarkeit.',
-    aboutAuthorPart4: 'Außerhalb des Dōjō studiere ich an der Universität Hamburg und arbeite mit React, TypeScript und lokalen Speicherprinzipien. Enso ist der Ort, an dem sich diese beiden Wege treffen — Code und Budō — wo Einfachheit zur Übung wird, und Übung zu Klarheit.',
+    aboutAuthorPart1:
+      'Ich bin Kyle Brooks (offiziell Kirill Bobrov), Student für Software Systems Development und Aikidō-Praktizierender in Hamburg.',
+    aboutAuthorPart2:
+      'Mit Aikidō habe ich im August 2022 begonnen, und Enso entstand im Oktober 2025 — aus meiner Liebe zu achtsamer Bewegung und klarer digitaler Gestaltung. Was als kleines Lernhilfsmittel begann, wurde nach und nach zu einer Möglichkeit, mein Wissen zu bewahren und den ruhigen, verbindenden Geist des Aikidō mit moderner Technologie zu teilen.',
+    aboutAuthorPart3:
+      'Das Foto unten entstand während eines Aikidō-Lehrgangs mit Werner Lättig im WSV Walddörfer Sportverein im November 2024 — ein stiller Moment, der mich daran erinnert, warum ich übe: Harmonie, Konzentration und Dankbarkeit.',
+    aboutAuthorPart4:
+      'Außerhalb des Dōjō studiere ich an der Universität Hamburg und arbeite mit React, TypeScript und lokalen Speicherprinzipien. Enso ist der Ort, an dem sich diese beiden Wege treffen — Code und Budō — wo Einfachheit zur Übung wird, und Übung zu Klarheit.',
     aboutLink: 'Über',
     portfolio: 'Portfolio',
     iconsBy: 'Icons von',
@@ -816,16 +878,21 @@ export const messages = {
     homeSpotlightSubtitle: 'Zitat des Tages',
     homeQuoteOfMomentTitle: 'Zitat des Augenblicks',
     homeHistoricalNoteTitle: 'Geschichtliche Notiz',
-    homeHistoricalNotePart1: 'Aikidō wurde zu Beginn des 20. Jahrhunderts in Japan von Morihei Ueshiba (1883–1969) gegründet.',
-    homeHistoricalNotePart2: 'Es verbindet Kampftradition mit einer Philosophie der Harmonie und leitet Kraft um, anstatt sie zu bekämpfen.',
+    homeHistoricalNotePart1:
+      'Aikidō wurde zu Beginn des 20. Jahrhunderts in Japan von Morihei Ueshiba (1883–1969) gegründet.',
+    homeHistoricalNotePart2:
+      'Es verbindet Kampftradition mit einer Philosophie der Harmonie und leitet Kraft um, anstatt sie zu bekämpfen.',
     homeDojoCreditTitle: 'Mit Dankbarkeit',
     homeDojoCreditSubtitle: 'Mit Dankbarkeit:',
-    homeDojoCreditPart1: 'Meinen Lehrern Joachim Eiselen und Markus Möller, meiner herzlichen Gemeinschaft im WSV (Walddörfer Sportverein) und dem BSV (Bramfelder Sportverein), die mich immer freundlich als Gast aufnehmen – besonders Karen und Stefan Jakuszeit sowie Alfred Haase.',
-    homeDojoCreditPart2: 'Danke, dass ihr mich inspiriert, mir helft, jedes Training zu genießen, und mich daran erinnert, wie Aikidō uns alles andere vergessen lässt, wenn wir uns auf Harmonie konzentrieren.',
+    homeDojoCreditPart1:
+      'Meinen Lehrern Joachim Eiselen und Markus Möller, meiner herzlichen Gemeinschaft im WSV (Walddörfer Sportverein) und dem BSV (Bramfelder Sportverein), die mich immer freundlich als Gast aufnehmen – besonders Karen und Stefan Jakuszeit sowie Alfred Haase.',
+    homeDojoCreditPart2:
+      'Danke, dass ihr mich inspiriert, mir helft, jedes Training zu genießen, und mich daran erinnert, wie Aikidō uns alles andere vergessen lässt, wenn wir uns auf Harmonie konzentrieren.',
     // Roadmap
     roadmapPulseLabel: 'zweck',
     roadmapTitle: 'Roadmap & Updates',
-    roadmapSummary: 'Der Puls von Enso – was geplant ist, woran gearbeitet wird und was frisch erschienen ist. Leise Signale statt lauter Release-Notizen.',
+    roadmapSummary:
+      'Der Puls von Enso – was geplant ist, woran gearbeitet wird und was frisch erschienen ist. Leise Signale statt lauter Release-Notizen.',
     roadmapStatusPlanned: 'geplant',
     roadmapStatusInProgress: 'in arbeit',
     roadmapStatusLaunched: 'kürzlich veröffentlicht',
@@ -837,10 +904,12 @@ export const messages = {
     // Feedback
     feedback: 'Feedback',
     feedbackTitle: 'Feedback &  Beiträge (Beta)',
-    feedbackDescription: 'Hilf Enso zu wachsen, indem du bestehende Inhalte verbesserst oder deine Perspektive einbringst. Ob kleine Korrektur oder komplette Variante – dein Aikidō-Wissen zählt.',
+    feedbackDescription:
+      'Hilf Enso zu wachsen, indem du bestehende Inhalte verbesserst oder deine Perspektive einbringst. Ob kleine Korrektur oder komplette Variante – dein Aikidō-Wissen zählt.',
     feedbackAddTechniqueCta: 'Technik beitragen',
     feedbackPage: {
-      heroSubtitle: 'Hilf Enso zu wachsen, indem du bestehende Inhalte verbesserst oder deine Perspektive einbringst. Ob kleine Korrektur oder komplette Variante – dein Aikidō-Wissen zählt.',
+      heroSubtitle:
+        'Hilf Enso zu wachsen, indem du bestehende Inhalte verbesserst oder deine Perspektive einbringst. Ob kleine Korrektur oder komplette Variante – dein Aikidō-Wissen zählt.',
       headings: {
         type: '1. Feedback-Typ wählen',
         dynamic: '2. Dynamisches Formular',
@@ -854,7 +923,8 @@ export const messages = {
         },
         variation: {
           title: 'Neue Variante oder Version hinzufügen',
-          description: 'Beschreibe, wie dein Dojo oder deine Lehrerin bzw. dein Lehrer sie anders vermittelt.',
+          description:
+            'Beschreibe, wie dein Dojo oder deine Lehrerin bzw. dein Lehrer sie anders vermittelt.',
         },
         newTechnique: {
           title: 'Neue Technik vorschlagen',
@@ -970,7 +1040,8 @@ export const messages = {
         variationKeyPoint: 'Wichtigen Lernpunkt hinzufügen',
         variationMistake: 'Häufigen Fehler hinzufügen',
         variationMediaTitle: 'Kurzen Medientitel hinzufügen',
-        appFeedback: 'Mir gefällt das minimalistische Design! Vielleicht Favoriten-Filter anheften?',
+        appFeedback:
+          'Mir gefällt das minimalistische Design! Vielleicht Favoriten-Filter anheften?',
         appTitle: 'Kurzer, klarer Titel',
         screenshotUrl: 'URL oder Medienlink einfügen',
         bugLocation: 'Technik-Detailseite → Lesezeichen-Symbol.',
@@ -1068,10 +1139,16 @@ export const messages = {
           duplicates: 'Mögliche Dubletten',
         },
         counts: {
-          stepsUpdated: { one: '{count} Schritt aktualisiert', many: '{count} Schritte aktualisiert' },
+          stepsUpdated: {
+            one: '{count} Schritt aktualisiert',
+            many: '{count} Schritte aktualisiert',
+          },
           textSections: { one: '{count} Abschnitt', many: '{count} Abschnitte' },
           media: { one: '{count} Anhang', many: '{count} Anhänge' },
-          documentedSteps: { one: '{count} Schritt dokumentiert', many: '{count} Schritte dokumentiert' },
+          documentedSteps: {
+            one: '{count} Schritt dokumentiert',
+            many: '{count} Schritte dokumentiert',
+          },
           characters: { one: '{count} Zeichen', many: '{count} Zeichen' },
           reproduction: { one: '{count} Schritt', many: '{count} Schritte' },
           duplicates: { one: '{count} mögliche Dublette', many: '{count} mögliche Dubletten' },
@@ -1147,9 +1224,11 @@ export const messages = {
           summaryRemaining: 'Noch {remaining} Zeichen',
           summaryExceeded: 'Um {remaining} Zeichen überschritten',
           slugPreview: 'Slug baut sich aus Angriff, Name und Einstieg zusammen.',
-          unusualCombo: 'Diese Kombination aus Angriff und Waffe ist ungewöhnlich. Bitte doppelt prüfen oder im Kontext erwähnen.',
+          unusualCombo:
+            'Diese Kombination aus Angriff und Waffe ist ungewöhnlich. Bitte doppelt prüfen oder im Kontext erwähnen.',
         },
-        mediaRestrictions: 'Für neue Techniken werden nur YouTube (no-cookie) und direkte Bild-URLs akzeptiert.',
+        mediaRestrictions:
+          'Für neue Techniken werden nur YouTube (no-cookie) und direkte Bild-URLs akzeptiert.',
         warnings: {
           summaryMissingSingle: 'Bitte gib eine kurze Zusammenfassung (max. 230 Zeichen) an.',
           consentMissing: 'Zum Absenden musst du den Nutzungsrechten zustimmen.',
@@ -1160,8 +1239,10 @@ export const messages = {
           noneHint: 'Keine möglichen Dubletten gefunden.',
           switch: 'Zu „Neue Variante / Version“ wechseln',
         },
-        consentLabelUpdated: 'Mit dem Absenden stimmst du zu, dass dein Beitrag in der Enso-Datenbank erscheinen darf.',
-        lineageHelp: 'Deaktiviere dies, wenn die Technik zu einer bestimmten Trainer-/Dojo-Linie gehört.',
+        consentLabelUpdated:
+          'Mit dem Absenden stimmst du zu, dass dein Beitrag in der Enso-Datenbank erscheinen darf.',
+        lineageHelp:
+          'Deaktiviere dies, wenn die Technik zu einer bestimmten Trainer-/Dojo-Linie gehört.',
 
         errors: {
           generic: 'Kann derzeit nicht gesendet werden. Bitte später erneut versuchen.',
@@ -1183,7 +1264,8 @@ export const messages = {
     // Guide page
     beltExamProgramNote: 'Tippe auf einen Gürtel, um die passende Leitfadenseite zu öffnen.',
     examMatrixTitle: 'Prüfungsprogramm des Deutschen Aikido-Bundes (5. Kyū → 1. Dan)',
-    examMatrixLead: 'Zahlen zeigen den Prüfungsgrad für die jeweilige Variante. Technik oder Feld anklicken für Details. Links/rechts scrollen, um die ganze Tabelle zu sehen.',
+    examMatrixLead:
+      'Zahlen zeigen den Prüfungsgrad für die jeweilige Variante. Technik oder Feld anklicken für Details. Links/rechts scrollen, um die ganze Tabelle zu sehen.',
     examMatrixLegendTitle: 'Legende',
     examMatrixLegendKyu: 'Kyū-Grade (5–1)',
     examMatrixLegendDan: '1. Dan',
@@ -1193,40 +1275,52 @@ export const messages = {
     examMatrixSectionNage: 'Nage-waza',
     examMatrixSectionKatameShort: 'Katame-waza',
     sayaNoUchiTitle: 'Saya-no-Uchi-Programm',
-    sayaNoUchiLead: 'Diese Tabelle zeigt die Beziehung zwischen Angriffen und Techniken im Saya-no-Uchi-Programm. Symbole markieren, wo eine Technik gegen einen bestimmten Angriff angewendet wird. Klicke auf eine Technik oder Zelle, um Details und Varianten zu sehen. Zum vollständigen Anzeigen bitte nach links/rechts scrollen.',
+    sayaNoUchiLead:
+      'Diese Tabelle zeigt die Beziehung zwischen Angriffen und Techniken im Saya-no-Uchi-Programm. Symbole markieren, wo eine Technik gegen einen bestimmten Angriff angewendet wird. Klicke auf eine Technik oder Zelle, um Details und Varianten zu sehen. Zum vollständigen Anzeigen bitte nach links/rechts scrollen.',
     joTechniquesTitle: 'Waffentechniken: Stab (Jō)',
-    joTechniquesLead: 'Diese Tabelle zeigt, wie Stabtechniken (Jō-Waza) mit typischen Angriffen verbunden sind. Sie enthält grundlegende Formen wie Schläge, Stiche und Abwehrbewegungen sowie deren Anwendung im Partnertraining. Klicke auf eine Technik oder Zelle, um Details und Varianten zu sehen. Zum vollständigen Anzeigen bitte nach links/rechts scrollen.',
+    joTechniquesLead:
+      'Diese Tabelle zeigt, wie Stabtechniken (Jō-Waza) mit typischen Angriffen verbunden sind. Sie enthält grundlegende Formen wie Schläge, Stiche und Abwehrbewegungen sowie deren Anwendung im Partnertraining. Klicke auf eine Technik oder Zelle, um Details und Varianten zu sehen. Zum vollständigen Anzeigen bitte nach links/rechts scrollen.',
     joTechniquesLegendTitle: 'Angriffsbeschreibungen',
     joTechniquesLegend1: 'Jō Ryōte-tori (1): Doppelgriff der Stabspitze',
     joTechniquesLegend2: 'Jō Ryōte-tori (2): Wechselständiger Griff',
     joTechniquesLegend3: 'Jō Katate-tori (3): Nage Einhändig',
     joTechniquesLegend4: 'Jō Katate Ryōte-tori (4): Nage Einhändig',
     tantoTechniquesTitle: 'Waffentechniken: Messer (Tantō)',
-    tantoTechniquesLead: 'Diese Tabelle zeigt Messertechniken (Tantō-Waza), mit Schwerpunkt auf Verteidigung gegen bewaffnete Angriffe und sichere Entwaffnung. Symbole markieren, welche Abwehr gegen welchen Angriff angewendet wird. Klicke auf eine Technik oder Zelle, um Erklärungen und Varianten zu sehen. Zum vollständigen Anzeigen bitte nach links/rechts scrollen.',
+    tantoTechniquesLead:
+      'Diese Tabelle zeigt Messertechniken (Tantō-Waza), mit Schwerpunkt auf Verteidigung gegen bewaffnete Angriffe und sichere Entwaffnung. Symbole markieren, welche Abwehr gegen welchen Angriff angewendet wird. Klicke auf eine Technik oder Zelle, um Erklärungen und Varianten zu sehen. Zum vollständigen Anzeigen bitte nach links/rechts scrollen.',
     // Advanced programs page/link
     advancedProgramsTitle: 'Erweiterte Programme & Dan-Überblick',
-    advancedProgramsLead: 'Schnellzugriff auf Waffenprogramme (ab 1. Dan) und einen kompakten Dan-Überblick — ideal, um Waffen-Tabellen und Anforderungen höherer Grade zu erkunden.',
+    advancedProgramsLead:
+      'Schnellzugriff auf Waffenprogramme (ab 1. Dan) und einen kompakten Dan-Überblick — ideal, um Waffen-Tabellen und Anforderungen höherer Grade zu erkunden.',
     advancedProgramsCta: 'Erweiterte Programme ansehen',
     danOverviewTitle: 'Dan-Überblick (DAB)',
-    danOverviewLead: 'Knapper Überblick über Anforderungen 2.–5. Dan nach Deutschem Aikido-Bund (DAB). Waffen-Tabellen: Fortgeschrittene Programme.',
+    danOverviewLead:
+      'Knapper Überblick über Anforderungen 2.–5. Dan nach Deutschem Aikido-Bund (DAB). Waffen-Tabellen: Fortgeschrittene Programme.',
     danOverviewCta: 'Dan-Überblick ansehen',
     // Replace HTML blob with structured German keys
     danOverviewWhatTitle: 'Zweck der Seite',
-    danOverviewWhatP1: 'Knapper Überblick über die Anforderungen 2.–5. Dan nach Deutschem Aikido-Bund (DAB).',
-    danOverviewWhatP2: 'Für Kyū → 1. Dan Tabellen siehe Leitfaden. Für Waffenprogramme (Saya no Uchi, Jō, Tantō) siehe Fortgeschrittene Programme.',
+    danOverviewWhatP1:
+      'Knapper Überblick über die Anforderungen 2.–5. Dan nach Deutschem Aikido-Bund (DAB).',
+    danOverviewWhatP2:
+      'Für Kyū → 1. Dan Tabellen siehe Leitfaden. Für Waffenprogramme (Saya no Uchi, Jō, Tantō) siehe Fortgeschrittene Programme.',
 
     danOverviewGeneralTitle: 'Allgemeine Zulassung',
-    danOverviewGeneralLi1: 'Aktive Teilnahme in den letzten 24 Monaten (inkl. Bundes-/Dan-Lehrgängen).',
-    danOverviewGeneralLi2: 'Mindestvorbereitungszeiten seit dem letzten Grad: 2 → 3 → 4 → 5 Jahre (für 2.–5. Dan).',
-    danOverviewGeneralLi3: 'Ab 3. Dan: Lehrkompetenz (Trainerlizenz); ab 4. Dan: gelebte Aikidō-Werte und Vorbildfunktion.',
+    danOverviewGeneralLi1:
+      'Aktive Teilnahme in den letzten 24 Monaten (inkl. Bundes-/Dan-Lehrgängen).',
+    danOverviewGeneralLi2:
+      'Mindestvorbereitungszeiten seit dem letzten Grad: 2 → 3 → 4 → 5 Jahre (für 2.–5. Dan).',
+    danOverviewGeneralLi3:
+      'Ab 3. Dan: Lehrkompetenz (Trainerlizenz); ab 4. Dan: gelebte Aikidō-Werte und Vorbildfunktion.',
     danOverviewGeneralLi4: 'Uke mindestens 2. Kyū.',
-    danOverviewGeneralLi5: 'Vor den spezifischen Dan-Inhalten: Überprüfung des bisherigen Programms.',
+    danOverviewGeneralLi5:
+      'Vor den spezifischen Dan-Inhalten: Überprüfung des bisherigen Programms.',
 
     danOverviewAtAGlanceTitle: 'Kurzüberblick (typische DAB-Minima)',
     danOverviewAtAGlance2: '2. Dan: mind. 2 Jahre seit 1. Dan.',
     danOverviewAtAGlance3: '3. Dan: mind. 3 Jahre seit 2. Dan; Trainerlizenz erforderlich.',
     danOverviewAtAGlance4: '4. Dan: mind. 4 Jahre seit 3. Dan; Trainerlizenz; Werte & Vermittlung.',
-    danOverviewAtAGlance5: '5. Dan: mind. 5 Jahre seit 4. Dan; Trainerlizenz; schriftliche Hausarbeit.',
+    danOverviewAtAGlance5:
+      '5. Dan: mind. 5 Jahre seit 4. Dan; Trainerlizenz; schriftliche Hausarbeit.',
     danOverviewLabelAdmission: 'Zulassung',
     danOverviewLabelTheory: 'Theorie (Lehrprobe)',
     danOverviewLabelPractical: 'Praxis',
@@ -1234,39 +1328,53 @@ export const messages = {
 
     danOverview2Title: '2. Dan — Schwerpunkt: Kontrolle, Struktur & Lehrprobe',
     danOverview2Admission: 'Zulassung: ≥2 Jahre seit 1. Dan; aktuelle Lehrgänge.',
-    danOverview2Theory: 'Theorie (Lehrprobe): Methodische Reihe (oder Ganzheitsmethode) zu einer Technik aus dem 1.-Dan-Programm für eine definierte Zielgruppe (Jugend/Erwachsene) inkl. kurzer Prinzipien-Erläuterung. (~20 Min; mit gültiger Trainerlizenz entfällt.)',
+    danOverview2Theory:
+      'Theorie (Lehrprobe): Methodische Reihe (oder Ganzheitsmethode) zu einer Technik aus dem 1.-Dan-Programm für eine definierte Zielgruppe (Jugend/Erwachsene) inkl. kurzer Prinzipien-Erläuterung. (~20 Min; mit gültiger Trainerlizenz entfällt.)',
     danOverview2PracticalLi1: 'Aiki-no-kata (Katame-waza in Seiza): Sitzformen der Kontrolle.',
-    danOverview2PracticalLi2: 'Hanmi-hantachi (Za-ho): 8 festgelegte Techniken gegen Griffe (z. B. Shiho-nage, Kaiten-nage, Tenchi-nage, Sumi-otoshi, Ude-kime-nage, Ude-osae/Ikkyo).',
-    danOverview2PracticalLi3: 'Aiki-jō-jutsu: ≥6 jō-Grundtechniken + ≥6 Abwehrtechniken gegen unterschiedliche jō-Angriffe.',
-    danOverview2PracticalLi4: 'Jiyū-waza: freie Verteidigung gegen einen unbewaffneten Angreifer (kakari-geiko).',
+    danOverview2PracticalLi2:
+      'Hanmi-hantachi (Za-ho): 8 festgelegte Techniken gegen Griffe (z. B. Shiho-nage, Kaiten-nage, Tenchi-nage, Sumi-otoshi, Ude-kime-nage, Ude-osae/Ikkyo).',
+    danOverview2PracticalLi3:
+      'Aiki-jō-jutsu: ≥6 jō-Grundtechniken + ≥6 Abwehrtechniken gegen unterschiedliche jō-Angriffe.',
+    danOverview2PracticalLi4:
+      'Jiyū-waza: freie Verteidigung gegen einen unbewaffneten Angreifer (kakari-geiko).',
 
     danOverview3Title: '3. Dan — Schwerpunkt: Stand-Kata, Messerabwehr & Spontaneität',
     danOverview3Admission: 'Zulassung: ≥3 Jahre seit 2. Dan; Trainerlizenz; aktive Lehrgänge.',
-    danOverview3PracticalLi1: 'Aiki-no-kata (Nage-waza, 3. Kata): 12 fest definierte Standtechniken.',
-    danOverview3PracticalLi2: 'Hanmi-hantachi: 8 frei gewählte Za-ho-Techniken gegen Schlagangriffe.',
-    danOverview3PracticalLi3: 'Aiki-tanken-jutsu (Tantō): ≥8 Messerabwehren, die gängige Schlagmuster und Kombiangriffe abdecken.',
-    danOverview3PracticalLi4: 'Jiyū-waza: freie Verteidigung gegen zwei unbewaffnete Angreifer (ju-no-geiko).',
+    danOverview3PracticalLi1:
+      'Aiki-no-kata (Nage-waza, 3. Kata): 12 fest definierte Standtechniken.',
+    danOverview3PracticalLi2:
+      'Hanmi-hantachi: 8 frei gewählte Za-ho-Techniken gegen Schlagangriffe.',
+    danOverview3PracticalLi3:
+      'Aiki-tanken-jutsu (Tantō): ≥8 Messerabwehren, die gängige Schlagmuster und Kombiangriffe abdecken.',
+    danOverview3PracticalLi4:
+      'Jiyū-waza: freie Verteidigung gegen zwei unbewaffnete Angreifer (ju-no-geiko).',
 
     danOverview4Title: '4. Dan — Schwerpunkt: Verkettungen, Konter & Schwertarbeit',
-    danOverview4Admission: 'Zulassung: ≥4 Jahre seit 3. Dan; Trainerlizenz; Werte leben & vermitteln.',
+    danOverview4Admission:
+      'Zulassung: ≥4 Jahre seit 3. Dan; Trainerlizenz; Werte leben & vermitteln.',
     danOverview4PracticalLi1: 'Aiki-no-kata: Form der Abwehr bewaffneter Angriffe.',
-    danOverview4PracticalLi2: 'Renzoku-/Kaeshi-waza: 7 festgelegte Kombinationen mit Rollen-/Technikwechsel.',
+    danOverview4PracticalLi2:
+      'Renzoku-/Kaeshi-waza: 7 festgelegte Kombinationen mit Rollen-/Technikwechsel.',
     danOverview4PracticalLi3: 'Aiki-ken-jutsu: 7 Grundtechniken gegen bokken-Angriffe.',
-    danOverview4PracticalLi4: 'Jiyū-waza: freie Verteidigung gegen zwei unbewaffnete Angreifer (kakari-geiko).',
+    danOverview4PracticalLi4:
+      'Jiyū-waza: freie Verteidigung gegen zwei unbewaffnete Angreifer (kakari-geiko).',
 
     danOverview5Title: '5. Dan — Schwerpunkt: Meisterschaft, Reflexion & kreative Darstellung',
     danOverview5Admission: 'Zulassung: ≥5 Jahre seit 4. Dan; Trainerlizenz.',
-    danOverview5Written: 'Schriftliche Hausarbeit: Muss vor der Praxis bestanden sein (≥2/3 der Punkte).',
+    danOverview5Written:
+      'Schriftliche Hausarbeit: Muss vor der Praxis bestanden sein (≥2/3 der Punkte).',
     danOverview5PracticalLi1: 'Überprüfung: Gesamtprogramm bis 4. Dan.',
-    danOverview5PracticalLi2: 'Freie Formen: persönliche Darstellung von Aikidō-Elementen/-Prinzipien.',
+    danOverview5PracticalLi2:
+      'Freie Formen: persönliche Darstellung von Aikidō-Elementen/-Prinzipien.',
     danOverview5PracticalLi3: 'Renzoku/Kaeshi (frei): 8 Kombinationen, je zwei pro Variante.',
-    danOverview5PracticalLi4: 'Aiki-bu-jutsu: 7 fortgeschrittene Techniken gegen bewaffnete Angreifer (jō / tantō / katana).',
+    danOverview5PracticalLi4:
+      'Aiki-bu-jutsu: 7 fortgeschrittene Techniken gegen bewaffnete Angreifer (jō / tantō / katana).',
     danOverview5PracticalLi5: 'Morote-waza: 6 Formen gegen zwei gleichzeitige Angreifer.',
     danOverview5PracticalLi6: 'Jiyū-waza: freie Verteidigung gegen drei Angreifer (kakari-geiko).',
 
     danOverviewUkemiTitle: 'Hinweis zu Ukemi',
-    danOverviewUkemiP1: 'Mit jedem Grad müssen Ukemi sicherer, anpassungsfähiger und spontaner werden, um dynamisches Training zu ermöglichen.',
-
+    danOverviewUkemiP1:
+      'Mit jedem Grad müssen Ukemi sicherer, anpassungsfähiger und spontaner werden, um dynamisches Training zu ermöglichen.',
   },
 } as const satisfies Record<Locale, Record<string, unknown>>;
 

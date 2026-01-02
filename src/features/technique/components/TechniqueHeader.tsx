@@ -19,7 +19,10 @@ export type CollectionOption = {
   checked: boolean;
 };
 
-export type TagItem = { label: string; kind: 'category' | 'stance' | 'attack' | 'weapon' | 'entry' };
+export type TagItem = {
+  label: string;
+  kind: 'category' | 'stance' | 'attack' | 'weapon' | 'entry';
+};
 
 export type TechniqueHeaderProps = {
   technique: Technique;
@@ -60,32 +63,52 @@ export const TechniqueHeader = ({
   // Map tag to glossary category for appropriate styling
   const getTagCategory = (tag: string): GlossaryTerm['category'] => {
     const lowerTag = tag.toLowerCase();
-    
+
     // Movement/technique category tags
-    if (lowerTag.includes('nage') || lowerTag.includes('throw') || lowerTag.includes('irimi') || 
-        lowerTag.includes('kaiten') || lowerTag.includes('kokyu')) {
+    if (
+      lowerTag.includes('nage') ||
+      lowerTag.includes('throw') ||
+      lowerTag.includes('irimi') ||
+      lowerTag.includes('kaiten') ||
+      lowerTag.includes('kokyu')
+    ) {
       return 'movement';
     }
-    
+
     // Stance category tags
     if (lowerTag.includes('kamae') || lowerTag.includes('hanmi') || lowerTag.includes('seiza')) {
-      return 'stance';  
+      return 'stance';
     }
-    
+
     // Attack category tags
-    if (lowerTag.includes('tori') || lowerTag.includes('uchi') || lowerTag.includes('tsuki') || 
-        lowerTag.includes('grab') || lowerTag.includes('strike') || lowerTag.includes('punch') ||
-        lowerTag.includes('shomen') || lowerTag.includes('yokomen') || lowerTag.includes('katate') ||
-        lowerTag.includes('ryote') || lowerTag.includes('morote') || lowerTag.includes('mune')) {
+    if (
+      lowerTag.includes('tori') ||
+      lowerTag.includes('uchi') ||
+      lowerTag.includes('tsuki') ||
+      lowerTag.includes('grab') ||
+      lowerTag.includes('strike') ||
+      lowerTag.includes('punch') ||
+      lowerTag.includes('shomen') ||
+      lowerTag.includes('yokomen') ||
+      lowerTag.includes('katate') ||
+      lowerTag.includes('ryote') ||
+      lowerTag.includes('morote') ||
+      lowerTag.includes('mune')
+    ) {
       return 'attack';
     }
-    
+
     // Control/technique family tags (nikyo, ikkyo, etc.)
-    if (lowerTag.includes('kyo') || lowerTag.includes('control') || lowerTag.includes('pin') || 
-        lowerTag.includes('osae') || lowerTag.includes('katame')) {
+    if (
+      lowerTag.includes('kyo') ||
+      lowerTag.includes('control') ||
+      lowerTag.includes('pin') ||
+      lowerTag.includes('osae') ||
+      lowerTag.includes('katame')
+    ) {
       return 'other';
     }
-    
+
     // Default to movement for general technique terms
     return 'movement';
   };
@@ -117,7 +140,10 @@ export const TechniqueHeader = ({
                   // tag is TagItem { label, kind }
                   const lowerTagKey = tag.kind === 'entry' ? tag.label.toLowerCase() : '';
                   let displayLabel = tag.label;
-                  if (tag.kind === 'entry' && ['irimi', 'tenkan', 'omote', 'ura'].includes(lowerTagKey)) {
+                  if (
+                    tag.kind === 'entry' &&
+                    ['irimi', 'tenkan', 'omote', 'ura'].includes(lowerTagKey)
+                  ) {
                     const map: Record<string, string> = {
                       irimi: copy.entryIrimi,
                       tenkan: copy.entryTenkan,
@@ -129,7 +155,12 @@ export const TechniqueHeader = ({
 
                   // Category tags should use the 'other' / grey palette in glossary
                   // Stance tags should use the 'stance' (green) palette
-                  const tagCategory = tag.kind === 'category' ? 'other' : tag.kind === 'stance' ? 'stance' : getTagCategory(displayLabel);
+                  const tagCategory =
+                    tag.kind === 'category'
+                      ? 'other'
+                      : tag.kind === 'stance'
+                        ? 'stance'
+                        : getTagCategory(displayLabel);
                   const categoryStyle = getCategoryStyle(tagCategory);
 
                   return onTagClick ? (
@@ -196,7 +227,9 @@ export const TechniqueHeader = ({
               <AddToCollectionMenu
                 copy={copy}
                 collections={collections}
-                onToggle={(collectionId, nextChecked) => onToggleCollection(collectionId, nextChecked)}
+                onToggle={(collectionId, nextChecked) =>
+                  onToggleCollection(collectionId, nextChecked)
+                }
                 onCreate={onCreateCollection}
               />
               <div className="inline-flex rounded-lg border surface-border overflow-hidden">
@@ -217,10 +250,16 @@ export const TechniqueHeader = ({
                   <motion.span
                     aria-hidden
                     className="w-4 h-4 flex items-center justify-center"
-                    animate={isBookmarked ? { scale: 1, opacity: 1 } : { scale: 0.86, opacity: 0.85 }}
+                    animate={
+                      isBookmarked ? { scale: 1, opacity: 1 } : { scale: 0.86, opacity: 0.85 }
+                    }
                     transition={toggleTransition}
                   >
-                    {isBookmarked ? <BookmarkCheck className="w-4 h-4" /> : <Bookmark className="w-4 h-4" />}
+                    {isBookmarked ? (
+                      <BookmarkCheck className="w-4 h-4" />
+                    ) : (
+                      <Bookmark className="w-4 h-4" />
+                    )}
                   </motion.span>
                 </motion.button>
               </div>

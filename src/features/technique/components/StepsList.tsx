@@ -8,7 +8,9 @@ export type StepsListProps = {
 
 export const StepsList = ({ steps, ariaLabel, versionLabel }: StepsListProps): ReactElement => (
   <div className="space-y-4">
-    {versionLabel && <p className="text-xs uppercase tracking-[0.3em] text-subtle">{versionLabel}</p>}
+    {versionLabel && (
+      <p className="text-xs uppercase tracking-[0.3em] text-subtle">{versionLabel}</p>
+    )}
     <ol aria-label={ariaLabel} className="space-y-5">
       {steps.map((step, index) => (
         <li key={index} className="flex gap-3">

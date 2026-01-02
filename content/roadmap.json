@@ -24,7 +24,10 @@
   {
     "id": "pwa-advanced",
     "status": "launched",
-    "title": { "en": "PWA install & advanced offline", "de": "PWA‑Installation & erweiterter Offline‑Modus" },
+    "title": {
+      "en": "PWA install & advanced offline",
+      "de": "PWA‑Installation & erweiterter Offline‑Modus"
+    },
     "summary": {
       "en": "Full PWA install prompt and broader caching strategy for Guide/Glossary.",
       "de": "Vollständige PWA‑Installation und breiteres Caching für Guide/Glossar."
@@ -88,15 +91,15 @@
     "icon": "sparkles"
   },
   {
-  "id": "practice-page",
-  "status": "planned",
-  "title": { "en": "Practice page", "de": "Trainingsseite" },
-  "summary": {
-    "en": "A companion to the Guide and Library — warm-ups, conditioning, and mindful exercises that keep body and mind ready for keiko.",
-    "de": "Ein Begleiter zu Guide und Bibliothek – Aufwärmen, Konditionierung und achtsame Übungen, die Körper und Geist für Keiko bereiten."
-  },
-  "version": "v1.3",
-  "icon": "dumbbell"
+    "id": "practice-page",
+    "status": "planned",
+    "title": { "en": "Practice page", "de": "Trainingsseite" },
+    "summary": {
+      "en": "A companion to the Guide and Library — warm-ups, conditioning, and mindful exercises that keep body and mind ready for keiko.",
+      "de": "Ein Begleiter zu Guide und Bibliothek – Aufwärmen, Konditionierung und achtsame Übungen, die Körper und Geist für Keiko bereiten."
+    },
+    "version": "v1.3",
+    "icon": "dumbbell"
   },
   {
     "id": "intro-guide",

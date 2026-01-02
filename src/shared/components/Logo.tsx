@@ -10,22 +10,8 @@ export const Logo = ({ className, ...props }: SVGAttributes<SVGElement>): ReactE
     {...props}
   >
     {/* Outer circle with border */}
-    <circle 
-      cx="16" 
-      cy="16" 
-      r="14" 
-      fill="none" 
-      className="stroke-current"
-      strokeWidth="2"
-    />
+    <circle cx="16" cy="16" r="14" fill="none" className="stroke-current" strokeWidth="2" />
     {/* Inner circle with border */}
-    <circle 
-      cx="16" 
-      cy="16" 
-      r="8" 
-      fill="none" 
-      className="stroke-current"
-      strokeWidth="1"
-    />
+    <circle cx="16" cy="16" r="8" fill="none" className="stroke-current" strokeWidth="1" />
   </svg>
 );
