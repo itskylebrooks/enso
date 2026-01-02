@@ -8,7 +8,8 @@
     "dev": "pnpm run build:content && vite",
     "build": "pnpm run build:content && tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "format": "prettier . --write"
   },
   "dependencies": {
     "fuse.js": "^7.1.0",
