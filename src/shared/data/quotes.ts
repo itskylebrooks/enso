@@ -11,7 +11,7 @@ const quotesModules = import.meta.glob('/content/quotes*.json', { eager: true })
 const getQuotesForLocale = (locale: Locale): Quote[] => {
   const fileName = locale === 'de' ? '/content/quotes-de.json' : '/content/quotes.json';
   const module = quotesModules[fileName];
-  return (module as any)?.default || [];
+  return ((module as Record<string, unknown>)?.default as Quote[]) || [];
 };
 
 /**
@@ -21,14 +21,14 @@ export function getRandomQuote(locale: Locale = 'en'): Quote {
   const quotes = getQuotesForLocale(locale);
   if (quotes.length === 0) {
     // Fallback quote based on locale
-    return locale === 'de' 
+    return locale === 'de'
       ? {
-          quote: "Der wahre Sieg ist der Sieg über sich selbst.",
-          author: "Morihei Ueshiba"
+          quote: 'Der wahre Sieg ist der Sieg über sich selbst.',
+          author: 'Morihei Ueshiba',
         }
       : {
-          quote: "True victory is victory over oneself.",
-          author: "Morihei Ueshiba"
+          quote: 'True victory is victory over oneself.',
+          author: 'Morihei Ueshiba',
         };
   }
   const randomIndex = Math.floor(Math.random() * quotes.length);

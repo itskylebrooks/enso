@@ -1,4 +1,5 @@
 import { parseTechnique } from '@shared/types/content';
+import { ENTRY_MODE_ORDER } from '../constants/entryModes';
 import {
   ANIMATION_PREFERENCE_KEY,
   APP_NAME,
@@ -25,7 +26,6 @@ import type {
   TechniqueVersion,
   Theme,
 } from '../types';
-import { ENTRY_MODE_ORDER } from '../constants/entryModes';
 
 // Load technique files directly from the content/techniques folder.
 // Vite's import.meta.glob with { eager: true } returns the parsed JSON modules at build time.
@@ -84,7 +84,7 @@ const normalizeVersion = (version: TechniqueVersion): TechniqueVersion => {
     commonMistakes: normalizeLocalizedArray(version.commonMistakes),
     context: version.context ? normalizeLocalizedString(version.context) : undefined,
     media: Array.isArray(version.media)
-      ? version.media.map((item: any) => ({
+      ? version.media.map((item: { type: string; url?: string; title?: string }) => ({
           type: item.type,
           url: (item.url ?? '').trim(),
           title: typeof item.title === 'string' ? item.title.trim() : undefined,
@@ -92,20 +92,20 @@ const normalizeVersion = (version: TechniqueVersion): TechniqueVersion => {
       : [],
     // support optional per-entry media block under stepsByEntry.media
     mediaByEntry: (() => {
-      const mediaObj = (version.stepsByEntry as any)?.media;
+      const mediaObj = (version.stepsByEntry as Record<string, unknown>)?.media;
       if (!mediaObj || typeof mediaObj !== 'object') return undefined;
       const out: Record<string, Array<{ type: string; url: string; title?: string }>> = {};
       ['irimi', 'tenkan', 'omote', 'ura'].forEach((k) => {
         const arr = mediaObj[k];
         if (Array.isArray(arr)) {
-          out[k] = arr.map((m: any) => ({
+          out[k] = arr.map((m: { type: string; url?: string; title?: string }) => ({
             type: m.type,
             url: (m.url ?? '').trim(),
             title: typeof m.title === 'string' ? m.title.trim() : undefined,
           }));
         }
       });
-      return Object.keys(out).length > 0 ? (out as any) : undefined;
+      return Object.keys(out).length > 0 ? out : undefined;
     })(),
   };
 
@@ -117,9 +117,13 @@ const normalizeTechnique = (technique: Technique): Technique => ({
   jp: normalizeOptional(technique.jp ?? undefined),
   attack: normalizeOptional(technique.attack ?? undefined),
   weapon: normalizeOptional(technique.weapon ?? undefined),
-  aliases: technique.aliases ? technique.aliases.filter(alias => alias.trim().length > 0) : undefined,
+  aliases: technique.aliases
+    ? technique.aliases.filter((alias) => alias.trim().length > 0)
+    : undefined,
   summary: normalizeLocalizedString(technique.summary),
-  tags: Array.from(new Set(technique.tags.map((tag) => tag.trim()).filter((tag) => tag.length > 0))),
+  tags: Array.from(
+    new Set(technique.tags.map((tag) => tag.trim()).filter((tag) => tag.length > 0)),
+  ),
   versions: technique.versions.map(normalizeVersion),
 });
 
@@ -127,10 +131,10 @@ const seedTechniques: Technique[] = Object.keys(techniqueModules)
   .map((filePath) => {
     const moduleValue = techniqueModules[filePath];
     const hasDefaultExport =
-      moduleValue && typeof moduleValue === 'object' && 'default' in (moduleValue as Record<string, unknown>);
-    const raw = hasDefaultExport
-      ? (moduleValue as { default: unknown }).default
-      : moduleValue;
+      moduleValue &&
+      typeof moduleValue === 'object' &&
+      'default' in (moduleValue as Record<string, unknown>);
+    const raw = hasDefaultExport ? (moduleValue as { default: unknown }).default : moduleValue;
     const filename = filePath.split('/').pop() ?? '';
     const slug = filename.replace(/\.json$/i, '');
     // parse/validate technique using schema
@@ -198,7 +202,9 @@ const stripUnknownProgress = (progress: Progress[]): Progress[] =>
   progress.filter((entry): entry is Progress => Boolean(entry && entry.techniqueId));
 
 const ensureProgressCoverage = (db: DB): Progress[] => {
-  const progressMap = new Map(stripUnknownProgress(db.progress).map((entry) => [entry.techniqueId, entry]));
+  const progressMap = new Map(
+    stripUnknownProgress(db.progress).map((entry) => [entry.techniqueId, entry]),
+  );
   return db.techniques.map((technique) => {
     const existing = progressMap.get(technique.id);
     return existing ? { ...existing } : buildDefaultProgress(technique.id);
@@ -209,7 +215,9 @@ const stripUnknownGlossaryProgress = (progress: GlossaryProgress[]): GlossaryPro
   progress.filter((entry): entry is GlossaryProgress => Boolean(entry && entry.termId));
 
 const ensureGlossaryProgress = (rawGlossaryProgress: GlossaryProgress[]): GlossaryProgress[] => {
-  return stripUnknownGlossaryProgress(Array.isArray(rawGlossaryProgress) ? rawGlossaryProgress : []);
+  return stripUnknownGlossaryProgress(
+    Array.isArray(rawGlossaryProgress) ? rawGlossaryProgress : [],
+  );
 };
 
 const ensureGlossaryBookmarkCollections = (
@@ -316,10 +324,6 @@ const ensureBookmarkCollections = (
   });
 };
 
-
-
-
-
 export const loadDB = (): DB => {
   const raw = readLocalStorage(STORAGE_KEY);
   if (!raw) {
@@ -349,8 +353,15 @@ export const loadDB = (): DB => {
       }),
       glossaryProgress: ensureGlossaryProgress(parsed.glossaryProgress ?? []),
       collections,
-      bookmarkCollections: ensureBookmarkCollections(parsed.bookmarkCollections ?? [], seedTechniques, collectionIds),
-      glossaryBookmarkCollections: ensureGlossaryBookmarkCollections(parsed.glossaryBookmarkCollections ?? [], collectionIds),
+      bookmarkCollections: ensureBookmarkCollections(
+        parsed.bookmarkCollections ?? [],
+        seedTechniques,
+        collectionIds,
+      ),
+      glossaryBookmarkCollections: ensureGlossaryBookmarkCollections(
+        parsed.glossaryBookmarkCollections ?? [],
+        collectionIds,
+      ),
     };
 
     return db;
@@ -400,7 +411,7 @@ export const saveAnimationsDisabled = (disabled: boolean): void => {
 /**
  * Detects the user's browser language preference.
  * Returns 'de' if any German locale is detected, otherwise 'en'.
- * 
+ *
  * This function checks navigator.language and navigator.languages
  * to determine if the user prefers German. It safely handles SSR
  * environments where navigator is undefined.
@@ -412,26 +423,26 @@ const detectBrowserLanguage = (): Locale => {
 
   // Check navigator.language and navigator.languages for German
   const languages = navigator.languages || [navigator.language];
-  
+
   for (const lang of languages) {
     if (lang && lang.toLowerCase().startsWith('de')) {
       console.log(`[enso] Detected German browser language: ${lang}, setting locale to 'de'`);
       return 'de';
     }
   }
-  
+
   console.log(`[enso] No German language detected, defaulting to 'en'. Languages:`, languages);
   return fallbackLocale;
 };
 
 export const loadLocale = (): Locale => {
   const value = readLocalStorage(LOCALE_KEY) as Locale | null;
-  
+
   // If no saved preference, detect browser language
   if (value === null) {
     return detectBrowserLanguage();
   }
-  
+
   return value === 'en' || value === 'de' ? value : fallbackLocale;
 };
 
@@ -441,17 +452,15 @@ export const saveLocale = (locale: Locale): void => {
 
 export const exportDB = (db: DB): string => {
   // Extract bookmarked technique IDs from progress
-  const bookmarkedTechniqueIds = db.progress
-    .filter(p => p.bookmarked)
-    .map(p => p.techniqueId);
+  const bookmarkedTechniqueIds = db.progress.filter((p) => p.bookmarked).map((p) => p.techniqueId);
 
   // Extract bookmarked glossary term IDs from glossary progress
   const bookmarkedGlossaryTermIds = db.glossaryProgress
-    .filter(p => p.bookmarked)
-    .map(p => p.termId);
+    .filter((p) => p.bookmarked)
+    .map((p) => p.termId);
 
   // Create collection name mapping
-  const collectionIdToName = new Map(db.collections.map(c => [c.id, c.name]));
+  const collectionIdToName = new Map(db.collections.map((c) => [c.id, c.name]));
 
   // Export collections by name only
   const exportCollections = db.collections.map(({ name, icon }) => ({
@@ -498,7 +507,9 @@ export const exportDB = (db: DB): string => {
   );
 };
 
-export const parseIncomingDB = (raw: string): {
+export const parseIncomingDB = (
+  raw: string,
+): {
   bookmarks?: string[];
   glossaryBookmarks?: string[];
   collections?: Array<{ name: string; icon?: string | null }>;
@@ -515,7 +526,7 @@ export const parseIncomingDB = (raw: string): {
     glossaryBookmarkCollections?: Array<{ termId: string; collectionName: string }>;
     animationsDisabled?: boolean;
   };
-  
+
   if (!parsed || typeof parsed !== 'object') {
     throw new Error('Invalid JSON payload');
   }
@@ -528,9 +539,14 @@ export const parseIncomingDB = (raw: string): {
     bookmarks: Array.isArray(parsed.bookmarks) ? parsed.bookmarks : [],
     glossaryBookmarks: Array.isArray(parsed.glossaryBookmarks) ? parsed.glossaryBookmarks : [],
     collections: Array.isArray(parsed.collections) ? parsed.collections : [],
-    bookmarkCollections: Array.isArray(parsed.bookmarkCollections) ? parsed.bookmarkCollections : [],
-    glossaryBookmarkCollections: Array.isArray(parsed.glossaryBookmarkCollections) ? parsed.glossaryBookmarkCollections : [],
-    animationsDisabled: typeof parsed.animationsDisabled === 'boolean' ? parsed.animationsDisabled : undefined,
+    bookmarkCollections: Array.isArray(parsed.bookmarkCollections)
+      ? parsed.bookmarkCollections
+      : [],
+    glossaryBookmarkCollections: Array.isArray(parsed.glossaryBookmarkCollections)
+      ? parsed.glossaryBookmarkCollections
+      : [],
+    animationsDisabled:
+      typeof parsed.animationsDisabled === 'boolean' ? parsed.animationsDisabled : undefined,
   };
 };
 
@@ -543,7 +559,7 @@ const generateId = (): string => {
 
 export const importData = (currentDB: DB, importedData: ReturnType<typeof parseIncomingDB>): DB => {
   // Update progress with imported bookmarks
-  const updatedProgress = currentDB.progress.map(progress => {
+  const updatedProgress = currentDB.progress.map((progress) => {
     const isBookmarked = importedData.bookmarks?.includes(progress.techniqueId) || false;
     return {
       ...progress,
@@ -554,7 +570,7 @@ export const importData = (currentDB: DB, importedData: ReturnType<typeof parseI
 
   // Update glossary progress with imported bookmarks
   const importedGlossaryBookmarkIds = new Set(importedData.glossaryBookmarks || []);
-  const updatedGlossaryProgress = currentDB.glossaryProgress.map(progress => {
+  const updatedGlossaryProgress = currentDB.glossaryProgress.map((progress) => {
     const isBookmarked = importedGlossaryBookmarkIds.has(progress.termId);
     return {
       ...progress,
@@ -564,11 +580,11 @@ export const importData = (currentDB: DB, importedData: ReturnType<typeof parseI
   });
 
   // Add new glossary progress entries for newly bookmarked terms that don't exist
-  const existingGlossaryTermIds = new Set(currentDB.glossaryProgress.map(p => p.termId));
+  const existingGlossaryTermIds = new Set(currentDB.glossaryProgress.map((p) => p.termId));
   const newGlossaryProgressEntries: GlossaryProgress[] = (importedData.glossaryBookmarks || [])
-    .filter(termId => !existingGlossaryTermIds.has(termId))
-    .map(termId => buildDefaultGlossaryProgress(termId))
-    .map(progress => ({
+    .filter((termId) => !existingGlossaryTermIds.has(termId))
+    .map((termId) => buildDefaultGlossaryProgress(termId))
+    .map((progress) => ({
       ...progress,
       bookmarked: true,
       updatedAt: Date.now(),
@@ -579,7 +595,7 @@ export const importData = (currentDB: DB, importedData: ReturnType<typeof parseI
   // Import collections and regenerate IDs and timestamps
   const now = Date.now();
   const collectionNameToId = new Map<string, string>();
-  
+
   const importedCollections = ensureCollections(
     (importedData.collections || []).map((collection, index) => {
       const id = generateId();
@@ -592,12 +608,12 @@ export const importData = (currentDB: DB, importedData: ReturnType<typeof parseI
         createdAt: now,
         updatedAt: now,
       };
-    })
+    }),
   );
-  
+
   // Import bookmark collections using collection name mapping
-  const validTechniqueIds = new Set(currentDB.techniques.map(t => t.id));
-  
+  const validTechniqueIds = new Set(currentDB.techniques.map((t) => t.id));
+
   const importedBookmarkCollections: BookmarkCollection[] = (importedData.bookmarkCollections || [])
     .map(({ techniqueId, collectionName }) => {
       const collectionId = collectionNameToId.get(collectionName);
@@ -614,7 +630,9 @@ export const importData = (currentDB: DB, importedData: ReturnType<typeof parseI
     .filter((entry): entry is BookmarkCollection => Boolean(entry));
 
   // Import glossary bookmark collections using collection name mapping
-  const importedGlossaryBookmarkCollections: GlossaryBookmarkCollection[] = (importedData.glossaryBookmarkCollections || [])
+  const importedGlossaryBookmarkCollections: GlossaryBookmarkCollection[] = (
+    importedData.glossaryBookmarkCollections || []
+  )
     .map(({ termId, collectionName }) => {
       const collectionId = collectionNameToId.get(collectionName);
       if (!collectionId) {

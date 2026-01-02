@@ -1,57 +1,70 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type ReactElement } from 'react';
-import { motion, AnimatePresence, MotionConfig } from 'motion/react';
-import { Header } from '@shared/components/layout/Header';
-import { MobileTabBar } from '@shared/components/layout/MobileTabBar';
-import { FilterPanel } from './features/search/components/FilterPanel';
-import { ExpandableFilterBar } from '@shared/components/ui/ExpandableFilterBar';
-import { Library } from '@features/technique/components/Library';
-import { BookmarksView } from './features/bookmarks/components/BookmarksView';
-import { SearchOverlay } from './features/search/components/SearchOverlay';
-import { SettingsModal } from '@features/home/components/settings/SettingsModal';
-import { TechniquePage } from '@features/technique/components/TechniquePage';
-import { type CollectionOption } from '@features/technique/components/TechniqueHeader';
-import { Toast } from '@shared/components/ui/Toast';
-import { MobileFilters } from '@shared/components/ui/MobileFilters';
-import { HomePage } from './features/home';
+import type { FeedbackType } from '@features/home/components/feedback/FeedbackPage';
+import { FeedbackPage } from '@features/home/components/feedback/FeedbackPage';
+import { GuideGradePage } from '@features/home/components/guide/GuideGradePage';
 import { AboutPage } from '@features/home/components/home/AboutPage';
 import { AdvancedPrograms } from '@features/home/components/home/AdvancedPrograms';
 import { DanOverview } from '@features/home/components/home/DanOverview';
 import { GuidePage } from '@features/home/components/home/GuidePage';
-import { GuideGradePage } from '@features/home/components/guide/GuideGradePage';
 import { RoadmapPage } from '@features/home/components/home/RoadmapPage';
-import { FeedbackPage } from '@features/home/components/feedback/FeedbackPage';
-import type { FeedbackType } from '@features/home/components/feedback/FeedbackPage';
-import { GlossaryPage, GlossaryDetailPage } from './features/glossary';
-import { GlossaryFilterPanel, MobileGlossaryFilters, loadAllTerms } from './features/glossary';
-import { ConfirmClearModal } from './shared/components/dialogs/ConfirmClearDialog';
+import { SettingsModal } from '@features/home/components/settings/SettingsModal';
+import { Library } from '@features/technique/components/Library';
+import { type CollectionOption } from '@features/technique/components/TechniqueHeader';
+import { TechniquePage } from '@features/technique/components/TechniquePage';
+import { Header } from '@shared/components/layout/Header';
+import { MobileTabBar } from '@shared/components/layout/MobileTabBar';
+import { ExpandableFilterBar } from '@shared/components/ui/ExpandableFilterBar';
+import { MobileFilters } from '@shared/components/ui/MobileFilters';
 import { setAnimationsDisabled, useMotionPreferences } from '@shared/components/ui/motion';
+import { Toast } from '@shared/components/ui/Toast';
+import {
+  buildTechniqueUrlWithVariant,
+  buildTechniqueUrl as buildUrl,
+  parseTechniquePath,
+} from '@shared/constants/urls';
+import { enrichTechniqueWithVariants } from '@shared/constants/variantMapping';
+import { PencilLine } from 'lucide-react';
+import { AnimatePresence, MotionConfig, motion } from 'motion/react';
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactElement } from 'react';
+import { BookmarksView } from './features/bookmarks/components/BookmarksView';
+import {
+  GlossaryDetailPage,
+  GlossaryFilterPanel,
+  GlossaryPage,
+  MobileGlossaryFilters,
+  loadAllTerms,
+} from './features/glossary';
+import { HomePage } from './features/home';
+import { FilterPanel } from './features/search/components/FilterPanel';
+import { SearchOverlay } from './features/search/components/SearchOverlay';
+import { ConfirmClearModal } from './shared/components/dialogs/ConfirmClearDialog';
+import { ENTRY_MODE_ORDER, isEntryMode } from './shared/constants/entryModes';
 import { getCopy } from './shared/constants/i18n';
 import useLockBodyScroll from './shared/hooks/useLockBodyScroll';
-import { cameFromBackForwardNavigation, consumeBFCacheRestoreFlag, rememberScrollPosition } from './shared/utils/navigationLifecycle';
 import {
   clearDB,
+  clearFilters,
   clearThemePreference,
   hasStoredTheme,
-  loadDB,
   loadAnimationsDisabled,
-  loadLocale,
-  loadTheme,
-  saveDB,
-  saveAnimationsDisabled,
-  saveLocale,
-  saveTheme,
-  loadFilters,
-  saveFilters,
-  clearFilters,
-  loadPinnedBeltGrade,
-  savePinnedBeltGrade,
   loadBeltPromptDismissed,
+  loadDB,
+  loadFilters,
+  loadLocale,
+  loadPinnedBeltGrade,
+  loadTheme,
+  saveAnimationsDisabled,
   saveBeltPromptDismissed,
+  saveDB,
+  saveFilters,
+  saveLocale,
+  savePinnedBeltGrade,
+  saveTheme,
 } from './shared/services/storageService';
 import type {
   AppRoute,
   Collection,
   DB,
+  Direction,
   EntryMode,
   Filters,
   GlossaryBookmarkCollection,
@@ -61,14 +74,17 @@ import type {
   Locale,
   Progress,
   Technique,
+  TechniqueVariant,
   Theme,
+  WeaponKind,
 } from './shared/types';
-import { gradeOrder } from './shared/utils/grades';
 import { unique, upsert } from './shared/utils/array';
-import { buildTechniqueUrl as buildUrl, parseTechniquePath, buildTechniqueUrlWithVariant } from '@shared/constants/urls';
-import { enrichTechniqueWithVariants } from '@shared/constants/variantMapping';
-import { ENTRY_MODE_ORDER, isEntryMode } from './shared/constants/entryModes';
-import { PencilLine } from 'lucide-react';
+import { gradeOrder } from './shared/utils/grades';
+import {
+  cameFromBackForwardNavigation,
+  consumeBFCacheRestoreFlag,
+  rememberScrollPosition,
+} from './shared/utils/navigationLifecycle';
 
 const defaultFilters: Filters = {};
 
@@ -135,7 +151,8 @@ const routeToPath = (route: AppRoute): string => {
   }
 };
 
-export const buildTechniqueUrl = buildUrl;
+// Inline helper instead of exporting to fix react-refresh
+const buildTechniqueUrl = buildUrl;
 
 type TechniqueParams = {
   slug: string;
@@ -196,7 +213,6 @@ const gradeToGuideRoute = (grade: Grade): AppRoute | null => {
       return null;
   }
 };
-
 
 const getGlossarySlugFromPath = (pathname: string): string | null => {
   const match = /^\/glossary\/([^/?#]+)/.exec(pathname);
@@ -289,7 +305,11 @@ const parseLocation = (
   return { route: 'home', slug: null };
 };
 
-const getInitialLocation = (): { route: AppRoute; slug: string | null; techniqueParams?: TechniqueParams } => {
+const getInitialLocation = (): {
+  route: AppRoute;
+  slug: string | null;
+  techniqueParams?: TechniqueParams;
+} => {
   if (typeof window === 'undefined') {
     return { route: 'home', slug: null };
   }
@@ -314,7 +334,11 @@ const getSystemTheme = (): Theme => {
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 };
 
-function updateProgressEntry(progress: Progress[], id: string, patch: Partial<Progress>): Progress[] {
+function updateProgressEntry(
+  progress: Progress[],
+  id: string,
+  patch: Partial<Progress>,
+): Progress[] {
   const existing = progress.find((entry) => entry.techniqueId === id);
   const timestamp = Date.now();
   const baseline: Progress = existing ?? {
@@ -333,7 +357,11 @@ function updateProgressEntry(progress: Progress[], id: string, patch: Partial<Pr
   return upsert(progress, (entry) => entry.techniqueId === id, nextEntry);
 }
 
-function updateGlossaryProgressEntry(glossaryProgress: GlossaryProgress[], termId: string, patch: Partial<GlossaryProgress>): GlossaryProgress[] {
+function updateGlossaryProgressEntry(
+  glossaryProgress: GlossaryProgress[],
+  termId: string,
+  patch: Partial<GlossaryProgress>,
+): GlossaryProgress[] {
   const existing = glossaryProgress.find((entry) => entry.termId === termId);
   const timestamp = Date.now();
   const baseline: GlossaryProgress = existing ?? {
@@ -371,7 +399,10 @@ const getGlossaryCollectionOptions = (
   }));
 };
 
-const getSelectableValues = (techniques: Technique[], selector: (technique: Technique) => string | undefined): string[] =>
+const getSelectableValues = (
+  techniques: Technique[],
+  selector: (technique: Technique) => string | undefined,
+): string[] =>
   unique(
     techniques
       .map(selector)
@@ -384,7 +415,9 @@ const getTrainerValues = (techniques: Technique[]): string[] => {
     .flatMap((technique) => technique.versions.map((version) => version.trainerId))
     .filter((v): v is string => Boolean(v && v.trim().length > 0));
 
-  const hasBaseVersions = techniques.some((technique) => technique.versions.some((version) => !version.trainerId));
+  const hasBaseVersions = techniques.some((technique) =>
+    technique.versions.some((version) => !version.trainerId),
+  );
 
   const values = unique(trainerIds).sort();
   if (hasBaseVersions) {
@@ -395,35 +428,40 @@ const getTrainerValues = (techniques: Technique[]): string[] => {
 };
 
 function applyFilters(techniques: Technique[], filters: Filters): Technique[] {
-  return techniques.filter((technique) => {
-    if (filters.category && technique.category !== filters.category) return false;
-    if (filters.attack && technique.attack !== filters.attack) return false;
-    if (filters.weapon && technique.weapon !== filters.weapon) return false;
-    if (filters.level && technique.level !== filters.level) return false;
-    if (filters.stance) {
-      if (!isEntryMode(filters.stance)) {
-        return false;
-      }
+  return techniques
+    .filter((technique) => {
+      if (filters.category && technique.category !== filters.category) return false;
+      if (filters.attack && technique.attack !== filters.attack) return false;
+      if (filters.weapon && technique.weapon !== filters.weapon) return false;
+      if (filters.level && technique.level !== filters.level) return false;
+      if (filters.stance) {
+        if (!isEntryMode(filters.stance)) {
+          return false;
+        }
 
-      const requiredEntry: EntryMode = filters.stance;
-      const hasEntryMode = technique.versions.some((version) => Boolean(version.stepsByEntry?.[requiredEntry]));
-      if (!hasEntryMode) return false;
-    }
-    if (filters.trainer) {
-      if (filters.trainer === 'base-forms') {
-        // include techniques which have at least one base version (version without trainerId)
-        if (!technique.versions.some((version) => !version.trainerId)) return false;
-      } else {
-        if (!technique.versions.some((version) => version.trainerId === filters.trainer)) return false;
+        const requiredEntry: EntryMode = filters.stance;
+        const hasEntryMode = technique.versions.some((version) =>
+          Boolean(version.stepsByEntry?.[requiredEntry]),
+        );
+        if (!hasEntryMode) return false;
       }
-    }
-    return true;
-  }).sort((a, b) => {
-    // Sort all techniques alphabetically by name (English), regardless of category
-    const aName = a.name.en || a.name.de || '';
-    const bName = b.name.en || b.name.de || '';
-    return aName.localeCompare(bName, 'en', { sensitivity: 'base' });
-  });
+      if (filters.trainer) {
+        if (filters.trainer === 'base-forms') {
+          // include techniques which have at least one base version (version without trainerId)
+          if (!technique.versions.some((version) => !version.trainerId)) return false;
+        } else {
+          if (!technique.versions.some((version) => version.trainerId === filters.trainer))
+            return false;
+        }
+      }
+      return true;
+    })
+    .sort((a, b) => {
+      // Sort all techniques alphabetically by name (English), regardless of category
+      const aName = a.name.en || a.name.de || '';
+      const bName = b.name.en || b.name.de || '';
+      return aName.localeCompare(bName, 'en', { sensitivity: 'base' });
+    });
 }
 
 function useKeyboardShortcuts(onSearch: (method?: 'keyboard' | 'mouse') => void): void {
@@ -470,7 +508,9 @@ export default function App(): ReactElement {
       return defaultFilters;
     }
   });
-  const [glossaryFilters, setGlossaryFilters] = useState<{ category?: 'movement' | 'stance' | 'attack' | 'etiquette' | 'philosophy' | 'other' }>({});
+  const [glossaryFilters, setGlossaryFilters] = useState<{
+    category?: 'movement' | 'stance' | 'attack' | 'etiquette' | 'philosophy' | 'other';
+  }>({});
   const [selectedCollectionId, setSelectedCollectionId] = useState<SelectedCollectionId>('all');
   const [route, setRoute] = useState<AppRoute>(() => getInitialLocation().route);
   const [activeSlug, setActiveSlug] = useState<string | null>(() => getInitialLocation().slug);
@@ -481,7 +521,9 @@ export default function App(): ReactElement {
   const [glossaryTerms, setGlossaryTerms] = useState<GlossaryTerm[]>([]);
   const [feedbackInitialType, setFeedbackInitialType] = useState<FeedbackType | null>(null);
   const [pinnedBeltGrade, setPinnedBeltGrade] = useState<Grade | null>(() => loadPinnedBeltGrade());
-  const [beltPromptDismissed, setBeltPromptDismissed] = useState<boolean>(() => loadBeltPromptDismissed());
+  const [beltPromptDismissed, setBeltPromptDismissed] = useState<boolean>(() =>
+    loadBeltPromptDismissed(),
+  );
 
   const copy = getCopy(locale);
   const { pageMotion } = useMotionPreferences();
@@ -599,21 +641,18 @@ export default function App(): ReactElement {
     [navigateTo],
   );
 
-  const showToast = useCallback(
-    (message: string) => {
-      setToast(message);
-      if (typeof window !== 'undefined') {
-        if (toastTimeoutRef.current) {
-          window.clearTimeout(toastTimeoutRef.current);
-        }
-        toastTimeoutRef.current = window.setTimeout(() => {
-          setToast(null);
-          toastTimeoutRef.current = null;
-        }, 2400);
+  const showToast = useCallback((message: string) => {
+    setToast(message);
+    if (typeof window !== 'undefined') {
+      if (toastTimeoutRef.current) {
+        window.clearTimeout(toastTimeoutRef.current);
       }
-    },
-    [],
-  );
+      toastTimeoutRef.current = window.setTimeout(() => {
+        setToast(null);
+        toastTimeoutRef.current = null;
+      }, 2400);
+    }
+  }, []);
 
   useEffect(
     () => () => {
@@ -643,7 +682,7 @@ export default function App(): ReactElement {
 
   const openSearch = useCallback((method: 'keyboard' | 'mouse' = 'mouse') => {
     // store how the search was opened so the overlay can adjust pointer behavior
-    (openSearch as any).lastOpenedBy = method;
+    (openSearch as { lastOpenedBy?: 'keyboard' | 'mouse' }).lastOpenedBy = method;
     setSearchOpen(true);
   }, []);
 
@@ -756,7 +795,9 @@ export default function App(): ReactElement {
     if (typeof window === 'undefined') return;
 
     const syncFromLocation = (event?: PopStateEvent) => {
-      const state = (event?.state as HistoryState | undefined) ?? (window.history.state as HistoryState | undefined);
+      const state =
+        (event?.state as HistoryState | undefined) ??
+        (window.history.state as HistoryState | undefined);
       const { route: nextRoute, slug } = parseLocation(window.location.pathname, state);
       setRoute(nextRoute);
       setActiveSlug(slug);
@@ -774,7 +815,17 @@ export default function App(): ReactElement {
   // Idle prefetch both heavy chunks after initial render
   useEffect(() => {
     const idle = (cb: () => void) =>
-      (window as any).requestIdleCallback ? (window as any).requestIdleCallback(cb, { timeout: 1500 }) : setTimeout(cb, 600);
+      (
+        window as Window & {
+          requestIdleCallback?: (cb: () => void, options: { timeout: number }) => void;
+        }
+      ).requestIdleCallback
+        ? (
+            window as Window & {
+              requestIdleCallback?: (cb: () => void, options: { timeout: number }) => void;
+            }
+          ).requestIdleCallback(cb, { timeout: 1500 })
+        : setTimeout(cb, 600);
     idle(() => {
       prefetchTechniquePage();
       prefetchFeedbackPage();
@@ -784,7 +835,11 @@ export default function App(): ReactElement {
   }, [prefetchTechniquePage, prefetchFeedbackPage, prefetchGlossary, prefetchBookmarks]);
 
   useEffect(() => {
-    if (hasManualTheme || typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
+    if (
+      hasManualTheme ||
+      typeof window === 'undefined' ||
+      typeof window.matchMedia !== 'function'
+    ) {
       return;
     }
 
@@ -811,19 +866,30 @@ export default function App(): ReactElement {
     () => getSelectableValues(db.techniques, (technique) => technique.weapon),
     [db.techniques],
   );
-  const trainers = useMemo(
-    () => getTrainerValues(db.techniques),
-    [db.techniques],
-  );
+  const trainers = useMemo(() => getTrainerValues(db.techniques), [db.techniques]);
 
   // Glossary categories - all possible categories sorted alphabetically by localized label
-  const glossaryCategories: ('movement' | 'stance' | 'attack' | 'etiquette' | 'philosophy' | 'other')[] = useMemo(() => {
-    const allCategories: ('movement' | 'stance' | 'attack' | 'etiquette' | 'philosophy' | 'other')[] = [
-      'movement', 'stance', 'attack', 'etiquette', 'philosophy', 'other'
-    ];
+  const glossaryCategories: (
+    | 'movement'
+    | 'stance'
+    | 'attack'
+    | 'etiquette'
+    | 'philosophy'
+    | 'other'
+  )[] = useMemo(() => {
+    const allCategories: (
+      | 'movement'
+      | 'stance'
+      | 'attack'
+      | 'etiquette'
+      | 'philosophy'
+      | 'other'
+    )[] = ['movement', 'stance', 'attack', 'etiquette', 'philosophy', 'other'];
 
     const copy = getCopy(locale);
-    const getCategoryLabel = (category: 'movement' | 'stance' | 'attack' | 'etiquette' | 'philosophy' | 'other'): string => {
+    const getCategoryLabel = (
+      category: 'movement' | 'stance' | 'attack' | 'etiquette' | 'philosophy' | 'other',
+    ): string => {
       const labels = {
         movement: copy.categoryMovement,
         stance: copy.categoryStance,
@@ -838,8 +904,8 @@ export default function App(): ReactElement {
     return allCategories.sort((a, b) =>
       getCategoryLabel(a).localeCompare(getCategoryLabel(b), locale, {
         sensitivity: 'accent',
-        caseFirst: 'upper'
-      })
+        caseFirst: 'upper',
+      }),
     );
   }, [locale]);
 
@@ -849,12 +915,16 @@ export default function App(): ReactElement {
   );
 
   const currentTechnique = useMemo(
-    () => (activeSlug ? db.techniques.find((technique) => technique.slug === activeSlug) ?? null : null),
+    () =>
+      activeSlug ? db.techniques.find((technique) => technique.slug === activeSlug) ?? null : null,
     [db.techniques, activeSlug],
   );
 
   const currentProgress = useMemo(
-    () => (currentTechnique ? db.progress.find((entry) => entry.techniqueId === currentTechnique.id) ?? null : null),
+    () =>
+      currentTechnique
+        ? db.progress.find((entry) => entry.techniqueId === currentTechnique.id) ?? null
+        : null,
     [db.progress, currentTechnique],
   );
 
@@ -890,7 +960,11 @@ export default function App(): ReactElement {
 
   const updateGlossaryProgress = (termId: string, patch: Partial<GlossaryProgress>): void => {
     setDB((prev) => {
-      const nextGlossaryProgress = updateGlossaryProgressEntry(prev.glossaryProgress, termId, patch);
+      const nextGlossaryProgress = updateGlossaryProgressEntry(
+        prev.glossaryProgress,
+        termId,
+        patch,
+      );
       const shouldRemoveAssignments = patch.bookmarked === false;
       const nextGlossaryBookmarkCollections = shouldRemoveAssignments
         ? prev.glossaryBookmarkCollections.filter((entry) => entry.termId !== termId)
@@ -953,10 +1027,10 @@ export default function App(): ReactElement {
         prev.collections.map((collection) =>
           collection.id === id
             ? {
-              ...collection,
-              name: sanitizeCollectionName(trimmed),
-              updatedAt: now,
-            }
+                ...collection,
+                name: sanitizeCollectionName(trimmed),
+                updatedAt: now,
+              }
             : collection,
         ),
       ),
@@ -966,7 +1040,9 @@ export default function App(): ReactElement {
   const deleteCollection = (id: string): void => {
     setDB((prev) => ({
       ...prev,
-      collections: sortCollectionsByName(prev.collections.filter((collection) => collection.id !== id)),
+      collections: sortCollectionsByName(
+        prev.collections.filter((collection) => collection.id !== id),
+      ),
       bookmarkCollections: prev.bookmarkCollections.filter((entry) => entry.collectionId !== id),
     }));
   };
@@ -985,14 +1061,15 @@ export default function App(): ReactElement {
             p.techniqueId === techniqueId ? { ...p, bookmarked: true, updatedAt: now } : p,
           );
         } else {
-          nextProgress = [
-            ...prev.progress,
-            { techniqueId, bookmarked: true, updatedAt: now },
-          ];
+          nextProgress = [...prev.progress, { techniqueId, bookmarked: true, updatedAt: now }];
         }
       }
 
-      if (prev.bookmarkCollections.some((entry) => entry.techniqueId === techniqueId && entry.collectionId === collectionId)) {
+      if (
+        prev.bookmarkCollections.some(
+          (entry) => entry.techniqueId === techniqueId && entry.collectionId === collectionId,
+        )
+      ) {
         return { ...prev, progress: nextProgress };
       }
 
@@ -1044,7 +1121,11 @@ export default function App(): ReactElement {
         }
       }
 
-      if (prev.glossaryBookmarkCollections.some((entry) => entry.termId === termId && entry.collectionId === collectionId)) {
+      if (
+        prev.glossaryBookmarkCollections.some(
+          (entry) => entry.termId === termId && entry.collectionId === collectionId,
+        )
+      ) {
         return { ...prev, glossaryProgress: nextGlossaryProgress };
       }
 
@@ -1125,7 +1206,8 @@ export default function App(): ReactElement {
     let finalPath: string;
     let state: HistoryState = { route: tabRoute, slug, trainerId, entry, sourceRoute };
 
-    const shouldAutoApplyFilters = !trainerId && !entry && (filters.trainer || filters.stance || filters.weapon);
+    const shouldAutoApplyFilters =
+      !trainerId && !entry && (filters.trainer || filters.stance || filters.weapon);
 
     if (shouldAutoApplyFilters) {
       const technique = db.techniques.find((t) => t.slug === slug);
@@ -1133,21 +1215,29 @@ export default function App(): ReactElement {
         const enriched = enrichTechniqueWithVariants(technique);
 
         // Map filter values to toolbar/variant values
-        const direction = (filters.stance as any) ?? undefined; // irimi/tenkan/omote/ura
+        const direction = (filters.stance as Direction | undefined) ?? undefined; // irimi/tenkan/omote/ura
         const weaponFilter = filters.weapon as string | undefined;
-        const weapon = weaponFilter ? (weaponFilter === 'empty-hand' ? 'empty' : (weaponFilter as any)) : undefined;
+        const weapon = weaponFilter
+          ? weaponFilter === 'empty-hand'
+            ? 'empty'
+            : (weaponFilter as WeaponKind)
+          : undefined;
 
         // Determine versionId candidate from trainer filter
         let versionIdCandidate: string | null | undefined = undefined;
         if (filters.trainer) {
           if (filters.trainer === 'base-forms') {
             // prefer a base version (null) if available
-            const hasBase = (technique.versions || []).some((v) => !v.trainerId || v.id === 'v-base');
+            const hasBase = (technique.versions || []).some(
+              (v) => !v.trainerId || v.id === 'v-base',
+            );
             versionIdCandidate = hasBase ? null : undefined;
           }
           if (versionIdCandidate === undefined) {
             // try to find a version authored by the selected trainer
-            const authorVersion = (technique.versions || []).find((v) => v.trainerId === filters.trainer);
+            const authorVersion = (technique.versions || []).find(
+              (v) => v.trainerId === filters.trainer,
+            );
             if (authorVersion) versionIdCandidate = authorVersion.id;
           }
         }
@@ -1155,7 +1245,7 @@ export default function App(): ReactElement {
         // Try to find the best matching variant
         const variants = enriched.variants || [];
 
-        const matchPredicate = (v: any) => {
+        const matchPredicate = (v: TechniqueVariant) => {
           if (direction && v.key.direction !== direction) return false;
           if (weapon && v.key.weapon !== weapon) return false;
           if (versionIdCandidate !== undefined) {
@@ -1187,11 +1277,27 @@ export default function App(): ReactElement {
             versionId: found.key.versionId,
           });
           // store state for history (also include trainer/entry for back navigation)
-          state = { route: tabRoute, slug, trainerId: filters.trainer, entry: (filters.stance as EntryMode) ?? undefined, sourceRoute };
+          state = {
+            route: tabRoute,
+            slug,
+            trainerId: filters.trainer,
+            entry: (filters.stance as EntryMode) ?? undefined,
+            sourceRoute,
+          };
         } else {
           // fallback to legacy path with trainer/entry if available
-          finalPath = buildTechniqueUrl(slug, filters.trainer ?? undefined, (filters.stance as any) ?? undefined);
-          state = { route: tabRoute, slug, trainerId: filters.trainer, entry: (filters.stance as EntryMode) ?? undefined, sourceRoute };
+          finalPath = buildTechniqueUrl(
+            slug,
+            filters.trainer ?? undefined,
+            (filters.stance as EntryMode | undefined) ?? undefined,
+          );
+          state = {
+            route: tabRoute,
+            slug,
+            trainerId: filters.trainer,
+            entry: (filters.stance as EntryMode) ?? undefined,
+            sourceRoute,
+          };
         }
       } else {
         // technique not found in DB (edge case) - fallback to basic path
@@ -1253,45 +1359,49 @@ export default function App(): ReactElement {
     navigateTo('guide');
   }, [navigateTo]);
 
-  const navigateToGuideGrade = useCallback((grade: Grade, sourceRoute?: AppRoute) => {
-    switch (grade) {
-      case 'kyu5':
-        navigateTo('guideKyu5', { sourceRoute });
-        break;
-      case 'kyu4':
-        navigateTo('guideKyu4', { sourceRoute });
-        break;
-      case 'kyu3':
-        navigateTo('guideKyu3', { sourceRoute });
-        break;
-      case 'kyu2':
-        navigateTo('guideKyu2', { sourceRoute });
-        break;
-      case 'kyu1':
-        navigateTo('guideKyu1', { sourceRoute });
-        break;
-      case 'dan1':
-        navigateTo('guideDan1', { sourceRoute });
-        break;
-      case 'dan2':
-        navigateTo('guideDan2', { sourceRoute });
-        break;
-      case 'dan3':
-        navigateTo('guideDan3', { sourceRoute });
-        break;
-      case 'dan4':
-        navigateTo('guideDan4', { sourceRoute });
-        break;
-      case 'dan5':
-        navigateTo('guideDan5', { sourceRoute });
-        break;
-      default:
-        navigateTo('guide', { sourceRoute });
-        break;
-    }
-  }, [navigateTo]);
+  const navigateToGuideGrade = useCallback(
+    (grade: Grade, sourceRoute?: AppRoute) => {
+      switch (grade) {
+        case 'kyu5':
+          navigateTo('guideKyu5', { sourceRoute });
+          break;
+        case 'kyu4':
+          navigateTo('guideKyu4', { sourceRoute });
+          break;
+        case 'kyu3':
+          navigateTo('guideKyu3', { sourceRoute });
+          break;
+        case 'kyu2':
+          navigateTo('guideKyu2', { sourceRoute });
+          break;
+        case 'kyu1':
+          navigateTo('guideKyu1', { sourceRoute });
+          break;
+        case 'dan1':
+          navigateTo('guideDan1', { sourceRoute });
+          break;
+        case 'dan2':
+          navigateTo('guideDan2', { sourceRoute });
+          break;
+        case 'dan3':
+          navigateTo('guideDan3', { sourceRoute });
+          break;
+        case 'dan4':
+          navigateTo('guideDan4', { sourceRoute });
+          break;
+        case 'dan5':
+          navigateTo('guideDan5', { sourceRoute });
+          break;
+        default:
+          navigateTo('guide', { sourceRoute });
+          break;
+      }
+    },
+    [navigateTo],
+  );
 
-  const techniqueHistoryState = typeof window !== 'undefined' ? (window.history.state as HistoryState | null) : null;
+  const techniqueHistoryState =
+    typeof window !== 'undefined' ? (window.history.state as HistoryState | null) : null;
   const techniqueBackRoute = techniqueHistoryState?.sourceRoute ?? route;
   const closeTechnique = (): void => {
     navigateTo(techniqueBackRoute, { replace: true });
@@ -1328,48 +1438,57 @@ export default function App(): ReactElement {
     if (skipEntranceAnimations || animationsDisabled) {
       flushScrollToTop();
     }
-  }, [route, activeSlug, currentTechnique?.id, skipEntranceAnimations, animationsDisabled, flushScrollToTop]);
+  }, [
+    route,
+    activeSlug,
+    currentTechnique?.id,
+    skipEntranceAnimations,
+    animationsDisabled,
+    flushScrollToTop,
+  ]);
 
   const techniqueBackLabel =
     techniqueBackRoute === 'bookmarks'
       ? copy.backToBookmarks
       : techniqueBackRoute === 'home'
-        ? copy.backToHome
-        : techniqueBackRoute === 'about'
-          ? copy.backToAbout
-          : techniqueBackRoute === 'roadmap'
-            ? copy.backToRoadmap
-            : techniqueBackRoute === 'guide'
-              ? copy.backToGuide
-              : techniqueBackRoute === 'glossary'
-                ? copy.backToGlossary
-                : techniqueBackRoute === 'feedback'
-                  ? copy.backToFeedback
-                  : copy.backToLibrary;
+      ? copy.backToHome
+      : techniqueBackRoute === 'about'
+      ? copy.backToAbout
+      : techniqueBackRoute === 'roadmap'
+      ? copy.backToRoadmap
+      : techniqueBackRoute === 'guide'
+      ? copy.backToGuide
+      : techniqueBackRoute === 'glossary'
+      ? copy.backToGlossary
+      : techniqueBackRoute === 'feedback'
+      ? copy.backToFeedback
+      : copy.backToLibrary;
 
-  const glossaryHistoryState = typeof window !== 'undefined' ? (window.history.state as HistoryState | null) : null;
+  const glossaryHistoryState =
+    typeof window !== 'undefined' ? (window.history.state as HistoryState | null) : null;
   const glossaryBackRoute = glossaryHistoryState?.sourceRoute ?? route;
   const glossaryBackLabel =
     glossaryBackRoute === 'bookmarks'
       ? copy.backToBookmarks
       : glossaryBackRoute === 'home'
-        ? copy.backToHome
-        : glossaryBackRoute === 'about'
-          ? copy.backToAbout
-          : glossaryBackRoute === 'roadmap'
-            ? copy.backToRoadmap
-            : glossaryBackRoute === 'guide'
-              ? copy.backToGuide
-              : glossaryBackRoute === 'feedback'
+      ? copy.backToHome
+      : glossaryBackRoute === 'about'
+      ? copy.backToAbout
+      : glossaryBackRoute === 'roadmap'
+      ? copy.backToRoadmap
+      : glossaryBackRoute === 'guide'
+      ? copy.backToGuide
+      : glossaryBackRoute === 'feedback'
       ? copy.backToFeedback
       : copy.backToGlossary;
 
-  const guideHistoryState = typeof window !== 'undefined' ? (window.history.state as HistoryState | null) : null;
+  const guideHistoryState =
+    typeof window !== 'undefined' ? (window.history.state as HistoryState | null) : null;
   const guideBackLabel = guideHistoryState?.sourceSlug
     ? copy.backToTechnique
     : guideHistoryState?.sourceRoute === 'home'
-      ? copy.backToHome
-      : copy.backToGuide;
+    ? copy.backToHome
+    : copy.backToGuide;
   const handleGuideBack = (): void => {
     if (guideHistoryState?.sourceSlug) {
       openTechnique(guideHistoryState.sourceSlug, undefined, undefined, true, {
@@ -1404,8 +1523,12 @@ export default function App(): ReactElement {
           onToggleBookmark={() => toggleBookmark(currentTechnique, currentProgress ?? null)}
           collections={db.collections}
           bookmarkCollections={db.bookmarkCollections}
-          onAssignToCollection={(collectionId) => assignToCollection(currentTechnique.id, collectionId)}
-          onRemoveFromCollection={(collectionId) => removeFromCollection(currentTechnique.id, collectionId)}
+          onAssignToCollection={(collectionId) =>
+            assignToCollection(currentTechnique.id, collectionId)
+          }
+          onRemoveFromCollection={(collectionId) =>
+            removeFromCollection(currentTechnique.id, collectionId)
+          }
           onOpenGlossary={openGlossaryTerm}
           onOpenGuideGrade={(grade) => {
             openGuideGrade(grade, { route, slug: currentTechnique.slug });
@@ -1427,7 +1550,9 @@ export default function App(): ReactElement {
         // when opened from bookmarks the current `route` will still be 'bookmarks', so navigate there.
         onBack={() => navigateTo(glossaryBackRoute, { replace: true })}
         isBookmarked={Boolean(currentGlossaryProgress?.bookmarked)}
-        onToggleBookmark={() => updateGlossaryProgress(activeSlug!, { bookmarked: !currentGlossaryProgress?.bookmarked })}
+        onToggleBookmark={() =>
+          updateGlossaryProgress(activeSlug!, { bookmarked: !currentGlossaryProgress?.bookmarked })
+        }
         collections={glossaryCollectionOptions}
         onToggleCollection={(collectionId, nextChecked) => {
           if (nextChecked) {
@@ -1483,12 +1608,7 @@ export default function App(): ReactElement {
       />
     );
   } else if (route === 'guideDan') {
-    mainContent = (
-      <DanOverview
-        locale={locale}
-        onBack={() => navigateTo('guide')}
-      />
-    );
+    mainContent = <DanOverview locale={locale} onBack={() => navigateTo('guide')} />;
   } else if (guideRouteToGrade(route)) {
     const grade = guideRouteToGrade(route) as Grade;
     mainContent = (
@@ -1629,7 +1749,11 @@ export default function App(): ReactElement {
                 backLabel={glossaryBackLabel}
                 onBack={() => navigateTo('glossary', { replace: true })}
                 isBookmarked={Boolean(currentGlossaryProgress?.bookmarked)}
-                onToggleBookmark={() => updateGlossaryProgress(activeSlug, { bookmarked: !currentGlossaryProgress?.bookmarked })}
+                onToggleBookmark={() =>
+                  updateGlossaryProgress(activeSlug, {
+                    bookmarked: !currentGlossaryProgress?.bookmarked,
+                  })
+                }
                 collections={glossaryCollectionOptions}
                 onToggleCollection={(collectionId, nextChecked) => {
                   if (nextChecked) {
@@ -1680,7 +1804,11 @@ export default function App(): ReactElement {
     );
   }
 
-  const pageKey = currentTechnique ? `technique-${currentTechnique.id}` : activeSlug ? `glossary-${activeSlug}` : route;
+  const pageKey = currentTechnique
+    ? `technique-${currentTechnique.id}`
+    : activeSlug
+    ? `glossary-${activeSlug}`
+    : route;
 
   return (
     <MotionConfig reducedMotion={animationsDisabled ? 'always' : 'user'}>
@@ -1736,13 +1864,17 @@ export default function App(): ReactElement {
               }}
               onToggleTechniqueBookmark={(techniqueId: string) =>
                 updateProgress(techniqueId, {
-                  bookmarked: !(db.progress.find((p) => p.techniqueId === techniqueId)?.bookmarked),
-                })}
+                  bookmarked: !db.progress.find((p) => p.techniqueId === techniqueId)?.bookmarked,
+                })
+              }
               onToggleGlossaryBookmark={(termId: string) =>
                 updateGlossaryProgress(termId, {
-                  bookmarked: !(db.glossaryProgress.find((g) => g.termId === termId)?.bookmarked),
-                })}
-              openedBy={(openSearch as any).lastOpenedBy ?? 'mouse'}
+                  bookmarked: !db.glossaryProgress.find((g) => g.termId === termId)?.bookmarked,
+                })
+              }
+              openedBy={
+                (openSearch as { lastOpenedBy?: 'keyboard' | 'mouse' }).lastOpenedBy ?? 'mouse'
+              }
             />
           )}
 
@@ -1761,7 +1893,6 @@ export default function App(): ReactElement {
               onChangeTheme={handleThemeChange}
               onChangeAnimations={handleAnimationsPreferenceChange}
               onChangeDB={handleDBChange}
-
               clearButtonRef={settingsClearButtonRef}
               trapEnabled={!confirmClearOpen}
             />

@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
 import type { Copy } from '@shared/constants/i18n';
+import { useEffect, useState } from 'react';
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>;
@@ -35,7 +35,9 @@ if (typeof window !== 'undefined') {
 }
 
 export const usePwaInstall = (copy: Copy) => {
-  const [installPromptEvent, setInstallPromptEvent] = useState<BeforeInstallPromptEvent | null>(deferredPrompt);
+  const [installPromptEvent, setInstallPromptEvent] = useState<BeforeInstallPromptEvent | null>(
+    deferredPrompt,
+  );
   const [isInstallable, setIsInstallable] = useState(true); // Default to true, assume installable until proven otherwise
   const [isInstalled, setIsInstalled] = useState(false);
   const [isIosDevice, setIsIosDevice] = useState(false);
@@ -54,7 +56,7 @@ export const usePwaInstall = (copy: Copy) => {
     // Check if already installed
     if (
       window.matchMedia('(display-mode: standalone)').matches ||
-      (window.navigator as any).standalone === true
+      (window.navigator as Navigator & { standalone?: boolean }).standalone === true
     ) {
       setIsInstalled(true);
       setIsInstallable(false);
@@ -126,8 +128,12 @@ export const usePwaInstall = (copy: Copy) => {
 
     // For Android/Chrome
     if (!promptToUse) {
-      console.warn('PWA: Install prompt not available. The beforeinstallprompt event may not have fired.');
-      console.warn('PWA: This can happen if the app is already installed, or PWA criteria are not met.');
+      console.warn(
+        'PWA: Install prompt not available. The beforeinstallprompt event may not have fired.',
+      );
+      console.warn(
+        'PWA: This can happen if the app is already installed, or PWA criteria are not met.',
+      );
       alert(copy.installPwaUnavailable);
       return false;
     }

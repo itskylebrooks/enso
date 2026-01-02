@@ -1,17 +1,22 @@
+import { useMotionPreferences } from '@shared/components/ui/motion';
+import { getCopy } from '@shared/constants/i18n';
+import type { EntryMode, Locale } from '@shared/types';
+import { getInitialThemeState } from '@shared/utils/theme';
 import { motion } from 'motion/react';
 import type { ReactElement } from 'react';
 import { useState } from 'react';
-import type { Locale, EntryMode } from '@shared/types';
-import { getInitialThemeState } from '@shared/utils/theme';
-import { SayaNoUchiMatrix } from '../guide/SayaNoUchiMatrix';
 import { JoMatrix } from '../guide/JoMatrix';
+import { SayaNoUchiMatrix } from '../guide/SayaNoUchiMatrix';
 import { TantoMatrix } from '../guide/TantoMatrix';
-import { useMotionPreferences } from '@shared/components/ui/motion';
-import { getCopy } from '@shared/constants/i18n';
 
 type Props = {
   locale: Locale;
-  onOpenTechnique: (slug: string, trainerId?: string, entry?: EntryMode, skipExistenceCheck?: boolean) => void;
+  onOpenTechnique: (
+    slug: string,
+    trainerId?: string,
+    entry?: EntryMode,
+    skipExistenceCheck?: boolean,
+  ) => void;
   onBack: () => void;
 };
 
@@ -42,7 +47,9 @@ export const AdvancedPrograms = ({ locale, onOpenTechnique, onBack }: Props): Re
             <span>{i18nCopy.backToGuide}</span>
           </button>
           <motion.header className="space-y-2" {...animationProps}>
-            <h1 className="text-2xl font-semibold leading-tight">{i18nCopy.advancedProgramsTitle}</h1>
+            <h1 className="text-2xl font-semibold leading-tight">
+              {i18nCopy.advancedProgramsTitle}
+            </h1>
             <p className="text-sm text-subtle leading-relaxed">{i18nCopy.advancedProgramsLead}</p>
           </motion.header>
         </div>
@@ -58,7 +65,7 @@ export const AdvancedPrograms = ({ locale, onOpenTechnique, onBack }: Props): Re
             locale={locale}
             isDark={isDark}
             onCellClick={(slug, attackKey) => {
-              let attackSlug = attackKey
+              const attackSlug = attackKey
                 .replace(/_ai_hanmi$/, '')
                 .replace(/_gyaku_hanmi$/, '')
                 .replace(/^hanmi_hantachi_/, '')

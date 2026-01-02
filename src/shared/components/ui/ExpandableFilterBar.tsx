@@ -1,8 +1,8 @@
-import { useState, useEffect, type ReactNode, createContext, useContext } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
-import { SlidersHorizontal } from 'lucide-react';
-import { useMotionPreferences } from './motion';
 import { loadFilterPanelPinned, saveFilterPanelPinned } from '@shared/services/storageService';
+import { SlidersHorizontal } from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
+import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+import { useMotionPreferences } from './motion';
 
 type ExpandableFilterBarProps = {
   children: ReactNode;
@@ -16,11 +16,15 @@ type FilterBarContextValue = {
 
 const FilterBarContext = createContext<FilterBarContextValue | null>(null);
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const usePinButton = (): FilterBarContextValue | null => {
   return useContext(FilterBarContext);
 };
 
-export const ExpandableFilterBar = ({ children, label = 'Filters' }: ExpandableFilterBarProps): ReactNode => {
+export const ExpandableFilterBar = ({
+  children,
+  label = 'Filters',
+}: ExpandableFilterBarProps): ReactNode => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isPinned, setIsPinned] = useState(() => loadFilterPanelPinned());
   const [isInitialMount, setIsInitialMount] = useState(true);
@@ -83,7 +87,11 @@ export const ExpandableFilterBar = ({ children, label = 'Filters' }: ExpandableF
       <AnimatePresence mode="wait" initial={!isInitialMount}>
         {isPinned ? (
           /* Pinned Panel - Always visible, right edge aligned with filter button's right edge */
-          <aside key="pinned" className="hidden lg:block sticky top-20 z-30 float-left -ml-16" style={{ left: '-3.5rem' }}>
+          <aside
+            key="pinned"
+            className="hidden lg:block sticky top-20 z-30 float-left -ml-16"
+            style={{ left: '-3.5rem' }}
+          >
             {/* Invisible spacer to match the collapsed button size */}
             <div className="opacity-0 pointer-events-none surface border surface-border rounded-xl px-2.5 py-4 flex flex-col items-center gap-3">
               <SlidersHorizontal className="w-4 h-4" aria-hidden />

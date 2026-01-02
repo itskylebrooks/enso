@@ -1,17 +1,20 @@
-import { useCallback, useEffect, useMemo, useState, type ReactElement } from 'react';
-import { AnimatePresence, motion } from 'motion/react';
-import { Select, type SelectOption } from '@shared/components/ui/Select';
 import { Chip } from '@shared/components/ui/Chip';
-import { useMotionPreferences, defaultEase } from '@shared/components/ui/motion';
+import { defaultEase, useMotionPreferences } from '@shared/components/ui/motion';
+import { Select, type SelectOption } from '@shared/components/ui/Select';
+import type { Copy, FeedbackPageCopy } from '@shared/constants/i18n';
+import { getLevelLabel, getOrderedTaxonomyValues, getTaxonomyLabel } from '@shared/i18n/taxonomy';
+import {
+  buildFeedbackPayloadV1,
+  type NewTechniqueFormState,
+} from '@shared/lib/buildFeedbackPayload';
+import type { Grade, Hanmi, Locale, Technique } from '@shared/types';
+import type { FeedbackPayloadV1 } from '@shared/types/feedback';
 import { classNames } from '@shared/utils/classNames';
 import { gradeOrder } from '@shared/utils/grades';
-import { getLevelLabel, getOrderedTaxonomyValues, getTaxonomyLabel } from '@shared/i18n/taxonomy';
 import { stripDiacritics, toSearchable } from '@shared/utils/text';
-import { BadgePlus, Bug, HeartPulse, Lightbulb, Rocket, PencilLine, Link } from 'lucide-react';
-import type { Copy, FeedbackPageCopy } from '@shared/constants/i18n';
-import { buildFeedbackPayloadV1, type NewTechniqueFormState } from '@shared/lib/buildFeedbackPayload';
-import type { FeedbackPayloadV1 } from '@shared/types/feedback';
-import type { Grade, Hanmi, Locale, Technique } from '@shared/types';
+import { BadgePlus, Bug, HeartPulse, Lightbulb, Link, PencilLine, Rocket } from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
+import { useCallback, useEffect, useMemo, useState, type ReactElement } from 'react';
 
 export type FeedbackType =
   | 'improveTechnique'
@@ -20,7 +23,13 @@ export type FeedbackType =
   | 'appFeedback'
   | 'bugReport';
 
-const feedbackTypeOrder: FeedbackType[] = ['improveTechnique', 'addVariation', 'newTechnique', 'appFeedback', 'bugReport'];
+const feedbackTypeOrder: FeedbackType[] = [
+  'improveTechnique',
+  'addVariation',
+  'newTechnique',
+  'appFeedback',
+  'bugReport',
+];
 
 export type ImproveSection =
   | 'steps'
@@ -61,7 +70,19 @@ type CategoryTag =
   | 'kids'
   | 'flow';
 
-const categoryTagOrder: CategoryTag[] = ['throw', 'pin', 'defense', 'jo', 'tanto', 'sword', 'advanced', 'rantori', 'weapons', 'kids', 'flow'];
+const categoryTagOrder: CategoryTag[] = [
+  'throw',
+  'pin',
+  'defense',
+  'jo',
+  'tanto',
+  'sword',
+  'advanced',
+  'rantori',
+  'weapons',
+  'kids',
+  'flow',
+];
 
 const isCategoryTag = (value: unknown): value is CategoryTag =>
   typeof value === 'string' && (categoryTagOrder as string[]).includes(value);
@@ -69,7 +90,8 @@ const isCategoryTag = (value: unknown): value is CategoryTag =>
 type AppArea = 'library' | 'technique' | 'glossary' | 'guide' | 'settings' | 'other';
 
 const isAppArea = (value: unknown): value is AppArea =>
-  typeof value === 'string' && ['library', 'technique', 'glossary', 'guide', 'settings', 'other'].includes(value);
+  typeof value === 'string' &&
+  ['library', 'technique', 'glossary', 'guide', 'settings', 'other'].includes(value);
 
 type ImproveTechniqueForm = {
   techniqueId: string | null;
@@ -189,7 +211,9 @@ const ensureString = (value: unknown, fallback = ''): string => {
 
 const ensureStringList = (value: unknown, minItems = 1): string[] => {
   const coerce = (list: unknown[]): string[] => {
-    const cleaned = list.map((item) => (typeof item === 'string' ? item : '')).filter((item) => item !== undefined);
+    const cleaned = list
+      .map((item) => (typeof item === 'string' ? item : ''))
+      .filter((item) => item !== undefined);
     while (cleaned.length < minItems) cleaned.push('');
     return cleaned.length > 0 ? cleaned : new Array(minItems).fill('');
   };
@@ -250,10 +274,12 @@ const sanitizeEntries = (entries?: unknown): Entry | '' => {
   if (entries && typeof entries === 'object') {
     const localized = entries as { en?: unknown; de?: unknown };
     if (Array.isArray(localized.en) && localized.en.length > 0) {
-      for (const e of localized.en) if (typeof e === 'string' && allowedValues.includes(e)) return e as Entry;
+      for (const e of localized.en)
+        if (typeof e === 'string' && allowedValues.includes(e)) return e as Entry;
     }
     if (Array.isArray(localized.de) && localized.de.length > 0) {
-      for (const e of localized.de) if (typeof e === 'string' && allowedValues.includes(e)) return e as Entry;
+      for (const e of localized.de)
+        if (typeof e === 'string' && allowedValues.includes(e)) return e as Entry;
     }
   }
   return '';
@@ -319,14 +345,18 @@ const computeDuplicateMatches = (form: NewTechniqueForm, techniques: Technique[]
 };
 
 const escapeInline = (value: string): string => {
-  const normalized = value.replace(/\r/g, '').split('\n').map((line) => line.trim()).join(' ');
+  const normalized = value
+    .replace(/\r/g, '')
+    .split('\n')
+    .map((line) => line.trim())
+    .join(' ');
   return ['*', '[', ']', '`'].reduce((acc, ch) => acc.split(ch).join(`\\${ch}`), normalized);
 };
 
 const summarizeMedia = (media?: MediaEntry[]) =>
   (media ?? [])
     .map((item) => ({
-      type: (item.type === 'gumlet' || item.type === 'gumlet-dab') ? 'link' : item.type,
+      type: item.type === 'gumlet' || item.type === 'gumlet-dab' ? 'link' : item.type,
       url: item.url,
       title: item.title,
     }))
@@ -347,7 +377,10 @@ type NewTechniqueSubmitPayload = Omit<FeedbackPayloadV1, 'media'> & {
   media?: FeedbackMediaItem[];
 };
 
-const mapNewTechniqueDraftToFormState = (form: NewTechniqueForm, locale: Locale): NewTechniqueFormState => ({
+const mapNewTechniqueDraftToFormState = (
+  form: NewTechniqueForm,
+  locale: Locale,
+): NewTechniqueFormState => ({
   contributorName: form.creditName || null,
   contributorEmail: null,
   name: {
@@ -414,7 +447,8 @@ const normalizeMediaForSubmission = (media: MediaEntry[]): FeedbackMediaItem[] =
     .map((entry) => {
       const url = normalizeUrlForSubmission(entry.url);
       if (!url) return null;
-      const type: FeedbackMediaItem['type'] = entry.type === 'youtube' ? 'youtube' : entry.type === 'image' ? 'image' : 'link';
+      const type: FeedbackMediaItem['type'] =
+        entry.type === 'youtube' ? 'youtube' : entry.type === 'image' ? 'image' : 'link';
       const title = entry.title?.trim();
       return title ? { type, url, title } : { type, url };
     })
@@ -429,14 +463,20 @@ const buildNewTechniqueSubmission = (
   const v1 = buildFeedbackPayloadV1(formState, { locale: locale === 'de' ? 'de' : 'en', entityId });
   const diffLocale = locale;
   const diffSteps = v1.diffJson.steps[diffLocale];
-  const allTextEmpty = v1.diffJson.name[diffLocale] === 'EMPTY' && v1.diffJson.summary[diffLocale] === 'EMPTY';
+  const allTextEmpty =
+    v1.diffJson.name[diffLocale] === 'EMPTY' && v1.diffJson.summary[diffLocale] === 'EMPTY';
   const stepsEmpty = Array.isArray(diffSteps) && diffSteps.length === 1 && diffSteps[0] === 'EMPTY';
   const media = normalizeMediaForSubmission(form.media);
-  const fallbackDetails = form.summary
-    || form.steps.map((step) => step.text || '').filter(Boolean).join('\n')
-    || 'New technique proposal';
+  const fallbackDetails =
+    form.summary ||
+    form.steps
+      .map((step) => step.text || '')
+      .filter(Boolean)
+      .join('\n') ||
+    'New technique proposal';
   const detailsMd = v1.detailsMd && v1.detailsMd.trim().length > 0 ? v1.detailsMd : fallbackDetails;
-  const { media: _legacyMedia, ...rest } = v1;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { media: _media, ...rest } = v1;
   const payload: NewTechniqueSubmitPayload = {
     ...rest,
     detailsMd,
@@ -488,8 +528,10 @@ const buildFeedbackPayload = (
   };
 
   const toBilingualArray = (values: string[]): { en: string[]; de: string[] } => {
-    const texts = Array.isArray(values) && values.length > 0 ? values.map((s) => (s || '').trim()) : [];
-    const ensure = (arr: string[]): string[] => (arr.length > 0 ? arr : ['EMPTY']).map((s) => (s ? s : 'EMPTY'));
+    const texts =
+      Array.isArray(values) && values.length > 0 ? values.map((s) => (s || '').trim()) : [];
+    const ensure = (arr: string[]): string[] =>
+      (arr.length > 0 ? arr : ['EMPTY']).map((s) => (s ? s : 'EMPTY'));
     if (locale === 'de') {
       return { en: ensure([]), de: ensure(texts) };
     }
@@ -497,14 +539,16 @@ const buildFeedbackPayload = (
   };
 
   const toBilingualSteps = (steps: StepItem[]): { en: string[]; de: string[] } => {
-    const texts = Array.isArray(steps) && steps.length > 0 ? steps.map((s) => (s?.text || '').trim()) : [];
+    const texts =
+      Array.isArray(steps) && steps.length > 0 ? steps.map((s) => (s?.text || '').trim()) : [];
     return toBilingualArray(texts);
   };
 
   const fillMissing = (value: unknown): unknown => {
     if (value === null || value === undefined) return 'EMPTY';
     if (typeof value === 'string') return value.trim().length === 0 ? 'EMPTY' : value;
-    if (Array.isArray(value)) return value.length === 0 ? ['EMPTY'] : value.map((item) => fillMissing(item));
+    if (Array.isArray(value))
+      return value.length === 0 ? ['EMPTY'] : value.map((item) => fillMissing(item));
     if (typeof value === 'object') {
       const result: Record<string, unknown> = {};
       for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
@@ -521,15 +565,22 @@ const buildFeedbackPayload = (
 
     const listMd = (items: string[]) =>
       items.length ? items.map((item) => `- ${item || '-'}`).join('\n') : '-';
-    const stepsMd = form.steps.map((step, index) => `  ${index + 1}. ${step.text || '-'}`).join('\n') || '  -';
+    const stepsMd =
+      form.steps.map((step, index) => `  ${index + 1}. ${step.text || '-'}`).join('\n') || '  -';
 
     const detailsParts: string[] = [];
     detailsParts.push(`### Summary\n${form.summary || '-'}`);
     detailsParts.push(
-      `\n### Taxonomy\n- Attack: ${form.attack ?? '—'}\n- Category: ${form.category ?? '—'}\n- Weapon: ${form.weapon ?? '—'}\n- Entries: ${form.entries || '—'}\n- Hanmi: ${form.hanmi ?? '—'}\n- Level hint: ${form.levelHint || '—'}`,
+      `\n### Taxonomy\n- Attack: ${form.attack ?? '—'}\n- Category: ${
+        form.category ?? '—'
+      }\n- Weapon: ${form.weapon ?? '—'}\n- Entries: ${form.entries || '—'}\n- Hanmi: ${
+        form.hanmi ?? '—'
+      }\n- Level hint: ${form.levelHint || '—'}`,
     );
     detailsParts.push(`\n### Steps\n${stepsMd}`);
-    detailsParts.push(`\n### Uke guidance\n**Role:** ${form.ukeRole || '-'}\n${listMd(form.ukeNotes)}`);
+    detailsParts.push(
+      `\n### Uke guidance\n**Role:** ${form.ukeRole || '-'}\n${listMd(form.ukeNotes)}`,
+    );
     detailsParts.push(`\n### Key points\n${listMd(form.keyPoints)}`);
     detailsParts.push(`\n### Common mistakes\n${listMd(form.commonMistakes)}`);
 
@@ -580,7 +631,7 @@ const buildFeedbackPayload = (
         attack: form.attack,
         category: form.category,
         weapon: form.weapon,
-    entries: form.entries ? [form.entries] : [],
+        entries: form.entries ? [form.entries] : [],
         hanmi: form.hanmi,
       },
       media: form.media,
@@ -609,26 +660,37 @@ const buildFeedbackPayload = (
   if (selectedType === 'addVariation') {
     const form = draft.addVariation;
     const techniqueLabel = findTechniqueName(form.relatedTechniqueId);
-    const directionLabel = form.direction && form.direction in variationDirectionLabels
-      ? variationDirectionLabels[form.direction as VariationDirection]
-      : '—';
+    const directionLabel =
+      form.direction && form.direction in variationDirectionLabels
+        ? variationDirectionLabels[form.direction as VariationDirection]
+        : '—';
     const stanceLabel = form.stance ? hanmiLabelMap[form.stance] : '—';
     const tagList = form.categoryTags.length
       ? form.categoryTags.map((tag) => `- ${tag}`).join('\n')
       : '-';
-    const stepsMd = form.steps
-      .map((step, index) => `  ${index + 1}. ${step.text || '-'}`)
-      .join('\n') || '  -';
+    const stepsMd =
+      form.steps.map((step, index) => `  ${index + 1}. ${step.text || '-'}`).join('\n') || '  -';
     const keyPointsMd = form.keyPoints.map((item) => `- ${item || '-'}`).join('\n') || '-';
     const mistakesMd = form.commonMistakes.map((item) => `- ${item || '-'}`).join('\n') || '-';
 
-    const summaryTextParts = [techniqueLabel, directionLabel].filter((value) => value && value !== '—');
-    const summary = summaryTextParts.length > 0 ? `${summaryTextParts.join(' – ')} variation` : `${techniqueLabel} variation`;
+    const summaryTextParts = [techniqueLabel, directionLabel].filter(
+      (value) => value && value !== '—',
+    );
+    const summary =
+      summaryTextParts.length > 0
+        ? `${summaryTextParts.join(' – ')} variation`
+        : `${techniqueLabel} variation`;
 
     const detailsSections = [
       `### Summary\n${form.summary || '-'}`,
-      `\n### Trainer & credit\n- Trainer: ${form.trainer || '—'}\n- Credit name: ${form.creditName || '—'}\n- Trainer credit: ${form.trainerCredit || '—'}\n- Mark as base: ${form.markAsBase ? 'Yes' : 'No'}`,
-      `\n### Direction & stance\n- Direction: ${directionLabel}\n- Stance: ${stanceLabel}\n- Level: ${form.level ? getLevelLabel(locale, form.level) : '—'}`,
+      `\n### Trainer & credit\n- Trainer: ${form.trainer || '—'}\n- Credit name: ${
+        form.creditName || '—'
+      }\n- Trainer credit: ${form.trainerCredit || '—'}\n- Mark as base: ${
+        form.markAsBase ? 'Yes' : 'No'
+      }`,
+      `\n### Direction & stance\n- Direction: ${directionLabel}\n- Stance: ${stanceLabel}\n- Level: ${
+        form.level ? getLevelLabel(locale, form.level) : '—'
+      }`,
       `\n### Tags\n${tagList}`,
       `\n### Steps\n${stepsMd}`,
       `\n### Key points\n${keyPointsMd}`,
@@ -898,8 +960,7 @@ const loadDraft = (): FeedbackDraft => {
 
     // Parse as any to support legacy draft shapes (backwards compatibility)
     // and avoid strict property checks during migration.
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const parsed: any = JSON.parse(stored);
+    const parsed: Record<string, unknown> = JSON.parse(stored);
 
     const selectedType = feedbackTypeOrder.includes(parsed.selectedType as FeedbackType)
       ? (parsed.selectedType as FeedbackType)
@@ -916,16 +977,20 @@ const loadDraft = (): FeedbackDraft => {
       improveTechnique: {
         ...defaultImproveTechniqueForm(),
         ...improveTechnique,
-        steps: (improveTechnique.steps ?? defaultImproveTechniqueForm().steps).map((step: any) => ({
-          id: step.id || createId(),
-          text: step.text || '',
-        })),
-        media: (improveTechnique.media ?? []).map((item: any) => ({
-          id: item.id || createId(),
-          url: item.url,
-          type: item.type,
-          embedUrl: item.embedUrl,
-        })),
+        steps: (improveTechnique.steps ?? defaultImproveTechniqueForm().steps).map(
+          (step: { id?: string; text?: string }) => ({
+            id: step.id || createId(),
+            text: step.text || '',
+          }),
+        ),
+        media: (improveTechnique.media ?? []).map(
+          (item: { id?: string; url: string; type: string; embedUrl?: string }) => ({
+            id: item.id || createId(),
+            url: item.url,
+            type: item.type,
+            embedUrl: item.embedUrl,
+          }),
+        ),
         consent: Boolean(improveTechnique.consent),
       },
       addVariation: {
@@ -942,18 +1007,29 @@ const loadDraft = (): FeedbackDraft => {
         categoryTags: Array.isArray(addVariation.categoryTags)
           ? addVariation.categoryTags.filter(isCategoryTag)
           : [],
-        level: addVariation.level && gradeOrder.includes(addVariation.level) ? addVariation.level : null,
+        level:
+          addVariation.level && gradeOrder.includes(addVariation.level) ? addVariation.level : null,
         steps: ensureStepList(addVariation.steps),
         keyPoints: ensureStringList(addVariation.keyPoints, 3),
         commonMistakes: ensureStringList(addVariation.commonMistakes, 3),
         ukeInstructions: ensureString(addVariation.ukeInstructions),
-        media: (addVariation.media ?? []).map((item: any) => ({
-          id: item?.id || createId(),
-          url: item?.url || '',
-          type: item?.type || 'link',
-          embedUrl: item?.embedUrl,
-          title: item?.title ?? '',
-        })).filter((item: any) => item.url),
+        media: (addVariation.media ?? [])
+          .map(
+            (item: {
+              id?: string;
+              url?: string;
+              type?: string;
+              embedUrl?: string;
+              title?: string;
+            }) => ({
+              id: item?.id || createId(),
+              url: item?.url || '',
+              type: item?.type || 'link',
+              embedUrl: item?.embedUrl,
+              title: item?.title ?? '',
+            }),
+          )
+          .filter((item: { url: string }) => item.url),
         context: ensureString(addVariation.context),
         creditName: ensureString(addVariation.creditName ?? addVariation.credit ?? ''),
         trainerCredit: ensureString(addVariation.trainerCredit ?? ''),
@@ -985,16 +1061,28 @@ const loadDraft = (): FeedbackDraft => {
         ukeNotes: ensureStringList(newTechnique.ukeNotes, 3),
         keyPoints: ensureStringList(newTechnique.keyPoints, 3),
         commonMistakes: ensureStringList(newTechnique.commonMistakes, 3),
-        media: (newTechnique.media ?? []).map((item: any) => ({
-          id: item?.id || createId(),
-          url: item?.url || '',
-          type: item?.type || 'link',
-          embedUrl: item?.embedUrl,
-          title: item?.title ?? '',
-        })).filter((item: any) => item.url),
+        media: (newTechnique.media ?? [])
+          .map(
+            (item: {
+              id?: string;
+              url?: string;
+              type?: string;
+              embedUrl?: string;
+              title?: string;
+            }) => ({
+              id: item?.id || createId(),
+              url: item?.url || '',
+              type: item?.type || 'link',
+              embedUrl: item?.embedUrl,
+              title: item?.title ?? '',
+            }),
+          )
+          .filter((item: { url: string }) => item.url),
         sources: ensureString(newTechnique.sources),
         creditName: ensureString(newTechnique.creditName ?? newTechnique.contributor?.name ?? ''),
-        trainerCredit: ensureString(newTechnique.trainerCredit ?? newTechnique.lineage?.dojoOrTrainer ?? ''),
+        trainerCredit: ensureString(
+          newTechnique.trainerCredit ?? newTechnique.lineage?.dojoOrTrainer ?? '',
+        ),
         markAsBase: newTechnique.markAsBase ?? newTechnique.lineage?.markAsBase ?? true,
         consent: Boolean(newTechnique.consent),
       },
@@ -1025,7 +1113,9 @@ const StepBuilder = ({
   removeButtonAria,
 }: StepBuilderProps): ReactElement => {
   const { prefersReducedMotion } = useMotionPreferences();
-  const stepTransition = prefersReducedMotion ? { duration: 0.05 } : { duration: 0.18, ease: defaultEase };
+  const stepTransition = prefersReducedMotion
+    ? { duration: 0.05 }
+    : { duration: 0.18, ease: defaultEase };
 
   const handleStepChange = (id: string, text: string) => {
     onChange(steps.map((step) => (step.id === id ? { ...step, text } : step)));
@@ -1107,9 +1197,17 @@ const getMediaIcon = (type: MediaKind): ReactElement => {
     case 'youtube':
     case 'gumlet':
     case 'gumlet-dab':
-      return <span aria-hidden className="text-lg">▶</span>;
+      return (
+        <span aria-hidden className="text-lg">
+          ▶
+        </span>
+      );
     case 'image':
-      return <span aria-hidden className="text-lg">🖼️</span>;
+      return (
+        <span aria-hidden className="text-lg">
+          🖼️
+        </span>
+      );
     default:
       return <Link className="w-5 h-5" />;
   }
@@ -1137,7 +1235,9 @@ const MediaManager = ({
   const [inputValue, setInputValue] = useState('');
   const [error, setError] = useState<string | null>(null);
   const { prefersReducedMotion } = useMotionPreferences();
-  const mediaTransition = prefersReducedMotion ? { duration: 0.05 } : { duration: 0.2, ease: defaultEase };
+  const mediaTransition = prefersReducedMotion
+    ? { duration: 0.05 }
+    : { duration: 0.2, ease: defaultEase };
 
   const handleAdd = () => {
     const entry = detectMedia(inputValue);
@@ -1255,7 +1355,8 @@ const MediaManager = ({
   );
 };
 
-const hasContent = (value: string | null | undefined): boolean => Boolean(value && value.trim().length > 0);
+const hasContent = (value: string | null | undefined): boolean =>
+  Boolean(value && value.trim().length > 0);
 
 const useAutosave = (draft: FeedbackDraft): void => {
   const [isHydrated, setHydrated] = useState(false);
@@ -1285,23 +1386,46 @@ type FeedbackPageProps = {
   onConsumeInitialType?: () => void;
 };
 
-export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, onConsumeInitialType }: FeedbackPageProps): ReactElement => {
+export const FeedbackPage = ({
+  copy,
+  locale,
+  techniques,
+  onBack,
+  initialType,
+  onConsumeInitialType,
+}: FeedbackPageProps): ReactElement => {
   const t: FeedbackPageCopy = copy.feedbackPage;
   const { prefersReducedMotion } = useMotionPreferences();
-  const formTransition = prefersReducedMotion ? { duration: 0.05 } : { duration: 0.24, ease: defaultEase };
-  const itemTransition = prefersReducedMotion ? { duration: 0.05 } : { duration: 0.18, ease: defaultEase };
+  const formTransition = prefersReducedMotion
+    ? { duration: 0.05 }
+    : { duration: 0.24, ease: defaultEase };
+  const itemTransition = prefersReducedMotion
+    ? { duration: 0.05 }
+    : { duration: 0.18, ease: defaultEase };
   const [draft, setDraft] = useState<FeedbackDraft>(() => loadDraft());
   const [showJsonPreview, setShowJsonPreview] = useState(false);
-  const [submissionState, setSubmissionState] = useState<'idle' | 'success' | 'error' | 'submitting'>('idle');
-  const [submitResult, setSubmitResult] = useState<{ ok: boolean; issueNumber?: number; message?: string; requestId?: string } | null>(null);
+  const [submissionState, setSubmissionState] = useState<
+    'idle' | 'success' | 'error' | 'submitting'
+  >('idle');
+  const [submitResult, setSubmitResult] = useState<{
+    ok: boolean;
+    issueNumber?: number;
+    message?: string;
+    requestId?: string;
+  } | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [softWarningShown, setSoftWarningShown] = useState(false);
 
-  const techniqueOptions = useMemo(() =>
-    techniques
-      .map((technique) => ({ value: technique.slug, label: technique.name[locale] || technique.name.en }))
-      .sort((a, b) => a.label.localeCompare(b.label)),
-  [techniques, locale]);
+  const techniqueOptions = useMemo(
+    () =>
+      techniques
+        .map((technique) => ({
+          value: technique.slug,
+          label: technique.name[locale] || technique.name.en,
+        }))
+        .sort((a, b) => a.label.localeCompare(b.label)),
+    [techniques, locale],
+  );
 
   const attackOptions = useMemo<SelectOption<string>[]>(
     () =>
@@ -1309,7 +1433,7 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
         value,
         label: getTaxonomyLabel(locale, 'attack', value),
       })),
-  [locale],
+    [locale],
   );
 
   const categoryOptions = useMemo<SelectOption<string>[]>(
@@ -1340,7 +1464,9 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
     [locale, t.options.notSpecified],
   );
 
-  const cardContent = useMemo<Record<FeedbackType, { icon: ReactElement; title: string; description: string }>>(
+  const cardContent = useMemo<
+    Record<FeedbackType, { icon: ReactElement; title: string; description: string }>
+  >(
     () => ({
       improveTechnique: {
         icon: <Rocket className="w-5 h-5" aria-hidden />,
@@ -1396,8 +1522,8 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
   useAutosave(draft);
 
   const slugPreview = useMemo(
-  () => buildNewTechniqueSlug(draft.newTechnique.name),
-  [draft.newTechnique.name],
+    () => buildNewTechniqueSlug(draft.newTechnique.name),
+    [draft.newTechnique.name],
   );
 
   const duplicateMatches = useMemo(
@@ -1468,7 +1594,10 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
     });
   };
 
-  const updateImprove = <K extends keyof ImproveTechniqueForm>(key: K, value: ImproveTechniqueForm[K]) => {
+  const updateImprove = <K extends keyof ImproveTechniqueForm>(
+    key: K,
+    value: ImproveTechniqueForm[K],
+  ) => {
     setDraft((current) => ({
       ...current,
       improveTechnique: {
@@ -1488,7 +1617,10 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
     }));
   };
 
-  const updateAppFeedback = <K extends keyof AppFeedbackForm>(key: K, value: AppFeedbackForm[K]) => {
+  const updateAppFeedback = <K extends keyof AppFeedbackForm>(
+    key: K,
+    value: AppFeedbackForm[K],
+  ) => {
     setDraft((current) => ({
       ...current,
       appFeedback: {
@@ -1515,7 +1647,10 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
     }));
   };
 
-  const updateNewTechnique = <K extends keyof NewTechniqueForm>(key: K, value: NewTechniqueForm[K]) => {
+  const updateNewTechnique = <K extends keyof NewTechniqueForm>(
+    key: K,
+    value: NewTechniqueForm[K],
+  ) => {
     setNewTechnique((form) => ({
       ...form,
       [key]: value,
@@ -1536,9 +1671,13 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
       return false;
     }
 
-    const selectedTextSections = sections.filter((section): section is ImproveTextSection => section !== 'steps');
+    const selectedTextSections = sections.filter(
+      (section): section is ImproveTextSection => section !== 'steps',
+    );
     if (selectedTextSections.length > 0) {
-      const hasTextContent = selectedTextSections.some((section) => hasContent(textBySection[section]));
+      const hasTextContent = selectedTextSections.some((section) =>
+        hasContent(textBySection[section]),
+      );
       if (!hasTextContent) return false;
     }
 
@@ -1589,8 +1728,9 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
 
   const isNewTechniqueReady = (() => {
     const form = draft.newTechnique;
-    const taxonomyComplete = hasContent(form.attack) && hasContent(form.category) && hasContent(form.weapon);
-  const entriesComplete = Boolean(form.entries);
+    const taxonomyComplete =
+      hasContent(form.attack) && hasContent(form.category) && hasContent(form.weapon);
+    const entriesComplete = Boolean(form.entries);
     const hanmiComplete = Boolean(form.hanmi);
     const stepsComplete = form.steps.some((step) => hasContent(step.text));
     const ukeListComplete = form.ukeNotes.every((item) => hasContent(item));
@@ -1626,7 +1766,8 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
       ? isBugReportReady
       : false;
   // Prevent submitting while already submitting or after a successful submit.
-  const canSubmit = isSubmitEnabled && submissionState !== 'submitting' && submissionState !== 'success';
+  const canSubmit =
+    isSubmitEnabled && submissionState !== 'submitting' && submissionState !== 'success';
 
   const formatCount = (count: number, forms: { one: string; many: string }): string =>
     (count === 1 ? forms.one : forms.many).replace('{count}', String(count));
@@ -1643,13 +1784,12 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
 
   const summaryEntries = useMemo(() => {
     if (!selectedCard) {
-      return [
-        { label: t.summary.labels.status, value: t.summary.emptyStatus },
-      ];
+      return [{ label: t.summary.labels.status, value: t.summary.emptyStatus }];
     }
 
     if (selectedCard === 'improveTechnique') {
-      const { techniqueId, sections, steps, textBySection, media, source, credit } = draft.improveTechnique;
+      const { techniqueId, sections, steps, textBySection, media, source, credit } =
+        draft.improveTechnique;
       const populatedSections = sections.map((section) => improveSectionLabels[section]).join(', ');
       const stepCount = steps.filter((step) => hasContent(step.text)).length;
       const textCount = sections
@@ -1689,7 +1829,9 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
       const directionLabel = isVariationDirection(form.direction)
         ? t.forms.variation.directionOptions[form.direction as VariationDirection]
         : t.summary.notSpecified;
-      const stanceLabel = form.stance ? t.newTechnique.hanmiOptions[form.stance] : t.summary.notSpecified;
+      const stanceLabel = form.stance
+        ? t.newTechnique.hanmiOptions[form.stance]
+        : t.summary.notSpecified;
       const summaryPreview = hasContent(form.summary)
         ? form.summary.length > 90
           ? `${form.summary.slice(0, 87)}…`
@@ -1712,7 +1854,10 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
           label: t.summary.labels.steps,
           value: stepCount > 0 ? formatCount(stepCount, t.summary.counts.documentedSteps) : '—',
         },
-        { label: t.summary.labels.credit, value: hasContent(form.creditName) ? form.creditName : '—' },
+        {
+          label: t.summary.labels.credit,
+          value: hasContent(form.creditName) ? form.creditName : '—',
+        },
         {
           label: t.summary.labels.markAsBase,
           value: form.markAsBase ? t.summary.boolean.yes : t.summary.boolean.no,
@@ -1727,12 +1872,21 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
     if (selectedCard === 'newTechnique') {
       const form = draft.newTechnique;
       const entriesLabel = form.entries
-        ? (t.newTechnique.entryLabels as any)[form.entries] ?? String(form.entries)
+        ? (t.newTechnique.entryLabels as Record<string, string>)[form.entries] ??
+          String(form.entries)
         : t.summary.notSpecified;
-      const hanmiLabel = form.hanmi ? t.newTechnique.hanmiOptions[form.hanmi] : t.summary.notSpecified;
-      const attackLabel = form.attack ? getTaxonomyLabel(locale, 'attack', form.attack) : t.summary.notSpecified;
-      const categoryLabel = form.category ? getTaxonomyLabel(locale, 'category', form.category) : t.summary.notSpecified;
-      const weaponLabel = form.weapon ? getTaxonomyLabel(locale, 'weapon', form.weapon) : t.summary.notSpecified;
+      const hanmiLabel = form.hanmi
+        ? t.newTechnique.hanmiOptions[form.hanmi]
+        : t.summary.notSpecified;
+      const attackLabel = form.attack
+        ? getTaxonomyLabel(locale, 'attack', form.attack)
+        : t.summary.notSpecified;
+      const categoryLabel = form.category
+        ? getTaxonomyLabel(locale, 'category', form.category)
+        : t.summary.notSpecified;
+      const weaponLabel = form.weapon
+        ? getTaxonomyLabel(locale, 'weapon', form.weapon)
+        : t.summary.notSpecified;
       const duplicateLabel = duplicateMatches.length
         ? formatCount(duplicateMatches.length, t.summary.counts.duplicates)
         : t.newTechnique.duplicates.none;
@@ -1773,13 +1927,15 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
         { label: t.summary.labels.area, value: area ? areaLabels[area] : t.summary.notSpecified },
         {
           label: t.summary.labels.feedback,
-          value: hasContent(feedback) ? formatCount(feedback.length, t.summary.counts.characters) : '—',
+          value: hasContent(feedback)
+            ? formatCount(feedback.length, t.summary.counts.characters)
+            : '—',
         },
         { label: t.summary.labels.link, value: hasContent(screenshotUrl) ? screenshotUrl : '—' },
       ];
     }
 
-  const { location, details, reproduction } = draft.bugReport;
+    const { location, details, reproduction } = draft.bugReport;
     const reproductionLines = reproduction
       .split('\n')
       .map((line) => line.trim())
@@ -1794,9 +1950,10 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
       },
       {
         label: t.summary.labels.reproduction,
-        value: reproductionLines.length > 0
-          ? formatCount(reproductionLines.length, t.summary.counts.reproduction)
-          : '—',
+        value:
+          reproductionLines.length > 0
+            ? formatCount(reproductionLines.length, t.summary.counts.reproduction)
+            : '—',
       },
       // includeSystemInfo removed from summary per privacy change
     ];
@@ -1845,12 +2002,18 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
     if (!canSubmit) return;
     let payload: unknown | null = null;
     if (selectedCard === 'newTechnique') {
-      const { payload: newTechniquePayload, allTextEmpty, stepsEmpty } = buildNewTechniqueSubmission(
-        draft.newTechnique,
-        { locale, entityId: slugPreview || undefined },
-      );
+      const {
+        payload: newTechniquePayload,
+        allTextEmpty,
+        stepsEmpty,
+      } = buildNewTechniqueSubmission(draft.newTechnique, {
+        locale,
+        entityId: slugPreview || undefined,
+      });
       if (allTextEmpty && stepsEmpty && !softWarningShown) {
-        setSubmitError('Please add at least one step or a short summary. Click Submit again to proceed.');
+        setSubmitError(
+          'Please add at least one step or a short summary. Click Submit again to proceed.',
+        );
         setSoftWarningShown(true);
         setSubmissionState('idle');
         return;
@@ -1928,12 +2091,23 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
   const handleDownloadJson = () => {
     const payload = buildDownloadPayload();
     if (!payload) return;
-    const typeLabel = selectedCard === 'newTechnique' ? 'new-technique-v1' : selectedCard === 'addVariation' ? 'variation' : selectedCard === 'improveTechnique' ? 'improve' : selectedCard === 'bugReport' ? 'bug' : selectedCard === 'appFeedback' ? 'app' : 'unknown';
+    const typeLabel =
+      selectedCard === 'newTechnique'
+        ? 'new-technique-v1'
+        : selectedCard === 'addVariation'
+        ? 'variation'
+        : selectedCard === 'improveTechnique'
+        ? 'improve'
+        : selectedCard === 'bugReport'
+        ? 'bug'
+        : selectedCard === 'appFeedback'
+        ? 'app'
+        : 'unknown';
     const ts = new Date();
     const pad = (n: number) => String(n).padStart(2, '0');
-    const timestamp = `${ts.getFullYear()}${pad(ts.getMonth() + 1)}${pad(ts.getDate())}-${pad(ts.getHours())}${pad(
-      ts.getMinutes(),
-    )}${pad(ts.getSeconds())}`;
+    const timestamp = `${ts.getFullYear()}${pad(ts.getMonth() + 1)}${pad(ts.getDate())}-${pad(
+      ts.getHours(),
+    )}${pad(ts.getMinutes())}${pad(ts.getSeconds())}`;
     const filename = `enso-feedback-${typeLabel}-${timestamp}.json`;
     const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
@@ -1946,11 +2120,14 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
     URL.revokeObjectURL(url);
   };
 
-  const stepPlaceholder = (index: number) => t.placeholders.step.replace('{index}', String(index + 1));
-  const removeStepAria = (index: number) => t.builder.removeStepAria.replace('{index}', String(index + 1));
+  const stepPlaceholder = (index: number) =>
+    t.placeholders.step.replace('{index}', String(index + 1));
+  const removeStepAria = (index: number) =>
+    t.builder.removeStepAria.replace('{index}', String(index + 1));
 
   const renderImproveForm = (): ReactElement => {
-    const { techniqueId, sections, textBySection, source, credit, steps, media } = draft.improveTechnique;
+    const { techniqueId, sections, textBySection, source, credit, steps, media } =
+      draft.improveTechnique;
 
     const toggleSection = (section: ImproveSection) => {
       const isSelected = sections.includes(section);
@@ -1992,7 +2169,9 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
         </section>
 
         <section className="space-y-3">
-          <span className="text-sm font-semibold text-[var(--color-text)]">{t.forms.improve.sectionsLabel}</span>
+          <span className="text-sm font-semibold text-[var(--color-text)]">
+            {t.forms.improve.sectionsLabel}
+          </span>
           <div className="flex flex-wrap gap-2">
             {Object.keys(improveSectionLabels).map((section) => {
               const typedSection = section as ImproveSection;
@@ -2069,7 +2248,9 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
         </AnimatePresence>
 
         <section className="space-y-3">
-          <span className="text-sm font-semibold text-[var(--color-text)]">{t.forms.improve.mediaLabel}</span>
+          <span className="text-sm font-semibold text-[var(--color-text)]">
+            {t.forms.improve.mediaLabel}
+          </span>
           <MediaManager
             media={media}
             onChange={(items) => updateImprove('media', items)}
@@ -2083,7 +2264,9 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
 
         <section className="grid gap-4 sm:grid-cols-2">
           <div className="space-y-2">
-          <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.improve.sourceLabel}</label>
+            <label className="text-sm font-medium text-[var(--color-text)]">
+              {t.forms.improve.sourceLabel}
+            </label>
             <input
               type="text"
               value={source}
@@ -2093,7 +2276,9 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
             />
           </div>
           <div className="space-y-2">
-          <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.improve.creditLabel}</label>
+            <label className="text-sm font-medium text-[var(--color-text)]">
+              {t.forms.improve.creditLabel}
+            </label>
             <input
               type="text"
               value={credit}
@@ -2143,7 +2328,9 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
 
     const toggleTag = (tag: CategoryTag) => {
       const isActive = categoryTags.includes(tag);
-      const nextTags = isActive ? categoryTags.filter((item) => item !== tag) : [...categoryTags, tag];
+      const nextTags = isActive
+        ? categoryTags.filter((item) => item !== tag)
+        : [...categoryTags, tag];
       updateVariation('categoryTags', nextTags);
     };
 
@@ -2155,14 +2342,22 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
       updateVariation('stance', value === 'none' ? null : (value as Hanmi));
     };
 
-    const handleListItemChange = (field: 'keyPoints' | 'commonMistakes', index: number, value: string) => {
+    const handleListItemChange = (
+      field: 'keyPoints' | 'commonMistakes',
+      index: number,
+      value: string,
+    ) => {
       const source = field === 'keyPoints' ? keyPoints : commonMistakes;
       const next = [...source];
       next[index] = value;
       updateVariation(field, next);
     };
 
-    const renderBulletList = (field: 'keyPoints' | 'commonMistakes', label: string, placeholder: string) => {
+    const renderBulletList = (
+      field: 'keyPoints' | 'commonMistakes',
+      label: string,
+      placeholder: string,
+    ) => {
       const items = field === 'keyPoints' ? keyPoints : commonMistakes;
       return (
         <div className="space-y-2">
@@ -2197,9 +2392,13 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
         className="space-y-8"
       >
         <section className="space-y-4">
-          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.forms.variation.sections.details}</h2>
+          <h2 className="text-sm font-semibold text-[var(--color-text)]">
+            {t.forms.variation.sections.details}
+          </h2>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.variation.relatedTechniqueLabel}</label>
+            <label className="text-sm font-medium text-[var(--color-text)]">
+              {t.forms.variation.relatedTechniqueLabel}
+            </label>
             <Select
               options={techniqueOptions}
               value={relatedTechniqueId ?? ''}
@@ -2210,24 +2409,42 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
           </div>
           <div className="grid gap-4 md:grid-cols-3">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.variation.directionLabel}</label>
-              <Select options={directionOptions} value={direction || 'none'} onChange={handleDirectionChange} />
+              <label className="text-sm font-medium text-[var(--color-text)]">
+                {t.forms.variation.directionLabel}
+              </label>
+              <Select
+                options={directionOptions}
+                value={direction || 'none'}
+                onChange={handleDirectionChange}
+              />
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.variation.stanceLabel}</label>
-              <Select options={stanceOptions} value={stance ?? 'none'} onChange={handleStanceChange} />
+              <label className="text-sm font-medium text-[var(--color-text)]">
+                {t.forms.variation.stanceLabel}
+              </label>
+              <Select
+                options={stanceOptions}
+                value={stance ?? 'none'}
+                onChange={handleStanceChange}
+              />
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.variation.levelLabel}</label>
+              <label className="text-sm font-medium text-[var(--color-text)]">
+                {t.forms.variation.levelLabel}
+              </label>
               <Select
                 options={levelOptions}
                 value={level ?? 'none'}
-                onChange={(value) => updateVariation('level', value === 'none' ? null : (value as Grade))}
+                onChange={(value) =>
+                  updateVariation('level', value === 'none' ? null : (value as Grade))
+                }
               />
             </div>
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.variation.trainerLabel}</label>
+            <label className="text-sm font-medium text-[var(--color-text)]">
+              {t.forms.variation.trainerLabel}
+            </label>
             <input
               type="text"
               value={trainer}
@@ -2239,9 +2456,13 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
         </section>
 
         <section className="space-y-4">
-          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.forms.variation.sections.summary}</h2>
+          <h2 className="text-sm font-semibold text-[var(--color-text)]">
+            {t.forms.variation.sections.summary}
+          </h2>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.variation.summaryLabel}</label>
+            <label className="text-sm font-medium text-[var(--color-text)]">
+              {t.forms.variation.summaryLabel}
+            </label>
             <textarea
               rows={4}
               value={summary}
@@ -2251,7 +2472,9 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
             />
           </div>
           <div className="space-y-3">
-            <h3 className="text-sm font-medium text-[var(--color-text)]">{t.forms.variation.categoryTagsLabel}</h3>
+            <h3 className="text-sm font-medium text-[var(--color-text)]">
+              {t.forms.variation.categoryTagsLabel}
+            </h3>
             <div className="flex flex-wrap gap-2">
               {categoryTagOrder.map((tag) => {
                 const isActive = categoryTags.includes(tag);
@@ -2277,7 +2500,9 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
         </section>
 
         <section className="space-y-4">
-          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.forms.variation.sections.steps}</h2>
+          <h2 className="text-sm font-semibold text-[var(--color-text)]">
+            {t.forms.variation.sections.steps}
+          </h2>
           <div className="rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-4">
             <StepBuilder
               label={t.forms.variation.stepsLabel}
@@ -2292,17 +2517,31 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
         </section>
 
         <section className="space-y-4">
-          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.forms.variation.sections.insights}</h2>
+          <h2 className="text-sm font-semibold text-[var(--color-text)]">
+            {t.forms.variation.sections.insights}
+          </h2>
           <div className="grid gap-6 md:grid-cols-2">
-            {renderBulletList('keyPoints', t.forms.variation.keyPointsLabel, t.placeholders.variationKeyPoint)}
-            {renderBulletList('commonMistakes', t.forms.variation.commonMistakesLabel, t.placeholders.variationMistake)}
+            {renderBulletList(
+              'keyPoints',
+              t.forms.variation.keyPointsLabel,
+              t.placeholders.variationKeyPoint,
+            )}
+            {renderBulletList(
+              'commonMistakes',
+              t.forms.variation.commonMistakesLabel,
+              t.placeholders.variationMistake,
+            )}
           </div>
         </section>
 
         <section className="space-y-4">
-          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.forms.variation.sections.uke}</h2>
+          <h2 className="text-sm font-semibold text-[var(--color-text)]">
+            {t.forms.variation.sections.uke}
+          </h2>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.variation.ukeLabel}</label>
+            <label className="text-sm font-medium text-[var(--color-text)]">
+              {t.forms.variation.ukeLabel}
+            </label>
             <textarea
               rows={3}
               value={ukeInstructions}
@@ -2312,7 +2551,9 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
             />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.variation.contextLabel}</label>
+            <label className="text-sm font-medium text-[var(--color-text)]">
+              {t.forms.variation.contextLabel}
+            </label>
             <textarea
               rows={3}
               value={context}
@@ -2324,7 +2565,9 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
         </section>
 
         <section className="space-y-4">
-          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.shared.sections.media}</h2>
+          <h2 className="text-sm font-semibold text-[var(--color-text)]">
+            {t.shared.sections.media}
+          </h2>
           <MediaManager
             media={media}
             onChange={(items) => updateVariation('media', items)}
@@ -2337,10 +2580,14 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
         </section>
 
         <section className="space-y-4">
-          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.shared.sections.contributor}</h2>
+          <h2 className="text-sm font-semibold text-[var(--color-text)]">
+            {t.shared.sections.contributor}
+          </h2>
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-[var(--color-text)]">{t.shared.labels.contributorName}</label>
+              <label className="text-sm font-medium text-[var(--color-text)]">
+                {t.shared.labels.contributorName}
+              </label>
               <input
                 type="text"
                 value={creditName}
@@ -2350,7 +2597,9 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
               />
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium text-[var(--color-text)]">{t.shared.labels.trainerCredit}</label>
+              <label className="text-sm font-medium text-[var(--color-text)]">
+                {t.shared.labels.trainerCredit}
+              </label>
               <input
                 type="text"
                 value={trainerCredit}
@@ -2375,7 +2624,6 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
     );
   };
 
-
   const renderNewTechniqueForm = (): ReactElement => {
     const form = draft.newTechnique;
 
@@ -2385,14 +2633,18 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
     ];
 
     const entrySelectOptions: SelectOption<string>[] = [
-        { value: '', label: t.options.notSpecified },
-        { value: 'irimi', label: t.newTechnique.entryLabels.irimi },
-        { value: 'tenkan', label: t.newTechnique.entryLabels.tenkan },
-        { value: 'omote', label: 'Omote' },
-        { value: 'ura', label: 'Ura' },
-      ];
+      { value: '', label: t.options.notSpecified },
+      { value: 'irimi', label: t.newTechnique.entryLabels.irimi },
+      { value: 'tenkan', label: t.newTechnique.entryLabels.tenkan },
+      { value: 'omote', label: 'Omote' },
+      { value: 'ura', label: 'Ura' },
+    ];
 
-    const handleListItemChange = (field: 'ukeNotes' | 'keyPoints' | 'commonMistakes', index: number, value: string) => {
+    const handleListItemChange = (
+      field: 'ukeNotes' | 'keyPoints' | 'commonMistakes',
+      index: number,
+      value: string,
+    ) => {
       const next = [...form[field]];
       if (index >= 0 && index < next.length) {
         next[index] = value;
@@ -2400,7 +2652,11 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
       }
     };
 
-    const renderList = (field: 'ukeNotes' | 'keyPoints' | 'commonMistakes', label: string, placeholder: string) => {
+    const renderList = (
+      field: 'ukeNotes' | 'keyPoints' | 'commonMistakes',
+      label: string,
+      placeholder: string,
+    ) => {
       const items = form[field];
       return (
         <div className="space-y-2">
@@ -2423,7 +2679,10 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
     };
 
     const summaryLabel = summaryExceeded
-      ? t.newTechnique.hints.summaryExceeded.replace('{remaining}', String(Math.abs(summaryRemaining)))
+      ? t.newTechnique.hints.summaryExceeded.replace(
+          '{remaining}',
+          String(Math.abs(summaryRemaining)),
+        )
       : t.newTechnique.hints.summaryRemaining.replace('{remaining}', String(summaryRemaining));
 
     return (
@@ -2437,10 +2696,14 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
         className="space-y-8"
       >
         <section className="space-y-4">
-          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.newTechnique.sections.details}</h2>
+          <h2 className="text-sm font-semibold text-[var(--color-text)]">
+            {t.newTechnique.sections.details}
+          </h2>
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-[var(--color-text)]" htmlFor="nt-name">{t.newTechnique.fields.nameSingle}</label>
+              <label className="text-sm font-medium text-[var(--color-text)]" htmlFor="nt-name">
+                {t.newTechnique.fields.nameSingle}
+              </label>
               <input
                 id="nt-name"
                 value={form.name}
@@ -2459,7 +2722,9 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
                   <span className="text-subtle">{t.newTechnique.duplicates.noneHint}</span>
                 ) : (
                   <div className="space-y-2">
-                    <p className="text-[var(--color-text)]">{t.newTechnique.duplicates.possibleMatches}</p>
+                    <p className="text-[var(--color-text)]">
+                      {t.newTechnique.duplicates.possibleMatches}
+                    </p>
                     <ul className="space-y-1">
                       {duplicateMatches.slice(0, 3).map((tech) => (
                         <li key={`dup-inline-${tech.id}`} className="text-[var(--color-text)]">
@@ -2483,7 +2748,9 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
               </div>
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium text-[var(--color-text)]" htmlFor="nt-jp-name">{t.newTechnique.fields.jpName}</label>
+              <label className="text-sm font-medium text-[var(--color-text)]" htmlFor="nt-jp-name">
+                {t.newTechnique.fields.jpName}
+              </label>
               <input
                 id="nt-jp-name"
                 value={form.jpName}
@@ -2496,10 +2763,14 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
         </section>
 
         <section className="space-y-4">
-          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.newTechnique.sections.taxonomy}</h2>
+          <h2 className="text-sm font-semibold text-[var(--color-text)]">
+            {t.newTechnique.sections.taxonomy}
+          </h2>
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-[var(--color-text)]">{t.newTechnique.fields.attack}</label>
+              <label className="text-sm font-medium text-[var(--color-text)]">
+                {t.newTechnique.fields.attack}
+              </label>
               <Select
                 options={attackOptions}
                 value={form.attack ?? ''}
@@ -2508,7 +2779,9 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
               />
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium text-[var(--color-text)]">{t.newTechnique.fields.category}</label>
+              <label className="text-sm font-medium text-[var(--color-text)]">
+                {t.newTechnique.fields.category}
+              </label>
               <Select
                 options={categoryOptions}
                 value={form.category ?? ''}
@@ -2517,7 +2790,9 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
               />
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium text-[var(--color-text)]">{t.newTechnique.fields.weapon}</label>
+              <label className="text-sm font-medium text-[var(--color-text)]">
+                {t.newTechnique.fields.weapon}
+              </label>
               <Select
                 options={weaponOptions}
                 value={form.weapon ?? ''}
@@ -2526,16 +2801,25 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
               />
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium text-[var(--color-text)]">{t.newTechnique.fields.hanmi}</label>
+              <label className="text-sm font-medium text-[var(--color-text)]">
+                {t.newTechnique.fields.hanmi}
+              </label>
               <Select
                 options={hanmiOptions}
                 value={form.hanmi ?? ''}
-                onChange={(value) => updateNewTechnique('hanmi', value === 'ai-hanmi' || value === 'gyaku-hanmi' ? (value as Hanmi) : null)}
+                onChange={(value) =>
+                  updateNewTechnique(
+                    'hanmi',
+                    value === 'ai-hanmi' || value === 'gyaku-hanmi' ? (value as Hanmi) : null,
+                  )
+                }
                 placeholder={t.placeholders.newTechniqueHanmi}
               />
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium text-[var(--color-text)]">{t.newTechnique.fields.entries}</label>
+              <label className="text-sm font-medium text-[var(--color-text)]">
+                {t.newTechnique.fields.entries}
+              </label>
               <Select
                 options={entrySelectOptions}
                 value={form.entries ?? ''}
@@ -2543,7 +2827,9 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
               />
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium text-[var(--color-text)]">{t.newTechnique.fields.levelHint}</label>
+              <label className="text-sm font-medium text-[var(--color-text)]">
+                {t.newTechnique.fields.levelHint}
+              </label>
               <input
                 value={form.levelHint}
                 onChange={(event) => updateNewTechnique('levelHint', event.target.value)}
@@ -2568,32 +2854,44 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
           <label className="text-sm font-medium text-[var(--color-text)]" htmlFor="nt-summary">
             {t.newTechnique.fields.summarySingle}
           </label>
-              <textarea
-                id="nt-summary"
-                rows={4}
-                value={form.summary}
-                onChange={(event) => updateNewTechnique('summary', event.target.value)}
-                placeholder={t.placeholders.newTechniqueSummary}
-                className={classNames(
+          <textarea
+            id="nt-summary"
+            rows={4}
+            value={form.summary}
+            onChange={(event) => updateNewTechnique('summary', event.target.value)}
+            placeholder={t.placeholders.newTechniqueSummary}
+            className={classNames(
               'w-full rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-3 text-sm focus-halo focus:outline-none',
               summaryExceeded && 'border-[var(--color-error, #b91c1c)]',
             )}
-              />
+          />
           <div className="flex justify-between text-xs">
-            <span className={classNames(summaryExceeded ? 'text-[var(--color-error, #b91c1c)]' : 'text-subtle')}>
+            <span
+              className={classNames(
+                summaryExceeded ? 'text-[var(--color-error, #b91c1c)]' : 'text-subtle',
+              )}
+            >
               {summaryLabel}
             </span>
-            <span className={classNames(summaryExceeded ? 'text-[var(--color-error, #b91c1c)]' : 'text-subtle')}>
+            <span
+              className={classNames(
+                summaryExceeded ? 'text-[var(--color-error, #b91c1c)]' : 'text-subtle',
+              )}
+            >
               {summaryLength}/{SUMMARY_MAX}
             </span>
           </div>
           {summaryEmpty && (
-            <p className="text-xs text-[var(--color-error, #b91c1c)]">{t.newTechnique.warnings.summaryMissingSingle}</p>
+            <p className="text-xs text-[var(--color-error, #b91c1c)]">
+              {t.newTechnique.warnings.summaryMissingSingle}
+            </p>
           )}
         </section>
 
         <section className="space-y-3">
-          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.newTechnique.sections.steps}</h2>
+          <h2 className="text-sm font-semibold text-[var(--color-text)]">
+            {t.newTechnique.sections.steps}
+          </h2>
           <StepBuilder
             steps={form.steps}
             onChange={(nextSteps) => updateNewTechnique('steps', nextSteps)}
@@ -2605,9 +2903,13 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
         </section>
 
         <section className="space-y-4">
-          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.newTechnique.sections.uke}</h2>
+          <h2 className="text-sm font-semibold text-[var(--color-text)]">
+            {t.newTechnique.sections.uke}
+          </h2>
           <div className="space-y-2">
-            <label className="text-sm font-medium text-[var(--color-text)]">{t.newTechnique.fields.ukeRoleSingle}</label>
+            <label className="text-sm font-medium text-[var(--color-text)]">
+              {t.newTechnique.fields.ukeRoleSingle}
+            </label>
             <input
               value={form.ukeRole}
               onChange={(event) => updateNewTechnique('ukeRole', event.target.value)}
@@ -2615,19 +2917,35 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
               className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus-halo focus:outline-none"
             />
           </div>
-          {renderList('ukeNotes', t.newTechnique.fields.ukeNotesSingle, t.placeholders.newTechniqueUkeNote)}
+          {renderList(
+            'ukeNotes',
+            t.newTechnique.fields.ukeNotesSingle,
+            t.placeholders.newTechniqueUkeNote,
+          )}
         </section>
 
         <section className="space-y-4">
-          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.newTechnique.sections.insights}</h2>
+          <h2 className="text-sm font-semibold text-[var(--color-text)]">
+            {t.newTechnique.sections.insights}
+          </h2>
           <div className="grid gap-6 md:grid-cols-2">
-            {renderList('keyPoints', t.newTechnique.fields.keyPointsSingle, t.placeholders.newTechniqueKeyPoint)}
-            {renderList('commonMistakes', t.newTechnique.fields.commonMistakesSingle, t.placeholders.newTechniqueMistake)}
+            {renderList(
+              'keyPoints',
+              t.newTechnique.fields.keyPointsSingle,
+              t.placeholders.newTechniqueKeyPoint,
+            )}
+            {renderList(
+              'commonMistakes',
+              t.newTechnique.fields.commonMistakesSingle,
+              t.placeholders.newTechniqueMistake,
+            )}
           </div>
         </section>
 
         <section className="space-y-3">
-          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.newTechnique.sections.media}</h2>
+          <h2 className="text-sm font-semibold text-[var(--color-text)]">
+            {t.newTechnique.sections.media}
+          </h2>
           <MediaManager
             media={form.media}
             onChange={(items) => updateNewTechnique('media', items)}
@@ -2640,7 +2958,9 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
         </section>
 
         <section className="space-y-2">
-          <label className="text-sm font-medium text-[var(--color-text)]">{t.summary.labels.source}</label>
+          <label className="text-sm font-medium text-[var(--color-text)]">
+            {t.summary.labels.source}
+          </label>
           <input
             value={form.sources}
             onChange={(event) => updateNewTechnique('sources', event.target.value)}
@@ -2650,10 +2970,14 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
         </section>
 
         <section className="space-y-4">
-          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.newTechnique.sections.contributor}</h2>
+          <h2 className="text-sm font-semibold text-[var(--color-text)]">
+            {t.newTechnique.sections.contributor}
+          </h2>
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-[var(--color-text)]">{t.shared.labels.contributorName}</label>
+              <label className="text-sm font-medium text-[var(--color-text)]">
+                {t.shared.labels.contributorName}
+              </label>
               <input
                 value={form.creditName}
                 onChange={(event) => updateNewTechnique('creditName', event.target.value)}
@@ -2662,7 +2986,9 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
               />
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium text-[var(--color-text)]">{t.shared.labels.trainerCredit}</label>
+              <label className="text-sm font-medium text-[var(--color-text)]">
+                {t.shared.labels.trainerCredit}
+              </label>
               <input
                 value={form.trainerCredit}
                 onChange={(event) => updateNewTechnique('trainerCredit', event.target.value)}
@@ -2680,7 +3006,9 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
             />
             {t.shared.labels.markAsBase}
           </label>
-          {t.shared.help?.markAsBase && <p className="text-xs text-subtle">{t.shared.help.markAsBase}</p>}
+          {t.shared.help?.markAsBase && (
+            <p className="text-xs text-subtle">{t.shared.help.markAsBase}</p>
+          )}
         </section>
 
         {/* Removed bottom duplicates block; now shown inline under name and in Summary */}
@@ -2706,7 +3034,9 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
         className="space-y-6"
       >
         <section className="space-y-2">
-          <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.app.titleLabel}</label>
+          <label className="text-sm font-medium text-[var(--color-text)]">
+            {t.forms.app.titleLabel}
+          </label>
           <input
             type="text"
             value={title ?? ''}
@@ -2716,7 +3046,9 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
           />
         </section>
         <section className="space-y-3">
-          <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.app.areaLabel}</label>
+          <label className="text-sm font-medium text-[var(--color-text)]">
+            {t.forms.app.areaLabel}
+          </label>
           <Select
             options={areaOptions}
             value={area ?? ''}
@@ -2726,7 +3058,9 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
         </section>
 
         <section className="space-y-3">
-          <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.app.feedbackLabel}</label>
+          <label className="text-sm font-medium text-[var(--color-text)]">
+            {t.forms.app.feedbackLabel}
+          </label>
           <textarea
             rows={5}
             value={feedback}
@@ -2754,7 +3088,9 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
         className="space-y-6"
       >
         <section className="space-y-2">
-          <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.bug.titleLabel}</label>
+          <label className="text-sm font-medium text-[var(--color-text)]">
+            {t.forms.bug.titleLabel}
+          </label>
           <input
             type="text"
             value={title ?? ''}
@@ -2764,7 +3100,9 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
           />
         </section>
         <section className="space-y-2">
-          <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.bug.locationLabel}</label>
+          <label className="text-sm font-medium text-[var(--color-text)]">
+            {t.forms.bug.locationLabel}
+          </label>
           <input
             type="text"
             value={location}
@@ -2775,7 +3113,9 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
         </section>
 
         <section className="space-y-3">
-          <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.bug.detailsLabel}</label>
+          <label className="text-sm font-medium text-[var(--color-text)]">
+            {t.forms.bug.detailsLabel}
+          </label>
           <textarea
             rows={4}
             value={details}
@@ -2786,7 +3126,9 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
         </section>
 
         <section className="space-y-3">
-          <label className="text-sm font-medium text-[var(--color-text)]">{t.forms.bug.reproductionLabel}</label>
+          <label className="text-sm font-medium text-[var(--color-text)]">
+            {t.forms.bug.reproductionLabel}
+          </label>
           <textarea
             rows={4}
             value={reproduction}
@@ -2800,10 +3142,6 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
       </motion.div>
     );
   };
-
-
-
-
 
   const renderForm = () => {
     if (!selectedCard) return null;
@@ -2862,10 +3200,16 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
                     layout="position"
                     initial={false}
                     animate={{
-                      backgroundColor: isActive ? 'var(--color-surface-hover)' : 'var(--color-surface)',
+                      backgroundColor: isActive
+                        ? 'var(--color-surface-hover)'
+                        : 'var(--color-surface)',
                       borderColor: isActive ? 'var(--color-text)' : 'var(--color-border)',
                     }}
-                    whileHover={prefersReducedMotion ? undefined : { backgroundColor: 'var(--color-surface-hover)' }}
+                    whileHover={
+                      prefersReducedMotion
+                        ? undefined
+                        : { backgroundColor: 'var(--color-surface-hover)' }
+                    }
                     transition={itemTransition}
                     onClick={() => handleTypeChange(value)}
                     aria-pressed={isActive}
@@ -2874,10 +3218,14 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
                       isActive ? 'shadow-md' : 'shadow-sm surface-hover',
                     )}
                   >
-                    <div className={classNames(
-                      // Center the overall block for the bug card, but keep text left-aligned
-                      value === 'bugReport' ? 'flex items-center justify-center gap-3' : 'flex items-center gap-3',
-                    )}>
+                    <div
+                      className={classNames(
+                        // Center the overall block for the bug card, but keep text left-aligned
+                        value === 'bugReport'
+                          ? 'flex items-center justify-center gap-3'
+                          : 'flex items-center gap-3',
+                      )}
+                    >
                       <span className="text-subtle" aria-hidden>
                         {content.icon}
                       </span>
@@ -2948,21 +3296,35 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
             <h2 className="text-xs uppercase tracking-[0.3em] text-subtle">{t.headings.summary}</h2>
             <div className="rounded-2xl border surface-border bg-[var(--color-surface)] p-6 space-y-4">
               <div className="space-y-1">
-                <h3 className="text-sm font-semibold text-[var(--color-text)]">{t.summary.title}</h3>
+                <h3 className="text-sm font-semibold text-[var(--color-text)]">
+                  {t.summary.title}
+                </h3>
                 <p className="text-xs text-subtle">{t.summary.subtitle}</p>
               </div>
               {/* Duplicates banner at top of summary */}
               {selectedCard === 'newTechnique' && (
-                <div className={classNames('rounded-xl border px-4 py-3 text-sm', 'surface-border bg-[var(--color-surface)]')}>
+                <div
+                  className={classNames(
+                    'rounded-xl border px-4 py-3 text-sm',
+                    'surface-border bg-[var(--color-surface)]',
+                  )}
+                >
                   {duplicateMatches.length === 0 ? (
                     <span className="text-subtle">{t.newTechnique.duplicates.noneHint}</span>
                   ) : (
                     <div className="space-y-2">
-                      <p className="font-medium text-[var(--color-text)]">{t.newTechnique.duplicates.possibleMatches}</p>
+                      <p className="font-medium text-[var(--color-text)]">
+                        {t.newTechnique.duplicates.possibleMatches}
+                      </p>
                       <ul className="space-y-1">
                         {duplicateMatches.map((tech) => (
-                          <li key={`dup-summary-${tech.id}`} className="flex items-center justify-between gap-2">
-                            <span className="text-[var(--color-text)]">{tech.name[locale] || tech.name.en}</span>
+                          <li
+                            key={`dup-summary-${tech.id}`}
+                            className="flex items-center justify-between gap-2"
+                          >
+                            <span className="text-[var(--color-text)]">
+                              {tech.name[locale] || tech.name.en}
+                            </span>
                             <span className="text-xs text-subtle">{tech.slug}</span>
                           </li>
                         ))}
@@ -2996,7 +3358,9 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
                 >
                   <p className="font-medium">{t.hints.successTitle}</p>
                   {submitResult?.requestId && (
-                    <p className="text-xs text-subtle">{t.newTechnique.requestIdLabel} {submitResult.requestId}</p>
+                    <p className="text-xs text-subtle">
+                      {t.newTechnique.requestIdLabel} {submitResult.requestId}
+                    </p>
                   )}
                 </motion.div>
               ) : submissionState === 'error' ? (
@@ -3007,7 +3371,8 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
                   className="rounded-xl border border-[var(--color-error, #b91c1c)] bg-[var(--color-surface)] px-4 py-3 text-xs text-[var(--color-error, #b91c1c)]"
                 >
                   {submitError || t.newTechnique.errors.generic}
-                  {submitResult?.requestId && ` · ${t.newTechnique.requestIdLabel} ${submitResult.requestId}`}
+                  {submitResult?.requestId &&
+                    ` · ${t.newTechnique.requestIdLabel} ${submitResult.requestId}`}
                 </motion.div>
               ) : submissionState === 'submitting' ? (
                 <p className="text-xs text-subtle">{t.newTechnique.sending}</p>
@@ -3049,7 +3414,9 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
                       : 'border surface-border bg-[var(--color-surface)] text-subtle cursor-not-allowed',
                   )}
                 >
-                  {submissionState === 'submitting' ? t.newTechnique.sendingButton : t.buttons.submit}
+                  {submissionState === 'submitting'
+                    ? t.newTechnique.sendingButton
+                    : t.buttons.submit}
                 </button>
                 <button
                   type="button"
@@ -3082,7 +3449,9 @@ export const FeedbackPage = ({ copy, locale, techniques, onBack, initialType, on
 
           {showJsonPreview && (
             <section className="space-y-3">
-          <h2 className="text-sm font-semibold text-[var(--color-text)]">{t.headings.jsonPreview}</h2>
+              <h2 className="text-sm font-semibold text-[var(--color-text)]">
+                {t.headings.jsonPreview}
+              </h2>
               <pre className="max-h-64 overflow-auto rounded-2xl border surface-border bg-[var(--color-surface)] p-4 text-xs">
                 {JSON.stringify(draft, null, 2)}
               </pre>

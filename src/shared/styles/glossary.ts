@@ -1,11 +1,16 @@
 import type { GlossaryTerm } from '../types';
 
-export const getCategoryStyle = (category: GlossaryTerm['category']): { backgroundColor: string; color: string } => ({
+export const getCategoryStyle = (
+  category: GlossaryTerm['category'],
+): { backgroundColor: string; color: string } => ({
   backgroundColor: `var(--glossary-${category}-bg)`,
   color: `var(--glossary-${category}-fg)`,
 });
 
-export const getCategoryLabel = (category: GlossaryTerm['category'], copy: any): string => {
+export const getCategoryLabel = (
+  category: GlossaryTerm['category'],
+  copy: Record<string, string>,
+): string => {
   const labels: Record<GlossaryTerm['category'], string> = {
     movement: copy.categoryMovement,
     stance: copy.categoryStance,

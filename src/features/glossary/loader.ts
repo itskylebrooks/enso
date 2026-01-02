@@ -22,23 +22,23 @@ export async function loadAllTerms(): Promise<GlossaryTerm[]> {
   }
 
   const terms: GlossaryTerm[] = [];
-  
+
   for (const [filePath, module] of Object.entries(modules)) {
     try {
-      const termData = (module as any).default || module;
-      
+      const termData = (module as Record<string, unknown>).default || module;
+
       // Validate that we have required fields
       if (!termData.id || !termData.slug || !termData.romaji || !termData.def) {
         console.warn(`Invalid glossary term in ${filePath}:`, termData);
         continue;
       }
-      
+
       terms.push(termData as GlossaryTerm);
     } catch (error) {
       console.error(`Error loading glossary term from ${filePath}:`, error);
     }
   }
-  
+
   // Dedupe by slug (keep first occurrence) to avoid duplicate entries when
   // multiple files define the same slug (e.g., legacy/redirected files).
   const bySlug = new Map<string, GlossaryTerm>();
@@ -57,14 +57,14 @@ export async function loadAllTerms(): Promise<GlossaryTerm[]> {
     a.romaji.localeCompare(b.romaji, 'en', {
       sensitivity: 'accent',
       caseFirst: 'lower',
-    })
+    }),
   );
 
   termsCache = uniqueTerms;
 
   // Build slug-to-term map for quick lookups
   termsBySlugCache = new Map();
-  uniqueTerms.forEach(term => {
+  uniqueTerms.forEach((term) => {
     termsBySlugCache!.set(term.slug, term);
   });
 
@@ -77,10 +77,10 @@ export async function loadAllTerms(): Promise<GlossaryTerm[]> {
 export async function loadTermBySlug(slug: string): Promise<GlossaryTerm | undefined> {
   // Ensure terms are loaded and cached
   await loadAllTerms();
-  
+
   // Check for redirects first
   const redirectedSlug = slugRedirects[slug] || slug;
-  
+
   return termsBySlugCache?.get(redirectedSlug);
 }
 

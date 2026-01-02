@@ -1,5 +1,5 @@
-import { useMemo, useCallback, useSyncExternalStore } from 'react';
 import { useReducedMotion, type Transition, type Variants } from 'motion/react';
+import { useCallback, useMemo, useSyncExternalStore } from 'react';
 
 type AnimationPreferenceListener = () => void;
 
@@ -45,15 +45,15 @@ export const reducedPageTransition: Transition = { duration: 0.05 };
 
 // Enhanced backdrop with synchronized blur animation
 export const backdropVariants: Variants = {
-  initial: { 
+  initial: {
     opacity: 0,
     backdropFilter: 'blur(0px)',
   },
-  animate: { 
+  animate: {
     opacity: 1,
     backdropFilter: 'blur(8px)',
   },
-  exit: { 
+  exit: {
     opacity: 0,
     backdropFilter: 'blur(0px)',
   },
@@ -208,17 +208,18 @@ export const useMotionPreferences = () => {
     // Keep blur even when animations are disabled by using the full backdrop
     // variants with zero-duration transitions. Only switch to the reduced
     // backdrop when the user explicitly prefers reduced motion.
-    const backdrop = prefersReducedMotion && !animationsDisabled
-      ? reducedBackdropVariants
-      : isAndroid
-      ? androidBackdropVariants
-      : backdropVariants;
-    const panel = prefersReducedMotion 
-      ? reducedPanelVariants 
+    const backdrop =
+      prefersReducedMotion && !animationsDisabled
+        ? reducedBackdropVariants
+        : isAndroid
+        ? androidBackdropVariants
+        : backdropVariants;
+    const panel = prefersReducedMotion
+      ? reducedPanelVariants
       : isAndroid
       ? androidPanelVariants
       : panelVariants;
-    
+
     // Android gets significantly faster transitions for lag-free performance
     const transition = animationsDisabled
       ? zeroTransition
@@ -279,18 +280,15 @@ export const useMotionPreferences = () => {
     [animationsDisabled, prefersReducedMotion],
   );
 
-  const getItemTransition = useCallback(
-    (_index: number): Transition => {
-      if (animationsDisabled) {
-        return zeroTransition;
-      }
-      if (prefersReducedMotion) {
-        return { duration: 0.05 };
-      }
-      return { duration: 0.18, ease: defaultEase };
-    },
-    [animationsDisabled, prefersReducedMotion],
-  );
+  const getItemTransition = useCallback((): Transition => {
+    if (animationsDisabled) {
+      return zeroTransition;
+    }
+    if (prefersReducedMotion) {
+      return { duration: 0.05 };
+    }
+    return { duration: 0.18, ease: defaultEase };
+  }, [animationsDisabled, prefersReducedMotion]);
 
   const toggleTransition: Transition = animationsDisabled
     ? zeroTransition

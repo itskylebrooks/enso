@@ -1,5 +1,6 @@
 import type Fuse from 'fuse.js';
-import type { TechniqueV2, Locale } from '../../shared/types';
+import type { IFuseOptions } from 'fuse.js';
+import type { Locale, TechniqueV2 } from '../../shared/types';
 
 export type SearchDoc = {
   id: string;
@@ -15,7 +16,7 @@ export type SearchDoc = {
   aliases?: string[];
 };
 
-export type SearchHit = any;
+export type SearchHit = Fuse.FuseResult<SearchDoc>;
 
 type SearchIndex = {
   fuse: Fuse<SearchDoc>;
@@ -49,7 +50,7 @@ const createDocs = (techniques: TechniqueV2[]): SearchDoc[] =>
     aliases: [],
   }));
 
-const buildOptions = (locale: Locale): any => {
+const buildOptions = (locale: Locale): IFuseOptions<SearchDoc> => {
   const localeKey = locale === 'de' ? 'name_de' : 'name_en';
   return {
     includeMatches: true,
@@ -72,7 +73,10 @@ const buildOptions = (locale: Locale): any => {
   };
 };
 
-export const buildSearchIndex = async (techniques: TechniqueV2[], locale: Locale): Promise<SearchIndex> => {
+export const buildSearchIndex = async (
+  techniques: TechniqueV2[],
+  locale: Locale,
+): Promise<SearchIndex> => {
   const [{ default: Fuse }] = await Promise.all([loadFuse()]);
   const docs = createDocs(techniques);
   const fuse = new Fuse(

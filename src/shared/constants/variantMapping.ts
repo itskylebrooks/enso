@@ -4,12 +4,12 @@
  */
 
 import type {
-  Technique,
-  TechniqueVersionMeta,
-  TechniqueVariant,
   Direction,
-  WeaponKind,
   Localized,
+  Technique,
+  TechniqueVariant,
+  TechniqueVersionMeta,
+  WeaponKind,
 } from '@shared/types';
 import { generateVersionLabel } from './versionLabels';
 
@@ -23,13 +23,13 @@ export const extractVersionsMeta = (technique: Technique): TechniqueVersionMeta[
   // Also exclude any version with id "v-base" as it's the base/default
   const seen = new Set<string>();
   const uniqueVersions: TechniqueVersionMeta[] = [];
-  
+
   for (const version of technique.versions) {
     // Skip standard versions - they're accessed via the default "Standard" dropdown option
     if (version.id === 'v-base') {
       continue;
     }
-    
+
     if (!seen.has(version.id)) {
       seen.add(version.id);
       uniqueVersions.push({
@@ -40,7 +40,7 @@ export const extractVersionsMeta = (technique: Technique): TechniqueVersionMeta[
       });
     }
   }
-  
+
   return uniqueVersions;
 };
 
@@ -50,21 +50,21 @@ export const extractVersionsMeta = (technique: Technique): TechniqueVersionMeta[
  */
 export const convertToVariants = (technique: Technique): TechniqueVariant[] => {
   const variants: TechniqueVariant[] = [];
-  
+
   // Default weapon is empty-hand
   const defaultWeapon: WeaponKind = 'empty';
-  
+
   // For each version, create variants for available directions
   technique.versions.forEach((version) => {
     if (!version.stepsByEntry) return;
-    
+
     // Extract available directions from stepsByEntry
     const availableDirections = Object.keys(version.stepsByEntry) as Direction[];
-    
+
     availableDirections.forEach((direction) => {
       const steps = version.stepsByEntry[direction];
       if (!steps) return;
-      
+
       // Create variant for this (direction, weapon, version) combination
       const variant: TechniqueVariant = {
         key: {
@@ -74,22 +74,26 @@ export const convertToVariants = (technique: Technique): TechniqueVariant[] => {
           versionId: version.id === 'v-base' ? null : version.id, // null for base versions
         },
         steps: steps as Localized<string[]>,
-        uke: version.uke ? {
-          role: version.uke.role as Localized<string>,
-          notes: version.uke.notes as Localized<string[]>,
-        } : undefined,
+        uke: version.uke
+          ? {
+              role: version.uke.role as Localized<string>,
+              notes: version.uke.notes as Localized<string[]>,
+            }
+          : undefined,
         commonMistakes: version.commonMistakes as Localized<string[]> | undefined,
         context: version.context as Localized<string> | undefined,
         // Prefer per-entry media if present (new shape), otherwise fallback to version.media
-        media: (version as any).mediaByEntry && (version as any).mediaByEntry[direction]
-          ? (version as any).mediaByEntry[direction]
-          : version.media,
+        media:
+          (version as { mediaByEntry?: Record<string, unknown[]> }).mediaByEntry &&
+          (version as { mediaByEntry?: Record<string, unknown[]> }).mediaByEntry[direction]
+            ? (version as { mediaByEntry?: Record<string, unknown[]> }).mediaByEntry[direction]
+            : version.media,
       };
-      
+
       variants.push(variant);
     });
   });
-  
+
   return variants;
 };
 
@@ -102,7 +106,7 @@ export const enrichTechniqueWithVariants = (technique: Technique): Technique => 
   if (technique.versionsMeta && technique.variants) {
     return technique;
   }
-  
+
   // Otherwise, generate them
   return {
     ...technique,
@@ -119,13 +123,13 @@ export const getAvailableDirections = (technique: Technique): Direction[] => {
     const directions = new Set(technique.variants.map((v) => v.key.direction));
     return Array.from(directions).sort();
   }
-  
+
   // Fallback to checking first version's stepsByEntry
   const firstVersion = technique.versions[0];
   if (firstVersion?.stepsByEntry) {
     return Object.keys(firstVersion.stepsByEntry) as Direction[];
   }
-  
+
   return ['irimi']; // Default fallback
 };
 
@@ -137,7 +141,7 @@ export const getAvailableHanmis = (technique: Technique): import('@shared/types'
     const hanmis = new Set(technique.variants.map((v) => v.key.hanmi));
     return Array.from(hanmis).sort();
   }
-  
+
   // Fallback: should not happen with required hanmi
   return ['ai-hanmi'];
 };
@@ -150,7 +154,7 @@ export const getAvailableWeapons = (technique: Technique): WeaponKind[] => {
     const weapons = new Set(technique.variants.map((v) => v.key.weapon));
     return Array.from(weapons).sort();
   }
-  
+
   // Default to empty-hand only
   return ['empty'];
 };

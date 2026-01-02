@@ -1,11 +1,30 @@
-import { forwardRef, useState, useEffect, useRef, type PropsWithChildren, type ReactElement, type RefObject } from 'react';
-import { classNames } from '../../utils/classNames';
-import type { AppRoute } from '@shared/types';
-import type { Copy } from '@shared/constants/i18n';
-import { Search, Settings, Bookmark, LibraryBig, BookOpenText, Compass, ChevronDown, Milestone, MessageSquare, Info } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
-import { useMotionPreferences, defaultEase } from '../ui/motion';
 import { Logo } from '@shared/components';
+import type { Copy } from '@shared/constants/i18n';
+import type { AppRoute } from '@shared/types';
+import {
+  Bookmark,
+  BookOpenText,
+  ChevronDown,
+  Compass,
+  Info,
+  LibraryBig,
+  MessageSquare,
+  Milestone,
+  Search,
+  Settings,
+} from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
+import {
+  forwardRef,
+  useEffect,
+  useRef,
+  useState,
+  type PropsWithChildren,
+  type ReactElement,
+  type RefObject,
+} from 'react';
+import { classNames } from '../../utils/classNames';
+import { defaultEase, useMotionPreferences } from '../ui/motion';
 
 type HeaderProps = {
   copy: Copy;
@@ -51,7 +70,7 @@ export const Header = ({
         animate: { opacity: 1, transition: { duration: 0.05 } },
         exit: { opacity: 0, transition: { duration: 0.05 } },
       }
-    : {
+    : ({
         initial: { opacity: 0, y: 12, scale: 0.98 },
         animate: {
           opacity: 1,
@@ -67,7 +86,7 @@ export const Header = ({
           // Make exit smoother and a bit longer so it reads
           transition: { duration: 0.28, ease: defaultEase },
         },
-      } as const;
+      } as const);
 
   // Auto-close mobile "More" menu on outside click or scroll
   useEffect(() => {
@@ -76,7 +95,10 @@ export const Header = ({
     const handleClickOutside = (event: MouseEvent | TouchEvent) => {
       const target = event.target as Node | null;
       if (!target) return;
-      if (moreMobileMenuRef.current?.contains(target) || moreMobileButtonRef.current?.contains(target)) {
+      if (
+        moreMobileMenuRef.current?.contains(target) ||
+        moreMobileButtonRef.current?.contains(target)
+      ) {
         return;
       }
       setMoreMobileOpen(false);
@@ -251,15 +273,25 @@ export const Header = ({
                   <motion.div
                     ref={moreMenuRef}
                     initial={{ opacity: 0, y: 6, scale: 0.98 }}
-                    animate={{ opacity: 1, y: 0, scale: 1, transition: { duration: 0.2, ease: defaultEase } }}
-                    exit={{ opacity: 0, y: -4, scale: 0.98, transition: { duration: 0.2, ease: defaultEase } }}
+                    animate={{
+                      opacity: 1,
+                      y: 0,
+                      scale: 1,
+                      transition: { duration: 0.2, ease: defaultEase },
+                    }}
+                    exit={{
+                      opacity: 0,
+                      y: -4,
+                      scale: 0.98,
+                      transition: { duration: 0.2, ease: defaultEase },
+                    }}
                     className="absolute right-0 mt-2 w-48 rounded-lg border surface-border bg-[var(--color-surface)] panel-shadow z-30"
                     role="menu"
                   >
                     <ul className="p-2">
                       <li>
                         <button
-                          ref={settingsButtonRef as any}
+                          ref={settingsButtonRef as RefObject<HTMLButtonElement>}
                           type="button"
                           onClick={() => {
                             setMoreDesktopOpen(false);
@@ -268,7 +300,10 @@ export const Header = ({
                           className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
                           role="menuitem"
                         >
-                          <span className="flex items-center gap-2"><Settings className="w-4 h-4" />{copy.settings}</span>
+                          <span className="flex items-center gap-2">
+                            <Settings className="w-4 h-4" />
+                            {copy.settings}
+                          </span>
                         </button>
                       </li>
                       <li>
@@ -281,7 +316,10 @@ export const Header = ({
                           className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
                           role="menuitem"
                         >
-                          <span className="flex items-center gap-2"><Milestone className="w-4 h-4" />{copy.roadmap}</span>
+                          <span className="flex items-center gap-2">
+                            <Milestone className="w-4 h-4" />
+                            {copy.roadmap}
+                          </span>
                         </button>
                       </li>
                       <li>
@@ -294,10 +332,13 @@ export const Header = ({
                           className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
                           role="menuitem"
                         >
-                          <span className="flex items-center gap-2"><MessageSquare className="w-4 h-4" />{copy.feedback}</span>
+                          <span className="flex items-center gap-2">
+                            <MessageSquare className="w-4 h-4" />
+                            {copy.feedback}
+                          </span>
                         </button>
                       </li>
-                      
+
                       <li>
                         <button
                           type="button"
@@ -308,7 +349,10 @@ export const Header = ({
                           className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
                           role="menuitem"
                         >
-                          <span className="flex items-center gap-2"><Info className="w-4 h-4" />{copy.aboutLink}</span>
+                          <span className="flex items-center gap-2">
+                            <Info className="w-4 h-4" />
+                            {copy.aboutLink}
+                          </span>
                         </button>
                       </li>
                     </ul>
@@ -322,7 +366,11 @@ export const Header = ({
           {/* Mobile: search + bookmarks + more */}
           <div className="md:hidden relative">
             <div className="flex items-center gap-2">
-              <IconButton ref={searchButtonRef} onClick={() => onSearch?.('mouse')} label={copy.searchBtn}>
+              <IconButton
+                ref={searchButtonRef}
+                onClick={() => onSearch?.('mouse')}
+                label={copy.searchBtn}
+              >
                 <Search className="w-5 h-5" />
               </IconButton>
               <button
@@ -381,7 +429,10 @@ export const Header = ({
                         className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
                         role="menuitem"
                       >
-                        <span className="flex items-center gap-2"><Settings className="w-4 h-4" />{copy.settings}</span>
+                        <span className="flex items-center gap-2">
+                          <Settings className="w-4 h-4" />
+                          {copy.settings}
+                        </span>
                       </button>
                     </li>
                     <li>
@@ -394,7 +445,10 @@ export const Header = ({
                         className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
                         role="menuitem"
                       >
-                        <span className="flex items-center gap-2"><Milestone className="w-4 h-4" />{copy.roadmap}</span>
+                        <span className="flex items-center gap-2">
+                          <Milestone className="w-4 h-4" />
+                          {copy.roadmap}
+                        </span>
                       </button>
                     </li>
                     <li>
@@ -407,7 +461,10 @@ export const Header = ({
                         className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
                         role="menuitem"
                       >
-                        <span className="flex items-center gap-2"><MessageSquare className="w-4 h-4" />{copy.feedback}</span>
+                        <span className="flex items-center gap-2">
+                          <MessageSquare className="w-4 h-4" />
+                          {copy.feedback}
+                        </span>
                       </button>
                     </li>
                     <li>
@@ -420,7 +477,10 @@ export const Header = ({
                         className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
                         role="menuitem"
                       >
-                        <span className="flex items-center gap-2"><Info className="w-4 h-4" />{copy.aboutLink}</span>
+                        <span className="flex items-center gap-2">
+                          <Info className="w-4 h-4" />
+                          {copy.aboutLink}
+                        </span>
                       </button>
                     </li>
                   </ul>
@@ -449,17 +509,19 @@ const TextButton = forwardRef<HTMLButtonElement, ButtonProps>(({ children, onCli
 
 TextButton.displayName = 'TextButton';
 
-const IconButton = forwardRef<HTMLButtonElement, ButtonProps>(({ children, label, onClick }, ref) => (
-  <button
-    ref={ref}
-    type="button"
-    onClick={onClick}
-    className="px-3 py-2 rounded-lg border btn-tonal surface-hover inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
-    title={label}
-    aria-label={label}
-  >
-    <span aria-hidden>{children}</span>
-  </button>
-));
+const IconButton = forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ children, label, onClick }, ref) => (
+    <button
+      ref={ref}
+      type="button"
+      onClick={onClick}
+      className="px-3 py-2 rounded-lg border btn-tonal surface-hover inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+      title={label}
+      aria-label={label}
+    >
+      <span aria-hidden>{children}</span>
+    </button>
+  ),
+);
 
 IconButton.displayName = 'IconButton';

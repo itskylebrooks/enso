@@ -1,30 +1,35 @@
-import { useCallback, useMemo, useState, type ReactElement } from 'react';
-import { AnimatePresence, motion } from 'motion/react';
+import { getActiveVariant } from '@features/technique/store';
+import { NameModal } from '@shared/components/ui/modals/NameModal';
+import { useMotionPreferences } from '@shared/components/ui/motion';
 import type { Copy } from '@shared/constants/i18n';
+import { buildTechniqueUrlWithVariant, parseTechniqueVariantParams } from '@shared/constants/urls';
+import { enrichTechniqueWithVariants } from '@shared/constants/variantMapping';
+import {
+  expandWithSynonyms,
+  getTaxonomyLabel,
+  normalizeTaxonomyValue,
+  taxonomyLabels,
+} from '@shared/i18n/taxonomy';
 import type {
   BookmarkCollection,
   Collection,
   Direction,
   Grade,
-  WeaponKind,
   Locale,
   Progress,
   Technique,
+  WeaponKind,
 } from '@shared/types';
-import { getTaxonomyLabel, taxonomyLabels, expandWithSynonyms, normalizeTaxonomyValue } from '@shared/i18n/taxonomy';
 import { stripDiacritics } from '@shared/utils/text';
-import { useMotionPreferences } from '@shared/components/ui/motion';
-import { TechniqueHeader, type CollectionOption } from './TechniqueHeader';
-import { TechniqueToolbar, type TechniqueToolbarValue } from './TechniqueToolbar';
-import { StepsList } from './StepsList';
-import { UkePanel } from './UkePanel';
+import { Footprints } from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
+import { useCallback, useMemo, useState, type ReactElement } from 'react';
 import { MediaPanel } from './MediaPanel';
 import { NotesPanel } from './NotesPanel';
-import { Footprints } from 'lucide-react';
-import { enrichTechniqueWithVariants } from '@shared/constants/variantMapping';
-import { getActiveVariant } from '@features/technique/store';
-import { parseTechniqueVariantParams, buildTechniqueUrlWithVariant } from '@shared/constants/urls';
-import { NameModal } from '@shared/components/ui/modals/NameModal';
+import { StepsList } from './StepsList';
+import { TechniqueHeader, type CollectionOption } from './TechniqueHeader';
+import { TechniqueToolbar, type TechniqueToolbarValue } from './TechniqueToolbar';
+import { UkePanel } from './UkePanel';
 
 type TagItem = { label: string; kind: 'category' | 'stance' | 'attack' | 'weapon' | 'entry' };
 
@@ -41,7 +46,11 @@ const buildTags = (technique: Technique, locale: Locale): TagItem[] => {
   const unique: TagItem[] = [];
   const seen = new Set<string>();
 
-  const pushIfValid = (label: string | undefined | null, kind: TagItem['kind'], ignoreTitle = false) => {
+  const pushIfValid = (
+    label: string | undefined | null,
+    kind: TagItem['kind'],
+    ignoreTitle = false,
+  ) => {
     if (!label) return;
     const normalizedValue = stripDiacritics(label.toLowerCase());
     if (normalizedValue.length === 0) return;
@@ -57,7 +66,7 @@ const buildTags = (technique: Technique, locale: Locale): TagItem[] => {
   // 1.5) Stance tags (hanmi) - show available hanmi values if present
   const hanmiSet = new Set<string>();
   (technique.versions || []).forEach((v) => {
-    const hanmi = (v as any).hanmi as string | undefined;
+    const hanmi = (v as { hanmi?: string }).hanmi as string | undefined;
     if (hanmi) hanmiSet.add(hanmi);
   });
   ['ai-hanmi', 'gyaku-hanmi'].forEach((h) => {
@@ -75,7 +84,9 @@ const buildTags = (technique: Technique, locale: Locale): TagItem[] => {
   // 4) Entry type tags (irimi/tenkan/omote/ura) - add last in this order
   const entrySet = new Set<string>();
   (technique.versions || []).forEach((v) => {
-    const stepsBy = (v as any).stepsByEntry as Record<string, unknown> | undefined;
+    const stepsBy = (v as { stepsByEntry?: Record<string, unknown> }).stepsByEntry as
+      | Record<string, unknown>
+      | undefined;
     if (!stepsBy) return;
     ['irimi', 'tenkan', 'omote', 'ura'].forEach((entry) => {
       if (stepsBy[entry]) entrySet.add(entry);
@@ -139,16 +150,16 @@ const mapTagToGlossarySlug = (tagLabel: string, locale: Locale): string | null =
   // Common direct mappings (English forms)
   const direct: Record<string, string> = {
     'throws (nage-waza)': 'nage-waza',
-    'throws': 'nage-waza',
+    throws: 'nage-waza',
     'controls / pins (osae-waza)': 'osae-waza',
-    'controls': 'osae-waza',
+    controls: 'osae-waza',
     'immobilizations (katame-waza)': 'katame-waza',
     'weapons (buki-waza)': 'buki-waza',
     'shomen-uchi': 'shomen-uchi',
-    'irimi': 'irimi',
-    'tenkan': 'tenkan',
-    'omote': 'omote',
-    'ura': 'ura',
+    irimi: 'irimi',
+    tenkan: 'tenkan',
+    omote: 'omote',
+    ura: 'ura',
   };
 
   if (direct[normalizedLabel]) return direct[normalizedLabel];
@@ -158,7 +169,10 @@ const mapTagToGlossarySlug = (tagLabel: string, locale: Locale): string | null =
   if (paren && paren[1]) {
     const candidate = normalizeTaxonomyValue(paren[1]);
     // check if it's a known category key
-    if (taxonomyLabels.en?.category && taxonomyLabels.en.category[candidate as keyof typeof taxonomyLabels.en.category]) {
+    if (
+      taxonomyLabels.en?.category &&
+      taxonomyLabels.en.category[candidate as keyof typeof taxonomyLabels.en.category]
+    ) {
       return candidate;
     }
     // also allow direct candidate
@@ -194,7 +208,11 @@ const mapTagToGlossarySlug = (tagLabel: string, locale: Locale): string | null =
   const synonyms = expandWithSynonyms(normalizedLabel);
   for (const syn of synonyms) {
     const cand = normalizeTaxonomyValue(syn);
-  if (taxonomyLabels.en?.category && taxonomyLabels.en.category[cand as keyof typeof taxonomyLabels.en.category]) return cand;
+    if (
+      taxonomyLabels.en?.category &&
+      taxonomyLabels.en.category[cand as keyof typeof taxonomyLabels.en.category]
+    )
+      return cand;
   }
 
   // 4) Fallback: slugify the label (remove non-ascii junk first)
@@ -236,7 +254,7 @@ export const TechniquePage = ({
 
   const versionsMeta = enrichedTechnique.versionsMeta || [];
 
-  const hasBaseVersion = (enrichedTechnique.versions || []).some(v => v.id === 'v-base');
+  const hasBaseVersion = (enrichedTechnique.versions || []).some((v) => v.id === 'v-base');
 
   // Get available variant combinations to intelligently disable options
   const availableVariants = useMemo(() => {
@@ -244,19 +262,36 @@ export const TechniquePage = ({
   }, [enrichedTechnique]);
 
   // Helper to check if a specific combination exists
-  const variantExists = useCallback((hanmi: import('@shared/types').Hanmi, direction: Direction, weapon: WeaponKind, versionId: string | null) => {
-    return availableVariants.some(v => 
-      v.key.hanmi === hanmi &&
-      v.key.direction === direction && 
-      v.key.weapon === weapon && 
-      v.key.versionId === versionId
-    );
-  }, [availableVariants]);
+  const variantExists = useCallback(
+    (
+      hanmi: import('@shared/types').Hanmi,
+      direction: Direction,
+      weapon: WeaponKind,
+      versionId: string | null,
+    ) => {
+      return availableVariants.some(
+        (v) =>
+          v.key.hanmi === hanmi &&
+          v.key.direction === direction &&
+          v.key.weapon === weapon &&
+          v.key.versionId === versionId,
+      );
+    },
+    [availableVariants],
+  );
 
   // Initialize toolbar state from URL or defaults to first available variant
   const [toolbarValue, setToolbarValue] = useState<TechniqueToolbarValue>(() => {
     // If URL params specify a valid variant, use it
-    if (initialVariantParams && variantExists(initialVariantParams.hanmi, initialVariantParams.direction, initialVariantParams.weapon, initialVariantParams.versionId || null)) {
+    if (
+      initialVariantParams &&
+      variantExists(
+        initialVariantParams.hanmi,
+        initialVariantParams.direction,
+        initialVariantParams.weapon,
+        initialVariantParams.versionId || null,
+      )
+    ) {
       return {
         hanmi: initialVariantParams.hanmi,
         direction: initialVariantParams.direction,
@@ -289,8 +324,8 @@ export const TechniquePage = ({
   const availableHanmisForCurrentVersion = useMemo(() => {
     const hanmis = new Set<import('@shared/types').Hanmi>();
     availableVariants
-      .filter(v => v.key.versionId === (toolbarValue.versionId || null))
-      .forEach(v => {
+      .filter((v) => v.key.versionId === (toolbarValue.versionId || null))
+      .forEach((v) => {
         hanmis.add(v.key.hanmi);
       });
     return Array.from(hanmis).sort();
@@ -299,54 +334,60 @@ export const TechniquePage = ({
   const availableDirectionsForCurrentVersion = useMemo(() => {
     const directions = new Set<Direction>();
     availableVariants
-      .filter(v => v.key.versionId === (toolbarValue.versionId || null))
-      .forEach(v => directions.add(v.key.direction));
+      .filter((v) => v.key.versionId === (toolbarValue.versionId || null))
+      .forEach((v) => directions.add(v.key.direction));
     return Array.from(directions).sort();
   }, [availableVariants, toolbarValue.versionId]);
 
   const availableWeaponsForCurrentVersion = useMemo(() => {
     const weapons = new Set<WeaponKind>();
     availableVariants
-      .filter(v => v.key.versionId === (toolbarValue.versionId || null))
-      .forEach(v => weapons.add(v.key.weapon));
+      .filter((v) => v.key.versionId === (toolbarValue.versionId || null))
+      .forEach((v) => weapons.add(v.key.weapon));
     return Array.from(weapons).sort();
   }, [availableVariants, toolbarValue.versionId]);
 
   // Get active variant based on current toolbar selection
   const activeVariant = useMemo(
-    () => getActiveVariant(
-      enrichedTechnique,
-      toolbarValue.hanmi,
-      toolbarValue.direction,
-      toolbarValue.weapon,
-      toolbarValue.versionId
-    ),
-    [enrichedTechnique, toolbarValue]
+    () =>
+      getActiveVariant(
+        enrichedTechnique,
+        toolbarValue.hanmi,
+        toolbarValue.direction,
+        toolbarValue.weapon,
+        toolbarValue.versionId,
+      ),
+    [enrichedTechnique, toolbarValue],
   );
 
   // Handle toolbar changes
   const handleToolbarChange = useCallback(
     (newValue: TechniqueToolbarValue) => {
       // Check if this combination exists
-      const exists = variantExists(newValue.hanmi, newValue.direction, newValue.weapon, newValue.versionId || null);
-      
+      const exists = variantExists(
+        newValue.hanmi,
+        newValue.direction,
+        newValue.weapon,
+        newValue.versionId || null,
+      );
+
       let finalValue = newValue;
-      
+
       // If combination doesn't exist, find first available variant
       if (!exists) {
         // Priority: Version determines what's available
         // Find first available variant for this version (if version changed)
         // Or find first available for this direction/weapon combo (if direction/weapon changed)
-        
+
         const previousValue = toolbarValue;
         const versionChanged = newValue.versionId !== previousValue.versionId;
-        
+
         if (versionChanged) {
           // Version changed - find first available hanmi/direction/weapon for this version
-          const firstForVersion = availableVariants.find(v => 
-            v.key.versionId === (newValue.versionId || null)
+          const firstForVersion = availableVariants.find(
+            (v) => v.key.versionId === (newValue.versionId || null),
           );
-          
+
           if (firstForVersion) {
             finalValue = {
               hanmi: firstForVersion.key.hanmi,
@@ -358,17 +399,18 @@ export const TechniquePage = ({
         } else {
           // Direction, weapon, or hanmi changed - try to keep as much as possible
           // First try: keep version, adjust other parameters
-          const availableForVersion = availableVariants.filter(v => 
-            v.key.versionId === (newValue.versionId || null)
+          const availableForVersion = availableVariants.filter(
+            (v) => v.key.versionId === (newValue.versionId || null),
           );
-          
+
           // Try to find a matching variant
-          const match = availableForVersion.find(v => 
-            v.key.hanmi === newValue.hanmi &&
-            v.key.direction === newValue.direction &&
-            v.key.weapon === newValue.weapon
+          const match = availableForVersion.find(
+            (v) =>
+              v.key.hanmi === newValue.hanmi &&
+              v.key.direction === newValue.direction &&
+              v.key.weapon === newValue.weapon,
           );
-          
+
           if (match) {
             finalValue = {
               hanmi: match.key.hanmi,
@@ -387,9 +429,9 @@ export const TechniquePage = ({
           }
         }
       }
-      
+
       setToolbarValue(finalValue);
-      
+
       // Update URL without full page reload - using path-based routing
       if (typeof window !== 'undefined') {
         const newPath = buildTechniqueUrlWithVariant(technique.slug, {
@@ -400,17 +442,17 @@ export const TechniquePage = ({
         });
         window.history.replaceState({}, '', newPath);
       }
-      
+
       // Notify parent
       onVariantChange?.(finalValue.direction, finalValue.weapon, finalValue.versionId);
-      
+
       // Preserve scroll to Steps heading
       const stepsHeading = document.querySelector('[data-steps-section]');
       if (stepsHeading) {
         stepsHeading.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
     },
-    [onVariantChange, variantExists, availableVariants, toolbarValue]
+    [onVariantChange, variantExists, availableVariants, toolbarValue, technique.slug],
   );
 
   const bookmarkedActive = Boolean(progress?.bookmarked);
@@ -514,7 +556,9 @@ export const TechniquePage = ({
 
       <AnimatePresence mode="wait">
         <motion.section
-    key={`${toolbarValue.hanmi}-${toolbarValue.direction}-${toolbarValue.weapon}-${toolbarValue.versionId || 'base'}`}
+          key={`${toolbarValue.hanmi}-${toolbarValue.direction}-${toolbarValue.weapon}-${
+            toolbarValue.versionId || 'base'
+          }`}
           initial={motionInitial}
           animate={motionAnimate}
           exit={motionExit}
@@ -553,7 +597,11 @@ export const TechniquePage = ({
                       ? activeVariant.commonMistakes[locale] || activeVariant.commonMistakes.en
                       : undefined
                   }
-                  context={activeVariant.context ? activeVariant.context[locale] || activeVariant.context.en : undefined}
+                  context={
+                    activeVariant.context
+                      ? activeVariant.context[locale] || activeVariant.context.en
+                      : undefined
+                  }
                   copy={copy}
                   onFeedbackClick={onFeedbackClick}
                 />

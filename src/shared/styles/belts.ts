@@ -19,20 +19,20 @@ const ordinal = (value: string, locale: Locale): string => {
 
 // Base colors - consistent across light and dark modes
 const baseColors: Record<Grade, string> = {
-  kyu5: '#f7d80e',  // Yellow
-  kyu4: '#f2571a',  // Orange
-  kyu3: '#0aad28',  // Green
-  kyu2: '#2563EB',  // Blue
-  kyu1: '#8c4b0b',  // Brown
-  dan1: '#0B0B0B',  // Black
-  dan2: '#0B0B0B',  // Black
-  dan3: '#0B0B0B',  // Black
-  dan4: '#0B0B0B',  // Black
-  dan5: '#0B0B0B',  // Black
+  kyu5: '#f7d80e', // Yellow
+  kyu4: '#f2571a', // Orange
+  kyu3: '#0aad28', // Green
+  kyu2: '#2563EB', // Blue
+  kyu1: '#8c4b0b', // Brown
+  dan1: '#0B0B0B', // Black
+  dan2: '#0B0B0B', // Black
+  dan3: '#0B0B0B', // Black
+  dan4: '#0B0B0B', // Black
+  dan5: '#0B0B0B', // Black
 };
 
 // Default text color for belt labels (app-wide requirement): always white.
-const getTextColorAlwaysWhite = (_grade: Grade): string => '#FFFFFF';
+const getTextColorAlwaysWhite = (): string => '#FFFFFF';
 
 // Adaptive text color used only by the Guide page table (ExamMatrix).
 // Preserves previous contrast logic: dan belts always white; kyu belts
@@ -44,7 +44,10 @@ const getAdaptiveTextColor = (grade: Grade, isDark: boolean): string => {
 
 // Legacy palette for compatibility (defaults to light mode)
 const palette: Record<Grade, { bg: string; fg: string }> = Object.fromEntries(
-  Object.entries(baseColors).map(([grade, bg]) => [grade, { bg, fg: getTextColorAlwaysWhite(grade as Grade) }])
+  Object.entries(baseColors).map(([grade, bg]) => [
+    grade,
+    { bg, fg: getTextColorAlwaysWhite(grade as Grade) },
+  ]),
 ) as Record<Grade, { bg: string; fg: string }>;
 
 export const gradePalette = palette;
@@ -68,10 +71,16 @@ export const gradeLabel = (grade: Grade, locale: Locale): string => {
   return `${ord} ${suffix}`;
 };
 
-export const getGradeStyle = (grade: Grade, isDark?: boolean): { backgroundColor: string; color: string } => {
+export const getGradeStyle = (
+  grade: Grade,
+  isDark?: boolean,
+): { backgroundColor: string; color: string } => {
   const backgroundColor = baseColors[grade];
   // If isDark is provided use adaptive contrast (used by ExamMatrix table).
   // Otherwise return the default always-white text color for belt labels.
-  const color = typeof isDark === 'boolean' ? getAdaptiveTextColor(grade, isDark) : getTextColorAlwaysWhite(grade);
+  const color =
+    typeof isDark === 'boolean'
+      ? getAdaptiveTextColor(grade, isDark)
+      : getTextColorAlwaysWhite(grade);
   return { backgroundColor, color };
 };

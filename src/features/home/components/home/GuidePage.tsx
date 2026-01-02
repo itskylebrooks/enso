@@ -1,18 +1,23 @@
-import { motion } from 'motion/react';
-import type { ReactElement } from 'react';
-import { useEffect, useState } from 'react';
+import { defaultEase, useMotionPreferences } from '@shared/components/ui/motion';
+import { getCopy } from '@shared/constants/i18n';
+import { getGradeStyle, gradeLabel } from '@shared/styles/belts';
 import type { EntryMode, Grade, Locale } from '@shared/types';
 import { gradeOrder } from '@shared/utils/grades';
-import { gradeLabel, getGradeStyle } from '@shared/styles/belts';
-import { useMotionPreferences, defaultEase } from '@shared/components/ui/motion';
 import { getInitialThemeState } from '@shared/utils/theme';
-import { getCopy } from '@shared/constants/i18n';
+import { motion } from 'motion/react';
+import type { CSSProperties, ReactElement } from 'react';
+import { useEffect, useState } from 'react';
 import { ExamMatrix } from '../guide/ExamMatrix';
 
 type GuidePageProps = {
   locale: Locale;
   onNavigateToGuideGrade: (grade: Grade) => void;
-  onOpenTechnique: (slug: string, trainerId?: string, entry?: EntryMode, skipExistenceCheck?: boolean) => void;
+  onOpenTechnique: (
+    slug: string,
+    trainerId?: string,
+    entry?: EntryMode,
+    skipExistenceCheck?: boolean,
+  ) => void;
   onNavigateToAdvanced: () => void;
   onNavigateToDan: () => void;
 };
@@ -140,8 +145,14 @@ const content: Record<Locale, GuideContent> = {
 
 // YouTube inspiration titles for localization
 const youtubeTitles: Record<Locale, { heading: string; lead: string }> = {
-  en: { heading: 'YouTube inspiration', lead: 'Curated playlists to watch for technique ideas, drills, and historical footage.' },
-  de: { heading: 'YouTube Inspiration', lead: 'Ausgewählte Playlists für Techniken, Drills und historisches Material.' },
+  en: {
+    heading: 'YouTube inspiration',
+    lead: 'Curated playlists to watch for technique ideas, drills, and historical footage.',
+  },
+  de: {
+    heading: 'YouTube Inspiration',
+    lead: 'Ausgewählte Playlists für Techniken, Drills und historisches Material.',
+  },
 };
 
 const sectionVariants = {
@@ -149,8 +160,8 @@ const sectionVariants = {
   show: { opacity: 1 },
 };
 
-export const GuidePage = ({ 
-  locale, 
+export const GuidePage = ({
+  locale,
   onNavigateToGuideGrade,
   onOpenTechnique,
   onNavigateToAdvanced,
@@ -191,7 +202,7 @@ export const GuidePage = ({
     const observer = new MutationObserver(checkDarkMode);
     observer.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ['class']
+      attributeFilter: ['class'],
     });
 
     return () => observer.disconnect();
@@ -212,7 +223,6 @@ export const GuidePage = ({
   return (
     <section className="py-12">
       <div className="container max-w-4xl mx-auto px-4 md:px-6 space-y-10">
-
         {/* Philosophy */}
         <motion.article className="space-y-4" {...animationProps}>
           <header className="space-y-2">
@@ -222,7 +232,9 @@ export const GuidePage = ({
           <ul className="space-y-3 text-sm leading-relaxed">
             {copy.philosophyPoints.map((point) => (
               <li key={point} className="text-sm leading-relaxed flex gap-2">
-                <span aria-hidden className="shrink-0">•</span>
+                <span aria-hidden className="shrink-0">
+                  •
+                </span>
                 <span className="flex-1">{point}</span>
               </li>
             ))}
@@ -243,30 +255,30 @@ export const GuidePage = ({
             {gradeOrder
               .filter((g) => !['dan2', 'dan3', 'dan4', 'dan5'].includes(g))
               .map((grade) => {
-              // Use default grade style (always-white text) for belt labels in the list.
-              const style = getGradeStyle(grade);
-              return (
-                <li key={grade}>
-                  <button
-                    type="button"
-                    onClick={() => handleBeltClick(grade)}
-                    className="w-full rounded-xl border surface-border bg-[var(--color-surface)]/70 px-4 py-3 flex items-center justify-between gap-3 cursor-pointer hover:bg-[var(--color-surface-hover)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
-                  >
-                    <span className="text-sm font-medium">{gradeLabel(grade, locale)}</span>
-                    <span
-                      aria-hidden
-                      className="inline-flex items-center justify-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide"
-                      style={{
-                        backgroundColor: style.backgroundColor,
-                        color: style.color,
-                      }}
+                // Use default grade style (always-white text) for belt labels in the list.
+                const style = getGradeStyle(grade);
+                return (
+                  <li key={grade}>
+                    <button
+                      type="button"
+                      onClick={() => handleBeltClick(grade)}
+                      className="w-full rounded-xl border surface-border bg-[var(--color-surface)]/70 px-4 py-3 flex items-center justify-between gap-3 cursor-pointer hover:bg-[var(--color-surface-hover)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
                     >
-                      {copy.beltNames[grade]}
-                    </span>
-                  </button>
-                </li>
-              );
-            })}
+                      <span className="text-sm font-medium">{gradeLabel(grade, locale)}</span>
+                      <span
+                        aria-hidden
+                        className="inline-flex items-center justify-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide"
+                        style={{
+                          backgroundColor: style.backgroundColor,
+                          color: style.color,
+                        }}
+                      >
+                        {copy.beltNames[grade]}
+                      </span>
+                    </button>
+                  </li>
+                );
+              })}
           </ul>
         </motion.article>
 
@@ -291,7 +303,9 @@ export const GuidePage = ({
         {/* Advanced Programs (moved) */}
         <motion.article className="space-y-4" {...animationProps}>
           <header className="space-y-2">
-            <h2 className="text-xl font-semibold leading-tight">{i18nCopy.advancedProgramsTitle}</h2>
+            <h2 className="text-xl font-semibold leading-tight">
+              {i18nCopy.advancedProgramsTitle}
+            </h2>
             <p className="text-sm text-subtle leading-relaxed">{i18nCopy.advancedProgramsLead}</p>
           </header>
           <div className="flex gap-3">
@@ -321,7 +335,9 @@ export const GuidePage = ({
           <ul className="space-y-3 text-sm leading-relaxed">
             {copy.etiquettePoints.map((point) => (
               <li key={point} className="text-sm leading-relaxed flex gap-2">
-                <span aria-hidden className="shrink-0">•</span>
+                <span aria-hidden className="shrink-0">
+                  •
+                </span>
                 <span className="flex-1">{point}</span>
               </li>
             ))}
@@ -330,7 +346,9 @@ export const GuidePage = ({
         {/* Further Study / Weiterführende Ressourcen */}
         <motion.article className="space-y-3" {...animationProps}>
           <header className="space-y-2">
-            <h2 className="text-xl font-semibold leading-tight">{locale === 'de' ? 'Weiterführende Ressourcen' : 'Further Study'}</h2>
+            <h2 className="text-xl font-semibold leading-tight">
+              {locale === 'de' ? 'Weiterführende Ressourcen' : 'Further Study'}
+            </h2>
             <p className="text-sm text-subtle leading-relaxed">{copy.furtherStudyLead}</p>
           </header>
           <div className="flex flex-wrap gap-3">
@@ -339,12 +357,14 @@ export const GuidePage = ({
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center rounded-full px-4 py-2 border text-sm transition-colors pill-adaptive"
-              style={{
-                '--pill-bg': isDark ? externalColors.dab.dark.bg : externalColors.dab.light.bg,
-                '--pill-bg-hover': isDark ? 'rgba(249, 220, 4, 0.22)' : 'rgba(249, 220, 4, 0.18)',
-                color: isDark ? externalColors.dab.dark.fg : externalColors.dab.light.fg,
-                borderColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'
-              } as any}
+              style={
+                {
+                  '--pill-bg': isDark ? externalColors.dab.dark.bg : externalColors.dab.light.bg,
+                  '--pill-bg-hover': isDark ? 'rgba(249, 220, 4, 0.22)' : 'rgba(249, 220, 4, 0.18)',
+                  color: isDark ? externalColors.dab.dark.fg : externalColors.dab.light.fg,
+                  borderColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)',
+                } as CSSProperties
+              }
               aria-label="Deutscher Aikido-Bund (opens in new tab)"
             >
               Deutscher Aikido-Bund
@@ -398,12 +418,14 @@ export const GuidePage = ({
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center rounded-full px-4 py-2 border text-sm transition-colors pill-adaptive"
-              style={{
-                '--pill-bg': isDark ? externalColors.wsv.dark.bg : externalColors.wsv.light.bg,
-                '--pill-bg-hover': isDark ? 'rgba(2, 130, 53, 0.28)' : 'rgba(2, 130, 53, 0.18)',
-                color: isDark ? externalColors.wsv.dark.fg : externalColors.wsv.light.fg,
-                borderColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'
-              } as any}
+              style={
+                {
+                  '--pill-bg': isDark ? externalColors.wsv.dark.bg : externalColors.wsv.light.bg,
+                  '--pill-bg-hover': isDark ? 'rgba(2, 130, 53, 0.28)' : 'rgba(2, 130, 53, 0.18)',
+                  color: isDark ? externalColors.wsv.dark.fg : externalColors.wsv.light.fg,
+                  borderColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)',
+                } as CSSProperties
+              }
               aria-label="Walddörfer SV (opens in new tab)"
             >
               WSV
@@ -414,12 +436,14 @@ export const GuidePage = ({
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center rounded-full px-4 py-2 border text-sm transition-colors pill-adaptive"
-              style={{
-                '--pill-bg': isDark ? externalColors.bsv.dark.bg : externalColors.bsv.light.bg,
-                '--pill-bg-hover': isDark ? 'rgba(178, 1, 0, 0.28)' : 'rgba(178, 1, 0, 0.18)',
-                color: isDark ? externalColors.bsv.dark.fg : externalColors.bsv.light.fg,
-                borderColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'
-              } as any}
+              style={
+                {
+                  '--pill-bg': isDark ? externalColors.bsv.dark.bg : externalColors.bsv.light.bg,
+                  '--pill-bg-hover': isDark ? 'rgba(178, 1, 0, 0.28)' : 'rgba(178, 1, 0, 0.18)',
+                  color: isDark ? externalColors.bsv.dark.fg : externalColors.bsv.light.fg,
+                  borderColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)',
+                } as CSSProperties
+              }
               aria-label="Aikido BSV (opens in new tab)"
             >
               BSV
