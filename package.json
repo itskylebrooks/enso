@@ -7,7 +7,9 @@
     "build:content": "tsx scripts/build-content.ts",
     "dev": "pnpm run build:content && vite",
     "build": "pnpm run build:content && tsc -b && vite build",
+    "typecheck": "tsc -b --pretty false",
     "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "preview": "vite preview",
     "format": "prettier . --write"
   },

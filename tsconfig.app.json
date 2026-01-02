@@ -5,7 +5,6 @@
     "useDefineForClassFields": true,
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
-    "types": ["vite/client", "react"],
     "skipLibCheck": true,
 
     /* Bundler mode */
@@ -32,9 +31,9 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
-    
+
     /* JSON */
     "resolveJsonModule": true
   },
-  "include": ["src"]
+  "include": ["src", "content"]
 }
