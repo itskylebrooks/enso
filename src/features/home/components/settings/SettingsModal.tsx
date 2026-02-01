@@ -9,7 +9,16 @@ import { SectionTitle } from '@shared/components';
 import { useFocusTrap } from '@shared/hooks/useFocusTrap';
 import { useMotionPreferences } from '@shared/components/ui/motion';
 import { usePwaInstall } from '@shared/hooks/usePwaInstall';
-import { Linkedin, User, X, Sun, Moon, Monitor, Download, Check } from 'lucide-react';
+import {
+  Linkedin,
+  SquareArrowOutUpRight,
+  X,
+  Sun,
+  Moon,
+  Monitor,
+  Download,
+  Check,
+} from 'lucide-react';
 // import version from package.json
 import pkg from '../../../../../package.json';
 
@@ -388,19 +397,19 @@ export const SettingsModal = ({
 
                 <div className="absolute right-4 inset-y-0 flex items-center">
                   <a
-                    href="https://itskylebrooks.tech/"
+                    href="https://brooksstudio.tech/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label="Kyle Brooks personal website"
+                    aria-label="Brooks Studio website"
                     className="text-current opacity-90"
                   >
-                    <User className="h-5 w-5" aria-hidden />
+                    <SquareArrowOutUpRight className="h-5 w-5" aria-hidden />
                   </a>
                 </div>
 
                 {/* Center text: author • version on one line */}
                 <div className="leading-snug flex items-center justify-center gap-2">
-                  <span className="truncate font-medium text-strong">Kyle Brooks</span>
+                  <span className="truncate font-medium text-strong">Brooks Studio</span>
                   <span>•</span>
                   <span className="truncate">Enso {pkg.version}</span>
                 </div>
@@ -409,7 +418,7 @@ export const SettingsModal = ({
                 <div className="flex items-center justify-center gap-2.5 leading-snug mt-1">
                   <a
                     className="underline"
-                    href="https://itskylebrooks.vercel.app/imprint"
+                    href="https://brooksstudio.tech/en/imprint"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -417,7 +426,7 @@ export const SettingsModal = ({
                   </a>
                   <a
                     className="underline"
-                    href="https://itskylebrooks.vercel.app/privacy"
+                    href="https://brooksstudio.tech/en/privacy"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -425,7 +434,7 @@ export const SettingsModal = ({
                   </a>
                   <a
                     className="underline"
-                    href="https://itskylebrooks.vercel.app/license"
+                    href="https://brooksstudio.tech/en/license"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
