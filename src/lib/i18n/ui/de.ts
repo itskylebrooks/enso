@@ -585,7 +585,124 @@ export const de = {
   categoryPhilosophy: 'Philosophie',
   categoryOther: 'Andere',
   // Guide page
-  beltExamProgramNote: 'Tippe auf einen Gürtel, um die passende Leitfadenseite zu öffnen.',
+  guidePage: {
+    headings: {
+      philosophy: 'Aikidō‑Prinzipien',
+      belts: 'Gürtelgrade & Farben',
+      routines: 'Routinen',
+      etiquette: 'Dōjō‑Etikette & Sicherheit',
+      furtherStudy: 'Weiterführende Ressourcen',
+      youtubeInspiration: 'YouTube Inspiration',
+    },
+    philosophyLead:
+      'Aikidō bevorzugt das Führen statt Kollisionen. Entwickle Zentrum, Timing und Mitgefühl bei voller Wirksamkeit.',
+    philosophyPoints: [
+      'Mit der Kraftlinie verbinden – das Gleichgewicht bewegen statt zu kämpfen.',
+      'Zentrum (hara) und aufrechte Wirbelsäule halten; Kraft entsteht aus guter Haltung.',
+      'Kuzushi: Gleichgewicht brechen statt Muskelkraft einsetzen.',
+      'Dreieck–Kreis–Quadrat: Stand finden, kreisförmig führen, stabil abschließen.',
+      'Zanshin: vor, während und nach der Technik aufmerksam bleiben.',
+    ],
+    beltsLead:
+      'Graduierungen folgen der Reihenfolge Kyū → Dan. Die Farben unterscheiden sich je nach Schule.',
+    beltNames: {
+      kyu5: 'Gelb',
+      kyu4: 'Orange',
+      kyu3: 'Grün',
+      kyu2: 'Blau',
+      kyu1: 'Braun',
+      dan1: 'Schwarz',
+      dan2: 'Schwarz',
+      dan3: 'Schwarz',
+      dan4: 'Schwarz',
+      dan5: 'Schwarz',
+    },
+    routines: [
+      {
+        id: 'warm-up',
+        title: 'Warm-up',
+        description: 'Vor dem Training. Gelenkvorbereitung + leichte Aktivierung.',
+      },
+      {
+        id: 'cooldown',
+        title: 'Cooldown',
+        description: 'Nach dem Training. Runterfahren + Bewegungsumfang wiederherstellen.',
+      },
+      {
+        id: 'mobility',
+        title: 'Mobility',
+        description: 'Längere mobility-fokussierte Einheit (Ruhetag oder Vorbereitungstag).',
+      },
+      {
+        id: 'strength',
+        title: 'Strength',
+        description: 'Kontrollierte Kraft + Core-Arbeit.',
+      },
+      {
+        id: 'skill',
+        title: 'Skill',
+        description:
+          'Fußarbeit, Balance, Koordination, Bewegungsmuster (niedrige Ermüdung, hohe Qualität).',
+      },
+      {
+        id: 'recovery',
+        title: 'Recovery',
+        description:
+          'Atmung, regeneratives Dehnen, Nervensystem-Reset (Ruhetag / Abendroutine).',
+      },
+    ],
+    etiquetteLead:
+      'Etikette schafft Sicherheit und eine gute Trainingsatmosphäre. Die folgenden Punkte sind weit verbreitet.',
+    etiquettePoints: [
+      'Beim Betreten/Verlassen der Matte verbeugen; den Partner vor und nach dem Üben grüßen.',
+      'Pünktlich erscheinen; Ordnung und Sauberkeit wahren.',
+      'Meister und Schüler achten; jeder Partner ist gerade „der Beste“ für dich.',
+      'Ehrlich, höflich, bescheiden üben; den gelehrten Formen unvoreingenommen begegnen.',
+      'Konzentriert und diszipliniert trainieren; Körper und Geist bilden – nicht den Mund.',
+      'Beim Werfen stets Raum für Ukemi schaffen; auf umliegende Paare achten.',
+      'Nägel kurz halten, Schmuck ablegen, lange Haare binden.',
+      'Verletzungen/Grenzen vorher mitteilen; früh und deutlich abklopfen.',
+    ],
+    furtherStudyLead:
+      'Eine Auswahl an Organisationen, Vereinen und Ressourcen zum Weiterlesen für lokale Dōjō und ergänzendes Lernmaterial.',
+    furtherStudyLinks: [
+      { id: 'dab', label: 'Deutscher Aikido-Bund', href: 'https://www.aikido-bund.de' },
+      { id: 'av-hamburg', label: 'AV Hamburg', href: 'https://www.aikido-hamburg.de' },
+      { id: 'av-bayern', label: 'AV Bayern', href: 'https://www.aikido-bayern.de' },
+      {
+        id: 'av-wattenbek',
+        label: 'AV Wattenbeck',
+        href: 'https://www.aikidoverein-wattenbek.de',
+      },
+      { id: 'aikido-warrior', label: 'Aikido Warrior Dojo', href: 'https://theaikidowarrior.com/' },
+      { id: 'wsv', label: 'WSV', href: 'https://walddoerfer-sv.de/sportangebot/aikido/' },
+      { id: 'bsv', label: 'BSV', href: 'https://www.aikido-bsv.de/index.php' },
+    ],
+    youtubeInspirationLead:
+      'Ausgewählte Playlists für Techniken, Drills und historisches Material.',
+    youtubeLinks: [
+      {
+        id: 'budo-skk',
+        label: 'Budo SKK',
+        href: 'https://www.youtube.com/playlist?list=PLsN-xOAz_W0941oH9feDAApPxiRBN4zNu',
+      },
+      {
+        id: 'howcast',
+        label: 'Howcast',
+        href: 'https://www.youtube.com/playlist?list=PL970B7BDB368DB950',
+      },
+      {
+        id: 'expert-village',
+        label: 'ExpertVillage',
+        href: 'https://www.youtube.com/playlist?list=PLN_iPNgAZVncPf9AQfKQkhiyCjoLAjjET',
+      },
+      {
+        id: 'yoshinkan',
+        label: 'Yoshinkan Aikido',
+        href: 'https://www.youtube.com/playlist?list=PLragapDhtsQXzrqgZk-ZgDX6zJopT0WCK',
+      },
+    ],
+  },
   examMatrixTitle: 'Prüfungsprogramm des Deutschen Aikido-Bundes (5. Kyū → 1. Dan)',
   examMatrixLead:
     'Zahlen zeigen den Prüfungsgrad für die jeweilige Variante. Technik oder Feld anklicken für Details. Links/rechts scrollen, um die ganze Tabelle zu sehen.',

@@ -186,8 +186,22 @@ export type AppRoute =
   | 'guideDan3'
   | 'guideDan4'
   | 'guideDan5'
+  | 'guideRoutineWarmUp'
+  | 'guideRoutineCooldown'
+  | 'guideRoutineMobility'
+  | 'guideRoutineStrength'
+  | 'guideRoutineSkill'
+  | 'guideRoutineRecovery'
   | 'terms'
   | 'feedback';
+
+export type GuideRoutine =
+  | 'warm-up'
+  | 'cooldown'
+  | 'mobility'
+  | 'strength'
+  | 'skill'
+  | 'recovery';
 
 export type PracticeCategory =
   | 'mobility'

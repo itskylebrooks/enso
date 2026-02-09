@@ -30,7 +30,13 @@ export const MobileTabBar = ({ copy, route, onNavigate }: MobileTabBarProps): Re
     route === 'guideKyu3' ||
     route === 'guideKyu2' ||
     route === 'guideKyu1' ||
-    route === 'guideDan1';
+    route === 'guideDan1' ||
+    route === 'guideRoutineWarmUp' ||
+    route === 'guideRoutineCooldown' ||
+    route === 'guideRoutineMobility' ||
+    route === 'guideRoutineStrength' ||
+    route === 'guideRoutineSkill' ||
+    route === 'guideRoutineRecovery';
   const activeTab: MobileTab | null = isGuideActive
     ? 'guide'
     : route === 'techniques'

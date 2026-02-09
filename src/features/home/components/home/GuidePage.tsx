@@ -1,7 +1,7 @@
 import { defaultEase, useMotionPreferences } from '@shared/components/ui/motion';
 import { getCopy } from '@shared/constants/i18n';
 import { getGradeStyle, gradeLabel } from '@shared/styles/belts';
-import type { EntryMode, Grade, Locale } from '@shared/types';
+import type { EntryMode, Grade, GuideRoutine, Locale } from '@shared/types';
 import { gradeOrder } from '@shared/utils/grades';
 import { getInitialThemeState } from '@shared/utils/theme';
 import { motion } from 'motion/react';
@@ -12,6 +12,7 @@ import { ExamMatrix } from '../guide/ExamMatrix';
 type GuidePageProps = {
   locale: Locale;
   onNavigateToGuideGrade: (grade: Grade) => void;
+  onNavigateToRoutine: (routine: GuideRoutine) => void;
   onOpenTechnique: (
     slug: string,
     trainerId?: string,
@@ -22,139 +23,6 @@ type GuidePageProps = {
   onNavigateToDan: () => void;
 };
 
-type GuideContent = {
-  headings: {
-    philosophy: string;
-    belts: string;
-    etiquette: string;
-  };
-
-  philosophyLead: string;
-  philosophyPoints: string[];
-  // virtues removed per request
-
-  beltsLead: string;
-  beltNames: Record<Grade, string>;
-
-  etiquetteLead: string;
-  etiquettePoints: string[];
-  furtherStudyLead: string;
-};
-
-const content: Record<Locale, GuideContent> = {
-  en: {
-    headings: {
-      philosophy: 'Aikidō principles',
-      belts: 'Belt grades & colors',
-      etiquette: 'Dōjō etiquette & safety',
-    },
-
-    philosophyLead:
-      'Aikidō favors blending over collision. You cultivate center, timing, and compassion while maintaining effectiveness.',
-    philosophyPoints: [
-      'Blend with the line of force—move the person by moving their balance.',
-      'Maintain center (hara) and upright spine; power radiates from good posture.',
-      'Create kuzushi (unbalance) rather than using muscle.',
-      'Triangle–Circle–Square: establish stance, move in circles, finish with stable control.',
-      'Zanshin: remain aware before, during, and after technique.',
-    ],
-    // virtues removed per request
-
-    beltsLead:
-      'Gradings follow the kyū → dan structure. Colors vary by school; the list below is a common reference.',
-    beltNames: {
-      kyu5: 'Yellow',
-      kyu4: 'Orange',
-      kyu3: 'Green',
-      kyu2: 'Blue',
-      kyu1: 'Brown',
-      dan1: 'Black',
-      dan2: 'Black',
-      dan3: 'Black',
-      dan4: 'Black',
-      dan5: 'Black',
-    },
-
-    etiquetteLead:
-      'Etiquette keeps everyone safe and training pleasant. The following points reflect common dōjō practice.',
-    etiquettePoints: [
-      // Dōjōkun-inspired
-      'Bow when entering/leaving the mat; greet your partner before and after training.',
-      'Be punctual; keep the training area in order and clean.',
-      'Respect teachers and students; each partner is the best teacher of the moment.',
-      'Be honest, polite, and modest; stay open-minded toward the taught forms.',
-      'Train with concentration and discipline; develop body and mind—avoid idle talk.',
-      'Always create space for ukemi when projecting; mind surrounding pairs.',
-      // Safety
-      'Trim nails, remove jewelry, and tie back long hair.',
-      'Communicate about injuries or limits before practice; tap early and clearly.',
-    ],
-    furtherStudyLead:
-      'A selection of organizations, clubs, and resources to explore further study, local dojos, and supplementary learning materials.',
-  },
-
-  de: {
-    headings: {
-      philosophy: 'Aikidō‑Prinzipien',
-      belts: 'Gürtelgrade & Farben',
-      etiquette: 'Dōjō‑Etikette & Sicherheit',
-    },
-
-    philosophyLead:
-      'Aikidō bevorzugt das Führen statt das Kollisionen. Entwickle Zentrum, Timing und Mitgefühl – bei voller Wirksamkeit.',
-    philosophyPoints: [
-      'Mit der Kraftlinie verbinden – das Gleichgewicht bewegen statt zu kämpfen.',
-      'Zentrum (hara) und aufrechte Wirbelsäule halten; Kraft entsteht aus guter Haltung.',
-      'Kuzushi: Gleichgewicht brechen statt Muskelkraft einsetzen.',
-      'Dreieck–Kreis–Quadrat: Stand finden, kreisförmig führen, stabil abschließen.',
-      'Zanshin: vor, während und nach der Technik aufmerksam bleiben.',
-    ],
-    // virtues removed per request
-
-    beltsLead:
-      'Graduierungen folgen der Reihenfolge Kyū → Dan. Die Farben unterscheiden sich je nach Schule.',
-    beltNames: {
-      kyu5: 'Gelb',
-      kyu4: 'Orange',
-      kyu3: 'Grün',
-      kyu2: 'Blau',
-      kyu1: 'Braun',
-      dan1: 'Schwarz',
-      dan2: 'Schwarz',
-      dan3: 'Schwarz',
-      dan4: 'Schwarz',
-      dan5: 'Schwarz',
-    },
-
-    etiquetteLead:
-      'Etikette schafft Sicherheit und eine gute Trainingsatmosphäre. Die folgenden Punkte sind weit verbreitet.',
-    etiquettePoints: [
-      'Beim Betreten/Verlassen der Matte verbeugen; den Partner vor und nach dem Üben grüßen.',
-      'Pünktlich erscheinen; Ordnung und Sauberkeit wahren.',
-      'Meister und Schüler achten; jeder Partner ist gerade „der Beste“ für dich.',
-      'Ehrlich, höflich, bescheiden üben; den gelehrten Formen unvoreingenommen begegnen.',
-      'Konzentriert und diszipliniert trainieren; Körper und Geist bilden – nicht den Mund.',
-      'Beim Werfen stets Raum für Ukemi schaffen; auf umliegende Paare achten.',
-      'Nägel kurz halten, Schmuck ablegen, lange Haare binden.',
-      'Verletzungen/ Grenzen vorher mitteilen; früh und deutlich abklopfen.',
-    ],
-    furtherStudyLead:
-      'Eine Auswahl an Organisationen, Vereinen und Ressourcen zum Weiterlesen — für lokale Dojos und ergänzendes Lernmaterial.',
-  },
-};
-
-// YouTube inspiration titles for localization
-const youtubeTitles: Record<Locale, { heading: string; lead: string }> = {
-  en: {
-    heading: 'YouTube inspiration',
-    lead: 'Curated playlists to watch for technique ideas, drills, and historical footage.',
-  },
-  de: {
-    heading: 'YouTube Inspiration',
-    lead: 'Ausgewählte Playlists für Techniken, Drills und historisches Material.',
-  },
-};
-
 const sectionVariants = {
   hidden: { opacity: 0 },
   show: { opacity: 1 },
@@ -163,12 +31,13 @@ const sectionVariants = {
 export const GuidePage = ({
   locale,
   onNavigateToGuideGrade,
+  onNavigateToRoutine,
   onOpenTechnique,
   onNavigateToAdvanced,
   onNavigateToDan,
 }: GuidePageProps): ReactElement => {
-  const copy = content[locale];
   const i18nCopy = getCopy(locale);
+  const guideCopy = i18nCopy.guidePage;
   const { prefersReducedMotion } = useMotionPreferences();
   const [isDark, setIsDark] = useState(getInitialThemeState);
 
@@ -223,33 +92,11 @@ export const GuidePage = ({
   return (
     <section className="py-12">
       <div className="container max-w-4xl mx-auto px-4 md:px-6 space-y-10">
-        {/* Philosophy */}
-        <motion.article className="space-y-4" {...animationProps}>
-          <header className="space-y-2">
-            <h2 className="text-xl font-semibold leading-tight">{copy.headings.philosophy}</h2>
-            <p className="text-sm text-subtle leading-relaxed">{copy.philosophyLead}</p>
-          </header>
-          <ul className="space-y-3 text-sm leading-relaxed">
-            {copy.philosophyPoints.map((point) => (
-              <li key={point} className="text-sm leading-relaxed flex gap-2">
-                <span aria-hidden className="shrink-0">
-                  •
-                </span>
-                <span className="flex-1">{point}</span>
-              </li>
-            ))}
-          </ul>
-          {/* virtues section removed */}
-        </motion.article>
-
         {/* Belts */}
         <motion.article className="space-y-4" {...animationProps}>
           <header className="space-y-2">
-            <h2 className="text-xl font-semibold leading-tight">{copy.headings.belts}</h2>
-            <p className="text-sm text-subtle leading-relaxed">{copy.beltsLead}</p>
-            <p className="text-sm bg-[var(--color-surface)] border surface-border rounded-lg px-4 py-3 leading-relaxed text-center">
-              {i18nCopy.beltExamProgramNote}
-            </p>
+            <h2 className="text-xl font-semibold leading-tight">{guideCopy.headings.belts}</h2>
+            <p className="text-sm text-subtle leading-relaxed">{guideCopy.beltsLead}</p>
           </header>
           <ul className="grid gap-3 sm:grid-cols-2">
             {gradeOrder
@@ -273,12 +120,40 @@ export const GuidePage = ({
                           color: style.color,
                         }}
                       >
-                        {copy.beltNames[grade]}
+                        {guideCopy.beltNames[grade]}
                       </span>
                     </button>
                   </li>
                 );
               })}
+          </ul>
+        </motion.article>
+
+        {/* Routines */}
+        <motion.article className="space-y-4" {...animationProps}>
+          <header className="space-y-2">
+            <h2 className="text-xl font-semibold leading-tight">{guideCopy.headings.routines}</h2>
+          </header>
+          <ul className="grid gap-3 sm:grid-cols-2">
+            {guideCopy.routines.map((routine) => (
+              <li key={routine.id}>
+                <button
+                  type="button"
+                  onClick={() => onNavigateToRoutine(routine.id as GuideRoutine)}
+                  className="w-full rounded-xl border surface-border bg-[var(--color-surface)]/70 px-4 py-3 flex items-start justify-between gap-3 text-left cursor-pointer hover:bg-[var(--color-surface-hover)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+                >
+                  <span className="space-y-1">
+                    <span className="block text-sm font-medium">{routine.title}</span>
+                    <span className="block text-xs text-subtle leading-relaxed">
+                      {routine.description}
+                    </span>
+                  </span>
+                  <span aria-hidden className="text-sm text-subtle shrink-0">
+                    →
+                  </span>
+                </button>
+              </li>
+            ))}
           </ul>
         </motion.article>
 
@@ -326,14 +201,33 @@ export const GuidePage = ({
           </div>
         </motion.article>
 
+        {/* Philosophy */}
+        <motion.article className="space-y-4" {...animationProps}>
+          <header className="space-y-2">
+            <h2 className="text-xl font-semibold leading-tight">{guideCopy.headings.philosophy}</h2>
+            <p className="text-sm text-subtle leading-relaxed">{guideCopy.philosophyLead}</p>
+          </header>
+          <ul className="space-y-3 text-sm leading-relaxed">
+            {guideCopy.philosophyPoints.map((point) => (
+              <li key={point} className="text-sm leading-relaxed flex gap-2">
+                <span aria-hidden className="shrink-0">
+                  •
+                </span>
+                <span className="flex-1">{point}</span>
+              </li>
+            ))}
+          </ul>
+          {/* virtues section removed */}
+        </motion.article>
+
         {/* Etiquette */}
         <motion.article className="space-y-3" {...animationProps}>
           <header className="space-y-2">
-            <h2 className="text-xl font-semibold leading-tight">{copy.headings.etiquette}</h2>
-            <p className="text-sm text-subtle leading-relaxed">{copy.etiquetteLead}</p>
+            <h2 className="text-xl font-semibold leading-tight">{guideCopy.headings.etiquette}</h2>
+            <p className="text-sm text-subtle leading-relaxed">{guideCopy.etiquetteLead}</p>
           </header>
           <ul className="space-y-3 text-sm leading-relaxed">
-            {copy.etiquettePoints.map((point) => (
+            {guideCopy.etiquettePoints.map((point) => (
               <li key={point} className="text-sm leading-relaxed flex gap-2">
                 <span aria-hidden className="shrink-0">
                   •
@@ -343,159 +237,89 @@ export const GuidePage = ({
             ))}
           </ul>
         </motion.article>
-        {/* Further Study / Weiterführende Ressourcen */}
+        {/* Further Study */}
         <motion.article className="space-y-3" {...animationProps}>
           <header className="space-y-2">
             <h2 className="text-xl font-semibold leading-tight">
-              {locale === 'de' ? 'Weiterführende Ressourcen' : 'Further Study'}
+              {guideCopy.headings.furtherStudy}
             </h2>
-            <p className="text-sm text-subtle leading-relaxed">{copy.furtherStudyLead}</p>
+            <p className="text-sm text-subtle leading-relaxed">{guideCopy.furtherStudyLead}</p>
           </header>
           <div className="flex flex-wrap gap-3">
-            <a
-              href="https://www.aikido-bund.de"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center rounded-full px-4 py-2 border text-sm transition-colors pill-adaptive"
-              style={
-                {
+            {guideCopy.furtherStudyLinks.map((link) => {
+              let style: CSSProperties | undefined;
+              let className =
+                'inline-flex items-center rounded-full px-4 py-2 bg-[var(--color-surface)]/20 border surface-border text-sm hover:bg-[var(--color-surface-hover)] transition-colors';
+              if (link.id === 'dab') {
+                className =
+                  'inline-flex items-center rounded-full px-4 py-2 border text-sm transition-colors pill-adaptive';
+                style = {
                   '--pill-bg': isDark ? externalColors.dab.dark.bg : externalColors.dab.light.bg,
                   '--pill-bg-hover': isDark ? 'rgba(249, 220, 4, 0.22)' : 'rgba(249, 220, 4, 0.18)',
                   color: isDark ? externalColors.dab.dark.fg : externalColors.dab.light.fg,
                   borderColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)',
-                } as CSSProperties
-              }
-              aria-label="Deutscher Aikido-Bund (opens in new tab)"
-            >
-              Deutscher Aikido-Bund
-            </a>
-
-            <a
-              href="https://www.aikido-hamburg.de"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center rounded-full px-4 py-2 bg-[var(--color-surface)]/20 border surface-border text-sm hover:bg-[var(--color-surface-hover)] transition-colors"
-              style={{ color: 'var(--color-text)' }}
-              aria-label="AV Hamburg (opens in new tab)"
-            >
-              AV Hamburg
-            </a>
-
-            <a
-              href="https://www.aikido-bayern.de"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center rounded-full px-4 py-2 bg-[var(--color-surface)]/20 border surface-border text-sm hover:bg-[var(--color-surface-hover)] transition-colors"
-              style={{ color: 'var(--color-text)' }}
-              aria-label="AV Bayern (opens in new tab)"
-            >
-              AV Bayern
-            </a>
-
-            <a
-              href="https://www.aikidoverein-wattenbek.de"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center rounded-full px-4 py-2 bg-[var(--color-surface)]/20 border surface-border text-sm hover:bg-[var(--color-surface-hover)] transition-colors"
-              style={{ color: 'var(--color-text)' }}
-              aria-label="AV Wattenbeck (opens in new tab)"
-            >
-              AV Wattenbeck
-            </a>
-
-            <a
-              href="https://theaikidowarrior.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center rounded-full px-4 py-2 bg-[var(--color-surface)]/20 border surface-border text-sm hover:bg-[var(--color-surface-hover)] transition-colors"
-              style={{ color: 'var(--color-text)' }}
-              aria-label="Aikido Warrior Dojo (opens in new tab)"
-            >
-              Aikido Warrior Dojo
-            </a>
-            <a
-              href="https://walddoerfer-sv.de/sportangebot/aikido/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center rounded-full px-4 py-2 border text-sm transition-colors pill-adaptive"
-              style={
-                {
+                } as CSSProperties;
+              } else if (link.id === 'wsv') {
+                className =
+                  'inline-flex items-center rounded-full px-4 py-2 border text-sm transition-colors pill-adaptive';
+                style = {
                   '--pill-bg': isDark ? externalColors.wsv.dark.bg : externalColors.wsv.light.bg,
                   '--pill-bg-hover': isDark ? 'rgba(2, 130, 53, 0.28)' : 'rgba(2, 130, 53, 0.18)',
                   color: isDark ? externalColors.wsv.dark.fg : externalColors.wsv.light.fg,
                   borderColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)',
-                } as CSSProperties
-              }
-              aria-label="Walddörfer SV (opens in new tab)"
-            >
-              WSV
-            </a>
-
-            <a
-              href="https://www.aikido-bsv.de/index.php"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center rounded-full px-4 py-2 border text-sm transition-colors pill-adaptive"
-              style={
-                {
+                } as CSSProperties;
+              } else if (link.id === 'bsv') {
+                className =
+                  'inline-flex items-center rounded-full px-4 py-2 border text-sm transition-colors pill-adaptive';
+                style = {
                   '--pill-bg': isDark ? externalColors.bsv.dark.bg : externalColors.bsv.light.bg,
                   '--pill-bg-hover': isDark ? 'rgba(178, 1, 0, 0.28)' : 'rgba(178, 1, 0, 0.18)',
                   color: isDark ? externalColors.bsv.dark.fg : externalColors.bsv.light.fg,
                   borderColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)',
-                } as CSSProperties
+                } as CSSProperties;
+              } else {
+                style = { color: 'var(--color-text)' };
               }
-              aria-label="Aikido BSV (opens in new tab)"
-            >
-              BSV
-            </a>
+
+              return (
+                <a
+                  key={link.id}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={className}
+                  style={style}
+                  aria-label={link.label}
+                >
+                  {link.label}
+                </a>
+              );
+            })}
           </div>
         </motion.article>
         {/* YouTube Inspiration */}
         <motion.article className="space-y-3" {...animationProps}>
           <header className="space-y-2">
-            <h2 className="text-xl font-semibold leading-tight">{youtubeTitles[locale].heading}</h2>
-            <p className="text-sm text-subtle leading-relaxed">{youtubeTitles[locale].lead}</p>
+            <h2 className="text-xl font-semibold leading-tight">
+              {guideCopy.headings.youtubeInspiration}
+            </h2>
+            <p className="text-sm text-subtle leading-relaxed">
+              {guideCopy.youtubeInspirationLead}
+            </p>
           </header>
           <div className="flex flex-wrap gap-3">
-            <a
-              href="https://www.youtube.com/playlist?list=PLsN-xOAz_W0941oH9feDAApPxiRBN4zNu"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center rounded-full px-4 py-2 bg-[var(--color-surface)]/20 border surface-border text-sm hover:bg-[var(--color-surface-hover)] transition-colors"
-              aria-label="Budo SKK playlist (opens in new tab)"
-            >
-              Budo SKK
-            </a>
-
-            <a
-              href="https://www.youtube.com/playlist?list=PL970B7BDB368DB950"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center rounded-full px-4 py-2 bg-[var(--color-surface)]/20 border surface-border text-sm hover:bg-[var(--color-surface-hover)] transition-colors"
-              aria-label="Howcast playlist (opens in new tab)"
-            >
-              Howcast
-            </a>
-
-            <a
-              href="https://www.youtube.com/playlist?list=PLN_iPNgAZVncPf9AQfKQkhiyCjoLAjjET"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center rounded-full px-4 py-2 bg-[var(--color-surface)]/20 border surface-border text-sm hover:bg-[var(--color-surface-hover)] transition-colors"
-              aria-label="ExpertVillage / Leaf Group playlist (opens in new tab)"
-            >
-              ExpertVillage
-            </a>
-
-            <a
-              href="https://www.youtube.com/playlist?list=PLragapDhtsQXzrqgZk-ZgDX6zJopT0WCK"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center rounded-full px-4 py-2 bg-[var(--color-surface)]/20 border surface-border text-sm hover:bg-[var(--color-surface-hover)] transition-colors"
-              aria-label="Martial Arts Kenshinkai Aikido playlist (opens in new tab)"
-            >
-              Yoshinkan Aikido
-            </a>
+            {guideCopy.youtubeLinks.map((link) => (
+              <a
+                key={link.id}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center rounded-full px-4 py-2 bg-[var(--color-surface)]/20 border surface-border text-sm hover:bg-[var(--color-surface-hover)] transition-colors"
+                aria-label={link.label}
+              >
+                {link.label}
+              </a>
+            ))}
           </div>
         </motion.article>
       </div>

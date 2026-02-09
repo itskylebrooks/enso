@@ -7,6 +7,7 @@ import { AboutPage } from '@features/home/components/home/AboutPage';
 import { AdvancedPrograms } from '@features/home/components/home/AdvancedPrograms';
 import { DanOverview } from '@features/home/components/home/DanOverview';
 import { GuidePage } from '@features/home/components/home/GuidePage';
+import { GuideRoutinePage } from '@features/home/components/home/GuideRoutinePage';
 import { SettingsModal } from '@features/home/components/settings/SettingsModal';
 import { TechniquesPage } from '@features/technique/components/TechniquesPage';
 import { type CollectionOption } from '@features/technique/components/TechniqueHeader';
@@ -82,6 +83,7 @@ import type {
   GlossaryProgress,
   GlossaryTerm,
   Grade,
+  GuideRoutine,
   Locale,
   Progress,
   PracticeCategory,
@@ -158,6 +160,18 @@ const routeToPath = (route: AppRoute): string => {
       return '/guide/4-dan';
     case 'guideDan5':
       return '/guide/5-dan';
+    case 'guideRoutineWarmUp':
+      return '/guide/routines/warm-up';
+    case 'guideRoutineCooldown':
+      return '/guide/routines/cooldown';
+    case 'guideRoutineMobility':
+      return '/guide/routines/mobility';
+    case 'guideRoutineStrength':
+      return '/guide/routines/strength';
+    case 'guideRoutineSkill':
+      return '/guide/routines/skill';
+    case 'guideRoutineRecovery':
+      return '/guide/routines/recovery';
     case 'feedback':
       return '/feedback';
     case 'techniques':
@@ -236,6 +250,42 @@ const gradeToGuideRoute = (grade: Grade): AppRoute | null => {
   }
 };
 
+const routineToGuideRoute = (routine: GuideRoutine): AppRoute => {
+  switch (routine) {
+    case 'warm-up':
+      return 'guideRoutineWarmUp';
+    case 'cooldown':
+      return 'guideRoutineCooldown';
+    case 'mobility':
+      return 'guideRoutineMobility';
+    case 'strength':
+      return 'guideRoutineStrength';
+    case 'skill':
+      return 'guideRoutineSkill';
+    case 'recovery':
+      return 'guideRoutineRecovery';
+  }
+};
+
+const guideRouteToRoutine = (route: AppRoute): GuideRoutine | null => {
+  switch (route) {
+    case 'guideRoutineWarmUp':
+      return 'warm-up';
+    case 'guideRoutineCooldown':
+      return 'cooldown';
+    case 'guideRoutineMobility':
+      return 'mobility';
+    case 'guideRoutineStrength':
+      return 'strength';
+    case 'guideRoutineSkill':
+      return 'skill';
+    case 'guideRoutineRecovery':
+      return 'recovery';
+    default:
+      return null;
+  }
+};
+
 const getGlossarySlugFromPath = (pathname: string): string | null => {
   const match = /^\/(?:terms|glossary)\/([^/?#]+)/.exec(pathname);
   return match ? decodeURIComponent(match[1]) : null;
@@ -304,6 +354,14 @@ const parseLocation = (
 
   if (pathname === '/guide/dan') {
     return { route: 'guideDan', slug: null };
+  }
+
+  const guideRoutineMatch = /^\/guide\/routines\/(warm-up|cooldown|mobility|strength|skill|recovery)$/.exec(
+    pathname,
+  );
+  if (guideRoutineMatch) {
+    const [, routine] = guideRoutineMatch;
+    return { route: routineToGuideRoute(routine as GuideRoutine), slug: null };
   }
 
   const guideGradeMatch = /^\/guide\/(\d+)-(kyu|dan)$/.exec(pathname);
@@ -1665,6 +1723,13 @@ export default function App({
     [navigateTo],
   );
 
+  const navigateToGuideRoutine = useCallback(
+    (routine: GuideRoutine, sourceRoute?: AppRoute) => {
+      navigateTo(routineToGuideRoute(routine), { sourceRoute });
+    },
+    [navigateTo],
+  );
+
   const techniqueHistoryState =
     typeof window !== 'undefined' ? (window.history.state as HistoryState | null) : null;
   const techniqueBackRoute = techniqueHistoryState?.sourceRoute ?? route;
@@ -1924,6 +1989,18 @@ export default function App({
     );
   } else if (route === 'guideDan') {
     mainContent = <DanOverview locale={locale} onBack={() => navigateTo('guide')} />;
+  } else if (guideRouteToRoutine(route)) {
+    const routine = guideRouteToRoutine(route) as GuideRoutine;
+    const routineContent = copy.guidePage.routines.find((entry) => entry.id === routine);
+    mainContent = (
+      <GuideRoutinePage
+        copy={copy}
+        locale={locale}
+        title={routineContent?.title ?? ''}
+        description={routineContent?.description ?? ''}
+        onBack={() => navigateTo('guide')}
+      />
+    );
   } else if (guideRouteToGrade(route)) {
     const grade = guideRouteToGrade(route) as Grade;
     mainContent = (
@@ -1942,6 +2019,7 @@ export default function App({
       <GuidePage
         locale={locale}
         onNavigateToGuideGrade={navigateToGuideGrade}
+        onNavigateToRoutine={navigateToGuideRoutine}
         onOpenTechnique={openTechnique}
         onNavigateToAdvanced={() => navigateTo('guideAdvanced')}
         onNavigateToDan={() => navigateTo('guideDan')}
