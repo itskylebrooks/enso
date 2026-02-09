@@ -434,6 +434,34 @@ body.suppress-transitions *::after {
   box-shadow: var(--card-shadow);
 }
 
+/* Mobile tab bar: frosted/foggy glass with stronger translucency and blur */
+.mobile-tab-bar {
+  background-color: color-mix(in srgb, var(--color-surface) 60%, transparent);
+  border-color: color-mix(in srgb, var(--color-border) 56%, transparent);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.1);
+  transition:
+    background-color 0.18s var(--motion-ease),
+    box-shadow 0.18s var(--motion-ease);
+  overflow: hidden;
+}
+
+@supports ((-webkit-backdrop-filter: blur(0)) or (backdrop-filter: blur(0))) {
+  .mobile-tab-bar {
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+  }
+}
+
+.dark .mobile-tab-bar {
+  background-color: color-mix(
+    in srgb,
+    var(--color-text) 6%,
+    color-mix(in srgb, var(--color-bg) 78%, transparent)
+  );
+  border-color: color-mix(in srgb, var(--color-border) 40%, transparent);
+  box-shadow: 0 12px 24px rgba(2, 6, 23, 0.34);
+}
+
 /* Breathing dot loader: single dot that grows/shrinks at a 1s cadence.
    - Uses CSS custom properties to adapt to light/dark mode
    - Respects prefers-reduced-motion
