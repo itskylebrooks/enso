@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import type { ReactElement } from 'react';
 import { motion } from 'motion/react';
 import { loadAllTerms } from '../loader';
@@ -28,11 +28,8 @@ export const GlossaryPage = ({
 }: GlossaryPageProps): ReactElement => {
   const { terms, loading, error, setTerms, setLoading, setError } = useGlossaryStore();
   const { listMotion, getItemTransition, prefersReducedMotion } = useMotionPreferences();
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
-
     const loadTerms = async () => {
       if (terms.length > 0) return; // Already loaded
 
@@ -72,26 +69,18 @@ export const GlossaryPage = ({
     resetKey: termsKey,
   });
 
-  if (!mounted) {
-    return <div className="max-w-4xl mx-auto px-4 py-8 no-select" />;
-  }
-
   if (loading) {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-8 no-select">
-        <div className="text-center">
-          <p className="text-muted">Loading glossary...</p>
-        </div>
+      <div className="text-center py-12 no-select">
+        <p className="text-muted">{copy.loading}</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-8 no-select">
-        <div className="text-center">
-          <p className="text-red-600 dark:text-red-400">{error}</p>
-        </div>
+      <div className="text-center py-12 no-select">
+        <p className="text-red-600 dark:text-red-400">{error}</p>
       </div>
     );
   }

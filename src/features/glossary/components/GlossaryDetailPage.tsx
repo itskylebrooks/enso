@@ -113,6 +113,8 @@ export const GlossaryDetailPage = ({
   const notes = term.notes?.[locale] || term.notes?.en;
   const categoryLabel = getCategoryLabel(term.category, copy);
   const categoryStyle = getCategoryStyle(term.category);
+  const definitionLabel = locale === 'de' ? 'Definition' : 'Definition';
+  const literalLabel = locale === 'de' ? 'Wortbedeutung' : 'Literal Translation';
 
   return (
     <motion.main
@@ -122,120 +124,112 @@ export const GlossaryDetailPage = ({
       animate="animate"
       transition={pageMotion.transition}
     >
-      <div className="space-y-4">
-        {/* Back navigation */}
-        <div className="flex items-center">
-          <a
-            href="/"
-            aria-label={backLabel ?? copy.backToGlossary}
-            onClick={(event) => {
-              event.preventDefault();
-              onBack();
-            }}
-            className="text-sm text-subtle hover:text-[var(--color-text)] transition flex items-center gap-2"
-          >
-            <span aria-hidden>←</span>
-            <span>{backLabel ?? copy.backToGlossary}</span>
-          </a>
+      <header className="z-10 border-b surface-border pb-4 bg-transparent space-y-4">
+        <a
+          href="/terms"
+          aria-label={backLabel ?? copy.backToGlossary}
+          onClick={(event) => {
+            event.preventDefault();
+            onBack();
+          }}
+          className="text-sm text-subtle hover:text-[var(--color-text)] transition flex items-center gap-2"
+        >
+          <span aria-hidden>←</span>
+          <span>{backLabel ?? copy.backToGlossary}</span>
+        </a>
+
+        <div className="space-y-3">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div className="space-y-2">
+              <h1 className="text-3xl font-semibold leading-tight" title={term.romaji}>
+                {term.romaji}
+              </h1>
+              {term.jp && <div className="text-sm text-subtle">{term.jp}</div>}
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => onNavigateToGlossaryWithFilter?.(term.category)}
+                  aria-label={`Show ${categoryLabel} in glossary`}
+                  className="glossary-tag glossary-tag--interactive rounded-lg px-2 py-1 text-xs uppercase tracking-wide focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+                  style={{
+                    backgroundColor: categoryStyle.backgroundColor,
+                    color: categoryStyle.color,
+                  }}
+                >
+                  {categoryLabel}
+                </button>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <AddToCollectionMenu
+                copy={copy}
+                collections={collections}
+                onToggle={(collectionId, nextChecked) =>
+                  onToggleCollection(collectionId, nextChecked)
+                }
+                onCreate={openCreateDialog}
+              />
+              <div className="inline-flex rounded-lg border surface-border overflow-hidden">
+                <motion.button
+                  type="button"
+                  onClick={onToggleBookmark}
+                  aria-pressed={isBookmarked}
+                  aria-label={copy.bookmark}
+                  transition={{ duration: 0.15 }}
+                  whileTap={{ scale: 0.96 }}
+                  className={classNames(
+                    'p-2 text-sm flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] transition-colors duration-150',
+                    isBookmarked
+                      ? 'bg-[var(--color-text)] text-[var(--color-bg)]'
+                      : 'bg-[var(--color-surface)] text-[var(--color-text)] hover:bg-[var(--color-surface-hover)]',
+                  )}
+                >
+                  {isBookmarked ? (
+                    <BookmarkCheck className="w-4 h-4" />
+                  ) : (
+                    <Bookmark className="w-4 h-4" />
+                  )}
+                </motion.button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </header>
+
+      <div className="grid grid-cols-1 gap-10 lg:grid-cols-[2fr,1fr]">
+        <div className="space-y-8">
+          {notes && (
+            <section className="space-y-3">
+              <h2 className="text-xs uppercase tracking-[0.3em] text-subtle">{copy.notes}</h2>
+              <div className="space-y-2 text-sm leading-relaxed text-muted">
+                {notes
+                  .split('\n')
+                  .map((paragraph) => paragraph.trim())
+                  .filter((paragraph) => paragraph.length > 0)
+                  .map((paragraph, index) => (
+                    <p key={`${term.slug}-notes-${index}`}>{paragraph}</p>
+                  ))}
+              </div>
+            </section>
+          )}
         </div>
 
-        {/* Term header - centered and focused */}
-        <header className="text-center space-y-4 pb-6 border-b surface-border">
-          <div className="space-y-3">
-            <h1 className="text-3xl font-semibold leading-tight" title={term.romaji}>
-              {term.romaji}
-            </h1>
-            {term.jp && <div className="text-sm text-subtle">{term.jp}</div>}
-            <div className="flex justify-center">
-              <button
-                type="button"
-                onClick={() => onNavigateToGlossaryWithFilter?.(term.category)}
-                aria-label={`Show ${categoryLabel} in glossary`}
-                className="glossary-tag glossary-tag--interactive rounded-lg px-2 py-1 text-xs uppercase tracking-wide focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
-                style={{
-                  backgroundColor: categoryStyle.backgroundColor,
-                  color: categoryStyle.color,
-                }}
-              >
-                {categoryLabel}
-              </button>
-            </div>
-          </div>
+        <div className="space-y-8">
+          <section className="space-y-3">
+            <h2 className="text-xs uppercase tracking-[0.3em] text-subtle">{definitionLabel}</h2>
+            <p className="text-sm leading-relaxed text-muted">{definition}</p>
+          </section>
 
-          {/* Bookmark controls */}
-          <div className="flex justify-center gap-2">
-            <AddToCollectionMenu
-              copy={copy}
-              collections={collections}
-              onToggle={(collectionId, nextChecked) =>
-                onToggleCollection(collectionId, nextChecked)
-              }
-              onCreate={openCreateDialog}
-            />
-            <div className="inline-flex rounded-lg border surface-border overflow-hidden">
-              <motion.button
-                type="button"
-                onClick={onToggleBookmark}
-                aria-pressed={isBookmarked}
-                aria-label={copy.bookmark}
-                transition={{ duration: 0.15 }}
-                whileTap={{ scale: 0.96 }}
-                className={classNames(
-                  'p-2 text-sm flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] transition-colors duration-150',
-                  isBookmarked
-                    ? 'bg-[var(--color-text)] text-[var(--color-bg)]'
-                    : 'surface hover:surface-hover',
-                )}
-              >
-                {isBookmarked ? (
-                  <BookmarkCheck className="w-4 h-4" />
-                ) : (
-                  <Bookmark className="w-4 h-4" />
-                )}
-              </motion.button>
-            </div>
-          </div>
-        </header>
+          {literal && (
+            <section className="space-y-3">
+              <h2 className="text-xs uppercase tracking-[0.3em] text-subtle">{literalLabel}</h2>
+              <p className="text-sm italic leading-relaxed text-muted">{literal}</p>
+            </section>
+          )}
+        </div>
       </div>
-
-      {/* Definition section */}
-      <section className="prose prose-sm max-w-none dark:prose-invert">
-        <div className="text-center space-y-4">
-          <h2 className="text-xs uppercase tracking-[0.3em] text-subtle">Definition</h2>
-          <p className="text-base leading-relaxed">{definition}</p>
-        </div>
-      </section>
-
-      {/* Literal translation section */}
-      {literal && (
-        <section className="prose prose-sm max-w-none dark:prose-invert">
-          <div className="text-center space-y-4">
-            <h2 className="text-xs uppercase tracking-[0.3em] text-subtle italic text-[var(--color-text)]">
-              Literal Translation
-            </h2>
-            <p className="text-base italic text-[var(--color-text)] leading-relaxed">{literal}</p>
-          </div>
-        </section>
-      )}
-
-      {/* Notes section */}
-      {notes && (
-        <section className="prose prose-sm max-w-none dark:prose-invert">
-          <div className="space-y-4">
-            <h2 className="text-xs uppercase tracking-[0.3em] text-subtle text-center">Notes</h2>
-            <div className="space-y-3">
-              {notes.split('\n').map(
-                (paragraph, index) =>
-                  paragraph.trim() && (
-                    <p key={index} className="text-base leading-relaxed text-center">
-                      {paragraph.trim()}
-                    </p>
-                  ),
-              )}
-            </div>
-          </div>
-        </section>
-      )}
 
       <AnimatePresence>
         {dialogOpen && (
