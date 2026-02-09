@@ -7,6 +7,7 @@ import { LevelBadge } from '@shared/components';
 import { EmphasizedName } from '@shared/components';
 import { getTaxonomyLabel } from '@shared/i18n/taxonomy';
 import { ENTRY_MODE_ORDER } from '@shared/constants/entryModes';
+import { getGradeStyle } from '@shared/styles/belts';
 
 type MotionProps = {
   variants: Variants;
@@ -25,6 +26,12 @@ export type TechniqueCardProps = {
   isDimmed?: boolean;
   summaryLines?: 2 | 3;
   openedEntry?: EntryMode;
+  showJapanese?: boolean;
+  showVariantMeta?: boolean;
+  compactSpacing?: boolean;
+  showEntryTags?: boolean;
+  levelBadgePlacement?: 'footer' | 'header';
+  levelBadgeStyle?: 'default' | 'number-circle';
 } & MotionProps;
 
 export const TechniqueCard = ({
@@ -41,6 +48,12 @@ export const TechniqueCard = ({
   isDimmed,
   summaryLines,
   openedEntry,
+  showJapanese = true,
+  showVariantMeta = true,
+  compactSpacing = false,
+  showEntryTags = true,
+  levelBadgePlacement = 'footer',
+  levelBadgeStyle = 'default',
 }: TechniqueCardProps): ReactElement => {
   const bookmarkedVariant = progress?.bookmarkedVariant;
 
@@ -109,6 +122,23 @@ export const TechniqueCard = ({
     }
   };
 
+  const levelNumber = technique.level.replace(/^\D+/, '');
+  const levelStyle = getGradeStyle(technique.level);
+  const levelBadge =
+    levelBadgeStyle === 'number-circle' ? (
+      <span
+        className="glossary-tag text-xs font-medium px-2 py-1 rounded-full shrink-0"
+        style={{
+          backgroundColor: levelStyle.backgroundColor,
+          color: levelStyle.color,
+        }}
+      >
+        {levelNumber}
+      </span>
+    ) : (
+      <LevelBadge locale={locale} level={technique.level} />
+    );
+
   return (
     <motion.div
       role="button"
@@ -116,7 +146,9 @@ export const TechniqueCard = ({
       onClick={handleActivate}
       onKeyDown={handleKeyDown}
       className={
-        `surface border surface-border rounded-2xl p-4 flex flex-col gap-3 text-left card-hover-shadow` +
+        `surface border surface-border rounded-2xl p-4 flex flex-col ${
+          compactSpacing ? 'gap-2' : 'gap-3'
+        } text-left card-hover-shadow` +
         (isDimmed ? ' pointer-events-none opacity-70 blur-card' : '')
       }
       initial={false}
@@ -134,39 +166,54 @@ export const TechniqueCard = ({
           >
             <EmphasizedName name={technique.name[locale]} />
           </div>
-          {bookmarkedVariant && (
+          {showJapanese && technique.jp && (
+            <div className="text-xs text-subtle truncate">{technique.jp}</div>
+          )}
+          {!showJapanese && showVariantMeta && bookmarkedVariant && (
             <div className="text-xs text-subtle truncate">
               {[versionTagLabel, trainerInitials, weaponFullLabel].filter(Boolean).join(' · ')}
             </div>
           )}
         </div>
-        <div className="flex items-center gap-2">{actionSlot}</div>
+        <div
+          className={
+            levelBadgePlacement === 'header'
+              ? 'flex flex-col items-end gap-2 shrink-0'
+              : 'flex items-center gap-2'
+          }
+        >
+          {levelBadgePlacement === 'header' && levelBadge}
+          {actionSlot}
+        </div>
       </div>
 
       <p
         className={`text-sm text-muted leading-relaxed${
-          summaryLines === 2 ? ' line-clamp-2' : ' line-clamp-3'
+          summaryLines === 3 ? ' line-clamp-3' : summaryLines === 2 ? ' line-clamp-2' : ''
         }`}
       >
         {technique.summary[locale] ?? technique.summary.en}
       </p>
 
-      <div className="mt-auto flex items-end justify-between gap-4 pt-1">
+      <div className={`mt-auto flex items-end justify-between gap-4 ${compactSpacing ? '' : 'pt-1'}`}>
         <div className="flex flex-wrap items-center gap-2 text-xs font-medium uppercase tracking-wide text-subtle">
-          {entryLabels.map((label) => (
-            <span key={label} className="rounded-sm bg-black/5 px-2 py-0.5 dark:bg-white/10">
-              {label}
-            </span>
-          ))}
+          {showEntryTags &&
+            entryLabels.map((label) => (
+              <span key={label} className="rounded-sm bg-black/5 px-2 py-0.5 dark:bg-white/10">
+                {label}
+              </span>
+            ))}
           {weaponLabel && (
             <span className="rounded-sm bg-black/5 px-2 py-0.5 dark:bg-white/10">
               {weaponLabel}
             </span>
           )}
         </div>
-        <div className="shrink-0 self-end">
-          <LevelBadge locale={locale} level={technique.level} />
-        </div>
+        {levelBadgePlacement === 'footer' && (
+          <div className="shrink-0 self-end">
+            {levelBadge}
+          </div>
+        )}
       </div>
     </motion.div>
   );

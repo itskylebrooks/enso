@@ -149,6 +149,13 @@ export const ContinueCard = ({
                 copy={copy}
                 onSelect={(slug) => onOpenTechnique(slug)}
                 openedEntry={item.openedEntry}
+                showJapanese={false}
+                showVariantMeta={false}
+                summaryLines={3}
+                compactSpacing
+                showEntryTags={false}
+                levelBadgePlacement="header"
+                levelBadgeStyle="number-circle"
                 motionIndex={index}
                 variants={listMotion.item}
                 getTransition={getItemTransition}
@@ -166,6 +173,8 @@ export const ContinueCard = ({
                 copy={copy}
                 onSelect={onOpenTerm}
                 motionIndex={index}
+                showJapanese={false}
+                compactSpacing
                 variants={listMotion.item}
                 getTransition={getItemTransition}
                 prefersReducedMotion={prefersReducedMotion}
@@ -180,6 +189,8 @@ export const ContinueCard = ({
               copy={copy}
               locale={locale}
               onSelect={onOpenExercise}
+              summaryLines={3}
+              compactSpacing
               motionIndex={index}
               variants={listMotion.item}
               getTransition={getItemTransition}

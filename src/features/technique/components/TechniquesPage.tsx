@@ -54,6 +54,8 @@ export const TechniquesPage = ({
           progress={progressById[technique.id]}
           copy={copy}
           onSelect={onOpen}
+          showJapanese
+          showVariantMeta={false}
           motionIndex={index}
           variants={listMotion.item}
           getTransition={getItemTransition}

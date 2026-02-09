@@ -17,6 +17,8 @@ type TermCardProps = {
   copy: Copy;
   onSelect: (slug: string) => void;
   motionIndex: number;
+  showJapanese?: boolean;
+  compactSpacing?: boolean;
 } & MotionProps;
 
 const truncateDefinition = (text: string, maxLength: number = 120): string => {
@@ -32,6 +34,8 @@ export const TermCard = ({
   copy,
   onSelect,
   motionIndex,
+  showJapanese = true,
+  compactSpacing = false,
   variants,
   getTransition,
   // prefersReducedMotion removed (no hover motion)
@@ -59,7 +63,9 @@ export const TermCard = ({
       tabIndex={0}
       onClick={handleActivate}
       onKeyDown={handleKeyDown}
-      className="surface border surface-border rounded-2xl p-4 flex flex-col gap-3 text-left card-hover-shadow"
+      className={`surface border surface-border rounded-2xl p-4 flex flex-col ${
+        compactSpacing ? 'gap-2' : 'gap-3'
+      } text-left card-hover-shadow`}
       initial={false}
       variants={variants}
       transition={getTransition(motionIndex)}
@@ -70,7 +76,7 @@ export const TermCard = ({
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 space-y-1">
           <h3 className="text-base font-semibold leading-tight">{term.romaji}</h3>
-          {term.jp && <div className="text-xs text-subtle truncate">{term.jp}</div>}
+          {showJapanese && term.jp && <div className="text-xs text-subtle truncate">{term.jp}</div>}
         </div>
         <span
           className="glossary-tag text-xs font-medium px-2 py-1 rounded-full shrink-0"

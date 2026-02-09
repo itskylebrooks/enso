@@ -21,6 +21,7 @@ type ExerciseCardProps = {
   categoryPlacement?: 'header' | 'footer';
   headerAlign?: 'start' | 'center';
   summaryLines?: 2 | 3;
+  compactSpacing?: boolean;
 } & MotionProps;
 
 export const ExerciseCard = ({
@@ -36,6 +37,7 @@ export const ExerciseCard = ({
   categoryPlacement = 'header',
   headerAlign = 'start',
   summaryLines = 3,
+  compactSpacing = false,
 }: ExerciseCardProps): ReactElement => {
   const categoryLabel = getExerciseCategoryLabel(exercise.category, copy);
   const categoryStyle = getExerciseCategoryStyle(exercise.category);
@@ -60,7 +62,9 @@ export const ExerciseCard = ({
       onClick={handleActivate}
       onKeyDown={handleKeyDown}
       className={
-        `surface border surface-border rounded-2xl p-4 flex flex-col gap-3 text-left card-hover-shadow` +
+        `surface border surface-border rounded-2xl p-4 flex flex-col ${
+          compactSpacing ? 'gap-2' : 'gap-3'
+        } text-left card-hover-shadow` +
         (isDimmed ? ' pointer-events-none opacity-70 blur-card' : '')
       }
       initial={false}
