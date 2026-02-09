@@ -11,6 +11,7 @@ import { useMotionPreferences } from '@shared/components/ui/motion';
 import { usePwaInstall } from '@shared/hooks/usePwaInstall';
 import {
   Linkedin,
+  Share2,
   SquareArrowOutUpRight,
   X,
   Sun,
@@ -61,6 +62,30 @@ export const SettingsModal = ({
 
   useFocusTrap(trapEnabled, dialogRef, onClose);
 
+  const handleShare = async (): Promise<void> => {
+    try {
+      const shareData: ShareData = {
+        title: copy.app,
+        text: 'Check out Enso',
+        url: window.location.href,
+      };
+      const navWithShare = navigator as Navigator & {
+        share?: (data: ShareData) => Promise<void>;
+      };
+      if (typeof navWithShare.share === 'function') {
+        await navWithShare.share(shareData);
+        return;
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(window.location.href);
+        return;
+      }
+      window.prompt('Copy this link', window.location.href);
+    } catch {
+      // ignore sharing failures
+    }
+  };
+
   const handleExport = (): void => {
     const blob = new Blob([exportDB(db)], { type: 'application/json' });
     const anchor = document.createElement('a');
@@ -98,23 +123,45 @@ export const SettingsModal = ({
         aria-modal="true"
         aria-labelledby="settings-title"
       >
-        <div className="p-4 border-b surface-border flex items-center justify-between">
-          <h2 id="settings-title" className="font-semibold">
-            {copy.settings}
-          </h2>
-          <motion.button
-            type="button"
-            onClick={onClose}
-            className="px-2 py-1 text-sm rounded-lg border btn-tonal surface-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
-            variants={overlayMotion.closeButton}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            transition={toggleTransition}
-            aria-label="Close"
-          >
-            <X className="h-5 w-5" aria-hidden />
-          </motion.button>
+        <div className="p-4 border-b surface-border">
+          <div className="grid grid-cols-3 items-center gap-2 h-12">
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  void handleShare();
+                }}
+                className="grid w-full p-2 place-items-center rounded-lg border btn-tonal surface-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+                aria-label="Share"
+                title="Share"
+              >
+                <Share2 className="h-4 w-4" aria-hidden />
+              </button>
+              <div />
+            </div>
+
+            <h2 id="settings-title" className="text-center text-lg font-semibold tracking-wide">
+              {copy.settings}
+            </h2>
+
+            <div className="grid grid-cols-2 gap-2">
+              <div />
+              <motion.button
+                type="button"
+                onClick={onClose}
+                className="grid w-full p-2 place-items-center rounded-lg border btn-tonal surface-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+                variants={overlayMotion.closeButton}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                transition={toggleTransition}
+                aria-label="Close settings"
+                title="Close"
+              >
+                <X className="h-5 w-5" aria-hidden />
+              </motion.button>
+            </div>
+          </div>
         </div>
         <div className="p-4 space-y-3">
           {/* Theme */}
