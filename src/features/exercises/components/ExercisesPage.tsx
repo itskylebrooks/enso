@@ -5,27 +5,27 @@ import type { Copy } from '@shared/constants/i18n';
 import type { Exercise, Locale, PracticeCategory, PracticeEquipment } from '@shared/types';
 import { useMotionPreferences } from '@shared/components/ui/motion';
 import { useIncrementalList } from '@shared/hooks/useIncrementalList';
-import { PracticeCard } from './PracticeCard';
+import { ExerciseCard } from './ExerciseCard';
 import { loadAllExercises } from '../loader';
 
-export type PracticeFilters = {
+export type ExerciseFilters = {
   categories: PracticeCategory[];
   equipment: PracticeEquipment[];
 };
 
-type PracticePageProps = {
+type ExercisesPageProps = {
   copy: Copy;
   locale: Locale;
-  filters: PracticeFilters;
+  filters: ExerciseFilters;
   onOpenExercise: (slug: string) => void;
 };
 
-export const PracticePage = ({
+export const ExercisesPage = ({
   copy,
   locale,
   filters,
   onOpenExercise,
-}: PracticePageProps): ReactElement => {
+}: ExercisesPageProps): ReactElement => {
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -117,7 +117,7 @@ export const PracticePage = ({
       animate="show"
     >
       {visibleExercises.map((exercise, index) => (
-        <PracticeCard
+        <ExerciseCard
           key={exercise.id}
           exercise={exercise}
           copy={copy}

@@ -31,7 +31,7 @@ import {
 } from '../indexer';
 import { scoreSearchResult, applyTieBreakers, type ScoredSearchResult } from '../scorer';
 import { useMotionPreferences } from '@shared/components/ui/motion';
-import { loadAllTerms } from '../../glossary/loader';
+import { loadAllTerms } from '../../terms/loader';
 
 type SearchResult =
   | { type: 'technique'; item: Technique }
@@ -528,7 +528,7 @@ export const SearchOverlay = ({
                             className="text-[0.65rem] font-medium px-2 py-0.5 rounded-full"
                             style={{ backgroundColor: '#474747', color: '#FFFFFF' }}
                           >
-                            Glossary
+                            {copy.glossary}
                           </span>
                           <button
                             type="button"

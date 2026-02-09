@@ -169,8 +169,8 @@ export type DB = {
 
 export type AppRoute =
   | 'home'
-  | 'library'
-  | 'practice'
+  | 'techniques'
+  | 'exercises'
   | 'bookmarks'
   | 'about'
   | 'guide'
@@ -186,7 +186,7 @@ export type AppRoute =
   | 'guideDan3'
   | 'guideDan4'
   | 'guideDan5'
-  | 'glossary'
+  | 'terms'
   | 'feedback';
 
 export type PracticeCategory =

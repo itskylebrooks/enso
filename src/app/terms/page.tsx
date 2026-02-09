@@ -3,5 +3,5 @@ import { detectRequestLocale } from '../_lib/locale';
 
 export default async function TermsPage() {
   const initialLocale = await detectRequestLocale();
-  return <App initialLocale={initialLocale} initialRoute="glossary" initialSlug={null} />;
+  return <App initialLocale={initialLocale} initialRoute="terms" initialSlug={null} />;
 }

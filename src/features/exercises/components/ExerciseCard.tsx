@@ -2,7 +2,7 @@ import type { KeyboardEvent, ReactElement, ReactNode } from 'react';
 import { motion, type Transition, type Variants } from 'motion/react';
 import type { Copy } from '@shared/constants/i18n';
 import type { Exercise, Locale } from '@shared/types';
-import { getPracticeCategoryLabel, getPracticeCategoryStyle } from '@shared/styles/practice';
+import { getExerciseCategoryLabel, getExerciseCategoryStyle } from '@shared/styles/exercises';
 
 type MotionProps = {
   variants: Variants;
@@ -10,7 +10,7 @@ type MotionProps = {
   prefersReducedMotion: boolean;
 };
 
-type PracticeCardProps = {
+type ExerciseCardProps = {
   exercise: Exercise;
   copy: Copy;
   locale: Locale;
@@ -22,7 +22,7 @@ type PracticeCardProps = {
   headerAlign?: 'start' | 'center';
 } & MotionProps;
 
-export const PracticeCard = ({
+export const ExerciseCard = ({
   exercise,
   copy,
   locale,
@@ -34,9 +34,9 @@ export const PracticeCard = ({
   isDimmed,
   categoryPlacement = 'header',
   headerAlign = 'start',
-}: PracticeCardProps): ReactElement => {
-  const categoryLabel = getPracticeCategoryLabel(exercise.category, copy);
-  const categoryStyle = getPracticeCategoryStyle(exercise.category);
+}: ExerciseCardProps): ReactElement => {
+  const categoryLabel = getExerciseCategoryLabel(exercise.category, copy);
+  const categoryStyle = getExerciseCategoryStyle(exercise.category);
   const name = exercise.name[locale] || exercise.name.en;
   const summary = exercise.summary[locale] || exercise.summary.en;
 

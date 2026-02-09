@@ -9,7 +9,7 @@ import type { Copy } from '../../../shared/constants/i18n';
 import { AddToCollectionMenu } from '../../../features/bookmarks/components/AddToCollectionMenu';
 import { Bookmark, BookmarkCheck } from 'lucide-react';
 import { classNames } from '@shared/utils/classNames';
-import { getCategoryStyle, getCategoryLabel } from '../../../shared/styles/glossary';
+import { getCategoryStyle, getCategoryLabel } from '../../../shared/styles/terms';
 import BreathingDot from '@shared/components/ui/BreathingDot';
 import { NameModal } from '@shared/components/ui/modals/NameModal';
 
@@ -20,7 +20,7 @@ export type CollectionOption = {
   checked: boolean;
 };
 
-type GlossaryDetailPageProps = {
+type TermDetailPageProps = {
   slug: string;
   copy: Copy;
   locale: Locale;
@@ -31,10 +31,10 @@ type GlossaryDetailPageProps = {
   collections: CollectionOption[];
   onToggleCollection: (collectionId: string, nextChecked: boolean) => void;
   onCreateCollection?: (name: string) => string | null;
-  onNavigateToGlossaryWithFilter?: (category: GlossaryTerm['category']) => void;
+  onNavigateToTermsWithFilter?: (category: GlossaryTerm['category']) => void;
 };
 
-export const GlossaryDetailPage = ({
+export const TermDetailPage = ({
   slug,
   copy,
   locale,
@@ -45,8 +45,8 @@ export const GlossaryDetailPage = ({
   collections,
   onToggleCollection,
   onCreateCollection,
-  onNavigateToGlossaryWithFilter,
-}: GlossaryDetailPageProps): ReactElement => {
+  onNavigateToTermsWithFilter,
+}: TermDetailPageProps): ReactElement => {
   const [term, setTerm] = useState<GlossaryTerm | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -61,7 +61,7 @@ export const GlossaryDetailPage = ({
     const newId = onCreateCollection(name);
     closeCreateDialog();
     if (newId && term) {
-      // Assign the current glossary term to the newly created collection
+      // Assign the current term to the newly created collection
       onToggleCollection(newId, true);
     }
   };
@@ -79,7 +79,7 @@ export const GlossaryDetailPage = ({
           setError('Term not found');
         }
       } catch (err) {
-        console.error('Error loading glossary term:', err);
+        console.error('Error loading term:', err);
         setError('Failed to load term');
       } finally {
         setLoading(false);
@@ -148,8 +148,8 @@ export const GlossaryDetailPage = ({
               <div className="flex flex-wrap gap-2">
                 <button
                   type="button"
-                  onClick={() => onNavigateToGlossaryWithFilter?.(term.category)}
-                  aria-label={`Show ${categoryLabel} in glossary`}
+                  onClick={() => onNavigateToTermsWithFilter?.(term.category)}
+                  aria-label={`Show ${categoryLabel} in terms`}
                   className="glossary-tag glossary-tag--interactive rounded-lg px-2 py-1 text-xs uppercase tracking-wide focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
                   style={{
                     backgroundColor: categoryStyle.backgroundColor,
@@ -234,7 +234,7 @@ export const GlossaryDetailPage = ({
       <AnimatePresence>
         {dialogOpen && (
           <NameModal
-            key="glossary-create-collection"
+            key="terms-create-collection"
             strings={{
               title: copy.collectionsNew,
               nameLabel: copy.collectionsNameLabel,

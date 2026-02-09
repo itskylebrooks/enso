@@ -8,7 +8,7 @@ import { AddToCollectionMenu } from '@features/bookmarks/components/AddToCollect
 import { Bookmark, BookmarkCheck } from 'lucide-react';
 import { useMotionPreferences } from '@shared/components/ui/motion';
 import { classNames } from '@shared/utils/classNames';
-import { getCategoryStyle } from '@shared/styles/glossary';
+import { getCategoryStyle } from '@shared/styles/terms';
 import type { GlossaryTerm } from '@shared/types';
 import { gradeLabel } from '@shared/utils/grades';
 

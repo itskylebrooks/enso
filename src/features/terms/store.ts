@@ -17,7 +17,7 @@ const initialState = {
   error: null,
 };
 
-export const useGlossaryStore = create<GlossaryState>((set) => ({
+export const useTermsStore = create<GlossaryState>((set) => ({
   ...initialState,
   setTerms: (terms) => set({ terms, loading: false, error: null }),
   setLoading: (loading) => set({ loading }),

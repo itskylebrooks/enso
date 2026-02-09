@@ -16,5 +16,5 @@ type PageProps = {
 export default async function ExerciseDetailPage({ params }: PageProps) {
   const { exerciseSlug } = await params;
   const initialLocale = await detectRequestLocale();
-  return <App initialLocale={initialLocale} initialRoute="practice" initialSlug={exerciseSlug} />;
+  return <App initialLocale={initialLocale} initialRoute="exercises" initialSlug={exerciseSlug} />;
 }

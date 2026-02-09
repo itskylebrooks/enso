@@ -291,7 +291,7 @@ export const applyTieBreakers = (a: ScoredSearchResult, b: ScoredSearchResult): 
     return b.score - a.score;
   }
 
-  // Entity type priority: Glossary term > Technique > Collection
+  // Entity type priority: Term > Technique > Collection
   const typeOrder = { glossary: 1, technique: 2, exercise: 3 };
   const aTypeOrder = typeOrder[a.type] || 99;
   const bTypeOrder = typeOrder[b.type] || 99;

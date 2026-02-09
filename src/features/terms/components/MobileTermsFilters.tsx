@@ -7,7 +7,7 @@ type GlossaryFilters = {
   category?: GlossaryTerm['category'];
 };
 
-type MobileGlossaryFiltersProps = {
+type MobileTermsFiltersProps = {
   copy: Copy;
   filters: GlossaryFilters;
   categories: GlossaryTerm['category'][];
@@ -26,12 +26,12 @@ const getCategoryLabel = (category: GlossaryTerm['category'], copy: Copy): strin
   return labels[category];
 };
 
-export const MobileGlossaryFilters = ({
+export const MobileTermsFilters = ({
   copy,
   filters,
   categories,
   onChange,
-}: MobileGlossaryFiltersProps): ReactElement => {
+}: MobileTermsFiltersProps): ReactElement => {
   const handleCategoryChange = (category: GlossaryTerm['category'] | undefined) => {
     onChange({
       ...filters,

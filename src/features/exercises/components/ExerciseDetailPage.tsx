@@ -14,15 +14,15 @@ import { useMotionPreferences } from '@shared/components/ui/motion';
 import { MediaPanel } from '@features/technique/components/MediaPanel';
 import { StepsList } from '@features/technique/components/StepsList';
 import BreathingDot from '@shared/components/ui/BreathingDot';
-import { getPracticeCategoryLabel, getPracticeCategoryStyle } from '@shared/styles/practice';
-import { getCategoryStyle } from '@shared/styles/glossary';
+import { getExerciseCategoryLabel, getExerciseCategoryStyle } from '@shared/styles/exercises';
+import { getCategoryStyle } from '@shared/styles/terms';
 import { AddToCollectionMenu } from '@features/bookmarks/components/AddToCollectionMenu';
 import { Bookmark, BookmarkCheck } from 'lucide-react';
 import { classNames } from '@shared/utils/classNames';
 import { NameModal } from '@shared/components/ui/modals/NameModal';
-import type { PracticeFilters } from './PracticePage';
+import type { ExerciseFilters } from './ExercisesPage';
 
-type PracticeDetailPageProps = {
+type ExerciseDetailPageProps = {
   slug: string;
   copy: Copy;
   locale: Locale;
@@ -35,7 +35,7 @@ type PracticeDetailPageProps = {
   onCreateCollection: (name: string) => string | null;
   onBack: () => void;
   backLabel?: string;
-  onNavigateToPracticeWithFilter?: (filters: PracticeFilters) => void;
+  onNavigateToExercisesWithFilter?: (filters: ExerciseFilters) => void;
 };
 
 const getEquipmentLabel = (equipment: PracticeEquipment, copy: Copy): string => {
@@ -47,7 +47,7 @@ const getEquipmentLabel = (equipment: PracticeEquipment, copy: Copy): string => 
   return labels[equipment];
 };
 
-export const PracticeDetailPage = ({
+export const ExerciseDetailPage = ({
   slug,
   copy,
   locale,
@@ -60,8 +60,8 @@ export const PracticeDetailPage = ({
   onCreateCollection,
   onBack,
   backLabel,
-  onNavigateToPracticeWithFilter,
-}: PracticeDetailPageProps): ReactElement => {
+  onNavigateToExercisesWithFilter,
+}: ExerciseDetailPageProps): ReactElement => {
   const [exercise, setExercise] = useState<Exercise | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -110,8 +110,8 @@ export const PracticeDetailPage = ({
     );
   }
 
-  const categoryLabel = getPracticeCategoryLabel(exercise.category, copy);
-  const categoryStyle = getPracticeCategoryStyle(exercise.category);
+  const categoryLabel = getExerciseCategoryLabel(exercise.category, copy);
+  const categoryStyle = getExerciseCategoryStyle(exercise.category);
   const metadataTagStyle = getCategoryStyle('other');
   const name = exercise.name[locale] || exercise.name.en;
   const summary = exercise.summary[locale] || exercise.summary.en;
@@ -170,12 +170,12 @@ export const PracticeDetailPage = ({
                 <button
                   type="button"
                   onClick={() =>
-                    onNavigateToPracticeWithFilter?.({
+                    onNavigateToExercisesWithFilter?.({
                       categories: [exercise.category],
                       equipment: [],
                     })
                   }
-                  aria-label={`Show ${categoryLabel} in practice`}
+                  aria-label={`Show ${categoryLabel} in exercises`}
                   className="glossary-tag glossary-tag--interactive rounded-lg px-2 py-1 text-xs uppercase tracking-wide focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
                   style={{
                     backgroundColor: categoryStyle.backgroundColor,
@@ -288,7 +288,7 @@ export const PracticeDetailPage = ({
                     type="button"
                     key={item}
                     onClick={() =>
-                      onNavigateToPracticeWithFilter?.({
+                      onNavigateToExercisesWithFilter?.({
                         categories: [],
                         equipment: [item],
                       })
@@ -310,7 +310,7 @@ export const PracticeDetailPage = ({
 
       {createOpen && (
         <NameModal
-          key="practice-collection-create"
+          key="exercises-collection-create"
           strings={{
             title: copy.collectionsNew,
             nameLabel: copy.collectionsNameLabel,

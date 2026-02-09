@@ -3,17 +3,17 @@ import { motion } from 'motion/react';
 import type { Copy } from '@shared/constants/i18n';
 import type { PracticeCategory, PracticeEquipment } from '@shared/types';
 import { classNames } from '@shared/utils/classNames';
-import { getPracticeCategoryLabel } from '@shared/styles/practice';
+import { getExerciseCategoryLabel } from '@shared/styles/exercises';
 import { SectionTitle } from '@shared/components';
 import { useMotionPreferences } from '@shared/components/ui/motion';
 import { ChevronDown } from 'lucide-react';
-import type { PracticeFilters } from './PracticePage';
+import type { ExerciseFilters } from './ExercisesPage';
 
-type MobilePracticeFiltersProps = {
+type MobileExercisesFiltersProps = {
   copy: Copy;
-  filters: PracticeFilters;
+  filters: ExerciseFilters;
   categories: PracticeCategory[];
-  onChange: (filters: PracticeFilters) => void;
+  onChange: (filters: ExerciseFilters) => void;
 };
 
 const getEquipmentLabel = (equipment: PracticeEquipment, copy: Copy): string => {
@@ -25,12 +25,12 @@ const getEquipmentLabel = (equipment: PracticeEquipment, copy: Copy): string => 
   return labels[equipment];
 };
 
-export const MobilePracticeFilters = ({
+export const MobileExercisesFilters = ({
   copy,
   filters,
   categories,
   onChange,
-}: MobilePracticeFiltersProps): ReactElement => {
+}: MobileExercisesFiltersProps): ReactElement => {
   const handleReset = () => {
     onChange({
       categories: [],
@@ -121,7 +121,7 @@ export const MobilePracticeFilters = ({
                     })
                   }
                 >
-                  <span className="truncate">{getPracticeCategoryLabel(category, copy)}</span>
+                  <span className="truncate">{getExerciseCategoryLabel(category, copy)}</span>
                 </button>
               );
             })}

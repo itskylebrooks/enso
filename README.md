@@ -1,8 +1,8 @@
 # Enso — Aikidō Study Companion
 
-A calm, bilingual (EN/DE) Progressive Web App for studying Aikidō: searchable techniques, glossary terms, exam guides, and local-first bookmarks.
+A calm, bilingual (EN/DE) Progressive Web App for studying Aikidō: searchable techniques, terms, exam guides, and local-first bookmarks.
 
-![Desktop Library Page](./public/images/library-page.png)
+![Desktop Techniques Page](./public/images/library-page.png)
 
 **Local-first:** no accounts • bookmarks & preferences stay on your device
 
@@ -24,7 +24,7 @@ A calm, bilingual (EN/DE) Progressive Web App for studying Aikidō: searchable t
 - Find techniques quickly (filters + spotlight search)
 - Learn from a consistent technique layout: Steps, Uke, Common Mistakes, Context, Media
 - Compare entries/stances/variants without splitting into dozens of pages
-- Browse a clean glossary (terms, attacks, etiquette, philosophy)
+- Browse a clean terms page (terms, attacks, etiquette, philosophy)
 - Save techniques/terms to bookmark collections for your training goals
 - Use exam/program guides as a quick reference before class
 
@@ -44,10 +44,10 @@ A calm, bilingual (EN/DE) Progressive Web App for studying Aikidō: searchable t
 ### Search
 
 - Spotlight-style search overlay
-- Weighted ranking across techniques, glossary, and collections
+- Weighted ranking across techniques, terms, and collections
 - Keyboard-friendly navigation
 
-### Glossary
+### Terms
 
 - Filterable term list + detail pages
 - Short definitions + optional literal translation and longer notes
@@ -55,7 +55,7 @@ A calm, bilingual (EN/DE) Progressive Web App for studying Aikidō: searchable t
 
 ### Bookmarks & collections
 
-- Bookmark techniques and glossary terms
+- Bookmark techniques and terms
 - Organize into collections
 - Track personal progress over time
 
@@ -78,7 +78,7 @@ Enso is **content-driven**.
 Main content areas:
 
 - Techniques: `content/techniques/*.json`
-- Glossary terms: `content/glossary/*.json`
+- Terms: `content/glossary/*.json`
 - Trainers / dojos: `content/trainers.json`, `content/dojos.json`
 - Quotes: `content/quotes.json`, `content/quotes-de.json`
 
@@ -92,9 +92,9 @@ Techniques are modeled around:
 
 See `src/shared/types/content.ts` (and related types) for the current canonical shape.
 
-### Glossary JSON (concept)
+### Terms JSON (concept)
 
-Glossary terms include:
+Terms include:
 
 - `romaji`, optional `jp`
 - short definition (EN/DE)
@@ -130,9 +130,10 @@ High-level layout:
 
 - `src/`
   - `features/`
-    - `technique/` — library + technique pages + toolbar
+    - `technique/` — techniques + technique pages + toolbar
     - `search/` — indexer + scorer + overlay UI
-    - `glossary/` — glossary pages, filters, detail views
+    - `terms/` — terms pages, filters, detail views
+    - `exercises/` — exercises pages, filters, detail views
     - `bookmarks/` — collections + bookmark UI + local progress
     - `home/` — landing, guides, settings, feedback
   - `shared/`
@@ -147,7 +148,7 @@ High-level layout:
 
 ## Content workflow
 
-1. Edit JSON in `content/` (techniques or glossary).
+1. Edit JSON in `content/` (techniques or terms).
 2. Validate/build content:
 
 ```bash
@@ -188,7 +189,7 @@ PRs and content improvements are welcome.
 - Keep changes small and reviewable
 - Follow existing TypeScript types (single source of truth)
 - Prefer structured content (JSON) over freeform text
-- If you add new glossary/technique files, keep IDs/slugs stable and unique
+- If you add new term/technique files, keep IDs/slugs stable and unique
 
 ## License
 

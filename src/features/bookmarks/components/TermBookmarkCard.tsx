@@ -3,7 +3,7 @@ import { motion, type Variants, type Transition } from 'motion/react';
 import type { GlossaryTerm, GlossaryProgress } from '../../../shared/types';
 import type { Locale } from '../../../shared/types';
 import type { Copy } from '../../../shared/constants/i18n';
-import { getCategoryStyle, getCategoryLabel } from '../../../shared/styles/glossary';
+import { getCategoryStyle, getCategoryLabel } from '../../../shared/styles/terms';
 
 type MotionProps = {
   variants: Variants;
@@ -11,7 +11,7 @@ type MotionProps = {
   prefersReducedMotion: boolean;
 };
 
-type GlossaryBookmarkCardProps = {
+type TermBookmarkCardProps = {
   term: GlossaryTerm;
   locale: Locale;
   progress?: GlossaryProgress | null;
@@ -22,7 +22,7 @@ type GlossaryBookmarkCardProps = {
   actionSlot?: ReactElement;
 } & MotionProps;
 
-export const GlossaryBookmarkCard = ({
+export const TermBookmarkCard = ({
   term,
   locale,
   copy,
@@ -33,7 +33,7 @@ export const GlossaryBookmarkCard = ({
   // prefersReducedMotion removed (no hover motion)
   isDimmed = false,
   actionSlot,
-}: GlossaryBookmarkCardProps): ReactElement => {
+}: TermBookmarkCardProps): ReactElement => {
   const definition = term.def[locale] || term.def.en;
   const categoryLabel = getCategoryLabel(term.category, copy);
   const categoryStyle = getCategoryStyle(term.category);

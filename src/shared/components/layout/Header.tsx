@@ -190,7 +190,7 @@ export const Header = ({
           <Logo className="shrink-0" />
           <div className="font-semibold tracking-tight">{copy.app}</div>
         </a>
-        {/* Centered nav (desktop): Guide / Library / Practice / Glossary */}
+        {/* Centered nav (desktop): Guide / Techniques / Exercises / Terms */}
         <div className="absolute left-1/2 transform -translate-x-1/2 hidden md:flex items-center gap-2 inset-y-0">
           <button
             type="button"
@@ -208,13 +208,13 @@ export const Header = ({
           </button>
           <button
             type="button"
-            onClick={() => onNavigate('library')}
+            onClick={() => onNavigate('techniques')}
             className={classNames(
               'px-3 py-2 rounded-lg border inline-flex items-center gap-2 justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] !transition-colors !duration-150 !ease-in-out',
-              route === 'library' ? 'btn-contrast' : 'btn-tonal surface-hover',
+              route === 'techniques' ? 'btn-contrast' : 'btn-tonal surface-hover',
             )}
-            aria-pressed={route === 'library'}
-            aria-current={route === 'library' ? 'page' : undefined}
+            aria-pressed={route === 'techniques'}
+            aria-current={route === 'techniques' ? 'page' : undefined}
             aria-label={copy.library}
           >
             <LibraryBig className="w-4 h-4 shrink-0" />
@@ -222,13 +222,13 @@ export const Header = ({
           </button>
           <button
             type="button"
-            onClick={() => onNavigate('practice')}
+            onClick={() => onNavigate('exercises')}
             className={classNames(
               'px-3 py-2 rounded-lg border inline-flex items-center gap-2 justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] !transition-colors !duration-150 !ease-in-out',
-              route === 'practice' ? 'btn-contrast' : 'btn-tonal surface-hover',
+              route === 'exercises' ? 'btn-contrast' : 'btn-tonal surface-hover',
             )}
-            aria-pressed={route === 'practice'}
-            aria-current={route === 'practice' ? 'page' : undefined}
+            aria-pressed={route === 'exercises'}
+            aria-current={route === 'exercises' ? 'page' : undefined}
             aria-label={copy.practice}
           >
             <Dumbbell className="w-4 h-4 shrink-0" />
@@ -236,13 +236,13 @@ export const Header = ({
           </button>
           <button
             type="button"
-            onClick={() => onNavigate('glossary')}
+            onClick={() => onNavigate('terms')}
             className={classNames(
               'px-3 py-2 rounded-lg border inline-flex items-center gap-2 justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] !transition-colors !duration-150 !ease-in-out',
-              route === 'glossary' ? 'btn-contrast' : 'btn-tonal surface-hover',
+              route === 'terms' ? 'btn-contrast' : 'btn-tonal surface-hover',
             )}
-            aria-pressed={route === 'glossary'}
-            aria-current={route === 'glossary' ? 'page' : undefined}
+            aria-pressed={route === 'terms'}
+            aria-current={route === 'terms' ? 'page' : undefined}
             aria-label={copy.glossary}
           >
             <BookOpenText className="w-4 h-4 shrink-0" />

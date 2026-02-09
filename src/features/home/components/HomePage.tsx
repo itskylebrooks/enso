@@ -6,7 +6,7 @@ import { SakuraFlower } from '../../../shared/components';
 import { QuoteRotator } from './QuoteRotator';
 import { getAllQuotes, type Quote } from '@shared/data/quotes';
 import { classNames } from '@shared/utils/classNames';
-import { getCategoryLabel, getCategoryStyle } from '../../../shared/styles/glossary';
+import { getCategoryLabel, getCategoryStyle } from '../../../shared/styles/terms';
 import { getGradeStyle, gradeLabel } from '@shared/styles/belts';
 
 const truncateDefinition = (text: string, maxLength: number = 140): string => {

@@ -16,5 +16,5 @@ type PageProps = {
 export default async function TermDetailPage({ params }: PageProps) {
   const { termSlug } = await params;
   const initialLocale = await detectRequestLocale();
-  return <App initialLocale={initialLocale} initialRoute="glossary" initialSlug={termSlug} />;
+  return <App initialLocale={initialLocale} initialRoute="terms" initialSlug={termSlug} />;
 }

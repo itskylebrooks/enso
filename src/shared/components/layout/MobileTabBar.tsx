@@ -6,7 +6,7 @@ import type { Copy } from '@shared/constants/i18n';
 import { useMotionPreferences } from '@shared/components/ui/motion';
 import { useSmartSticky } from '@shared/hooks/useSmartSticky';
 
-type MobileTab = 'guide' | 'library' | 'practice' | 'glossary';
+type MobileTab = 'guide' | 'techniques' | 'exercises' | 'terms';
 
 type MobileTabBarProps = {
   copy: Copy;
@@ -33,12 +33,12 @@ export const MobileTabBar = ({ copy, route, onNavigate }: MobileTabBarProps): Re
     route === 'guideDan1';
   const activeTab: MobileTab | null = isGuideActive
     ? 'guide'
-    : route === 'library'
-      ? 'library'
-      : route === 'practice'
-        ? 'practice'
-        : route === 'glossary'
-          ? 'glossary'
+    : route === 'techniques'
+      ? 'techniques'
+      : route === 'exercises'
+        ? 'exercises'
+        : route === 'terms'
+          ? 'terms'
           : null;
 
   const tabs: Array<{ id: MobileTab; label: string; icon: LucideIcon }> = [
@@ -48,17 +48,17 @@ export const MobileTabBar = ({ copy, route, onNavigate }: MobileTabBarProps): Re
       icon: Compass,
     },
     {
-      id: 'library',
+      id: 'techniques',
       label: copy.library,
       icon: LibraryBig,
     },
     {
-      id: 'practice',
+      id: 'exercises',
       label: copy.practice,
       icon: Dumbbell,
     },
     {
-      id: 'glossary',
+      id: 'terms',
       label: copy.glossary,
       icon: BookOpenText,
     },

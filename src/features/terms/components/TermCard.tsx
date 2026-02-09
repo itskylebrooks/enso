@@ -3,7 +3,7 @@ import { motion, type Variants, type Transition } from 'motion/react';
 import type { GlossaryTerm } from '../../../shared/types';
 import type { Locale } from '../../../shared/types';
 import type { Copy } from '../../../shared/constants/i18n';
-import { getCategoryStyle, getCategoryLabel } from '../../../shared/styles/glossary';
+import { getCategoryStyle, getCategoryLabel } from '../../../shared/styles/terms';
 
 type MotionProps = {
   variants: Variants;
@@ -11,7 +11,7 @@ type MotionProps = {
   prefersReducedMotion: boolean;
 };
 
-type GlossaryCardProps = {
+type TermCardProps = {
   term: GlossaryTerm;
   locale: Locale;
   copy: Copy;
@@ -26,7 +26,7 @@ const truncateDefinition = (text: string, maxLength: number = 120): string => {
   return lastSpace > 0 ? `${truncated.slice(0, lastSpace)}...` : `${truncated}...`;
 };
 
-export const GlossaryCard = ({
+export const TermCard = ({
   term,
   locale,
   copy,
@@ -35,7 +35,7 @@ export const GlossaryCard = ({
   variants,
   getTransition,
   // prefersReducedMotion removed (no hover motion)
-}: GlossaryCardProps): ReactElement => {
+}: TermCardProps): ReactElement => {
   const definition = term.def[locale] || term.def.en;
   const categoryLabel = getCategoryLabel(term.category, copy);
   const categoryStyle = getCategoryStyle(term.category);

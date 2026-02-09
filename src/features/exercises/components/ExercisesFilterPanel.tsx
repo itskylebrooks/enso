@@ -7,14 +7,14 @@ import { usePinButton } from '@shared/components/ui';
 import { SectionTitle } from '@shared/components';
 import { useMotionPreferences } from '@shared/components/ui/motion';
 import { ChevronDown, Undo2, Pin, PinOff } from 'lucide-react';
-import { getPracticeCategoryLabel } from '@shared/styles/practice';
-import type { PracticeFilters } from './PracticePage';
+import { getExerciseCategoryLabel } from '@shared/styles/exercises';
+import type { ExerciseFilters } from './ExercisesPage';
 
-type PracticeFilterPanelProps = {
+type ExercisesFilterPanelProps = {
   copy: Copy;
-  filters: PracticeFilters;
+  filters: ExerciseFilters;
   categories: PracticeCategory[];
-  onChange: (filters: PracticeFilters) => void;
+  onChange: (filters: ExerciseFilters) => void;
 };
 
 const getEquipmentLabel = (equipment: PracticeEquipment, copy: Copy): string => {
@@ -26,12 +26,12 @@ const getEquipmentLabel = (equipment: PracticeEquipment, copy: Copy): string => 
   return labels[equipment];
 };
 
-export const PracticeFilterPanel = ({
+export const ExercisesFilterPanel = ({
   copy,
   filters,
   categories,
   onChange,
-}: PracticeFilterPanelProps): ReactElement => {
+}: ExercisesFilterPanelProps): ReactElement => {
   const handleReset = () => {
     onChange({
       categories: [],
@@ -142,7 +142,7 @@ export const PracticeFilterPanel = ({
                       : 'surface surface-border',
                   )}
                 >
-                  <span className="truncate">{getPracticeCategoryLabel(category, copy)}</span>
+                  <span className="truncate">{getExerciseCategoryLabel(category, copy)}</span>
                 </button>
               );
             })}

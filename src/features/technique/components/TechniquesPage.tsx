@@ -9,7 +9,7 @@ import { useIncrementalList } from '@shared/hooks/useIncrementalList';
 const buildProgressMap = (entries: Progress[]): Record<string, Progress> =>
   Object.fromEntries(entries.map((entry) => [entry.techniqueId, entry]));
 
-type LibraryProps = {
+type TechniquesPageProps = {
   copy: Copy;
   locale: Locale;
   techniques: Technique[];
@@ -17,13 +17,13 @@ type LibraryProps = {
   onOpen: (slug: string) => void;
 };
 
-export const Library = ({
+export const TechniquesPage = ({
   copy,
   locale,
   techniques,
   progress,
   onOpen,
-}: LibraryProps): ReactElement => {
+}: TechniquesPageProps): ReactElement => {
   const progressById = buildProgressMap(progress);
   const { listMotion, getItemTransition, prefersReducedMotion } = useMotionPreferences();
 

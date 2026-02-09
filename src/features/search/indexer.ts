@@ -176,7 +176,7 @@ export const matchSearch = (haystack: string, queries: string[]): boolean =>
     });
   });
 
-// Glossary search functionality
+// Term search functionality
 type GlossarySearchEntry = {
   term: GlossaryTerm;
   haystack: string;
@@ -225,7 +225,7 @@ export const buildGlossarySearchIndex = (terms: GlossaryTerm[]): GlossarySearchE
     return { term, haystack };
   });
 
-// Practice/exercise search functionality
+// Exercise search functionality
 type ExerciseSearchEntry = {
   exercise: Exercise;
   haystack: string;

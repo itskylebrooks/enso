@@ -3,5 +3,5 @@ import { detectRequestLocale } from '../_lib/locale';
 
 export default async function TechniquesPage() {
   const initialLocale = await detectRequestLocale();
-  return <App initialLocale={initialLocale} initialRoute="library" initialSlug={null} />;
+  return <App initialLocale={initialLocale} initialRoute="techniques" initialSlug={null} />;
 }

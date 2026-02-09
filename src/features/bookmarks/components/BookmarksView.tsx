@@ -1,4 +1,4 @@
-import { PracticeCard } from '@features/practice/components/PracticeCard';
+import { ExerciseCard } from '@features/exercises/components/ExerciseCard';
 import { TechniqueCard } from '@features/technique/components/TechniqueCard';
 import { ExpandableFilterBar } from '@shared/components/ui/ExpandableFilterBar';
 import { MobileCollections } from '@shared/components/ui/MobileCollections';
@@ -25,7 +25,7 @@ import type {
 } from '../../../shared/types';
 import { AddToCollectionMenu } from './AddToCollectionMenu';
 import { CollectionsSidebar } from './CollectionsSidebar';
-import { GlossaryBookmarkCard } from './GlossaryBookmarkCard';
+import { TermBookmarkCard } from './TermBookmarkCard';
 
 type SelectedCollectionId = 'all' | 'ungrouped' | string;
 
@@ -549,7 +549,7 @@ export const BookmarksView = ({
                     const assignedCollections =
                       glossaryMembershipByTerm.get(term.id) ?? new Set<string>();
                     return (
-                      <GlossaryBookmarkCard
+                      <TermBookmarkCard
                         key={`glossary-${term.id}`}
                         term={term}
                         locale={locale}
@@ -592,7 +592,7 @@ export const BookmarksView = ({
                   const assignedCollections =
                     membershipByExercise.get(exercise.id) ?? new Set<string>();
                   return (
-                    <PracticeCard
+                    <ExerciseCard
                       key={`exercise-${exercise.id}`}
                       exercise={exercise}
                       copy={copy}

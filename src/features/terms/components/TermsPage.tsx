@@ -2,9 +2,9 @@ import { useEffect } from 'react';
 import type { ReactElement } from 'react';
 import { motion } from 'motion/react';
 import { loadAllTerms } from '../loader';
-import { useGlossaryStore } from '../store';
+import { useTermsStore } from '../store';
 import { useMotionPreferences } from '@shared/components/ui/motion';
-import { GlossaryCard } from './GlossaryCard';
+import { TermCard } from './TermCard';
 import { useIncrementalList } from '@shared/hooks/useIncrementalList';
 import type { Locale } from '../../../shared/types';
 import type { Copy } from '../../../shared/constants/i18n';
@@ -13,20 +13,20 @@ type GlossaryFilters = {
   category?: 'movement' | 'stance' | 'attack' | 'etiquette' | 'philosophy' | 'other';
 };
 
-type GlossaryPageProps = {
+type TermsPageProps = {
   locale: Locale;
   copy: Copy;
   filters?: GlossaryFilters;
   onOpenTerm: (slug: string) => void;
 };
 
-export const GlossaryPage = ({
+export const TermsPage = ({
   locale,
   copy,
   filters = {},
   onOpenTerm,
-}: GlossaryPageProps): ReactElement => {
-  const { terms, loading, error, setTerms, setLoading, setError } = useGlossaryStore();
+}: TermsPageProps): ReactElement => {
+  const { terms, loading, error, setTerms, setLoading, setError } = useTermsStore();
   const { listMotion, getItemTransition, prefersReducedMotion } = useMotionPreferences();
 
   useEffect(() => {
@@ -104,7 +104,7 @@ export const GlossaryPage = ({
           animate="show"
         >
           {visibleTerms.map((term, index) => (
-            <GlossaryCard
+            <TermCard
               key={term.id}
               term={term}
               locale={locale}

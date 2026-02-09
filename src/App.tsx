@@ -8,7 +8,7 @@ import { AdvancedPrograms } from '@features/home/components/home/AdvancedProgram
 import { DanOverview } from '@features/home/components/home/DanOverview';
 import { GuidePage } from '@features/home/components/home/GuidePage';
 import { SettingsModal } from '@features/home/components/settings/SettingsModal';
-import { Library } from '@features/technique/components/Library';
+import { TechniquesPage } from '@features/technique/components/TechniquesPage';
 import { type CollectionOption } from '@features/technique/components/TechniqueHeader';
 import { TechniquePage } from '@features/technique/components/TechniquePage';
 import { Header } from '@shared/components/layout/Header';
@@ -28,20 +28,20 @@ import { AnimatePresence, MotionConfig, motion } from 'motion/react';
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactElement } from 'react';
 import { BookmarksView } from './features/bookmarks/components/BookmarksView';
 import {
-  GlossaryDetailPage,
-  GlossaryFilterPanel,
-  GlossaryPage,
-  MobileGlossaryFilters,
+  TermDetailPage,
+  TermsFilterPanel,
+  TermsPage,
+  MobileTermsFilters,
   loadAllTerms,
-} from './features/glossary';
+} from './features/terms';
 import {
-  MobilePracticeFilters,
-  PracticeDetailPage,
-  PracticeFilterPanel,
-  PracticePage,
+  MobileExercisesFilters,
+  ExerciseDetailPage,
+  ExercisesFilterPanel,
+  ExercisesPage,
   loadAllExercises,
-} from './features/practice';
-import type { PracticeFilters } from './features/practice';
+} from './features/exercises';
+import type { ExerciseFilters } from './features/exercises';
 import { HomePage } from './features/home';
 import { FilterPanel } from './features/search/components/FilterPanel';
 import { SearchOverlay } from './features/search/components/SearchOverlay';
@@ -93,7 +93,7 @@ import type {
 } from './shared/types';
 import { unique, upsert } from './shared/utils/array';
 import { gradeOrder } from './shared/utils/grades';
-import { getPracticeCategoryLabel } from './shared/styles/practice';
+import { getExerciseCategoryLabel } from './shared/styles/exercises';
 import {
   cameFromBackForwardNavigation,
   consumeBFCacheRestoreFlag,
@@ -160,11 +160,11 @@ const routeToPath = (route: AppRoute): string => {
       return '/guide/5-dan';
     case 'feedback':
       return '/feedback';
-    case 'library':
+    case 'techniques':
       return '/techniques';
-    case 'practice':
+    case 'exercises':
       return '/exercises';
-    case 'glossary':
+    case 'terms':
       return '/terms';
     case 'bookmarks':
       return '/bookmarks';
@@ -253,7 +253,7 @@ const parseLocation = (
 ): { route: AppRoute; slug: string | null; techniqueParams?: TechniqueParams } => {
   const techniqueParams = parseTechniquePath(pathname, search);
   if (techniqueParams) {
-    const fallbackRoute = state?.route ?? 'library';
+    const fallbackRoute = state?.route ?? 'techniques';
     return { route: fallbackRoute, slug: techniqueParams.slug, techniqueParams };
   }
 
@@ -265,13 +265,13 @@ const parseLocation = (
       'tenkan-ura': 'tenkan',
     };
     const finalSlug = slug && (slugRedirects[slug] || slug);
-    const fallbackRoute = state?.route ?? 'glossary';
+    const fallbackRoute = state?.route ?? 'terms';
     return { route: fallbackRoute, slug: finalSlug };
   }
 
   if (pathname.startsWith('/exercises/') || pathname.startsWith('/practice/')) {
     const slug = getPracticeSlugFromPath(pathname);
-    return { route: 'practice', slug };
+    return { route: 'exercises', slug };
   }
 
   if (pathname === '/bookmarks') {
@@ -279,15 +279,15 @@ const parseLocation = (
   }
 
   if (pathname === '/techniques' || pathname === '/library') {
-    return { route: 'library', slug: null };
+    return { route: 'techniques', slug: null };
   }
 
   if (pathname === '/exercises' || pathname === '/practice') {
-    return { route: 'practice', slug: null };
+    return { route: 'exercises', slug: null };
   }
 
   if (pathname === '/terms' || pathname === '/glossary') {
-    return { route: 'glossary', slug: null };
+    return { route: 'terms', slug: null };
   }
 
   if (pathname === '/about') {
@@ -571,7 +571,7 @@ export default function App({
   const [glossaryFilters, setGlossaryFilters] = useState<{
     category?: 'movement' | 'stance' | 'attack' | 'etiquette' | 'philosophy' | 'other';
   }>({});
-  const [practiceFilters, setPracticeFilters] = useState<PracticeFilters>({
+  const [practiceFilters, setPracticeFilters] = useState<ExerciseFilters>({
     categories: [],
     equipment: [],
   });
@@ -628,7 +628,7 @@ export default function App({
     // No-op: FeedbackPage is now statically imported
   }, []);
   const prefetchGlossary = useCallback(() => {
-    // No-op: GlossaryPage is now statically imported
+    // No-op: TermsPage is now statically imported
   }, []);
   const prefetchBookmarks = useCallback(() => {
     // No-op: BookmarksView is now statically imported
@@ -990,7 +990,7 @@ export default function App({
   );
   const trainers = useMemo(() => getTrainerValues(db.techniques), [db.techniques]);
 
-  // Glossary categories - all possible categories sorted alphabetically by localized label
+  // Term categories - all possible categories sorted alphabetically by localized label
   const glossaryCategories: (
     | 'movement'
     | 'stance'
@@ -1043,7 +1043,7 @@ export default function App({
     ];
 
     return allCategories.sort((a, b) =>
-      getPracticeCategoryLabel(a, copy).localeCompare(getPracticeCategoryLabel(b, copy), locale, {
+      getExerciseCategoryLabel(a, copy).localeCompare(getExerciseCategoryLabel(b, copy), locale, {
         sensitivity: 'accent',
         caseFirst: 'upper',
       }),
@@ -1421,7 +1421,7 @@ export default function App({
     }
 
     const sourceRoute = options?.originRoute ?? route;
-    const tabRoute = sourceRoute === 'bookmarks' ? 'library' : sourceRoute;
+    const tabRoute = sourceRoute === 'bookmarks' ? 'techniques' : sourceRoute;
     if (tabRoute !== route) {
       setRoute(tabRoute);
     }
@@ -1570,7 +1570,7 @@ export default function App({
       'tenkan-ura': 'tenkan',
     };
     const finalSlug = slugRedirects[slug] || slug;
-    const nextRoute = route === 'home' || route === 'bookmarks' ? 'glossary' : route;
+    const nextRoute = route === 'home' || route === 'bookmarks' ? 'terms' : route;
 
     if (typeof window !== 'undefined') {
       const encodedSlug = encodeURIComponent(finalSlug);
@@ -1588,14 +1588,14 @@ export default function App({
     // Mirror technique behavior: set active slug but keep `route` unchanged unless coming from home,
     // where we want the glossary tab highlighted.
     if (route === 'home' || route === 'bookmarks') {
-      setRoute('glossary');
+      setRoute('terms');
     }
     setActiveSlug(finalSlug);
   };
 
   const openPracticeExercise = (slug: string): void => {
     rememberScrollPosition();
-    const nextRoute = route === 'home' || route === 'bookmarks' ? 'practice' : route;
+    const nextRoute = route === 'home' || route === 'bookmarks' ? 'exercises' : route;
 
     if (typeof window !== 'undefined') {
       const encodedSlug = encodeURIComponent(slug);
@@ -1610,7 +1610,7 @@ export default function App({
     }
 
     if (route === 'home' || route === 'bookmarks') {
-      setRoute('practice');
+      setRoute('exercises');
     }
     setActiveSlug(slug);
   };
@@ -1693,7 +1693,7 @@ export default function App({
   };
 
   const techniqueNotFound =
-    Boolean(activeSlug) && !currentTechnique && route !== 'glossary' && route !== 'practice';
+    Boolean(activeSlug) && !currentTechnique && route !== 'terms' && route !== 'exercises';
 
   const flushScrollToTop = useCallback(() => {
     if (typeof window === 'undefined') return;
@@ -1733,7 +1733,7 @@ export default function App({
           ? copy.backToAbout
           : techniqueBackRoute === 'guide'
               ? copy.backToGuide
-              : techniqueBackRoute === 'glossary'
+              : techniqueBackRoute === 'terms'
                 ? copy.backToGlossary
                 : techniqueBackRoute === 'feedback'
                   ? copy.backToFeedback
@@ -1781,7 +1781,7 @@ export default function App({
   const handleGuideBack = (): void => {
     if (guideHistoryState?.sourceSlug) {
       openTechnique(guideHistoryState.sourceSlug, undefined, undefined, true, {
-        originRoute: guideHistoryState.sourceRoute ?? 'library',
+        originRoute: guideHistoryState.sourceRoute ?? 'techniques',
       });
       return;
     }
@@ -1832,7 +1832,7 @@ export default function App({
   } else if (currentGlossaryTerm) {
     // Render glossary detail when an active glossary term is set, regardless of current route
     mainContent = (
-      <GlossaryDetailPage
+      <TermDetailPage
         slug={activeSlug!}
         copy={copy}
         locale={locale}
@@ -1853,16 +1853,16 @@ export default function App({
           }
         }}
         onCreateCollection={createCollection}
-        onNavigateToGlossaryWithFilter={(category) => {
+        onNavigateToTermsWithFilter={(category) => {
           setGlossaryFilters({ category });
           prefetchGlossary();
-          navigateTo('glossary');
+          navigateTo('terms');
         }}
       />
     );
-  } else if (route === 'practice' && activeSlug) {
+  } else if (route === 'exercises' && activeSlug) {
     mainContent = (
-      <PracticeDetailPage
+      <ExerciseDetailPage
         slug={activeSlug}
         copy={copy}
         locale={locale}
@@ -1874,9 +1874,9 @@ export default function App({
         onRemoveFromCollection={removeExerciseFromCollection}
         onCreateCollection={createCollection}
         backLabel={practiceBackLabel}
-        onNavigateToPracticeWithFilter={(nextFilters) => {
+        onNavigateToExercisesWithFilter={(nextFilters) => {
           setPracticeFilters(nextFilters);
-          navigateTo('practice', { replace: true });
+          navigateTo('exercises', { replace: true });
         }}
         onBack={() => navigateTo(practiceBackRoute, { replace: true })}
       />
@@ -1887,7 +1887,7 @@ export default function App({
         <p className="text-lg font-semibold">Technique not found.</p>
         <button
           type="button"
-          onClick={() => navigateTo('library', { replace: true })}
+          onClick={() => navigateTo('techniques', { replace: true })}
           className="text-sm underline"
         >
           {copy.backToLibrary}
@@ -1954,7 +1954,7 @@ export default function App({
           copy={copy}
           locale={locale}
           techniques={db.techniques}
-          onBack={() => navigateTo('library')}
+          onBack={() => navigateTo('techniques')}
           initialType={feedbackInitialType}
           onConsumeInitialType={() => setFeedbackInitialType(null)}
         />
@@ -1963,7 +1963,7 @@ export default function App({
   } else {
     mainContent = (
       <div className="container max-w-4xl mx-auto px-4 md:px-6 py-4 space-y-4">
-        {route === 'library' && (
+        {route === 'techniques' && (
           <>
             <div className="lg:hidden">
               <MobileFilters
@@ -2012,7 +2012,7 @@ export default function App({
               </ExpandableFilterBar>
               <section>
                 {/* Button moved to under filters (desktop) and above grid (mobile) */}
-                <Library
+                <TechniquesPage
                   copy={copy}
                   locale={locale}
                   techniques={filteredTechniques}
@@ -2024,10 +2024,10 @@ export default function App({
           </>
         )}
 
-        {route === 'practice' && (
+        {route === 'exercises' && (
           <>
             <div className="lg:hidden">
-              <MobilePracticeFilters
+              <MobileExercisesFilters
                 copy={copy}
                 filters={practiceFilters}
                 categories={practiceCategories}
@@ -2036,7 +2036,7 @@ export default function App({
             </div>
             <div className="relative">
               <ExpandableFilterBar label={copy.filters}>
-                <PracticeFilterPanel
+                <ExercisesFilterPanel
                   copy={copy}
                   filters={practiceFilters}
                   categories={practiceCategories}
@@ -2044,7 +2044,7 @@ export default function App({
                 />
               </ExpandableFilterBar>
               <section>
-                <PracticePage
+                <ExercisesPage
                   copy={copy}
                   locale={locale}
                   filters={practiceFilters}
@@ -2095,15 +2095,15 @@ export default function App({
           />
         )}
 
-        {route === 'glossary' && (
+        {route === 'terms' && (
           <>
             {activeSlug ? (
-              <GlossaryDetailPage
+              <TermDetailPage
                 slug={activeSlug}
                 copy={copy}
                 locale={locale}
                 backLabel={glossaryBackLabel}
-                onBack={() => navigateTo('glossary', { replace: true })}
+                onBack={() => navigateTo('terms', { replace: true })}
                 isBookmarked={Boolean(currentGlossaryProgress?.bookmarked)}
                 onToggleBookmark={() =>
                   updateGlossaryProgress(activeSlug, {
@@ -2119,15 +2119,15 @@ export default function App({
                   }
                 }}
                 onCreateCollection={createCollection}
-                onNavigateToGlossaryWithFilter={(category) => {
+                onNavigateToTermsWithFilter={(category) => {
                   setGlossaryFilters({ category });
-                  navigateTo('glossary');
+                  navigateTo('terms');
                 }}
               />
             ) : (
               <>
                 <div className="lg:hidden">
-                  <MobileGlossaryFilters
+                  <MobileTermsFilters
                     copy={copy}
                     filters={glossaryFilters}
                     categories={glossaryCategories}
@@ -2136,7 +2136,7 @@ export default function App({
                 </div>
                 <div className="relative">
                   <ExpandableFilterBar label={copy.filters}>
-                    <GlossaryFilterPanel
+                    <TermsFilterPanel
                       copy={copy}
                       filters={glossaryFilters}
                       categories={glossaryCategories}
@@ -2144,7 +2144,7 @@ export default function App({
                     />
                   </ExpandableFilterBar>
                   <section>
-                    <GlossaryPage
+                    <TermsPage
                       locale={locale}
                       copy={copy}
                       filters={glossaryFilters}
@@ -2162,10 +2162,10 @@ export default function App({
 
   const pageKey = currentTechnique
     ? `technique-${currentTechnique.id}`
-    : route === 'practice' && activeSlug
-      ? `practice-${activeSlug}`
+    : route === 'exercises' && activeSlug
+      ? `exercises-${activeSlug}`
       : activeSlug
-        ? `glossary-${activeSlug}`
+        ? `terms-${activeSlug}`
         : route;
 
   return (

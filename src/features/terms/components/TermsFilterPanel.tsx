@@ -9,7 +9,7 @@ type GlossaryFilters = {
   category?: GlossaryTerm['category'];
 };
 
-type GlossaryFilterPanelProps = {
+type TermsFilterPanelProps = {
   copy: Copy;
   filters: GlossaryFilters;
   categories: GlossaryTerm['category'][];
@@ -28,12 +28,12 @@ const getCategoryLabel = (category: GlossaryTerm['category'], copy: Copy): strin
   return labels[category];
 };
 
-export const GlossaryFilterPanel = ({
+export const TermsFilterPanel = ({
   copy,
   filters,
   categories,
   onChange,
-}: GlossaryFilterPanelProps): ReactElement => {
+}: TermsFilterPanelProps): ReactElement => {
   const handleCategoryChange = (category: GlossaryTerm['category'] | undefined) => {
     onChange({
       ...filters,

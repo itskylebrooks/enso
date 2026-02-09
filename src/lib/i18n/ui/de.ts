@@ -27,7 +27,7 @@ export const de = {
     'Einträge bleiben als Lesezeichen gespeichert, werden aber nicht mehr zugeordnet.',
   collectionsAddTo: 'Zur Sammlung hinzufügen',
   collectionsEmptyAll:
-    'Noch keine Lesezeichen. Durchstöbere die Bibliothek und tippe das Icon zum Speichern.',
+    'Noch keine Lesezeichen. Durchstöbere die Techniken und tippe das Icon zum Speichern.',
   collectionsEmptyCollection:
     'Hier ist noch nichts. Füge Einträge über das Menü auf den Karten hinzu.',
   collectionsEmptyUngrouped: 'Alles sortiert. Schön.',
@@ -38,11 +38,11 @@ export const de = {
   collectionsCancel: 'Abbrechen',
   guide: 'Leitfaden',
   glossary: 'Begriffe',
-  glossaryTitle: 'Glossar',
+  glossaryTitle: 'Begriffe',
   glossaryDescription: 'Wichtige Aikidō-Begriffe mit kurzen Übersetzungen.',
-  practiceTitle: 'Praxis',
+  practiceTitle: 'Übungen',
   practiceDescription: 'Vorbereitungs- und Regenerationsübungen, die das Training unterstützen.',
-  practiceLoading: 'Praxis wird geladen…',
+  practiceLoading: 'Übungen werden geladen…',
   practiceEmpty: 'Noch keine Übungen verfügbar.',
   practiceEmptyFiltered: 'Keine Übungen für die ausgewählten Filter gefunden.',
   practiceCategoryMobility: 'Mobilität',
@@ -59,14 +59,14 @@ export const de = {
   practiceEquipmentNone: 'Keine',
   practiceEquipmentMat: 'Matte',
   practiceEquipmentResistanceBand: 'Widerstandsband',
-  backToLibrary: 'Zurück zur Bibliothek',
-  backToPractice: 'Zurück zur Praxis',
+  backToLibrary: 'Zurück zu Techniken',
+  backToPractice: 'Zurück zu Übungen',
   backToBookmarks: 'Zurück zu den Lesezeichen',
   backToHome: 'Zurück zur Startseite',
   backToAbout: 'Zurück zu Über Enso',
   backToGuide: 'Zurück zum Leitfaden',
   backToTechnique: 'Zurück zur Technik',
-  backToGlossary: 'Zurück zum Glossar',
+  backToGlossary: 'Zurück zu Begriffen',
   backToFeedback: 'Zurück zum Feedback',
   status: 'Fortschritt',
   focus: 'Fokus',
@@ -138,7 +138,7 @@ export const de = {
   installPwaSafariInstructions:
     'So installierst du Enso in Safari:\n\n1. Klicke auf den Teilen-Button in der Symbolleiste\n2. Scrolle nach unten und klicke auf „Zum Dock hinzufügen"\n\nAlternativ: Datei → Zum Dock hinzufügen im Menü.',
   pageLabels: 'Seitenlabels',
-  pageLabelsDescription: 'Zeige Labels neben Icons in Bibliothek, Leitfaden und Glossar.',
+  pageLabelsDescription: 'Zeige Labels neben Icons in Techniken, Leitfaden und Begriffen.',
   searchBtn: 'Suche',
   bookmark: 'Lesezeichen',
   confirmClearTitle: 'Alle Daten löschen?',
@@ -150,7 +150,7 @@ export const de = {
   toastDataCleared: 'Daten gelöscht.',
   homeTagline:
     'Verwalte dein Dojo-Curriculum, fokussiere wichtige Techniken und behalte deine Daten offline bei dir.',
-  openLibraryCta: 'Bibliothek öffnen',
+  openLibraryCta: 'Techniken öffnen',
   viewProgressCta: 'Lesezeichen ansehen',
   aboutTitle: 'Über Enso',
   aboutIntro:
@@ -158,7 +158,7 @@ export const de = {
   aboutFeaturesTitle: 'Mit Enso kannst du:',
   aboutFeature1: 'Techniken durchsuchen, filtern und speichern.',
   aboutFeature2: 'Lesezeichen in eigenen Sammlungen organisieren.',
-  aboutFeature3: 'Prüfungsprogramme und Glossarbegriffe nachschlagen.',
+  aboutFeature3: 'Prüfungsprogramme und Begriffe nachschlagen.',
   aboutFeature4: 'Nahtlos zwischen Deutsch und Englisch wechseln.',
   aboutPrivacyTitle: 'Datenschutz zuerst',
   aboutPrivacyIntro: 'Enso respektiert deine Privatsphäre:',
@@ -177,7 +177,7 @@ export const de = {
     'Alle Technikbeschreibungen und Notizen sind meine persönlichen Interpretationen als Schüler.\nSie wurden nicht offiziell von meinen Lehrer:innen überprüft oder freigegeben. Alle Fehler liegen bei mir.\nBitte nutze Enso nur als Lernhilfe und trainiere stets unter Anleitung einer qualifizierten Lehrkraft.',
   aboutVisionTitle: 'Vision',
   aboutVision:
-    'Enso wird weiter wachsen: mit einer größeren Bibliothek, Katas, historischem Kontext und Beiträgen von verschiedenen Dojos und Trainer:innen.\nZiel ist es, die Harmonie des Aikidō zu bewahren und eine vertrauenswürdige, datenschutzfreundliche Lernressource für alle zu schaffen.',
+    'Enso wird weiter wachsen: mit einer größeren Techniksammlung, Katas, historischem Kontext und Beiträgen von verschiedenen Dojos und Trainer:innen.\nZiel ist es, die Harmonie des Aikidō zu bewahren und eine vertrauenswürdige, datenschutzfreundliche Lernressource für alle zu schaffen.',
   // Autor / Über den Autor
   aboutAuthorTitle: 'Autor',
   aboutAuthorPart1:
@@ -200,7 +200,7 @@ export const de = {
   privacy: 'Datenschutz',
   viewGuideCta: 'Leitfaden ansehen',
   // Homepage strings
-  homeIdentityTagline: 'Deine persönliche Aikidō-Bibliothek und Studienbegleiter.',
+  homeIdentityTagline: 'Deine persönlichen Aikidō-Techniken und dein Studienbegleiter.',
   homeTermToLearnTitle: 'Begriff zum Lernen',
   homePinToHome: 'An Startseite anheften',
   homeUnpinFromHome: 'Von Startseite lösen',
@@ -494,9 +494,9 @@ export const de = {
       flow: 'Fluss',
     },
     appAreas: {
-      library: 'Bibliothek',
+      library: 'Techniken',
       technique: 'Technik',
-      glossary: 'Glossar',
+      glossary: 'Begriffe',
       guide: 'Guide',
       settings: 'Einstellungen',
       other: 'Sonstiges',
@@ -576,7 +576,7 @@ export const de = {
   },
   feedbackInApp: 'In-App',
   feedbackEmail: 'E-Mail',
-  // Glossary categories
+  // Term categories
   categoryMovement: 'Bewegung',
   categoryStance: 'Haltung',
   categoryAttack: 'Angriff',
