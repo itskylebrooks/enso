@@ -1,6 +1,7 @@
 import { getActiveVariant } from '@features/technique/store';
 import { NameModal } from '@shared/components/ui/modals/NameModal';
 import { useMotionPreferences } from '@shared/components/ui/motion';
+import { addRecent } from '@shared/services/recentsService';
 import type { Copy } from '@shared/constants/i18n';
 import { buildTechniqueUrlWithVariant, parseTechniqueVariantParams } from '@shared/constants/urls';
 import { enrichTechniqueWithVariants } from '@shared/constants/variantMapping';
@@ -320,6 +321,10 @@ export const TechniquePage = ({
       versionId: null,
     };
   });
+
+  useEffect(() => {
+    addRecent({ type: 'technique', slug: technique.slug, entry: toolbarValue.direction });
+  }, [technique.slug, toolbarValue.direction]);
 
   // Get available hanmis/directions/weapons for the CURRENTLY SELECTED version
   const availableHanmisForCurrentVersion = useMemo(() => {

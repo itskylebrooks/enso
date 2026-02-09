@@ -201,6 +201,7 @@ export const de = {
   viewGuideCta: 'Leitfaden ansehen',
   // Homepage strings
   homeIdentityTagline: 'Deine persönlichen Aikidō-Techniken und dein Studienbegleiter.',
+  homeRecentlyViewedTitle: 'Zuletzt angesehen',
   homeTermToLearnTitle: 'Begriff zum Lernen',
   homePinToHome: 'An Startseite anheften',
   homeUnpinFromHome: 'Von Startseite lösen',

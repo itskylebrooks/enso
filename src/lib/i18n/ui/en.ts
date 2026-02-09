@@ -198,6 +198,7 @@ export const en = {
   viewGuideCta: 'Study Guide',
   // Homepage strings
   homeIdentityTagline: 'Your personal Aikidō techniques and study companion.',
+  homeRecentlyViewedTitle: 'Recently viewed',
   homeTermToLearnTitle: 'Term to learn',
   homePinToHome: 'Pin to Home',
   homeUnpinFromHome: 'Unpin from Home',

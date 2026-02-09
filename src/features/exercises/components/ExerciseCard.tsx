@@ -20,6 +20,7 @@ type ExerciseCardProps = {
   isDimmed?: boolean;
   categoryPlacement?: 'header' | 'footer';
   headerAlign?: 'start' | 'center';
+  summaryLines?: 2 | 3;
 } & MotionProps;
 
 export const ExerciseCard = ({
@@ -34,6 +35,7 @@ export const ExerciseCard = ({
   isDimmed,
   categoryPlacement = 'header',
   headerAlign = 'start',
+  summaryLines = 3,
 }: ExerciseCardProps): ReactElement => {
   const categoryLabel = getExerciseCategoryLabel(exercise.category, copy);
   const categoryStyle = getExerciseCategoryStyle(exercise.category);
@@ -90,7 +92,13 @@ export const ExerciseCard = ({
         </div>
       </div>
 
-      <p className="text-sm text-muted leading-relaxed flex-1">{summary}</p>
+      <p
+        className={`text-sm text-muted leading-relaxed flex-1 ${
+          summaryLines === 2 ? 'line-clamp-2' : 'line-clamp-3'
+        }`}
+      >
+        {summary}
+      </p>
 
       {categoryPlacement === 'footer' && (
         <div className="mt-auto flex justify-end pt-1">

@@ -24,6 +24,7 @@ export type TechniqueCardProps = {
   actionSlot?: ReactNode;
   isDimmed?: boolean;
   summaryLines?: 2 | 3;
+  openedEntry?: EntryMode;
 } & MotionProps;
 
 export const TechniqueCard = ({
@@ -39,6 +40,7 @@ export const TechniqueCard = ({
   actionSlot,
   isDimmed,
   summaryLines,
+  openedEntry,
 }: TechniqueCardProps): ReactElement => {
   const bookmarkedVariant = progress?.bookmarkedVariant;
 
@@ -55,6 +57,8 @@ export const TechniqueCard = ({
 
   if (bookmarkedVariant) {
     entryLabels.push(labelByMode[bookmarkedVariant.direction]);
+  } else if (openedEntry) {
+    entryLabels.push(labelByMode[openedEntry]);
   } else {
     ENTRY_MODE_ORDER.forEach((mode) => {
       if (availableEntries[mode]) {
@@ -130,12 +134,10 @@ export const TechniqueCard = ({
           >
             <EmphasizedName name={technique.name[locale]} />
           </div>
-          {bookmarkedVariant ? (
+          {bookmarkedVariant && (
             <div className="text-xs text-subtle truncate">
               {[versionTagLabel, trainerInitials, weaponFullLabel].filter(Boolean).join(' · ')}
             </div>
-          ) : (
-            technique.jp && <div className="text-xs text-subtle truncate">{technique.jp}</div>
           )}
         </div>
         <div className="flex items-center gap-2">{actionSlot}</div>
@@ -143,7 +145,7 @@ export const TechniqueCard = ({
 
       <p
         className={`text-sm text-muted leading-relaxed${
-          summaryLines === 3 ? ' line-clamp-3' : summaryLines === 2 ? ' line-clamp-2' : ''
+          summaryLines === 2 ? ' line-clamp-2' : ' line-clamp-3'
         }`}
       >
         {technique.summary[locale] ?? technique.summary.en}

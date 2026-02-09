@@ -1899,8 +1899,13 @@ export default function App({
       <HomePage
         copy={copy}
         locale={locale}
+        techniques={db.techniques}
+        techniqueProgress={db.progress}
         glossaryTerms={glossaryTerms}
+        exercises={practiceExercises}
+        onOpenTechnique={openTechnique}
         onOpenGlossaryTerm={openGlossaryTerm}
+        onOpenExercise={openPracticeExercise}
         pinnedBeltGrade={pinnedBeltGrade}
         onOpenPinnedBeltGrade={(grade) => navigateToGuideGrade(grade, 'home')}
         beltPromptDismissed={beltPromptDismissed}

@@ -6,5 +6,6 @@ export const ANIMATION_PREFERENCE_KEY = 'enso-animations-disabled';
 export const FILTER_PANEL_PINNED_KEY = 'enso-filter-panel-pinned';
 export const HOME_PINNED_BELT_KEY = 'enso-home-pinned-belt';
 export const HOME_BELT_PROMPT_DISMISSED_KEY = 'enso-home-belt-prompt-dismissed';
+export const RECENTS_STORAGE_KEY = 'enso-recents-v1';
 export const DB_VERSION = 6;
 export const APP_NAME = 'enso';

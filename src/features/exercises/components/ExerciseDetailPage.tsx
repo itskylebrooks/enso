@@ -21,6 +21,7 @@ import { Bookmark, BookmarkCheck } from 'lucide-react';
 import { classNames } from '@shared/utils/classNames';
 import { NameModal } from '@shared/components/ui/modals/NameModal';
 import type { ExerciseFilters } from './ExercisesPage';
+import { addRecent } from '@shared/services/recentsService';
 
 type ExerciseDetailPageProps = {
   slug: string;
@@ -76,6 +77,7 @@ export const ExerciseDetailPage = ({
       try {
         const loaded = await loadExerciseBySlug(slug);
         if (loaded) {
+          addRecent({ type: 'exercise', slug: loaded.slug });
           setExercise(loaded);
         } else {
           setError('Exercise not found');

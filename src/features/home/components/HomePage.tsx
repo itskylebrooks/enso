@@ -1,11 +1,11 @@
 import type { ReactElement } from 'react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Copy } from '../../../shared/constants/i18n';
-import type { GlossaryTerm, Grade, Locale } from '../../../shared/types';
+import type { Exercise, GlossaryTerm, Grade, Locale, Progress, Technique } from '../../../shared/types';
 import { QuoteRotator } from './QuoteRotator';
 import { getAllQuotes, type Quote } from '@shared/data/quotes';
-import { getCategoryLabel, getCategoryStyle } from '../../../shared/styles/terms';
 import { getGradeStyle, gradeLabel } from '@shared/styles/belts';
+import { ContinueCard } from './ContinueCard';
 
 const truncateDefinition = (text: string, maxLength: number = 140): string => {
   if (text.length <= maxLength) return text;
@@ -26,8 +26,13 @@ const toRgba = (hex: string, alpha: number): string => {
 type HomePageProps = {
   copy: Copy;
   locale: Locale;
+  techniques: Technique[];
+  techniqueProgress: Progress[];
   glossaryTerms: GlossaryTerm[];
+  exercises: Exercise[];
+  onOpenTechnique: (slug: string) => void;
   onOpenGlossaryTerm: (slug: string) => void;
+  onOpenExercise: (slug: string) => void;
   pinnedBeltGrade: Grade | null;
   onOpenPinnedBeltGrade: (grade: Grade) => void;
   beltPromptDismissed: boolean;
@@ -37,8 +42,13 @@ type HomePageProps = {
 export const HomePage = ({
   copy,
   locale,
+  techniques,
+  techniqueProgress,
   glossaryTerms,
+  exercises,
+  onOpenTechnique,
   onOpenGlossaryTerm,
+  onOpenExercise,
   pinnedBeltGrade,
   onOpenPinnedBeltGrade,
   beltPromptDismissed,
@@ -205,12 +215,24 @@ export const HomePage = ({
             );
           })()}
 
+        <div className="-mt-2">
+          <ContinueCard
+            copy={copy}
+            locale={locale}
+            techniques={techniques}
+            techniqueProgress={techniqueProgress}
+            glossaryTerms={glossaryTerms}
+            exercises={exercises}
+            onOpenTechnique={onOpenTechnique}
+            onOpenTerm={onOpenGlossaryTerm}
+            onOpenExercise={onOpenExercise}
+          />
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {termToLearn &&
             (() => {
               const definition = termToLearn.def[locale] || termToLearn.def.en;
-              const categoryLabel = getCategoryLabel(termToLearn.category, copy);
-              const categoryStyle = getCategoryStyle(termToLearn.category);
               const ariaLabel = `${termToLearn.romaji} – ${definition}`;
               const truncatedDefinition = truncateDefinition(definition, 140);
 
@@ -218,33 +240,15 @@ export const HomePage = ({
                 <button
                   type="button"
                   onClick={() => onOpenGlossaryTerm(termToLearn.slug)}
-                  className="rounded-2xl border surface-border surface card-hover-shadow p-6 md:p-8 text-left focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] flex flex-col justify-start"
+                  className="rounded-2xl border surface-border surface card-hover-shadow pt-2 pb-4 px-4 md:pt-3 md:pb-5 md:px-5 text-left focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] flex flex-col justify-start"
                   aria-label={ariaLabel}
                 >
-                  <div className="space-y-4">
-                    <h2 className="text-lg md:text-xl font-semibold">
-                      {copy.homeTermToLearnTitle}
-                    </h2>
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="min-w-0 space-y-1">
-                        <h3 className="text-base font-semibold leading-tight">
-                          {termToLearn.romaji}
-                        </h3>
-                        {termToLearn.jp && (
-                          <div className="text-xs text-subtle truncate">{termToLearn.jp}</div>
-                        )}
-                      </div>
-                      <span
-                        className="glossary-tag text-xs font-medium px-2 py-1 rounded-full shrink-0"
-                        style={{
-                          backgroundColor: categoryStyle.backgroundColor,
-                          color: categoryStyle.color,
-                        }}
-                      >
-                        {categoryLabel}
-                      </span>
-                    </div>
-                    <p className="text-sm text-muted leading-relaxed">{truncatedDefinition}</p>
+                  <div className="space-y-3">
+                    <h2 className="text-lg md:text-xl font-semibold">{copy.homeTermToLearnTitle}</h2>
+                    <p className="text-sm md:text-base leading-6 md:leading-7 text-subtle italic">
+                      {truncatedDefinition}
+                    </p>
+                    <p className="text-sm text-subtle text-right">— {termToLearn.romaji}</p>
                   </div>
                 </button>
               );
@@ -254,9 +258,9 @@ export const HomePage = ({
           <button
             type="button"
             onClick={handleCopyQuote}
-            className="rounded-2xl border surface-border surface card-hover-shadow p-6 md:p-8 text-left focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] flex flex-col justify-start"
+            className="rounded-2xl border surface-border surface card-hover-shadow pt-2 pb-4 px-4 md:pt-3 md:pb-5 md:px-5 text-left focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] flex flex-col justify-start"
           >
-            <div className="space-y-4">
+            <div className="space-y-3">
               <h2 className="text-lg md:text-xl font-semibold">
                 {quoteCopied ? copy.homeQuoteCopiedTitle : copy.homeQuoteOfMomentTitle}
               </h2>
