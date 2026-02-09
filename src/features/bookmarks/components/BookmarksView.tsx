@@ -484,7 +484,7 @@ export const BookmarksView = ({
           <section>
             <motion.div
               key={`${selectedCollectionId}-${sortedKey}`}
-              className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 min-h-[280px]"
+              className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
               variants={listMotion.container}
               initial={false}
               animate="show"
@@ -639,7 +639,7 @@ export const BookmarksView = ({
 
               {sortedVisibleItems.length === 0 && (
                 <motion.div
-                  className="col-span-full flex items-center justify-center py-6 text-sm text-subtle text-center border border-dashed border-[var(--color-border)] rounded-2xl mt-6 md:mt-0"
+                  className="col-span-full flex items-center justify-center min-h-[280px] py-6 text-sm text-subtle text-center border border-dashed border-[var(--color-border)] rounded-2xl mt-6 md:mt-0"
                   variants={listMotion.item}
                   transition={getItemTransition(0)}
                 >
