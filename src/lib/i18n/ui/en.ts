@@ -35,7 +35,6 @@ export const en = {
   collectionsRenameAction: 'Save',
   collectionsCancel: 'Cancel',
   guide: 'Guide',
-  roadmap: 'Roadmap',
   glossary: 'Terms',
   glossaryTitle: 'Glossary',
   glossaryDescription: 'Key aikidō terms with brief translations.',
@@ -65,7 +64,6 @@ export const en = {
   backToAbout: 'Back to About',
   backToGuide: 'Back to Guide',
   backToTechnique: 'Back to Technique',
-  backToRoadmap: 'Back to Roadmap',
   backToGlossary: 'Back to Glossary',
   backToFeedback: 'Back to Feedback',
   status: 'Progress',
@@ -222,18 +220,6 @@ export const en = {
     'To my teachers Joachim Eiselen and Markus Möller, my warm community at WSV (Walddörfer Sportverein), and BSV (Bramfelder Sportverein), who always welcome me kindly as a guest — especially Karen and Stefan Jakuszeit, and Alfred Haase.',
   homeDojoCreditPart2:
     'Thank you for inspiring me, for helping me enjoy every training, and for reminding me how Aikidō lets us leave everything else behind by focusing on harmony.',
-  // Roadmap
-  roadmapPulseLabel: 'purpose',
-  roadmapTitle: 'Roadmap & updates',
-  roadmapSummary:
-    "Enso's pulse — the work that is planned, in motion, and freshly launched. Quiet signals instead of a corporate changelog.",
-  roadmapStatusPlanned: 'planned',
-  roadmapStatusInProgress: 'in progress',
-  roadmapStatusLaunched: 'recently launched',
-  roadmapLearnMore: 'Learn more',
-  roadmapMetaLabel: 'reflection',
-  roadmapUpdatesHeading: 'Recent updates',
-  roadmapUpdateDivider: '—',
   openAriaPrefix: 'Open',
   // Feedback
   feedback: 'Feedback',

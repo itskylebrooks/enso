@@ -7,7 +7,6 @@ import { AboutPage } from '@features/home/components/home/AboutPage';
 import { AdvancedPrograms } from '@features/home/components/home/AdvancedPrograms';
 import { DanOverview } from '@features/home/components/home/DanOverview';
 import { GuidePage } from '@features/home/components/home/GuidePage';
-import { RoadmapPage } from '@features/home/components/home/RoadmapPage';
 import { SettingsModal } from '@features/home/components/settings/SettingsModal';
 import { Library } from '@features/technique/components/Library';
 import { type CollectionOption } from '@features/technique/components/TechniqueHeader';
@@ -132,8 +131,6 @@ const routeToPath = (route: AppRoute): string => {
       return '/';
     case 'about':
       return '/about';
-    case 'roadmap':
-      return '/roadmap';
     case 'guide':
       return '/guide';
     case 'guideAdvanced':
@@ -294,10 +291,6 @@ const parseLocation = (
 
   if (pathname === '/about') {
     return { route: 'about', slug: null };
-  }
-
-  if (pathname === '/roadmap') {
-    return { route: 'roadmap', slug: null };
   }
 
   if (pathname === '/guide') {
@@ -1713,9 +1706,7 @@ export default function App({
         ? copy.backToHome
         : techniqueBackRoute === 'about'
           ? copy.backToAbout
-          : techniqueBackRoute === 'roadmap'
-            ? copy.backToRoadmap
-            : techniqueBackRoute === 'guide'
+          : techniqueBackRoute === 'guide'
               ? copy.backToGuide
               : techniqueBackRoute === 'glossary'
                 ? copy.backToGlossary
@@ -1733,9 +1724,7 @@ export default function App({
         ? copy.backToHome
         : glossaryBackRoute === 'about'
           ? copy.backToAbout
-          : glossaryBackRoute === 'roadmap'
-            ? copy.backToRoadmap
-            : glossaryBackRoute === 'guide'
+          : glossaryBackRoute === 'guide'
               ? copy.backToGuide
               : glossaryBackRoute === 'feedback'
                 ? copy.backToFeedback
@@ -1751,9 +1740,7 @@ export default function App({
         ? copy.backToHome
         : practiceBackRoute === 'about'
           ? copy.backToAbout
-          : practiceBackRoute === 'roadmap'
-            ? copy.backToRoadmap
-            : practiceBackRoute === 'guide'
+          : practiceBackRoute === 'guide'
               ? copy.backToGuide
               : practiceBackRoute === 'feedback'
                 ? copy.backToFeedback
@@ -1893,8 +1880,6 @@ export default function App({
         onOpenGuideFromPrompt={handleOpenGuideFromPrompt}
       />
     );
-  } else if (route === 'roadmap') {
-    mainContent = <RoadmapPage copy={copy} locale={locale} />;
   } else if (route === 'about') {
     mainContent = <AboutPage copy={copy} />;
   } else if (route === 'guideAdvanced') {

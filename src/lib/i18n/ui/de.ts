@@ -37,7 +37,6 @@ export const de = {
   collectionsRenameAction: 'Speichern',
   collectionsCancel: 'Abbrechen',
   guide: 'Leitfaden',
-  roadmap: 'Roadmap',
   glossary: 'Begriffe',
   glossaryTitle: 'Glossar',
   glossaryDescription: 'Wichtige Aikidō-Begriffe mit kurzen Übersetzungen.',
@@ -67,7 +66,6 @@ export const de = {
   backToAbout: 'Zurück zu Über Enso',
   backToGuide: 'Zurück zum Leitfaden',
   backToTechnique: 'Zurück zur Technik',
-  backToRoadmap: 'Zurück zur Roadmap',
   backToGlossary: 'Zurück zum Glossar',
   backToFeedback: 'Zurück zum Feedback',
   status: 'Fortschritt',
@@ -225,18 +223,6 @@ export const de = {
     'Meinen Lehrern Joachim Eiselen und Markus Möller, meiner herzlichen Gemeinschaft im WSV (Walddörfer Sportverein) und dem BSV (Bramfelder Sportverein), die mich immer freundlich als Gast aufnehmen – besonders Karen und Stefan Jakuszeit sowie Alfred Haase.',
   homeDojoCreditPart2:
     'Danke, dass ihr mich inspiriert, mir helft, jedes Training zu genießen, und mich daran erinnert, wie Aikidō uns alles andere vergessen lässt, wenn wir uns auf Harmonie konzentrieren.',
-  // Roadmap
-  roadmapPulseLabel: 'zweck',
-  roadmapTitle: 'Roadmap & Updates',
-  roadmapSummary:
-    'Der Puls von Enso – was geplant ist, woran gearbeitet wird und was frisch erschienen ist. Leise Signale statt lauter Release-Notizen.',
-  roadmapStatusPlanned: 'geplant',
-  roadmapStatusInProgress: 'in arbeit',
-  roadmapStatusLaunched: 'kürzlich veröffentlicht',
-  roadmapLearnMore: 'Mehr erfahren',
-  roadmapMetaLabel: 'reflexion',
-  roadmapUpdatesHeading: 'Aktuelle Updates',
-  roadmapUpdateDivider: '—',
   openAriaPrefix: 'Öffne',
   // Feedback
   feedback: 'Feedback',

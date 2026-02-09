@@ -62,7 +62,6 @@ A calm, bilingual (EN/DE) Progressive Web App for studying Aikidō: searchable t
 ### Guides
 
 - Exam/program pages and matrices (kyū/dan and weapon basics)
-- Roadmap view for structured progression
 
 ### PWA
 
@@ -81,7 +80,7 @@ Main content areas:
 - Techniques: `content/techniques/*.json`
 - Glossary terms: `content/glossary/*.json`
 - Trainers / dojos: `content/trainers.json`, `content/dojos.json`
-- Quotes / roadmap: `content/quotes.json`, `content/quotes-de.json`, `content/roadmap.json`
+- Quotes: `content/quotes.json`, `content/quotes-de.json`
 
 ### Technique JSON (concept)
 
@@ -135,7 +134,7 @@ High-level layout:
     - `search/` — indexer + scorer + overlay UI
     - `glossary/` — glossary pages, filters, detail views
     - `bookmarks/` — collections + bookmark UI + local progress
-    - `home/` — landing, guides, roadmap, settings, feedback
+    - `home/` — landing, guides, settings, feedback
   - `shared/`
     - `services/storageService.ts` — local persistence
     - `store/` — app-wide state

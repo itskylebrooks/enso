@@ -172,7 +172,6 @@ export type AppRoute =
   | 'practice'
   | 'bookmarks'
   | 'about'
-  | 'roadmap'
   | 'guide'
   | 'guideAdvanced'
   | 'guideDan'

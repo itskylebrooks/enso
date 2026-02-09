@@ -11,7 +11,6 @@ import {
   Info,
   LibraryBig,
   MessageSquare,
-  Milestone,
   Search,
   Settings,
 } from 'lucide-react';
@@ -324,22 +323,6 @@ export const Header = ({
                           type="button"
                           onClick={() => {
                             setMoreDesktopOpen(false);
-                            onNavigate('roadmap');
-                          }}
-                          className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
-                          role="menuitem"
-                        >
-                          <span className="flex items-center gap-2">
-                            <Milestone className="w-4 h-4" />
-                            {copy.roadmap}
-                          </span>
-                        </button>
-                      </li>
-                      <li>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setMoreDesktopOpen(false);
                             onNavigate('feedback');
                           }}
                           className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
@@ -437,22 +420,6 @@ export const Header = ({
                         <span className="flex items-center gap-2">
                           <Settings className="w-4 h-4" />
                           {copy.settings}
-                        </span>
-                      </button>
-                    </li>
-                    <li>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setMoreMobileOpen(false);
-                          onNavigate('roadmap');
-                        }}
-                        className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
-                        role="menuitem"
-                      >
-                        <span className="flex items-center gap-2">
-                          <Milestone className="w-4 h-4" />
-                          {copy.roadmap}
                         </span>
                       </button>
                     </li>
