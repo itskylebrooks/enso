@@ -196,7 +196,7 @@ export const Header = ({
             type="button"
             onClick={() => onNavigate('guide')}
             className={classNames(
-              'px-3 py-2 rounded-lg border inline-flex items-center gap-2 justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+              'px-3 py-2 rounded-lg border inline-flex items-center gap-2 justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] !transition-colors !duration-150 !ease-in-out',
               isGuideActive ? 'btn-contrast' : 'btn-tonal surface-hover',
             )}
             aria-pressed={isGuideActive}
@@ -210,7 +210,7 @@ export const Header = ({
             type="button"
             onClick={() => onNavigate('library')}
             className={classNames(
-              'px-3 py-2 rounded-lg border inline-flex items-center gap-2 justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+              'px-3 py-2 rounded-lg border inline-flex items-center gap-2 justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] !transition-colors !duration-150 !ease-in-out',
               route === 'library' ? 'btn-contrast' : 'btn-tonal surface-hover',
             )}
             aria-pressed={route === 'library'}
@@ -224,7 +224,7 @@ export const Header = ({
             type="button"
             onClick={() => onNavigate('practice')}
             className={classNames(
-              'px-3 py-2 rounded-lg border inline-flex items-center gap-2 justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+              'px-3 py-2 rounded-lg border inline-flex items-center gap-2 justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] !transition-colors !duration-150 !ease-in-out',
               route === 'practice' ? 'btn-contrast' : 'btn-tonal surface-hover',
             )}
             aria-pressed={route === 'practice'}
@@ -238,7 +238,7 @@ export const Header = ({
             type="button"
             onClick={() => onNavigate('glossary')}
             className={classNames(
-              'px-3 py-2 rounded-lg border inline-flex items-center gap-2 justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+              'px-3 py-2 rounded-lg border inline-flex items-center gap-2 justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] !transition-colors !duration-150 !ease-in-out',
               route === 'glossary' ? 'btn-contrast' : 'btn-tonal surface-hover',
             )}
             aria-pressed={route === 'glossary'}
@@ -266,7 +266,7 @@ export const Header = ({
               type="button"
               onClick={() => onNavigate('bookmarks')}
               className={classNames(
-                'px-3 py-2 rounded-lg border inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+                'px-3 py-2 rounded-lg border inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] !transition-colors !duration-150 !ease-in-out',
                 route === 'bookmarks' ? 'btn-contrast' : 'btn-tonal surface-hover',
               )}
               aria-pressed={route === 'bookmarks'}
@@ -373,7 +373,7 @@ export const Header = ({
                 type="button"
                 onClick={() => onNavigate('bookmarks')}
                 className={classNames(
-                  'px-3 py-2 rounded-lg border inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+                  'px-3 py-2 rounded-lg border inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] !transition-colors !duration-150 !ease-in-out',
                   route === 'bookmarks' ? 'btn-contrast' : 'btn-tonal surface-hover',
                 )}
                 aria-pressed={route === 'bookmarks'}
