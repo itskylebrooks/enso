@@ -1,5 +1,6 @@
 import type { ReactElement } from 'react';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
 import type { Copy } from '../../../shared/constants/i18n';
 import type { Exercise, GlossaryTerm, Grade, Locale, Progress, Technique } from '../../../shared/types';
 import { QuoteRotator } from './QuoteRotator';
@@ -96,7 +97,7 @@ export const HomePage = ({
       copyTimeoutRef.current = window.setTimeout(() => {
         setQuoteCopied(false);
         copyTimeoutRef.current = null;
-      }, 1600);
+      }, 900);
     } catch {
       // noop
     }
@@ -162,7 +163,7 @@ export const HomePage = ({
               <button
                 type="button"
                 onClick={() => onOpenPinnedBeltGrade(pinnedBeltGrade)}
-                className="w-full rounded-2xl border-2 surface surface-border card-hover-shadow p-6 md:p-8 text-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] relative overflow-hidden"
+                className="w-full rounded-2xl border surface surface-border card-hover-shadow p-6 md:p-8 text-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] relative overflow-hidden"
               >
                 {!isDanBelt && (
                   <>
@@ -262,7 +263,18 @@ export const HomePage = ({
           >
             <div className="space-y-3">
               <h2 className="text-lg md:text-xl font-semibold">
-                {quoteCopied ? copy.homeQuoteCopiedTitle : copy.homeQuoteOfMomentTitle}
+                <AnimatePresence mode="wait" initial={false}>
+                  <motion.span
+                    key={quoteCopied ? 'copied' : 'default'}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="inline-block"
+                  >
+                    {quoteCopied ? copy.homeQuoteCopiedTitle : copy.homeQuoteOfMomentTitle}
+                  </motion.span>
+                </AnimatePresence>
               </h2>
               <QuoteRotator quotes={quotes} onQuoteChange={setCurrentQuote} />
             </div>
