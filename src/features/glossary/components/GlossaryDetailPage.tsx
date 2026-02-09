@@ -199,7 +199,7 @@ export const GlossaryDetailPage = ({
       </header>
 
       <div className="grid grid-cols-1 gap-10 lg:grid-cols-[2fr,1fr]">
-        <div className="space-y-8">
+        <div className="order-2 space-y-8 lg:order-1">
           {notes && (
             <section className="space-y-3">
               <h2 className="text-xs uppercase tracking-[0.3em] text-subtle">{copy.notes}</h2>
@@ -216,7 +216,7 @@ export const GlossaryDetailPage = ({
           )}
         </div>
 
-        <div className="space-y-8">
+        <div className="order-1 space-y-8 lg:order-2">
           <section className="space-y-3">
             <h2 className="text-xs uppercase tracking-[0.3em] text-subtle">{definitionLabel}</h2>
             <p className="text-sm leading-relaxed text-muted">{definition}</p>
