@@ -79,7 +79,11 @@ export const SettingsModal = ({
       exit="exit"
       transition={overlayMotion.transition}
       onClick={onClose}
-      style={{ backdropFilter: prefersReducedMotion ? 'blur(8px)' : undefined }}
+      style={
+        prefersReducedMotion
+          ? undefined
+          : { backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }
+      }
     >
       <motion.div
         ref={dialogRef}

@@ -2170,7 +2170,6 @@ export default function App({
             variants={pageMotion.variants}
             initial={skipEntranceAnimations ? 'animate' : 'initial'}
             animate="animate"
-            exit={skipEntranceAnimations ? undefined : 'exit'}
             transition={pageMotion.transition}
             className="flex-1 pb-24 md:pb-0"
             style={{ willChange: 'opacity' }}

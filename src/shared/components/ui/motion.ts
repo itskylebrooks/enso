@@ -24,26 +24,23 @@ export const setAnimationsDisabled = (value: boolean): void => {
 const useAnimationsDisabled = (): boolean =>
   useSyncExternalStore(subscribeToAnimationsDisabled, getAnimationsDisabled, getAnimationsDisabled);
 
-export const defaultEase = [0.16, 1, 0.3, 1] as const; // Custom cubic-bezier for smoother motion
+export const defaultEase = [0.2, 0.8, 0.2, 1] as const;
 export const pageEase = [0.4, 0, 0.2, 1] as const;
-export const springEase = { type: 'spring', damping: 20, stiffness: 300 } as const;
+export const springEase = { type: 'spring', stiffness: 700, damping: 30, mass: 0.6 } as const;
 
 export const pageVariants: Variants = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1 },
-  exit: { opacity: 0 },
+  initial: { opacity: 0, y: 8 },
+  animate: { opacity: 1, y: 0 },
 };
 
 export const reducedPageVariants: Variants = {
   initial: { opacity: 0 },
   animate: { opacity: 1 },
-  exit: { opacity: 0 },
 };
 
-export const pageTransition: Transition = { duration: 0.16, ease: pageEase };
-export const reducedPageTransition: Transition = { duration: 0.05 };
+export const pageTransition: Transition = { duration: 0.22 };
+export const reducedPageTransition: Transition = { duration: 0.06 };
 
-// Enhanced backdrop with synchronized blur animation
 export const backdropVariants: Variants = {
   initial: {
     opacity: 0,
@@ -83,11 +80,10 @@ export const reducedBackdropVariants: Variants = {
   exit: { opacity: 0 },
 };
 
-// Improved panel animation with spring physics for smoothness
 export const panelVariants: Variants = {
-  initial: { opacity: 0, y: 20, scale: 0.95 },
+  initial: { opacity: 0, y: 12, scale: 0.98 },
   animate: { opacity: 1, y: 0, scale: 1 },
-  exit: { opacity: 0, y: -10, scale: 0.98 },
+  exit: { opacity: 0, y: -8, scale: 0.98 },
 };
 
 // Android-optimized panel: Simpler animation without scale transforms
@@ -101,9 +97,9 @@ export const androidPanelVariants: Variants = {
 // Hint that transforms and opacity will change to allow the browser to
 // promote the element to its own layer on some platforms.
 export const panelVariantsWithHints: Variants = {
-  initial: { opacity: 0, y: 20, scale: 0.95, willChange: 'transform, opacity' },
+  initial: { opacity: 0, y: 12, scale: 0.98, willChange: 'transform, opacity' },
   animate: { opacity: 1, y: 0, scale: 1, willChange: 'transform, opacity' },
-  exit: { opacity: 0, y: -10, scale: 0.98, willChange: 'transform, opacity' },
+  exit: { opacity: 0, y: -8, scale: 0.98, willChange: 'transform, opacity' },
 };
 
 export const reducedPanelVariants: Variants = {
@@ -199,42 +195,19 @@ export const useMotionPreferences = () => {
     [animationsDisabled, prefersReducedMotion],
   );
 
-  // Lightweight runtime UA check to detect Android devices. We only use this
-  // to pick cheaper variants for Android; keep reduced-motion preference
-  // authoritative first.
-  const isAndroid = typeof navigator !== 'undefined' && /android/i.test(navigator.userAgent);
-
   const overlayMotion = useMemo(() => {
-    // Keep blur even when animations are disabled by using the full backdrop
-    // variants with zero-duration transitions. Only switch to the reduced
-    // backdrop when the user explicitly prefers reduced motion.
-    const backdrop =
-      prefersReducedMotion && !animationsDisabled
-        ? reducedBackdropVariants
-        : isAndroid
-          ? androidBackdropVariants
-          : backdropVariants;
-    const panel = prefersReducedMotion
-      ? reducedPanelVariants
-      : isAndroid
-        ? androidPanelVariants
-        : panelVariants;
-
-    // Android gets significantly faster transitions for lag-free performance
+    const backdrop = prefersReducedMotion ? reducedBackdropVariants : backdropVariants;
+    const panel = prefersReducedMotion ? reducedPanelVariants : panelVariants;
     const transition = animationsDisabled
       ? zeroTransition
       : prefersReducedMotion
         ? reducedPageTransition
-        : isAndroid
-          ? { duration: 0.15, ease: defaultEase }
-          : pageTransition;
+        : { duration: 0.18, ease: defaultEase };
     const panelTransition = animationsDisabled
       ? zeroTransition
       : prefersReducedMotion
         ? reducedPageTransition
-        : isAndroid
-          ? { duration: 0.16, ease: defaultEase }
-          : springEase;
+        : springEase;
     const closeButton = prefersReducedMotion ? reducedCloseButtonVariants : closeButtonVariants;
 
     return {
@@ -244,7 +217,7 @@ export const useMotionPreferences = () => {
       panelTransition,
       closeButton,
     };
-  }, [animationsDisabled, prefersReducedMotion, isAndroid]);
+  }, [animationsDisabled, prefersReducedMotion]);
 
   const listMotion = useMemo(
     () => ({

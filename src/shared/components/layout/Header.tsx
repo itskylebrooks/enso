@@ -1,4 +1,5 @@
 import { Logo } from '@shared/components';
+import { defaultEase, useMotionPreferences } from '@shared/components/ui/motion';
 import type { Copy } from '@shared/constants/i18n';
 import type { AppRoute } from '@shared/types';
 import {
@@ -14,10 +15,11 @@ import {
   Search,
   Settings,
 } from 'lucide-react';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence, motion, type Transition, type Variants } from 'motion/react';
 import {
   forwardRef,
   useEffect,
+  useMemo,
   useRef,
   useState,
   type PropsWithChildren,
@@ -25,7 +27,6 @@ import {
   type RefObject,
 } from 'react';
 import { classNames } from '../../utils/classNames';
-import { defaultEase, useMotionPreferences } from '../ui/motion';
 
 type HeaderProps = {
   copy: Copy;
@@ -36,6 +37,40 @@ type HeaderProps = {
   searchButtonRef: RefObject<HTMLButtonElement | null>;
   settingsButtonRef: RefObject<HTMLButtonElement | null>;
 };
+
+const desktopDropdownVariants: Variants = {
+  initial: { opacity: 0, y: 6, scale: 0.98 },
+  animate: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.18, ease: defaultEase },
+  },
+  exit: {
+    opacity: 0,
+    y: -6,
+    scale: 0.98,
+    transition: { duration: 0.18, ease: defaultEase },
+  },
+};
+
+const createMobileMenuVariants = (
+  prefersReducedMotion: boolean,
+  panelTransition: Transition,
+): Variants => ({
+  initial: prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 12, scale: 0.98 },
+  animate: prefersReducedMotion
+    ? { opacity: 1, transition: { duration: 0.12 } }
+    : { opacity: 1, y: 0, scale: 1, transition: panelTransition },
+  exit: prefersReducedMotion
+    ? { opacity: 0, transition: { duration: 0.12 } }
+    : {
+        opacity: 0,
+        y: -8,
+        scale: 0.98,
+        transition: { duration: 0.3, ease: defaultEase },
+      },
+});
 
 export const Header = ({
   copy,
@@ -48,7 +83,11 @@ export const Header = ({
 }: HeaderProps): ReactElement => {
   const [moreDesktopOpen, setMoreDesktopOpen] = useState(false);
   const [moreMobileOpen, setMoreMobileOpen] = useState(false);
-  const { overlayMotion, prefersReducedMotion } = useMotionPreferences();
+  const { prefersReducedMotion, overlayMotion } = useMotionPreferences();
+  const mobileMenuVariants = useMemo(
+    () => createMobileMenuVariants(prefersReducedMotion, overlayMotion.panelTransition),
+    [prefersReducedMotion, overlayMotion.panelTransition],
+  );
   const isGuideActive =
     route === 'guide' ||
     route === 'guideAdvanced' ||
@@ -63,31 +102,6 @@ export const Header = ({
   const moreButtonRef = useRef<HTMLButtonElement>(null);
   const moreMobileMenuRef = useRef<HTMLDivElement>(null);
   const moreMobileButtonRef = useRef<HTMLButtonElement>(null);
-
-  // Smoother mobile menu animation with slower exit
-  const menuVariants = prefersReducedMotion
-    ? {
-        initial: { opacity: 0 },
-        animate: { opacity: 1, transition: { duration: 0.05 } },
-        exit: { opacity: 0, transition: { duration: 0.05 } },
-      }
-    : ({
-        initial: { opacity: 0, y: 12, scale: 0.98 },
-        animate: {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          // Keep snappy spring on enter
-          transition: overlayMotion.panelTransition,
-        },
-        exit: {
-          opacity: 0,
-          y: -8,
-          scale: 0.98,
-          // Make exit smoother and a bit longer so it reads
-          transition: { duration: 0.28, ease: defaultEase },
-        },
-      } as const);
 
   // Auto-close mobile "More" menu on outside click or scroll
   useEffect(() => {
@@ -273,33 +287,17 @@ export const Header = ({
                 aria-expanded={moreDesktopOpen}
                 aria-label={copy.more}
               >
-                <motion.span
-                  initial={false}
-                  animate={{ rotate: moreDesktopOpen ? 180 : 0 }}
-                  transition={{ duration: 0.2, ease: defaultEase }}
-                  className="inline-flex"
-                  aria-hidden
-                >
-                  <ChevronDown className="w-4 h-4" />
-                </motion.span>
+                <ChevronDown className="w-4 h-4" />
               </button>
+
               <AnimatePresence>
                 {moreDesktopOpen && (
                   <motion.div
                     ref={moreMenuRef}
-                    initial={{ opacity: 0, y: 6, scale: 0.98 }}
-                    animate={{
-                      opacity: 1,
-                      y: 0,
-                      scale: 1,
-                      transition: { duration: 0.2, ease: defaultEase },
-                    }}
-                    exit={{
-                      opacity: 0,
-                      y: -4,
-                      scale: 0.98,
-                      transition: { duration: 0.2, ease: defaultEase },
-                    }}
+                    initial="initial"
+                    animate="animate"
+                    exit="exit"
+                    variants={desktopDropdownVariants}
                     className="absolute right-0 mt-2 w-48 rounded-lg border surface-border bg-[var(--color-surface)] panel-shadow z-30"
                     role="menu"
                   >
@@ -410,15 +408,7 @@ export const Header = ({
                 aria-expanded={moreMobileOpen}
                 aria-label={copy.more}
               >
-                <motion.span
-                  initial={false}
-                  animate={{ rotate: moreMobileOpen ? 180 : 0 }}
-                  transition={{ duration: 0.2, ease: defaultEase }}
-                  className="inline-flex"
-                  aria-hidden
-                >
-                  <ChevronDown className="w-5 h-5" />
-                </motion.span>
+                <ChevronDown className="w-5 h-5" />
               </button>
             </div>
 
@@ -429,7 +419,7 @@ export const Header = ({
                   initial="initial"
                   animate="animate"
                   exit="exit"
-                  variants={menuVariants}
+                  variants={mobileMenuVariants}
                   className="absolute right-0 mt-4 w-48 rounded-lg border surface-border bg-[var(--color-surface)] panel-shadow z-30"
                   role="menu"
                 >

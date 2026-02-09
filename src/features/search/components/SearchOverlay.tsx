@@ -85,7 +85,7 @@ export const SearchOverlay = ({
   const dialogRef = useRef<HTMLDivElement>(null);
   const resultsContainerRef = useRef<HTMLDivElement>(null);
   const resultRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const { overlayMotion } = useMotionPreferences();
+  const { overlayMotion, prefersReducedMotion } = useMotionPreferences();
 
   // When opened via keyboard shortcut, ignore pointer hover changes until the
   // user actually uses the mouse (mousemove or mousedown). This prevents the
@@ -329,6 +329,11 @@ export const SearchOverlay = ({
       exit="exit"
       transition={overlayMotion.transition}
       onClick={onClose}
+      style={
+        prefersReducedMotion
+          ? undefined
+          : { backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }
+      }
     >
       <motion.div
         ref={dialogRef}
