@@ -1,4 +1,4 @@
-import { parseTechnique } from '@shared/types/content';
+import techniquesData from '@generated/content/techniques.json';
 import { ENTRY_MODE_ORDER } from '../constants/entryModes';
 import {
   ANIMATION_PREFERENCE_KEY,
@@ -29,14 +29,6 @@ import type {
   TechniqueVersion,
   Theme,
 } from '../types';
-
-// Load technique files directly from the content/techniques folder.
-// Vite's import.meta.glob with { eager: true } returns the parsed JSON modules at build time.
-// We handle both module.default and module cases for robustness.
-const techniqueModules = import.meta.glob('/content/techniques/*.json', { eager: true }) as Record<
-  string,
-  unknown
->;
 
 const normalizeOptional = (value: string | undefined | null): string | undefined => {
   if (value == null) return undefined;
@@ -130,21 +122,8 @@ const normalizeTechnique = (technique: Technique): Technique => ({
   versions: technique.versions.map(normalizeVersion),
 });
 
-const seedTechniques: Technique[] = Object.keys(techniqueModules)
-  .map((filePath) => {
-    const moduleValue = techniqueModules[filePath];
-    const hasDefaultExport =
-      moduleValue &&
-      typeof moduleValue === 'object' &&
-      'default' in (moduleValue as Record<string, unknown>);
-    const raw = hasDefaultExport ? (moduleValue as { default: unknown }).default : moduleValue;
-    const filename = filePath.split('/').pop() ?? '';
-    const slug = filename.replace(/\.json$/i, '');
-    // parse/validate technique using schema
-    const parsed = parseTechnique(raw, slug);
-    const normalized = normalizeTechnique(parsed);
-    return normalized;
-  })
+const seedTechniques: Technique[] = (techniquesData as Technique[])
+  .map((technique) => normalizeTechnique(technique))
   .sort((a, b) => a.name.en.localeCompare(b.name.en));
 
 const isBrowser = typeof window !== 'undefined' && typeof window.localStorage !== 'undefined';
@@ -275,7 +254,8 @@ const ensureExerciseBookmarkCollections = (
   const sanitized = raw
     .map((entry) => {
       if (!entry || typeof entry !== 'object') return null;
-      const { id, exerciseId, collectionId, createdAt } = entry as Partial<ExerciseBookmarkCollection>;
+      const { id, exerciseId, collectionId, createdAt } =
+        entry as Partial<ExerciseBookmarkCollection>;
       if (typeof id !== 'string' || id.trim().length === 0) return null;
       if (typeof exerciseId !== 'string' || exerciseId.trim().length === 0) return null;
       if (typeof collectionId !== 'string' || collectionId.trim().length === 0) return null;
@@ -469,39 +449,25 @@ export const saveAnimationsDisabled = (disabled: boolean): void => {
   }
 };
 
-/**
- * Detects the user's browser language preference.
- * Returns 'de' if any German locale is detected, otherwise 'en'.
- *
- * This function checks navigator.language and navigator.languages
- * to determine if the user prefers German. It safely handles SSR
- * environments where navigator is undefined.
- */
-const detectBrowserLanguage = (): Locale => {
-  if (typeof navigator === 'undefined') {
-    return fallbackLocale;
+const detectBrowserLanguage = (fallback: Locale = fallbackLocale): Locale => {
+  if (!isBrowser) {
+    return fallback;
   }
 
-  // Check navigator.language and navigator.languages for German
-  const languages = navigator.languages || [navigator.language];
+  const languages =
+    window.navigator.languages && window.navigator.languages.length > 0
+      ? window.navigator.languages
+      : [window.navigator.language];
 
-  for (const lang of languages) {
-    if (lang && lang.toLowerCase().startsWith('de')) {
-      console.log(`[enso] Detected German browser language: ${lang}, setting locale to 'de'`);
-      return 'de';
-    }
-  }
-
-  console.log(`[enso] No German language detected, defaulting to 'en'. Languages:`, languages);
-  return fallbackLocale;
+  return languages.some((lang) => lang?.toLowerCase().startsWith('de')) ? 'de' : fallback;
 };
 
-export const loadLocale = (): Locale => {
+export const loadLocale = (fallback: Locale = fallbackLocale): Locale => {
   const value = readLocalStorage(LOCALE_KEY) as Locale | null;
 
-  // If no saved preference, detect browser language
+  // If no saved preference exists, auto-detect from browser/system language.
   if (value === null) {
-    return detectBrowserLanguage();
+    return detectBrowserLanguage(fallback);
   }
 
   return value === 'en' || value === 'de' ? value : fallbackLocale;

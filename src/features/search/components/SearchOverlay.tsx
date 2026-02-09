@@ -211,7 +211,6 @@ export const SearchOverlay = ({
     normalizedQuery,
     techniques,
     glossaryTerms,
-    exercises,
     query,
     locale,
   ]);

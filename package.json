@@ -5,18 +5,21 @@
   "type": "module",
   "scripts": {
     "build:content": "tsx scripts/build-content.ts",
-    "dev": "pnpm run build:content && vite",
-    "build": "pnpm run build:content && tsc -b && vite build",
-    "typecheck": "tsc -b --pretty false",
+    "dev": "pnpm run build:content && next dev",
+    "build": "pnpm run build:content && next build",
+    "start": "next start",
+    "typecheck": "pnpm run build:content && tsc --noEmit -p tsconfig.app.json --pretty false && tsc --noEmit -p tsconfig.node.json --pretty false",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "preview": "vite preview",
-    "format": "prettier . --write"
+    "preview": "next start",
+    "test": "vitest run",
+    "format": "prettier ."
   },
   "dependencies": {
     "fuse.js": "^7.1.0",
     "lucide-react": "^0.546.0",
     "motion": "^12.23.26",
+    "next": "^15.0.0",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
     "react-virtualized-auto-sizer": "^1.0.26",
@@ -26,6 +29,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
+    "@next/eslint-plugin-next": "^15.5.12",
     "@tailwindcss/line-clamp": "^0.4.4",
     "@types/node": "^24.10.4",
     "@types/react": "^19.2.7",
@@ -45,6 +49,7 @@
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.51.0",
     "vite": "^7.3.0",
-    "vite-plugin-pwa": "^1.2.0"
+    "vite-plugin-pwa": "^1.2.0",
+    "vitest": "^3.2.4"
   }
 }

@@ -306,7 +306,12 @@ export const BookmarksView = ({
     }
 
     return exerciseMembershipByCollection.get(selectedCollectionId) ?? new Set<string>();
-  }, [selectedCollectionId, allBookmarkedExercises, ungroupedExerciseIds, exerciseMembershipByCollection]);
+  }, [
+    selectedCollectionId,
+    allBookmarkedExercises,
+    ungroupedExerciseIds,
+    exerciseMembershipByCollection,
+  ]);
 
   const visibleTechniques = useMemo(
     () => allBookmarkedTechniques.filter((technique) => visibleTechniqueIds.has(technique.id)),
@@ -379,11 +384,15 @@ export const BookmarksView = ({
       map.set(collection.id, techniqueCount + glossaryCount + exerciseCount);
     });
     return map;
-  }, [orderedCollections, membershipByCollection, glossaryMembershipByCollection, exerciseMembershipByCollection]);
+  }, [
+    orderedCollections,
+    membershipByCollection,
+    glossaryMembershipByCollection,
+    exerciseMembershipByCollection,
+  ]);
 
   const allCount = bookmarkedIds.size + bookmarkedGlossaryIds.size + bookmarkedExerciseIds.size;
-  const ungroupedCount =
-    ungroupedIds.size + ungroupedGlossaryIds.size + ungroupedExerciseIds.size;
+  const ungroupedCount = ungroupedIds.size + ungroupedGlossaryIds.size + ungroupedExerciseIds.size;
 
   const emptyStateMessage = useMemo(() => {
     if (selectedCollectionId === 'all') {

@@ -16,7 +16,6 @@ type FilterBarContextValue = {
 
 const FilterBarContext = createContext<FilterBarContextValue | null>(null);
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const usePinButton = (): FilterBarContextValue | null => {
   return useContext(FilterBarContext);
 };

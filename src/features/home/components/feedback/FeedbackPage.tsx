@@ -363,12 +363,7 @@ const summarizeMedia = (media?: MediaEntry[]) =>
     .filter((item) => item.url);
 
 const getClientVersion = (): string | undefined => {
-  try {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return (import.meta as any)?.env?.VITE_APP_VERSION ?? undefined;
-  } catch {
-    return undefined;
-  }
+  return process.env.NEXT_PUBLIC_APP_VERSION ?? undefined;
 };
 
 type FeedbackMediaItem = { type: 'youtube' | 'image' | 'link'; url: string; title?: string };
@@ -442,17 +437,26 @@ const normalizeUrlForSubmission = (rawUrl: string): string | null => {
   return `https://${value}`;
 };
 
-const normalizeMediaForSubmission = (media: MediaEntry[]): FeedbackMediaItem[] =>
-  media
-    .map((entry) => {
-      const url = normalizeUrlForSubmission(entry.url);
-      if (!url) return null;
-      const type: FeedbackMediaItem['type'] =
-        entry.type === 'youtube' ? 'youtube' : entry.type === 'image' ? 'image' : 'link';
-      const title = entry.title?.trim();
-      return title ? { type, url, title } : { type, url };
-    })
-    .filter((item): item is FeedbackMediaItem => Boolean(item));
+const normalizeMediaForSubmission = (media: MediaEntry[]): FeedbackMediaItem[] => {
+  const normalized: FeedbackMediaItem[] = [];
+
+  media.forEach((entry) => {
+    const url = normalizeUrlForSubmission(entry.url);
+    if (!url) return;
+
+    const type: FeedbackMediaItem['type'] =
+      entry.type === 'youtube' ? 'youtube' : entry.type === 'image' ? 'image' : 'link';
+    const title = entry.title?.trim();
+
+    if (title) {
+      normalized.push({ type, url, title });
+    } else {
+      normalized.push({ type, url });
+    }
+  });
+
+  return normalized;
+};
 
 const buildNewTechniqueSubmission = (
   form: NewTechniqueForm,

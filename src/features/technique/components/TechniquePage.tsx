@@ -249,7 +249,7 @@ export const TechniquePage = ({
   // Parse URL params on mount to hydrate initial state
   const initialVariantParams = useMemo(() => {
     if (typeof window === 'undefined') return null;
-    return parseTechniqueVariantParams(window.location.pathname);
+    return parseTechniqueVariantParams(window.location.pathname, window.location.search);
   }, []);
 
   const versionsMeta = enrichedTechnique.versionsMeta || [];

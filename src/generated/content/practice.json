@@ -1,0 +1,263 @@
+[
+  {
+    "id": "ex-006",
+    "slug": "box-breathing",
+    "name": { "en": "Box breathing", "de": "Box-Atmung" },
+    "category": "recovery",
+    "summary": {
+      "en": "Settle the breath and nervous system between rounds.",
+      "de": "Beruhigt Atem und Nervensystem zwischen Runden."
+    },
+    "howTo": {
+      "en": [
+        "Inhale through the nose for a count of four.",
+        "Hold the breath gently for four counts.",
+        "Exhale slowly for four counts, then pause for four."
+      ],
+      "de": [
+        "Durch die Nase vier Sekunden einatmen.",
+        "Den Atem sanft vier Sekunden halten.",
+        "Vier Sekunden ausatmen, dann vier Sekunden pausieren."
+      ]
+    },
+    "equipment": ["none"],
+    "safetyNotes": {
+      "en": ["Keep the breath smooth and stop if you feel lightheaded."],
+      "de": ["Atem ruhig halten und stoppen, wenn dir schwindelig wird."]
+    },
+    "aikidoContext": {
+      "en": "Supports calm attention for review and recovery.",
+      "de": "Unterstützt ruhige Aufmerksamkeit für Nachbereitung und Erholung."
+    },
+    "updatedAt": "2024-10-01T00:00:00Z"
+  },
+  {
+    "id": "ex-007",
+    "slug": "cross-body-steps",
+    "name": { "en": "Cross-body steps", "de": "Cross-Body-Schritte" },
+    "category": "coordination",
+    "summary": {
+      "en": "Build cross-body timing and directional control for smooth turns.",
+      "de": "Baut Cross-Body-Timing und Richtungssteuerung für flüssige Drehungen auf."
+    },
+    "howTo": {
+      "en": [
+        "Stand in a relaxed stance with feet under hips.",
+        "Step the right foot across the center line and turn 90 degrees left.",
+        "Reset, then repeat to the other side for 6–8 slow reps.",
+        "Keep the head level and let the hips lead the turn."
+      ],
+      "de": [
+        "Locker stehen, Füße unter den Hüften.",
+        "Rechten Fuß über die Mittellinie setzen und 90 Grad nach links drehen.",
+        "Zurücksetzen, dann zur anderen Seite 6–8 langsame Wiederholungen.",
+        "Kopf ruhig halten und die Drehung aus der Hüfte führen."
+      ]
+    },
+    "equipment": ["none"],
+    "safetyNotes": {
+      "en": ["Use a smaller step if the turn feels rushed or unstable."],
+      "de": ["Kleinere Schritte nutzen, wenn die Drehung hastig oder instabil wirkt."]
+    },
+    "aikidoContext": {
+      "en": "Reinforces cross-body coordination for tai sabaki entries.",
+      "de": "Stärkt Cross-Body-Koordination für tai sabaki-Eintritte."
+    },
+    "updatedAt": "2024-10-01T00:00:00Z"
+  },
+  {
+    "id": "ex-003",
+    "slug": "dead-bug",
+    "name": { "en": "Dead bug", "de": "Dead Bug" },
+    "category": "core",
+    "summary": {
+      "en": "Build steady trunk control for turns and falls.",
+      "de": "Baut stabile Rumpfkontrolle für Drehungen und Fallen auf."
+    },
+    "howTo": {
+      "en": [
+        "Lie on your back with knees bent at 90° and arms up.",
+        "Extend one leg and the opposite arm slowly, then return.",
+        "Alternate sides for 6–10 slow reps each."
+      ],
+      "de": [
+        "Rückenlage, Knie 90° gebeugt, Arme nach oben.",
+        "Ein Bein und den gegenüberliegenden Arm langsam strecken, dann zurück.",
+        "Seiten abwechseln, 6–10 langsame Wiederholungen pro Seite."
+      ]
+    },
+    "equipment": ["mat"],
+    "safetyNotes": {
+      "en": ["Keep your lower back softly in contact with the mat."],
+      "de": ["Den unteren Rücken sanft in Kontakt mit der Matte halten."]
+    },
+    "aikidoContext": {
+      "en": "Supports calm center control during ukemi transitions.",
+      "de": "Unterstützt ruhige Zentrenkontrolle bei ukemi-Übergängen."
+    },
+    "updatedAt": "2024-10-01T00:00:00Z"
+  },
+  {
+    "id": "ex-002",
+    "slug": "hip-figure-eights",
+    "name": { "en": "Hip figure-eights", "de": "Hüft-Achten" },
+    "category": "mobility",
+    "summary": {
+      "en": "Loosen hips to support smooth turns and stable stances.",
+      "de": "Lockert die Hüfte für fließende Drehungen und stabile Stände."
+    },
+    "howTo": {
+      "en": [
+        "Stand tall with feet hip-width apart.",
+        "Draw slow figure-eights with the hips for 6–8 reps.",
+        "Keep the upper body quiet and breathe evenly."
+      ],
+      "de": [
+        "Aufrecht stehen, Füße hüftbreit.",
+        "Langsame Achten mit der Hüfte zeichnen, 6–8 Wiederholungen.",
+        "Oberkörper ruhig halten und gleichmäßig atmen."
+      ]
+    },
+    "equipment": ["none"],
+    "safetyNotes": {
+      "en": ["Keep the motion small if the lower back feels tight."],
+      "de": ["Den Bewegungsumfang klein halten, wenn der untere Rücken sich fest anfühlt."]
+    },
+    "aikidoContext": {
+      "en": "Encourages relaxed rotation for tenkan and blending.",
+      "de": "Fördert entspannte Rotation für tenkan und Verbindung."
+    },
+    "updatedAt": "2024-10-01T00:00:00Z"
+  },
+  {
+    "id": "ex-004",
+    "slug": "single-leg-stance",
+    "name": { "en": "Single-leg stance", "de": "Einbeinstand" },
+    "category": "balance",
+    "summary": {
+      "en": "Improve balance for pivots and directional changes.",
+      "de": "Verbessert das Gleichgewicht für Drehungen und Richtungswechsel."
+    },
+    "howTo": {
+      "en": [
+        "Stand tall and shift weight onto one foot.",
+        "Hold for 20–30 seconds with soft knees.",
+        "Switch sides and repeat."
+      ],
+      "de": [
+        "Aufrecht stehen und das Gewicht auf einen Fuß verlagern.",
+        "20–30 Sekunden halten, Knie weich.",
+        "Seite wechseln und wiederholen."
+      ]
+    },
+    "equipment": ["none"],
+    "safetyNotes": {
+      "en": ["Hold a wall or chair if balance feels uncertain."],
+      "de": ["Bei unsicherem Gleichgewicht an Wand oder Stuhl abstützen."]
+    },
+    "aikidoContext": {
+      "en": "Supports stable footwork during entering steps.",
+      "de": "Unterstützt stabile Fußarbeit bei Eintritten."
+    },
+    "updatedAt": "2024-10-01T00:00:00Z"
+  },
+  {
+    "id": "ex-008",
+    "slug": "split-stance-hold",
+    "name": { "en": "Split-stance hold", "de": "Ausfallschritt-Halten" },
+    "category": "strength",
+    "summary": {
+      "en": "Build controlled leg and hip strength without heavy loading.",
+      "de": "Baut kontrollierte Bein- und Hüftkraft ohne hohe Last auf."
+    },
+    "howTo": {
+      "en": [
+        "Step into a long split stance with back heel lifted.",
+        "Lower until both knees are softly bent and the torso stays tall.",
+        "Hold for 15–25 seconds, then switch sides.",
+        "Keep weight centered and avoid collapsing the front knee inward."
+      ],
+      "de": [
+        "In einen langen Ausfallschritt gehen, hintere Ferse angehoben.",
+        "Absenken, bis beide Knie weich gebeugt sind und der Oberkörper aufrecht bleibt.",
+        "15–25 Sekunden halten, dann Seite wechseln.",
+        "Gewicht zentriert halten und das vordere Knie nicht nach innen fallen lassen."
+      ]
+    },
+    "equipment": ["none"],
+    "safetyNotes": {
+      "en": ["Reduce the depth if the front knee or hip feels pinched."],
+      "de": ["Tiefe reduzieren, wenn Knie oder Hüfte vorne sich eingeengt anfühlen."]
+    },
+    "aikidoContext": {
+      "en": "Supports stable posture during entering steps and pivots.",
+      "de": "Unterstützt stabile Haltung bei Eintritten und Drehungen."
+    },
+    "updatedAt": "2024-10-01T00:00:00Z"
+  },
+  {
+    "id": "ex-005",
+    "slug": "squat-hops",
+    "name": { "en": "Squat hops", "de": "Kniebeugen-Hops" },
+    "category": "power",
+    "summary": {
+      "en": "Wake up leg drive for quick entries.",
+      "de": "Aktiviert den Beinantrieb für schnelle Eintritte."
+    },
+    "howTo": {
+      "en": [
+        "Start in a shallow squat with feet hip-width apart.",
+        "Hop gently, landing softly back into the squat.",
+        "Perform 6–8 controlled reps."
+      ],
+      "de": [
+        "In eine flache Kniebeuge gehen, Füße hüftbreit.",
+        "Sanft hüpfen und weich in die Kniebeuge landen.",
+        "6–8 kontrollierte Wiederholungen."
+      ]
+    },
+    "equipment": ["mat"],
+    "safetyNotes": {
+      "en": ["Land quietly and stop if knees feel unstable."],
+      "de": ["Leise landen und stoppen, wenn sich die Knie instabil anfühlen."]
+    },
+    "aikidoContext": {
+      "en": "Reinforces springy legs for entering actions.",
+      "de": "Stärkt federnde Beine für Eintritte."
+    },
+    "updatedAt": "2024-10-01T00:00:00Z"
+  },
+  {
+    "id": "ex-001",
+    "slug": "wrist-circles",
+    "name": { "en": "Wrist circles", "de": "Handgelenkkreise" },
+    "category": "mobility",
+    "summary": {
+      "en": "Gently mobilize wrists and forearms for smooth grip changes.",
+      "de": "Mobilisiert Handgelenke und Unterarme für geschmeidige Griffwechsel."
+    },
+    "howTo": {
+      "en": [
+        "Extend arms forward at chest height.",
+        "Make slow circles with both wrists, 10–15 each direction.",
+        "Keep shoulders relaxed and fingers soft."
+      ],
+      "de": [
+        "Arme auf Brusthöhe nach vorn strecken.",
+        "Langsame Kreise mit beiden Handgelenken, 10–15 pro Richtung.",
+        "Schultern entspannt, Finger locker."
+      ]
+    },
+    "equipment": ["none"],
+    "safetyNotes": {
+      "en": ["Move within a comfortable range; avoid forcing the end range."],
+      "de": ["Bewege dich in einem angenehmen Bereich und erzwinge kein Endmaß."]
+    },
+    "aikidoContext": {
+      "en": "Supports comfortable kote movements during grabs and releases.",
+      "de": "Unterstützt angenehme kote-Bewegungen bei Griffen und Lösen."
+    },
+    "media": [{ "type": "youtube", "url": "https://www.youtube.com/embed/2L2lnxIcNmo" }],
+    "updatedAt": "2024-10-01T00:00:00Z"
+  }
+]

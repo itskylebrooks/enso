@@ -1,56 +1,84 @@
-import { readdir, readFile } from 'node:fs/promises';
-import { join } from 'node:path';
+import { copyFile, mkdir, readFile, writeFile } from 'node:fs/promises';
+import path from 'node:path';
 import process from 'node:process';
-import { parseTechnique } from '../src/shared/types/content';
+import prettier from 'prettier';
+import { z } from 'zod';
+import { validateAllContent } from '../src/lib/content/validate-all';
+import { loadAllGlossaryTerms } from '../src/lib/content/loaders/glossary';
+import { loadAllPracticeExercises } from '../src/lib/content/loaders/practice';
+import { loadAllTechniques } from '../src/lib/content/loaders/techniques';
 
-const techniquesDir = join(process.cwd(), 'content', 'techniques');
+const rootDir = process.cwd();
+const generatedDir = path.join(rootDir, 'src', 'generated', 'content');
+const contentDir = path.join(rootDir, 'content');
+const publicImagesDir = path.join(rootDir, 'public', 'images');
 
-async function loadTechniqueFiles(): Promise<string[]> {
-  const entries = await readdir(techniquesDir, { withFileTypes: true });
-  return entries
-    .filter((entry) => entry.isFile() && entry.name.toLowerCase().endsWith('.json'))
-    .map((entry) => join(techniquesDir, entry.name))
-    .sort();
-}
+const quoteSchema = z.array(
+  z.object({
+    quote: z.string().min(1),
+    author: z.string().min(1),
+  }),
+);
 
-async function validateTechniques(): Promise<void> {
-  const files = await loadTechniqueFiles();
-  const errors: Array<{ file: string; error: unknown }> = [];
+const readAndParseQuotes = async (fileName: string) => {
+  const filePath = path.join(contentDir, fileName);
+  const raw = await readFile(filePath, 'utf8');
+  const parsed = JSON.parse(raw) as unknown;
+  const result = quoteSchema.safeParse(parsed);
 
-  await Promise.all(
-    files.map(async (filePath) => {
-      try {
-        const raw = await readFile(filePath, 'utf8');
-        const json = JSON.parse(raw);
-        const slug =
-          json?.slug ??
-          filePath
-            .split('/')
-            .pop()
-            ?.replace(/\.json$/i, '');
-        if (typeof slug !== 'string' || slug.length === 0) {
-          throw new Error('Missing slug');
-        }
-        parseTechnique(json, slug);
-      } catch (error) {
-        errors.push({ file: filePath, error });
-      }
-    }),
-  );
-
-  if (errors.length > 0) {
-    errors.forEach(({ file, error }) => {
-      console.error(`Failed to validate ${file}`);
-      console.error(error);
-      console.error('');
-    });
-    throw new Error('Content validation failed');
+  if (!result.success) {
+    throw new Error(`Invalid quotes file: ${fileName}\n${result.error.message}`);
   }
 
-  console.log(`Validated ${files.length} technique file(s).`);
+  return result.data;
+};
+
+const writeJsonFile = async (fileName: string, value: unknown) => {
+  const destination = path.join(generatedDir, fileName);
+  const resolvedConfig = (await prettier.resolveConfig(destination)) ?? {};
+  const formatted = await prettier.format(JSON.stringify(value), {
+    ...resolvedConfig,
+    parser: 'json',
+    filepath: destination,
+  });
+  await writeFile(destination, formatted, 'utf8');
+};
+
+const copyAuthorImage = async () => {
+  const source = path.join(contentDir, 'Lehrgang-2024-09.jpeg');
+  const destination = path.join(publicImagesDir, 'Lehrgang-2024-09.jpeg');
+  await mkdir(publicImagesDir, { recursive: true });
+  await copyFile(source, destination);
+};
+
+async function run(): Promise<void> {
+  const summary = await validateAllContent();
+  const [techniques, glossaryTerms, practiceExercises, quotesEn, quotesDe] = await Promise.all([
+    loadAllTechniques(),
+    loadAllGlossaryTerms(),
+    loadAllPracticeExercises(),
+    readAndParseQuotes('quotes.json'),
+    readAndParseQuotes('quotes-de.json'),
+  ]);
+
+  await mkdir(generatedDir, { recursive: true });
+
+  await Promise.all([
+    writeJsonFile('techniques.json', techniques),
+    writeJsonFile('glossary.json', glossaryTerms),
+    writeJsonFile('practice.json', practiceExercises),
+    writeJsonFile('quotes-en.json', quotesEn),
+    writeJsonFile('quotes-de.json', quotesDe),
+    copyAuthorImage(),
+  ]);
+
+  console.log(
+    `Validated content: techniques=${summary.techniques}, glossary=${summary.glossaryTerms}, practice=${summary.practiceExercises}`,
+  );
+  console.log(`Generated content artifacts in ${generatedDir}`);
 }
 
-validateTechniques().catch((error) => {
+run().catch((error) => {
   console.error(error instanceof Error ? error.message : error);
   process.exit(1);
 });

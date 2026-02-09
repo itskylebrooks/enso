@@ -1,3 +1,5 @@
+'use client';
+
 import type { FeedbackType } from '@features/home/components/feedback/FeedbackPage';
 import { FeedbackPage } from '@features/home/components/feedback/FeedbackPage';
 import { GuideGradePage } from '@features/home/components/guide/GuideGradePage';
@@ -118,6 +120,10 @@ type HistoryState = {
   sourceSlug?: string;
 };
 
+type AppProps = {
+  initialLocale?: Locale;
+};
+
 const routeToPath = (route: AppRoute): string => {
   switch (route) {
     case 'home':
@@ -155,10 +161,13 @@ const routeToPath = (route: AppRoute): string => {
     case 'feedback':
       return '/feedback';
     case 'library':
+      return '/techniques';
     case 'practice':
-    case 'bookmarks':
+      return '/exercises';
     case 'glossary':
-      return `/${route}`;
+      return '/terms';
+    case 'bookmarks':
+      return '/bookmarks';
     default:
       return '/';
   }
@@ -228,28 +237,27 @@ const gradeToGuideRoute = (grade: Grade): AppRoute | null => {
 };
 
 const getGlossarySlugFromPath = (pathname: string): string | null => {
-  const match = /^\/glossary\/([^/?#]+)/.exec(pathname);
+  const match = /^\/(?:terms|glossary)\/([^/?#]+)/.exec(pathname);
   return match ? decodeURIComponent(match[1]) : null;
 };
 
 const getPracticeSlugFromPath = (pathname: string): string | null => {
-  const match = /^\/practice\/([^/?#]+)/.exec(pathname);
+  const match = /^\/(?:exercises|practice)\/([^/?#]+)/.exec(pathname);
   return match ? decodeURIComponent(match[1]) : null;
 };
 
 const parseLocation = (
   pathname: string,
   state?: HistoryState,
+  search?: string,
 ): { route: AppRoute; slug: string | null; techniqueParams?: TechniqueParams } => {
-  if (pathname.startsWith('/technique/')) {
-    const techniqueParams = parseTechniquePath(pathname);
-    if (techniqueParams) {
-      const fallbackRoute = state?.route ?? 'library';
-      return { route: fallbackRoute, slug: techniqueParams.slug, techniqueParams };
-    }
+  const techniqueParams = parseTechniquePath(pathname, search);
+  if (techniqueParams) {
+    const fallbackRoute = state?.route ?? 'library';
+    return { route: fallbackRoute, slug: techniqueParams.slug, techniqueParams };
   }
 
-  if (pathname.startsWith('/glossary/')) {
+  if (pathname.startsWith('/terms/') || pathname.startsWith('/glossary/')) {
     const slug = getGlossarySlugFromPath(pathname);
     // Handle backwards compatibility redirects
     const slugRedirects: Record<string, string> = {
@@ -261,7 +269,7 @@ const parseLocation = (
     return { route: fallbackRoute, slug: finalSlug };
   }
 
-  if (pathname.startsWith('/practice/')) {
+  if (pathname.startsWith('/exercises/') || pathname.startsWith('/practice/')) {
     const slug = getPracticeSlugFromPath(pathname);
     return { route: 'practice', slug };
   }
@@ -270,15 +278,15 @@ const parseLocation = (
     return { route: 'bookmarks', slug: null };
   }
 
-  if (pathname === '/library') {
+  if (pathname === '/techniques' || pathname === '/library') {
     return { route: 'library', slug: null };
   }
 
-  if (pathname === '/practice') {
+  if (pathname === '/exercises' || pathname === '/practice') {
     return { route: 'practice', slug: null };
   }
 
-  if (pathname === '/glossary') {
+  if (pathname === '/terms' || pathname === '/glossary') {
     return { route: 'glossary', slug: null };
   }
 
@@ -342,7 +350,7 @@ const getInitialLocation = (): {
   }
 
   const state = window.history.state as HistoryState | undefined;
-  return parseLocation(window.location.pathname, state);
+  return parseLocation(window.location.pathname, state, window.location.search);
 };
 
 const isEditableElement = (element: EventTarget | null): boolean => {
@@ -449,7 +457,6 @@ const getGlossaryCollectionOptions = (
   }));
 };
 
-
 const getSelectableValues = (
   techniques: Technique[],
   selector: (technique: Technique) => string | undefined,
@@ -541,8 +548,10 @@ function useKeyboardShortcuts(onSearch: (method?: 'keyboard' | 'mouse') => void)
   }, [onSearch]);
 }
 
-export default function App(): ReactElement {
-  const [locale, setLocale] = useState<Locale>(() => loadLocale());
+export default function App({ initialLocale = 'en' }: AppProps): ReactElement {
+  const [locale, setLocale] = useState<Locale>(initialLocale);
+  const [isLocaleReady, setIsLocaleReady] = useState(false);
+  const [isHomePrefsReady, setIsHomePrefsReady] = useState(false);
   const [theme, setTheme] = useState<Theme>(() => loadTheme());
   const [hasManualTheme, setHasManualTheme] = useState<boolean>(() => hasStoredTheme());
   const [animationsDisabled, setAnimationsDisabledState] = useState<boolean>(() => {
@@ -576,10 +585,8 @@ export default function App(): ReactElement {
   const [glossaryTerms, setGlossaryTerms] = useState<GlossaryTerm[]>([]);
   const [practiceExercises, setPracticeExercises] = useState<Exercise[]>([]);
   const [feedbackInitialType, setFeedbackInitialType] = useState<FeedbackType | null>(null);
-  const [pinnedBeltGrade, setPinnedBeltGrade] = useState<Grade | null>(() => loadPinnedBeltGrade());
-  const [beltPromptDismissed, setBeltPromptDismissed] = useState<boolean>(() =>
-    loadBeltPromptDismissed(),
-  );
+  const [pinnedBeltGrade, setPinnedBeltGrade] = useState<Grade | null>(null);
+  const [beltPromptDismissed, setBeltPromptDismissed] = useState<boolean>(false);
 
   const copy = getCopy(locale);
   const { pageMotion } = useMotionPreferences();
@@ -850,20 +857,34 @@ export default function App(): ReactElement {
   }, [hasManualTheme, theme]);
 
   useEffect(() => {
+    setLocale(loadLocale(initialLocale));
+    setIsLocaleReady(true);
+  }, [initialLocale]);
+
+  useEffect(() => {
+    setPinnedBeltGrade(loadPinnedBeltGrade());
+    setBeltPromptDismissed(loadBeltPromptDismissed());
+    setIsHomePrefsReady(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isLocaleReady) return;
     saveLocale(locale);
-  }, [locale]);
+  }, [isLocaleReady, locale]);
 
   useEffect(() => {
     saveDB(db);
   }, [db]);
 
   useEffect(() => {
+    if (!isHomePrefsReady) return;
     savePinnedBeltGrade(pinnedBeltGrade);
-  }, [pinnedBeltGrade]);
+  }, [isHomePrefsReady, pinnedBeltGrade]);
 
   useEffect(() => {
+    if (!isHomePrefsReady) return;
     saveBeltPromptDismissed(beltPromptDismissed);
-  }, [beltPromptDismissed]);
+  }, [beltPromptDismissed, isHomePrefsReady]);
 
   // Persist filters to local storage so they survive reloads/navigation
   useEffect(() => {
@@ -891,7 +912,11 @@ export default function App(): ReactElement {
       const state =
         (event?.state as HistoryState | undefined) ??
         (window.history.state as HistoryState | undefined);
-      const { route: nextRoute, slug } = parseLocation(window.location.pathname, state);
+      const { route: nextRoute, slug } = parseLocation(
+        window.location.pathname,
+        state,
+        window.location.search,
+      );
       setRoute(nextRoute);
       setActiveSlug(slug);
     };
@@ -1503,7 +1528,8 @@ export default function App(): ReactElement {
     }
 
     if (typeof window !== 'undefined') {
-      if (window.location.pathname !== finalPath) {
+      const currentPath = `${window.location.pathname}${window.location.search}`;
+      if (currentPath !== finalPath) {
         window.history.pushState(state, '', finalPath);
       } else {
         window.history.replaceState(state, '', finalPath);
@@ -1525,7 +1551,7 @@ export default function App(): ReactElement {
 
     if (typeof window !== 'undefined') {
       const encodedSlug = encodeURIComponent(finalSlug);
-      const glossaryPath = `/glossary/${encodedSlug}`;
+      const glossaryPath = `/terms/${encodedSlug}`;
       // Push the current route into history state so the detail page knows where it was opened from
       const state: HistoryState = { route: nextRoute, slug: finalSlug, sourceRoute: route };
 
@@ -1550,7 +1576,7 @@ export default function App(): ReactElement {
 
     if (typeof window !== 'undefined') {
       const encodedSlug = encodeURIComponent(slug);
-      const practicePath = `/practice/${encodedSlug}`;
+      const practicePath = `/exercises/${encodedSlug}`;
       const state: HistoryState = { route: nextRoute, slug, sourceRoute: route };
 
       if (window.location.pathname !== practicePath) {

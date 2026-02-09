@@ -4,7 +4,7 @@ import { motion } from 'motion/react';
 import { loadAllTerms } from '../loader';
 import { useGlossaryStore } from '../store';
 import { useMotionPreferences } from '@shared/components/ui/motion';
-import { GlossaryCard } from './GlossaryCard.tsx';
+import { GlossaryCard } from './GlossaryCard';
 import { useIncrementalList } from '@shared/hooks/useIncrementalList';
 import type { Locale } from '../../../shared/types';
 import type { Copy } from '../../../shared/constants/i18n';

@@ -302,9 +302,17 @@ export const applyTieBreakers = (a: ScoredSearchResult, b: ScoredSearchResult): 
 
   // Shorter title wins (canonical term preference)
   const aTitle =
-    a.type === 'technique' ? a.item.name.en : a.type === 'glossary' ? a.item.romaji : a.item.name.en;
+    a.type === 'technique'
+      ? a.item.name.en
+      : a.type === 'glossary'
+        ? a.item.romaji
+        : a.item.name.en;
   const bTitle =
-    b.type === 'technique' ? b.item.name.en : b.type === 'glossary' ? b.item.romaji : b.item.name.en;
+    b.type === 'technique'
+      ? b.item.name.en
+      : b.type === 'glossary'
+        ? b.item.romaji
+        : b.item.name.en;
 
   if (aTitle.length !== bTitle.length) {
     return aTitle.length - bTitle.length;

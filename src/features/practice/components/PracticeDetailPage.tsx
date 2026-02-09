@@ -151,7 +151,7 @@ export const PracticeDetailPage = ({
     >
       <header className="z-10 border-b surface-border pb-4 bg-transparent space-y-4">
         <a
-          href="/practice"
+          href="/exercises"
           aria-label={backLabel ?? copy.backToPractice}
           onClick={(event) => {
             event.preventDefault();
@@ -270,7 +270,6 @@ export const PracticeDetailPage = ({
               </ul>
             </section>
           )}
-
         </div>
 
         <div className="space-y-8">
@@ -306,7 +305,6 @@ export const PracticeDetailPage = ({
               </div>
             </section>
           )}
-
         </div>
       </div>
 

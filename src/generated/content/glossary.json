@@ -1,0 +1,1693 @@
+[
+  {
+    "id": "13-no-jo",
+    "slug": "13-no-jo",
+    "romaji": "13-no-Jō",
+    "jp": "十三の杖",
+    "category": "other",
+    "def": {
+      "en": "13-count solo jō kata; crisp lines and stance changes.",
+      "de": "13-Zähler Solo-Jō-Kata; klare Linien und Standwechsel."
+    },
+    "literal": { "en": "thirteen + of + staff", "de": "dreizehn + von + Stab" },
+    "notes": {
+      "en": "Iwama Aiki-jō staple. Trains choku-tsuki, jōdan/chūdan/gedan-gaeshi, and shōmen-uchikomi with clean hand changes. Start left hanmi; keep the tip at solar-plexus height on thrusts, shoulders soft on returns, and let the jō slide rather than gripping tight. Goals: hyōshi (timing), ma-ai (distance), and straight-line control before diagonal entries. Counts and pauses vary by teacher; core structure follows Saitō Morihiro.",
+      "de": "Iwama Aiki-Jō Standard. Übt choku-tsuki, jōdan/chūdan/gedan-gaeshi sowie shōmen-uchikomi mit sauberen Handwechseln. Start im linken Hanmi; Spitze auf Solarplexus-Höhe, Schultern bei der Rücknahme lösen, den Jō gleiten lassen statt zu klemmen. Ziele: hyōshi (Timing), ma-ai (Distanz) und Linienkontrolle vor diagonalen Eintritten. Zählweise/Stopps je nach Lehrer; Grundstruktur nach Saitō Morihiro."
+    }
+  },
+  {
+    "id": "31-no-jo",
+    "slug": "31-no-jo",
+    "romaji": "31-no-Jō",
+    "jp": "三十一の杖",
+    "category": "other",
+    "def": {
+      "en": "31-count solo jō kata; rhythm and angle transitions.",
+      "de": "31-Zähler Solo-Jō-Kata; Rhythmus- und Winkelwechsel."
+    },
+    "literal": { "en": "thirty-one + of + staff", "de": "einunddreißig + von + Stab" },
+    "notes": {
+      "en": "Widely taught base form that later maps to 31 no Kumi-jō (paired). Motifs: kaeshi-zuki, shōmen-uchikomi chains, ushiro-barai, gedan-gaeshi, hassō links. Train tempo control (don’t rush early counts), cover on high counters, and keep center while switching lines. Common mix-up: solo 31-no-Jō vs paired 31-no-Kumi-jō—different drills, shared pathway.",
+      "de": "Weit verbreitete Grundform, die später auf 31 no Kumi-jō (gepaart) abbildet. Motive: kaeshi-zuki, Ketten aus shōmen-uchikomi, ushiro-barai, gedan-gaeshi, hassō-Verbindungen. Übe Temposteuerung (frühe Zähler nicht „durchrennen“), Deckung bei hohen Kontern und zentrierten Linienwechsel. Häufige Verwechslung: Solo 31-no-Jō vs. gepaartes 31-no-Kumi-jō."
+    }
+  },
+  {
+    "id": "agura",
+    "slug": "agura",
+    "romaji": "Agura",
+    "jp": "胡座",
+    "category": "stance",
+    "def": {
+      "en": "Informal cross-legged sitting; not seiza.",
+      "de": "Informeller Schneidersitz; nicht seiza."
+    },
+    "literal": { "en": "cross-legged sitting", "de": "Schneidersitz" },
+    "notes": {
+      "en": "Used for explanations or rest outside formal etiquette. Spine tall, pelvis neutral, shoulders soft; if holding a weapon, place it parallel on the right. Not for bows unless your dojo permits. Tight hips? Sit on a small cushion to avoid rounding the back.",
+      "de": "Für Erklärungen oder Pausen außerhalb der formellen Etikette. Wirbelsäule lang, Becken neutral, Schultern locker; Waffen rechts parallel ablegen. Nicht für Verbeugungen, außer das Dojo erlaubt es. Bei steifen Hüften ein Kissen nutzen, um Rundrücken zu vermeiden."
+    }
+  },
+  {
+    "id": "ai",
+    "slug": "ai",
+    "romaji": "Ai",
+    "jp": "合",
+    "category": "philosophy",
+    "def": {
+      "en": "Harmony; joining without collision.",
+      "de": "Harmonie; Verbinden ohne Kollision."
+    },
+    "literal": { "en": "to fit/join", "de": "passen/fügen" },
+    "notes": {
+      "en": "AI has multiple layers of meaning: in daily Japanese it refers to togetherness, complementing, or joining. In Aikidō, it is the principle of blending—bringing attacker and defender into one movement without collision. Ueshiba Morihei placed AI alongside KI (vital energy) and DŌ (the way), making Aikidō a path of harmonizing forces. Technically, AI means to receive and redirect uke’s attack so it merges with nage’s movement, doubling dynamic power. Spiritually, AI is linked to compassion and the pursuit of peace: meeting force without aggression, maintaining harmonious distance (ma-ai), and guiding conflict into understanding. In daily life, AI is applied as the ability to join differing perspectives, find common ground, and build harmony in relationships.",
+      "de": "AI besitzt mehrere Bedeutungsebenen: Im alltäglichen Japanisch steht es für Gemeinsamkeit, Ergänzen oder Zusammenführen. Im Aikidō bezeichnet es das Prinzip des Verbindens – Angreifer und Verteidiger in einer Bewegung ohne Kollision zu vereinen. Ueshiba Morihei stellte AI neben KI (Lebenskraft) und DŌ (den Weg) und machte Aikidō zum Weg der Harmonisierung der Kräfte. Technisch bedeutet AI, die Angriffskraft des Uke aufzunehmen und umzuleiten, sodass sie sich mit der Bewegung des Nage ergänzt und dessen Dynamik verstärkt. Geistig ist AI mit Nächstenliebe und dem Streben nach Frieden verbunden: Kraft ohne Aggression aufnehmen, harmonische Distanz (Ma-ai) wahren und Konflikte in Verstehen umwandeln. Im Alltag zeigt sich AI in der Fähigkeit, unterschiedliche Sichtweisen aufzunehmen, Gemeinsamkeiten zu suchen und so Harmonie im Miteinander zu schaffen."
+    }
+  },
+  {
+    "id": "ai-hanmi",
+    "slug": "ai-hanmi",
+    "romaji": "Ai-hanmi",
+    "jp": "相半身",
+    "category": "stance",
+    "def": {
+      "en": "Same-lead facing: both partners share the same front foot.",
+      "de": "Gleichführige Stellung: beide Partner mit demselben Bein vorn."
+    },
+    "literal": { "en": "mutual/same + half-body", "de": "gemeinsam/gleich + Halbkörper" },
+    "notes": {
+      "en": "Parallel lines and mirrored guards. Outside entries (soto irimi/tenkan) are naturally available; inside entries are tighter and often supported by atemi. Maintain center-to-center alignment and avoid crossing your own line when changing leads.",
+      "de": "Parallele Linien und gespiegelte Guard. Außen-Einstiege (soto irimi/tenkan) bieten sich an; Innen-Einstiege sind enger und oft durch Atemi unterstützt. Zentrum-zu-Zentrum halten und beim Führungswechsel die eigene Linie nicht kreuzen."
+    }
+  },
+  {
+    "id": "ai-hanmi-katate-tori",
+    "slug": "ai-hanmi-katate-tori",
+    "romaji": "Ai-hanmi Katate-tori",
+    "jp": "相半身片手取り",
+    "category": "attack",
+    "def": {
+      "en": "Same-lead one-hand wrist grab (R-R/L-L).",
+      "de": "Gleichständiger Einhand-Handgelenkgriff (R-R/L-L)."
+    },
+    "literal": {
+      "en": "mutual/same + half-body (stance) + one hand + seize",
+      "de": "gemeinsam/gleich + Halbkörper (Stellung) + eine Hand + greifen"
+    },
+    "notes": {
+      "en": "Lines are parallel; outside path is open for irimi or tenkan. Connect through the forearm to your center—no arm-only tugging; keep elbows heavy. Typical follow-ups: ikkyo/nikyo/yonkyo, shiho-nage, kaiten-nage, irimi-nage. Contrast with gyaku-hanmi katate-tori (opposite lead), which flips the entering angles and inside/outside options.",
+      "de": "Parallele Linien; Außenbahn ist offen für irimi oder tenkan. Verbindung über den Unterarm bis ins Zentrum – kein reines Ziehen; Ellbogen „schwer“. Typische Weiterführungen: ikkyo/nikyo/yonkyo, shiho-nage, kaiten-nage, irimi-nage. Abgrenzung zu gyaku-hanmi katate-tori (gegenläufige Führung), das Eintrittswinkel und Innen/Außen-Optionen verändert."
+    }
+  },
+  {
+    "id": "aikijutsu",
+    "slug": "aikijutsu",
+    "romaji": "Aiki-jūjutsu",
+    "jp": "合気柔術",
+    "category": "other",
+    "def": {
+      "en": "Classical jūjutsu using ‘aiki’ to control and finish; source for much of Aikidō.",
+      "de": "Klassisches Jūjutsu mit „Aiki“ zur Kontrolle und zum Abschluss; Quelle vieler Aikidō-Techniken."
+    },
+    "literal": {
+      "en": "harmonize + energy + gentle/flexible + art/technique",
+      "de": "harmonisieren + Energie + sanft/flexibel + Kunst/Technik"
+    },
+    "notes": {
+      "en": "Historically tied to Daitō-ryū; emphasizes direct structure control, atemi, joint locks, and decisive pins—often in kata-based study with weapon awareness. Circles tend to be smaller and finishes harsher than modern Aikidō, though curricula vary widely by ryū. The label also appears as Aiki-jutsu (合気術) in some lines; usage depends on school and period. Core principle is shared: connect to the center (aiki), break balance (kuzushi), then resolve cleanly.",
+      "de": "Historisch mit Daitō-ryū verbunden; betont direkte Strukturkontrolle, Atemi, Gelenkhebel und eindeutige Fixierungen – häufig im Kata-Training mit Waffenbezug. Kreise sind meist kleiner und Abschlüsse „härter“ als im modernen Aikidō, doch Inhalte variieren stark je nach Ryū. Der Begriff erscheint teils auch als Aiki-jutsu (合気術); die Verwendung hängt von Schule und Epoche ab. Gemeinsames Prinzip: an das Zentrum „anknüpfen“ (Aiki), Gleichgewicht brechen (Kuzushi) und klar auflösen."
+    }
+  },
+  {
+    "id": "aikido",
+    "slug": "aikido",
+    "romaji": "Aikidō",
+    "jp": "合気道",
+    "category": "philosophy",
+    "def": {
+      "en": "The way of harmonizing energy: blend, redirect, resolve.",
+      "de": "Der Weg, Energie zu harmonisieren: führen, umlenken, lösen."
+    },
+    "literal": { "en": "harmonize + energy + way", "de": "harmonisieren + Energie + Weg" },
+    "notes": {
+      "en": "Principle before technique: control line, timing (hyōshi), and distance (ma-ai) to unbalance (kuzushi) without collision. Protect uke and tori; power is organized through posture and connection, not force-on-force. Training spans tai-jutsu (empty-hand) and buki-waza (weapons).",
+      "de": "Prinzip vor Technik: Linie, Timing (hyōshi) und Distanz (ma-ai) führen, um ohne Kollision zu destabilisieren (kuzushi). Uke und Tori schützen; Kraft entsteht aus Haltung und Verbindung, nicht Gegendrücken. Training umfasst Tai-jutsu (waffenlos) und Buki-waza (Waffen)."
+    }
+  },
+  {
+    "id": "arigato-gozaimashita",
+    "slug": "arigato-gozaimashita",
+    "romaji": "Arigatō gozaimashita",
+    "jp": "ありがとうございました",
+    "category": "etiquette",
+    "def": {
+      "en": "\"Thank you (for what has been)\" — said after practice.",
+      "de": "\"Vielen Dank (für das Gewesene)\" – nach dem Training."
+    },
+    "literal": { "en": "thanks + polite past", "de": "Dank + höfliche Vergangenheitsform" },
+    "notes": {
+      "en": "Addressed to teacher and partners at class end.",
+      "de": "An Lehrer und Partner am Ende der Stunde gerichtet."
+    }
+  },
+  {
+    "id": "atemi",
+    "slug": "atemi",
+    "romaji": "Atemi",
+    "jp": "当身",
+    "category": "movement",
+    "def": {
+      "en": "Strike to create openings, timing, or kuzushi—not brawling.",
+      "de": "Schlag/Stoß, um Öffnungen, Timing oder kuzushi zu erzeugen – kein Prügeln."
+    },
+    "literal": { "en": "apply/strike + body", "de": "treffen/anlegen + Körper" },
+    "notes": {
+      "en": "Purposeful and on-line: target head, solar plexus, forearm, or hip line to interrupt intent. Often indicated rather than delivered with force; the value is the reaction it provokes. Keep posture tall, elbow heavy, wrist aligned.",
+      "de": "Zweckmäßig und auf der Linie: Ziele z. B. Kopf, Solarplexus, Unterarm oder Hüftlinie, um Intention zu stören. Meist angedeutet statt hart ausgeführt; der Wert liegt in der Reaktion. Haltung aufrecht, Ellbogen schwer, Handgelenk ausgerichtet."
+    }
+  },
+  {
+    "id": "awase",
+    "slug": "awase",
+    "romaji": "Awase",
+    "jp": "合わせ",
+    "category": "philosophy",
+    "def": {
+      "en": "Blending—matching direction, timing, and pressure.",
+      "de": "Blenden – Richtung, Timing und Druck angleichen."
+    },
+    "literal": { "en": "to match/bring together", "de": "anpassen/zusammenführen" },
+    "notes": {
+      "en": "Meet without collision, then guide. Enter on the same beat, capture center through contact, and adjust tempo to keep uke extended. Applies equally in empty-hand and weapons lines.",
+      "de": "Begegnen ohne Kollision, dann führen. Im gleichen Takt eintreten, über Kontakt das Zentrum aufnehmen und das Tempo so steuern, dass Uke gestreckt bleibt. Gilt gleichermaßen für waffenlos und Waffen."
+    }
+  },
+  {
+    "id": "buki-waza",
+    "slug": "buki-waza",
+    "romaji": "Buki-waza",
+    "jp": "武器技",
+    "category": "other",
+    "def": {
+      "en": "Weapons curriculum: bokken, jō, tantō.",
+      "de": "Waffen-Curriculum: Bokken, Jō, Tantō."
+    },
+    "literal": { "en": "weapon + technique", "de": "Waffe + Technik" },
+    "notes": {
+      "en": "Trains posture, ma-ai, and line discipline via suburi (basics), kata (solo), and paired work (kumitachi/kumijō, tantō-tori). Weapons clarify hasuji (cutting angle) and center connection that transfer directly to tai-jutsu.",
+      "de": "Schult Haltung, ma-ai und Liniendisziplin über Suburi (Grundlagen), Kata (solo) und Partnerarbeit (Kumitachi/Kumijō, Tantō-tori). Waffen verdeutlichen Hasuji (Schnittwinkel) und Zentrumsverbindung – direkt auf Tai-jutsu übertragbar."
+    }
+  },
+  {
+    "id": "do",
+    "slug": "do",
+    "romaji": "Dō",
+    "jp": "道",
+    "category": "philosophy",
+    "def": {
+      "en": "The way; a lifelong practice path.",
+      "de": "Der Weg; lebenslanger Übungspfad."
+    },
+    "literal": { "en": "road/path", "de": "Straße/Pfad" },
+    "notes": {
+      "en": "In Japanese, Dō means 'the way' and also the act of setting out on a path, comparable to the Chinese Tao. In Aikidō, Dō emphasizes lifelong practice as a journey rather than a final goal. Historically, after the age of the samurai, the martial arts (bujutsu) transformed into budō, disciplines aimed at the positive spiritual and physical development of practitioners. Thus Kenjutsu became Kendō, Kyūjutsu became Kyūdō, Jūjutsu became Jūdō, and Aikijujutsu evolved into Aikidō. For Ueshiba Morihei, Dō symbolized the path of harmonizing forces (AI) and life energy (KI). The phrase 'The way is the goal' captures this idea. Technically, repeated training shortens the distance between perception and action, uniting body and mind so that response becomes natural and unhindered. Spiritually, Dō is the pursuit of inner harmony, vigilance, and calm engagement with others. In daily life, it means recognizing the right moment, seeing connections, and responding wisely. Dō is not about reaching an endpoint, but about steady refinement and integration of body, mind, and spirit.",
+      "de": "Im Japanischen bedeutet Dō 'Weg' und auch das Sich-auf-den-Weg-Begeben, vergleichbar mit dem chinesischen Tao. Im Aikidō betont Dō das lebenslange Üben als Reise, nicht als endgültiges Ziel. Historisch wandelten sich nach der Zeit der Samurai die Kriegskünste (Bujutsu) zu Budō-Disziplinen, die auf die positive geistige und körperliche Entwicklung der Übenden ausgerichtet sind. So wurde aus Kenjutsu Kendō, aus Kyūjutsu Kyūdō, aus Jūjutsu Jūdō, und aus Aikijujutsu entwickelte sich Aikidō. Für Ueshiba Morihei stand Dō für den Weg der Harmonisierung von Kräften (AI) und Lebensenergie (KI). Der bekannte Sinnspruch 'Der Weg ist das Ziel' fasst diesen Gedanken zusammen. Technisch bedeutet Dō, dass durch wiederholtes Üben die Reaktionswege zwischen Wahrnehmung und Handlung kürzer werden und Körper und Geist zu einer Einheit verschmelzen. Geistig ist Dō das Streben nach innerer Harmonie, Wachsamkeit und Gelassenheit im Umgang mit anderen. Im Alltag bedeutet es, den richtigen Moment zu erkennen, Zusammenhänge zu sehen und weise zu reagieren. Dō ist kein Endpunkt, sondern stetige Verfeinerung und die Vereinigung von Körper, Geist und Seele."
+    }
+  },
+  {
+    "id": "dogi",
+    "slug": "dogi",
+    "romaji": "Dōgi",
+    "jp": "道着",
+    "category": "etiquette",
+    "def": {
+      "en": "Training uniform (gi) worn for budō practice.",
+      "de": "Trainingsanzug (Gi) für Budō-Praxis."
+    },
+    "literal": { "en": "way + clothing", "de": "Weg + Kleidung" },
+    "notes": {
+      "en": "Also called keikogi; parts are jacket (uwagi), trousers (zubon), and belt (obi). In Aikidō, a hakama may be worn per dojo policy. Fit: cuffs above wrist/ankle enough to move; jacket overlaps left over right and is secured with the obi. Etiquette: keep the dōgi clean, nails short, no jewelry, patches minimal and consistent with dojo rules. Tie the belt firmly, ends even; retie facing away from shōmen.",
+      "de": "Auch keikogi genannt; Teile: Jacke (uwagi), Hose (zubon) und Gürtel (obi). Im Aikidō wird je nach Dojo-Regel eine Hakama getragen. Sitz: Ärmel/Beine so, dass freie Bewegung möglich ist; Jacke links über rechts, mit dem Obi gebunden. Etikette: Dōgi sauber halten, Nägel kurz, kein Schmuck, Abzeichen sparsam und dojo-konform. Gürtel fest binden, Enden gleich; zum Neu­binden vom Shōmen abwenden."
+    }
+  },
+  {
+    "id": "dojo",
+    "slug": "dojo",
+    "romaji": "Dōjō",
+    "jp": "道場",
+    "category": "etiquette",
+    "def": {
+      "en": "Training hall—the place dedicated to practice and etiquette.",
+      "de": "Trainingshalle – der Ort für Übung und Etikette."
+    },
+    "literal": { "en": "way + place", "de": "Weg + Ort" },
+    "notes": {
+      "en": "Enter with a light bow toward shōmen; remove shoes before the mat. Keep the space clean, weapons orderly, and arrive early to prepare. On the mat: bow at start/end of class and with each partner; address the instructor respectfully; avoid walking between the instructor and shōmen. Safety culture: maintain awareness, help clean, and thank partners—skill development and mutual care are inseparable.",
+      "de": "Beim Eintreten leicht zum Shōmen verbeugen; Schuhe vor der Matte ausziehen. Raum sauber halten, Waffen ordentlich ablegen, rechtzeitig da sein. Auf der Matte: Verbeugung zu Beginn/Ende des Trainings und mit jedem Partner; die Lehrperson respektvoll ansprechen; nicht zwischen Lehrperson und Shōmen hindurchgehen. Sicherheitskultur: Achtsam bleiben, beim Putzen helfen, Partner danken – Können und gegenseitige Fürsorge gehören zusammen."
+    }
+  },
+  {
+    "id": "eri-tori",
+    "slug": "eri-tori",
+    "romaji": "Eri-tori",
+    "jp": "襟取り",
+    "category": "attack",
+    "def": {
+      "en": "Collar/lapel grab at the neckline; front or rear variants exist.",
+      "de": "Griff am Kragen/Revers am Halsansatz; vorn oder hinten möglich."
+    },
+    "literal": { "en": "collar + seize", "de": "Kragen + greifen" },
+    "notes": {
+      "en": "Front collar grabs threaten posture and airway; rear (ushiro-eri-tori) controls the head from behind. Protect the neck by aligning chin and sternum, drop weight through the heels, and connect the grabbing hand to your center before moving. Typical responses include irimi-nage, kokyū-nage, sumi-otoshi, or entering to ikkyo/nikyo off the elbow line. Avoid twisting the cervical spine; turn with the shoulders/hips, not the head alone.",
+      "de": "Vorderer Kragengriff bedroht Haltung und Atemweg; hinten (ushiro-eri-tori) kontrolliert den Kopf von hinten. Hals schützen: Kinn–Brustbein ausrichten, Gewicht in die Fersen bringen, Griffhand zuerst mit dem Zentrum verbinden. Typische Antworten: irimi-nage, kokyū-nage, sumi-otoshi oder Einstieg zu ikkyo/nikyo über die Ellbogenlinie. Keine gewaltsamen Halsverdrehungen; mit Schultern/Hüfte drehen, nicht nur mit dem Kopf."
+    }
+  },
+  {
+    "id": "gokyo",
+    "slug": "gokyo",
+    "romaji": "Gokyō",
+    "jp": "五教",
+    "category": "other",
+    "def": {
+      "en": "Fifth control: ikkyo family pin with reversed hand position, used especially in knife defenses.",
+      "de": "Fünfte Kontrolle: ikkyo-nahe Fixierung mit umgekehrter Handposition, v. a. in Messerabwehr."
+    },
+    "literal": { "en": "fifth + teaching", "de": "fünftes + Lehre" },
+    "notes": {
+      "en": "Structure mirrors ikkyo but the wrist is controlled with a reversed grip so the blade edge turns away. Sequence: capture the knife arm, switch hands to place thumb along the back of uke’s hand, align elbow to the floor line, and pin with the forearm to immobilize the shoulder. Priorities: keep the edge off-line, dominate the elbow, and pin with body weight—do not wrestle the wrist. Common errors: letting the edge face your body, high pins that invite kicking, and hands only without shoulder control.",
+      "de": "Strukturell wie ikkyo, jedoch mit umgekehrtem Griff am Handgelenk, sodass die Schneide nach außen zeigt. Ablauf: Messerarm fassen, Handwechsel mit Daumen auf dem Handrücken von Uke, Ellbogen zur Bodenlinie ausrichten, mit dem Unterarm fixieren und die Schulter immobilisieren. Prioritäten: Schneide aus der Linie, Ellbogen dominieren, mit Körpergewicht fixieren – nicht am Handgelenk „ringen“. Häufige Fehler: Schneide zum eigenen Körper, hohe Pins mit Trittgefahr, nur Hände ohne Schulterkontrolle."
+    }
+  },
+  {
+    "id": "gyaku-hanmi",
+    "slug": "gyaku-hanmi",
+    "romaji": "Gyaku-hanmi",
+    "jp": "逆半身",
+    "category": "stance",
+    "def": {
+      "en": "Opposite-lead facing: partners present different front feet.",
+      "de": "Gegenläufige Stellung: Partner mit unterschiedlichem vorderen Bein."
+    },
+    "literal": { "en": "reverse/opposite + half-body", "de": "umgekehrt/gegen + Halbkörper" },
+    "notes": {
+      "en": "Centers cross; the inside path (uchi) is naturally open, while outside entries require a sharper angle. Keep hips and shoulders at ~45° with even weight; front foot points forward, rear foot ~30–45° out. Hands guard the center line (not wide, not crossed). Typical follow-ups: tenkan to ikkyo/nikyo/yonkyo, inside shiho-nage, kaiten-nage, or irimi-nage off atemi. Manage feet first—small step to set angle, then hands. For weapons, the same geometry applies: be strict about tip line and head cover on high counters.",
+      "de": "Zentren kreuzen sich; der Inneneinstieg (uchi) bietet sich an, Außen-Einstiege brauchen einen deutlich schärferen Winkel. Hüfte/Schultern ca. 45°, Gewicht ausgeglichen; vorderer Fuß nach vorn, hinterer ca. 30–45° ausgedreht. Hände schützen die Mittellinie (weder breit noch gekreuzt). Typische Weiterführungen: Tenkan zu ikkyo/nikyo/yonkyo, innen geführtes shiho-nage, kaiten-nage oder irimi-nage über Atemi. Zuerst die Füße setzen – kleiner Schritt für den Winkel, dann die Hände. Bei Waffen gilt dieselbe Geometrie: strenge Spitzenlinie und Kopfschutz bei hohen Kontern."
+    }
+  },
+  {
+    "id": "gyaku-hanmi-katate-tori",
+    "slug": "gyaku-hanmi-katate-tori",
+    "romaji": "Gyaku-hanmi Katate-tori",
+    "jp": "逆半身片手取り",
+    "category": "attack",
+    "def": {
+      "en": "Cross-hand wrist grab: opposite leads (R→L or L→R).",
+      "de": "Gekreuzter Handgelenkgriff: gegenläufige Führung (R→L oder L→R)."
+    },
+    "literal": {
+      "en": "reverse/opposite + half-body + one hand + seize",
+      "de": "umgekehrt + Halbkörper + eine Hand + greifen"
+    },
+    "notes": {
+      "en": "Centers cross, inviting inside (uchi) entries and turning actions. Keep your elbow heavy and connect the grab through the shoulder to your center; avoid pulling with the forearm alone. Preferred follow-ups: tenkan to ikkyo/nikyo/yonkyo, inside shiho-nage, kaiten-nage, or irimi-nage off atemi. Distance changes quickly—adjust feet first, then hands. Distinguish from ai-hanmi katate-tori (same-lead), which favors outside lines and simpler irimi.",
+      "de": "Zentren kreuzen sich; das begünstigt Inneneinstiege (uchi) und Drehbewegungen. Ellbogen „schwer“ halten und den Griff über die Schulter ins Zentrum leiten; nicht nur mit dem Unterarm ziehen. Geeignete Weiterführungen: tenkan zu ikkyo/nikyo/yonkyo, innen geführtes shiho-nage, kaiten-nage oder irimi-nage über Atemi. Die Distanz ändert sich schnell – zuerst die Fußarbeit anpassen, dann die Hände. Abgrenzung zu ai-hanmi katate-tori (gleichführig), das eher Außenlinien und geradere irimi begünstigt."
+    }
+  },
+  {
+    "id": "hajime",
+    "slug": "hajime",
+    "romaji": "Hajime",
+    "jp": "始め",
+    "category": "etiquette",
+    "def": {
+      "en": "“Begin” — instructor’s command to start a drill or exchange.",
+      "de": "„Beginnen“ – Kommando der Lehrperson zum Start einer Übung/Sequenz."
+    },
+    "literal": { "en": "to start", "de": "beginnen" },
+    "notes": {
+      "en": "On ‘Hajime’: acknowledge (often a short “Hai”), bow if indicated, then move promptly—smooth first step, not a jump. Maintain awareness of space, partners, and weapons. On ‘Yame’ (stop), freeze the technique safely, disengage, and bow. Keep zanshin (lingering readiness) before and after. In paired work, match level and tempo first, then increase intensity; safety and clarity outrank speed.",
+      "de": "Bei „Hajime“: quittieren (oft ein kurzes „Hai“), ggf. verbeugen und zügig starten – erster Schritt ruhig, nicht hektisch. Raum, Partner und Waffen im Blick behalten. Bei „Yame“ (Stop) Technik sicher beenden, lösen, verbeugen. Zanshin (fortdauernde Wachsamkeit) vor und nach der Aktion halten. Im Partnertraining zuerst Niveau und Tempo angleichen, dann steigern; Sicherheit und Klarheit gehen vor Geschwindigkeit."
+    }
+  },
+  {
+    "id": "hakama",
+    "slug": "hakama",
+    "romaji": "Hakama",
+    "jp": "袴",
+    "category": "etiquette",
+    "def": {
+      "en": "Pleated over-trousers worn over the gi, per dojo custom.",
+      "de": "Gefaltete Überhose über dem Gi, je nach Dojo-Brauch."
+    },
+    "literal": { "en": "pleated trousers", "de": "Faltenhose" },
+    "notes": {
+      "en": "Wear per dojo policy (often from a certain rank or role). Fit: koshi-ita (back plate) centered at the sacrum; himo (ties) flat and secure so the hem does not drag. Etiquette: fold after class, do not step on the hem, keep pleats crisp. Function: conceals footwork, encourages upright posture, and reminds you to move from the hips. Some schools associate the seven pleats with virtues (e.g., jin, gi, rei, chi, shin, chū, kō); this is symbolic, not universal.",
+      "de": "Wird je nach Dojo-Regel getragen (oft ab bestimmtem Grad oder Funktion). Sitz: koshi-ita (Rückenplatte) mittig am Kreuzbein; himo (Bänder) flach und sicher binden, Saum darf nicht schleifen. Etikette: nach dem Training ordentlich falten, nicht auf den Saum treten, Falten pflegen. Funktion: verdeckt Fußarbeit, fördert aufrechte Haltung und erinnert an Bewegung aus der Hüfte. Mancherorts werden die sieben Falten mit Tugenden verbunden (z. B. jin, gi, rei, chi, shin, chū, kō); symbolisch und nicht allgemein verbindlich."
+    }
+  },
+  {
+    "id": "hanmi",
+    "slug": "hanmi",
+    "romaji": "Hanmi",
+    "jp": "半身",
+    "category": "stance",
+    "def": {
+      "en": "Angled ‘half-body’ stance: one foot forward, hips/shoulders turned.",
+      "de": "Abgewinkelte „Halbkörper“-Stellung: ein Fuß vorn, Hüfte/Schultern gedreht."
+    },
+    "literal": { "en": "half + body", "de": "halb + Körper" },
+    "notes": {
+      "en": "Set feet hip-width on a narrow track: front foot forward, rear foot ~30–45° out. Knees track over toes; weight even with slight forward intent. Pelvis neutral, crown lifted, tail heavy. Hands cover the center line at rib height; elbows relaxed and ‘heavy’. Purpose: protect the line, enable irimi/tenkan without reshuffling, and keep power organized through the torso. Avoid square shoulders, locked knees, or wide hands that expose the center.",
+      "de": "Füße hüftbreit auf schmaler Spur: vorderer Fuß nach vorn, hinterer ca. 30–45° ausgedreht. Knie über den Zehen, Gewicht ausgeglichen mit leichtem Vorwärtsimpuls. Becken neutral, Scheitel aufgerichtet, Kreuzbein „schwer“. Hände decken die Mittellinie auf Rippenhöhe; Ellbogen entspannt und „schwer“. Zweck: Linie schützen, irimi/tenkan ohne Umstellen ermöglichen und Kraft über den Rumpf organisieren. Vermeiden: quadratische Schultern, durchgestreckte Knie, breite Hände mit offener Mitte."
+    }
+  },
+  {
+    "id": "hanmi-handachi",
+    "slug": "hanmi-handachi",
+    "romaji": "Hanmi-handachi",
+    "jp": "半身半立ち",
+    "category": "stance",
+    "def": {
+      "en": "Half-standing format: nage kneels, uke stands; tests posture and connection.",
+      "de": "Halbstehendes Format: Nage kniet, Uke steht; prüft Haltung und Verbindung."
+    },
+    "literal": { "en": "half-body + half-standing", "de": "Halbkörper + halbes Stehen" },
+    "notes": {
+      "en": "Nage maintains a tall spine with pelvis over knees; move from the hips and center, not the shoulders. Adjust with shikkō (knee-walking) or small knee slides; avoid twisting the knees. Uke lowers center to an appropriate attack height—no leaning from the waist. Objectives: receive force through the torso, keep elbows heavy, use atemi to normalize height, and unbalance through line rather than strength. Common errors: collapsing the chest, reaching with arms, or rising onto toes while kneeling.",
+      "de": "Nage hält die Wirbelsäule lang, Becken über den Knien; aus Hüfte und Zentrum bewegen, nicht aus den Schultern. Korrigieren mit shikkō (Knieschritt) oder kleinen Gleitbewegungen; Knie nicht verdrehen. Uke senkt sein Zentrum auf passende Angriffshöhe – kein Vorbeugen aus der Taille. Ziele: Kraft über den Rumpf aufnehmen, Ellbogen „schwer“ halten, Atemi zur Höhenangleichung nutzen und über die Linie destabilisieren statt über Kraft. Häufige Fehler: eingesunkter Brustkorb, Greifen mit den Armen, Hochkommen auf die Zehen im Knien."
+    }
+  },
+  {
+    "id": "heijoshin",
+    "slug": "heijoshin",
+    "romaji": "Heijōshin",
+    "jp": "平常心",
+    "category": "philosophy",
+    "def": {
+      "en": "Steady, ordinary mind—calm composure under stress.",
+      "de": "Gleichmäßiger, „gewöhnlicher“ Geist – ruhige Fassung unter Druck."
+    },
+    "literal": { "en": "even/constant + mind/heart", "de": "gleichmäßig/konstant + Geist/Herz" },
+    "notes": {
+      "en": "Train a baseline that does not spike or crash. Methods: quiet breathing before bow-in, consistent ukemi, deliberate tempo changes, and eyes that see the whole mat (enzan no metsuke). Signs you have it: clear first step, precise stopping on ‘Yame’, and courteous recovery after mistakes. Distinguish from flat affect—heijōshin is alert and kind, not numb.",
+      "de": "Ein Grundzustand, der weder hochschießt noch abstürzt. Mittel: ruhige Atmung vor dem Anbeginn, verlässliches Ukemi, bewusstes Spiel mit dem Tempo und ein Blick, der die ganze Matte erfasst (enzan no metsuke). Anzeichen: klarer erster Schritt, präzises Stoppen bei „Yame“ und höfliche Rückkehr nach Fehlern. Abgrenzung zur Teilnahmslosigkeit – heijōshin ist wach und zugewandt, nicht abgestumpft."
+    }
+  },
+  {
+    "id": "hidari-hanmi",
+    "slug": "hidari-hanmi",
+    "romaji": "Hidari Hanmi",
+    "jp": "左半身",
+    "category": "stance",
+    "def": {
+      "en": "Left-lead hanmi: left foot forward, right foot back.",
+      "de": "Hanmi mit linker Führung: linker Fuß vorn, rechter zurück."
+    },
+    "literal": { "en": "left + half-body", "de": "links + Halbkörper" },
+    "notes": {
+      "en": "Feet on a narrow track: front foot forward, rear foot turned out ~30–45°. Knees align over toes; weight even with a slight forward intent. Pelvis neutral; ribs soft; crown lifted. Hands cover the center line at rib height; elbows relaxed and “heavy.” Purpose: protect the center, enable quick irimi/tenkan without reshuffling, and provide a stable base for atemi or grabs. For weapons, keep the tip/edge on your center line and the rear hand active for cover. Common faults: square shoulders, locked knees, wide or crossed hands, and leaning forward when stepping.",
+      "de": "Füße auf schmaler Spur: vorderer Fuß nach vorn, hinterer ca. 30–45° ausgedreht. Knie über den Zehen; Gewicht ausgeglichen mit leichtem Vorwärtsimpuls. Becken neutral; Rippen weich; Scheitel aufgerichtet. Hände decken die Mittellinie auf Rippenhöhe; Ellbogen entspannt und „schwer“. Zweck: Mitte schützen, schnelles irimi/tenkan ohne Umstellen, stabile Basis für Atemi oder Griffe. Bei Waffen Spitze/Schneide auf der Mittellinie halten und die hintere Hand als Deckung aktiv führen. Häufige Fehler: quadratische Schultern, durchgestreckte Knie, breite oder gekreuzte Hände und Vorbeugen beim Schritt."
+    }
+  },
+  {
+    "id": "hiji-tori",
+    "slug": "hiji-tori",
+    "romaji": "Hiji-tori",
+    "jp": "肘取り",
+    "category": "attack",
+    "def": { "en": "Elbow grab.", "de": "Ellbogengriff." },
+    "literal": { "en": "elbow + seize", "de": "Ellbogen + greifen" },
+    "notes": {
+      "en": "Variants include side/front grabs and rear (ushiro) control. Threats: posture disruption, elbow lock, and head control via the upper arm. Initial response: keep your elbow close to your ribs, align forearm with your center, and set your feet before moving. Lead with the shoulder line (not the hand), rotate hips/shoulders together, and project uke’s grip across your center to create kuzushi. Typical follow-ups: ikkyo/nikyo/yonkyo off the elbow line, irimi-nage after atemi, or kaiten-nage when uke overcommits. Safety: avoid sudden arm yanks that hyperextend the joint; move the whole body. Common errors: fighting with the forearm, letting the elbow float away, or turning only the head while the torso stays square.",
+      "de": "Varianten: seitlicher/vorderer Griff sowie Kontrolle von hinten (ushiro). Risiken: Haltungsbruch, Ellbogenhebel, Kopfkontrolle über den Oberarm. Erste Maßnahme: Ellbogen körpernah halten, Unterarm zur eigenen Mitte ausrichten, Füße setzen bevor man bewegt. Mit der Schulterlinie führen (nicht mit der Hand), Hüfte/Schultern gemeinsam drehen und Ukes Griff über die eigene Mittellinie führen, um kuzushi zu erzeugen. Typische Weiterführungen: ikkyo/nikyo/yonkyo über die Ellbogenlinie, irimi-nage nach Atemi oder kaiten-nage bei Übercommitment von Uke. Sicherheit: keine ruckartigen Armzüge mit Überstreckungsgefahr; den ganzen Körper bewegen. Häufige Fehler: Unterarmkraft statt Körperarbeit, „schwebender“ Ellbogen oder nur den Kopf drehen bei statischem Rumpf."
+    }
+  },
+  {
+    "id": "hito-emi",
+    "slug": "hito-emi",
+    "romaji": "Hito-emi",
+    "jp": "ひとえみ",
+    "category": "stance",
+    "def": {
+      "en": "Narrow body profile—turn shoulders/hips to present a thin line.",
+      "de": "Schmale Körperfläche – Schultern/Hüfte drehen, um eine „dünne Linie“ zu zeigen."
+    },
+    "literal": { "en": "single + body (profile)", "de": "einfach + Körper (Profil)" },
+    "notes": {
+      "en": "A principle inside hanmi: rotate the whole torso so strikes meet a narrow target and slide past your center. Hips and shoulders move together; head stays over the spine; no side-bending. Use it to slip power, enter on a clean line (irimi), or align edge/tip in weapons. Combine with a small angle step to avoid trading places on the same line. Common errors: leaning away, collapsing the rear shoulder, or twisting shoulders without moving the hips.",
+      "de": "Ein Prinzip innerhalb von Hanmi: den gesamten Rumpf drehen, sodass Treffer auf eine schmale Fläche treffen und an der Mitte vorbeigleiten. Hüfte und Schultern bewegen sich gemeinsam; Kopf über der Wirbelsäule; kein Seitneigen. Nützlich zum Ableiten von Kraft, für saubere Eintrittslinien (irimi) und zur Kanten-/Spitzenausrichtung bei Waffen. In Kombination mit einem kleinen Winkel­schritt vermeiden, „auf derselben Linie zu tauschen“. Häufige Fehler: Weglehnen, eingesunkene hintere Schulter oder Schultertorsion ohne Hüftbewegung."
+    }
+  },
+  {
+    "id": "ikkyo",
+    "slug": "ikkyo",
+    "romaji": "Ikkyō",
+    "jp": "一教",
+    "category": "other",
+    "def": {
+      "en": "First control: elbow/arm control across the center leading to a basic pin.",
+      "de": "Erste Kontrolle: Ellbogen-/Armkontrolle über die Mittellinie mit einfachem Haltegriff."
+    },
+    "literal": { "en": "first + teaching", "de": "erstes + Lehren" },
+    "notes": {
+      "en": "Capture the arm along its line, guide the elbow across your center, and align uke’s shoulder to the floor line. Omote: enter forward on the front corner; ura: tenkan to the rear corner. Hand placement: near hand controls at the wrist/forearm with tegatana; far hand supports just above the elbow to steer the shoulder. Pin (osae): knee by the shoulder, spine tall; near hand pins the wrist palm-down; far hand compresses the elbow/upper arm toward the mat to immobilize the shoulder. Priorities: keep the elbow close, move the whole body, and maintain center-to-center contact. Common errors: pushing the elbow upward (instead of across), bending at the waist, or pinning high so uke can kick or roll.",
+      "de": "Den Arm in seiner Linie erfassen, den Ellbogen über die eigene Mitte führen und Ukes Schulter zur Bodenlinie ausrichten. Omote: vorwärts in die vordere Ecke eintreten; ura: tenkan in die hintere Ecke. Handposition: nahe Hand kontrolliert am Handgelenk/Unterarm mit Tegatana; ferne Hand unterstützt knapp oberhalb des Ellbogens und steuert die Schulter. Halt (osae): Knie an der Schulter, Wirbelsäule lang; nahe Hand fixiert das Handgelenk mit Handfläche nach unten; ferne Hand komprimiert Ellbogen/Oberarm zum Boden, um die Schulter zu immobilisieren. Prioritäten: Ellbogen körpernah, Ganzkörperbewegung, Zentrum-zu-Zentrum beibehalten. Häufige Fehler: Ellbogen nach oben drücken (statt quer), Vorbeugen aus der Taille oder zu hoch fixieren, sodass Uke treten/rollen kann."
+    }
+  },
+  {
+    "id": "irimi",
+    "slug": "irimi",
+    "romaji": "Irimi",
+    "jp": "入身",
+    "category": "movement",
+    "def": {
+      "en": "Direct entry movement where nage moves toward uke's center, entering their space with precise timing.",
+      "de": "Direkte Eingangsbewegung, bei der Nage auf Ukes Zentrum zugeht und mit präzisem Timing in dessen Raum eintritt."
+    },
+    "literal": { "en": "enter + body", "de": "hinein + Körper" },
+    "notes": {
+      "en": "Irimi is one of the two fundamental principles of Aikidō (together with tenkan). Literally meaning 'entering with the body,' it refers to stepping directly into uke’s space with timing that disrupts the attack at its origin. Unlike Aikijujutsu, where entry often sought destruction, in Aikidō Irimi expresses decisive yet non-destructive engagement. Technically, Irimi applies at the start of a defense (entering during uke’s preparation), during the technique (re-entering to amplify control), and at the finish (projecting or pinning). It usually follows the inner entrance while consciously leaving the line of attack, redirecting power to uke’s center and breaking balance. Characteristic movement is straight, forward stepping (tsugi-ashi or ayumi-ashi), synchronized with exhalation. Spiritually, Irimi embodies a 'positive element': entering with clarity and firm presence, showing uke the futility of aggression through decisive blending. In daily life, Irimi means confronting unclear or disruptive arguments directly, asking for clarity, and engaging openly instead of avoiding. It is always paired with tenkan, and both principles together form the basis of Aikidō strategy.",
+      "de": "Irimi ist eines der beiden grundlegenden Prinzipien des Aikidō (neben Tenkan). Wörtlich bedeutet es 'mit dem Körper eintreten' und beschreibt das direkte Eintreten in Ukes Raum mit einem Timing, das den Angriff an seiner Wurzel stört. Anders als im Aikijujutsu, wo der Eintritt oft auf Zerstörung zielte, drückt Irimi im Aikidō eine entschlossene, aber nicht zerstörerische Begegnung aus. Technisch findet Irimi Anwendung beim Beginn einer Verteidigung (Eintreten während Ukes Vorbereitung), im Verlauf der Technik (erneutes Eintreten zur Verstärkung der Kontrolle) und beim Abschluss (Wurf oder Hebel). Es folgt meist dem inneren Eingang, verlässt aber bewusst die Angriffslinie und lenkt die Kraft auf Ukes Zentrum, wodurch dessen Gleichgewicht gebrochen wird. Typisch ist das gradlinige Vorwärtsschreiten (Tsugi-ashi oder Ayumi-ashi), begleitet von der Ausatmung. Geistig verkörpert Irimi ein 'positives Element': ein klares, bestimmtes Eintreten, das Uke die Nutzlosigkeit seiner Aggression aufzeigt. Im Alltag bedeutet Irimi, unklare oder störende Argumente direkt zu konfrontieren, nach Klarheit zu fragen und offen zu handeln statt auszuweichen. Es steht immer im Zusammenhang mit Tenkan, beide Prinzipien bilden die Grundlage der Aikidō-Strategie."
+    }
+  },
+  {
+    "id": "irimi-nage",
+    "slug": "irimi-nage",
+    "romaji": "Irimi-nage",
+    "jp": "入身投げ",
+    "category": "movement",
+    "def": {
+      "en": "Entering throw that claims the center and turns uke’s axis.",
+      "de": "Eindringender Wurf, der das Zentrum nimmt und Ukes Achse dreht."
+    },
+    "literal": { "en": "enter + body + throw", "de": "hinein + Körper + Wurf" },
+    "notes": {
+      "en": "Irimi (entering) is a core Aikidō principle with sword roots (ken-tai-ichi: body and blade as one line). The throw embodies “move through the attack, not away,” taking the path the cut or thrust would travel and owning it. Point of study: meet the intent on time (hyōshi), align posture so your spine becomes the driving line, and rotate uke’s vertical axis a few degrees past neutral—displacement, not collision. Characteristics: direct line, minimal detour, center-to-center contact; atemi is often used to open the gate rather than to strike. Typical variants: omote (forward pressure) and ura (blended turn), close- or long-arc versions, standing or hanmi-handachi. Transfer: the same mechanics appear in tanto-tori and bokken entries (claim the line, then turn the pillar). Safety focus: preserve the neck’s length—project by organizing your body, not cranking the head. Common errors to avoid: arm-led “clothesline,” entering late and pushing, or losing hip connection so the upper body outruns the legs.",
+      "de": "Irimi (Eintreten) ist ein Grundprinzip des Aikidō mit Schwertbezug (ken-tai-ichi: Körper und Klinge auf einer Linie). Der Wurf verkörpert „durch den Angriff gehen, nicht fliehen“: man nimmt die Bahn, auf der Schnitt oder Stoß kämen, und beansprucht sie. Lernpunkt: die Intention im richtigen Takt (hyōshi) aufnehmen, Haltung so ausrichten, dass die Wirbelsäule zur Antriebslinie wird, und Ukes vertikale Achse wenige Grad über neutral drehen – Verlagerung statt Kollision. Merkmale: direkte Linie, kaum Umweg, Zentrum-zu-Zentrum; Atemi dient meist dem Öffnen der „Tür“, nicht der Härte. Übliche Varianten: omote (vorwärts gerichteter Druck) und ura (blendes Drehen), kurze oder weite Bögen, im Stand oder hanmi-handachi. Übertrag: dieselbe Mechanik in tantō-tori und bokken-Einstiegen (Linie nehmen, dann die „Säule“ drehen). Sicherheit: Nackenlänge bewahren – projizieren durch Körperorganisation, nicht durch Kopfdrehhebel. Häufige Fehler: armgeführte „Clothesline“, spätes Eintreten mit Schieben oder fehlende Hüftanbindung, sodass der Oberkörper den Beinen davonläuft."
+    }
+  },
+  {
+    "id": "kaiten",
+    "slug": "kaiten",
+    "romaji": "Kaiten",
+    "jp": "回転",
+    "category": "movement",
+    "def": {
+      "en": "Rotational action used to turn lines and generate spirals.",
+      "de": "Rotationsbewegung, um Linien zu wenden und Spiralen zu erzeugen."
+    },
+    "literal": { "en": "turn + revolve", "de": "drehen + rotieren" },
+    "notes": {
+      "en": "In Aikidō, kaiten names the body principle of creating circular power with the hips and stance, not with the arms. It underpins throws like kaiten-nage and shows up in weapons circles (bokken/jō) and in tenkan pedagogy. The aim is to redirect force around a temporary axis—often at the partner’s shoulder line—while you keep a narrow profile (hito-emi) and a tall spine. Small circles yield tight control; larger circles project. Good kaiten keeps the face/neck line safe and moves the center first; common errors are arm-spinning without fixing the axis and leaning into the arc.",
+      "de": "Im Aikidō bezeichnet kaiten das Körperprinzip, kreisförmige Kraft mit Hüfte und Stand zu erzeugen – nicht mit den Armen. Es liegt Würfen wie kaiten-nage zugrunde, erscheint in Waffen-Kreisen (Bokken/Jō) und in der Tenkan-Didaktik. Ziel ist es, Kraft um eine temporäre Achse – oft an der Schulterlinie des Partners – umzulenken, bei schmalem Profil (hito-emi) und aufrechter Wirbelsäule. Kleine Kreise bringen enge Kontrolle, große Kreise projizieren. Gutes kaiten schützt die Gesichts-/Nackenlinie und bewegt zuerst das Zentrum; typische Fehler sind Armdrehen ohne Achsfixierung und in den Bogen hineinlehnen."
+    }
+  },
+  {
+    "id": "kaiten-nage",
+    "slug": "kaiten-nage",
+    "romaji": "Kaiten-nage",
+    "jp": "回転投げ",
+    "category": "movement",
+    "def": {
+      "en": "Rotational throw built on a shoulder-axis and circular projection.",
+      "de": "Rotationswurf über eine Schulterachse und kreisförmige Projektion."
+    },
+    "literal": { "en": "rotation + throw", "de": "Rotation + Wurf" },
+    "notes": {
+      "en": "‘Kaiten’ (rotation) reflects Aikidō’s turn/tenkan pedagogy and the sword idea of drawing a circle to redirect force. The technique creates a temporary axis at uke’s shoulder; your body rotation carries the arm like the leg of a compass while the head/neck line is guided lightly. Point of study: establish the axis first (control elbow close; keep your own posture narrow—hito-emi), then rotate the whole body to move uke’s center on a circular path. Characteristics: inside or outside entries; small circle for tight control, larger circle for projection; height management determines whether uke is pinned or thrown. Transfer: clarifies how circular body power in tai-jutsu mirrors bokken circles and jō turns. Safety focus: manage the face/neck line without compression—rotation should come from your hips/torso, not from twisting the head with the arms. Common errors to avoid: spinning the arms without fixing uke’s center, letting the trapped elbow drift away from your chest, or leaning into the arc and losing your base.",
+      "de": "„Kaiten“ (Rotation) spiegelt die Tenkan-Didaktik des Aikidō und das Schwertbild des Kreisziehens zur Umlenkung von Kraft. Die Technik bildet eine temporäre Achse an Ukes Schulter; deine Kör­per­drehung führt den Arm wie den Schenkel eines Zirkels, während die Kopf-/Nackenlinie leicht geführt wird. Lernpunkt: zuerst die Achse setzen (Ellbogen eng kontrollieren; eigenes Profil schmal – hito-emi), dann mit dem ganzen Körper rotieren und Ukes Zentrum auf einer Kreisbahn bewegen. Merkmale: Innen- oder Außeneinstieg; kleiner Kreis für Nähe und Kontrolle, größerer Kreis für Projektion; Höhensteuerung entscheidet über Pin oder Wurf. Übertrag: verdeutlicht, wie kreisförmige Körperkraft im Tai-jutsu die Bokken-Kreise und Jō-Drehungen spiegelt. Sicherheit: Gesichts-/Nackenlinie ohne Kompression führen – die Rotation kommt aus Hüfte/Rumpf, nicht aus dem Kopfdrehen mit den Armen. Häufige Fehler: Armdrehen ohne Fixierung von Ukes Zentrum, den kontrollierten Ellbogen vom Brustkorb abdriften lassen oder in den Bogen hineinlehnen und die Basis verlieren."
+    }
+  },
+  {
+    "id": "kamae",
+    "slug": "kamae",
+    "romaji": "Kamae",
+    "jp": "構え",
+    "category": "stance",
+    "def": {
+      "en": "Ready posture: relaxed shoulders, soft knees, centered and alert.",
+      "de": "Bereitschaftshaltung: Schultern entspannt, Knie locker, Zentrum stabil und aufmerksam."
+    },
+    "literal": { "en": "readiness/pose", "de": "Bereitschaft/Haltung" },
+    "notes": {
+      "en": "Kamae is the fundamental ready stance. The right foot is placed forward, the left foot behind, forming a light 'T' shape for stability and mobility. Knees remain soft, weight balanced slightly forward in the balls of the feet. Shoulders are relaxed, elbows heavy, and the spine upright yet supple. Hands are calm but alert at midline, ready to extend or receive. The gaze is steady, expressing awareness (zanshin) without tension. Kamae embodies the balance between rootedness and adaptability, showing intention without aggression or passivity.",
+      "de": "Kamae ist die grundlegende Bereitschaftshaltung. Der rechte Fuß steht vorne, der linke Fuß leicht versetzt hinten, in einer leichten 'T'-Form für Stabilität und Beweglichkeit. Die Knie bleiben locker, das Gewicht ruht leicht nach vorn auf den Fußballen. Schultern entspannt, Ellbogen schwer, die Wirbelsäule aufrecht und doch geschmeidig. Die Hände in Ruhe, aber aufmerksam vor der Körpermitte, bereit sich zu öffnen oder aufzunehmen. Der Blick ist klar und wach (Zanshin), ohne Anspannung. Kamae verkörpert das Gleichgewicht zwischen Verwurzelung und Anpassungsfähigkeit, Absicht ohne Aggression oder Passivität."
+    }
+  },
+  {
+    "id": "kamiza",
+    "slug": "kamiza",
+    "romaji": "Kamiza",
+    "jp": "上座",
+    "category": "etiquette",
+    "def": { "en": "Honor seat/front of the dōjō.", "de": "Ehrenplatz/Vorderseite des Dōjō." },
+    "literal": { "en": "upper + seat", "de": "oberer + Sitz" },
+    "notes": {
+      "en": "The front of the hall, often with shōmen (display) such as a calligraphy, O-Sensei’s photo, or a small shrine (tokonoma). It symbolizes the art’s lineage and sets the orientation for bow-in. Etiquette: face this side for opening/closing bows, keep the area clear and clean, and avoid turning your back to it unnecessarily. Line-up conventions (jōseki/shimoseki, left/right seniority) vary by dojo; follow local practice. Weapons should not be placed casually in front of kamiza.",
+      "de": "Die Vorderseite der Halle, oft mit Shōmen (Darstellung) wie Kalligraphie, Foto des Gründers oder kleinem Schrein (Tokonoma). Sie steht für die Linie der Kunst und gibt die Ausrichtung für die Verbeugung vor. Etikette: für An- und Abgrüßen dorthin ausrichten, den Bereich sauber und frei halten und ihm nicht unnötig den Rücken zukehren. Aufstellungsregeln (Jōseki/Shimoseki, Links-/Rechtsseniorität) variieren je nach Dojo; lokale Praxis beachten. Waffen nicht achtlos vor der Kamiza ablegen."
+    }
+  },
+  {
+    "id": "kata-tori",
+    "slug": "kata-tori",
+    "romaji": "Kata-tori",
+    "jp": "肩取り",
+    "category": "attack",
+    "def": { "en": "Single-side shoulder/gi grab.", "de": "Einseitiger Schulter-/Gi-Griff." },
+    "literal": { "en": "shoulder + seize", "de": "Schulter + greifen" },
+    "notes": {
+      "en": "Targets posture by fixing the jacket and shoulder line, reducing head mobility and turning capacity. Study how to keep the neck long, connect the grabbed side to your center, and lead the grip via the torso rather than the forearm. It’s foundational for learning to enter on a tight line (irimi) and to rotate the frame (tenkan/kaiten) without collapsing. Historically tied to clothing control in jūjutsu; in Aikidō it builds clean body mechanics for throws and pins without striking reliance.",
+      "de": "Zielt über das Fixieren von Jacke und Schulterlinie auf die Haltung, reduziert Kopfbeweglichkeit und Drehfähigkeit. Übe, den Nacken lang zu halten, die gegriffene Seite mit dem Zentrum zu verbinden und den Griff über den Rumpf statt über den Unterarm zu führen. Grundlegend, um eng einzutreten (irimi) und den Rahmen (tenkan/kaiten) zu drehen, ohne einzusacken. Historisch mit Kleidungskontrolle im Jūjutsu verbunden; im Aikidō schult es saubere Körpermechanik für Würfe und Halte ohne Schlagabhängigkeit."
+    }
+  },
+  {
+    "id": "kata-tori-men-uchi",
+    "slug": "kata-tori-men-uchi",
+    "romaji": "Kata-tori Men-uchi",
+    "jp": "肩取り面打ち",
+    "category": "attack",
+    "def": {
+      "en": "Shoulder grab combined with a frontal strike.",
+      "de": "Schultergriff kombiniert mit frontalem Schlag."
+    },
+    "literal": {
+      "en": "shoulder + seize; face/head + strike",
+      "de": "Schulter + greifen; Gesicht/Kopf + Schlag"
+    },
+    "notes": {
+      "en": "A pedagogical attack that tests composure under mixed stimuli: the grab disrupts posture at the shoulder girdle while the strike forces immediate line management. It trains prioritization (protect the head line without sacrificing the grabbed shoulder), timing (hyōshi) under pressure, and use of atemi to recover initiative. Lines and angles mirror tanto-tori logic: manage the near hand, then address the incoming line. Variants include shōmen-uchi phrasing and different shoulders depending on stance.",
+      "de": "Eine didaktische Angriffskombination, die Ruhe unter Mehrfachreizen schult: Der Griff stört die Haltung am Schultergürtel, der Schlag erzwingt sofortiges Linienmanagement. Trainiert Priorisierung (Kopflinie schützen, ohne die gegriffene Schulter preiszugeben), Timing (hyōshi) unter Druck und den Einsatz von Atemi zur Wiedergewinnung der Initiative. Linien und Winkel entsprechen dem Prinzip aus dem Tantō-tori: die nahe Hand sichern, dann die ankommende Linie führen. Varianten umfassen die Shōmen-uchi-Formulierung und unterschiedliche Schultern je nach Stellung."
+    }
+  },
+  {
+    "id": "katame-waza",
+    "slug": "katame-waza",
+    "romaji": "Katame-waza",
+    "jp": "固め技",
+    "category": "other",
+    "def": {
+      "en": "Fixation/holding techniques (controls).",
+      "de": "Fixier-/Haltetechniken (Kontrollen)."
+    },
+    "literal": { "en": "to make firm + technique", "de": "fest machen + Technik" },
+    "notes": {
+      "en": "In Aikidō, this refers chiefly to pins/controls that stabilize posture and isolate joints—often called osae-waza (e.g., ikkyo–gokyo). Emphasis is on structure over pain: align shoulder–elbow–wrist, control the shoulder line with body weight, and keep joints within safe range for a clear tap. Distinct from jūdō newaza focus: most Aikidō holds are stand-to-pin transitions rather than long groundwork. Good practice maintains breath, posture, and partner safety while demonstrating decisive control.",
+      "de": "Im Aikidō sind damit vor allem Fixierungen/Kontrollen gemeint, die Haltung stabilisieren und Gelenke isolieren – oft als Osae-waza bezeichnet (z. B. ikkyo–gokyo). Der Schwerpunkt liegt auf Struktur statt Schmerz: Schulter–Ellbogen–Handgelenk ausrichten, die Schulterlinie mit Körpergewicht kontrollieren und Gelenke im sicheren Bereich halten, damit ein klares Abklopfen möglich ist. Abgrenzung zur jūdō-Ne-waza-Ausrichtung: Aikidō-Kontrollen sind meist Übergänge vom Stand in die Fixierung, nicht lange Bodenarbeit. Gute Ausführung bewahrt Atmung, Haltung und Partnersicherheit bei zugleich eindeutiger Kontrolle."
+    }
+  },
+  {
+    "id": "katate-tori",
+    "slug": "katate-tori",
+    "romaji": "Katate-tori",
+    "jp": "片手取り",
+    "category": "attack",
+    "def": { "en": "Single-hand wrist grab.", "de": "Einhand-Handgelenkgriff." },
+    "literal": { "en": "one-side + hand + seize", "de": "einseitig + Hand + greifen" },
+    "notes": {
+      "en": "The basic study grip for connection through the forearm into the center. Two principal contexts: ai-hanmi (same-lead) favors outside lines and direct irimi; gyaku-hanmi (opposite-lead) crosses centers and invites inside turns. Keep the elbow ‘heavy,’ align the wrist with your center, and move feet before hands. Related families include morote-tori (two hands on one wrist) and ryōte-tori (both wrists), which amplify the same principles of line, timing, and center control.",
+      "de": "Grundgriff zum Üben der Verbindung über den Unterarm ins Zentrum. Zwei Hauptkontexte: Ai-hanmi (gleichführig) begünstigt Außenlinien und direktes irimi; Gyaku-hanmi (gegenläufig) kreuzt die Zentren und lädt zu Innendrehungen ein. Ellbogen „schwer“ halten, Handgelenk zur eigenen Mitte ausrichten und die Füße vor den Händen bewegen. Verwandte Gruppen sind morote-tori (zwei Hände an einem Handgelenk) und ryōte-tori (beide Handgelenke), die dieselben Prinzipien von Linie, Timing und Zentrumsführung verstärken."
+    }
+  },
+  {
+    "id": "keiko",
+    "slug": "keiko",
+    "romaji": "Keiko",
+    "jp": "稽古",
+    "category": "etiquette",
+    "def": { "en": "Practice/training session.", "de": "Übung/Training." },
+    "literal": {
+      "en": "to consider + old (reflective practice)",
+      "de": "überdenken + alt (reflektierte Übung)"
+    },
+    "notes": {
+      "en": "In budō, keiko implies reflective repetition—studying what was handed down to discover something new through the body. Culture: begin with bow-in (rei), end with bow-out; arrive prepared, help clean, and treat partners as co-investigators, not opponents. Seasonal forms like kangeiko (midwinter), shochūgeiko (midsummer), and hatsugeiko (first practice of the year) stress mindset over hardship. Measure a session by attention, safety, and clarity of movement rather than sweat alone.",
+      "de": "Im Budō meint keiko reflektierte Wiederholung – das Überlieferte durch den eigenen Körper neu verstehen. Kultur: mit Verbeugung beginnen (rei), mit Verbeugung beenden; vorbereitet ankommen, beim Putzen helfen und Partner als Mitforschende behandeln, nicht als Gegner. Saisonformen wie kangeiko (Winter), shochūgeiko (Sommer) und hatsugeiko (Jahresauftakt) betonen Haltung vor Härte. Eine Einheit misst sich an Aufmerksamkeit, Sicherheit und Klarheit der Bewegung, nicht nur am Schweiß."
+    }
+  },
+  {
+    "id": "keikogi",
+    "slug": "keikogi",
+    "romaji": "Keikogi",
+    "jp": "稽古着",
+    "category": "etiquette",
+    "def": { "en": "Training uniform (gi).", "de": "Trainingsanzug (Gi)." },
+    "literal": { "en": "practice + clothing", "de": "Üben + Kleidung" },
+    "notes": {
+      "en": "Also called dōgi/gi. Typical parts: jacket (uwagi), trousers (zubon), belt (obi); in Aikidō a hakama may be added per dojo custom. Function: durable weave for ukemi and grips; cut allows shoulder/hip rotation without binding. Etiquette: clean, repaired, labeled; nails short; no jewelry; patches only as your dojo permits. Fit the jacket left over right; tie obi with flat, even ends; retie facing away from shōmen.",
+      "de": "Auch dōgi/gi genannt. Teile: Jacke (uwagi), Hose (zubon), Gürtel (obi); im Aikidō ggf. plus Hakama je nach Dojo. Zweck: robustes Gewebe für Ukemi und Griffe; Schnitt erlaubt Schulter-/Hüftrotation ohne Einengen. Etikette: sauber, instand gesetzt, beschriftet; kurze Nägel; kein Schmuck; Abzeichen nur nach Dojo-Regeln. Jacke links über rechts; Obi flach und mit gleichen Enden binden; zum Nachbinden vom Shōmen abwenden."
+    }
+  },
+  {
+    "id": "ki",
+    "slug": "ki",
+    "romaji": "Ki",
+    "jp": "気",
+    "category": "philosophy",
+    "def": {
+      "en": "Vital energy; intent that organizes movement.",
+      "de": "Lebensenergie; Intention, die Bewegung ordnet."
+    },
+    "literal": { "en": "breath/energy/spirit", "de": "Atem/Energie/Geist" },
+    "notes": {
+      "en": "In Japanese, KI carries multiple meanings depending on context, but in Aikidō it refers to energy, vital force, and willpower. Comparable to Chinese Qi, KI is the breath of life that animates living beings. It is absorbed with inhalation and released with exhalation, and is neutral until transformed by one’s mindset into positive or negative action. In training, KI is expressed through posture, timing, breathing, and attention. Aikidō emphasizes abdominal breathing: inhale as uke is active, exhale as nage acts. Techniques flow more effectively when KI extends beyond the attacker, not stopping at contact, but continuing outward through the arms into space. KI harmonizes willpower and action (seen in kiai), supporting clear intent and unbroken flow in techniques such as sumi-otoshi, tenchi-nage, and kokyu-nage. Spiritually, KI strengthens personality and confidence, encouraging compassionate conduct and steady problem-solving in daily life.",
+      "de": "Im Japanischen hat KI je nach Zusammenhang unterschiedliche Bedeutungen, im Aikidō steht es für Energie, Lebenskraft und Willenskraft. Vergleichbar mit dem chinesischen Qi ist KI der Lebensatem, der alle Lebewesen durchdringt. Es wird mit der Einatmung aufgenommen und mit der Ausatmung abgegeben, bleibt zunächst neutral und wird durch die Geisteshaltung des Menschen in positives oder negatives Handeln gewandelt. Im Training zeigt sich KI in Haltung, Timing, Atmung und Aufmerksamkeit. Im Aikidō wird die Bauch-Atmung betont: einatmen, wenn Uke aktiv ist, ausatmen, wenn Nage handelt. Techniken gelingen wirkungsvoller, wenn das KI über den Angreifer hinaus in den Raum weiterfließt und nicht an ihm endet, durch die Arme (Tegatana) geführt. KI harmonisiert Willenskraft und Handlung (Kiai) und unterstützt einen fließenden Ablauf in Techniken wie Sumi-otoshi, Tenchi-nage und Kokyu-nage. Geistig-seelisch stärkt KI Persönlichkeit und Selbstvertrauen, fördert wohlwollendes Handeln und eine entschlossene Problemlösung auch im Alltag."
+    }
+  },
+  {
+    "id": "ki-musubi",
+    "slug": "ki-musubi",
+    "romaji": "Ki-musubi",
+    "jp": "気結び",
+    "category": "philosophy",
+    "def": {
+      "en": "Energy/intent connection—tying into the partner’s line.",
+      "de": "Energie-/Intentionsverbindung – sich an die Linie des Partners „anknüpfen“."
+    },
+    "literal": { "en": "energy/intent + knot/binding", "de": "Energie/Intention + Knoten/Bindung" },
+    "notes": {
+      "en": "A core Aikidō idea found across Japanese arts: establish a living connection that carries information both ways. Read intent through touch and posture, then guide without collision. Practical view: treat ‘ki’ as attention, pressure, and timing organized through the center; mysticism not required. Training cues: soft, adhesive contact; elbows heavy; eyes that take in the whole mat. Distinguish from kiai (focused vocalization)—musubi is continuous, not a single moment.",
+      "de": "Zentrales Aikidō-Prinzip, in vielen japanischen Künsten präsent: eine lebendige Verbindung herstellen, die beidseitig Information trägt. Intention über Kontakt und Haltung „lesen“ und ohne Kollision führen. Praktisch verstanden ist „ki“ Aufmerksamkeit, Druck und Timing, über das Zentrum organisiert – ohne Mystik. Trainingshinweise: weicher, haftender Kontakt; schwere Ellbogen; ein Blick, der die ganze Matte erfasst. Abgrenzung zu kiai (Stimmstoß): musubi ist kontinuierlich, kein Einzelmoment."
+    }
+  },
+  {
+    "id": "kohai",
+    "slug": "kohai",
+    "romaji": "Kōhai",
+    "jp": "後輩",
+    "category": "etiquette",
+    "def": {
+      "en": "Junior student within the dojo community.",
+      "de": "Jüngerer Schüler innerhalb der Dojo-Gemeinschaft."
+    },
+    "literal": { "en": "later + companion", "de": "später + Gefährte" },
+    "notes": {
+      "en": "Part of the senpai–kōhai relationship: kōhai learn by observing, asking respectfully, and caring for the space (e.g., cleaning, setting weapons). Responsibility is mutual—senpai model safety and clarity. Seniority is usually time-in-training, not personality or job title. Give feedback upward via the instructor when in doubt; etiquette should support learning, never excuse disrespect.",
+      "de": "Teil der Senpai–Kōhai-Beziehung: Kōhai lernen durch Beobachten, respektvolles Fragen und Sorge fürs Dojo (z. B. Putzen, Waffen richten). Verantwortung ist wechselseitig – Senpai geben Sicherheit und Klarheit vor. Seniorität ergibt sich meist aus Trainingszeit, nicht aus Persönlichkeit oder Beruf. Rückmeldungen an Ältere ggf. über die Lehrperson geben; Etikette soll Lernen stützen, nicht Respektlosigkeit rechtfertigen."
+    }
+  },
+  {
+    "id": "kokyu",
+    "slug": "kokyu",
+    "romaji": "Kokyū",
+    "jp": "呼吸",
+    "category": "movement",
+    "def": {
+      "en": "Breath coordination that powers posture and timing.",
+      "de": "Atemkoordination, die Haltung und Timing trägt."
+    },
+    "literal": { "en": "breath + inhale/exhale", "de": "Atem + Ein-/Ausatmen" },
+    "notes": {
+      "en": "The baseline skill behind kokyū-ryoku and kokyū-nage. Coordinate inhale/exhale with expansion/settling so the center leads movement and contact feels continuous. Practice modes include kokyū-hō (seated/standing breath work), kokyū-dōsa (kneeling body–breath integration), and paired sensitivity drills. Aim for quiet ribs, active lower abdomen, and steady gaze; the goal is organization, not volume.",
+      "de": "Grundfertigkeit hinter kokyū-ryoku und kokyū-nage. Ein- und Ausatem mit Expansion/Settling koppeln, sodass das Zentrum führt und der Kontakt kontinuierlich bleibt. Übungsformen: Kokyū-hō (Atemarbeit im Sitzen/Stand), Kokyū-dōsa (knieende Körper–Atem-Integration) und Partnerübungen für Sensibilität. Ziel: ruhige Rippen, aktive Unterbauchspannung, ruhiger Blick – es geht um Organisation, nicht um Atemvolumen."
+    }
+  },
+  {
+    "id": "kokyu-nage",
+    "slug": "kokyu-nage",
+    "romaji": "Kokyū-nage",
+    "jp": "呼吸投げ",
+    "category": "movement",
+    "def": {
+      "en": "Throws using connection, timing, and breath-led power.",
+      "de": "Würfe über Verbindung, Timing und atemgeführte Kraft."
+    },
+    "literal": { "en": "breath + throw", "de": "Atem + Wurf" },
+    "notes": {
+      "en": "An umbrella label rather than one fixed technique. Idea: unify breath, posture, and line so uke’s balance yields without joint locks. Often taught in flowing forms and rantori to highlight whole-body power and soft leading. Hallmarks: take center on the beat (hyōshi), use elastic pressure through the frame, project along uke’s intent rather than against it. Safety: maintain space for clear ukemi; no head cranks.",
+      "de": "Ein Sammelbegriff, keine einzelne Technik. Gedanke: Atem, Haltung und Linie vereinen, sodass Ukes Gleichgewicht ohne Gelenkhebel weicht. Häufig in fließenden Formen und Rantori, um Ganzkörperkraft und weiches Führen zu betonen. Merkmale: Zentrum im Takt (hyōshi) nehmen, elastischen Druck über den Körperrahmen nutzen, entlang von Ukes Intention projizieren statt dagegen. Sicherheit: Raum für klares Ukemi lassen; keine Nackenhebel."
+    }
+  },
+  {
+    "id": "kokyu-ryoku",
+    "slug": "kokyu-ryoku",
+    "romaji": "Kokyū-ryoku",
+    "jp": "呼吸力",
+    "category": "philosophy",
+    "def": {
+      "en": "Breath-generated, whole-body power.",
+      "de": "Durch den Atem organisierte Ganzkörperkraft."
+    },
+    "literal": { "en": "breath + power", "de": "Atem + Kraft" },
+    "notes": {
+      "en": "Not lung strength but the coordinated expansion/settling of the body—diaphragm, pelvic floor, back, and feet—so pressure travels through the skeleton without local strain. Feels elastic rather than muscular. Cultivated by kokyū-hō/dōsa (breath training), slow weapons suburi, and stable posture work. Avoid breath-holding/straining; timing the exhale on contact often clarifies the line.",
+      "de": "Nicht Lungenkraft, sondern koordinierte Expansion/Settling des Körpers – Zwerchfell, Beckenboden, Rücken und Füße –, sodass Druck über das Skelett läuft statt lokal zu verspannen. Fühlt sich elastisch, nicht muskulär an. Wird durch Kokyū-hō/Dōsa (Atemübungen), langsame Waffen-Suburi und Haltungsarbeit entwickelt. Kein Atemanhalten/Pressen; das Ausatmen beim Kontakt klärt oft die Linie."
+    }
+  },
+  {
+    "id": "koshi-nage",
+    "slug": "koshi-nage",
+    "romaji": "Koshi-nage",
+    "jp": "腰投げ",
+    "category": "movement",
+    "def": {
+      "en": "Hip throw using body drop and rotation across your belt line.",
+      "de": "Hüftwurf über Körperschwerpunkt und Drehung auf Gürtelhöhe."
+    },
+    "literal": { "en": "hip + throw", "de": "Hüfte + Wurf" },
+    "notes": {
+      "en": "A budō-standard projection: unbalance, bring uke’s center to your hips, then rotate your frame so the belt line becomes the fulcrum. The point is body organization, not lifting—tall spine, settled pelvis, and a small height change that lets uke “sit” on your hip shelf while your turn redirects their momentum. Works in empty-hand lines and weapon entries when the head/shoulder line is captured. Good koshi-nage keeps the throwing circle driven by legs and hips with relaxed arms that only guide. Safety: leave space for a clear fall, keep the head free, and avoid bending at the waist. Common pitfalls are trying to hoist with the back, turning before you have uke on the hip, or stepping outside your own base.",
+      "de": "Eine budō-typische Projektion: aus dem Gleichgewicht bringen, Ukes Zentrum auf die eigene Hüfte holen und den Rumpf so rotieren, dass die Gürtelhöhe zum Drehpunkt wird. Entscheidend ist Körperorganisation, nicht Heben – aufrechte Wirbelsäule, gesetztes Becken und eine kleine Höhenänderung, die Uke auf die „Hüftablage“ bringt, während deine Drehung seinen Impuls umlenkt. Funktioniert waffenlos und bei Waffeneinstiegen, wenn Kopf-/Schulterlinie übernommen ist. Guter koshi-nage wird von Beinen und Hüfte getragen; die Arme führen nur. Sicherheit: Raum für klares Ukemi lassen, den Kopf frei halten, nicht aus der Taille abknicken. Typische Fehler: mit dem Rücken hochheben, drehen bevor Uke auf der Hüfte ist oder aus der eigenen Basis herauszuschreiten."
+    }
+  },
+  {
+    "id": "kote-gaeshi",
+    "slug": "kote-gaeshi",
+    "romaji": "Kote-gaeshi",
+    "jp": "小手返し",
+    "category": "movement",
+    "def": {
+      "en": "Wrist ‘return’ throw spiraling uke downward.",
+      "de": "Handgelenk-„Rückdreh“-Wurf, der Uke spiralig zu Boden führt."
+    },
+    "literal": { "en": "forearm (small hand) + return", "de": "Unterarm (kleine Hand) + Rückkehr" },
+    "notes": {
+      "en": "A classic spiral based on turning the forearm–wrist unit while controlling the elbow and shoulder. The ‘return’ is the redirection of uke’s line: lead their center, keep the elbow slightly extended and close to your body, and rotate the wrist so their forearm supinates while their structure unwinds. Principles over pain—projection comes from whole-body rotation, not cranking the joint. Used from grabs, strikes, and tanto contexts; the same mechanics appear in weapon disarms. Safety: maintain distance so uke can roll, guide the face line without forcing the neck, and release on a clean fall. Frequent errors: focusing on the hand and losing the elbow/shoulder, pulling with arms instead of turning with the hips, or standing square and getting stuck.",
+      "de": "Eine klassische Spirale über die Einheit Unterarm–Handgelenk bei gleichzeitiger Kontrolle von Ellbogen und Schulter. Das „Zurückdrehen“ meint das Umlenken von Ukes Linie: sein Zentrum führen, den Ellbogen leicht gestreckt und körpernah halten und das Handgelenk so drehen, dass der Unterarm supiniert und die Struktur sich auflöst. Prinzip statt Schmerz – die Projektion entsteht aus Ganzkörperrotation, nicht aus dem Gelenkhebel. Einsetzbar aus Griffen, Schlägen und Tantō-Situationen; die Mechanik findet sich auch in Waffenentwaffnungen. Sicherheit: Distanz für sauberes Ukemi wahren, die Kopflinie führen ohne den Nacken zu zwingen, bei klarem Fall lösen. Häufige Fehler: am Handgelenk „arbeiten“ und Ellbogen/Schulter verlieren, mit den Armen ziehen statt mit der Hüfte drehen oder quadratisch stehen bleiben und stecken bleiben."
+    }
+  },
+  {
+    "id": "ku",
+    "slug": "ku",
+    "romaji": "Ku",
+    "jp": "空",
+    "category": "philosophy",
+    "def": {
+      "en": "Emptiness/void; open space where timing appears.",
+      "de": "Leere/Void; offener Raum, in dem Timing entsteht."
+    },
+    "literal": { "en": "empty/sky", "de": "leer/Himmel" },
+    "notes": {
+      "en": "In budō usage, ku is not ‘nothingness’ but usable space—physical and mental—created by removing conflict on the line. You clear the path (kūkan) so intent and movement can resolve without collision: take the angle, settle the breath, and allow an opening to arise rather than forcing one. The concept sits behind ma-ai (distance) and hyōshi (beat): when space and beat are right, technique feels inevitable. Practical test: after an entry, could a third person walk between you without being hit? If yes, you’ve likely shaped ku. This is clarity, not passivity.",
+      "de": "Im Budō meint ku keine „Nichtsigkeit“, sondern nutzbaren Raum – körperlich wie geistig –, der entsteht, wenn die Kollision auf der Linie verschwindet. Man schafft Kūkan, damit Intention und Bewegung ohne Zusammenstoß lösen: Winkel nehmen, Atem setzen und die Öffnung entstehen lassen statt sie zu erzwingen. Der Begriff liegt hinter ma-ai (Distanz) und hyōshi (Takt): Stimmen Raum und Takt, wirkt Technik zwanglos. Praktischer Check: Kann nach deinem Einstieg eine dritte Person zwischen euch hindurchgehen, ohne getroffen zu werden? Wenn ja, hast du vermutlich ku geformt. Das ist Klarheit, nicht Passivität."
+    }
+  },
+  {
+    "id": "kumijo",
+    "slug": "kumijo",
+    "romaji": "Kumijō",
+    "jp": "組杖",
+    "category": "other",
+    "def": {
+      "en": "Paired staff (jō) forms with a partner.",
+      "de": "Paarübungen mit dem Stab (Jō)."
+    },
+    "literal": { "en": "paired + staff", "de": "paarweise + Stab" },
+    "notes": {
+      "en": "Partner drills that map solo jō lines to live timing and distance. They cultivate ma-ai, angle, and hand changes under pressure, and they teach how circles (kaiten) and counters (gaeshi) interact against a resisting line. Historically emphasized in the Iwama Aiki-jō curriculum; useful as a bridge to empty-hand entries because center control, rhythm, and line protection transfer directly. Etiquette: clear intent, safe tip control, no ‘dueling’—the goal is connection and correct pathing, not point-scoring.",
+      "de": "Partnerformen, die Solo-Jō-Linien auf lebendiges Timing und Distanz abbilden. Sie schulen ma-ai, Winkel und Handwechsel unter Druck und zeigen, wie Kreise (kaiten) und Konter (gaeshi) gegen eine widerstehende Linie zusammenspielen. Historisch im Iwama-Aiki-Jō betont; als Brücke zum Waffenlosen wertvoll, da Zentrumsführung, Rhythmus und Linienschutz direkt übertragen. Etikette: klare Intention, sichere Spitzenführung, kein „Fechten“ – Ziel ist Verbindung und korrekter Weg, nicht Punktgewinn."
+    }
+  },
+  {
+    "id": "kumitachi",
+    "slug": "kumitachi",
+    "romaji": "Kumitachi",
+    "jp": "組太刀",
+    "category": "other",
+    "def": {
+      "en": "Paired sword forms practiced with a partner.",
+      "de": "Paarübungen mit dem Schwert (Bokken)."
+    },
+    "literal": { "en": "paired + sword", "de": "paarweise + Schwert" },
+    "notes": {
+      "en": "Paired bokken kata that teach hasuji (edge alignment), seme (pressure), and the conversation of cut–cover–counter. They refine ma-ai and hyōshi more sharply than empty hand; every opening is earned. Many schools use them to reveal why empty-hand lines are the way they are—irimi/tenkan, awase, and atemi become obvious when the ‘blade’ is respected. Safety and etiquette are strict: correct distance, precise arcs, no chasing the head, and clear bow-in/out.",
+      "de": "Gepaarte Bokken-Kata, die Hasuji (Schnittwinkel), Seme (Druck) und das Gespräch aus Schnitt–Deckung–Konter lehren. Ma-ai und Hyōshi werden schärfer als waffenlos geschult; jede Öffnung muss erarbeitet werden. Viele Schulen nutzen sie, um zu zeigen, warum waffenlose Linien so geführt werden – irimi/tenkan, awase und atemi werden mit „Klinge“ unmittelbar einsichtig. Sicherheit/Etikette sind strikt: korrekte Distanz, präzise Bögen, kein Köpfejagen, klare Verbeugungen."
+    }
+  },
+  {
+    "id": "kuzushi",
+    "slug": "kuzushi",
+    "romaji": "Kuzushi",
+    "jp": "崩し",
+    "category": "movement",
+    "def": {
+      "en": "Breaking balance so technique becomes effortless.",
+      "de": "Gleichgewicht brechen, damit die Technik mühelos wird."
+    },
+    "literal": { "en": "to crumble/collapse", "de": "zum Einstürzen bringen" },
+    "notes": {
+      "en": "In Aikidō, kuzushi means displacing the center—not yanking limbs—so uke can’t stand organized. It has three flavors: linear (take the line), vertical (rise/settle), and rotational (turn the axis); most applications blend all three with timing (hyōshi) and distance (ma-ai). Use connection through the forearm and shoulder to move the whole frame; head and shoulder travel together so the neck stays long. Practical test: if uke must step or stiffen to recover, balance has already broken. Avoid overreaching or pushing from the arms; keep your own base calm and narrow (hito-emi).",
+      "de": "Im Aikidō heißt kuzushi: das Zentrum verlagern – nicht an Gliedmaßen reißen – sodass Uke seine Organisation verliert. Es zeigt sich linear (Linie nehmen), vertikal (heben/senken) und rotatorisch (Achse drehen); meist werden alle drei mit Timing (hyōshi) und Distanz (ma-ai) kombiniert. Über Unterarm und Schulter den ganzen Rahmen bewegen; Kopf und Schulter reisen gemeinsam, der Nacken bleibt lang. Praxistest: Muss Uke treten oder verhärten, ist das Gleichgewicht bereits gebrochen. Vermeide Übergreifen oder Arm­druck; eigene Basis ruhig und schmal (hito-emi) halten."
+    }
+  },
+  {
+    "id": "ma-ai",
+    "slug": "ma-ai",
+    "romaji": "Ma-ai",
+    "jp": "間合い",
+    "category": "philosophy",
+    "def": {
+      "en": "Proper distance and timing between partners.",
+      "de": "Richtige Distanz und Timing zwischen Partnern."
+    },
+    "notes": {
+      "en": "Ma-ai in Aikidō means 'harmonious distance.' Technically, it is the space where neither partner has yet entered the effective range of the other. A neutral, safe distance exists when both extend their arms (tegatana) forward and the hand edges only just meet. This spacing prevents sudden attacks and gives nage a calm, alert readiness. If uke steps closer, he breaks ma-ai, signaling aggression by entering nage’s sphere. Nage may then restore proper distance with movement (sabaki) or, if necessary, apply technique. Beyond the dojo, ma-ai symbolizes the ability to maintain healthy boundaries and observe conflict with perspective, de-escalating instead of being drawn into unproductive clashes.",
+      "de": "Ma-ai bedeutet im Aikidō 'harmonische Distanz.' Technisch ist es der Raum, in dem sich beide Partner noch nicht im Wirkungsbereich des anderen befinden. Eine neutrale, sichere Distanz besteht, wenn beide Arme (Tegatana) ausgestreckt sind und sich die Handkanten nur leicht berühren. Diese Distanz verhindert überraschende Angriffe und erlaubt es dem Nage, aufmerksam und gelassen auf einen möglichen Angriff zu warten. Tritt Uke näher, verletzt er das Ma-ai, signalisiert seine Angriffsabsicht und betritt den Wirkungsbereich des Nage. Nage kann mit Ausweichbewegungen (Sabaki) die harmonische Distanz wiederherstellen oder, falls nötig, eine Technik anwenden. Außerhalb des Dojos steht Ma-ai für die Fähigkeit, gesunde Grenzen zu wahren und Konflikte mit Abstand zu betrachten, um deeskalierend zu wirken und nicht in unsachliche Auseinandersetzungen hineingezogen zu werden."
+    }
+  },
+  {
+    "id": "migi-hanmi",
+    "slug": "migi-hanmi",
+    "romaji": "Migi Hanmi",
+    "jp": "右半身",
+    "category": "stance",
+    "def": {
+      "en": "Right-lead hanmi: right foot forward, left foot back.",
+      "de": "Hanmi mit rechter Führung: rechter Fuß vorn, linker zurück."
+    },
+    "literal": { "en": "right + half-body", "de": "rechts + Halbkörper" },
+    "notes": {
+      "en": "Same geometry as hanmi: feet on a narrow track, rear foot angled 30–45°, hips/shoulders turned about 45°, weight even with slight forward intent. Hands cover the center—neither wide nor crossed; elbows relaxed and ‘heavy’. This lead often pairs with ai-hanmi contexts and outside entries; for weapons keep edge/tip on your center line and guard your head on high counters. Common faults: squaring the torso, locking knees, or letting the front hand float away from the line.",
+      "de": "Gleiche Geometrie wie Hanmi: schmale Spur, hinterer Fuß 30–45° ausgedreht, Hüfte/Schultern ca. 45° gedreht, Gewicht ausgeglichen mit leichtem Vorwärtsimpuls. Hände decken die Mitte – weder breit noch gekreuzt; Ellbogen entspannt und „schwer“. Diese Führung passt oft zu Ai-Hanmi-Kontexten und Außen­einstiegen; bei Waffen Kante/Spitze auf der Mittellinie halten und den Kopf bei hohen Kontern decken. Häufige Fehler: Oberkörper quadratisch, Knie durchgestreckt oder die vordere Hand von der Linie lösen."
+    }
+  },
+  {
+    "id": "mokuso",
+    "slug": "mokuso",
+    "romaji": "Mokusō",
+    "jp": "黙想",
+    "category": "etiquette",
+    "def": {
+      "en": "Silent meditation at the start/end of class.",
+      "de": "Stilles Sammeln/„Meditation“ zu Beginn/Ende des Trainings."
+    },
+    "literal": { "en": "silent + contemplation", "de": "schweigend + Betrachtung" },
+    "notes": {
+      "en": "Purpose: shift from daily noise to heijōshin (steady mind) and align breath, posture, and attention before rei. Sit with a tall spine, eyes soft and lowered, jaw unheld; breathe quietly through the nose, letting the body expand/settle rather than forcing air. It’s cultural, not confessional: the aim is readiness and respect. Practical cue: when the first step after mokusō is clear and unhurried, it worked.",
+      "de": "Ziel: vom Alltagsrauschen in Heijōshin (gleichmäßiger Geist) wechseln und Atem, Haltung und Aufmerksamkeit vor dem Rei ordnen. Mit langer Wirbelsäule sitzen, Blick weich gesenkt, Kiefer entspannt; leise durch die Nase atmen – der Körper darf sich ausdehnen/senken, ohne das Atmen zu forcieren. Kulturell, nicht religiös: es geht um Bereitschaft und Respekt. Praxiszeichen: Wenn der erste Schritt nach Mokusō klar und unhektisch ist, hat es gewirkt."
+    }
+  },
+  {
+    "id": "morote-tori",
+    "slug": "morote-tori",
+    "romaji": "Morote-tori",
+    "jp": "諸手取り",
+    "category": "attack",
+    "def": {
+      "en": "Two hands grabbing one wrist/forearm.",
+      "de": "Zweihandgriff an einem Handgelenk/Unterarm."
+    },
+    "literal": { "en": "both/many + hands + seize", "de": "beide/viele + Hände + greifen" },
+    "notes": {
+      "en": "A pressure amplifier used to teach connection and whole-body response. Keep the captured elbow close and linked to your center; align the wrist so the line travels through your structure, not into the joint. Unbalance by moving from the hips (irimi/tenkan) rather than tugging with the forearm; atemi clarifies angle if space is tight. Related grips—ryōte-tori (both wrists) and kata-tori (shoulder)—train the same priorities: line, timing, elbow control. Safety: avoid sudden twists on the wrist; lead the shoulder line instead.",
+      "de": "Ein „Druckverstärker“, um Verbindung und Ganzkörperantwort zu lehren. Den gefassten Ellbogen körpernah halten und mit dem Zentrum koppeln; das Handgelenk so ausrichten, dass die Kraft durch die eigene Struktur läuft und nicht ins Gelenk. Aus der Hüfte (irimi/tenkan) destabilisieren statt mit dem Unterarm zu ziehen; bei wenig Raum klärt Atemi den Winkel. Verwandte Griffe – ryōte-tori (beide Handgelenke) und kata-tori (Schulter) – schulen dieselben Prioritäten: Linie, Timing, Ellbogenkontrolle. Sicherheit: keine ruckartigen Verdrehungen am Handgelenk; die Schulterlinie führen."
+    }
+  },
+  {
+    "id": "mu",
+    "slug": "mu",
+    "romaji": "Mu",
+    "jp": "無",
+    "category": "philosophy",
+    "def": {
+      "en": "Nothingness—absence of grasping; clear availability.",
+      "de": "Nichts/Leere – frei von Festhalten; klare Bereitschaft."
+    },
+    "literal": { "en": "nothing/without", "de": "nichts/ohne" },
+    "notes": {
+      "en": "In budō, mu is not nihilism but the uncluttered state that lets you perceive and act without pre-loading a plan. Empty hands, open options: release excess tension and stance bias so distance and beat can be read cleanly. It pairs with ma-ai and hyōshi—when space and timing are right, ‘nothing extra’ remains. The feel is alert and kind, not blank; passivity is the opposite of mu.",
+      "de": "Im Budō ist mu kein Nihilismus, sondern der unverklebte Zustand, in dem Wahrnehmen und Handeln ohne vorgefassten Plan möglich werden. Leere Hände, offene Optionen: Überspannung und Haltungsfixierung lösen, damit Distanz und Takt klar lesbar sind. Es ergänzt ma-ai und hyōshi – stimmen Raum und Timing, bleibt „nichts Überflüssiges“. Die Qualität ist wach und zugewandt, nicht leer; Passivität ist das Gegenteil von mu."
+    }
+  },
+  {
+    "id": "mune-tori",
+    "slug": "mune-tori",
+    "romaji": "Mune-tori",
+    "jp": "胸取り",
+    "category": "attack",
+    "def": { "en": "Chest/lapel grab at the gi.", "de": "Brust-/Reversgriff am Gi." },
+    "literal": { "en": "chest + seize", "de": "Brust + greifen" },
+    "notes": {
+      "en": "Targets posture at the sternum and can threaten the airway by collapsing the collar. Keep the chin protected and the neck long; connect the grabbed side to your center so the whole torso leads the response. Prioritize elbow/shoulder control over peeling fingers; use angle and height change to free the line. It’s a classic jūjutsu clothing control that in Aikidō teaches calm entries, clear atemi lines, and pins without resorting to pain compliance.",
+      "de": "Greift die Haltung am Brustbein an und kann durch den Kragen die Atemwege bedrohen. Kinn schützen und Nacken lang halten; die gegriffene Seite mit dem Zentrum verbinden, damit der Rumpf – nicht die Hand – die Antwort führt. Ellbogen/Schulter vor Fingerlösen priorisieren; über Winkel und Höhenwechsel die Linie frei machen. Klassische jūjutsu-Kleidungskontrolle, die im Aikidō ruhige Einstiege, klare Atemi-Linien und Fixierungen ohne Schmerzzwang vermittelt."
+    }
+  },
+  {
+    "id": "nage-tori",
+    "slug": "nage-tori",
+    "romaji": "Nage / Tori",
+    "jp": "投げ／取り",
+    "category": "other",
+    "def": {
+      "en": "Executor of the technique (nage); also called tori in some schools.",
+      "de": "Ausführender der Technik (Nage); in manchen Schulen \"Tori\"."
+    },
+    "literal": { "en": "to throw / to take", "de": "werfen / nehmen/greifen" },
+    "notes": {
+      "en": "Nage is the executor of the technique. Their task is not simply to apply a throw or pin, but to harmonize with uke’s intent, timing, and energy. Nage leads from the center (hara), maintains correct posture, and establishes maai (appropriate distance). Through kuzushi (unbalancing), nage blends with uke’s attack rather than colliding, redirecting force into a controlled pathway. Every action of nage must consider uke’s safety: guiding the attack into safe ukemi, modulating intensity according to level, and ensuring the spirit of mutual respect. Proper nage work is not domination but education: demonstrating to uke the futility of aggression, while embodying calm presence, zanshin (lingering awareness), and compassion. A good nage preserves the martial effectiveness of technique while embodying Aikidō’s ethical aim — to resolve conflict without causing harm.",
+      "de": "Nage ist der Ausführende der Technik. Seine Aufgabe besteht nicht nur darin, einen Wurf oder eine Kontrolle anzuwenden, sondern mit der Absicht, dem Timing und der Energie des Uke in Harmonie zu treten. Nage führt aus dem Zentrum (Hara), bewahrt eine aufrechte Haltung und achtet auf Maai (angemessene Distanz). Durch Kuzushi (Gleichgewichtsbrechung) verschmilzt Nage mit dem Angriff des Uke, anstatt zu kollidieren, und leitet dessen Kraft in eine kontrollierte Bahn um. Jede Handlung von Nage muss die Sicherheit des Uke berücksichtigen: den Angriff in ein sicheres Ukemi führen, die Intensität dem Niveau anpassen und stets gegenseitigen Respekt wahren. Ein guter Nage versteht seine Rolle nicht als Dominanz, sondern als Lehrfunktion: Er zeigt dem Uke die Sinnlosigkeit von Aggression und verkörpert dabei Ruhe, Zanshin (verweilende Achtsamkeit) und Mitgefühl. Ein guter Nage bewahrt die martiale Wirksamkeit der Technik und verbindet sie mit dem ethischen Ziel des Aikidō – Konflikte aufzulösen, ohne Schaden zu verursachen."
+    }
+  },
+  {
+    "id": "nage-waza",
+    "slug": "nage-waza",
+    "romaji": "Nage-waza",
+    "jp": "投げ技",
+    "category": "other",
+    "def": { "en": "Throwing techniques.", "de": "Wurftechniken." },
+    "literal": { "en": "throw + technique", "de": "werfen + Technik" },
+    "notes": {
+      "en": "Umbrella term for projections in Aikidō; built on kuzushi (unbalancing), line control, and center-driven power rather than lifting. Families include entering lines (irimi), turning/circular lines (tenkan/kaiten), and breath-led projections (kokyū-nage). Good practice shapes ma-ai (distance) and hyōshi (beat) so uke falls along an open path with safe ukemi. Structure and timing matter more than force.",
+      "de": "Sammelbegriff für Projektionen im Aikidō; basiert auf kuzushi (Gleichgewicht brechen), Linienkontrolle und zentrumsgeführter Kraft statt Heben. Familien: eindringende Linien (irimi), drehende/kreisförmige Linien (tenkan/kaiten) und atemgeführte Projektionen (kokyū-nage). Gute Ausführung gestaltet ma-ai (Distanz) und hyōshi (Takt), sodass Uke über eine freie Bahn mit sicherem Ukemi fällt. Struktur und Timing sind wichtiger als Kraft."
+    }
+  },
+  {
+    "id": "nikyo",
+    "slug": "nikyo",
+    "romaji": "Nikyō",
+    "jp": "二教",
+    "category": "other",
+    "def": {
+      "en": "Second control: rotational wrist lock creating a strong downward spiral.",
+      "de": "Zweite Kontrolle: Rotationshebel am Handgelenk mit starker Abwärtsspirale."
+    },
+    "literal": { "en": "second + teaching", "de": "zweites + Lehren" },
+    "notes": {
+      "en": "Often called kote-mawashi in some lines. The lock spirals the forearm while the elbow and shoulder are managed to destabilize the trunk; the emphasis is structural, not pain-driven. Train progressive pressure, clear taps, and elbow alignment to protect the joint. Useful in tanto contexts to turn the blade away. Common errors: cranking the hand without controlling the elbow/shoulder, or twisting from the arms instead of rotating from the hips.",
+      "de": "In manchen Linien auch kote-mawashi genannt. Die Spirale wirkt über den Unterarm, während Ellbogen und Schulter geführt werden, um den Rumpf zu destabilisieren; Schwerpunkt ist Struktur, nicht Schmerz. Mit ansteigendem Druck, klaren Abklopfzeichen und sauberer Ellbogenausrichtung üben. In Tantō-Situationen hilfreich, um die Klinge abzuwenden. Häufige Fehler: nur am Handgelenk „drehen“ ohne Ellbogen/Schulter zu kontrollieren oder aus den Armen statt aus der Hüfte zu rotieren."
+    }
+  },
+  {
+    "id": "obi",
+    "slug": "obi",
+    "romaji": "Obi",
+    "jp": "帯",
+    "category": "etiquette",
+    "def": {
+      "en": "Belt; indicates grade by color or black for dan.",
+      "de": "Gürtel; zeigt Grad an (Farbe) bzw. Schwarz für Dan."
+    },
+    "literal": { "en": "belt/sash", "de": "Gürtel/Schärpe" },
+    "notes": {
+      "en": "Practical and symbolic: secures the jacket (and in Aikidō supports the hakama ties) and shows rank per dojo/association. Etiquette: knot flat at center, ends even; jacket left over right; keep belt clean and in good repair. Do not drag weapons or place them across the obi casually. Rank colors vary by country—follow local standards without comparison.",
+      "de": "Praktisch und symbolisch: fixiert die Jacke (und stützt im Aikidō die Hakama-Bänder) und zeigt den Grad je nach Dojo/Verband. Etikette: Knoten flach in der Mitte, Enden gleich; Jacke links über rechts; Gürtel sauber und intakt halten. Waffen nicht am Obi entlang schleifen oder achtlos darauf legen. Farbsysteme unterscheiden sich je nach Land – lokale Standards respektieren, nicht vergleichen."
+    }
+  },
+  {
+    "id": "omote",
+    "slug": "omote",
+    "romaji": "Omote",
+    "jp": "表",
+    "category": "movement",
+    "def": {
+      "en": "Front/exterior line of execution—advancing on uke’s front.",
+      "de": "Vordere/äußere Ausführungslinie – vorwärts auf Ukes Vorderseite."
+    },
+    "literal": { "en": "front, surface, exterior", "de": "vorne, Oberfläche, äußerlich" },
+    "notes": {
+      "en": "Omote expresses the ‘visible/front’ approach: you take initiative on uke’s front quadrant, controlling center before the cross. It demands precise timing and posture since you engage closer to uke’s power line; atemi often opens the gate. Typically contrasted with ura (rear/turning line) which resolves by moving behind. Both are principles, not fixed foot patterns.",
+      "de": "Omote bezeichnet den „vorderen/sichtbaren“ Zugang: Initiative auf Ukes Vorderquartier, mit Zentrenkontrolle vor dem Kreuzen. Erfordert genaues Timing und Haltung, da näher an Ukes Kraftlinie gearbeitet wird; Atemi öffnet oft die „Tür“. Steht typischerweise im Gegenüber zu ura (hintere/drehende Linie), die durch das Hintergehen löst. Beides sind Prinzipien, keine festen Schritt­muster."
+    }
+  },
+  {
+    "id": "onegai-shimasu",
+    "slug": "onegai-shimasu",
+    "romaji": "Onegai shimasu",
+    "jp": "お願いします",
+    "category": "etiquette",
+    "def": {
+      "en": "\"Please\" — said before practice to teacher/partner.",
+      "de": "\"Bitte\" – vor dem Üben an Lehrer/Partner gerichtet."
+    },
+    "literal": { "en": "I humbly request", "de": "Ich bitte höflich" },
+    "notes": {
+      "en": "Signals a respectful request to practice together—used at bow-in and when pairing. Conveys ‘let’s study well together,’ not a casual ‘please.’ Variants include the more formal „yoroshiku onegai itashimasu.“ Tone and posture should match the words: small bow, clear eye line, ready mind.",
+      "de": "Zeigt die respektvolle Bitte, gemeinsam zu üben – beim Angrüßen und beim Partnerfinden. Bedeutet sinngemäß „Lass uns gut miteinander lernen“, nicht ein beiläufiges „bitte“. Varianten: formeller „yoroshiku onegai itashimasu“. Körperhaltung dem Wortlaut anpassen: kleine Verbeugung, klarer Blick, bereiter Geist."
+    }
+  },
+  {
+    "id": "osae-waza",
+    "slug": "osae-waza",
+    "romaji": "Osae-waza",
+    "jp": "抑え技",
+    "category": "other",
+    "def": { "en": "Pinning/immobilization techniques.", "de": "Halte-/Fixiertechniken." },
+    "literal": { "en": "to press/suppress + technique", "de": "drücken/unterdrücken + Technik" },
+    "notes": {
+      "en": "In Aikidō, chiefly the ikkyo–gokyo family of controls and related pins. Aim for structural containment—align shoulder–elbow–wrist, settle body weight through the frame, and give uke clear space to tap or transition. Good osae ends cleanly with posture, breath, and safe spacing; grinding force or pain compliance is a teaching failure.",
+      "de": "Im Aikidō vor allem die Kontrollen ikkyo–gokyo und verwandte Fixierungen. Ziel ist strukturelles Halten – Schulter–Ellbogen–Handgelenk ausrichten, Körpergewicht über den Rahmen setzen und Uke klaren Raum zum Abklopfen oder Wechsel lassen. Gutes osae endet sauber mit Haltung, Atem und sicherem Abstand; „Mahlen“ oder reiner Schmerzzwang ist didaktisch verfehlt."
+    }
+  },
+  {
+    "id": "otagai-ni-rei",
+    "slug": "otagai-ni-rei",
+    "romaji": "Otagai ni rei",
+    "jp": "お互いに礼",
+    "category": "etiquette",
+    "def": { "en": "Bow to each other (partners).", "de": "Verbeugung zueinander (Partner)." },
+    "literal": { "en": "to one another + bow", "de": "einander + Verbeugung" },
+    "notes": {
+      "en": "Used when pairing and often at class end to thank all partners. It acknowledges mutual responsibility for safety and learning. Bow with attention—brief, centered, and present—then re-establish zanshin before moving.",
+      "de": "Wird beim Partnerfinden und oft am Ende des Trainings genutzt, um allen Partnern zu danken. Es anerkennt die gemeinsame Verantwortung für Sicherheit und Lernen. Mit Aufmerksamkeit verbeugen – kurz, zentriert, präsent – und vor dem Weitergehen Zanshin herstellen."
+    }
+  },
+  {
+    "id": "rei",
+    "slug": "rei",
+    "romaji": "Rei",
+    "jp": "礼",
+    "category": "etiquette",
+    "def": {
+      "en": "Bow; the gesture of respect before/after practice.",
+      "de": "Verbeugung; Geste des Respekts vor/nach dem Üben."
+    },
+    "literal": { "en": "courtesy/etiquette", "de": "Höflichkeit/Etikette" },
+    "notes": {
+      "en": "Rei frames training as cooperation, not contest. Bow to shōmen/kamiza to acknowledge lineage, to the instructor to receive guidance, and to partners to accept mutual responsibility for safety and learning. Quality matters more than angle: steady posture, quiet breath, clear attention. Cultural note: it’s etiquette, not worship. Practical cues: pause your movement first, then bow; avoid crossing between instructor and shōmen; keep weapons oriented safely when bowing.",
+      "de": "Rei rahmt das Üben als Zusammenarbeit, nicht als Wettkampf. Verbeugung zum Shōmen/Kamiza anerkennt die Linie, zur Lehrperson die Anleitung, zum Partner die gemeinsame Verantwortung für Sicherheit und Lernen. Wichtiger als der Winkel ist die Qualität: stabile Haltung, ruhiger Atem, klare Aufmerksamkeit. Kultureller Hinweis: Etikette, kein Kult. Praxis: Bewegung erst stoppen, dann verbeugen; nicht zwischen Lehrperson und Shōmen hindurchgehen; Waffen beim Verbeugen sicher ausrichten."
+    }
+  },
+  {
+    "id": "reishiki",
+    "slug": "reishiki",
+    "romaji": "Reishiki",
+    "jp": "礼式",
+    "category": "etiquette",
+    "def": {
+      "en": "Etiquette/formal manners in the dojo.",
+      "de": "Etikette/formale Umgangsformen im Dōjō."
+    },
+    "literal": { "en": "courtesy + form", "de": "Höflichkeit + Form" },
+    "notes": {
+      "en": "Reishiki organizes attention so keiko is safe and effective: punctuality, clean space, proper dress (keikogi/hakama), bows at opening/closing, and clear partner greetings. Do not walk between instructor and shōmen; keep weapons in order; listen when the instructor addresses the group. Local customs vary—learn them and apply the spirit (respect, safety, clarity) rather than policing minutiae.",
+      "de": "Reishiki bündelt Aufmerksamkeit, damit Keiko sicher und wirksam ist: Pünktlichkeit, sauberer Raum, korrekte Kleidung (Keikogi/Hakama), Verbeugungen zu Beginn/Ende und klare Partnergrüße. Nicht zwischen Lehrperson und Shōmen hindurchgehen; Waffen ordentlich führen; zuhören, wenn die Lehrperson die Gruppe anspricht. Lokale Gepflogenheiten variieren – den Geist (Respekt, Sicherheit, Klarheit) verstehen und anwenden statt Kleinlichkeiten zu „polizieren“."
+    }
+  },
+  {
+    "id": "ritsurei",
+    "slug": "ritsurei",
+    "romaji": "Ritsurei",
+    "jp": "立礼",
+    "category": "etiquette",
+    "def": { "en": "Standing bow.", "de": "Stehende Verbeugung." },
+    "literal": { "en": "standing + bow", "de": "stehend + Verbeugung" },
+    "notes": {
+      "en": "Neutral stance, hinge from the hips with a long spine, neck neutral, eyes soft; hands stay at the thighs or along the seams (per dojo style). Small, unhurried movement signals focus. With weapons, maintain safe tip/edge orientation and avoid sweeping others as you bow.",
+      "de": "Neutrale Stellung, Hüftknick bei langer Wirbelsäule, Nacken neutral, Blick weich; Hände an den Oberschenkeln oder entlang der Seitennähte (je nach Dojo). Kleine, ruhige Bewegung zeigt Konzentration. Mit Waffen sichere Spitzen-/Schneidenausrichtung wahren und niemanden beim Verbeugen „streifen“."
+    }
+  },
+  {
+    "id": "ryokata-tori",
+    "slug": "ryokata-tori",
+    "romaji": "Ryokata-tori",
+    "jp": "両肩取り",
+    "category": "attack",
+    "def": { "en": "Both shoulders grabbed.", "de": "Beide Schultern werden gefasst." },
+    "literal": { "en": "both + shoulders + seize", "de": "beide + Schultern + greifen" },
+    "notes": {
+      "en": "A posture test: uke fixes the shoulder girdle and limits head turn. Study dropping weight through the heels, connecting both arms to your center, and turning from the hips to displace the whole frame (not wrestling the upper body). Builds entries for kokyū-nage, tenchi-nage, and koshi mechanics. Safety: protect the neck by moving torso and head together; avoid yanking the collar.",
+      "de": "Ein Haltungs-Test: Uke fixiert den Schultergürtel und begrenzt die Kopfrotation. Übe Gewicht in die Fersen zu senken, beide Arme mit dem Zentrum zu koppeln und aus der Hüfte zu drehen, um den ganzen Rahmen zu verlagern (kein Oberkörper-Ringen). Baut Einstiege für Kokyū-nage, Tenchi-nage und Koshimechanik. Sicherheit: Nacken schützen, indem Rumpf und Kopf gemeinsam bewegen; Kragen nicht reißen."
+    }
+  },
+  {
+    "id": "ryote-tori",
+    "slug": "ryote-tori",
+    "romaji": "Ryote-tori",
+    "jp": "両手取り",
+    "category": "attack",
+    "def": {
+      "en": "Both wrists grabbed (each of uke's hands on each wrist).",
+      "de": "Beide Handgelenke werden gefasst (jede Hand greift ein Handgelenk)."
+    },
+    "literal": { "en": "both + hands + seize", "de": "beide + Hände + greifen" },
+    "notes": {
+      "en": "High control on your hands—so keep elbows heavy and connect through the forearms into the center. Move feet first to set angle/height, then lead the grip with body rotation (irimi/tenkan). Common study lines: tenchi-nage, kokyū-nage, and kaiten-based turns. Avoid pulling with the arms or widening the hands away from the center line.",
+      "de": "Viel Kontrolle an deinen Händen – daher Ellbogen „schwer“ halten und über die Unterarme ins Zentrum verbinden. Zuerst die Füße setzen, um Winkel/Höhe zu bestimmen, dann den Griff mit Körperrotation führen (irimi/tenkan). Häufige Studienlinien: Tenchi-nage, Kokyū-nage und Kaiten-Drehungen. Kein Ziehen mit den Armen und die Hände nicht von der Mittellinie wegspreizen."
+    }
+  },
+  {
+    "id": "triangle-circle-square",
+    "slug": "triangle-circle-square",
+    "romaji": "Sankaku–En–Shikaku",
+    "jp": "三角・円・四角",
+    "category": "philosophy",
+    "def": {
+      "en": "Triangle–Circle–Square: stance, movement, and stable finish.",
+      "de": "Dreieck–Kreis–Quadrat: Stand, Bewegung und stabiler Abschluss."
+    },
+    "literal": { "en": "triangle • circle • square", "de": "Dreieck • Kreis • Quadrat" },
+    "notes": {
+      "en": "Triangle finds the angle (irimi) and initiative; circle blends/turns (tenkan, kaiten); square settles structure for pin or posture. Use it as a checklist: angle first, then arc, then stabilize—don’t skip to ‘square’ without taking the line. The model maps cleanly to weapons: cut the angle, draw the circle, finish on a clear hasuji.",
+      "de": "Das Dreieck nimmt den Winkel (irimi) und die Initiative; der Kreis verbindet/dreht (tenkan, kaiten); das Quadrat setzt die Struktur für Halt oder Haltung. Als Prüfliste nutzen: erst Winkel, dann Bogen, dann stabilisieren – nicht zum „Quadrat“ springen, ohne die Linie genommen zu haben. Überträgt sich direkt auf Waffen: Winkel schneiden, Kreis ziehen, mit klarem Hasuji abschließen."
+    }
+  },
+  {
+    "id": "sankyo",
+    "slug": "sankyo",
+    "romaji": "Sankyō",
+    "jp": "三教",
+    "category": "other",
+    "def": {
+      "en": "Third control: spiral up the arm to the shoulder, leading posture.",
+      "de": "Dritte Kontrolle: Spiralhebel über den Arm bis zur Schulter, führt die Haltung."
+    },
+    "literal": { "en": "third + teaching", "de": "drittes + Lehren" },
+    "notes": {
+      "en": "Also known as kote-hineri in some lines. The spiral winds the forearm and orients the elbow down to steer the shoulder and spine. Study continuous, small-circle rotation from the hips/center with stable posture and clear tap safety—structure over pain. Transfers cleanly to tanto defenses and weapon disarms because the spiral keeps the ‘edge’ off your body. Frequent errors: breaking the spiral into stops, over-gripping the hand, or lifting the elbow away from your body.",
+      "de": "In manchen Linien auch kote-hineri genannt. Die Spirale „wickelt“ den Unterarm, richtet den Ellbogen nach unten und steuert Schulter und Wirbelsäule. Übe kontinuierliche Kleinkreisdrehung aus Hüfte/Zentrum, stabile Haltung und klare Abklopf-Sicherheit – Struktur statt Schmerz. Überträgt sich gut auf Tantō-Abwehr und Entwaffnungen, da die Spirale die „Schneide“ vom Körper fernhält. Häufige Fehler: die Spirale in Stopps zerlegen, die Hand „zuklammern“ oder den Ellbogen vom Körper abheben."
+    }
+  },
+  {
+    "id": "seika-tanden",
+    "slug": "seika-tanden",
+    "romaji": "Seika-tanden",
+    "jp": "臍下丹田",
+    "category": "philosophy",
+    "def": {
+      "en": "Lower abdominal center below the navel—the body's hub.",
+      "de": "Unteres Bauchzentrum unterhalb des Nabels – der Körpermittelpunkt."
+    },
+    "literal": { "en": "below the navel + cinnabar field", "de": "unter dem Nabel + Zinnoberfeld" },
+    "notes": {
+      "en": "Pedagogical ‘center’ used across Japanese arts. Treat it as the organizing point for posture, breath (kokyū), and movement initiation: expansion/settling starts here and travels through the frame. Practical cues: soften ribs, lengthen the back of the neck, feel weight through the feet; let hands be carried by the center rather than moving first. When seika-tanden leads, techniques feel lighter and timing clearer.",
+      "de": "Pädagogisches „Zentrum“ vieler japanischer Künste. Es dient als Organisationspunkt für Haltung, Atem (kokyū) und Bewegungsbeginn: Expansion/Settling startet hier und läuft durch den Körperrahmen. Praxis: Rippen weich, Nackenrückseite lang, Gewicht über die Füße spüren; die Hände vom Zentrum „tragen lassen“, nicht zuerst bewegen. Wenn das Seika-tanden führt, wirken Techniken leichter und das Timing klarer."
+    }
+  },
+  {
+    "id": "seiretsu",
+    "slug": "seiretsu",
+    "romaji": "Seiretsu",
+    "jp": "整列",
+    "category": "etiquette",
+    "def": { "en": "Line up/arrange in order.", "de": "Aufstellen/ordnungsgemäß anreihen." },
+    "literal": { "en": "to arrange + line", "de": "ordnen + Reihe" },
+    "notes": {
+      "en": "The class forms lines by grade facing shōmen/kamiza. Conventions differ (higher ranks to the instructor’s right or left), so follow local practice and move promptly. Stand evenly spaced, weapons placed neatly, and fall silent as the senior calls bow-in. Purpose: focus attention, establish safety, and show mutual respect—precision without stiffness.",
+      "de": "Die Gruppe stellt sich nach Graduierung in Reihen zum Shōmen/Kamiza auf. Gepflogenheiten variieren (Höhere rechts oder links der Lehrperson); lokale Ordnung zügig übernehmen. Gleichmäßiger Abstand, Waffen ordentlich abgelegt, Ruhe bis zum Angrüßen. Zweck: Aufmerksamkeit bündeln, Sicherheit herstellen und gegenseitigen Respekt zeigen – präzise, aber nicht verkrampft."
+    }
+  },
+  {
+    "id": "seiza",
+    "slug": "seiza",
+    "romaji": "Seiza",
+    "jp": "正座",
+    "category": "stance",
+    "def": {
+      "en": "Formal kneeling posture used for etiquette and seated practice.",
+      "de": "Formales Kniesitzen für Etikette und Sitzübungen."
+    },
+    "literal": { "en": "correct/proper + sit", "de": "richtig + sitzen" },
+    "notes": {
+      "en": "Cultural posture for bowing, mokusō, and suwari-waza. Hips heavy toward the heels, spine tall, ribs soft; tops of feet flat, knees comfortable width. Transition to shikkō (knee-walking) or seated techniques without bouncing. Health note: if kneeling strains knees/ankles, use approved alternatives (agura or seiza pad) per dojo policy—the spirit is attentiveness, not endurance testing.",
+      "de": "Kulturelle Haltung für Verbeugung, Mokusō und Suwari-waza. Becken schwer zu den Fersen, Wirbelsäule lang, Rippen weich; Fußrücken am Boden, Knie in angenehmem Abstand. Übergänge zu Shikkō (Knieschritt) oder Sitztechniken ohne „Abfedern“. Hinweis: Bei Knie-/Sprunggelenkproblemen zugelassene Alternativen (Agura oder Kniesitzkissen) nutzen – entscheidend ist Aufmerksamkeit, nicht Leidensfähigkeit."
+    }
+  },
+  {
+    "id": "senpai",
+    "slug": "senpai",
+    "romaji": "Senpai",
+    "jp": "先輩",
+    "category": "etiquette",
+    "def": { "en": "Senior student; guides juniors.", "de": "Höherer Schüler; begleitet Jüngere." },
+    "literal": { "en": "earlier + companion", "de": "früher + Gefährte" },
+    "notes": {
+      "en": "Role in the senpai–kōhai relationship: model reishiki (etiquette), safety, and steady practice; help newcomers integrate (lining up, bowing, basics). Authority is by time-in-training and trust, not personality. Offer concise guidance on the mat, defer technical corrections to the instructor when in doubt, and keep the dojo culture welcoming.",
+      "de": "Rolle im Senpai–Kōhai-Verhältnis: Reishiki (Etikette), Sicherheit und ruhiges Üben vorleben; Neulinge beim Ankommen unterstützen (Aufstellen, Grüßen, Grundlagen). Autorität entsteht durch Trainingszeit und Vertrauen, nicht durch Persönlichkeit. Hinweise auf der Matte knapp halten, technische Korrekturen bei Unsicherheit der Lehrperson überlassen und eine einladende Dojo-Kultur fördern."
+    }
+  },
+  {
+    "id": "sensei",
+    "slug": "sensei",
+    "romaji": "Sensei",
+    "jp": "先生",
+    "category": "etiquette",
+    "def": { "en": "Teacher/instructor.", "de": "Lehrer/Lehrerin." },
+    "literal": { "en": "one who was born before", "de": "der/die „vorher Geborene“" },
+    "notes": {
+      "en": "Honorific title used on the mat and in dojo communications (e.g., ‘Tanaka Sensei’). Avoid first names during practice; follow local custom for addressing assistants (shidōin/fukushidōin) and visitors. After class, it’s polite to thank the instructor with a brief bow and clear ‘arigatō gozaimashita.’",
+      "de": "Ehrenbezeichnung auf der Matte und in Dojo-Kommunikation (z. B. „Tanaka Sensei“). Vornamen im Training meiden; lokale Anrede für Assistenten (shidōin/fukushidōin) und Gäste beachten. Nach dem Training ist ein kurzes „Arigatō gozaimashita“ mit Verbeugung höflich."
+    }
+  },
+  {
+    "id": "sensei-ni-rei",
+    "slug": "sensei-ni-rei",
+    "romaji": "Sensei ni rei",
+    "jp": "先生に礼",
+    "category": "etiquette",
+    "def": { "en": "Bow to the teacher.", "de": "Verbeugung zum Lehrer/zur Lehrerin." },
+    "literal": { "en": "to teacher + bow", "de": "zum Lehrer + Verbeugung" },
+    "notes": {
+      "en": "Usually led by the senior student at bow-in/out. The bow acknowledges instruction and shared responsibility for safe study; it is etiquette, not worship. With weapons present, ensure safe orientation and spacing. Pause, settle breath, then bow together—clarity over dramatics.",
+      "de": "Wird beim Angrüßen/Abgrüßen meist vom ranghöchsten Schüler angeleitet. Die Verbeugung anerkennt Anleitung und gemeinsame Verantwortung für sicheres Lernen; Etikette, kein Kult. Bei Waffen auf sichere Ausrichtung und Abstand achten. Kurz sammeln, dann gemeinsam verbeugen – Klarheit statt Dramatisierung."
+    }
+  },
+  {
+    "id": "shiho-nage",
+    "slug": "shiho-nage",
+    "romaji": "Shihō-nage",
+    "jp": "四方投げ",
+    "category": "movement",
+    "def": {
+      "en": "Four-direction throw using elbow control and a cutting line.",
+      "de": "Vier-Richtungen-Wurf über Ellbogenkontrolle und Schnittlinie."
+    },
+    "literal": { "en": "four + directions + throw", "de": "vier + Richtungen + Wurf" },
+    "notes": {
+      "en": "Historically linked to sword pedagogy: the ‘four directions’ echo cutting to the front, back, left, and right while maintaining center. Principle: control the elbow to align the shoulder and spine, then ‘cut’ through your own line—projection or pin depends on height and angle. Emphasis is on posture and hasuji-like alignment, not wrist twisting. Common pitfalls: wrestling the hand, losing the elbow close to the body, or stepping off your line so the cut has no support.",
+      "de": "Historisch mit der Schwertschulung verbunden: Die „vier Richtungen“ spiegeln Schnitte nach vorn, hinten, links und rechts bei gewahrter Mitte. Prinzip: Ellbogen kontrollieren, um Schulter und Wirbelsäule auszurichten, dann entlang der eigenen Linie „schneiden“ – je nach Höhe/Winkel als Projektion oder Fixierung. Schwerpunkt liegt auf Haltung und hasuji-ähnlicher Ausrichtung, nicht auf Handgelenksdrehen. Häufige Fehler: am Handgelenk „kämpfen“, den Ellbogen vom Körper lösen oder aus der eigenen Linie treten, sodass der Schnitt keine Stütze hat."
+    }
+  },
+  {
+    "id": "shin-gi-tai",
+    "slug": "shin-gi-tai",
+    "romaji": "Shin–Gi–Tai",
+    "jp": "心技体",
+    "category": "philosophy",
+    "def": {
+      "en": "Unity of mind, technique, and body.",
+      "de": "Einheit von Geist, Technik und Körper."
+    },
+    "literal": { "en": "mind/heart + skill + body", "de": "Geist/Herz + Technik + Körper" },
+    "notes": {
+      "en": "A budō triad found across Japanese arts: calm intention (shin), reliable method (gi), and a trained vessel (tai). Training emphasis rotates—etiquette/breath for shin, precise lines and drills for gi, conditioning/posture for tai—but the goal is integration so choices under pressure are simple and kind. Useful diagnostic: when something fails, identify which pillar sagged; re-balance rather than forcing more repetitions.",
+      "de": "Ein Budō-Dreiklang in vielen japanischen Künsten: ruhige Intention (shin), verlässliche Methode (gi) und ein geschulter Körper (tai). Der Trainingsfokus wechselt – Etikette/Atem für shin, präzise Linien/Drills für gi, Kondition/Haltung für tai –, Ziel ist jedoch die Integration, damit Entscheidungen unter Druck einfach und zugewandt bleiben. Praktischer Check: Wenn etwas misslingt, klären, welche Säule schwächelt; ausgleichen statt bloß Wiederholungen erzwingen."
+    }
+  },
+  {
+    "id": "shizentai",
+    "slug": "shizentai",
+    "romaji": "Shizentai",
+    "jp": "自然体",
+    "category": "stance",
+    "def": {
+      "en": "Natural stance: feet under hips, easy posture, ready to move.",
+      "de": "Natürliche Haltung: Füße unter der Hüfte, lockere Haltung, bewegungsbereit."
+    },
+    "literal": { "en": "natural + body", "de": "natürlich + Körper" },
+    "notes": {
+      "en": "Neutral base between drills and before initiative—weight even, pelvis neutral, crown lifted, hands relaxed near the center. It’s not sloppy rest; it’s poised availability that converts instantly to hanmi or agura/seiza. Use it to reset breath and awareness so entries start clean, not rushed.",
+      "de": "Neutrale Basis zwischen Sequenzen und vor der Initiative – Gewicht ausgeglichen, Becken neutral, Scheitel aufgerichtet, Hände entspannt nahe der Mitte. Kein nachlässiges Ausruhen, sondern bereite Verfügbarkeit, die sofort in Hanmi oder Agura/Seiza wechselt. Dient zum Atem- und Aufmerksamkeits-Reset, damit Einstiege sauber und nicht gehetzt beginnen."
+    }
+  },
+  {
+    "id": "shomen",
+    "slug": "shomen",
+    "romaji": "Shōmen",
+    "jp": "正面",
+    "category": "etiquette",
+    "def": {
+      "en": "Front/main side of the dōjō (often where a portrait/scroll sits).",
+      "de": "Front-/Hauptseite des Dōjō (oft mit Bild/Schriftrolle)."
+    },
+    "literal": { "en": "true/correct + face", "de": "richtig + Gesicht/Front" },
+    "notes": {
+      "en": "Marks the dojo’s orientation and is the focus for opening/closing bows. Often coincides with kamiza; if separate, treat both with the same respect: keep clear, tidy, and don’t turn your back unnecessarily during ceremonies. Line up facing shōmen unless instructed otherwise.",
+      "de": "Bestimmt die Ausrichtung des Dōjō und ist Fokus für An- und Abgrüßen. Fällt häufig mit der Kamiza zusammen; wenn getrennt, beide gleich respektvoll behandeln: frei halten, ordentlich, bei Zeremonien nicht unnötig den Rücken zuwenden. Zum Aufstellen auf Shōmen ausrichten, sofern nichts anderes angesagt ist."
+    }
+  },
+  {
+    "id": "shomen-ni-rei",
+    "slug": "shomen-ni-rei",
+    "romaji": "Shōmen ni rei",
+    "jp": "正面に礼",
+    "category": "etiquette",
+    "def": {
+      "en": "Bow to the front (shōmen/kamiza).",
+      "de": "Verbeugung zur Front (Shōmen/Kamiza)."
+    },
+    "literal": { "en": "to the front + bow", "de": "zur Vorderseite + Verbeugung" },
+    "notes": {
+      "en": "Acknowledges the art’s lineage and sets the room’s orientation at opening/closing. It is etiquette, not worship: steady posture, quiet breath, and clear attention are the substance. Keep the area tidy, avoid crossing between instructor and shōmen, and manage weapon orientation while bowing.",
+      "de": "Anerkennt die Linie der Kunst und legt bei Beginn/Ende die Ausrichtung des Raums fest. Etikette, kein Kult: stabile Haltung, ruhiger Atem und klare Aufmerksamkeit sind der Kern. Bereich sauber halten, nicht zwischen Lehrperson und Shōmen hindurchgehen und beim Verbeugen Waffen sicher ausrichten."
+    }
+  },
+  {
+    "id": "shomen-uchi",
+    "slug": "shomen-uchi",
+    "romaji": "Shomen-uchi",
+    "jp": "正面打ち",
+    "category": "attack",
+    "def": {
+      "en": "Frontal strike to the head/forehead line.",
+      "de": "Frontaler Schlag zur Stirn/Kopflinie."
+    },
+    "literal": { "en": "front + face + strike", "de": "vorn + Gesicht + Schlag" },
+    "notes": {
+      "en": "Pedagogical strike with sword heritage—travels straight down the centerline and demands honest posture, distance (ma-ai), and high cover in ukemi. Trains direct entries (omote, irimi) and crisp line changes (ura) without angling off early. Contrast with yokomen-uchi (diagonal to the temple/jaw), which tests oblique covers and off-line entries.",
+      "de": "Didaktischer Schlag mit Schwertbezug – läuft gerade auf der Mittellinie und verlangt klare Haltung, Distanz (ma-ai) und hohe Deckung im Ukemi. Schult direkte Einstiege (omote, irimi) und präzise Linienwechsel (ura) ohne frühzeitiges Ausweichen. Abgrenzung zu yokomen-uchi (diagonal zur Schläfe/Kiefer), das schräge Deckungen und seitliche Einstiege prüft."
+    }
+  },
+  {
+    "id": "shotei-uchi",
+    "slug": "shotei-uchi",
+    "romaji": "Shotei-uchi",
+    "jp": "掌底打ち",
+    "category": "attack",
+    "def": {
+      "en": "Palm-heel strike (used as atemi).",
+      "de": "Handballenschlag (als Atemi genutzt)."
+    },
+    "literal": { "en": "palm + base + strike", "de": "Handfläche + Basis + Schlag" },
+    "notes": {
+      "en": "A safety-forward atemi: neutral wrist, palm base aligned with the forearm, driven by body weight rather than arm swing. Targets include chin/jawline, solar plexus, or hip line to disrupt posture and create openings—often indicated rather than delivered with force. Keep posture tall, elbow heavy, and recover the line immediately after contact.",
+      "de": "Sicherheitsbetontes Atemi: neutrales Handgelenk, Handballen in Linie mit dem Unterarm, getragen vom Körpergewicht statt Armschwung. Ziele u. a. Kinn/Kieferlinie, Solarplexus oder Hüftlinie, um Haltung zu stören und Öffnungen zu schaffen – häufig angedeutet statt hart ausgeführt. Haltung aufrecht, Ellbogen schwer, Linie nach dem Kontakt sofort zurückgewinnen."
+    }
+  },
+  {
+    "id": "shu-ha-ri",
+    "slug": "shu-ha-ri",
+    "romaji": "Shu–Ha–Ri",
+    "jp": "守破離",
+    "category": "philosophy",
+    "def": {
+      "en": "Stages of learning: obey the form, break the form, transcend the form.",
+      "de": "Lernstufen: Form bewahren, Form brechen, Form überschreiten."
+    },
+    "literal": { "en": "protect + break + depart", "de": "bewahren + brechen + verlassen" },
+    "notes": {
+      "en": "A teaching framework in many Japanese arts. Shu: copy exactly to build reliable basics and etiquette. Ha: test limits—compare lines, remove excess, and adapt under supervision. Ri: act from principle; forms reappear without being forced. Progress is cyclical, not a straight ladder; returning to shu refines ri. In Aikidō this means: preserve safety and clarity first; freedom grows from precision, not from shortcuts.",
+      "de": "Ein Lehrrahmen vieler japanischer Künste. Shu: exakt nachahmen, um verlässliche Grundlagen und Etikette aufzubauen. Ha: Grenzen erproben – Linien vergleichen, Überflüssiges entfernen, unter Anleitung anpassen. Ri: aus Prinzip handeln; Formen erscheinen, ohne „gemacht“ zu wirken. Der Fortschritt ist zyklisch, keine Leiter; die Rückkehr zu shu verfeinert ri. Im Aikidō gilt: Sicherheit und Klarheit zuerst; Freiheit entsteht aus Präzision, nicht aus Abkürzungen."
+    }
+  },
+  {
+    "id": "sode-tori",
+    "slug": "sode-tori",
+    "romaji": "Sode-tori",
+    "jp": "袖取り",
+    "category": "attack",
+    "def": { "en": "Sleeve grab.", "de": "Ärmelgriff." },
+    "literal": { "en": "sleeve + seize", "de": "Ärmel + greifen" },
+    "notes": {
+      "en": "Clothing control that fixes the forearm through the jacket, often near the elbow. Study how sleeve tension changes posture: rotate the forearm to align with your center, keep the elbow close, and lead from the shoulder girdle rather than peeling fingers. Emphasizes timing on small angles and teaches connection without relying on the hand. Safety: avoid sudden jerks on fabric; manage distance so ukemi stays clear.",
+      "de": "Kleidungskontrolle, die den Unterarm über die Jacke fixiert, oft nahe dem Ellbogen. Übe, wie Stoffspannung Haltung verändert: Unterarm zur eigenen Mitte ausrichten, Ellbogen körpernah halten und über den Schultergürtel führen statt Finger „abzureißen“. Betont Timing auf kleinen Winkeln und schult Verbindung ohne Handdominanz. Sicherheit: keine ruckartigen Züge am Stoff; Distanz so führen, dass Ukemi klar bleibt."
+    }
+  },
+  {
+    "id": "suburi",
+    "slug": "suburi",
+    "romaji": "Suburi",
+    "jp": "素振り",
+    "category": "other",
+    "def": {
+      "en": "Solo weapon swings/drills for form and conditioning.",
+      "de": "Solo-Waffenschwünge/Drills für Form und Kondition."
+    },
+    "literal": { "en": "plain/simple + swing", "de": "einfach + Schwung" },
+    "notes": {
+      "en": "Purpose: engrain clean lines (hasuji), stable posture, footwork, and breath rhythm without partner noise. Quality over volume—consistent arcs, same start/finish points, quiet shoulders, eyes steady (metsuke). Transfers directly to empty hand through timing, center use, and distance sense. Useful formats include slow, breath-led sets for organization and moderate, sustainable reps for endurance.",
+      "de": "Zweck: saubere Linien (hasuji), stabile Haltung, Fußarbeit und Atemrhythmus ohne Partnereinfluss einprägen. Qualität vor Menge – gleichbleibende Bögen, identische Start-/Endpunkte, ruhige Schultern, ruhiger Blick (metsuke). Überträgt sich direkt ins Waffenlose durch Timing, Zentrumsnutzung und Distanzgefühl. Sinnvoll sind langsame, atemgeführte Serien zur Organisation und moderate, nachhaltige Wiederholungen für Ausdauer."
+    }
+  },
+  {
+    "id": "sumi-otoshi",
+    "slug": "sumi-otoshi",
+    "romaji": "Sumi-otoshi",
+    "jp": "隅落とし",
+    "category": "movement",
+    "def": {
+      "en": "Corner drop; guide uke diagonally into empty space.",
+      "de": "Eckensturz; Uke diagonal in den leeren Raum führen."
+    },
+    "literal": { "en": "corner + drop", "de": "Ecke + fallen lassen" },
+    "notes": {
+      "en": "A light, diagonal off-balance that tips uke toward a weak corner without collision. Rather than pulling the arm, set angle and height so the axis tilts and the legs must step—emptiness (ku) does the work. Appears from grips or strikes and pairs well with atemi to clear the line. Safety: create a wide, low path so the fall is a slide, not a snap.",
+      "de": "Eine leichte, diagonale Destabilisierung in eine schwache Ecke – ohne Zusammenstoß. Statt am Arm zu ziehen, Winkel und Höhe so setzen, dass die Achse kippt und die Beine reagieren müssen – die Leere (ku) „arbeitet“. Entsteht aus Griffen oder Schlägen und lässt sich gut mit Atemi kombinieren, um die Linie zu öffnen. Sicherheit: breite, niedrige Bahn schaffen, damit der Fall gleitend und nicht abrupt ist."
+    }
+  },
+  {
+    "id": "tai-sabaki",
+    "slug": "tai-sabaki",
+    "romaji": "Tai-sabaki",
+    "jp": "体捌き",
+    "category": "movement",
+    "def": {
+      "en": "Whole-body repositioning to gain angle and balance.",
+      "de": "Ganzkörper-Umsetzen, um Winkel und Gleichgewicht zu gewinnen."
+    },
+    "literal": { "en": "body + handling", "de": "Körper + Handhabung" },
+    "notes": {
+      "en": "Core movement grammar: organize feet, hips, and spine so you change the relationship without fighting force. Think ‘center moves first’: feet set the track, hips turn, hands arrive last. Irimi (entering), tenkan (turning), and kaiten (rotation) are expressions of tai-sabaki, governed by ma-ai (distance) and hyōshi (beat). Common errors: moving hands before feet, widening the base, or breaking posture to escape.",
+      "de": "Kern der Bewegungssprache: Füße, Hüfte und Wirbelsäule so organisieren, dass sich die Beziehung ändert, ohne gegen Kraft zu arbeiten. „Zentrum zuerst“: Füße legen die Spur, Hüfte dreht, Hände kommen zuletzt. Irimi (Einstieg), Tenkan (Drehung) und Kaiten (Rotation) sind Ausprägungen von Tai-sabaki, gesteuert von Ma-ai (Distanz) und Hyōshi (Takt). Häufige Fehler: Hände vor den Füßen bewegen, Stand verbreitern oder die Haltung brechen, um zu entkommen."
+    }
+  },
+  {
+    "id": "tatami",
+    "slug": "tatami",
+    "romaji": "Tatami",
+    "jp": "畳",
+    "category": "etiquette",
+    "def": { "en": "Mats used for training.", "de": "Matten für das Training." },
+    "literal": { "en": "fold/floor mat", "de": "Matte/Bodenmatte" },
+    "notes": {
+      "en": "Surface and safety rule-set: no shoes, no jewelry, nails trimmed, gi clean. Step lightly on seams, don’t drag weapons or bags across the mat, and wipe down after class. Treat edges as hazard zones—roll away from them and keep throws directed toward open space. Modern foams and traditional straw feel different; adjust ukemi to the rebound of your dojo’s tatami.",
+      "de": "Grundregeln für Fläche und Sicherheit: keine Schuhe, kein Schmuck, Nägel kurz, Gi sauber. Nähte leicht belasten, Waffen oder Taschen nicht über die Matte schleifen und nach dem Training abwischen. Kanten als Gefahrenzone behandeln – davon weg rollen und Würfe in freie Bereiche lenken. Moderne Schaumstoffe und traditioneller Reisstrohaufbau fühlen sich unterschiedlich an; Ukemi an den „Rückfeder“-Charakter des Dojo anpassen."
+    }
+  },
+  {
+    "id": "te-sabaki",
+    "slug": "te-sabaki",
+    "romaji": "Te-sabaki",
+    "jp": "手捌き",
+    "category": "movement",
+    "def": {
+      "en": "Efficient hand/arm handling to keep connection and lines.",
+      "de": "Effiziente Hand-/Armarbeit, um Verbindung und Linie zu halten."
+    },
+    "literal": { "en": "hand + handling", "de": "Hand + Handhabung" },
+    "notes": {
+      "en": "Think forearm rotation (supination/pronation) and tegatana alignment before grip strength; elbows stay “heavy” so power travels through your center. Tenouchi (living grip) changes with the line—soft to receive, decisive to lead—while shoulders remain quiet. The goal is to preserve contact information and steer the axis, not to tug wrists. Weapons teach the same: edge/tip in line, hands follow hips.",
+      "de": "Zuerst Unterarmrotation (Supination/Pronation) und Tegatana-Ausrichtung, nicht Griffkraft; Ellbogen „schwer“, damit Kraft über das Zentrum läuft. Tenouchi (lebendiger Griff) passt sich der Linie an – weich zum Aufnehmen, klar zum Führen – bei ruhigen Schultern. Ziel ist Informations- und Achsführung, nicht am Handgelenk zu ziehen. Bei Waffen gilt dasselbe: Kante/Spitze auf Linie, Hände folgen der Hüfte."
+    }
+  },
+  {
+    "id": "tenchi-nage",
+    "slug": "tenchi-nage",
+    "romaji": "Tenchi-nage",
+    "jp": "天地投げ",
+    "category": "movement",
+    "def": {
+      "en": "'Heaven and earth' throw splitting lines up and down.",
+      "de": "\"Himmel-und-Erde\"-Wurf mit geteilten Linien nach oben und unten."
+    },
+    "literal": { "en": "heaven + earth + throw", "de": "Himmel + Erde + Wurf" },
+    "notes": {
+      "en": "A vertical kuzushi study: one hand opens upward while the other settles downward, with your hips centered and spine tall. The split is created by whole-body stretch and timing, not arm spreading; it turns uke’s axis so feet must step. Often taught to show how breath and posture, not force, create space. Safety: keep the head/neck long and project into open mat.",
+      "de": "Studie der vertikalen Kuzushi: eine Hand öffnet nach oben, die andere setzt nach unten, bei zentrierter Hüfte und langer Wirbelsäule. Der „Split“ entsteht durch Ganzkörperdehnung und Timing, nicht durch Armspreizen; er kippt Ukes Achse, sodass die Füße reagieren müssen. Dient häufig dazu, Atem und Haltung statt Kraft als Raumöffner zu zeigen. Sicherheit: Kopf/Nacken lang halten und in freie Matte projizieren."
+    }
+  },
+  {
+    "id": "tenkan",
+    "slug": "tenkan",
+    "romaji": "Tenkan",
+    "jp": "転換",
+    "category": "movement",
+    "def": {
+      "en": "Pivoting movement where nage turns and redirects uke's energy, blending with their force.",
+      "de": "Drehbewegung, bei der Nage sich dreht und Ukes Energie umleitet, indem er sich mit ihrer Kraft verbindet."
+    },
+    "literal": { "en": "turn + change", "de": "wenden + wechseln" },
+    "notes": {
+      "en": "Tenkan is one of the two core principles of Aikidō (together with irimi). Literally 'turning change,' it means pivoting to redirect force rather than meeting it head-on. In contrast to irimi’s direct entering, tenkan emphasizes indirect reception: when uke’s attack is already committed and stable, nage avoids collision and rolls off the line, using circular body turns and centrifugal/centripetal forces to guide uke into imbalance. The nage’s role is largely passive, letting uke’s energy carry them into instability, then using that redirected momentum for throws or pins. Characteristic are outward entries with tenkan-ashi and tai-sabaki, synchronized with exhalation, after first 'inhaling' the attack’s energy. Tenkan is sometimes described as a 'negative element' (not pejoratively), balancing irimi’s positive entering. In daily life, tenkan means stepping back from forcing arguments when the other side is unreceptive, listening first, and later re-engaging at the right time, weaving perspectives together for cooperative outcomes.",
+      "de": "Tenkan ist eines der beiden Grundprinzipien des Aikidō (neben Irimi). Wörtlich 'Wenden + Wechsel' bedeutet es, der Kraft nicht frontal zu begegnen, sondern sie durch Drehbewegungen umzuleiten. Im Gegensatz zum direkten Irimi betont Tenkan die indirekte Aufnahme: wenn Ukes Angriff bereits festgelegt und stabil ist, weicht Nage aus, rollt an der Angriffslinie ab und nutzt kreisförmige Drehungen sowie Zentrifugal- und Zentripetalkräfte, um Uke ins Ungleichgewicht zu führen. Nage verhält sich dabei weitgehend passiv, lässt Ukes Energie arbeiten und nutzt die umgelenkte Bewegung für Würfe oder Hebel. Typisch sind äußere Eingänge mit Tenkan-ashi und Tai-sabaki, begleitet von der Ausatmung, nachdem zuvor die Angriffskraft 'eingeatmet' wurde. Tenkan wird mitunter als 'negatives Element' bezeichnet, ohne abwertende Bedeutung, und bildet das Gegenstück zum positiven Eintreten des Irimi. Im Alltag bedeutet Tenkan, auf Zwang zu verzichten, wenn Gesprächspartner nicht aufnahmefähig sind, zunächst zuzuhören und später zum geeigneten Zeitpunkt die eigenen Argumente einzubringen, um gemeinsame Grundlagen zu schaffen."
+    }
+  },
+  {
+    "id": "tsuki",
+    "slug": "tsuki",
+    "romaji": "Tsuki",
+    "jp": "突き",
+    "category": "attack",
+    "def": {
+      "en": "Straight thrust/punch to torso or face.",
+      "de": "Gerader Stoß/Schlag zum Rumpf oder Gesicht."
+    },
+    "literal": { "en": "thrust", "de": "Stoß" },
+    "notes": {
+      "en": "Study jōdan (high) and chūdan (mid) lines with a quiet shoulder and aligned wrist/forearm; power comes from stance and hips, not arm swing. In Aikidō, tsuki clarifies timing and line management for irimi/tenkan—and in weapons it mirrors jō/bokken thrusts. Safety: keep mouth closed/teeth off-line, control contact, and recover guard immediately after extension.",
+      "de": "Jōdan- (hoch) und Chūdan- (mittel) Linien mit ruhiger Schulter und ausgerichtetem Handgelenk/Unterarm üben; Kraft entsteht aus Stand und Hüfte, nicht aus Armschwung. Im Aikidō schärft tsuki Timing und Linienführung für irimi/tenkan – und spiegelt bei Waffen Jō-/Bokken-Stöße. Sicherheit: Mund geschlossen/ Zähne aus der Linie, Kontakt kontrolliert und nach der Streckung sofort Deckung zurückholen."
+    }
+  },
+  {
+    "id": "ude-kime-nage",
+    "slug": "ude-kime-nage",
+    "romaji": "Ude-kime-nage",
+    "jp": "腕極め投げ",
+    "category": "movement",
+    "def": {
+      "en": "Arm-decision/fixation throw controlling the elbow while projecting.",
+      "de": "Arm-Fixationswurf mit Ellbogenkontrolle und Projektion."
+    },
+    "literal": { "en": "arm + decide/fix + throw", "de": "Arm + festlegen + Wurf" },
+    "notes": {
+      "en": "A projection that organizes uke via the elbow line: keep their elbow oriented and close to your body, steer the shoulder with your frame, and project along an open diagonal. It reads as ‘control first, throw second’—no hyperextension or cranking. Appears from grabs or strikes and translates well to tanto contexts. Safety: maintain space for a clear roll and ease pressure on any tap.",
+      "de": "Projektion über die Ellbogenlinie: Ellbogen ausgerichtet und körpernah halten, die Schulter mit dem eigenen Rahmen steuern und entlang einer freien Diagonale projizieren. Es gilt „erst Kontrolle, dann Wurf“ – ohne Überstrecken oder „Schrauben“. Entsteht aus Griffen oder Schlägen und überträgt sich gut auf Tantō-Situationen. Sicherheit: Raum für sauberes Rollen lassen und Druck bei Abklopfen sofort reduzieren."
+    }
+  },
+  {
+    "id": "uke",
+    "slug": "uke",
+    "romaji": "Uke",
+    "jp": "受け",
+    "category": "other",
+    "def": {
+      "en": "Receiver/attacker; person who initiates attack and takes ukemi.",
+      "de": "Empfänger/Angreifer; Person, die angreift und Ukemi nimmt."
+    },
+    "literal": { "en": "to receive", "de": "empfangen/aufnehmen" },
+    "notes": {
+      "en": "Uke’s role is not passive; they must attack with sincerity and commitment, maintaining correct posture and clear intent so that nage can practice a realistic technique. Safety is essential: uke should never resist unnaturally but instead follow the flow, protecting joints and head. Ukemi (falling/rolling) must be performed with full awareness, allowing nage to complete the technique while uke stays safe. Uke should also maintain zanshin (awareness) after the fall, returning smoothly to kamae to continue the exchange. Good uke adapts intensity to nage’s level, creating a cooperative yet challenging practice.",
+      "de": "Die Rolle des Uke ist nicht passiv; er muss aufrichtig und mit Engagement angreifen, dabei eine korrekte Haltung und klare Intention wahren, damit Nage eine realistische Technik üben kann. Sicherheit steht im Vordergrund: Uke soll nicht unnatürlich widerstehen, sondern dem Bewegungsfluss folgen und Gelenke sowie Kopf schützen. Ukemi (Fallen/Rollen) muss mit voller Achtsamkeit ausgeführt werden, sodass Nage die Technik vollenden kann, während Uke unverletzt bleibt. Uke soll auch Zanshin (Achtsamkeit) nach dem Fall beibehalten und fließend in Kamae zurückkehren, um die Übung fortzusetzen. Ein guter Uke passt die Intensität an das Niveau des Nage an und schafft so ein kooperatives, aber forderndes Training."
+    }
+  },
+  {
+    "id": "ukemi",
+    "slug": "ukemi",
+    "romaji": "Ukemi",
+    "jp": "受身",
+    "category": "etiquette",
+    "def": {
+      "en": "The art of receiving technique safely; protective falling and rolling.",
+      "de": "Die Kunst, Techniken sicher zu empfangen; schützende Fall- und Rolltechniken."
+    },
+    "notes": {
+      "en": "Ukemi in Aikidō means 'receiving with the body,' often explained as the art of rolling and falling safely. It encompasses all variations of falls and rolls that protect the body during dynamic techniques. Because Aikidō throws project uke widely and often use centrifugal force, proper ukemi prevents serious injury and makes safe training possible. Students begin with backward rolls (ushiro-ukemi, 5th kyū), then forward rolls (mae-ukemi, 4th kyū), followed by side falls and side rolls (yoko-ukemi, 3rd kyū), and eventually free falling (2nd kyū). Ukemi is essential for self-protection and for allowing nage to practice dynamically without harming uke. Good ukemi also enables uke to recover quickly to a stable stance (migi or hidari kamae) for continued practice. Training progresses step by step, often starting with small rocking and rolling exercises on the back, through kneeling rolls, before standing execution. This careful, methodical progression minimizes risk and builds confidence, making injuries rare in Aikidō dojos.",
+      "de": "Ukemi im Aikidō bedeutet 'mit dem Körper empfangen' und wird meist als Kunst des sicheren Rollens und Fallens erklärt. Es umfasst alle Varianten von Rollen und Stürzen, die den Körper bei dynamischen Techniken schützen. Da Aikidō-Würfe Uke oft weiträumig projizieren und Zentrifugalkräfte nutzen, verhindert korrektes Ukemi schwere Verletzungen und ermöglicht sicheres Training. Schüler beginnen mit Rückwärtsrollen (ushiro-ukemi, 5. Kyū), danach Vorwärtsrollen (mae-ukemi, 4. Kyū), gefolgt von Seitwärtsfallen und -rollen (yoko-ukemi, 3. Kyū) und schließlich freiem Fallen (2. Kyū). Ukemi ist unverzichtbar zum Selbstschutz und erlaubt es Nage, dynamisch zu üben, ohne Uke zu gefährden. Gutes Ukemi ermöglicht es außerdem, schnell wieder in eine stabile Standhaltung (Migi- oder Hidari-kamae) zurückzukehren. Das Training erfolgt schrittweise, beginnend mit kleinen Schaukel- und Rollübungen am Rücken, über Rollen aus dem Kniestand bis hin zur Ausführung aus dem Stand. Diese methodische Progression minimiert das Risiko und stärkt das Vertrauen, sodass Verletzungen im Aikidō-Dojo selten sind."
+    }
+  },
+  {
+    "id": "ura",
+    "slug": "ura",
+    "romaji": "Ura",
+    "jp": "裏",
+    "category": "movement",
+    "def": {
+      "en": "Rear/interior line of entry or technique execution, moving around to uke's back or blind side.",
+      "de": "Hintere/innere Linie der Eingangsbewegung oder Technikausführung, um Ukes Rücken oder blinden Winkel herum."
+    },
+    "literal": { "en": "back, reverse, interior", "de": "hinten, umgekehrt, innen" },
+    "notes": {
+      "en": "Ura represents the indirect, rear approach in techniques. It emphasizes blending and redirection, using uke's momentum against them. Often feels more fluid and requires less direct confrontation than omote. Commonly paired with tenkan movements.",
+      "de": "Ura stellt den indirekten, hinteren Ansatz in Techniken dar. Es betont das Verschmelzen und Umleiten, wobei Ukes Schwung gegen sie verwendet wird. Fühlt sich oft fließender an und erfordert weniger direkte Konfrontation als Omote. Häufig mit Tenkan-Bewegungen gepaart."
+    }
+  },
+  {
+    "id": "ushiro-eri-tori",
+    "slug": "ushiro-eri-tori",
+    "romaji": "Ushiro-eri-tori",
+    "jp": "後ろ襟取り",
+    "category": "attack",
+    "def": { "en": "Collar grab from behind.", "de": "Kragengriff von hinten." },
+    "literal": { "en": "rear + collar + seize", "de": "hinten + Kragen + greifen" },
+    "notes": {
+      "en": "A posture test and awareness drill: extend the spine, protect the neck line, and step off the grab’s line before turning. Lead from hips and shoulders as one—peel the collar with whole-body motion rather than yanking with the hands. Priorities: regain facing, control the attacker’s elbow/shoulder, and clear space for safe ukemi. Safety: avoid wrenching the neck via the collar; manage seams/edges of the tatami when rotating.",
+      "de": "Übung für Haltung und Wahrnehmung: Wirbelsäule verlängern, Kopflinie schützen und aus der Griffbahn heraus treten, bevor du drehst. Aus Hüfte und Schulter als Einheit führen – den Kragen mit Ganzkörperbewegung lösen statt mit den Händen zu reißen. Prioritäten: Front wiederherstellen, Ellbogen/Schulter des Angreifers kontrollieren und Raum für sicheres Ukemi schaffen. Sicherheit: Nacken nicht über den Kragen verdrehen; beim Drehen Nähte/Kanten der Tatami beachten."
+    }
+  },
+  {
+    "id": "ushiro-kubishime",
+    "slug": "ushiro-kubishime",
+    "romaji": "Ushiro-kubishime",
+    "jp": "後ろ首絞め",
+    "category": "attack",
+    "def": { "en": "Rear choke.", "de": "Würger von hinten." },
+    "literal": { "en": "rear + neck + constrict", "de": "hinten + Hals + würgen" },
+    "notes": {
+      "en": "First task: airway and neck safety—chin tuck, shoulders slightly raised, and hands connect to the choking arm near wrist/elbow. Turn from the hips to the safe side and lower your center to create space; don’t peel fingers. Understand lines: tracheal crush vs. carotid compression, and train with light contact and early taps. Nage monitors partner continuously; release immediately on tap or breath cue.",
+      "de": "Erstes Ziel: Atemweg und Nacken schützen – Kinn senken, Schultern leicht anheben und die Hände an der würgenden Armseite (Handgelenk/Ellbogen) anbinden. Aus der Hüfte zur sicheren Seite drehen und Schwerpunkt senken, um Raum zu schaffen; keine Finger „abpflücken“. Linien unterscheiden: Trachea-Druck vs. Karotis-Kompression; mit leichtem Kontakt und frühem Abklopfen üben. Nage beobachtet den Partner fortlaufend und löst beim Tap oder Atemsignal sofort."
+    }
+  },
+  {
+    "id": "ushiro-ryote-tori",
+    "slug": "ushiro-ryote-tori",
+    "romaji": "Ushiro-ryote-tori",
+    "jp": "後ろ両手取り",
+    "category": "attack",
+    "def": {
+      "en": "Both wrists grabbed from behind.",
+      "de": "Beide Handgelenke von hinten gefasst."
+    },
+    "literal": { "en": "rear + both + hands + seize", "de": "hinten + beide + Hände + greifen" },
+    "notes": {
+      "en": "Keep elbows heavy and center mobile; sink weight, step diagonally off the line, and rotate from the hips so the hands are carried by the body. Pairs well with tenchi-nage and kokyū-nage studies; atemi clarifies direction if crowded. Avoid arm wrestling—feet and pelvis set the escape and lead.",
+      "de": "Ellbogen „schwer“, Zentrum beweglich; Gewicht senken, diagonal aus der Linie treten und aus der Hüfte rotieren, sodass die Hände vom Körper geführt werden. Passt gut zu Tenchi-nage- und Kokyū-nage-Studien; Atemi klärt die Richtung bei engem Raum. Kein „Armkampf“ – Füße und Becken bestimmen Befreiung und Führung."
+    }
+  },
+  {
+    "id": "yame",
+    "slug": "yame",
+    "romaji": "Yame",
+    "jp": "止め",
+    "category": "etiquette",
+    "def": { "en": "Stop/end (command in class).", "de": "Stopp/Ende (Kommando im Training)." },
+    "literal": { "en": "to stop", "de": "anhalten/stoppen" },
+    "notes": {
+      "en": "On ‘yame’, release safely, control weapon orientation, and step to neutral (shizentai or hanmi) facing front with zanshin. If mid-throw/pin, guide partner to a clear exit first. Quiet the mat quickly—listening posture shows care for partners and space.",
+      "de": "Bei „yame“ sicher lösen, Waffenführung sichern und in eine neutrale Position (Shizentai oder Hanmi) zur Front mit Zanshin treten. Bei laufendem Wurf/Pin Partner erst in eine sichere Ausstiegsbahn führen. Matte rasch beruhigen – aufmerksame Haltung zeigt Sorge für Partner und Raum."
+    }
+  },
+  {
+    "id": "yokomen-uchi",
+    "slug": "yokomen-uchi",
+    "romaji": "Yokomen-uchi",
+    "jp": "横面打ち",
+    "category": "attack",
+    "def": {
+      "en": "Diagonal cut to the side of the head/neck.",
+      "de": "Diagonaler Schnitt zur Kopf-/Halsseite."
+    },
+    "literal": { "en": "side + face + strike", "de": "Seite + Gesicht + Schlag" },
+    "notes": {
+      "en": "Sword-derived angle that teaches oblique lines and outside blending (soto). The cut traces temple/jaw/neck and demands precise distance (ma-ai) and cover. Nage studies off-line entries, circular leads (kaiten), and timely atemi to the center. Keep shoulders quiet—no wind-up. With bokken, maintain hasuji and controlled contact.",
+      "de": "Schwertabgeleiteter Winkel für schräge Linien und Außenführung (soto). Der Schnitt zielt auf Schläfe/Kiefer/Hals und verlangt genaue Distanz (ma-ai) und Deckung. Nage übt seitliches Eintreten, kreisendes Leiten (kaiten) und rechtzeitiges Atemi zur Mitte. Schultern ruhig – kein Ausholen. Mit Bokken Hasuji und kontrollierten Kontakt wahren."
+    }
+  },
+  {
+    "id": "yonkyo",
+    "slug": "yonkyo",
+    "romaji": "Yonkyō",
+    "jp": "四教",
+    "category": "other",
+    "def": {
+      "en": "Fourth control: forearm compression along the bone/nerve for immobilization.",
+      "de": "Vierte Kontrolle: Unterarm-Kompression entlang Knochen/Nerv zur Immobilisierung."
+    },
+    "literal": { "en": "fourth + teaching", "de": "viertes + Lehren" },
+    "notes": {
+      "en": "Structural pin using concentrated pressure (often on the radial nerve) while the elbow and shoulder are aligned and directed. Apply with body weight and a flat, organized hand—not jabbing fingers—and keep the spiral toward the shoulder so posture, not pain, does the work. Clear taps and gradual release are mandatory.",
+      "de": "Strukturelle Fixierung mit konzentriertem Druck (oft auf den Radialnerv), bei ausgerichtetem Ellbogen und geführter Schulter. Mit Körpergewicht und flacher, organisierter Hand arbeiten – kein „Stechen“ mit Fingern – und die Spirale zur Schulter führen, sodass Haltung statt Schmerz wirkt. Klare Abklopfzeichen und langsames Lösen sind Pflicht."
+    }
+  },
+  {
+    "id": "zanshin",
+    "slug": "zanshin",
+    "romaji": "Zanshin",
+    "jp": "残心",
+    "category": "philosophy",
+    "def": {
+      "en": "Remaining awareness—before, during, and after technique.",
+      "de": "Verbleibende Achtsamkeit – vor, während und nach der Technik."
+    },
+    "literal": { "en": "remain + mind/heart", "de": "verbleiben + Geist/Herz" },
+    "notes": {
+      "en": "The through-line of practice: steady posture, clear distance, and soft focus that includes partner and surroundings. After throw or pin, recover line and breathing before moving; with weapons, control tip/edge while scanning. Zanshin reads as calm availability, not stiffness.",
+      "de": "Der rote Faden des Übens: stabile Haltung, klare Distanz und weicher Blick, der Partner und Umfeld einschließt. Nach Wurf oder Fixierung erst Linie und Atmung ordnen, dann bewegen; mit Waffen Spitze/Schneide sichern und Umgebung aufnehmen. Zanshin wirkt als ruhige Bereitschaft, nicht als Verkrampfung."
+    }
+  },
+  {
+    "id": "zarei",
+    "slug": "zarei",
+    "romaji": "Zarei",
+    "jp": "座礼",
+    "category": "etiquette",
+    "def": { "en": "Seated bow (from seiza).", "de": "Sitzende Verbeugung (aus Seiza)." },
+    "literal": { "en": "seated + bow", "de": "sitzend + Verbeugung" },
+    "notes": {
+      "en": "From seiza: hands (left then right) form a small triangle, slide forward; hinge from hips with a long spine, eyes soft, neck neutral. Movement is small and unhurried. With weapons, lay them correctly and keep edge/tip safe as you bow.",
+      "de": "Aus Seiza: Hände (links, dann rechts) bilden ein kleines Dreieck und gleiten vor; Hüftknick bei langer Wirbelsäule, Blick weich, Nacken neutral. Die Bewegung ist klein und ruhig. Mit Waffen korrekt ablegen und Schneide/Spitze sicher halten."
+    }
+  },
+  {
+    "id": "zori",
+    "slug": "zori",
+    "romaji": "Zōri",
+    "jp": "草履",
+    "category": "etiquette",
+    "def": {
+      "en": "Straw/rubber sandals worn off the mats.",
+      "de": "Stroh-/Gummisandalen für den Mattenrand."
+    },
+    "literal": { "en": "straw + footwear", "de": "Stroh + Fußbekleidung" },
+    "notes": {
+      "en": "Keep feet clean and mats clean: wear zōri off-mat (to restroom, lobby), never step barefoot off the tatami. Place sandals neatly at the edge, oriented for easy exit, not on the mat. Dry wet soles before returning to train.",
+      "de": "Füße und Matten sauber halten: Zōri abseits der Matte tragen (z. B. WC, Flur), nie barfuß außerhalb der Tatami gehen. Sandalen ordentlich am Mattenrand abstellen, ausgangsbereit ausgerichtet, nicht auf der Matte. Nasse Sohlen vor dem Weiterüben trocknen."
+    }
+  }
+]

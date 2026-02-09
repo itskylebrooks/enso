@@ -1,8 +1,8 @@
 /**
- * Utility functions for building hierarchical technique URLs
+ * Utility functions for canonical technique URLs.
  */
 
-import type { EntryMode, Direction, WeaponKind, Hanmi } from '@shared/types';
+import type { Direction, EntryMode, Hanmi, WeaponKind } from '@shared/types';
 
 const isEntryPathMode = (value: string | undefined): value is EntryMode =>
   value === 'irimi' || value === 'tenkan' || value === 'omote' || value === 'ura';
@@ -16,68 +16,51 @@ const isWeaponKind = (value: string | undefined): value is WeaponKind =>
 const isHanmi = (value: string | undefined): value is Hanmi =>
   value === 'ai-hanmi' || value === 'gyaku-hanmi';
 
-/**
- * Builds a technique URL with optional trainer and entry parameters
- *
- * @param slug - The technique slug
- * @param trainerId - Optional trainer ID for trainer-specific version
- * @param entry - Optional entry mode (irimi/tenkan)
- * @returns Hierarchical technique URL
- *
- * Examples:
- * - buildTechniqueUrl('katate-tori-kaiten-nage-soto') → '/technique/katate-tori-kaiten-nage-soto'
- * - buildTechniqueUrl('katate-tori-kaiten-nage-soto', 'alfred-haase') → '/technique/katate-tori-kaiten-nage-soto/alfred-haase'
- * - buildTechniqueUrl('katate-tori-kaiten-nage-soto', 'alfred-haase', 'irimi') → '/technique/katate-tori-kaiten-nage-soto/alfred-haase/irimi'
- */
 export const buildTechniqueUrl = (slug: string, trainerId?: string, entry?: EntryMode): string => {
   const encodedSlug = encodeURIComponent(slug);
-  let path = `/technique/${encodedSlug}`;
+  const query = new URLSearchParams();
 
   if (trainerId) {
-    const encodedTrainerId = encodeURIComponent(trainerId);
-    path += `/${encodedTrainerId}`;
-
-    if (entry) {
-      path += `/${entry}`;
-    }
+    query.set('trainer', trainerId);
   }
 
-  return path;
+  if (entry) {
+    query.set('entry', entry);
+  }
+
+  const queryString = query.toString();
+  return queryString ? `/techniques/${encodedSlug}?${queryString}` : `/techniques/${encodedSlug}`;
 };
 
-/**
- * Parses technique parameters from a pathname
- *
- * @param pathname - The pathname to parse (e.g., '/technique/slug/trainer/entry')
- * @returns Parsed technique parameters or null if not a technique path
- */
 export const parseTechniquePath = (
   pathname: string,
+  search = '',
 ): { slug: string; trainerId?: string; entry?: EntryMode } | null => {
-  // Match patterns:
-  // /technique/{slug}
-  // /technique/{slug}/{trainerId}
-  // /technique/{slug}/{trainerId}/{entry}
-  const match = /^\/technique\/([^/?#]+)(?:\/([^/?#]+))?(?:\/([^/?#]+))?/.exec(pathname);
+  const match = /^\/(?:techniques|library|technique)\/([^/?#]+)(?:\/([^/?#]+))?(?:\/([^/?#]+))?/.exec(
+    pathname,
+  );
 
-  if (!match) return null;
+  if (!match) {
+    return null;
+  }
 
   const slug = decodeURIComponent(match[1]);
-  const trainerId = match[2] ? decodeURIComponent(match[2]) : undefined;
-  const entryCandidate = match[3] ? decodeURIComponent(match[3]) : undefined;
-  const entry = isEntryPathMode(entryCandidate) ? entryCandidate : undefined;
+  const legacyTrainerId = match[2] ? decodeURIComponent(match[2]) : undefined;
+  const legacyEntryCandidate = match[3] ? decodeURIComponent(match[3]) : undefined;
 
-  return { slug, trainerId, entry };
+  const params = new URLSearchParams(search);
+  const trainerFromQuery = params.get('trainer') ?? undefined;
+  const entryFromQuery = params.get('entry') ?? undefined;
+
+  const entryCandidate = entryFromQuery || legacyEntryCandidate;
+
+  return {
+    slug,
+    trainerId: trainerFromQuery || legacyTrainerId,
+    entry: isEntryPathMode(entryCandidate) ? entryCandidate : undefined,
+  };
 };
 
-/**
- * Toolbar-based variant parameters (path-based approach)
- * URL structure: /technique/[slug]/[version]/[hanmi]/[direction]/[weapon]
- * - version: 'v-base' or custom version id (e.g., 'v-haase')
- * - hanmi: 'ai-hanmi' or 'gyaku-hanmi' (required)
- * - direction: 'irimi', 'tenkan', 'omote', or 'ura'
- * - weapon: omitted for 'empty' (default), or 'bokken', 'jo', 'tanto'
- */
 export type TechniqueVariantParams = {
   hanmi: Hanmi;
   direction: Direction;
@@ -85,71 +68,62 @@ export type TechniqueVariantParams = {
   versionId?: string | null;
 };
 
-/**
- * Builds a technique URL with path-based variant parameters
- *
- * @param slug - The technique slug
- * @param params - Variant parameters (hanmi, direction, weapon, versionId)
- * @returns Path-based technique URL
- *
- * Examples:
- * - buildTechniqueUrlWithVariant('shiho-nage', {hanmi: 'ai-hanmi', direction: 'irimi', weapon: 'empty'})
- *   → '/technique/shiho-nage/v-base/ai-hanmi/irimi'
- * - buildTechniqueUrlWithVariant('shiho-nage', {hanmi: 'ai-hanmi', direction: 'irimi', weapon: 'bokken', versionId: 'v-haase'})
- *   → '/technique/shiho-nage/v-haase/ai-hanmi/irimi/bokken'
- */
 export const buildTechniqueUrlWithVariant = (
   slug: string,
   params: TechniqueVariantParams,
 ): string => {
   const encodedSlug = encodeURIComponent(slug);
-  const version = params.versionId || 'v-base';
-  const segments = [
-    'technique',
-    encodedSlug,
-    encodeURIComponent(version),
-    encodeURIComponent(params.hanmi),
-    encodeURIComponent(params.direction),
-  ];
+  const query = new URLSearchParams();
 
-  // Only add weapon if it's not empty-hand (default)
-  if (params.weapon !== 'empty') {
-    segments.push(encodeURIComponent(params.weapon));
-  }
+  query.set('version', params.versionId || 'v-base');
+  query.set('hanmi', params.hanmi);
+  query.set('direction', params.direction);
+  query.set('weapon', params.weapon);
 
-  return '/' + segments.join('/');
+  return `/techniques/${encodedSlug}?${query.toString()}`;
 };
 
-/**
- * Parses toolbar variant parameters from pathname
- *
- * @param pathname - The URL pathname (e.g., '/technique/slug/v-base/ai-hanmi/irimi' or '/technique/slug/v-haase/gyaku-hanmi/omote/bokken')
- * @returns Parsed variant parameters or undefined if incomplete
- */
 export const parseTechniqueVariantParams = (
   pathname: string,
+  search = '',
 ): TechniqueVariantParams | undefined => {
-  // Match pattern: /technique/{slug}/{version}/{hanmi}/{direction}/{weapon?}
-  const match = /^\/technique\/([^/?#]+)\/([^/?#]+)\/([^/?#]+)\/([^/?#]+)(?:\/([^/?#]+))?/.exec(
-    pathname,
-  );
+  const legacyPathMatch =
+    /^\/(?:techniques|library|technique)\/[^/?#]+\/([^/?#]+)\/([^/?#]+)\/([^/?#]+)(?:\/([^/?#]+))?/.exec(
+      pathname,
+    );
 
-  if (!match) return undefined;
+  const params = new URLSearchParams(search);
 
-  const versionCandidate = decodeURIComponent(match[2]);
-  const hanmiCandidate = decodeURIComponent(match[3]);
-  const directionCandidate = decodeURIComponent(match[4]);
-  const weaponCandidate = match[5] ? decodeURIComponent(match[5]) : 'empty'; // Default to empty
+  const versionCandidate =
+    params.get('version') || (legacyPathMatch ? decodeURIComponent(legacyPathMatch[1]) : undefined);
+  const hanmiCandidateRaw =
+    params.get('hanmi') || (legacyPathMatch ? decodeURIComponent(legacyPathMatch[2]) : undefined);
+  const directionCandidateRaw =
+    params.get('direction') ||
+    (legacyPathMatch ? decodeURIComponent(legacyPathMatch[3]) : undefined);
+  const weaponCandidateRaw =
+    params.get('weapon') ||
+    (legacyPathMatch && legacyPathMatch[4] ? decodeURIComponent(legacyPathMatch[4]) : 'empty');
+  const hanmiCandidate = hanmiCandidateRaw ?? undefined;
+  const directionCandidate = directionCandidateRaw ?? undefined;
+  const weaponCandidate = weaponCandidateRaw ?? undefined;
 
-  // Validate all parameters
-  if (!isHanmi(hanmiCandidate)) return undefined;
-  if (!isDirection(directionCandidate)) return undefined;
-  if (!isWeaponKind(weaponCandidate)) return undefined;
+  if (!versionCandidate || !isHanmi(hanmiCandidate)) {
+    return undefined;
+  }
+
+  if (!isDirection(directionCandidate)) {
+    return undefined;
+  }
+
+  if (!isWeaponKind(weaponCandidate)) {
+    return undefined;
+  }
 
   return {
-    hanmi: hanmiCandidate as Hanmi,
-    direction: directionCandidate as Direction,
-    weapon: weaponCandidate as WeaponKind,
+    hanmi: hanmiCandidate,
+    direction: directionCandidate,
+    weapon: weaponCandidate,
     versionId: versionCandidate === 'v-base' ? null : versionCandidate,
   };
 };
