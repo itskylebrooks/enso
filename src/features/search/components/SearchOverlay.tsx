@@ -84,7 +84,7 @@ export const SearchOverlay = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const dialogRef = useRef<HTMLDivElement>(null);
   const resultsContainerRef = useRef<HTMLDivElement>(null);
-  const resultRefs = useRef<(HTMLButtonElement | null)[]>([]);
+  const resultRefs = useRef<(HTMLDivElement | null)[]>([]);
   const { overlayMotion } = useMotionPreferences();
 
   // When opened via keyboard shortcut, ignore pointer hover changes until the
@@ -411,12 +411,13 @@ export const SearchOverlay = ({
 
               {results.length > 0 ? (
                 results.map((result, index) => (
-                  <button
+                  <div
                     key={result.type === 'technique' ? result.item.id : result.item.id}
                     ref={(el) => {
                       resultRefs.current[index] = el;
                     }}
-                    type="button"
+                    role="button"
+                    tabIndex={-1}
                     onClick={(event) => {
                       const openInNewTab = event.metaKey || event.ctrlKey;
                       if (result.type === 'technique') {
@@ -592,7 +593,7 @@ export const SearchOverlay = ({
                         </>
                       )}
                     </div>
-                  </button>
+                  </div>
                 ))
               ) : (
                 <div className="px-3 py-6 text-sm text-subtle">

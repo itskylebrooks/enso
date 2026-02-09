@@ -57,4 +57,11 @@ describe('local-first persistence defaults', () => {
     const { loadLocale } = await import('../src/shared/services/storageService');
     expect(loadLocale()).toBe('de');
   });
+
+  it('reads locale from cookie when localStorage is empty', async () => {
+    setMockWindow();
+    vi.stubGlobal('document', { cookie: `${LOCALE_KEY}=de` });
+    const { loadStoredLocale } = await import('../src/shared/services/storageService');
+    expect(loadStoredLocale()).toBe('de');
+  });
 });

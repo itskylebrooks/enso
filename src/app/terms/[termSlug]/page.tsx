@@ -1,5 +1,6 @@
 import App from '../../../App';
 import { loadAllGlossaryTerms } from '../../../lib/content/loaders/glossary';
+import { detectRequestLocale } from '../../_lib/locale';
 
 export async function generateStaticParams() {
   const terms = await loadAllGlossaryTerms();
@@ -8,6 +9,12 @@ export async function generateStaticParams() {
 
 export const dynamicParams = false;
 
-export default function TermDetailPage() {
-  return <App />;
+type PageProps = {
+  params: Promise<{ termSlug: string }>;
+};
+
+export default async function TermDetailPage({ params }: PageProps) {
+  const { termSlug } = await params;
+  const initialLocale = await detectRequestLocale();
+  return <App initialLocale={initialLocale} initialRoute="glossary" initialSlug={termSlug} />;
 }

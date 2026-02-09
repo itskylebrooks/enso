@@ -59,7 +59,7 @@ import {
   loadBeltPromptDismissed,
   loadDB,
   loadFilters,
-  loadLocale,
+  loadStoredLocale,
   loadPinnedBeltGrade,
   loadTheme,
   saveAnimationsDisabled,
@@ -122,6 +122,8 @@ type HistoryState = {
 
 type AppProps = {
   initialLocale?: Locale;
+  initialRoute?: AppRoute;
+  initialSlug?: string | null;
 };
 
 const routeToPath = (route: AppRoute): string => {
@@ -548,7 +550,11 @@ function useKeyboardShortcuts(onSearch: (method?: 'keyboard' | 'mouse') => void)
   }, [onSearch]);
 }
 
-export default function App({ initialLocale = 'en' }: AppProps): ReactElement {
+export default function App({
+  initialLocale = 'en',
+  initialRoute,
+  initialSlug,
+}: AppProps): ReactElement {
   const [locale, setLocale] = useState<Locale>(initialLocale);
   const [isLocaleReady, setIsLocaleReady] = useState(false);
   const [isHomePrefsReady, setIsHomePrefsReady] = useState(false);
@@ -576,8 +582,12 @@ export default function App({ initialLocale = 'en' }: AppProps): ReactElement {
     equipment: [],
   });
   const [selectedCollectionId, setSelectedCollectionId] = useState<SelectedCollectionId>('all');
-  const [route, setRoute] = useState<AppRoute>(() => getInitialLocation().route);
-  const [activeSlug, setActiveSlug] = useState<string | null>(() => getInitialLocation().slug);
+  const [route, setRoute] = useState<AppRoute>(() =>
+    initialRoute !== undefined ? initialRoute : getInitialLocation().route,
+  );
+  const [activeSlug, setActiveSlug] = useState<string | null>(() =>
+    initialSlug !== undefined ? initialSlug : getInitialLocation().slug,
+  );
   const [searchOpen, setSearchOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [confirmClearOpen, setConfirmClearOpen] = useState(false);
@@ -857,7 +867,7 @@ export default function App({ initialLocale = 'en' }: AppProps): ReactElement {
   }, [hasManualTheme, theme]);
 
   useEffect(() => {
-    setLocale(loadLocale(initialLocale));
+    setLocale(loadStoredLocale() ?? initialLocale);
     setIsLocaleReady(true);
   }, [initialLocale]);
 

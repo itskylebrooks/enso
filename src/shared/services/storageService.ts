@@ -188,6 +188,31 @@ const removeLocalStorage = (key: string): void => {
   }
 };
 
+const readCookie = (key: string): string | null => {
+  if (!isBrowser || typeof document === 'undefined') return null;
+  try {
+    const entries = document.cookie.split(';');
+    for (const entry of entries) {
+      const [rawName, ...rawValue] = entry.trim().split('=');
+      if (rawName === key) {
+        return decodeURIComponent(rawValue.join('='));
+      }
+    }
+    return null;
+  } catch {
+    return null;
+  }
+};
+
+const writeCookie = (key: string, value: string): void => {
+  if (!isBrowser || typeof document === 'undefined') return;
+  try {
+    document.cookie = `${key}=${encodeURIComponent(value)}; Path=/; Max-Age=31536000; SameSite=Lax`;
+  } catch {
+    /* noop */
+  }
+};
+
 const stripUnknownProgress = (progress: Progress[]): Progress[] =>
   progress.filter((entry): entry is Progress => Boolean(entry && entry.techniqueId));
 
@@ -462,8 +487,18 @@ const detectBrowserLanguage = (fallback: Locale = fallbackLocale): Locale => {
   return languages.some((lang) => lang?.toLowerCase().startsWith('de')) ? 'de' : fallback;
 };
 
+export const loadStoredLocale = (): Locale | null => {
+  const localStorageValue = readLocalStorage(LOCALE_KEY);
+  if (localStorageValue === 'en' || localStorageValue === 'de') {
+    return localStorageValue;
+  }
+
+  const cookieValue = readCookie(LOCALE_KEY);
+  return cookieValue === 'en' || cookieValue === 'de' ? cookieValue : null;
+};
+
 export const loadLocale = (fallback: Locale = fallbackLocale): Locale => {
-  const value = readLocalStorage(LOCALE_KEY) as Locale | null;
+  const value = loadStoredLocale();
 
   // If no saved preference exists, auto-detect from browser/system language.
   if (value === null) {
@@ -475,6 +510,7 @@ export const loadLocale = (fallback: Locale = fallbackLocale): Locale => {
 
 export const saveLocale = (locale: Locale): void => {
   writeLocalStorage(LOCALE_KEY, locale);
+  writeCookie(LOCALE_KEY, locale);
 };
 
 export const exportDB = (db: DB): string => {
