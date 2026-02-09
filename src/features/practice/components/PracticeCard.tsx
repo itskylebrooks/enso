@@ -1,4 +1,4 @@
-import type { KeyboardEvent, ReactElement } from 'react';
+import type { KeyboardEvent, ReactElement, ReactNode } from 'react';
 import { motion, type Transition, type Variants } from 'motion/react';
 import type { Copy } from '@shared/constants/i18n';
 import type { Exercise, Locale, PracticeEquipment, PracticeWhen } from '@shared/types';
@@ -16,6 +16,10 @@ type PracticeCardProps = {
   locale: Locale;
   onSelect: (slug: string) => void;
   motionIndex: number;
+  actionSlot?: ReactNode;
+  isDimmed?: boolean;
+  showMetaLine?: boolean;
+  categoryPlacement?: 'header' | 'footer';
 } & MotionProps;
 
 const getWhenLabel = (whenToUse: PracticeWhen, copy: Copy): string => {
@@ -40,7 +44,7 @@ const getEquipmentLabel = (equipment: PracticeEquipment, copy: Copy): string => 
 const buildMetaLine = (exercise: Exercise, copy: Copy): string | null => {
   if (exercise.whenToUse && exercise.whenToUse.length > 0) {
     const labels = exercise.whenToUse.map((item) => getWhenLabel(item, copy));
-    return `${copy.practiceWhenToUse}: ${labels.join(' · ')}`;
+    return labels.join(' · ');
   }
 
   if (exercise.equipment && exercise.equipment.length > 0) {
@@ -59,6 +63,10 @@ export const PracticeCard = ({
   motionIndex,
   variants,
   getTransition,
+  actionSlot,
+  isDimmed,
+  showMetaLine = true,
+  categoryPlacement = 'header',
 }: PracticeCardProps): ReactElement => {
   const categoryLabel = getPracticeCategoryLabel(exercise.category, copy);
   const categoryStyle = getPracticeCategoryStyle(exercise.category);
@@ -83,7 +91,10 @@ export const PracticeCard = ({
       tabIndex={0}
       onClick={handleActivate}
       onKeyDown={handleKeyDown}
-      className="surface border surface-border rounded-2xl p-4 flex flex-col gap-3 text-left card-hover-shadow"
+      className={
+        `surface border surface-border rounded-2xl p-4 flex flex-col gap-3 text-left card-hover-shadow` +
+        (isDimmed ? ' pointer-events-none opacity-70 blur-card' : '')
+      }
       initial={false}
       variants={variants}
       transition={getTransition(motionIndex)}
@@ -94,6 +105,27 @@ export const PracticeCard = ({
           <h3 className="text-base font-semibold leading-tight">{name}</h3>
         </div>
         <div className="flex flex-col items-end gap-2 shrink-0">
+          {actionSlot && <div className="flex items-center gap-2">{actionSlot}</div>}
+          {categoryPlacement === 'header' && (
+            <span
+              className="glossary-tag text-xs font-medium px-2 py-1 rounded-full"
+              style={{
+                backgroundColor: categoryStyle.backgroundColor,
+                color: categoryStyle.color,
+              }}
+            >
+              {categoryLabel}
+            </span>
+          )}
+        </div>
+      </div>
+
+      <p className="text-sm text-muted leading-relaxed flex-1">{summary}</p>
+
+      {showMetaLine && metaLine && <p className="text-xs text-subtle">{metaLine}</p>}
+
+      {categoryPlacement === 'footer' && (
+        <div className="mt-auto flex justify-end pt-1">
           <span
             className="glossary-tag text-xs font-medium px-2 py-1 rounded-full"
             style={{
@@ -104,11 +136,7 @@ export const PracticeCard = ({
             {categoryLabel}
           </span>
         </div>
-      </div>
-
-      <p className="text-sm text-muted leading-relaxed flex-1">{summary}</p>
-
-      {metaLine && <p className="text-xs text-subtle">{metaLine}</p>}
+      )}
     </motion.div>
   );
 };

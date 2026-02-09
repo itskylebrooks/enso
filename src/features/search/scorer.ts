@@ -1,10 +1,11 @@
-import type { Technique, GlossaryTerm, Locale } from '../../shared/types';
+import type { Exercise, Technique, GlossaryTerm, Locale } from '../../shared/types';
 import { stripDiacritics } from '@shared/utils/text';
 import { ENTRY_MODE_ORDER } from '../../shared/constants/entryModes';
 
 export type ScoredSearchResult =
   | { type: 'technique'; item: Technique; score: number }
-  | { type: 'glossary'; item: GlossaryTerm; score: number };
+  | { type: 'glossary'; item: GlossaryTerm; score: number }
+  | { type: 'exercise'; item: Exercise; score: number };
 
 // Field weights for different entity types
 const FIELD_WEIGHTS = {
@@ -26,6 +27,15 @@ const FIELD_WEIGHTS = {
     def: 2,
     literal: 1,
     notes: 1,
+  },
+  exercise: {
+    nameEN: 7,
+    nameDE: 7,
+    category: 3,
+    summary: 3,
+    howTo: 1,
+    safety: 1,
+    context: 1,
   },
 } as const;
 
@@ -239,6 +249,41 @@ export const scoreGlossaryTerm = (term: GlossaryTerm, query: string, locale: Loc
   return score;
 };
 
+export const scoreExercise = (exercise: Exercise, query: string, locale: Locale): number => {
+  let score = 0;
+  const weights = FIELD_WEIGHTS.exercise;
+
+  score += getFieldMatchScore(exercise.name.en, query, weights.nameEN);
+  score += getFieldMatchScore(exercise.name.de, query, weights.nameDE);
+  score += getFieldMatchScore(exercise.category, query, weights.category);
+
+  const summary = exercise.summary[locale] || exercise.summary.en;
+  score +=
+    (getFieldMatchScore(summary, query, weights.summary) * MATCH_BOOSTS.secondary) /
+    MATCH_BOOSTS.contains;
+
+  (exercise.howTo?.[locale] || exercise.howTo?.en || []).forEach((step) => {
+    score +=
+      (getFieldMatchScore(step, query, weights.howTo) * MATCH_BOOSTS.secondary) /
+      MATCH_BOOSTS.contains;
+  });
+
+  (exercise.safetyNotes?.[locale] || exercise.safetyNotes?.en || []).forEach((note) => {
+    score +=
+      (getFieldMatchScore(note, query, weights.safety) * MATCH_BOOSTS.secondary) /
+      MATCH_BOOSTS.contains;
+  });
+
+  const context = exercise.aikidoContext?.[locale] || exercise.aikidoContext?.en;
+  if (context) {
+    score +=
+      (getFieldMatchScore(context, query, weights.context) * MATCH_BOOSTS.secondary) /
+      MATCH_BOOSTS.contains;
+  }
+
+  return score;
+};
+
 // Apply tie-breaking rules when scores are equal
 export const applyTieBreakers = (a: ScoredSearchResult, b: ScoredSearchResult): number => {
   // If scores are different, sort by score (descending)
@@ -247,7 +292,7 @@ export const applyTieBreakers = (a: ScoredSearchResult, b: ScoredSearchResult): 
   }
 
   // Entity type priority: Glossary term > Technique > Collection
-  const typeOrder = { glossary: 1, technique: 2 };
+  const typeOrder = { glossary: 1, technique: 2, exercise: 3 };
   const aTypeOrder = typeOrder[a.type] || 99;
   const bTypeOrder = typeOrder[b.type] || 99;
 
@@ -256,8 +301,10 @@ export const applyTieBreakers = (a: ScoredSearchResult, b: ScoredSearchResult): 
   }
 
   // Shorter title wins (canonical term preference)
-  const aTitle = a.type === 'technique' ? a.item.name.en : a.item.romaji;
-  const bTitle = b.type === 'technique' ? b.item.name.en : b.item.romaji;
+  const aTitle =
+    a.type === 'technique' ? a.item.name.en : a.type === 'glossary' ? a.item.romaji : a.item.name.en;
+  const bTitle =
+    b.type === 'technique' ? b.item.name.en : b.type === 'glossary' ? b.item.romaji : b.item.name.en;
 
   if (aTitle.length !== bTitle.length) {
     return aTitle.length - bTitle.length;
@@ -269,7 +316,10 @@ export const applyTieBreakers = (a: ScoredSearchResult, b: ScoredSearchResult): 
 
 // Main scoring function that handles synonym expansion and multi-term queries
 export const scoreSearchResult = (
-  result: { type: 'technique'; item: Technique } | { type: 'glossary'; item: GlossaryTerm },
+  result:
+    | { type: 'technique'; item: Technique }
+    | { type: 'glossary'; item: GlossaryTerm }
+    | { type: 'exercise'; item: Exercise },
   queryTerms: string[],
   locale: Locale,
 ): number => {
@@ -309,8 +359,10 @@ export const scoreSearchResult = (
 
     if (result.type === 'technique') {
       termScore = scoreTechnique(result.item, query, locale);
-    } else {
+    } else if (result.type === 'glossary') {
       termScore = scoreGlossaryTerm(result.item, query, locale);
+    } else {
+      termScore = scoreExercise(result.item, query, locale);
     }
 
     maxScore = Math.max(maxScore, termScore);
@@ -323,7 +375,9 @@ export const scoreSearchResult = (
       const termScore =
         result.type === 'technique'
           ? scoreTechnique(result.item, query, locale)
-          : scoreGlossaryTerm(result.item, query, locale);
+          : result.type === 'glossary'
+            ? scoreGlossaryTerm(result.item, query, locale)
+            : scoreExercise(result.item, query, locale);
 
       if (termScore > 0) matchingTerms++;
     }

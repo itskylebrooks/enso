@@ -10,11 +10,13 @@ import {
 import { motion } from 'motion/react';
 import type { Copy } from '../../../shared/constants/i18n';
 import type {
+  Exercise,
   Locale,
   Technique,
   GlossaryTerm,
   Progress,
   GlossaryProgress,
+  ExerciseProgress,
 } from '../../../shared/types';
 import { EmphasizedName } from '../../../shared/components';
 import { gradeLabel, getGradeStyle } from '@shared/styles/belts';
@@ -23,6 +25,7 @@ import { useFocusTrap } from '../../../shared/hooks/useFocusTrap';
 import {
   buildSearchIndex,
   buildGlossarySearchIndex,
+  buildExerciseSearchIndex,
   matchSearch,
   normalizeSearchQuery,
 } from '../indexer';
@@ -32,19 +35,24 @@ import { loadAllTerms } from '../../glossary/loader';
 
 type SearchResult =
   | { type: 'technique'; item: Technique }
-  | { type: 'glossary'; item: GlossaryTerm };
+  | { type: 'glossary'; item: GlossaryTerm }
+  | { type: 'exercise'; item: Exercise };
 
 type SearchOverlayProps = {
   copy: Copy;
   locale: Locale;
   techniques: Technique[];
+  exercises: Exercise[];
   progress: Progress[];
   glossaryProgress: GlossaryProgress[];
+  exerciseProgress: ExerciseProgress[];
   onClose: () => void;
   onOpen: (slug: string) => void;
   onOpenGlossary: (slug: string) => void;
+  onOpenExercise: (slug: string) => void;
   onToggleTechniqueBookmark?: (techniqueId: string) => void;
   onToggleGlossaryBookmark?: (termId: string) => void;
+  onToggleExerciseBookmark?: (exerciseId: string) => void;
   // Indicates how the overlay was opened. When opened by keyboard, pointer
   // (mouse) interactions should not affect selection until the user actually
   // moves or clicks the mouse.
@@ -55,13 +63,17 @@ export const SearchOverlay = ({
   copy,
   locale,
   techniques,
+  exercises,
   progress,
   glossaryProgress,
+  exerciseProgress,
   onClose,
   onOpen,
   onOpenGlossary,
+  onOpenExercise,
   onToggleTechniqueBookmark,
   onToggleGlossaryBookmark,
+  onToggleExerciseBookmark,
   openedBy,
 }: SearchOverlayProps): ReactElement => {
   const [query, setQuery] = useState('');
@@ -112,6 +124,7 @@ export const SearchOverlay = ({
 
   const techniqueIndex = useMemo(() => buildSearchIndex(techniques), [techniques]);
   const glossaryIndex = useMemo(() => buildGlossarySearchIndex(glossaryTerms), [glossaryTerms]);
+  const exerciseIndex = useMemo(() => buildExerciseSearchIndex(exercises), [exercises]);
 
   const normalizedQuery = useMemo(() => normalizeSearchQuery(query), [query]);
 
@@ -171,8 +184,19 @@ export const SearchOverlay = ({
         return { type: 'glossary', item: entry.term, score };
       });
 
+    const allExerciseResults: ScoredSearchResult[] = exerciseIndex
+      .filter((entry) => matchSearch(entry.haystack, normalizedQuery))
+      .map((entry) => {
+        const score = scoreSearchResult(
+          { type: 'exercise', item: entry.exercise },
+          normalizedQuery,
+          locale,
+        );
+        return { type: 'exercise', item: entry.exercise, score };
+      });
+
     // Combine and sort by score with tie-breaking rules
-    const allResults = [...allTechniqueResults, ...allGlossaryResults];
+    const allResults = [...allTechniqueResults, ...allGlossaryResults, ...allExerciseResults];
     allResults.sort(applyTieBreakers);
 
     // Limit results and remove score for return type compatibility
@@ -180,7 +204,17 @@ export const SearchOverlay = ({
       type: result.type,
       item: result.item,
     })) as SearchResult[];
-  }, [techniqueIndex, glossaryIndex, normalizedQuery, techniques, glossaryTerms, query, locale]);
+  }, [
+    techniqueIndex,
+    glossaryIndex,
+    exerciseIndex,
+    normalizedQuery,
+    techniques,
+    glossaryTerms,
+    exercises,
+    query,
+    locale,
+  ]);
 
   // Reset selection when results change
   useEffect(() => {
@@ -275,8 +309,10 @@ export const SearchOverlay = ({
         const result = results[selectedIndex];
         if (result.type === 'technique') {
           onOpen(result.item.slug);
-        } else {
+        } else if (result.type === 'glossary') {
           onOpenGlossary(result.item.slug);
+        } else {
+          onOpenExercise(result.item.slug);
         }
       }
     } else if (event.key === 'Escape') {
@@ -386,8 +422,10 @@ export const SearchOverlay = ({
                       const openInNewTab = event.metaKey || event.ctrlKey;
                       if (result.type === 'technique') {
                         onOpen(result.item.slug);
-                      } else {
+                      } else if (result.type === 'glossary') {
                         onOpenGlossary(result.item.slug);
+                      } else {
+                        onOpenExercise(result.item.slug);
                       }
                       if (!openInNewTab) {
                         onClose();
@@ -399,7 +437,11 @@ export const SearchOverlay = ({
                     }}
                     className="relative flex w-full items-baseline justify-between gap-4 rounded-xl px-3 py-3 text-left transition-colors z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--color-text)]"
                     title={
-                      result.type === 'technique' ? result.item.name[locale] : result.item.romaji
+                      result.type === 'technique'
+                        ? result.item.name[locale]
+                        : result.type === 'glossary'
+                          ? result.item.romaji
+                          : result.item.name[locale]
                     }
                   >
                     <div className="min-w-0 flex-1">
@@ -412,7 +454,7 @@ export const SearchOverlay = ({
                             {result.item.summary?.[locale] ?? result.item.summary?.en}
                           </div>
                         </>
-                      ) : (
+                      ) : result.type === 'glossary' ? (
                         <>
                           <div className="flex items-center gap-2 mb-1">
                             <div className="truncate text-sm font-semibold text-[color:var(--color-text)]">
@@ -423,6 +465,15 @@ export const SearchOverlay = ({
                             {result.item.def[locale] || result.item.def.en}
                           </div>
                           {/* Japanese name intentionally omitted in search results */}
+                        </>
+                      ) : (
+                        <>
+                          <div className="truncate text-sm font-semibold text-[color:var(--color-text)]">
+                            <EmphasizedName name={result.item.name[locale]} />
+                          </div>
+                          <div className="mt-1 text-xs font-medium text-subtle truncate mb-1">
+                            {result.item.summary?.[locale] ?? result.item.summary?.en}
+                          </div>
                         </>
                       )}
                     </div>
@@ -466,7 +517,7 @@ export const SearchOverlay = ({
                             )}
                           </button>
                         </>
-                      ) : (
+                      ) : result.type === 'glossary' ? (
                         <>
                           <span
                             className="text-[0.65rem] font-medium px-2 py-0.5 rounded-full"
@@ -491,6 +542,43 @@ export const SearchOverlay = ({
                           >
                             {glossaryProgress.find(
                               (g) => g.termId === result.item.id && g.bookmarked,
+                            ) ? (
+                              <Bookmark
+                                className="w-4 h-4 text-subtle"
+                                aria-hidden
+                                fill="currentColor"
+                                stroke="none"
+                              />
+                            ) : (
+                              <Bookmark className="w-4 h-4 text-subtle" aria-hidden />
+                            )}
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <span
+                            className="text-[0.65rem] font-medium px-2 py-0.5 rounded-full"
+                            style={{ backgroundColor: '#7C3AED', color: '#FFFFFF' }}
+                          >
+                            Exercise
+                          </span>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onToggleExerciseBookmark?.(result.item.id);
+                            }}
+                            aria-label={
+                              exerciseProgress.find(
+                                (p) => p.exerciseId === result.item.id && p.bookmarked,
+                              )
+                                ? 'Unbookmark'
+                                : 'Bookmark'
+                            }
+                            className="p-1 -mt-1"
+                          >
+                            {exerciseProgress.find(
+                              (p) => p.exerciseId === result.item.id && p.bookmarked,
                             ) ? (
                               <Bookmark
                                 className="w-4 h-4 text-subtle"

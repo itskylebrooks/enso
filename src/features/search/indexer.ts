@@ -3,7 +3,7 @@ import { ENTRY_MODE_ORDER } from '../../shared/constants/entryModes';
 import type { TaxonomyType } from '../../shared/i18n/taxonomy';
 import { expandWithSynonyms, getTaxonomyLabel } from '../../shared/i18n/taxonomy';
 import { gradeLabel } from '../../shared/styles/belts';
-import type { GlossaryTerm, Technique } from '../../shared/types';
+import type { Exercise, GlossaryTerm, Technique } from '../../shared/types';
 
 const TAXONOMY_FIELDS: TaxonomyType[] = ['category', 'attack', 'weapon'];
 
@@ -225,4 +225,41 @@ export const buildGlossarySearchIndex = (terms: GlossaryTerm[]): GlossarySearchE
     return { term, haystack };
   });
 
-export type { GlossarySearchEntry, SearchEntry };
+// Practice/exercise search functionality
+type ExerciseSearchEntry = {
+  exercise: Exercise;
+  haystack: string;
+};
+
+export const buildExerciseSearchIndex = (exercises: Exercise[]): ExerciseSearchEntry[] =>
+  exercises.map((exercise) => {
+    const tokens = new Set<string>();
+
+    pushToken(tokens, exercise.name.en);
+    pushToken(tokens, exercise.name.de);
+    pushToken(tokens, exercise.summary.en);
+    pushToken(tokens, exercise.summary.de);
+    pushToken(tokens, exercise.slug);
+    pushToken(tokens, exercise.category);
+
+    (exercise.howTo?.en || []).forEach((step) => pushToken(tokens, step));
+    (exercise.howTo?.de || []).forEach((step) => pushToken(tokens, step));
+
+    (exercise.safetyNotes?.en || []).forEach((note) => pushToken(tokens, note));
+    (exercise.safetyNotes?.de || []).forEach((note) => pushToken(tokens, note));
+
+    if (exercise.aikidoContext?.en) {
+      pushToken(tokens, exercise.aikidoContext.en);
+    }
+    if (exercise.aikidoContext?.de) {
+      pushToken(tokens, exercise.aikidoContext.de);
+    }
+
+    (exercise.whenToUse || []).forEach((item) => pushToken(tokens, item));
+    (exercise.equipment || []).forEach((item) => pushToken(tokens, item));
+
+    const haystack = Array.from(tokens).join(' ');
+    return { exercise, haystack };
+  });
+
+export type { GlossarySearchEntry, SearchEntry, ExerciseSearchEntry };

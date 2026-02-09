@@ -38,6 +38,7 @@ import {
   PracticeDetailPage,
   PracticeFilterPanel,
   PracticePage,
+  loadAllExercises,
 } from './features/practice';
 import type { PracticeFilters } from './features/practice';
 import { HomePage } from './features/home';
@@ -72,6 +73,8 @@ import type {
   Collection,
   DB,
   Direction,
+  Exercise,
+  ExerciseProgress,
   EntryMode,
   Filters,
   GlossaryBookmarkCollection,
@@ -404,6 +407,29 @@ function updateGlossaryProgressEntry(
   return upsert(glossaryProgress, (entry) => entry.termId === termId, nextEntry);
 }
 
+function updateExerciseProgressEntry(
+  exerciseProgress: ExerciseProgress[],
+  exerciseId: string,
+  patch: Partial<ExerciseProgress>,
+): ExerciseProgress[] {
+  const existing = exerciseProgress.find((entry) => entry.exerciseId === exerciseId);
+  const timestamp = Date.now();
+  const baseline: ExerciseProgress = existing ?? {
+    exerciseId,
+    bookmarked: false,
+    updatedAt: timestamp,
+  };
+
+  const nextEntry: ExerciseProgress = {
+    ...baseline,
+    ...patch,
+    exerciseId,
+    updatedAt: timestamp,
+  };
+
+  return upsert(exerciseProgress, (entry) => entry.exerciseId === exerciseId, nextEntry);
+}
+
 const getGlossaryCollectionOptions = (
   collections: Collection[],
   glossaryBookmarkCollections: GlossaryBookmarkCollection[],
@@ -422,6 +448,7 @@ const getGlossaryCollectionOptions = (
     checked: termCollectionIds.has(collection.id),
   }));
 };
+
 
 const getSelectableValues = (
   techniques: Technique[],
@@ -548,6 +575,7 @@ export default function App(): ReactElement {
   const [confirmClearOpen, setConfirmClearOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const [glossaryTerms, setGlossaryTerms] = useState<GlossaryTerm[]>([]);
+  const [practiceExercises, setPracticeExercises] = useState<Exercise[]>([]);
   const [feedbackInitialType, setFeedbackInitialType] = useState<FeedbackType | null>(null);
   const [pinnedBeltGrade, setPinnedBeltGrade] = useState<Grade | null>(() => loadPinnedBeltGrade());
   const [beltPromptDismissed, setBeltPromptDismissed] = useState<boolean>(() =>
@@ -708,6 +736,43 @@ export default function App(): ReactElement {
 
     loadGlossaryTerms();
   }, []);
+
+  // Load practice exercises on component mount (for bookmarks)
+  useEffect(() => {
+    const loadExercises = async () => {
+      try {
+        const exercises = await loadAllExercises();
+        setPracticeExercises(exercises);
+      } catch (error) {
+        console.error('Failed to load practice exercises:', error);
+      }
+    };
+
+    loadExercises();
+  }, []);
+
+  // Ensure exercise progress covers all known exercises
+  useEffect(() => {
+    if (practiceExercises.length === 0) return;
+    setDB((prev) => {
+      const existing = new Map(prev.exerciseProgress.map((entry) => [entry.exerciseId, entry]));
+      const nextProgress = [...prev.exerciseProgress];
+      let changed = false;
+
+      practiceExercises.forEach((exercise) => {
+        if (!existing.has(exercise.id)) {
+          nextProgress.push({
+            exerciseId: exercise.id,
+            bookmarked: false,
+            updatedAt: Date.now(),
+          });
+          changed = true;
+        }
+      });
+
+      return changed ? { ...prev, exerciseProgress: nextProgress } : prev;
+    });
+  }, [practiceExercises]);
 
   const openSearch = useCallback((method: 'keyboard' | 'mouse' = 'mouse') => {
     // store how the search was opened so the overlay can adjust pointer behavior
@@ -1027,6 +1092,25 @@ export default function App(): ReactElement {
     });
   };
 
+  const updateExerciseProgress = (exerciseId: string, patch: Partial<ExerciseProgress>): void => {
+    setDB((prev) => {
+      const nextExerciseProgress = updateExerciseProgressEntry(
+        prev.exerciseProgress,
+        exerciseId,
+        patch,
+      );
+      const shouldRemoveAssignments = patch.bookmarked === false;
+      const nextExerciseBookmarkCollections = shouldRemoveAssignments
+        ? prev.exerciseBookmarkCollections.filter((entry) => entry.exerciseId !== exerciseId)
+        : prev.exerciseBookmarkCollections;
+      return {
+        ...prev,
+        exerciseProgress: nextExerciseProgress,
+        exerciseBookmarkCollections: nextExerciseBookmarkCollections,
+      };
+    });
+  };
+
   const sanitizeCollectionName = (name: string): string => name.trim().slice(0, 40);
 
   const sortCollectionsByName = (collections: Collection[]): Collection[] =>
@@ -1094,6 +1178,12 @@ export default function App(): ReactElement {
         prev.collections.filter((collection) => collection.id !== id),
       ),
       bookmarkCollections: prev.bookmarkCollections.filter((entry) => entry.collectionId !== id),
+      glossaryBookmarkCollections: prev.glossaryBookmarkCollections.filter(
+        (entry) => entry.collectionId !== id,
+      ),
+      exerciseBookmarkCollections: prev.exerciseBookmarkCollections.filter(
+        (entry) => entry.collectionId !== id,
+      ),
     }));
   };
 
@@ -1202,6 +1292,61 @@ export default function App(): ReactElement {
       ...prev,
       glossaryBookmarkCollections: prev.glossaryBookmarkCollections.filter(
         (entry) => !(entry.termId === termId && entry.collectionId === collectionId),
+      ),
+    }));
+  };
+
+  const assignExerciseToCollection = (exerciseId: string, collectionId: string): void => {
+    setDB((prev) => {
+      const progressEntry = prev.exerciseProgress.find((entry) => entry.exerciseId === exerciseId);
+      const isBookmarked = progressEntry?.bookmarked;
+
+      let nextExerciseProgress = prev.exerciseProgress;
+      if (!isBookmarked) {
+        const now = Date.now();
+        if (progressEntry) {
+          nextExerciseProgress = prev.exerciseProgress.map((p) =>
+            p.exerciseId === exerciseId ? { ...p, bookmarked: true, updatedAt: now } : p,
+          );
+        } else {
+          nextExerciseProgress = [
+            ...prev.exerciseProgress,
+            { exerciseId, bookmarked: true, updatedAt: now },
+          ];
+        }
+      }
+
+      if (
+        prev.exerciseBookmarkCollections.some(
+          (entry) => entry.exerciseId === exerciseId && entry.collectionId === collectionId,
+        )
+      ) {
+        return { ...prev, exerciseProgress: nextExerciseProgress };
+      }
+
+      const now = Date.now();
+
+      return {
+        ...prev,
+        exerciseProgress: nextExerciseProgress,
+        exerciseBookmarkCollections: [
+          ...prev.exerciseBookmarkCollections,
+          {
+            id: generateId(),
+            exerciseId,
+            collectionId,
+            createdAt: now,
+          },
+        ],
+      };
+    });
+  };
+
+  const removeExerciseFromCollection = (exerciseId: string, collectionId: string): void => {
+    setDB((prev) => ({
+      ...prev,
+      exerciseBookmarkCollections: prev.exerciseBookmarkCollections.filter(
+        (entry) => !(entry.exerciseId === exerciseId && entry.collectionId === collectionId),
       ),
     }));
   };
@@ -1488,6 +1633,12 @@ export default function App(): ReactElement {
     });
   };
 
+  const toggleExerciseBookmark = (exerciseId: string, nextBookmarked: boolean): void => {
+    updateExerciseProgress(exerciseId, {
+      bookmarked: nextBookmarked,
+    });
+  };
+
   const techniqueNotFound =
     Boolean(activeSlug) && !currentTechnique && route !== 'glossary' && route !== 'practice';
 
@@ -1554,6 +1705,24 @@ export default function App(): ReactElement {
               : glossaryBackRoute === 'feedback'
                 ? copy.backToFeedback
                 : copy.backToGlossary;
+
+  const practiceHistoryState =
+    typeof window !== 'undefined' ? (window.history.state as HistoryState | null) : null;
+  const practiceBackRoute = practiceHistoryState?.sourceRoute ?? route;
+  const practiceBackLabel =
+    practiceBackRoute === 'bookmarks'
+      ? copy.backToBookmarks
+      : practiceBackRoute === 'home'
+        ? copy.backToHome
+        : practiceBackRoute === 'about'
+          ? copy.backToAbout
+          : practiceBackRoute === 'roadmap'
+            ? copy.backToRoadmap
+            : practiceBackRoute === 'guide'
+              ? copy.backToGuide
+              : practiceBackRoute === 'feedback'
+                ? copy.backToFeedback
+                : copy.backToPractice;
 
   const guideHistoryState =
     typeof window !== 'undefined' ? (window.history.state as HistoryState | null) : null;
@@ -1648,6 +1817,22 @@ export default function App(): ReactElement {
         slug={activeSlug}
         copy={copy}
         locale={locale}
+        collections={db.collections}
+        exerciseProgress={db.exerciseProgress}
+        exerciseBookmarkCollections={db.exerciseBookmarkCollections}
+        onToggleBookmark={toggleExerciseBookmark}
+        onAssignToCollection={assignExerciseToCollection}
+        onRemoveFromCollection={removeExerciseFromCollection}
+        onCreateCollection={createCollection}
+        backLabel={practiceBackLabel}
+        onNavigateToPracticeWithFilter={(category) => {
+          setPracticeFilters({
+            categories: [category],
+            whenToUse: [],
+            equipment: [],
+          });
+          navigateTo('practice', { replace: true });
+        }}
         onBack={() => navigateTo('practice', { replace: true })}
       />
     );
@@ -1832,12 +2017,15 @@ export default function App(): ReactElement {
             copy={copy}
             locale={locale}
             techniques={db.techniques}
+            exercises={practiceExercises}
             glossaryTerms={glossaryTerms}
             progress={db.progress}
             glossaryProgress={db.glossaryProgress}
+            exerciseProgress={db.exerciseProgress}
             collections={db.collections}
             bookmarkCollections={db.bookmarkCollections}
             glossaryBookmarkCollections={db.glossaryBookmarkCollections}
+            exerciseBookmarkCollections={db.exerciseBookmarkCollections}
             selectedCollectionId={selectedCollectionId}
             onSelectCollection={(id) => setSelectedCollectionId(id)}
             onCreateCollection={createCollection}
@@ -1847,8 +2035,11 @@ export default function App(): ReactElement {
             onUnassign={removeFromCollection}
             onAssignGlossary={assignGlossaryToCollection}
             onUnassignGlossary={removeGlossaryFromCollection}
+            onAssignExercise={assignExerciseToCollection}
+            onUnassignExercise={removeExerciseFromCollection}
             onOpenTechnique={openTechnique}
             onOpenGlossaryTerm={(slug) => openGlossaryTerm(slug)}
+            onOpenExercise={openPracticeExercise}
           />
         )}
 
@@ -1966,8 +2157,10 @@ export default function App(): ReactElement {
               copy={copy}
               locale={locale}
               techniques={db.techniques}
+              exercises={practiceExercises}
               progress={db.progress}
               glossaryProgress={db.glossaryProgress}
+              exerciseProgress={db.exerciseProgress}
               onClose={closeSearch}
               onOpen={(slug) => {
                 openTechnique(slug);
@@ -1975,6 +2168,10 @@ export default function App(): ReactElement {
               }}
               onOpenGlossary={(slug) => {
                 openGlossaryTerm(slug);
+                closeSearch();
+              }}
+              onOpenExercise={(slug) => {
+                openPracticeExercise(slug);
                 closeSearch();
               }}
               onToggleTechniqueBookmark={(techniqueId: string) =>
@@ -1985,6 +2182,12 @@ export default function App(): ReactElement {
               onToggleGlossaryBookmark={(termId: string) =>
                 updateGlossaryProgress(termId, {
                   bookmarked: !db.glossaryProgress.find((g) => g.termId === termId)?.bookmarked,
+                })
+              }
+              onToggleExerciseBookmark={(exerciseId: string) =>
+                updateExerciseProgress(exerciseId, {
+                  bookmarked: !db.exerciseProgress.find((p) => p.exerciseId === exerciseId)
+                    ?.bookmarked,
                 })
               }
               openedBy={

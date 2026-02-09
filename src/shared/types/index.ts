@@ -116,6 +116,12 @@ export type GlossaryProgress = {
   updatedAt: number;
 };
 
+export type ExerciseProgress = {
+  exerciseId: string;
+  bookmarked: boolean;
+  updatedAt: number;
+};
+
 export type Collection = {
   id: string;
   name: string;
@@ -139,6 +145,13 @@ export type GlossaryBookmarkCollection = {
   createdAt: number;
 };
 
+export type ExerciseBookmarkCollection = {
+  id: string;
+  exerciseId: string;
+  collectionId: string;
+  createdAt: number;
+};
+
 export type Theme = 'light' | 'dark';
 
 export type DB = {
@@ -146,9 +159,11 @@ export type DB = {
   techniques: Technique[];
   progress: Progress[];
   glossaryProgress: GlossaryProgress[];
+  exerciseProgress: ExerciseProgress[];
   collections: Collection[];
   bookmarkCollections: BookmarkCollection[];
   glossaryBookmarkCollections: GlossaryBookmarkCollection[];
+  exerciseBookmarkCollections: ExerciseBookmarkCollection[];
 };
 
 export type AppRoute =

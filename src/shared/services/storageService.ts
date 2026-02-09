@@ -16,6 +16,8 @@ import type {
   BookmarkCollection,
   Collection,
   DB,
+  ExerciseBookmarkCollection,
+  ExerciseProgress,
   GlossaryBookmarkCollection,
   GlossaryProgress,
   Grade,
@@ -162,14 +164,22 @@ const buildDefaultGlossaryProgress = (termId: string): GlossaryProgress => ({
   updatedAt: Date.now(),
 });
 
+const buildDefaultExerciseProgress = (exerciseId: string): ExerciseProgress => ({
+  exerciseId,
+  bookmarked: false,
+  updatedAt: Date.now(),
+});
+
 const buildDefaultDB = (): DB => ({
   version: DB_VERSION,
   techniques: seedTechniques,
   progress: seedTechniques.map((technique) => buildDefaultProgress(technique.id)),
   glossaryProgress: [],
+  exerciseProgress: [],
   collections: [],
   bookmarkCollections: [],
   glossaryBookmarkCollections: [],
+  exerciseBookmarkCollections: [],
 });
 
 const readLocalStorage = (key: string): string | null => {
@@ -221,6 +231,15 @@ const ensureGlossaryProgress = (rawGlossaryProgress: GlossaryProgress[]): Glossa
   );
 };
 
+const stripUnknownExerciseProgress = (progress: ExerciseProgress[]): ExerciseProgress[] =>
+  progress.filter((entry): entry is ExerciseProgress => Boolean(entry && entry.exerciseId));
+
+const ensureExerciseProgress = (rawExerciseProgress: ExerciseProgress[]): ExerciseProgress[] => {
+  return stripUnknownExerciseProgress(
+    Array.isArray(rawExerciseProgress) ? rawExerciseProgress : [],
+  );
+};
+
 const ensureGlossaryBookmarkCollections = (
   raw: GlossaryBookmarkCollection[],
   validCollectionIds: Set<string>,
@@ -245,6 +264,40 @@ const ensureGlossaryBookmarkCollections = (
     .filter((entry): entry is GlossaryBookmarkCollection => entry !== null);
 
   return sanitized;
+};
+
+const ensureExerciseBookmarkCollections = (
+  raw: ExerciseBookmarkCollection[],
+  validCollectionIds: Set<string>,
+): ExerciseBookmarkCollection[] => {
+  if (!Array.isArray(raw)) return [];
+
+  const sanitized = raw
+    .map((entry) => {
+      if (!entry || typeof entry !== 'object') return null;
+      const { id, exerciseId, collectionId, createdAt } = entry as Partial<ExerciseBookmarkCollection>;
+      if (typeof id !== 'string' || id.trim().length === 0) return null;
+      if (typeof exerciseId !== 'string' || exerciseId.trim().length === 0) return null;
+      if (typeof collectionId !== 'string' || collectionId.trim().length === 0) return null;
+      if (!validCollectionIds.has(collectionId)) return null;
+      return {
+        id,
+        exerciseId,
+        collectionId,
+        createdAt: typeof createdAt === 'number' ? createdAt : Date.now(),
+      } satisfies ExerciseBookmarkCollection;
+    })
+    .filter((entry): entry is ExerciseBookmarkCollection => entry !== null);
+
+  const seen = new Set<string>();
+  return sanitized.filter((entry) => {
+    const key = `${entry.collectionId}:${entry.exerciseId}`;
+    if (seen.has(key)) {
+      return false;
+    }
+    seen.add(key);
+    return true;
+  });
 };
 
 const detectSystemTheme = (): Theme => {
@@ -347,12 +400,15 @@ export const loadDB = (): DB => {
         techniques: seedTechniques,
         progress: Array.isArray(parsed.progress) ? (parsed.progress as Progress[]) : [],
         glossaryProgress: [],
+        exerciseProgress: [],
         collections,
         bookmarkCollections: [],
         glossaryBookmarkCollections: [],
+        exerciseBookmarkCollections: [],
         version: DB_VERSION,
       }),
       glossaryProgress: ensureGlossaryProgress(parsed.glossaryProgress ?? []),
+      exerciseProgress: ensureExerciseProgress(parsed.exerciseProgress ?? []),
       collections,
       bookmarkCollections: ensureBookmarkCollections(
         parsed.bookmarkCollections ?? [],
@@ -361,6 +417,10 @@ export const loadDB = (): DB => {
       ),
       glossaryBookmarkCollections: ensureGlossaryBookmarkCollections(
         parsed.glossaryBookmarkCollections ?? [],
+        collectionIds,
+      ),
+      exerciseBookmarkCollections: ensureExerciseBookmarkCollections(
+        parsed.exerciseBookmarkCollections ?? [],
         collectionIds,
       ),
     };
@@ -460,6 +520,11 @@ export const exportDB = (db: DB): string => {
     .filter((p) => p.bookmarked)
     .map((p) => p.termId);
 
+  // Extract bookmarked exercise IDs from exercise progress
+  const bookmarkedExerciseIds = db.exerciseProgress
+    .filter((p) => p.bookmarked)
+    .map((p) => p.exerciseId);
+
   // Create collection name mapping
   const collectionIdToName = new Map(db.collections.map((c) => [c.id, c.name]));
 
@@ -493,14 +558,28 @@ export const exportDB = (db: DB): string => {
     })
     .filter((entry): entry is { termId: string; collectionName: string } => Boolean(entry));
 
+  // Export exercise bookmark collections using collection names instead of IDs
+  const exportExerciseBookmarkCollections = db.exerciseBookmarkCollections
+    .map(({ exerciseId, collectionId }) => {
+      const collectionName = collectionIdToName.get(collectionId);
+      if (!collectionName) return null; // Skip if collection not found
+      return {
+        exerciseId,
+        collectionName,
+      };
+    })
+    .filter((entry): entry is { exerciseId: string; collectionName: string } => Boolean(entry));
+
   return JSON.stringify(
     {
       appName: APP_NAME,
       bookmarks: bookmarkedTechniqueIds,
       glossaryBookmarks: bookmarkedGlossaryTermIds,
+      exerciseBookmarks: bookmarkedExerciseIds,
       collections: exportCollections,
       bookmarkCollections: exportBookmarkCollections,
       glossaryBookmarkCollections: exportGlossaryBookmarkCollections,
+      exerciseBookmarkCollections: exportExerciseBookmarkCollections,
       animationsDisabled: loadAnimationsDisabled(),
     },
     null,
@@ -513,18 +592,22 @@ export const parseIncomingDB = (
 ): {
   bookmarks?: string[];
   glossaryBookmarks?: string[];
+  exerciseBookmarks?: string[];
   collections?: Array<{ name: string; icon?: string | null }>;
   bookmarkCollections?: Array<{ techniqueId: string; collectionName: string }>;
   glossaryBookmarkCollections?: Array<{ termId: string; collectionName: string }>;
+  exerciseBookmarkCollections?: Array<{ exerciseId: string; collectionName: string }>;
   animationsDisabled?: boolean;
 } => {
   const parsed = JSON.parse(raw) as {
     appName?: string;
     bookmarks?: string[];
     glossaryBookmarks?: string[];
+    exerciseBookmarks?: string[];
     collections?: Array<{ name: string; icon?: string | null }>;
     bookmarkCollections?: Array<{ techniqueId: string; collectionName: string }>;
     glossaryBookmarkCollections?: Array<{ termId: string; collectionName: string }>;
+    exerciseBookmarkCollections?: Array<{ exerciseId: string; collectionName: string }>;
     animationsDisabled?: boolean;
   };
 
@@ -539,12 +622,16 @@ export const parseIncomingDB = (
   return {
     bookmarks: Array.isArray(parsed.bookmarks) ? parsed.bookmarks : [],
     glossaryBookmarks: Array.isArray(parsed.glossaryBookmarks) ? parsed.glossaryBookmarks : [],
+    exerciseBookmarks: Array.isArray(parsed.exerciseBookmarks) ? parsed.exerciseBookmarks : [],
     collections: Array.isArray(parsed.collections) ? parsed.collections : [],
     bookmarkCollections: Array.isArray(parsed.bookmarkCollections)
       ? parsed.bookmarkCollections
       : [],
     glossaryBookmarkCollections: Array.isArray(parsed.glossaryBookmarkCollections)
       ? parsed.glossaryBookmarkCollections
+      : [],
+    exerciseBookmarkCollections: Array.isArray(parsed.exerciseBookmarkCollections)
+      ? parsed.exerciseBookmarkCollections
       : [],
     animationsDisabled:
       typeof parsed.animationsDisabled === 'boolean' ? parsed.animationsDisabled : undefined,
@@ -592,6 +679,30 @@ export const importData = (currentDB: DB, importedData: ReturnType<typeof parseI
     }));
 
   const finalGlossaryProgress = [...updatedGlossaryProgress, ...newGlossaryProgressEntries];
+
+  // Update exercise progress with imported bookmarks
+  const importedExerciseBookmarkIds = new Set(importedData.exerciseBookmarks || []);
+  const updatedExerciseProgress = currentDB.exerciseProgress.map((progress) => {
+    const isBookmarked = importedExerciseBookmarkIds.has(progress.exerciseId);
+    return {
+      ...progress,
+      bookmarked: isBookmarked,
+      updatedAt: isBookmarked ? Date.now() : progress.updatedAt,
+    };
+  });
+
+  // Add new exercise progress entries for newly bookmarked exercises that don't exist
+  const existingExerciseIds = new Set(currentDB.exerciseProgress.map((p) => p.exerciseId));
+  const newExerciseProgressEntries: ExerciseProgress[] = (importedData.exerciseBookmarks || [])
+    .filter((exerciseId) => !existingExerciseIds.has(exerciseId))
+    .map((exerciseId) => buildDefaultExerciseProgress(exerciseId))
+    .map((progress) => ({
+      ...progress,
+      bookmarked: true,
+      updatedAt: Date.now(),
+    }));
+
+  const finalExerciseProgress = [...updatedExerciseProgress, ...newExerciseProgressEntries];
 
   // Import collections and regenerate IDs and timestamps
   const now = Date.now();
@@ -648,6 +759,23 @@ export const importData = (currentDB: DB, importedData: ReturnType<typeof parseI
     })
     .filter((entry): entry is GlossaryBookmarkCollection => Boolean(entry));
 
+  const importedExerciseBookmarkCollections: ExerciseBookmarkCollection[] = (
+    importedData.exerciseBookmarkCollections || []
+  )
+    .map(({ exerciseId, collectionName }) => {
+      const collectionId = collectionNameToId.get(collectionName);
+      if (!collectionId) {
+        return null; // Skip invalid entries - note: we don't validate exerciseId since exercises are loaded separately
+      }
+      return {
+        id: generateId(),
+        exerciseId,
+        collectionId,
+        createdAt: now,
+      };
+    })
+    .filter((entry): entry is ExerciseBookmarkCollection => Boolean(entry));
+
   // Restore preferences if they were included in the export
   if (typeof importedData.animationsDisabled === 'boolean') {
     saveAnimationsDisabled(importedData.animationsDisabled);
@@ -657,9 +785,11 @@ export const importData = (currentDB: DB, importedData: ReturnType<typeof parseI
     ...currentDB,
     progress: updatedProgress,
     glossaryProgress: finalGlossaryProgress,
+    exerciseProgress: finalExerciseProgress,
     collections: importedCollections,
     bookmarkCollections: importedBookmarkCollections,
     glossaryBookmarkCollections: importedGlossaryBookmarkCollections,
+    exerciseBookmarkCollections: importedExerciseBookmarkCollections,
   };
 };
 

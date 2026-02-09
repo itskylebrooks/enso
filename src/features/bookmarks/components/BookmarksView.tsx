@@ -4,6 +4,9 @@ import type { Copy } from '../../../shared/constants/i18n';
 import type {
   BookmarkCollection,
   Collection,
+  Exercise,
+  ExerciseBookmarkCollection,
+  ExerciseProgress,
   GlossaryBookmarkCollection,
   GlossaryProgress,
   GlossaryTerm,
@@ -16,6 +19,7 @@ import { useMotionPreferences } from '@shared/components/ui/motion';
 import { CollectionsSidebar } from './CollectionsSidebar';
 import { AddToCollectionMenu } from './AddToCollectionMenu';
 import { GlossaryBookmarkCard } from './GlossaryBookmarkCard';
+import { PracticeCard } from '@features/practice/components/PracticeCard';
 import { NameModal } from '@shared/components/ui/modals/NameModal';
 import { ConfirmModal } from '@shared/components/ui/modals/ConfirmModal';
 import { MobileCollections } from '@shared/components/ui/MobileCollections';
@@ -28,12 +32,15 @@ type BookmarksViewProps = {
   copy: Copy;
   locale: Locale;
   techniques: Technique[];
+  exercises: Exercise[];
   glossaryTerms: GlossaryTerm[];
   progress: Progress[];
   glossaryProgress: GlossaryProgress[];
+  exerciseProgress: ExerciseProgress[];
   collections: Collection[];
   bookmarkCollections: BookmarkCollection[];
   glossaryBookmarkCollections: GlossaryBookmarkCollection[];
+  exerciseBookmarkCollections: ExerciseBookmarkCollection[];
   selectedCollectionId: SelectedCollectionId;
   onSelectCollection: (id: SelectedCollectionId) => void;
   onCreateCollection: (name: string) => string | null;
@@ -43,8 +50,11 @@ type BookmarksViewProps = {
   onUnassign: (techniqueId: string, collectionId: string) => void;
   onAssignGlossary: (termId: string, collectionId: string) => void;
   onUnassignGlossary: (termId: string, collectionId: string) => void;
+  onAssignExercise: (exerciseId: string, collectionId: string) => void;
+  onUnassignExercise: (exerciseId: string, collectionId: string) => void;
   onOpenTechnique: (slug: string) => void;
   onOpenGlossaryTerm: (slug: string) => void;
+  onOpenExercise: (slug: string) => void;
 };
 
 type DialogState =
@@ -57,12 +67,15 @@ export const BookmarksView = ({
   copy,
   locale,
   techniques,
+  exercises,
   glossaryTerms,
   progress,
   glossaryProgress,
+  exerciseProgress,
   collections,
   bookmarkCollections,
   glossaryBookmarkCollections,
+  exerciseBookmarkCollections,
   selectedCollectionId,
   onSelectCollection,
   onCreateCollection,
@@ -72,8 +85,11 @@ export const BookmarksView = ({
   onUnassign,
   onAssignGlossary,
   onUnassignGlossary,
+  onAssignExercise,
+  onUnassignExercise,
   onOpenTechnique,
   onOpenGlossaryTerm,
+  onOpenExercise,
 }: BookmarksViewProps): ReactElement => {
   const { listMotion, getItemTransition, prefersReducedMotion } = useMotionPreferences();
   const [dialog, setDialog] = useState<DialogState>(null);
@@ -121,6 +137,16 @@ export const BookmarksView = ({
     return set;
   }, [glossaryProgress]);
 
+  const bookmarkedExerciseIds = useMemo(() => {
+    const set = new Set<string>();
+    exerciseProgress.forEach((entry) => {
+      if (entry.bookmarked) {
+        set.add(entry.exerciseId);
+      }
+    });
+    return set;
+  }, [exerciseProgress]);
+
   const membershipByTechnique = useMemo(() => {
     const map = new Map<string, Set<string>>();
     bookmarkCollections.forEach((entry) => {
@@ -165,6 +191,28 @@ export const BookmarksView = ({
     return map;
   }, [glossaryBookmarkCollections, bookmarkedGlossaryIds]);
 
+  const membershipByExercise = useMemo(() => {
+    const map = new Map<string, Set<string>>();
+    exerciseBookmarkCollections.forEach((entry) => {
+      if (!bookmarkedExerciseIds.has(entry.exerciseId)) return;
+      const set = map.get(entry.exerciseId) ?? new Set<string>();
+      set.add(entry.collectionId);
+      map.set(entry.exerciseId, set);
+    });
+    return map;
+  }, [exerciseBookmarkCollections, bookmarkedExerciseIds]);
+
+  const exerciseMembershipByCollection = useMemo(() => {
+    const map = new Map<string, Set<string>>();
+    exerciseBookmarkCollections.forEach((entry) => {
+      if (!bookmarkedExerciseIds.has(entry.exerciseId)) return;
+      const set = map.get(entry.collectionId) ?? new Set<string>();
+      set.add(entry.exerciseId);
+      map.set(entry.collectionId, set);
+    });
+    return map;
+  }, [exerciseBookmarkCollections, bookmarkedExerciseIds]);
+
   const ungroupedIds = useMemo(() => {
     const set = new Set<string>();
     bookmarkedIds.forEach((techniqueId) => {
@@ -191,6 +239,19 @@ export const BookmarksView = ({
     return set;
   }, [bookmarkedGlossaryIds, glossaryMembershipByTerm]);
 
+  const ungroupedExerciseIds = useMemo(() => {
+    const set = new Set<string>();
+    bookmarkedExerciseIds.forEach((exerciseId) => {
+      if (
+        !membershipByExercise.has(exerciseId) ||
+        membershipByExercise.get(exerciseId)?.size === 0
+      ) {
+        set.add(exerciseId);
+      }
+    });
+    return set;
+  }, [bookmarkedExerciseIds, membershipByExercise]);
+
   const allBookmarkedTechniques = useMemo(
     () => techniques.filter((technique) => bookmarkedIds.has(technique.id)),
     [techniques, bookmarkedIds],
@@ -199,6 +260,11 @@ export const BookmarksView = ({
   const allBookmarkedGlossaryTerms = useMemo(
     () => glossaryTerms.filter((term) => bookmarkedGlossaryIds.has(term.id)),
     [glossaryTerms, bookmarkedGlossaryIds],
+  );
+
+  const allBookmarkedExercises = useMemo(
+    () => exercises.filter((exercise) => bookmarkedExerciseIds.has(exercise.id)),
+    [exercises, bookmarkedExerciseIds],
   );
 
   const visibleTechniqueIds = useMemo(() => {
@@ -230,6 +296,18 @@ export const BookmarksView = ({
     glossaryMembershipByCollection,
   ]);
 
+  const visibleExerciseIds = useMemo(() => {
+    if (selectedCollectionId === 'all') {
+      return new Set(allBookmarkedExercises.map((exercise) => exercise.id));
+    }
+
+    if (selectedCollectionId === 'ungrouped') {
+      return ungroupedExerciseIds;
+    }
+
+    return exerciseMembershipByCollection.get(selectedCollectionId) ?? new Set<string>();
+  }, [selectedCollectionId, allBookmarkedExercises, ungroupedExerciseIds, exerciseMembershipByCollection]);
+
   const visibleTechniques = useMemo(
     () => allBookmarkedTechniques.filter((technique) => visibleTechniqueIds.has(technique.id)),
     [allBookmarkedTechniques, visibleTechniqueIds],
@@ -238,6 +316,11 @@ export const BookmarksView = ({
   const visibleGlossaryTerms = useMemo(
     () => allBookmarkedGlossaryTerms.filter((term) => visibleGlossaryIds.has(term.id)),
     [allBookmarkedGlossaryTerms, visibleGlossaryIds],
+  );
+
+  const visibleExercises = useMemo(
+    () => allBookmarkedExercises.filter((exercise) => visibleExerciseIds.has(exercise.id)),
+    [allBookmarkedExercises, visibleExerciseIds],
   );
 
   // Combined and sorted list of both techniques and glossary terms
@@ -256,7 +339,14 @@ export const BookmarksView = ({
       id: term.id,
     }));
 
-    const combined = [...techniqueItems, ...glossaryItems];
+    const exerciseItems = visibleExercises.map((exercise) => ({
+      type: 'exercise' as const,
+      item: exercise,
+      name: exercise.name[locale] || exercise.name.en,
+      id: exercise.id,
+    }));
+
+    const combined = [...techniqueItems, ...glossaryItems, ...exerciseItems];
 
     return combined.sort((a, b) =>
       a.name.localeCompare(b.name, locale, {
@@ -264,7 +354,7 @@ export const BookmarksView = ({
         caseFirst: 'upper',
       }),
     );
-  }, [visibleTechniques, visibleGlossaryTerms, locale]);
+  }, [visibleTechniques, visibleGlossaryTerms, visibleExercises, locale]);
 
   const sortedKey = useMemo(
     () => sortedVisibleItems.map((item) => `${item.type}-${item.id}`).join(','),
@@ -285,13 +375,15 @@ export const BookmarksView = ({
     orderedCollections.forEach((collection) => {
       const techniqueCount = membershipByCollection.get(collection.id)?.size ?? 0;
       const glossaryCount = glossaryMembershipByCollection.get(collection.id)?.size ?? 0;
-      map.set(collection.id, techniqueCount + glossaryCount);
+      const exerciseCount = exerciseMembershipByCollection.get(collection.id)?.size ?? 0;
+      map.set(collection.id, techniqueCount + glossaryCount + exerciseCount);
     });
     return map;
-  }, [orderedCollections, membershipByCollection, glossaryMembershipByCollection]);
+  }, [orderedCollections, membershipByCollection, glossaryMembershipByCollection, exerciseMembershipByCollection]);
 
-  const allCount = bookmarkedIds.size + bookmarkedGlossaryIds.size;
-  const ungroupedCount = ungroupedIds.size + ungroupedGlossaryIds.size;
+  const allCount = bookmarkedIds.size + bookmarkedGlossaryIds.size + bookmarkedExerciseIds.size;
+  const ungroupedCount =
+    ungroupedIds.size + ungroupedGlossaryIds.size + ungroupedExerciseIds.size;
 
   const emptyStateMessage = useMemo(() => {
     if (selectedCollectionId === 'all') {
@@ -441,22 +533,67 @@ export const BookmarksView = ({
                     />
                   );
                 } else {
-                  const term = item.item;
+                  if (item.type === 'glossary') {
+                    const term = item.item;
+                    const assignedCollections =
+                      glossaryMembershipByTerm.get(term.id) ?? new Set<string>();
+                    return (
+                      <GlossaryBookmarkCard
+                        key={`glossary-${term.id}`}
+                        term={term}
+                        locale={locale}
+                        progress={glossaryProgressById[term.id]}
+                        copy={copy}
+                        onSelect={onOpenGlossaryTerm}
+                        motionIndex={index}
+                        variants={listMotion.item}
+                        getTransition={getItemTransition}
+                        prefersReducedMotion={prefersReducedMotion}
+                        isDimmed={activeCardId === `glossary-${term.id}`}
+                        actionSlot={
+                          <AddToCollectionMenu
+                            copy={copy}
+                            collections={orderedCollections.map((collection) => ({
+                              id: collection.id,
+                              name: collection.name,
+                              icon: collection.icon ?? null,
+                              checked: assignedCollections.has(collection.id),
+                            }))}
+                            onToggle={(collectionId, nextChecked) => {
+                              if (nextChecked) {
+                                onAssignGlossary(term.id, collectionId);
+                              } else {
+                                onUnassignGlossary(term.id, collectionId);
+                              }
+                            }}
+                            onCreate={openCreateModal}
+                            onOpen={() => setActiveCardId(`glossary-${term.id}`)}
+                            onClose={() =>
+                              setActiveCardId((cur) => (cur === `glossary-${term.id}` ? null : cur))
+                            }
+                          />
+                        }
+                      />
+                    );
+                  }
+
+                  const exercise = item.item;
                   const assignedCollections =
-                    glossaryMembershipByTerm.get(term.id) ?? new Set<string>();
+                    membershipByExercise.get(exercise.id) ?? new Set<string>();
                   return (
-                    <GlossaryBookmarkCard
-                      key={`glossary-${term.id}`}
-                      term={term}
-                      locale={locale}
-                      progress={glossaryProgressById[term.id]}
+                    <PracticeCard
+                      key={`exercise-${exercise.id}`}
+                      exercise={exercise}
                       copy={copy}
-                      onSelect={onOpenGlossaryTerm}
+                      locale={locale}
+                      onSelect={onOpenExercise}
                       motionIndex={index}
                       variants={listMotion.item}
                       getTransition={getItemTransition}
                       prefersReducedMotion={prefersReducedMotion}
-                      isDimmed={activeCardId === `glossary-${term.id}`}
+                      isDimmed={activeCardId === `exercise-${exercise.id}`}
+                      showMetaLine={false}
+                      categoryPlacement="footer"
                       actionSlot={
                         <AddToCollectionMenu
                           copy={copy}
@@ -468,15 +605,17 @@ export const BookmarksView = ({
                           }))}
                           onToggle={(collectionId, nextChecked) => {
                             if (nextChecked) {
-                              onAssignGlossary(term.id, collectionId);
+                              onAssignExercise(exercise.id, collectionId);
                             } else {
-                              onUnassignGlossary(term.id, collectionId);
+                              onUnassignExercise(exercise.id, collectionId);
                             }
                           }}
                           onCreate={openCreateModal}
-                          onOpen={() => setActiveCardId(`glossary-${term.id}`)}
+                          onOpen={() => setActiveCardId(`exercise-${exercise.id}`)}
                           onClose={() =>
-                            setActiveCardId((cur) => (cur === `glossary-${term.id}` ? null : cur))
+                            setActiveCardId((cur) =>
+                              cur === `exercise-${exercise.id}` ? null : cur,
+                            )
                           }
                         />
                       }
