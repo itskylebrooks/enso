@@ -592,8 +592,8 @@ export const BookmarksView = ({
                       getTransition={getItemTransition}
                       prefersReducedMotion={prefersReducedMotion}
                       isDimmed={activeCardId === `exercise-${exercise.id}`}
-                      showMetaLine={false}
                       categoryPlacement="footer"
+                      headerAlign="center"
                       actionSlot={
                         <AddToCollectionMenu
                           copy={copy}

@@ -1,7 +1,7 @@
 import type { KeyboardEvent, ReactElement, ReactNode } from 'react';
 import { motion, type Transition, type Variants } from 'motion/react';
 import type { Copy } from '@shared/constants/i18n';
-import type { Exercise, Locale, PracticeEquipment } from '@shared/types';
+import type { Exercise, Locale } from '@shared/types';
 import { getPracticeCategoryLabel, getPracticeCategoryStyle } from '@shared/styles/practice';
 
 type MotionProps = {
@@ -18,27 +18,9 @@ type PracticeCardProps = {
   motionIndex: number;
   actionSlot?: ReactNode;
   isDimmed?: boolean;
-  showMetaLine?: boolean;
   categoryPlacement?: 'header' | 'footer';
+  headerAlign?: 'start' | 'center';
 } & MotionProps;
-
-const getEquipmentLabel = (equipment: PracticeEquipment, copy: Copy): string => {
-  const labels: Record<PracticeEquipment, string> = {
-    none: copy.practiceEquipmentNone,
-    mat: copy.practiceEquipmentMat,
-    'resistance-band': copy.practiceEquipmentResistanceBand,
-  };
-  return labels[equipment];
-};
-
-const buildMetaLine = (exercise: Exercise, copy: Copy): string | null => {
-  if (exercise.equipment && exercise.equipment.length > 0) {
-    const labels = exercise.equipment.map((item) => getEquipmentLabel(item, copy));
-    return `${copy.practiceEquipment}: ${labels.join(' · ')}`;
-  }
-
-  return null;
-};
 
 export const PracticeCard = ({
   exercise,
@@ -50,12 +32,11 @@ export const PracticeCard = ({
   getTransition,
   actionSlot,
   isDimmed,
-  showMetaLine = true,
   categoryPlacement = 'header',
+  headerAlign = 'start',
 }: PracticeCardProps): ReactElement => {
   const categoryLabel = getPracticeCategoryLabel(exercise.category, copy);
   const categoryStyle = getPracticeCategoryStyle(exercise.category);
-  const metaLine = buildMetaLine(exercise, copy);
   const name = exercise.name[locale] || exercise.name.en;
   const summary = exercise.summary[locale] || exercise.summary.en;
 
@@ -85,8 +66,12 @@ export const PracticeCard = ({
       transition={getTransition(motionIndex)}
       title={name}
     >
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0 space-y-1">
+      <div
+        className={`flex justify-between gap-3 ${
+          headerAlign === 'center' ? 'items-center' : 'items-start'
+        }`}
+      >
+        <div className="min-w-0">
           <h3 className="text-base font-semibold leading-tight">{name}</h3>
         </div>
         <div className="flex flex-col items-end gap-2 shrink-0">
@@ -106,8 +91,6 @@ export const PracticeCard = ({
       </div>
 
       <p className="text-sm text-muted leading-relaxed flex-1">{summary}</p>
-
-      {showMetaLine && metaLine && <p className="text-xs text-subtle">{metaLine}</p>}
 
       {categoryPlacement === 'footer' && (
         <div className="mt-auto flex justify-end pt-1">
