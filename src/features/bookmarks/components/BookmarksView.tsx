@@ -1,5 +1,13 @@
+import { PracticeCard } from '@features/practice/components/PracticeCard';
+import { TechniqueCard } from '@features/technique/components/TechniqueCard';
+import { ExpandableFilterBar } from '@shared/components/ui/ExpandableFilterBar';
+import { MobileCollections } from '@shared/components/ui/MobileCollections';
+import { ConfirmModal } from '@shared/components/ui/modals/ConfirmModal';
+import { NameModal } from '@shared/components/ui/modals/NameModal';
+import { useMotionPreferences } from '@shared/components/ui/motion';
+import { useIncrementalList } from '@shared/hooks/useIncrementalList';
+import { AnimatePresence, motion } from 'motion/react';
 import { useMemo, useState, type ReactElement } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
 import type { Copy } from '../../../shared/constants/i18n';
 import type {
   BookmarkCollection,
@@ -15,17 +23,9 @@ import type {
   Technique,
   TechniqueVariantKey,
 } from '../../../shared/types';
-import { TechniqueCard } from '@features/technique/components/TechniqueCard';
-import { useMotionPreferences } from '@shared/components/ui/motion';
-import { CollectionsSidebar } from './CollectionsSidebar';
 import { AddToCollectionMenu } from './AddToCollectionMenu';
+import { CollectionsSidebar } from './CollectionsSidebar';
 import { GlossaryBookmarkCard } from './GlossaryBookmarkCard';
-import { PracticeCard } from '@features/practice/components/PracticeCard';
-import { NameModal } from '@shared/components/ui/modals/NameModal';
-import { ConfirmModal } from '@shared/components/ui/modals/ConfirmModal';
-import { MobileCollections } from '@shared/components/ui/MobileCollections';
-import { ExpandableFilterBar } from '@shared/components/ui/ExpandableFilterBar';
-import { useIncrementalList } from '@shared/hooks/useIncrementalList';
 
 type SelectedCollectionId = 'all' | 'ungrouped' | string;
 
@@ -470,7 +470,7 @@ export const BookmarksView = ({
           />
         </div>
         <div className="relative">
-          <ExpandableFilterBar label={copy.bookmarks}>
+          <ExpandableFilterBar label={copy.collectionsTitle}>
             <CollectionsSidebar
               copy={copy}
               collections={orderedCollections.map((collection) => ({
