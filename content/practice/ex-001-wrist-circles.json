@@ -1,0 +1,39 @@
+{
+  "id": "ex-001",
+  "slug": "wrist-circles",
+  "name": { "en": "Wrist circles", "de": "Handgelenkkreise" },
+  "category": "mobility",
+  "summary": {
+    "en": "Gently mobilize wrists and forearms for smooth grip changes.",
+    "de": "Mobilisiert Handgelenke und Unterarme für geschmeidige Griffwechsel."
+  },
+  "howTo": {
+    "en": [
+      "Extend arms forward at chest height.",
+      "Make slow circles with both wrists, 10–15 each direction.",
+      "Keep shoulders relaxed and fingers soft."
+    ],
+    "de": [
+      "Arme auf Brusthöhe nach vorn strecken.",
+      "Langsame Kreise mit beiden Handgelenken, 10–15 pro Richtung.",
+      "Schultern entspannt, Finger locker."
+    ]
+  },
+  "whenToUse": ["before-training", "anytime"],
+  "equipment": ["none"],
+  "safetyNotes": {
+    "en": ["Move within a comfortable range; avoid forcing the end range."],
+    "de": ["Bewege dich in einem angenehmen Bereich und erzwinge kein Endmaß."]
+  },
+  "aikidoContext": {
+    "en": "Supports comfortable kote movements during grabs and releases.",
+    "de": "Unterstützt angenehme kote-Bewegungen bei Griffen und Lösen."
+  },
+  "media": [
+    {
+      "type": "youtube",
+      "url": "https://www.youtube.com/embed/2L2lnxIcNmo"
+    }
+  ],
+  "updatedAt": "2024-10-01T00:00:00Z"
+}

@@ -1,0 +1,33 @@
+{
+  "id": "ex-002",
+  "slug": "hip-figure-eights",
+  "name": { "en": "Hip figure-eights", "de": "Hüft-Achten" },
+  "category": "mobility",
+  "summary": {
+    "en": "Loosen hips to support smooth turns and stable stances.",
+    "de": "Lockert die Hüfte für fließende Drehungen und stabile Stände."
+  },
+  "howTo": {
+    "en": [
+      "Stand tall with feet hip-width apart.",
+      "Draw slow figure-eights with the hips for 6–8 reps.",
+      "Keep the upper body quiet and breathe evenly."
+    ],
+    "de": [
+      "Aufrecht stehen, Füße hüftbreit.",
+      "Langsame Achten mit der Hüfte zeichnen, 6–8 Wiederholungen.",
+      "Oberkörper ruhig halten und gleichmäßig atmen."
+    ]
+  },
+  "whenToUse": ["before-training", "anytime"],
+  "equipment": ["none"],
+  "safetyNotes": {
+    "en": ["Keep the motion small if the lower back feels tight."],
+    "de": ["Den Bewegungsumfang klein halten, wenn der untere Rücken sich fest anfühlt."]
+  },
+  "aikidoContext": {
+    "en": "Encourages relaxed rotation for tenkan and blending.",
+    "de": "Fördert entspannte Rotation für tenkan und Verbindung."
+  },
+  "updatedAt": "2024-10-01T00:00:00Z"
+}

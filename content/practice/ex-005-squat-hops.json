@@ -1,0 +1,33 @@
+{
+  "id": "ex-005",
+  "slug": "squat-hops",
+  "name": { "en": "Squat hops", "de": "Kniebeugen-Hops" },
+  "category": "power",
+  "summary": {
+    "en": "Wake up leg drive for quick entries.",
+    "de": "Aktiviert den Beinantrieb für schnelle Eintritte."
+  },
+  "howTo": {
+    "en": [
+      "Start in a shallow squat with feet hip-width apart.",
+      "Hop gently, landing softly back into the squat.",
+      "Perform 6–8 controlled reps."
+    ],
+    "de": [
+      "In eine flache Kniebeuge gehen, Füße hüftbreit.",
+      "Sanft hüpfen und weich in die Kniebeuge landen.",
+      "6–8 kontrollierte Wiederholungen."
+    ]
+  },
+  "whenToUse": ["before-training"],
+  "equipment": ["mat"],
+  "safetyNotes": {
+    "en": ["Land quietly and stop if knees feel unstable."],
+    "de": ["Leise landen und stoppen, wenn sich die Knie instabil anfühlen."]
+  },
+  "aikidoContext": {
+    "en": "Reinforces springy legs for entering actions.",
+    "de": "Stärkt federnde Beine für Eintritte."
+  },
+  "updatedAt": "2024-10-01T00:00:00Z"
+}

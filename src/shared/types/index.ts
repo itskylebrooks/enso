@@ -154,6 +154,7 @@ export type DB = {
 export type AppRoute =
   | 'home'
   | 'library'
+  | 'practice'
   | 'bookmarks'
   | 'about'
   | 'roadmap'
@@ -173,6 +174,19 @@ export type AppRoute =
   | 'glossary'
   | 'feedback';
 
+export type PracticeCategory =
+  | 'mobility'
+  | 'strength'
+  | 'core'
+  | 'balance'
+  | 'coordination'
+  | 'power'
+  | 'recovery';
+
+export type PracticeWhen = 'before-training' | 'after-training' | 'rest-day' | 'anytime';
+
+export type PracticeEquipment = 'none' | 'mat' | 'resistance-band';
+
 export type Filters = {
   category?: string;
   attack?: string;
@@ -191,6 +205,22 @@ export type GlossaryTerm = {
   def: { en: string; de: string }; // short definition (1–2 lines)
   literal?: { en: string; de: string }; // word-by-word translation (optional)
   notes?: { en: string; de: string }; // longer text (optional)
+};
+
+export type Exercise = {
+  id: string;
+  slug: string;
+  name: Localized<string>;
+  category: PracticeCategory;
+  summary: Localized<string>;
+  description?: Localized<string>;
+  howTo?: Localized<string[]>;
+  whenToUse?: PracticeWhen[];
+  equipment?: PracticeEquipment[];
+  safetyNotes?: Localized<string[]>;
+  aikidoContext?: Localized<string>;
+  media?: MediaItem[];
+  updatedAt?: string;
 };
 
 export type Trainer = {

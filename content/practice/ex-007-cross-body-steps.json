@@ -1,0 +1,35 @@
+{
+  "id": "ex-007",
+  "slug": "cross-body-steps",
+  "name": { "en": "Cross-body steps", "de": "Cross-Body-Schritte" },
+  "category": "coordination",
+  "summary": {
+    "en": "Build cross-body timing and directional control for smooth turns.",
+    "de": "Baut Cross-Body-Timing und Richtungssteuerung für flüssige Drehungen auf."
+  },
+  "howTo": {
+    "en": [
+      "Stand in a relaxed stance with feet under hips.",
+      "Step the right foot across the center line and turn 90 degrees left.",
+      "Reset, then repeat to the other side for 6–8 slow reps.",
+      "Keep the head level and let the hips lead the turn."
+    ],
+    "de": [
+      "Locker stehen, Füße unter den Hüften.",
+      "Rechten Fuß über die Mittellinie setzen und 90 Grad nach links drehen.",
+      "Zurücksetzen, dann zur anderen Seite 6–8 langsame Wiederholungen.",
+      "Kopf ruhig halten und die Drehung aus der Hüfte führen."
+    ]
+  },
+  "whenToUse": ["before-training", "anytime"],
+  "equipment": ["none"],
+  "safetyNotes": {
+    "en": ["Use a smaller step if the turn feels rushed or unstable."],
+    "de": ["Kleinere Schritte nutzen, wenn die Drehung hastig oder instabil wirkt."]
+  },
+  "aikidoContext": {
+    "en": "Reinforces cross-body coordination for tai sabaki entries.",
+    "de": "Stärkt Cross-Body-Koordination für tai sabaki-Eintritte."
+  },
+  "updatedAt": "2024-10-01T00:00:00Z"
+}

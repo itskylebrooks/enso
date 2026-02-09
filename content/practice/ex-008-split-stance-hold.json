@@ -1,0 +1,35 @@
+{
+  "id": "ex-008",
+  "slug": "split-stance-hold",
+  "name": { "en": "Split-stance hold", "de": "Ausfallschritt-Halten" },
+  "category": "strength",
+  "summary": {
+    "en": "Build controlled leg and hip strength without heavy loading.",
+    "de": "Baut kontrollierte Bein- und Hüftkraft ohne hohe Last auf."
+  },
+  "howTo": {
+    "en": [
+      "Step into a long split stance with back heel lifted.",
+      "Lower until both knees are softly bent and the torso stays tall.",
+      "Hold for 15–25 seconds, then switch sides.",
+      "Keep weight centered and avoid collapsing the front knee inward."
+    ],
+    "de": [
+      "In einen langen Ausfallschritt gehen, hintere Ferse angehoben.",
+      "Absenken, bis beide Knie weich gebeugt sind und der Oberkörper aufrecht bleibt.",
+      "15–25 Sekunden halten, dann Seite wechseln.",
+      "Gewicht zentriert halten und das vordere Knie nicht nach innen fallen lassen."
+    ]
+  },
+  "whenToUse": ["before-training", "rest-day"],
+  "equipment": ["none"],
+  "safetyNotes": {
+    "en": ["Reduce the depth if the front knee or hip feels pinched."],
+    "de": ["Tiefe reduzieren, wenn Knie oder Hüfte vorne sich eingeengt anfühlen."]
+  },
+  "aikidoContext": {
+    "en": "Supports stable posture during entering steps and pivots.",
+    "de": "Unterstützt stabile Haltung bei Eintritten und Drehungen."
+  },
+  "updatedAt": "2024-10-01T00:00:00Z"
+}

@@ -1,0 +1,33 @@
+{
+  "id": "ex-004",
+  "slug": "single-leg-stance",
+  "name": { "en": "Single-leg stance", "de": "Einbeinstand" },
+  "category": "balance",
+  "summary": {
+    "en": "Improve balance for pivots and directional changes.",
+    "de": "Verbessert das Gleichgewicht für Drehungen und Richtungswechsel."
+  },
+  "howTo": {
+    "en": [
+      "Stand tall and shift weight onto one foot.",
+      "Hold for 20–30 seconds with soft knees.",
+      "Switch sides and repeat."
+    ],
+    "de": [
+      "Aufrecht stehen und das Gewicht auf einen Fuß verlagern.",
+      "20–30 Sekunden halten, Knie weich.",
+      "Seite wechseln und wiederholen."
+    ]
+  },
+  "whenToUse": ["before-training", "anytime"],
+  "equipment": ["none"],
+  "safetyNotes": {
+    "en": ["Hold a wall or chair if balance feels uncertain."],
+    "de": ["Bei unsicherem Gleichgewicht an Wand oder Stuhl abstützen."]
+  },
+  "aikidoContext": {
+    "en": "Supports stable footwork during entering steps.",
+    "de": "Unterstützt stabile Fußarbeit bei Eintritten."
+  },
+  "updatedAt": "2024-10-01T00:00:00Z"
+}

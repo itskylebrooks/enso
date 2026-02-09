@@ -33,6 +33,13 @@ import {
   MobileGlossaryFilters,
   loadAllTerms,
 } from './features/glossary';
+import {
+  MobilePracticeFilters,
+  PracticeDetailPage,
+  PracticeFilterPanel,
+  PracticePage,
+} from './features/practice';
+import type { PracticeFilters } from './features/practice';
 import { HomePage } from './features/home';
 import { FilterPanel } from './features/search/components/FilterPanel';
 import { SearchOverlay } from './features/search/components/SearchOverlay';
@@ -73,6 +80,7 @@ import type {
   Grade,
   Locale,
   Progress,
+  PracticeCategory,
   Technique,
   TechniqueVariant,
   Theme,
@@ -80,6 +88,7 @@ import type {
 } from './shared/types';
 import { unique, upsert } from './shared/utils/array';
 import { gradeOrder } from './shared/utils/grades';
+import { getPracticeCategoryLabel } from './shared/styles/practice';
 import {
   cameFromBackForwardNavigation,
   consumeBFCacheRestoreFlag,
@@ -143,6 +152,7 @@ const routeToPath = (route: AppRoute): string => {
     case 'feedback':
       return '/feedback';
     case 'library':
+    case 'practice':
     case 'bookmarks':
     case 'glossary':
       return `/${route}`;
@@ -219,6 +229,11 @@ const getGlossarySlugFromPath = (pathname: string): string | null => {
   return match ? decodeURIComponent(match[1]) : null;
 };
 
+const getPracticeSlugFromPath = (pathname: string): string | null => {
+  const match = /^\/practice\/([^/?#]+)/.exec(pathname);
+  return match ? decodeURIComponent(match[1]) : null;
+};
+
 const parseLocation = (
   pathname: string,
   state?: HistoryState,
@@ -243,12 +258,21 @@ const parseLocation = (
     return { route: fallbackRoute, slug: finalSlug };
   }
 
+  if (pathname.startsWith('/practice/')) {
+    const slug = getPracticeSlugFromPath(pathname);
+    return { route: 'practice', slug };
+  }
+
   if (pathname === '/bookmarks') {
     return { route: 'bookmarks', slug: null };
   }
 
   if (pathname === '/library') {
     return { route: 'library', slug: null };
+  }
+
+  if (pathname === '/practice') {
+    return { route: 'practice', slug: null };
   }
 
   if (pathname === '/glossary') {
@@ -511,6 +535,11 @@ export default function App(): ReactElement {
   const [glossaryFilters, setGlossaryFilters] = useState<{
     category?: 'movement' | 'stance' | 'attack' | 'etiquette' | 'philosophy' | 'other';
   }>({});
+  const [practiceFilters, setPracticeFilters] = useState<PracticeFilters>({
+    categories: [],
+    whenToUse: [],
+    equipment: [],
+  });
   const [selectedCollectionId, setSelectedCollectionId] = useState<SelectedCollectionId>('all');
   const [route, setRoute] = useState<AppRoute>(() => getInitialLocation().route);
   const [activeSlug, setActiveSlug] = useState<string | null>(() => getInitialLocation().slug);
@@ -908,6 +937,25 @@ export default function App(): ReactElement {
       }),
     );
   }, [locale]);
+
+  const practiceCategories: PracticeCategory[] = useMemo(() => {
+    const allCategories: PracticeCategory[] = [
+      'mobility',
+      'strength',
+      'core',
+      'balance',
+      'coordination',
+      'power',
+      'recovery',
+    ];
+
+    return allCategories.sort((a, b) =>
+      getPracticeCategoryLabel(a, copy).localeCompare(getPracticeCategoryLabel(b, copy), locale, {
+        sensitivity: 'accent',
+        caseFirst: 'upper',
+      }),
+    );
+  }, [copy, locale]);
 
   const filteredTechniques = useMemo(
     () => applyFilters(db.techniques, filters),
@@ -1352,6 +1400,28 @@ export default function App(): ReactElement {
     setActiveSlug(finalSlug);
   };
 
+  const openPracticeExercise = (slug: string): void => {
+    rememberScrollPosition();
+    const nextRoute = route === 'home' || route === 'bookmarks' ? 'practice' : route;
+
+    if (typeof window !== 'undefined') {
+      const encodedSlug = encodeURIComponent(slug);
+      const practicePath = `/practice/${encodedSlug}`;
+      const state: HistoryState = { route: nextRoute, slug, sourceRoute: route };
+
+      if (window.location.pathname !== practicePath) {
+        window.history.pushState(state, '', practicePath);
+      } else {
+        window.history.replaceState(state, '', practicePath);
+      }
+    }
+
+    if (route === 'home' || route === 'bookmarks') {
+      setRoute('practice');
+    }
+    setActiveSlug(slug);
+  };
+
   const togglePinnedBeltGrade = useCallback((grade: Grade) => {
     setPinnedBeltGrade((current) => (current === grade ? null : grade));
   }, []);
@@ -1418,7 +1488,8 @@ export default function App(): ReactElement {
     });
   };
 
-  const techniqueNotFound = Boolean(activeSlug) && !currentTechnique && route !== 'glossary';
+  const techniqueNotFound =
+    Boolean(activeSlug) && !currentTechnique && route !== 'glossary' && route !== 'practice';
 
   const flushScrollToTop = useCallback(() => {
     if (typeof window === 'undefined') return;
@@ -1571,6 +1642,15 @@ export default function App(): ReactElement {
         }}
       />
     );
+  } else if (route === 'practice' && activeSlug) {
+    mainContent = (
+      <PracticeDetailPage
+        slug={activeSlug}
+        copy={copy}
+        locale={locale}
+        onBack={() => navigateTo('practice', { replace: true })}
+      />
+    );
   } else if (techniqueNotFound) {
     mainContent = (
       <div className="max-w-5xl mx-auto px-6 py-10 space-y-4 text-center">
@@ -1716,6 +1796,37 @@ export default function App(): ReactElement {
           </>
         )}
 
+        {route === 'practice' && (
+          <>
+            <div className="lg:hidden">
+              <MobilePracticeFilters
+                copy={copy}
+                filters={practiceFilters}
+                categories={practiceCategories}
+                onChange={setPracticeFilters}
+              />
+            </div>
+            <div className="relative">
+              <ExpandableFilterBar label={copy.filters}>
+                <PracticeFilterPanel
+                  copy={copy}
+                  filters={practiceFilters}
+                  categories={practiceCategories}
+                  onChange={setPracticeFilters}
+                />
+              </ExpandableFilterBar>
+              <section>
+                <PracticePage
+                  copy={copy}
+                  locale={locale}
+                  filters={practiceFilters}
+                  onOpenExercise={openPracticeExercise}
+                />
+              </section>
+            </div>
+          </>
+        )}
+
         {route === 'bookmarks' && (
           <BookmarksView
             copy={copy}
@@ -1808,9 +1919,11 @@ export default function App(): ReactElement {
 
   const pageKey = currentTechnique
     ? `technique-${currentTechnique.id}`
-    : activeSlug
-      ? `glossary-${activeSlug}`
-      : route;
+    : route === 'practice' && activeSlug
+      ? `practice-${activeSlug}`
+      : activeSlug
+        ? `glossary-${activeSlug}`
+        : route;
 
   return (
     <MotionConfig reducedMotion={animationsDisabled ? 'always' : 'user'}>

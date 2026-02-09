@@ -1,0 +1,33 @@
+{
+  "id": "ex-006",
+  "slug": "box-breathing",
+  "name": { "en": "Box breathing", "de": "Box-Atmung" },
+  "category": "recovery",
+  "summary": {
+    "en": "Settle the breath and nervous system between rounds.",
+    "de": "Beruhigt Atem und Nervensystem zwischen Runden."
+  },
+  "howTo": {
+    "en": [
+      "Inhale through the nose for a count of four.",
+      "Hold the breath gently for four counts.",
+      "Exhale slowly for four counts, then pause for four."
+    ],
+    "de": [
+      "Durch die Nase vier Sekunden einatmen.",
+      "Den Atem sanft vier Sekunden halten.",
+      "Vier Sekunden ausatmen, dann vier Sekunden pausieren."
+    ]
+  },
+  "whenToUse": ["after-training", "rest-day", "anytime"],
+  "equipment": ["none"],
+  "safetyNotes": {
+    "en": ["Keep the breath smooth and stop if you feel lightheaded."],
+    "de": ["Atem ruhig halten und stoppen, wenn dir schwindelig wird."]
+  },
+  "aikidoContext": {
+    "en": "Supports calm attention for review and recovery.",
+    "de": "Unterstützt ruhige Aufmerksamkeit für Nachbereitung und Erholung."
+  },
+  "updatedAt": "2024-10-01T00:00:00Z"
+}

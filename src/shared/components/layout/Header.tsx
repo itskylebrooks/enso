@@ -6,6 +6,7 @@ import {
   BookOpenText,
   ChevronDown,
   Compass,
+  Dumbbell,
   Info,
   LibraryBig,
   MessageSquare,
@@ -176,7 +177,7 @@ export const Header = ({
           <Logo className="shrink-0" />
           <div className="font-semibold tracking-tight">{copy.app}</div>
         </a>
-        {/* Centered nav (desktop): Guide / Library / Glossary */}
+        {/* Centered nav (desktop): Guide / Library / Practice / Glossary */}
         <div className="absolute left-1/2 transform -translate-x-1/2 hidden md:flex items-center gap-2 inset-y-0">
           <button
             type="button"
@@ -205,6 +206,20 @@ export const Header = ({
           >
             <LibraryBig className="w-4 h-4 shrink-0" />
             <span className="text-sm">{copy.library}</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => onNavigate('practice')}
+            className={classNames(
+              'px-3 py-2 rounded-lg border inline-flex items-center gap-2 justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+              route === 'practice' ? 'btn-contrast' : 'btn-tonal surface-hover',
+            )}
+            aria-pressed={route === 'practice'}
+            aria-current={route === 'practice' ? 'page' : undefined}
+            aria-label={copy.practice}
+          >
+            <Dumbbell className="w-4 h-4 shrink-0" />
+            <span className="text-sm">{copy.practice}</span>
           </button>
           <button
             type="button"

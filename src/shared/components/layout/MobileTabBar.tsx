@@ -1,5 +1,5 @@
 import type { ReactElement } from 'react';
-import { BookOpenText, Compass, LibraryBig } from 'lucide-react';
+import { BookOpenText, Compass, Dumbbell, LibraryBig } from 'lucide-react';
 import { motion, type Transition } from 'motion/react';
 import type { AppRoute } from '@shared/types';
 import type { Copy } from '@shared/constants/i18n';
@@ -7,7 +7,7 @@ import { classNames } from '@shared/utils/classNames';
 import { useMotionPreferences } from '@shared/components/ui/motion';
 import { useSmartSticky } from '@shared/hooks/useSmartSticky';
 
-type MobileTab = 'guide' | 'library' | 'glossary';
+type MobileTab = 'guide' | 'library' | 'practice' | 'glossary';
 
 type MobileTabBarProps = {
   copy: Copy;
@@ -33,9 +33,11 @@ export const MobileTabBar = ({ copy, route, onNavigate }: MobileTabBarProps): Re
     ? 'guide'
     : route === 'library'
       ? 'library'
-      : route === 'glossary'
-        ? 'glossary'
-        : null;
+      : route === 'practice'
+        ? 'practice'
+        : route === 'glossary'
+          ? 'glossary'
+          : null;
 
   const tabs: Array<{ id: MobileTab; label: string; icon: ReactElement }> = [
     {
@@ -47,6 +49,11 @@ export const MobileTabBar = ({ copy, route, onNavigate }: MobileTabBarProps): Re
       id: 'library',
       label: copy.library,
       icon: <LibraryBig className="h-5 w-5" aria-hidden />,
+    },
+    {
+      id: 'practice',
+      label: copy.practice,
+      icon: <Dumbbell className="h-5 w-5" aria-hidden />,
     },
     {
       id: 'glossary',

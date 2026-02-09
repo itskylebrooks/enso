@@ -1,0 +1,33 @@
+{
+  "id": "ex-003",
+  "slug": "dead-bug",
+  "name": { "en": "Dead bug", "de": "Dead Bug" },
+  "category": "core",
+  "summary": {
+    "en": "Build steady trunk control for turns and falls.",
+    "de": "Baut stabile Rumpfkontrolle für Drehungen und Fallen auf."
+  },
+  "howTo": {
+    "en": [
+      "Lie on your back with knees bent at 90° and arms up.",
+      "Extend one leg and the opposite arm slowly, then return.",
+      "Alternate sides for 6–10 slow reps each."
+    ],
+    "de": [
+      "Rückenlage, Knie 90° gebeugt, Arme nach oben.",
+      "Ein Bein und den gegenüberliegenden Arm langsam strecken, dann zurück.",
+      "Seiten abwechseln, 6–10 langsame Wiederholungen pro Seite."
+    ]
+  },
+  "whenToUse": ["rest-day", "after-training"],
+  "equipment": ["mat"],
+  "safetyNotes": {
+    "en": ["Keep your lower back softly in contact with the mat."],
+    "de": ["Den unteren Rücken sanft in Kontakt mit der Matte halten."]
+  },
+  "aikidoContext": {
+    "en": "Supports calm center control during ukemi transitions.",
+    "de": "Unterstützt ruhige Zentrenkontrolle bei ukemi-Übergängen."
+  },
+  "updatedAt": "2024-10-01T00:00:00Z"
+}
