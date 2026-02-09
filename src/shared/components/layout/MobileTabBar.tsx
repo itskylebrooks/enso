@@ -1,10 +1,10 @@
-import type { ReactElement } from 'react';
+import { useMotionPreferences } from '@shared/components/ui/motion';
+import type { Copy } from '@shared/constants/i18n';
+import { useSmartSticky } from '@shared/hooks/useSmartSticky';
+import type { AppRoute } from '@shared/types';
 import { BookOpenText, Compass, Dumbbell, LibraryBig, type LucideIcon } from 'lucide-react';
 import { LayoutGroup, motion, type Transition } from 'motion/react';
-import type { AppRoute } from '@shared/types';
-import type { Copy } from '@shared/constants/i18n';
-import { useMotionPreferences } from '@shared/components/ui/motion';
-import { useSmartSticky } from '@shared/hooks/useSmartSticky';
+import type { ReactElement } from 'react';
 
 type MobileTab = 'guide' | 'techniques' | 'exercises' | 'terms';
 
@@ -19,8 +19,8 @@ export const MobileTabBar = ({ copy, route, onNavigate }: MobileTabBarProps): Re
   const { isVisible, isMobile } = useSmartSticky(route);
   const isCompact = isMobile && !isVisible;
   const dims = isCompact
-    ? { width: 56, gap: 6, paddingX: 6, paddingY: 6, height: 44 }
-    : { width: 80, gap: 8, paddingX: 8, paddingY: 8, height: 56 };
+    ? { width: 52, gap: 4, paddingX: 4, paddingY: 6, height: 44 }
+    : { width: 72, gap: 6, paddingX: 6, paddingY: 8, height: 56 };
   const isGuideActive =
     route === 'guide' ||
     route === 'guideAdvanced' ||
@@ -113,15 +113,15 @@ export const MobileTabBar = ({ copy, route, onNavigate }: MobileTabBarProps): Re
                   className="relative z-10 rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
                 >
                   <motion.div
-                    className="relative flex flex-col items-center justify-center rounded-full px-2 text-center font-medium leading-tight"
+                    className="relative flex flex-col items-center justify-center rounded-full px-1 text-center font-medium leading-tight"
                     initial={false}
                     animate={{
                       height: dims.height,
                       width: dims.width,
                       paddingTop: isCompact ? 4 : 6,
                       paddingBottom: isCompact ? 4 : 6,
-                      paddingLeft: 8,
-                      paddingRight: 8,
+                      paddingLeft: 6,
+                      paddingRight: 6,
                     }}
                     transition={springExpand}
                   >
