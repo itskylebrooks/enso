@@ -1,7 +1,8 @@
 import type { KeyboardEvent, ReactElement, ReactNode } from 'react';
 import { motion, type Variants, type Transition } from 'motion/react';
 import type { Copy } from '@shared/constants/i18n';
-import type { EntryMode, Locale, Progress, Technique } from '@shared/types';
+import { getTrainerInitialsById } from '@shared/constants/versionLabels';
+import type { EntryMode, Locale, Progress, Technique, TechniqueVariantKey } from '@shared/types';
 import { LevelBadge } from '@shared/components';
 import { EmphasizedName } from '@shared/components';
 import { getTaxonomyLabel } from '@shared/i18n/taxonomy';
@@ -18,7 +19,7 @@ export type TechniqueCardProps = {
   locale: Locale;
   progress?: Progress;
   copy: Copy;
-  onSelect: (slug: string) => void;
+  onSelect: (slug: string, bookmarkedVariant?: TechniqueVariantKey) => void;
   motionIndex: number;
   actionSlot?: ReactNode;
   isDimmed?: boolean;
@@ -28,6 +29,7 @@ export type TechniqueCardProps = {
 export const TechniqueCard = ({
   technique,
   locale,
+  progress,
   copy,
   onSelect,
   motionIndex,
@@ -38,30 +40,62 @@ export const TechniqueCard = ({
   isDimmed,
   summaryLines,
 }: TechniqueCardProps): ReactElement => {
+  const bookmarkedVariant = progress?.bookmarkedVariant;
+
   // Get available entry modes from the first version (assume all versions have same entries)
   const availableEntries = technique.versions[0]?.stepsByEntry || {};
   const entryLabels: string[] = [];
 
-  const labelByMode: Record<EntryMode, string> = {
+  const labelByMode: Record<EntryMode | 'irimi' | 'tenkan' | 'omote' | 'ura', string> = {
     irimi: copy.entryIrimi,
     omote: copy.entryOmote,
     tenkan: copy.entryTenkan,
     ura: copy.entryUra,
   };
 
-  ENTRY_MODE_ORDER.forEach((mode) => {
-    if (availableEntries[mode]) {
-      entryLabels.push(labelByMode[mode]);
-    }
-  });
+  if (bookmarkedVariant) {
+    entryLabels.push(labelByMode[bookmarkedVariant.direction]);
+  } else {
+    ENTRY_MODE_ORDER.forEach((mode) => {
+      if (availableEntries[mode]) {
+        entryLabels.push(labelByMode[mode]);
+      }
+    });
+  }
 
   const weaponLabel =
-    technique.weapon && technique.weapon !== 'empty-hand'
+    !bookmarkedVariant && technique.weapon && technique.weapon !== 'empty-hand'
       ? getTaxonomyLabel(locale, 'weapon', technique.weapon)
       : null;
 
+  const versionTagLabel = bookmarkedVariant
+    ? bookmarkedVariant.hanmi === 'ai-hanmi'
+      ? copy.hanmiAiHanmi
+      : copy.hanmiGyakuHanmi
+    : null;
+
+  const selectedVersion = bookmarkedVariant?.versionId
+    ? technique.versions.find(
+        (version) =>
+          version.id === bookmarkedVariant.versionId && version.hanmi === bookmarkedVariant.hanmi,
+      ) ?? technique.versions.find((version) => version.id === bookmarkedVariant.versionId)
+    : undefined;
+
+  const trainerInitials = selectedVersion?.trainerId
+    ? getTrainerInitialsById(selectedVersion.trainerId)
+    : null;
+
+  const weaponFullLabel = bookmarkedVariant
+    ? {
+        empty: copy.weaponEmptyHand,
+        bokken: copy.weaponBokken,
+        jo: copy.weaponJo,
+        tanto: copy.weaponTanto,
+      }[bookmarkedVariant.weapon]
+    : null;
+
   const handleActivate = () => {
-    onSelect(technique.slug);
+    onSelect(technique.slug, bookmarkedVariant);
   };
 
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
@@ -96,7 +130,13 @@ export const TechniqueCard = ({
           >
             <EmphasizedName name={technique.name[locale]} />
           </div>
-          {technique.jp && <div className="text-xs text-subtle truncate">{technique.jp}</div>}
+          {bookmarkedVariant ? (
+            <div className="text-xs text-subtle truncate">
+              {[versionTagLabel, trainerInitials, weaponFullLabel].filter(Boolean).join(' · ')}
+            </div>
+          ) : (
+            technique.jp && <div className="text-xs text-subtle truncate">{technique.jp}</div>
+          )}
         </div>
         <div className="flex items-center gap-2">{actionSlot}</div>
       </div>

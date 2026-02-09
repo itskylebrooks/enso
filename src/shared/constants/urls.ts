@@ -75,10 +75,10 @@ export const buildTechniqueUrlWithVariant = (
   const encodedSlug = encodeURIComponent(slug);
   const query = new URLSearchParams();
 
-  query.set('version', params.versionId || 'v-base');
-  query.set('hanmi', params.hanmi);
-  query.set('direction', params.direction);
-  query.set('weapon', params.weapon);
+  query.set('v', params.versionId || 'v-base');
+  query.set('h', params.hanmi);
+  query.set('d', params.direction);
+  query.set('w', params.weapon);
 
   return `/techniques/${encodedSlug}?${query.toString()}`;
 };
@@ -95,13 +95,19 @@ export const parseTechniqueVariantParams = (
   const params = new URLSearchParams(search);
 
   const versionCandidate =
-    params.get('version') || (legacyPathMatch ? decodeURIComponent(legacyPathMatch[1]) : undefined);
+    params.get('v') ||
+    params.get('version') ||
+    (legacyPathMatch ? decodeURIComponent(legacyPathMatch[1]) : undefined);
   const hanmiCandidateRaw =
-    params.get('hanmi') || (legacyPathMatch ? decodeURIComponent(legacyPathMatch[2]) : undefined);
+    params.get('h') ||
+    params.get('hanmi') ||
+    (legacyPathMatch ? decodeURIComponent(legacyPathMatch[2]) : undefined);
   const directionCandidateRaw =
+    params.get('d') ||
     params.get('direction') ||
     (legacyPathMatch ? decodeURIComponent(legacyPathMatch[3]) : undefined);
   const weaponCandidateRaw =
+    params.get('w') ||
     params.get('weapon') ||
     (legacyPathMatch && legacyPathMatch[4] ? decodeURIComponent(legacyPathMatch[4]) : 'empty');
   const hanmiCandidate = hanmiCandidateRaw ?? undefined;

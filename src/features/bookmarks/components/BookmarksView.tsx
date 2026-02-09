@@ -13,6 +13,7 @@ import type {
   Locale,
   Progress,
   Technique,
+  TechniqueVariantKey,
 } from '../../../shared/types';
 import { TechniqueCard } from '@features/technique/components/TechniqueCard';
 import { useMotionPreferences } from '@shared/components/ui/motion';
@@ -52,7 +53,7 @@ type BookmarksViewProps = {
   onUnassignGlossary: (termId: string, collectionId: string) => void;
   onAssignExercise: (exerciseId: string, collectionId: string) => void;
   onUnassignExercise: (exerciseId: string, collectionId: string) => void;
-  onOpenTechnique: (slug: string) => void;
+  onOpenTechnique: (slug: string, bookmarkedVariant?: TechniqueVariantKey) => void;
   onOpenGlossaryTerm: (slug: string) => void;
   onOpenExercise: (slug: string) => void;
 };

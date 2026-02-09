@@ -18,12 +18,13 @@ import type {
   Locale,
   Progress,
   Technique,
+  TechniqueVariantKey,
   WeaponKind,
 } from '@shared/types';
 import { stripDiacritics } from '@shared/utils/text';
 import { Footprints } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
-import { useCallback, useMemo, useState, type ReactElement } from 'react';
+import { useCallback, useEffect, useMemo, useState, type ReactElement } from 'react';
 import { MediaPanel } from './MediaPanel';
 import { NotesPanel } from './NotesPanel';
 import { StepsList } from './StepsList';
@@ -110,7 +111,7 @@ type TechniquePageProps = {
   locale: Locale;
   backLabel: string;
   onBack: () => void;
-  onToggleBookmark: () => void;
+  onToggleBookmark: (bookmarkedVariant: TechniqueVariantKey) => void;
   collections: Collection[];
   bookmarkCollections: BookmarkCollection[];
   onAssignToCollection: (collectionId: string) => void;
@@ -360,6 +361,22 @@ export const TechniquePage = ({
     [enrichedTechnique, toolbarValue],
   );
 
+  // Normalize technique URLs to always include explicit variant params.
+  // This also rewrites legacy long query keys to the short key format.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const nextPath = buildTechniqueUrlWithVariant(technique.slug, {
+      hanmi: toolbarValue.hanmi,
+      direction: toolbarValue.direction,
+      weapon: toolbarValue.weapon,
+      versionId: toolbarValue.versionId ?? null,
+    });
+    const currentPath = `${window.location.pathname}${window.location.search}`;
+    if (currentPath !== nextPath) {
+      window.history.replaceState(window.history.state ?? {}, '', nextPath);
+    }
+  }, [technique.slug, toolbarValue]);
+
   // Handle toolbar changes
   const handleToolbarChange = useCallback(
     (newValue: TechniqueToolbarValue) => {
@@ -518,6 +535,13 @@ export const TechniquePage = ({
     standard: copy.versionBase ?? 'Base',
   };
 
+  const currentBookmarkVariant: TechniqueVariantKey = {
+    hanmi: toolbarValue.hanmi,
+    direction: toolbarValue.direction,
+    weapon: toolbarValue.weapon,
+    versionId: toolbarValue.versionId ?? null,
+  };
+
   return (
     <motion.main
       className="mx-auto max-w-4xl px-4 sm:px-6 py-6 space-y-6"
@@ -534,7 +558,7 @@ export const TechniquePage = ({
         summary={summary}
         tags={tags}
         isBookmarked={bookmarkedActive}
-        onToggleBookmark={onToggleBookmark}
+        onToggleBookmark={() => onToggleBookmark(currentBookmarkVariant)}
         collections={collectionOptions}
         onToggleCollection={handleCollectionToggle}
         onCreateCollection={openCreateDialog}

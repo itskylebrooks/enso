@@ -107,6 +107,7 @@ export type Technique = TechniqueV2;
 export type Progress = {
   techniqueId: string;
   bookmarked: boolean;
+  bookmarkedVariant?: TechniqueVariantKey;
   updatedAt: number;
 };
 

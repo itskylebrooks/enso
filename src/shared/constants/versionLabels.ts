@@ -44,6 +44,29 @@ const DOJOS: Dojo[] = [
   },
 ];
 
+export function getTrainerNameById(trainerId: string | undefined): string | null {
+  if (!trainerId) return null;
+  const trainer = TRAINERS.find((item) => item.id === trainerId);
+  return trainer?.name ?? null;
+}
+
+export function getTrainerInitials(name: string): string {
+  const parts = name
+    .trim()
+    .split(/\s+/)
+    .map((part) => part.replace(/[^A-Za-zÀ-ÖØ-öø-ÿ]/g, ''))
+    .filter((part) => part.length > 0);
+
+  return parts.map((part) => part[0]?.toUpperCase() ?? '').join('.');
+}
+
+export function getTrainerInitialsById(trainerId: string | undefined): string | null {
+  const name = getTrainerNameById(trainerId);
+  if (!name) return null;
+  const initials = getTrainerInitials(name);
+  return initials.length > 0 ? initials : null;
+}
+
 /**
  * Generate a display label for a technique version based on v2 schema rules:
  * - If label exists, use it
