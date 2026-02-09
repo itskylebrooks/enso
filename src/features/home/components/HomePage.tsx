@@ -1,11 +1,9 @@
-import type { ReactElement, MouseEvent } from 'react';
+import type { ReactElement } from 'react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { Copy } from '../../../shared/constants/i18n';
 import type { GlossaryTerm, Grade, Locale } from '../../../shared/types';
-import { SakuraFlower } from '../../../shared/components';
 import { QuoteRotator } from './QuoteRotator';
 import { getAllQuotes, type Quote } from '@shared/data/quotes';
-import { classNames } from '@shared/utils/classNames';
 import { getCategoryLabel, getCategoryStyle } from '../../../shared/styles/terms';
 import { getGradeStyle, gradeLabel } from '@shared/styles/belts';
 
@@ -47,9 +45,6 @@ export const HomePage = ({
   onOpenGuideFromPrompt,
 }: HomePageProps): ReactElement => {
   const quotes = getAllQuotes(locale);
-  const [isGratitudeHovered, setIsGratitudeHovered] = useState(false);
-  const [isTouchDevice, setIsTouchDevice] = useState(false);
-  const [isGratitudeActive, setIsGratitudeActive] = useState(false);
   const [currentQuote, setCurrentQuote] = useState<Quote | null>(null);
   const [quoteCopied, setQuoteCopied] = useState(false);
   const copyTimeoutRef = useRef<number | null>(null);
@@ -60,27 +55,12 @@ export const HomePage = ({
   }, [glossaryTerms]);
 
   useEffect(() => {
-    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') return;
-    const mediaQuery = window.matchMedia('(hover: none) and (pointer: coarse)');
-    const updateTouchState = () => setIsTouchDevice(mediaQuery.matches);
-    updateTouchState();
-    mediaQuery.addEventListener('change', updateTouchState);
-    return () => mediaQuery.removeEventListener('change', updateTouchState);
-  }, []);
-
-  useEffect(() => {
     return () => {
       if (copyTimeoutRef.current) {
         window.clearTimeout(copyTimeoutRef.current);
       }
     };
   }, []);
-
-  const shouldToggleCard = (event: MouseEvent<HTMLElement>) => {
-    if (!isTouchDevice) return false;
-    const target = event.target as HTMLElement | null;
-    return !target?.closest('button, a, input, select, textarea, [role="button"]');
-  };
 
   const handleCopyQuote = async () => {
     if (!currentQuote) return;
@@ -111,8 +91,6 @@ export const HomePage = ({
       // noop
     }
   };
-
-  const gratitudeActive = isTouchDevice ? isGratitudeActive : isGratitudeHovered;
 
   return (
     <div className="min-h-dvh font-sans">
@@ -287,63 +265,6 @@ export const HomePage = ({
           </button>
         </div>
 
-        {/* Dojo Credit Card */}
-        <section
-          className={classNames(
-            'rounded-2xl border surface-border surface card-hover-shadow p-6 md:p-8 relative overflow-hidden',
-            isTouchDevice && isGratitudeActive && 'is-toggled',
-          )}
-          onMouseEnter={() => {
-            if (!isTouchDevice) setIsGratitudeHovered(true);
-          }}
-          onMouseLeave={() => {
-            if (!isTouchDevice) setIsGratitudeHovered(false);
-          }}
-          onClick={(event) => {
-            if (shouldToggleCard(event)) setIsGratitudeActive((prev) => !prev);
-          }}
-        >
-          {/* Sakura Flowers Background */}
-          <div
-            className={`absolute inset-0 pointer-events-none transition-opacity duration-500 ${gratitudeActive ? 'opacity-10' : 'opacity-0'}`}
-          >
-            {/* Top right sakura */}
-            <SakuraFlower
-              className="absolute -top-8 -right-8 w-28 h-28 transition-all duration-500 ease-out"
-              style={{
-                transform: gratitudeActive
-                  ? 'rotate(15deg) scale(1) translate(0, 0)'
-                  : 'rotate(45deg) scale(0.7) translate(10px, 10px)',
-              }}
-            />
-            {/* Top left sakura */}
-            <SakuraFlower
-              className="absolute top-8 -left-6 w-20 h-20 transition-all duration-500 delay-100 ease-out"
-              style={{
-                transform: gratitudeActive
-                  ? 'rotate(-20deg) scale(1) translate(0, 0)'
-                  : 'rotate(-50deg) scale(0.6) translate(-8px, 8px)',
-              }}
-            />
-            {/* Bottom right sakura */}
-            <SakuraFlower
-              className="absolute -bottom-6 right-12 w-18 h-18 transition-all duration-500 delay-200 ease-out"
-              style={{
-                transform: gratitudeActive
-                  ? 'rotate(30deg) scale(1) translate(0, 0)'
-                  : 'rotate(60deg) scale(0.5) translate(6px, -6px)',
-              }}
-            />
-          </div>
-
-          <div className="space-y-4 relative z-10">
-            <h2 className="text-lg md:text-xl font-semibold">{copy.homeDojoCreditTitle}</h2>
-            <div className="space-y-4 text-sm md:text-base leading-6 md:leading-7 text-subtle">
-              <p>{copy.homeDojoCreditPart1}</p>
-              <p>{copy.homeDojoCreditPart2}</p>
-            </div>
-          </div>
-        </section>
       </div>
     </div>
   );
