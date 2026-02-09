@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import type { ReactElement } from 'react';
 import { motion } from 'motion/react';
 import type { Copy } from '@shared/constants/i18n';
-import type { Exercise, Locale, PracticeCategory, PracticeEquipment, PracticeWhen } from '@shared/types';
+import type { Exercise, Locale, PracticeCategory, PracticeEquipment } from '@shared/types';
 import { useMotionPreferences } from '@shared/components/ui/motion';
 import { useIncrementalList } from '@shared/hooks/useIncrementalList';
 import { PracticeCard } from './PracticeCard';
@@ -10,7 +10,6 @@ import { loadAllExercises } from '../loader';
 
 export type PracticeFilters = {
   categories: PracticeCategory[];
-  whenToUse: PracticeWhen[];
   equipment: PracticeEquipment[];
 };
 
@@ -55,13 +54,6 @@ export const PracticePage = ({
       .filter((exercise) => {
         if (filters.categories.length > 0 && !filters.categories.includes(exercise.category)) {
           return false;
-        }
-
-        if (filters.whenToUse.length > 0) {
-          const whenTags = exercise.whenToUse ?? [];
-          if (!filters.whenToUse.some((item) => whenTags.includes(item))) {
-            return false;
-          }
         }
 
         if (filters.equipment.length > 0) {

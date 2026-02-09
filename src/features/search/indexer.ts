@@ -255,7 +255,6 @@ export const buildExerciseSearchIndex = (exercises: Exercise[]): ExerciseSearchE
       pushToken(tokens, exercise.aikidoContext.de);
     }
 
-    (exercise.whenToUse || []).forEach((item) => pushToken(tokens, item));
     (exercise.equipment || []).forEach((item) => pushToken(tokens, item));
 
     const haystack = Array.from(tokens).join(' ');

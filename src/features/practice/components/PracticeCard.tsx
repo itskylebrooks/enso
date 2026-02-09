@@ -1,7 +1,7 @@
 import type { KeyboardEvent, ReactElement, ReactNode } from 'react';
 import { motion, type Transition, type Variants } from 'motion/react';
 import type { Copy } from '@shared/constants/i18n';
-import type { Exercise, Locale, PracticeEquipment, PracticeWhen } from '@shared/types';
+import type { Exercise, Locale, PracticeEquipment } from '@shared/types';
 import { getPracticeCategoryLabel, getPracticeCategoryStyle } from '@shared/styles/practice';
 
 type MotionProps = {
@@ -22,16 +22,6 @@ type PracticeCardProps = {
   categoryPlacement?: 'header' | 'footer';
 } & MotionProps;
 
-const getWhenLabel = (whenToUse: PracticeWhen, copy: Copy): string => {
-  const labels: Record<PracticeWhen, string> = {
-    'before-training': copy.practiceWhenBeforeTraining,
-    'after-training': copy.practiceWhenAfterTraining,
-    'rest-day': copy.practiceWhenRestDay,
-    anytime: copy.practiceWhenAnytime,
-  };
-  return labels[whenToUse];
-};
-
 const getEquipmentLabel = (equipment: PracticeEquipment, copy: Copy): string => {
   const labels: Record<PracticeEquipment, string> = {
     none: copy.practiceEquipmentNone,
@@ -42,11 +32,6 @@ const getEquipmentLabel = (equipment: PracticeEquipment, copy: Copy): string => 
 };
 
 const buildMetaLine = (exercise: Exercise, copy: Copy): string | null => {
-  if (exercise.whenToUse && exercise.whenToUse.length > 0) {
-    const labels = exercise.whenToUse.map((item) => getWhenLabel(item, copy));
-    return labels.join(' · ');
-  }
-
   if (exercise.equipment && exercise.equipment.length > 0) {
     const labels = exercise.equipment.map((item) => getEquipmentLabel(item, copy));
     return `${copy.practiceEquipment}: ${labels.join(' · ')}`;

@@ -564,7 +564,6 @@ export default function App(): ReactElement {
   }>({});
   const [practiceFilters, setPracticeFilters] = useState<PracticeFilters>({
     categories: [],
-    whenToUse: [],
     equipment: [],
   });
   const [selectedCollectionId, setSelectedCollectionId] = useState<SelectedCollectionId>('all');
@@ -1825,15 +1824,11 @@ export default function App(): ReactElement {
         onRemoveFromCollection={removeExerciseFromCollection}
         onCreateCollection={createCollection}
         backLabel={practiceBackLabel}
-        onNavigateToPracticeWithFilter={(category) => {
-          setPracticeFilters({
-            categories: [category],
-            whenToUse: [],
-            equipment: [],
-          });
+        onNavigateToPracticeWithFilter={(nextFilters) => {
+          setPracticeFilters(nextFilters);
           navigateTo('practice', { replace: true });
         }}
-        onBack={() => navigateTo('practice', { replace: true })}
+        onBack={() => navigateTo(practiceBackRoute, { replace: true })}
       />
     );
   } else if (techniqueNotFound) {

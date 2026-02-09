@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactElement } from 'react';
 import { motion } from 'motion/react';
 import type { Copy } from '@shared/constants/i18n';
-import type { PracticeCategory, PracticeEquipment, PracticeWhen } from '@shared/types';
+import type { PracticeCategory, PracticeEquipment } from '@shared/types';
 import { classNames } from '@shared/utils/classNames';
 import { getPracticeCategoryLabel } from '@shared/styles/practice';
 import { SectionTitle } from '@shared/components';
@@ -14,16 +14,6 @@ type MobilePracticeFiltersProps = {
   filters: PracticeFilters;
   categories: PracticeCategory[];
   onChange: (filters: PracticeFilters) => void;
-};
-
-const getWhenLabel = (whenToUse: PracticeWhen, copy: Copy): string => {
-  const labels: Record<PracticeWhen, string> = {
-    'before-training': copy.practiceWhenBeforeTraining,
-    'after-training': copy.practiceWhenAfterTraining,
-    'rest-day': copy.practiceWhenRestDay,
-    anytime: copy.practiceWhenAnytime,
-  };
-  return labels[whenToUse];
 };
 
 const getEquipmentLabel = (equipment: PracticeEquipment, copy: Copy): string => {
@@ -44,18 +34,15 @@ export const MobilePracticeFilters = ({
   const handleReset = () => {
     onChange({
       categories: [],
-      whenToUse: [],
       equipment: [],
     });
   };
 
-  const hasActiveFilters =
-    filters.categories.length > 0 || filters.whenToUse.length > 0 || filters.equipment.length > 0;
+  const hasActiveFilters = filters.categories.length > 0 || filters.equipment.length > 0;
 
-  type SectionKey = 'category' | 'whenToUse' | 'equipment';
+  type SectionKey = 'category' | 'equipment';
   const [open, setOpen] = useState<Record<SectionKey, boolean>>(() => ({
     category: filters.categories.length > 0,
-    whenToUse: filters.whenToUse.length > 0,
     equipment: filters.equipment.length > 0,
   }));
 
@@ -67,10 +54,9 @@ export const MobilePracticeFilters = ({
     setOpen((prev) => ({
       ...prev,
       category: prev.category || filters.categories.length > 0,
-      whenToUse: prev.whenToUse || filters.whenToUse.length > 0,
       equipment: prev.equipment || filters.equipment.length > 0,
     }));
-  }, [filters.categories.length, filters.whenToUse.length, filters.equipment.length]);
+  }, [filters.categories.length, filters.equipment.length]);
 
   const toggleArrayValue = <T,>(values: T[], value: T): T[] =>
     values.includes(value) ? values.filter((item) => item !== value) : [...values, value];
@@ -139,61 +125,6 @@ export const MobilePracticeFilters = ({
                 </button>
               );
             })}
-          </div>
-        </motion.div>
-      </section>
-
-      <section>
-        <button
-          type="button"
-          aria-expanded={open.whenToUse}
-          onClick={() => toggleOpen('whenToUse')}
-          className="flex w-full items-center justify-between text-left"
-        >
-          <SectionTitle>{copy.practiceWhenToUse}</SectionTitle>
-          <motion.span
-            aria-hidden
-            className="text-subtle"
-            animate={{ rotate: open.whenToUse ? 0 : -90 }}
-            transition={{ duration: 0.2, ease: 'easeInOut' }}
-          >
-            <ChevronDown className="w-4 h-4" />
-          </motion.span>
-        </button>
-        <motion.div
-          className="overflow-hidden"
-          initial={false}
-          animate={open.whenToUse ? 'open' : 'closed'}
-          variants={collapseMotion.variants}
-          transition={collapseMotion.transition}
-        >
-          <div className="pt-3 space-y-2">
-            {(['before-training', 'after-training', 'rest-day', 'anytime'] as PracticeWhen[]).map(
-              (value) => {
-                const active = filters.whenToUse.includes(value);
-                return (
-                  <button
-                    key={value}
-                    type="button"
-                    className={classNames(
-                      'w-full rounded-lg border px-3 py-2.5 text-sm flex items-center justify-between gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
-                      active
-                        ? 'bg-[var(--color-text)] text-[var(--color-bg)] border-[var(--color-text)] font-semibold shadow-sm'
-                        : 'surface surface-border hover:border-[var(--color-text)]',
-                    )}
-                    aria-pressed={active}
-                    onClick={() =>
-                      onChange({
-                        ...filters,
-                        whenToUse: toggleArrayValue(filters.whenToUse, value),
-                      })
-                    }
-                  >
-                    <span className="truncate">{getWhenLabel(value, copy)}</span>
-                  </button>
-                );
-              },
-            )}
           </div>
         </motion.div>
       </section>

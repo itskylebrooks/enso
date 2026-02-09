@@ -19,7 +19,6 @@
       "Oberkörper ruhig halten und gleichmäßig atmen."
     ]
   },
-  "whenToUse": ["before-training", "anytime"],
   "equipment": ["none"],
   "safetyNotes": {
     "en": ["Keep the motion small if the lower back feels tight."],

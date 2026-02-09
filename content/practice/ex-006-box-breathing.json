@@ -19,7 +19,6 @@
       "Vier Sekunden ausatmen, dann vier Sekunden pausieren."
     ]
   },
-  "whenToUse": ["after-training", "rest-day", "anytime"],
   "equipment": ["none"],
   "safetyNotes": {
     "en": ["Keep the breath smooth and stop if you feel lightheaded."],

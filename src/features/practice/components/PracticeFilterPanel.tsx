@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactElement } from 'react';
 import { motion } from 'motion/react';
 import type { Copy } from '@shared/constants/i18n';
-import type { PracticeCategory, PracticeEquipment, PracticeWhen } from '@shared/types';
+import type { PracticeCategory, PracticeEquipment } from '@shared/types';
 import { classNames } from '@shared/utils/classNames';
 import { usePinButton } from '@shared/components/ui';
 import { SectionTitle } from '@shared/components';
@@ -15,16 +15,6 @@ type PracticeFilterPanelProps = {
   filters: PracticeFilters;
   categories: PracticeCategory[];
   onChange: (filters: PracticeFilters) => void;
-};
-
-const getWhenLabel = (whenToUse: PracticeWhen, copy: Copy): string => {
-  const labels: Record<PracticeWhen, string> = {
-    'before-training': copy.practiceWhenBeforeTraining,
-    'after-training': copy.practiceWhenAfterTraining,
-    'rest-day': copy.practiceWhenRestDay,
-    anytime: copy.practiceWhenAnytime,
-  };
-  return labels[whenToUse];
 };
 
 const getEquipmentLabel = (equipment: PracticeEquipment, copy: Copy): string => {
@@ -45,20 +35,17 @@ export const PracticeFilterPanel = ({
   const handleReset = () => {
     onChange({
       categories: [],
-      whenToUse: [],
       equipment: [],
     });
   };
 
-  const hasActiveFilters =
-    filters.categories.length > 0 || filters.whenToUse.length > 0 || filters.equipment.length > 0;
+  const hasActiveFilters = filters.categories.length > 0 || filters.equipment.length > 0;
   const pinButtonContext = usePinButton();
   const { collapseMotion } = useMotionPreferences();
 
-  type SectionKey = 'category' | 'whenToUse' | 'equipment';
+  type SectionKey = 'category' | 'equipment';
   const [open, setOpen] = useState<Record<SectionKey, boolean>>(() => ({
     category: filters.categories.length > 0,
-    whenToUse: filters.whenToUse.length > 0,
     equipment: filters.equipment.length > 0,
   }));
 
@@ -68,10 +55,9 @@ export const PracticeFilterPanel = ({
     setOpen((prev) => ({
       ...prev,
       category: prev.category || filters.categories.length > 0,
-      whenToUse: prev.whenToUse || filters.whenToUse.length > 0,
       equipment: prev.equipment || filters.equipment.length > 0,
     }));
-  }, [filters.categories.length, filters.whenToUse.length, filters.equipment.length]);
+  }, [filters.categories.length, filters.equipment.length]);
 
   const toggleArrayValue = <T,>(values: T[], value: T): T[] =>
     values.includes(value) ? values.filter((item) => item !== value) : [...values, value];
@@ -160,61 +146,6 @@ export const PracticeFilterPanel = ({
                 </button>
               );
             })}
-          </div>
-        </motion.div>
-      </section>
-
-      <section>
-        <button
-          type="button"
-          aria-expanded={open.whenToUse}
-          onClick={() => toggleOpen('whenToUse')}
-          className="flex w-full items-center justify-between text-left"
-        >
-          <SectionTitle>{copy.practiceWhenToUse}</SectionTitle>
-          <motion.span
-            aria-hidden
-            className="text-subtle"
-            animate={{ rotate: open.whenToUse ? 0 : -90 }}
-            transition={{ duration: 0.2, ease: 'easeInOut' }}
-          >
-            <ChevronDown className="w-4 h-4" />
-          </motion.span>
-        </button>
-        <motion.div
-          className="overflow-hidden"
-          initial={false}
-          animate={open.whenToUse ? 'open' : 'closed'}
-          variants={collapseMotion.variants}
-          transition={collapseMotion.transition}
-        >
-          <div className="pt-3 space-y-2">
-            {(['before-training', 'after-training', 'rest-day', 'anytime'] as PracticeWhen[]).map(
-              (value) => {
-                const isActive = filters.whenToUse.includes(value);
-                return (
-                  <button
-                    key={value}
-                    type="button"
-                    aria-pressed={isActive}
-                    onClick={() =>
-                      onChange({
-                        ...filters,
-                        whenToUse: toggleArrayValue(filters.whenToUse, value),
-                      })
-                    }
-                    className={classNames(
-                      'flex w-full items-center justify-between rounded-md border px-3 py-2 text-sm transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] hover:border-[var(--color-text)] hover:bg-[var(--color-surface-hover)]',
-                      isActive
-                        ? 'bg-[var(--color-text)] text-[var(--color-bg)] border-[var(--color-text)] shadow-sm hover:bg-[var(--color-text)]'
-                        : 'surface surface-border',
-                    )}
-                  >
-                    <span className="truncate">{getWhenLabel(value, copy)}</span>
-                  </button>
-                );
-              },
-            )}
           </div>
         </motion.div>
       </section>

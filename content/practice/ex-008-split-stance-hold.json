@@ -21,7 +21,6 @@
       "Gewicht zentriert halten und das vordere Knie nicht nach innen fallen lassen."
     ]
   },
-  "whenToUse": ["before-training", "rest-day"],
   "equipment": ["none"],
   "safetyNotes": {
     "en": ["Reduce the depth if the front knee or hip feels pinched."],

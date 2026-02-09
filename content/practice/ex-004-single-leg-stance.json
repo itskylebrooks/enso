@@ -19,7 +19,6 @@
       "Seite wechseln und wiederholen."
     ]
   },
-  "whenToUse": ["before-training", "anytime"],
   "equipment": ["none"],
   "safetyNotes": {
     "en": ["Hold a wall or chair if balance feels uncertain."],

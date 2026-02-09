@@ -198,8 +198,6 @@ export type PracticeCategory =
   | 'power'
   | 'recovery';
 
-export type PracticeWhen = 'before-training' | 'after-training' | 'rest-day' | 'anytime';
-
 export type PracticeEquipment = 'none' | 'mat' | 'resistance-band';
 
 export type Filters = {
@@ -230,7 +228,6 @@ export type Exercise = {
   summary: Localized<string>;
   description?: Localized<string>;
   howTo?: Localized<string[]>;
-  whenToUse?: PracticeWhen[];
   equipment?: PracticeEquipment[];
   safetyNotes?: Localized<string[]>;
   aikidoContext?: Localized<string>;

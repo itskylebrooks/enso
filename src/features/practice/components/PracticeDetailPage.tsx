@@ -8,7 +8,6 @@ import type {
   ExerciseProgress,
   Locale,
   PracticeEquipment,
-  PracticeWhen,
 } from '@shared/types';
 import { loadExerciseBySlug } from '../loader';
 import { useMotionPreferences } from '@shared/components/ui/motion';
@@ -21,6 +20,7 @@ import { AddToCollectionMenu } from '@features/bookmarks/components/AddToCollect
 import { Bookmark, BookmarkCheck } from 'lucide-react';
 import { classNames } from '@shared/utils/classNames';
 import { NameModal } from '@shared/components/ui/modals/NameModal';
+import type { PracticeFilters } from './PracticePage';
 
 type PracticeDetailPageProps = {
   slug: string;
@@ -35,17 +35,7 @@ type PracticeDetailPageProps = {
   onCreateCollection: (name: string) => string | null;
   onBack: () => void;
   backLabel?: string;
-  onNavigateToPracticeWithFilter?: (category: Exercise['category']) => void;
-};
-
-const getWhenLabel = (whenToUse: PracticeWhen, copy: Copy): string => {
-  const labels: Record<PracticeWhen, string> = {
-    'before-training': copy.practiceWhenBeforeTraining,
-    'after-training': copy.practiceWhenAfterTraining,
-    'rest-day': copy.practiceWhenRestDay,
-    anytime: copy.practiceWhenAnytime,
-  };
-  return labels[whenToUse];
+  onNavigateToPracticeWithFilter?: (filters: PracticeFilters) => void;
 };
 
 const getEquipmentLabel = (equipment: PracticeEquipment, copy: Copy): string => {
@@ -179,7 +169,12 @@ export const PracticeDetailPage = ({
               <div className="flex flex-wrap gap-2">
                 <button
                   type="button"
-                  onClick={() => onNavigateToPracticeWithFilter?.(exercise.category)}
+                  onClick={() =>
+                    onNavigateToPracticeWithFilter?.({
+                      categories: [exercise.category],
+                      equipment: [],
+                    })
+                  }
                   aria-label={`Show ${categoryLabel} in practice`}
                   className="glossary-tag glossary-tag--interactive rounded-lg px-2 py-1 text-xs uppercase tracking-wide focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
                   style={{
@@ -283,28 +278,6 @@ export const PracticeDetailPage = ({
             <MediaPanel media={exercise.media} copy={copy} locale={locale} />
           )}
 
-          {exercise.whenToUse && exercise.whenToUse.length > 0 && (
-            <section className="space-y-3">
-              <h2 className="text-xs uppercase tracking-[0.3em] text-subtle">
-                {copy.practiceWhenToUse}
-              </h2>
-              <div className="flex flex-wrap gap-2">
-                {exercise.whenToUse.map((item) => (
-                  <span
-                    key={item}
-                    className="glossary-tag rounded-lg px-2 py-1 text-xs uppercase tracking-wide"
-                    style={{
-                      backgroundColor: metadataTagStyle.backgroundColor,
-                      color: metadataTagStyle.color,
-                    }}
-                  >
-                    {getWhenLabel(item, copy)}
-                  </span>
-                ))}
-              </div>
-            </section>
-          )}
-
           {exercise.equipment && exercise.equipment.length > 0 && (
             <section className="space-y-3">
               <h2 className="text-xs uppercase tracking-[0.3em] text-subtle">
@@ -312,16 +285,23 @@ export const PracticeDetailPage = ({
               </h2>
               <div className="flex flex-wrap gap-2">
                 {exercise.equipment.map((item) => (
-                  <span
+                  <button
+                    type="button"
                     key={item}
-                    className="glossary-tag rounded-lg px-2 py-1 text-xs uppercase tracking-wide"
+                    onClick={() =>
+                      onNavigateToPracticeWithFilter?.({
+                        categories: [],
+                        equipment: [item],
+                      })
+                    }
+                    className="glossary-tag glossary-tag--interactive rounded-lg px-2 py-1 text-xs uppercase tracking-wide focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
                     style={{
                       backgroundColor: metadataTagStyle.backgroundColor,
                       color: metadataTagStyle.color,
                     }}
                   >
                     {getEquipmentLabel(item, copy)}
-                  </span>
+                  </button>
                 ))}
               </div>
             </section>
