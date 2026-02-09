@@ -161,17 +161,17 @@ const routeToPath = (route: AppRoute): string => {
     case 'guideDan5':
       return '/guide/5-dan';
     case 'guideRoutineWarmUp':
-      return '/guide/routines/warm-up';
+      return '/guide/warm-up';
     case 'guideRoutineCooldown':
-      return '/guide/routines/cooldown';
+      return '/guide/cooldown';
     case 'guideRoutineMobility':
-      return '/guide/routines/mobility';
+      return '/guide/mobility';
     case 'guideRoutineStrength':
-      return '/guide/routines/strength';
+      return '/guide/strength';
     case 'guideRoutineSkill':
-      return '/guide/routines/skill';
+      return '/guide/skill';
     case 'guideRoutineRecovery':
-      return '/guide/routines/recovery';
+      return '/guide/recovery';
     case 'feedback':
       return '/feedback';
     case 'techniques':
@@ -356,7 +356,7 @@ const parseLocation = (
     return { route: 'guideDan', slug: null };
   }
 
-  const guideRoutineMatch = /^\/guide\/routines\/(warm-up|cooldown|mobility|strength|skill|recovery)$/.exec(
+  const guideRoutineMatch = /^\/guide\/(warm-up|cooldown|mobility|strength|skill|recovery)$/.exec(
     pathname,
   );
   if (guideRoutineMatch) {
