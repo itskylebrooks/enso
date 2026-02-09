@@ -12,6 +12,7 @@ import { classNames } from '@shared/utils/classNames';
 import { getCategoryStyle, getCategoryLabel } from '../../../shared/styles/terms';
 import BreathingDot from '@shared/components/ui/BreathingDot';
 import { NameModal } from '@shared/components/ui/modals/NameModal';
+import { addRecent } from '@shared/services/recentsService';
 
 export type CollectionOption = {
   id: string;
@@ -74,6 +75,7 @@ export const TermDetailPage = ({
       try {
         const loadedTerm = await loadTermBySlug(slug);
         if (loadedTerm) {
+          addRecent({ type: 'term', slug: loadedTerm.slug });
           setTerm(loadedTerm);
         } else {
           setError('Term not found');
