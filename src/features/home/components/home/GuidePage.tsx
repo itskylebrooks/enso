@@ -183,20 +183,26 @@ export const GuidePage = ({
             </h2>
             <p className="text-sm text-subtle leading-relaxed">{i18nCopy.advancedProgramsLead}</p>
           </header>
-          <div className="flex gap-3">
+          <div className="grid gap-3 sm:grid-cols-2">
             <button
               type="button"
               onClick={onNavigateToAdvanced}
-              className="inline-flex items-center rounded-xl border surface-border bg-[var(--color-surface)]/70 px-4 py-2 text-sm font-medium hover:bg-[var(--color-surface)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+              className="w-full rounded-xl border surface-border bg-[var(--color-surface)]/70 px-4 py-3 flex items-center justify-between gap-3 cursor-pointer hover:bg-[var(--color-surface-hover)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
             >
-              {i18nCopy.advancedProgramsCta} →
+              <span className="text-sm font-medium">{i18nCopy.advancedProgramsCta}</span>
+              <span aria-hidden className="text-sm text-subtle shrink-0">
+                →
+              </span>
             </button>
             <button
               type="button"
               onClick={() => onNavigateToDan?.()}
-              className="inline-flex items-center rounded-xl border surface-border bg-[var(--color-surface)]/20 px-4 py-2 text-sm font-medium hover:bg-[var(--color-surface-hover)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+              className="w-full rounded-xl border surface-border bg-[var(--color-surface)]/70 px-4 py-3 flex items-center justify-between gap-3 cursor-pointer hover:bg-[var(--color-surface-hover)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
             >
-              {i18nCopy.danOverviewCta} →
+              <span className="text-sm font-medium">{i18nCopy.danOverviewCta}</span>
+              <span aria-hidden className="text-sm text-subtle shrink-0">
+                →
+              </span>
             </button>
           </div>
         </motion.article>
