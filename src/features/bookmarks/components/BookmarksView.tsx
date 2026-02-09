@@ -507,6 +507,7 @@ export const BookmarksView = ({
                       getTransition={getItemTransition}
                       prefersReducedMotion={prefersReducedMotion}
                       isDimmed={activeCardId === technique.id}
+                      summaryLines={3}
                       actionSlot={
                         <AddToCollectionMenu
                           copy={copy}

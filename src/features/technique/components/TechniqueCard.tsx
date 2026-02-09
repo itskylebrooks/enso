@@ -22,6 +22,7 @@ export type TechniqueCardProps = {
   motionIndex: number;
   actionSlot?: ReactNode;
   isDimmed?: boolean;
+  summaryLines?: 2 | 3;
 } & MotionProps;
 
 export const TechniqueCard = ({
@@ -35,6 +36,7 @@ export const TechniqueCard = ({
   // prefersReducedMotion removed (no hover motion)
   actionSlot,
   isDimmed,
+  summaryLines,
 }: TechniqueCardProps): ReactElement => {
   // Get available entry modes from the first version (assume all versions have same entries)
   const availableEntries = technique.versions[0]?.stepsByEntry || {};
@@ -99,7 +101,11 @@ export const TechniqueCard = ({
         <div className="flex items-center gap-2">{actionSlot}</div>
       </div>
 
-      <p className="text-sm text-muted leading-relaxed">
+      <p
+        className={`text-sm text-muted leading-relaxed${
+          summaryLines === 3 ? ' line-clamp-3' : summaryLines === 2 ? ' line-clamp-2' : ''
+        }`}
+      >
         {technique.summary[locale] ?? technique.summary.en}
       </p>
 
