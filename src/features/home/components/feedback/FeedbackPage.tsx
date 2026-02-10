@@ -3268,7 +3268,7 @@ export const FeedbackPage = ({
               })}
               {/* Email feedback card (opens mailto) placed to the right of Bug card on md screens */}
               <a
-                href="mailto:feedback@itskylebrooks.tech"
+                href="mailto:enso@kylebrooks.me"
                 className={classNames(
                   'rounded-2xl border surface surface-border px-4 py-4 transition-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] shadow-sm surface-hover flex items-center min-h-[88px]',
                 )}
@@ -3280,7 +3280,7 @@ export const FeedbackPage = ({
                   </span>
                   <div className="space-y-1 text-left">
                     <p className="font-medium text-[var(--color-text)]">Email feedback</p>
-                    <p className="text-sm text-subtle">itskylebrooks@icloud.com</p>
+                    <p className="text-sm text-subtle">enso@kylebrooks.me</p>
                   </div>
                 </div>
               </a>
