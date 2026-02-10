@@ -232,6 +232,7 @@ export const de = {
   feedbackDescription:
     'Hilf Enso zu wachsen, indem du bestehende Inhalte verbesserst oder deine Perspektive einbringst. Ob kleine Korrektur oder komplette Variante – dein Aikidō-Wissen zählt.',
   feedbackAddTechniqueCta: 'Technik beitragen',
+  feedbackAddExerciseCta: 'Übung beitragen',
   feedbackPage: {
     heroSubtitle:
       'Hilf Enso zu wachsen, indem du bestehende Inhalte verbesserst oder deine Perspektive einbringst. Ob kleine Korrektur oder komplette Variante – dein Aikidō-Wissen zählt.',

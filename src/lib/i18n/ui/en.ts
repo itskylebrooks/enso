@@ -230,6 +230,7 @@ export const en = {
   feedbackDescription:
     'Help Enso grow by improving what’s here or adding your own insight. Whether it’s a small correction or a full variation — your Aikidō knowledge matters.',
   feedbackAddTechniqueCta: 'Contribute technique',
+  feedbackAddExerciseCta: 'Contribute exercise',
   feedbackPage: {
     heroSubtitle:
       'Help Enso grow by improving what’s here or adding your own insight. Whether it’s a small correction or a full variation — your Aikidō knowledge matters.',

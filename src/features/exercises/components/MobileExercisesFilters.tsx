@@ -6,7 +6,7 @@ import { classNames } from '@shared/utils/classNames';
 import { getExerciseCategoryLabel } from '@shared/styles/exercises';
 import { SectionTitle } from '@shared/components';
 import { useMotionPreferences } from '@shared/components/ui/motion';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, PencilLine } from 'lucide-react';
 import type { ExerciseFilters } from './ExercisesPage';
 
 type MobileExercisesFiltersProps = {
@@ -14,6 +14,8 @@ type MobileExercisesFiltersProps = {
   filters: ExerciseFilters;
   categories: PracticeCategory[];
   onChange: (filters: ExerciseFilters) => void;
+  onContribute?: () => void;
+  onContributePrefetch?: () => void;
 };
 
 const getEquipmentLabel = (equipment: PracticeEquipment, copy: Copy): string => {
@@ -30,6 +32,8 @@ export const MobileExercisesFilters = ({
   filters,
   categories,
   onChange,
+  onContribute,
+  onContributePrefetch,
 }: MobileExercisesFiltersProps): ReactElement => {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const handleReset = () => {
@@ -156,6 +160,20 @@ export const MobileExercisesFilters = ({
               );
             })}
           </FilterSection>
+          {onContribute && (
+            <div className="mt-4">
+              <button
+                type="button"
+                onClick={onContribute}
+                onMouseEnter={onContributePrefetch}
+                onFocus={onContributePrefetch}
+                className="w-full inline-flex items-center justify-center gap-2 rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2 text-sm transition-soft hover-border-adaptive"
+              >
+                <PencilLine width={20} height={20} aria-hidden />
+                {copy.feedbackAddExerciseCta}
+              </button>
+            </div>
+          )}
         </div>
       </motion.div>
     </div>

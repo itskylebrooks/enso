@@ -804,9 +804,7 @@ export default function App({
 
   const goToFeedback = useCallback(
     (type?: FeedbackType) => {
-      if (type) {
-        setFeedbackInitialType(type);
-      }
+      setFeedbackInitialType(type ?? null);
       navigateTo('feedback');
     },
     [navigateTo],
@@ -2386,6 +2384,8 @@ export default function App({
                 filters={practiceFilters}
                 categories={practiceCategories}
                 onChange={setPracticeFilters}
+                onContribute={() => goToFeedback()}
+                onContributePrefetch={prefetchFeedbackPage}
               />
             </div>
             <div className="relative">
@@ -2396,6 +2396,18 @@ export default function App({
                   categories={practiceCategories}
                   onChange={setPracticeFilters}
                 />
+                <div className="mt-3">
+                  <button
+                    type="button"
+                    onClick={() => goToFeedback()}
+                    onMouseEnter={prefetchFeedbackPage}
+                    onFocus={prefetchFeedbackPage}
+                    className="w-full inline-flex items-center justify-center gap-2 rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2 text-sm transition-soft hover-border-adaptive"
+                  >
+                    <PencilLine width={20} height={20} aria-hidden />
+                    {copy.feedbackAddExerciseCta}
+                  </button>
+                </div>
               </ExpandableFilterBar>
               <section>
                 <ExercisesPage
