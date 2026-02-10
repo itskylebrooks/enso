@@ -2,11 +2,14 @@ import type { Grade, Locale } from '../../shared/types';
 import { stripDiacritics } from '../../shared/utils/text';
 
 export type SearchResultType = 'technique' | 'glossary' | 'exercise';
-type KyuGrade = Extract<Grade, 'kyu1' | 'kyu2' | 'kyu3' | 'kyu4' | 'kyu5'>;
+type BeltGrade = Extract<
+  Grade,
+  'kyu1' | 'kyu2' | 'kyu3' | 'kyu4' | 'kyu5' | 'dan1' | 'dan2' | 'dan3' | 'dan4' | 'dan5'
+>;
 
 export type SearchTokenFilter =
   | { kind: 'type'; value: SearchResultType }
-  | { kind: 'belt'; grade: KyuGrade };
+  | { kind: 'belt'; grade: BeltGrade };
 
 const TYPE_TOKENS: Record<Locale, Record<string, SearchResultType>> = {
   en: {
@@ -21,7 +24,7 @@ const TYPE_TOKENS: Record<Locale, Record<string, SearchResultType>> = {
   },
 };
 
-const BELT_TOKEN_PATTERN = /^([1-5])k$/;
+const BELT_TOKEN_PATTERN = /^([1-5])([kd])$/;
 
 const normalizeToken = (value: string): string => stripDiacritics(value.trim().toLowerCase());
 
@@ -36,8 +39,9 @@ export const parseSearchFilterToken = (
 
   const beltMatch = BELT_TOKEN_PATTERN.exec(token);
   if (beltMatch) {
-    const [, gradeNumber] = beltMatch;
-    return { kind: 'belt', grade: `kyu${gradeNumber}` as KyuGrade };
+    const [, gradeNumber, gradeSuffix] = beltMatch;
+    const prefix = gradeSuffix === 'k' ? 'kyu' : 'dan';
+    return { kind: 'belt', grade: `${prefix}${gradeNumber}` as BeltGrade };
   }
 
   const typeValue = TYPE_TOKENS[locale][token];
