@@ -23,6 +23,7 @@ type CollectionsSidebarProps = {
   onRename: (id: string) => void;
   onDelete: (id: string) => void;
   isEditing: boolean;
+  isEditDisabled?: boolean;
   onToggleEdit: () => void;
 };
 
@@ -37,6 +38,7 @@ export const CollectionsSidebar = ({
   onRename,
   onDelete,
   isEditing,
+  isEditDisabled = false,
   onToggleEdit,
 }: CollectionsSidebarProps): ReactElement => {
   const pinButtonContext = usePinButton();
@@ -59,11 +61,13 @@ export const CollectionsSidebar = ({
           <button
             type="button"
             onClick={onToggleEdit}
-            className={`p-2 rounded-lg border focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] ${
+            disabled={isEditDisabled}
+            className={`p-2 rounded-lg border disabled:cursor-not-allowed disabled:opacity-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] ${
               isEditing ? 'btn-contrast' : 'btn-tonal surface-hover'
             }`}
             aria-label={copy.collectionsEdit}
             aria-pressed={isEditing}
+            aria-disabled={isEditDisabled}
           >
             <Pencil className="w-4 h-4" />
           </button>

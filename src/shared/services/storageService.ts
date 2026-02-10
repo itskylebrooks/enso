@@ -29,6 +29,11 @@ import type {
   TechniqueVersion,
   Theme,
 } from '../types';
+import {
+  createCollectionItemId,
+  normalizeCollectionItemIds,
+  sanitizeCollectionItemIds,
+} from '../utils/collectionItems';
 
 const normalizeOptional = (value: string | undefined | null): string | undefined => {
   if (value == null) return undefined;
@@ -320,7 +325,7 @@ const ensureCollections = (rawCollections: Collection[]): Collection[] => {
 
   rawCollections.forEach((entry) => {
     if (!entry || typeof entry !== 'object') return;
-    const { id, name, icon, sortOrder, createdAt, updatedAt } = entry as Partial<Collection>;
+    const { id, name, icon, itemIds, sortOrder, createdAt, updatedAt } = entry as Partial<Collection>;
     if (typeof id !== 'string' || id.trim().length === 0) return;
     if (typeof name !== 'string' || name.trim().length === 0) return;
 
@@ -333,6 +338,7 @@ const ensureCollections = (rawCollections: Collection[]): Collection[] => {
       id,
       name: name.trim().slice(0, 40),
       icon: cleanedIcon,
+      itemIds: sanitizeCollectionItemIds(itemIds),
       sortOrder: order,
       createdAt: created,
       updatedAt: updated,
@@ -343,8 +349,55 @@ const ensureCollections = (rawCollections: Collection[]): Collection[] => {
     .sort((a, b) => a.sortOrder - b.sortOrder)
     .map((entry, index) => ({
       ...entry,
+      itemIds: sanitizeCollectionItemIds(entry.itemIds),
       sortOrder: index,
     }));
+};
+
+const normalizeCollectionItemOrder = (
+  collections: Collection[],
+  bookmarkCollections: BookmarkCollection[],
+  glossaryBookmarkCollections: GlossaryBookmarkCollection[],
+  exerciseBookmarkCollections: ExerciseBookmarkCollection[],
+): Collection[] => {
+  const orderedMembershipItems = [
+    ...bookmarkCollections.map((entry) => ({
+      collectionId: entry.collectionId,
+      itemId: createCollectionItemId('technique', entry.techniqueId),
+      createdAt: entry.createdAt,
+    })),
+    ...glossaryBookmarkCollections.map((entry) => ({
+      collectionId: entry.collectionId,
+      itemId: createCollectionItemId('glossary', entry.termId),
+      createdAt: entry.createdAt,
+    })),
+    ...exerciseBookmarkCollections.map((entry) => ({
+      collectionId: entry.collectionId,
+      itemId: createCollectionItemId('exercise', entry.exerciseId),
+      createdAt: entry.createdAt,
+    })),
+  ].sort((a, b) => {
+    if (a.createdAt !== b.createdAt) {
+      return a.createdAt - b.createdAt;
+    }
+    return a.itemId.localeCompare(b.itemId);
+  });
+
+  const orderedPresentIdsByCollection = new Map<string, string[]>();
+
+  orderedMembershipItems.forEach((entry) => {
+    const items = orderedPresentIdsByCollection.get(entry.collectionId) ?? [];
+    items.push(entry.itemId);
+    orderedPresentIdsByCollection.set(entry.collectionId, items);
+  });
+
+  return collections.map((collection) => {
+    const orderedPresentIds = orderedPresentIdsByCollection.get(collection.id) ?? [];
+    return {
+      ...collection,
+      itemIds: normalizeCollectionItemIds(collection.itemIds, orderedPresentIds, orderedPresentIds),
+    };
+  });
 };
 
 const ensureBookmarkCollections = (
@@ -397,6 +450,25 @@ export const loadDB = (): DB => {
 
     const collections = ensureCollections(parsed.collections ?? []);
     const collectionIds = new Set(collections.map((collection) => collection.id));
+    const bookmarkCollections = ensureBookmarkCollections(
+      parsed.bookmarkCollections ?? [],
+      seedTechniques,
+      collectionIds,
+    );
+    const glossaryBookmarkCollections = ensureGlossaryBookmarkCollections(
+      parsed.glossaryBookmarkCollections ?? [],
+      collectionIds,
+    );
+    const exerciseBookmarkCollections = ensureExerciseBookmarkCollections(
+      parsed.exerciseBookmarkCollections ?? [],
+      collectionIds,
+    );
+    const normalizedCollections = normalizeCollectionItemOrder(
+      collections,
+      bookmarkCollections,
+      glossaryBookmarkCollections,
+      exerciseBookmarkCollections,
+    );
 
     const db: DB = {
       version: DB_VERSION,
@@ -406,7 +478,7 @@ export const loadDB = (): DB => {
         progress: Array.isArray(parsed.progress) ? (parsed.progress as Progress[]) : [],
         glossaryProgress: [],
         exerciseProgress: [],
-        collections,
+        collections: normalizedCollections,
         bookmarkCollections: [],
         glossaryBookmarkCollections: [],
         exerciseBookmarkCollections: [],
@@ -414,20 +486,10 @@ export const loadDB = (): DB => {
       }),
       glossaryProgress: ensureGlossaryProgress(parsed.glossaryProgress ?? []),
       exerciseProgress: ensureExerciseProgress(parsed.exerciseProgress ?? []),
-      collections,
-      bookmarkCollections: ensureBookmarkCollections(
-        parsed.bookmarkCollections ?? [],
-        seedTechniques,
-        collectionIds,
-      ),
-      glossaryBookmarkCollections: ensureGlossaryBookmarkCollections(
-        parsed.glossaryBookmarkCollections ?? [],
-        collectionIds,
-      ),
-      exerciseBookmarkCollections: ensureExerciseBookmarkCollections(
-        parsed.exerciseBookmarkCollections ?? [],
-        collectionIds,
-      ),
+      collections: normalizedCollections,
+      bookmarkCollections,
+      glossaryBookmarkCollections,
+      exerciseBookmarkCollections,
     };
 
     return db;
@@ -531,9 +593,10 @@ export const exportDB = (db: DB): string => {
   const collectionIdToName = new Map(db.collections.map((c) => [c.id, c.name]));
 
   // Export collections by name only
-  const exportCollections = db.collections.map(({ name, icon }) => ({
+  const exportCollections = db.collections.map(({ name, icon, itemIds }) => ({
     name,
     icon,
+    itemIds,
   }));
 
   // Export bookmark collections using collection names instead of IDs
@@ -595,7 +658,7 @@ export const parseIncomingDB = (
   bookmarks?: string[];
   glossaryBookmarks?: string[];
   exerciseBookmarks?: string[];
-  collections?: Array<{ name: string; icon?: string | null }>;
+  collections?: Array<{ name: string; icon?: string | null; itemIds?: string[] }>;
   bookmarkCollections?: Array<{ techniqueId: string; collectionName: string }>;
   glossaryBookmarkCollections?: Array<{ termId: string; collectionName: string }>;
   exerciseBookmarkCollections?: Array<{ exerciseId: string; collectionName: string }>;
@@ -606,7 +669,7 @@ export const parseIncomingDB = (
     bookmarks?: string[];
     glossaryBookmarks?: string[];
     exerciseBookmarks?: string[];
-    collections?: Array<{ name: string; icon?: string | null }>;
+    collections?: Array<{ name: string; icon?: string | null; itemIds?: string[] }>;
     bookmarkCollections?: Array<{ techniqueId: string; collectionName: string }>;
     glossaryBookmarkCollections?: Array<{ termId: string; collectionName: string }>;
     exerciseBookmarkCollections?: Array<{ exerciseId: string; collectionName: string }>;
@@ -718,6 +781,7 @@ export const importData = (currentDB: DB, importedData: ReturnType<typeof parseI
         id,
         name: collection.name,
         icon: collection.icon || null,
+        itemIds: sanitizeCollectionItemIds(collection.itemIds),
         sortOrder: index,
         createdAt: now,
         updatedAt: now,
@@ -778,6 +842,13 @@ export const importData = (currentDB: DB, importedData: ReturnType<typeof parseI
     })
     .filter((entry): entry is ExerciseBookmarkCollection => Boolean(entry));
 
+  const normalizedImportedCollections = normalizeCollectionItemOrder(
+    importedCollections,
+    importedBookmarkCollections,
+    importedGlossaryBookmarkCollections,
+    importedExerciseBookmarkCollections,
+  );
+
   // Restore preferences if they were included in the export
   if (typeof importedData.animationsDisabled === 'boolean') {
     saveAnimationsDisabled(importedData.animationsDisabled);
@@ -788,7 +859,7 @@ export const importData = (currentDB: DB, importedData: ReturnType<typeof parseI
     progress: updatedProgress,
     glossaryProgress: finalGlossaryProgress,
     exerciseProgress: finalExerciseProgress,
-    collections: importedCollections,
+    collections: normalizedImportedCollections,
     bookmarkCollections: importedBookmarkCollections,
     glossaryBookmarkCollections: importedGlossaryBookmarkCollections,
     exerciseBookmarkCollections: importedExerciseBookmarkCollections,

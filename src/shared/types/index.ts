@@ -127,6 +127,7 @@ export type Collection = {
   id: string;
   name: string;
   icon?: string | null;
+  itemIds: string[];
   sortOrder: number;
   createdAt: number;
   updatedAt: number;

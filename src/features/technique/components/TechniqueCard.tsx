@@ -1,4 +1,4 @@
-import type { KeyboardEvent, ReactElement, ReactNode } from 'react';
+import type { KeyboardEvent, ReactElement, ReactNode, Ref } from 'react';
 import { motion, type Variants, type Transition } from 'motion/react';
 import type { Copy } from '@shared/constants/i18n';
 import { getTrainerInitialsById } from '@shared/constants/versionLabels';
@@ -23,8 +23,12 @@ export type TechniqueCardProps = {
   onSelect: (slug: string, bookmarkedVariant?: TechniqueVariantKey) => void;
   motionIndex: number;
   actionSlot?: ReactNode;
+  summarySlot?: ReactNode;
   isDimmed?: boolean;
   summaryLines?: 2 | 3;
+  onCardKeyDown?: (event: KeyboardEvent<HTMLDivElement>) => void;
+  cardRef?: Ref<HTMLDivElement>;
+  enableLayoutAnimation?: boolean;
   openedEntry?: EntryMode;
   showJapanese?: boolean;
   showVariantMeta?: boolean;
@@ -45,8 +49,12 @@ export const TechniqueCard = ({
   getTransition,
   // prefersReducedMotion removed (no hover motion)
   actionSlot,
+  summarySlot,
   isDimmed,
   summaryLines,
+  onCardKeyDown,
+  cardRef,
+  enableLayoutAnimation = false,
   openedEntry,
   showJapanese = true,
   showVariantMeta = true,
@@ -116,6 +124,10 @@ export const TechniqueCard = ({
   };
 
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    onCardKeyDown?.(event);
+    if (event.defaultPrevented) {
+      return;
+    }
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       handleActivate();
@@ -141,6 +153,7 @@ export const TechniqueCard = ({
 
   return (
     <motion.div
+      ref={cardRef}
       role="button"
       tabIndex={0}
       onClick={handleActivate}
@@ -154,6 +167,7 @@ export const TechniqueCard = ({
       initial={false}
       variants={variants}
       transition={getTransition(motionIndex)}
+      layout={enableLayoutAnimation}
       /* Hover and tap motion removed to disable hover effects completely */
       animate={isDimmed ? {} : {}}
       title={technique.name[locale]}
@@ -187,13 +201,17 @@ export const TechniqueCard = ({
         </div>
       </div>
 
-      <p
-        className={`text-sm text-muted leading-relaxed${
-          summaryLines === 3 ? ' line-clamp-3' : summaryLines === 2 ? ' line-clamp-2' : ''
-        }`}
-      >
-        {technique.summary[locale] ?? technique.summary.en}
-      </p>
+      <div className="relative">
+        <p
+          className={`text-sm text-muted leading-relaxed${
+            summaryLines === 3 ? ' line-clamp-3' : summaryLines === 2 ? ' line-clamp-2' : ''
+          }${summarySlot ? ' opacity-0 pointer-events-none select-none' : ''}`}
+          aria-hidden={Boolean(summarySlot)}
+        >
+          {technique.summary[locale] ?? technique.summary.en}
+        </p>
+        {summarySlot && <div className="absolute inset-0 flex items-center">{summarySlot}</div>}
+      </div>
 
       <div className={`mt-auto flex items-end justify-between gap-4 ${compactSpacing ? '' : 'pt-1'}`}>
         <div className="flex flex-wrap items-center gap-2 text-xs font-medium uppercase tracking-wide text-subtle">

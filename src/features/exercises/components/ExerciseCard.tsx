@@ -1,4 +1,4 @@
-import type { KeyboardEvent, ReactElement, ReactNode } from 'react';
+import type { KeyboardEvent, ReactElement, ReactNode, Ref } from 'react';
 import { motion, type Transition, type Variants } from 'motion/react';
 import type { Copy } from '@shared/constants/i18n';
 import type { Exercise, Locale } from '@shared/types';
@@ -17,11 +17,15 @@ type ExerciseCardProps = {
   onSelect: (slug: string) => void;
   motionIndex: number;
   actionSlot?: ReactNode;
+  summarySlot?: ReactNode;
   isDimmed?: boolean;
   categoryPlacement?: 'header' | 'footer';
   headerAlign?: 'start' | 'center';
   summaryLines?: 2 | 3;
   compactSpacing?: boolean;
+  onCardKeyDown?: (event: KeyboardEvent<HTMLDivElement>) => void;
+  cardRef?: Ref<HTMLDivElement>;
+  enableLayoutAnimation?: boolean;
 } & MotionProps;
 
 export const ExerciseCard = ({
@@ -33,11 +37,15 @@ export const ExerciseCard = ({
   variants,
   getTransition,
   actionSlot,
+  summarySlot,
   isDimmed,
   categoryPlacement = 'header',
   headerAlign = 'start',
   summaryLines = 3,
   compactSpacing = false,
+  onCardKeyDown,
+  cardRef,
+  enableLayoutAnimation = false,
 }: ExerciseCardProps): ReactElement => {
   const categoryLabel = getExerciseCategoryLabel(exercise.category, copy);
   const categoryStyle = getExerciseCategoryStyle(exercise.category);
@@ -49,6 +57,10 @@ export const ExerciseCard = ({
   };
 
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    onCardKeyDown?.(event);
+    if (event.defaultPrevented) {
+      return;
+    }
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       handleActivate();
@@ -57,6 +69,7 @@ export const ExerciseCard = ({
 
   return (
     <motion.div
+      ref={cardRef}
       role="button"
       tabIndex={0}
       onClick={handleActivate}
@@ -70,6 +83,7 @@ export const ExerciseCard = ({
       initial={false}
       variants={variants}
       transition={getTransition(motionIndex)}
+      layout={enableLayoutAnimation}
       title={name}
     >
       <div
@@ -96,13 +110,17 @@ export const ExerciseCard = ({
         </div>
       </div>
 
-      <p
-        className={`text-sm text-muted leading-relaxed flex-1 ${
-          summaryLines === 2 ? 'line-clamp-2' : 'line-clamp-3'
-        }`}
-      >
-        {summary}
-      </p>
+      <div className="relative flex-1">
+        <p
+          className={`text-sm text-muted leading-relaxed ${
+            summaryLines === 2 ? 'line-clamp-2' : 'line-clamp-3'
+          }${summarySlot ? ' opacity-0 pointer-events-none select-none' : ''}`}
+          aria-hidden={Boolean(summarySlot)}
+        >
+          {summary}
+        </p>
+        {summarySlot && <div className="absolute inset-0 flex items-center">{summarySlot}</div>}
+      </div>
 
       {categoryPlacement === 'footer' && (
         <div className="mt-auto flex justify-end pt-1">

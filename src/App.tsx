@@ -101,6 +101,7 @@ import {
   consumeBFCacheRestoreFlag,
   rememberScrollPosition,
 } from './shared/utils/navigationLifecycle';
+import { createCollectionItemId, swapCollectionItemIds } from './shared/utils/collectionItems';
 
 const defaultFilters: Filters = {};
 
@@ -111,6 +112,67 @@ const generateId = (): string => {
     return crypto.randomUUID();
   }
   return Math.random().toString(36).slice(2, 11);
+};
+
+const appendCollectionItem = (
+  collections: Collection[],
+  collectionId: string,
+  itemId: string,
+  updatedAt: number,
+): Collection[] => {
+  let changed = false;
+  const nextCollections = collections.map((collection) => {
+    if (collection.id !== collectionId) return collection;
+    if (collection.itemIds.includes(itemId)) return collection;
+    changed = true;
+    return {
+      ...collection,
+      itemIds: [...collection.itemIds, itemId],
+      updatedAt,
+    };
+  });
+
+  return changed ? nextCollections : collections;
+};
+
+const removeCollectionItem = (
+  collections: Collection[],
+  collectionId: string,
+  itemId: string,
+  updatedAt: number,
+): Collection[] => {
+  let changed = false;
+  const nextCollections = collections.map((collection) => {
+    if (collection.id !== collectionId) return collection;
+    if (!collection.itemIds.includes(itemId)) return collection;
+    changed = true;
+    return {
+      ...collection,
+      itemIds: collection.itemIds.filter((id) => id !== itemId),
+      updatedAt,
+    };
+  });
+
+  return changed ? nextCollections : collections;
+};
+
+const removeCollectionItemFromAll = (
+  collections: Collection[],
+  itemId: string,
+  updatedAt: number,
+): Collection[] => {
+  let changed = false;
+  const nextCollections = collections.map((collection) => {
+    if (!collection.itemIds.includes(itemId)) return collection;
+    changed = true;
+    return {
+      ...collection,
+      itemIds: collection.itemIds.filter((id) => id !== itemId),
+      updatedAt,
+    };
+  });
+
+  return changed ? nextCollections : collections;
 };
 
 type HistoryState = {
@@ -1154,9 +1216,15 @@ export default function App({
       const nextBookmarkCollections = shouldRemoveAssignments
         ? prev.bookmarkCollections.filter((entry) => entry.techniqueId !== id)
         : prev.bookmarkCollections;
+      const itemId = createCollectionItemId('technique', id);
+      const now = Date.now();
+      const nextCollections = shouldRemoveAssignments
+        ? removeCollectionItemFromAll(prev.collections, itemId, now)
+        : prev.collections;
       return {
         ...prev,
         progress: nextProgress,
+        collections: nextCollections,
         bookmarkCollections: nextBookmarkCollections,
       };
     });
@@ -1173,9 +1241,15 @@ export default function App({
       const nextGlossaryBookmarkCollections = shouldRemoveAssignments
         ? prev.glossaryBookmarkCollections.filter((entry) => entry.termId !== termId)
         : prev.glossaryBookmarkCollections;
+      const itemId = createCollectionItemId('glossary', termId);
+      const now = Date.now();
+      const nextCollections = shouldRemoveAssignments
+        ? removeCollectionItemFromAll(prev.collections, itemId, now)
+        : prev.collections;
       return {
         ...prev,
         glossaryProgress: nextGlossaryProgress,
+        collections: nextCollections,
         glossaryBookmarkCollections: nextGlossaryBookmarkCollections,
       };
     });
@@ -1192,9 +1266,15 @@ export default function App({
       const nextExerciseBookmarkCollections = shouldRemoveAssignments
         ? prev.exerciseBookmarkCollections.filter((entry) => entry.exerciseId !== exerciseId)
         : prev.exerciseBookmarkCollections;
+      const itemId = createCollectionItemId('exercise', exerciseId);
+      const now = Date.now();
+      const nextCollections = shouldRemoveAssignments
+        ? removeCollectionItemFromAll(prev.collections, itemId, now)
+        : prev.collections;
       return {
         ...prev,
         exerciseProgress: nextExerciseProgress,
+        collections: nextCollections,
         exerciseBookmarkCollections: nextExerciseBookmarkCollections,
       };
     });
@@ -1229,6 +1309,7 @@ export default function App({
           id,
           name: sanitizeCollectionName(trimmed),
           icon: null,
+          itemIds: [],
           sortOrder: prev.collections.length,
           createdAt: now,
           updatedAt: now,
@@ -1278,13 +1359,14 @@ export default function App({
 
   const assignToCollection = (techniqueId: string, collectionId: string): void => {
     setDB((prev) => {
+      const now = Date.now();
+      const itemId = createCollectionItemId('technique', techniqueId);
       // Automatically bookmark if not already bookmarked
       const progressEntry = prev.progress.find((entry) => entry.techniqueId === techniqueId);
       const isBookmarked = progressEntry?.bookmarked;
 
       let nextProgress = prev.progress;
       if (!isBookmarked) {
-        const now = Date.now();
         if (progressEntry) {
           nextProgress = prev.progress.map((p) =>
             p.techniqueId === techniqueId ? { ...p, bookmarked: true, updatedAt: now } : p,
@@ -1299,14 +1381,17 @@ export default function App({
           (entry) => entry.techniqueId === techniqueId && entry.collectionId === collectionId,
         )
       ) {
-        return { ...prev, progress: nextProgress };
+        return {
+          ...prev,
+          progress: nextProgress,
+          collections: appendCollectionItem(prev.collections, collectionId, itemId, now),
+        };
       }
-
-      const now = Date.now();
 
       return {
         ...prev,
         progress: nextProgress,
+        collections: appendCollectionItem(prev.collections, collectionId, itemId, now),
         bookmarkCollections: [
           ...prev.bookmarkCollections,
           {
@@ -1321,23 +1406,29 @@ export default function App({
   };
 
   const removeFromCollection = (techniqueId: string, collectionId: string): void => {
-    setDB((prev) => ({
-      ...prev,
-      bookmarkCollections: prev.bookmarkCollections.filter(
-        (entry) => !(entry.techniqueId === techniqueId && entry.collectionId === collectionId),
-      ),
-    }));
+    setDB((prev) => {
+      const now = Date.now();
+      const itemId = createCollectionItemId('technique', techniqueId);
+      return {
+        ...prev,
+        collections: removeCollectionItem(prev.collections, collectionId, itemId, now),
+        bookmarkCollections: prev.bookmarkCollections.filter(
+          (entry) => !(entry.techniqueId === techniqueId && entry.collectionId === collectionId),
+        ),
+      };
+    });
   };
 
   const assignGlossaryToCollection = (termId: string, collectionId: string): void => {
     setDB((prev) => {
+      const now = Date.now();
+      const itemId = createCollectionItemId('glossary', termId);
       // Automatically bookmark if not already bookmarked
       const progressEntry = prev.glossaryProgress.find((entry) => entry.termId === termId);
       const isBookmarked = progressEntry?.bookmarked;
 
       let nextGlossaryProgress = prev.glossaryProgress;
       if (!isBookmarked) {
-        const now = Date.now();
         if (progressEntry) {
           nextGlossaryProgress = prev.glossaryProgress.map((p) =>
             p.termId === termId ? { ...p, bookmarked: true, updatedAt: now } : p,
@@ -1355,14 +1446,17 @@ export default function App({
           (entry) => entry.termId === termId && entry.collectionId === collectionId,
         )
       ) {
-        return { ...prev, glossaryProgress: nextGlossaryProgress };
+        return {
+          ...prev,
+          glossaryProgress: nextGlossaryProgress,
+          collections: appendCollectionItem(prev.collections, collectionId, itemId, now),
+        };
       }
-
-      const now = Date.now();
 
       return {
         ...prev,
         glossaryProgress: nextGlossaryProgress,
+        collections: appendCollectionItem(prev.collections, collectionId, itemId, now),
         glossaryBookmarkCollections: [
           ...prev.glossaryBookmarkCollections,
           {
@@ -1377,22 +1471,28 @@ export default function App({
   };
 
   const removeGlossaryFromCollection = (termId: string, collectionId: string): void => {
-    setDB((prev) => ({
-      ...prev,
-      glossaryBookmarkCollections: prev.glossaryBookmarkCollections.filter(
-        (entry) => !(entry.termId === termId && entry.collectionId === collectionId),
-      ),
-    }));
+    setDB((prev) => {
+      const now = Date.now();
+      const itemId = createCollectionItemId('glossary', termId);
+      return {
+        ...prev,
+        collections: removeCollectionItem(prev.collections, collectionId, itemId, now),
+        glossaryBookmarkCollections: prev.glossaryBookmarkCollections.filter(
+          (entry) => !(entry.termId === termId && entry.collectionId === collectionId),
+        ),
+      };
+    });
   };
 
   const assignExerciseToCollection = (exerciseId: string, collectionId: string): void => {
     setDB((prev) => {
+      const now = Date.now();
+      const itemId = createCollectionItemId('exercise', exerciseId);
       const progressEntry = prev.exerciseProgress.find((entry) => entry.exerciseId === exerciseId);
       const isBookmarked = progressEntry?.bookmarked;
 
       let nextExerciseProgress = prev.exerciseProgress;
       if (!isBookmarked) {
-        const now = Date.now();
         if (progressEntry) {
           nextExerciseProgress = prev.exerciseProgress.map((p) =>
             p.exerciseId === exerciseId ? { ...p, bookmarked: true, updatedAt: now } : p,
@@ -1410,14 +1510,17 @@ export default function App({
           (entry) => entry.exerciseId === exerciseId && entry.collectionId === collectionId,
         )
       ) {
-        return { ...prev, exerciseProgress: nextExerciseProgress };
+        return {
+          ...prev,
+          exerciseProgress: nextExerciseProgress,
+          collections: appendCollectionItem(prev.collections, collectionId, itemId, now),
+        };
       }
-
-      const now = Date.now();
 
       return {
         ...prev,
         exerciseProgress: nextExerciseProgress,
+        collections: appendCollectionItem(prev.collections, collectionId, itemId, now),
         exerciseBookmarkCollections: [
           ...prev.exerciseBookmarkCollections,
           {
@@ -1432,12 +1535,43 @@ export default function App({
   };
 
   const removeExerciseFromCollection = (exerciseId: string, collectionId: string): void => {
-    setDB((prev) => ({
-      ...prev,
-      exerciseBookmarkCollections: prev.exerciseBookmarkCollections.filter(
-        (entry) => !(entry.exerciseId === exerciseId && entry.collectionId === collectionId),
-      ),
-    }));
+    setDB((prev) => {
+      const now = Date.now();
+      const itemId = createCollectionItemId('exercise', exerciseId);
+      return {
+        ...prev,
+        collections: removeCollectionItem(prev.collections, collectionId, itemId, now),
+        exerciseBookmarkCollections: prev.exerciseBookmarkCollections.filter(
+          (entry) => !(entry.exerciseId === exerciseId && entry.collectionId === collectionId),
+        ),
+      };
+    });
+  };
+
+  const reorderCollectionItem = (
+    collectionId: string,
+    itemId: string,
+    direction: 'backward' | 'forward',
+  ): void => {
+    setDB((prev) => {
+      const collection = prev.collections.find((entry) => entry.id === collectionId);
+      if (!collection) return prev;
+
+      const baseItemIds = collection.itemIds.includes(itemId)
+        ? collection.itemIds
+        : [...collection.itemIds, itemId];
+      const index = baseItemIds.indexOf(itemId);
+      const nextItemIds = swapCollectionItemIds(baseItemIds, index, direction);
+      if (nextItemIds === collection.itemIds) return prev;
+
+      const updatedAt = Date.now();
+      return {
+        ...prev,
+        collections: prev.collections.map((entry) =>
+          entry.id === collectionId ? { ...entry, itemIds: nextItemIds, updatedAt } : entry,
+        ),
+      };
+    });
   };
 
   const handleLocaleChange = (next: Locale): void => {
@@ -2163,6 +2297,7 @@ export default function App({
             onUnassignGlossary={removeGlossaryFromCollection}
             onAssignExercise={assignExerciseToCollection}
             onUnassignExercise={removeExerciseFromCollection}
+            onReorderCollectionItem={reorderCollectionItem}
             onOpenTechnique={(slug, bookmarkedVariant) =>
               openTechnique(
                 slug,

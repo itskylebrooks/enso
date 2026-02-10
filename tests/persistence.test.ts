@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import techniquesData from '../src/generated/content/techniques.json';
 import { loadDB } from '../src/shared/services/storageService';
-import { LOCALE_KEY } from '../src/shared/constants/storage';
+import { LOCALE_KEY, STORAGE_KEY } from '../src/shared/constants/storage';
 
 type StorageStub = {
   getItem: (key: string) => string | null;
@@ -63,5 +63,47 @@ describe('local-first persistence defaults', () => {
     vi.stubGlobal('document', { cookie: `${LOCALE_KEY}=de` });
     const { loadStoredLocale } = await import('../src/shared/services/storageService');
     expect(loadStoredLocale()).toBe('de');
+  });
+
+  it('restores and normalizes collection itemIds order from stored DB', async () => {
+    const techniqueId = techniquesData[0]?.id as string;
+    setMockWindow({
+      [STORAGE_KEY]: JSON.stringify({
+        version: 6,
+        techniques: [],
+        progress: [{ techniqueId, bookmarked: true, updatedAt: 1 }],
+        glossaryProgress: [{ termId: 'term-a', bookmarked: true, updatedAt: 1 }],
+        exerciseProgress: [{ exerciseId: 'exercise-a', bookmarked: true, updatedAt: 1 }],
+        collections: [
+          {
+            id: 'collection-1',
+            name: 'Collection',
+            icon: null,
+            itemIds: [`technique:${techniqueId}`, `technique:${techniqueId}`, 'unknown-item'],
+            sortOrder: 0,
+            createdAt: 1,
+            updatedAt: 1,
+          },
+        ],
+        bookmarkCollections: [
+          { id: 'bc-1', techniqueId, collectionId: 'collection-1', createdAt: 10 },
+        ],
+        glossaryBookmarkCollections: [
+          { id: 'gc-1', termId: 'term-a', collectionId: 'collection-1', createdAt: 20 },
+        ],
+        exerciseBookmarkCollections: [
+          { id: 'ec-1', exerciseId: 'exercise-a', collectionId: 'collection-1', createdAt: 30 },
+        ],
+      }),
+    });
+
+    const { loadDB: loadStoredDB } = await import('../src/shared/services/storageService');
+    const db = loadStoredDB();
+
+    expect(db.collections[0]?.itemIds).toEqual([
+      `technique:${techniqueId}`,
+      'glossary:term-a',
+      'exercise:exercise-a',
+    ]);
   });
 });

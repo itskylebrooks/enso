@@ -6,8 +6,18 @@ import { ConfirmModal } from '@shared/components/ui/modals/ConfirmModal';
 import { NameModal } from '@shared/components/ui/modals/NameModal';
 import { useMotionPreferences } from '@shared/components/ui/motion';
 import { useIncrementalList } from '@shared/hooks/useIncrementalList';
+import { createCollectionItemId, normalizeCollectionItemIds } from '@shared/utils/collectionItems';
+import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
-import { useMemo, useState, type ReactElement } from 'react';
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type KeyboardEvent,
+  type MouseEvent,
+  type ReactElement,
+} from 'react';
 import type { Copy } from '../../../shared/constants/i18n';
 import type {
   BookmarkCollection,
@@ -53,6 +63,11 @@ type BookmarksViewProps = {
   onUnassignGlossary: (termId: string, collectionId: string) => void;
   onAssignExercise: (exerciseId: string, collectionId: string) => void;
   onUnassignExercise: (exerciseId: string, collectionId: string) => void;
+  onReorderCollectionItem: (
+    collectionId: string,
+    itemId: string,
+    direction: 'backward' | 'forward',
+  ) => void;
   onOpenTechnique: (slug: string, bookmarkedVariant?: TechniqueVariantKey) => void;
   onOpenGlossaryTerm: (slug: string) => void;
   onOpenExercise: (slug: string) => void;
@@ -63,6 +78,106 @@ type DialogState =
   | { type: 'rename'; collection: Collection }
   | { type: 'delete'; collection: Collection }
   | null;
+
+type VisibleBookmarkItem =
+  | {
+      type: 'technique';
+      item: Technique;
+      name: string;
+      id: string;
+      itemId: string;
+    }
+  | {
+      type: 'glossary';
+      item: GlossaryTerm;
+      name: string;
+      id: string;
+      itemId: string;
+    }
+  | {
+      type: 'exercise';
+      item: Exercise;
+      name: string;
+      id: string;
+      itemId: string;
+    };
+
+type ReorderControlsProps = {
+  copy: Copy;
+  disableBackward: boolean;
+  disableForward: boolean;
+  onMoveBackward: () => void;
+  onMoveForward: () => void;
+};
+
+const ReorderControls = ({
+  copy,
+  disableBackward,
+  disableForward,
+  onMoveBackward,
+  onMoveForward,
+}: ReorderControlsProps): ReactElement => {
+  const stopCardClick = (event: MouseEvent<HTMLButtonElement>) => {
+    event.stopPropagation();
+  };
+
+  return (
+    <div className="w-full flex items-center justify-center">
+      <div className="flex items-center gap-2 sm:hidden">
+        <button
+          type="button"
+          onClick={(event) => {
+            stopCardClick(event);
+            onMoveBackward();
+          }}
+          disabled={disableBackward}
+          className="p-2 rounded-lg border btn-tonal surface-hover disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+          aria-label={copy.collectionReorderUp}
+        >
+          <ArrowUp className="w-4 h-4" />
+        </button>
+        <button
+          type="button"
+          onClick={(event) => {
+            stopCardClick(event);
+            onMoveForward();
+          }}
+          disabled={disableForward}
+          className="p-2 rounded-lg border btn-tonal surface-hover disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+          aria-label={copy.collectionReorderDown}
+        >
+          <ArrowDown className="w-4 h-4" />
+        </button>
+      </div>
+      <div className="hidden items-center gap-2 sm:flex">
+        <button
+          type="button"
+          onClick={(event) => {
+            stopCardClick(event);
+            onMoveBackward();
+          }}
+          disabled={disableBackward}
+          className="p-2 rounded-lg border btn-tonal surface-hover disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+          aria-label={copy.collectionReorderLeft}
+        >
+          <ArrowLeft className="w-4 h-4" />
+        </button>
+        <button
+          type="button"
+          onClick={(event) => {
+            stopCardClick(event);
+            onMoveForward();
+          }}
+          disabled={disableForward}
+          className="p-2 rounded-lg border btn-tonal surface-hover disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+          aria-label={copy.collectionReorderRight}
+        >
+          <ArrowRight className="w-4 h-4" />
+        </button>
+      </div>
+    </div>
+  );
+};
 
 export const BookmarksView = ({
   copy,
@@ -88,14 +203,17 @@ export const BookmarksView = ({
   onUnassignGlossary,
   onAssignExercise,
   onUnassignExercise,
+  onReorderCollectionItem,
   onOpenTechnique,
   onOpenGlossaryTerm,
   onOpenExercise,
 }: BookmarksViewProps): ReactElement => {
   const { listMotion, getItemTransition, prefersReducedMotion } = useMotionPreferences();
   const [dialog, setDialog] = useState<DialogState>(null);
-  const [editing, setEditing] = useState(false);
+  const [editingByCollection, setEditingByCollection] = useState<Record<string, boolean>>({});
   const [activeCardId, setActiveCardId] = useState<string | null>(null);
+  const cardRefs = useRef(new Map<string, HTMLDivElement | null>());
+  const pendingFocusItemId = useRef<string | null>(null);
 
   const progressById = useMemo(
     () => Object.fromEntries(progress.map((entry) => [entry.techniqueId, entry])),
@@ -111,6 +229,21 @@ export const BookmarksView = ({
         }),
       ),
     [collections, locale],
+  );
+
+  const isSpecificCollectionSelected =
+    selectedCollectionId !== 'all' && selectedCollectionId !== 'ungrouped';
+
+  const activeCollection = useMemo(
+    () =>
+      isSpecificCollectionSelected
+        ? orderedCollections.find((collection) => collection.id === selectedCollectionId) ?? null
+        : null,
+    [isSpecificCollectionSelected, orderedCollections, selectedCollectionId],
+  );
+
+  const isCollectionEditMode = Boolean(
+    activeCollection && editingByCollection[activeCollection.id] === true,
   );
 
   const bookmarkedIds = useMemo(() => {
@@ -329,41 +462,58 @@ export const BookmarksView = ({
     [allBookmarkedExercises, visibleExerciseIds],
   );
 
-  // Combined and sorted list of both techniques and glossary terms
-  const sortedVisibleItems = useMemo(() => {
-    const techniqueItems = visibleTechniques.map((technique) => ({
-      type: 'technique' as const,
+  const sortedVisibleItems = useMemo((): VisibleBookmarkItem[] => {
+    const techniqueItems: VisibleBookmarkItem[] = visibleTechniques.map((technique) => ({
+      type: 'technique',
       item: technique,
       name: technique.name[locale] || technique.name.en,
       id: technique.id,
+      itemId: createCollectionItemId('technique', technique.id),
     }));
 
-    const glossaryItems = visibleGlossaryTerms.map((term) => ({
-      type: 'glossary' as const,
+    const glossaryItems: VisibleBookmarkItem[] = visibleGlossaryTerms.map((term) => ({
+      type: 'glossary',
       item: term,
       name: term.romaji,
       id: term.id,
+      itemId: createCollectionItemId('glossary', term.id),
     }));
 
-    const exerciseItems = visibleExercises.map((exercise) => ({
-      type: 'exercise' as const,
+    const exerciseItems: VisibleBookmarkItem[] = visibleExercises.map((exercise) => ({
+      type: 'exercise',
       item: exercise,
       name: exercise.name[locale] || exercise.name.en,
       id: exercise.id,
+      itemId: createCollectionItemId('exercise', exercise.id),
     }));
 
     const combined = [...techniqueItems, ...glossaryItems, ...exerciseItems];
-
-    return combined.sort((a, b) =>
+    const alphaSorted = [...combined].sort((a, b) =>
       a.name.localeCompare(b.name, locale, {
         sensitivity: 'accent',
         caseFirst: 'upper',
       }),
     );
-  }, [visibleTechniques, visibleGlossaryTerms, visibleExercises, locale]);
+
+    if (!activeCollection) {
+      return alphaSorted;
+    }
+
+    const orderMap = new Map(combined.map((entry) => [entry.itemId, entry] as const));
+    const presentIds = combined.map((entry) => entry.itemId);
+    const normalizedIds = normalizeCollectionItemIds(activeCollection.itemIds, presentIds, presentIds);
+    const normalizedIdSet = new Set(normalizedIds);
+
+    const orderedFromCollection = normalizedIds
+      .map((itemId) => orderMap.get(itemId))
+      .filter((entry): entry is VisibleBookmarkItem => Boolean(entry));
+
+    const missingItems = alphaSorted.filter((entry) => !normalizedIdSet.has(entry.itemId));
+    return [...orderedFromCollection, ...missingItems];
+  }, [activeCollection, locale, visibleExercises, visibleGlossaryTerms, visibleTechniques]);
 
   const sortedKey = useMemo(
-    () => sortedVisibleItems.map((item) => `${item.type}-${item.id}`).join(','),
+    () => sortedVisibleItems.map((item) => item.itemId).join(','),
     [sortedVisibleItems],
   );
 
@@ -375,6 +525,21 @@ export const BookmarksView = ({
     pageSize: 18,
     resetKey: `${selectedCollectionId}-${sortedKey}`,
   });
+
+  const renderedBookmarks = isCollectionEditMode ? sortedVisibleItems : visibleBookmarks;
+  const itemIndexById = useMemo(
+    () => new Map(sortedVisibleItems.map((item, index) => [item.itemId, index] as const)),
+    [sortedVisibleItems],
+  );
+
+  useEffect(() => {
+    if (!pendingFocusItemId.current) return;
+    const itemId = pendingFocusItemId.current;
+    pendingFocusItemId.current = null;
+    requestAnimationFrame(() => {
+      cardRefs.current.get(itemId)?.focus();
+    });
+  }, [sortedKey]);
 
   const collectionCounts = useMemo(() => {
     const map = new Map<string, number>();
@@ -421,8 +586,50 @@ export const BookmarksView = ({
 
   const closeDialog = () => setDialog(null);
 
+  const setCardRef = (itemId: string, element: HTMLDivElement | null) => {
+    if (element) {
+      cardRefs.current.set(itemId, element);
+      return;
+    }
+    cardRefs.current.delete(itemId);
+  };
+
   const handleCollectionSelect = (id: SelectedCollectionId) => {
     onSelectCollection(id);
+  };
+
+  const handleToggleEdit = () => {
+    if (!activeCollection) return;
+    setEditingByCollection((previous) => ({
+      ...previous,
+      [activeCollection.id]: !previous[activeCollection.id],
+    }));
+  };
+
+  const moveItem = (itemId: string, direction: 'backward' | 'forward') => {
+    if (!activeCollection || !isCollectionEditMode) return;
+    const index = itemIndexById.get(itemId);
+    if (index == null) return;
+    const isOutOfBounds =
+      (direction === 'backward' && index <= 0) ||
+      (direction === 'forward' && index >= sortedVisibleItems.length - 1);
+    if (isOutOfBounds) return;
+
+    pendingFocusItemId.current = itemId;
+    onReorderCollectionItem(activeCollection.id, itemId, direction);
+  };
+
+  const handleCardKeyDown = (event: KeyboardEvent<HTMLDivElement>, itemId: string) => {
+    if (!isCollectionEditMode) return;
+    if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      moveItem(itemId, 'backward');
+      return;
+    }
+    if (event.key === 'ArrowRight') {
+      event.preventDefault();
+      moveItem(itemId, 'forward');
+    }
   };
 
   const handleCreate = (name: string) => {
@@ -440,6 +647,12 @@ export const BookmarksView = ({
 
   const handleDelete = (id: string) => {
     onDeleteCollection(id);
+    setEditingByCollection((previous) => {
+      if (!(id in previous)) return previous;
+      const next = { ...previous };
+      delete next[id];
+      return next;
+    });
     closeDialog();
     if (selectedCollectionId === id) {
       handleCollectionSelect('all');
@@ -465,8 +678,9 @@ export const BookmarksView = ({
             onCreate={openCreateModal}
             onRename={openRenameModal}
             onDelete={openDeleteModal}
-            isEditing={editing}
-            onToggleEdit={() => setEditing((value) => !value)}
+            isEditing={isCollectionEditMode}
+            isEditDisabled={!isSpecificCollectionSelected}
+            onToggleEdit={handleToggleEdit}
           />
         </div>
         <div className="relative">
@@ -486,27 +700,44 @@ export const BookmarksView = ({
               onCreate={openCreateModal}
               onRename={openRenameModal}
               onDelete={openDeleteModal}
-              isEditing={editing}
-              onToggleEdit={() => setEditing((value) => !value)}
+              isEditing={isCollectionEditMode}
+              isEditDisabled={!isSpecificCollectionSelected}
+              onToggleEdit={handleToggleEdit}
             />
           </ExpandableFilterBar>
 
           <section>
             <motion.div
-              key={`${selectedCollectionId}-${sortedKey}`}
+              key={selectedCollectionId}
               className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
               variants={listMotion.container}
               initial={false}
               animate="show"
+              layout
             >
-              {visibleBookmarks.map((item, index) => {
+              {renderedBookmarks.map((item, index) => {
+                const itemIndex = itemIndexById.get(item.itemId) ?? -1;
+                const disableBackward = itemIndex <= 0;
+                const disableForward = itemIndex === -1 || itemIndex >= sortedVisibleItems.length - 1;
+                const reorderControls =
+                  isCollectionEditMode && itemIndex !== -1 ? (
+                    <ReorderControls
+                      copy={copy}
+                      disableBackward={disableBackward}
+                      disableForward={disableForward}
+                      onMoveBackward={() => moveItem(item.itemId, 'backward')}
+                      onMoveForward={() => moveItem(item.itemId, 'forward')}
+                    />
+                  ) : undefined;
+
                 if (item.type === 'technique') {
                   const technique = item.item;
                   const assignedCollections =
                     membershipByTechnique.get(technique.id) ?? new Set<string>();
                   return (
                     <TechniqueCard
-                      key={technique.id}
+                      key={item.itemId}
+                      cardRef={(element) => setCardRef(item.itemId, element)}
                       technique={technique}
                       locale={locale}
                       progress={progressById[technique.id]}
@@ -516,8 +747,11 @@ export const BookmarksView = ({
                       variants={listMotion.item}
                       getTransition={getItemTransition}
                       prefersReducedMotion={prefersReducedMotion}
-                      isDimmed={activeCardId === technique.id}
+                      isDimmed={activeCardId === item.itemId}
                       summaryLines={3}
+                      summarySlot={reorderControls}
+                      onCardKeyDown={(event) => handleCardKeyDown(event, item.itemId)}
+                      enableLayoutAnimation
                       actionSlot={
                         <AddToCollectionMenu
                           copy={copy}
@@ -535,10 +769,8 @@ export const BookmarksView = ({
                             }
                           }}
                           onCreate={openCreateModal}
-                          onOpen={() => setActiveCardId(technique.id)}
-                          onClose={() =>
-                            setActiveCardId((cur) => (cur === technique.id ? null : cur))
-                          }
+                          onOpen={() => setActiveCardId(item.itemId)}
+                          onClose={() => setActiveCardId((cur) => (cur === item.itemId ? null : cur))}
                         />
                       }
                     />
@@ -550,7 +782,8 @@ export const BookmarksView = ({
                       glossaryMembershipByTerm.get(term.id) ?? new Set<string>();
                     return (
                       <TermBookmarkCard
-                        key={`glossary-${term.id}`}
+                        key={item.itemId}
+                        cardRef={(element) => setCardRef(item.itemId, element)}
                         term={term}
                         locale={locale}
                         progress={glossaryProgressById[term.id]}
@@ -560,7 +793,10 @@ export const BookmarksView = ({
                         variants={listMotion.item}
                         getTransition={getItemTransition}
                         prefersReducedMotion={prefersReducedMotion}
-                        isDimmed={activeCardId === `glossary-${term.id}`}
+                        isDimmed={activeCardId === item.itemId}
+                        descriptionSlot={reorderControls}
+                        onCardKeyDown={(event) => handleCardKeyDown(event, item.itemId)}
+                        enableLayoutAnimation
                         actionSlot={
                           <AddToCollectionMenu
                             copy={copy}
@@ -578,10 +814,8 @@ export const BookmarksView = ({
                               }
                             }}
                             onCreate={openCreateModal}
-                            onOpen={() => setActiveCardId(`glossary-${term.id}`)}
-                            onClose={() =>
-                              setActiveCardId((cur) => (cur === `glossary-${term.id}` ? null : cur))
-                            }
+                            onOpen={() => setActiveCardId(item.itemId)}
+                            onClose={() => setActiveCardId((cur) => (cur === item.itemId ? null : cur))}
                           />
                         }
                       />
@@ -593,7 +827,8 @@ export const BookmarksView = ({
                     membershipByExercise.get(exercise.id) ?? new Set<string>();
                   return (
                     <ExerciseCard
-                      key={`exercise-${exercise.id}`}
+                      key={item.itemId}
+                      cardRef={(element) => setCardRef(item.itemId, element)}
                       exercise={exercise}
                       copy={copy}
                       locale={locale}
@@ -602,9 +837,12 @@ export const BookmarksView = ({
                       variants={listMotion.item}
                       getTransition={getItemTransition}
                       prefersReducedMotion={prefersReducedMotion}
-                      isDimmed={activeCardId === `exercise-${exercise.id}`}
+                      isDimmed={activeCardId === item.itemId}
                       categoryPlacement="footer"
                       headerAlign="center"
+                      summarySlot={reorderControls}
+                      onCardKeyDown={(event) => handleCardKeyDown(event, item.itemId)}
+                      enableLayoutAnimation
                       actionSlot={
                         <AddToCollectionMenu
                           copy={copy}
@@ -622,12 +860,8 @@ export const BookmarksView = ({
                             }
                           }}
                           onCreate={openCreateModal}
-                          onOpen={() => setActiveCardId(`exercise-${exercise.id}`)}
-                          onClose={() =>
-                            setActiveCardId((cur) =>
-                              cur === `exercise-${exercise.id}` ? null : cur,
-                            )
-                          }
+                          onOpen={() => setActiveCardId(item.itemId)}
+                          onClose={() => setActiveCardId((cur) => (cur === item.itemId ? null : cur))}
                         />
                       }
                     />
@@ -635,7 +869,7 @@ export const BookmarksView = ({
                 }
               })}
 
-              {hasMore && (
+              {hasMore && !isCollectionEditMode && (
                 <div className="col-span-full flex justify-center">
                   <button
                     type="button"
