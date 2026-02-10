@@ -1,37 +1,37 @@
+import { useMotionPreferences } from '@shared/components/ui/motion';
+import { getGradeStyle, gradeLabel } from '@shared/styles/belts';
+import { Bookmark, Search, X } from 'lucide-react';
+import { motion } from 'motion/react';
 import {
   useEffect,
   useLayoutEffect,
   useMemo,
   useRef,
   useState,
-  type ReactElement,
   type KeyboardEvent,
+  type ReactElement,
 } from 'react';
-import { motion } from 'motion/react';
+import { EmphasizedName } from '../../../shared/components';
 import type { Copy } from '../../../shared/constants/i18n';
+import { useFocusTrap } from '../../../shared/hooks/useFocusTrap';
 import type {
   Exercise,
-  Locale,
-  Technique,
-  GlossaryTerm,
-  Progress,
-  GlossaryProgress,
   ExerciseProgress,
+  GlossaryProgress,
+  GlossaryTerm,
+  Locale,
+  Progress,
+  Technique,
 } from '../../../shared/types';
-import { EmphasizedName } from '../../../shared/components';
-import { gradeLabel, getGradeStyle } from '@shared/styles/belts';
-import { Bookmark, Search, X } from 'lucide-react';
-import { useFocusTrap } from '../../../shared/hooks/useFocusTrap';
+import { loadAllTerms } from '../../terms/loader';
 import {
-  buildSearchIndex,
-  buildGlossarySearchIndex,
   buildExerciseSearchIndex,
+  buildGlossarySearchIndex,
+  buildSearchIndex,
   matchSearch,
   normalizeSearchQuery,
 } from '../indexer';
-import { scoreSearchResult, applyTieBreakers, type ScoredSearchResult } from '../scorer';
-import { useMotionPreferences } from '@shared/components/ui/motion';
-import { loadAllTerms } from '../../terms/loader';
+import { applyTieBreakers, scoreSearchResult, type ScoredSearchResult } from '../scorer';
 import {
   matchesSearchTokenFilter,
   parseSearchFilterToken,
@@ -214,8 +214,10 @@ export const SearchOverlay = ({
 
     const allowTechniques =
       !activeFilter || activeFilter.kind === 'belt' || activeFilter.value === 'technique';
-    const allowGlossary = !activeFilter || (activeFilter.kind === 'type' && activeFilter.value === 'glossary');
-    const allowExercises = !activeFilter || (activeFilter.kind === 'type' && activeFilter.value === 'exercise');
+    const allowGlossary =
+      !activeFilter || (activeFilter.kind === 'type' && activeFilter.value === 'glossary');
+    const allowExercises =
+      !activeFilter || (activeFilter.kind === 'type' && activeFilter.value === 'exercise');
     const gradeConstraint = activeFilter?.kind === 'belt' ? activeFilter.grade : undefined;
 
     // Get all matching results using the existing haystack filtering
@@ -371,7 +373,11 @@ export const SearchOverlay = ({
       }
     }
 
-    if ((event.key === 'Backspace' || event.key === 'Delete') && query.length === 0 && activeFilter) {
+    if (
+      (event.key === 'Backspace' || event.key === 'Delete') &&
+      query.length === 0 &&
+      activeFilter
+    ) {
       event.preventDefault();
       setActiveFilter(null);
       return;
@@ -584,11 +590,11 @@ export const SearchOverlay = ({
                       )}
                     </div>
                     {/* Right-side label: technique belt or glossary label */}
-                    <div className="flex-shrink-0 ml-3 w-14 flex flex-col items-center gap-2">
+                    <div className="flex-shrink-0 ml-3 min-w-[3.5rem] flex flex-col items-center gap-2">
                       {result.type === 'technique' ? (
                         <>
                           <span
-                            className="text-[0.65rem] font-medium px-2 py-0.5 rounded-full border border-transparent"
+                            className="text-[0.65rem] font-medium px-2 py-0.5 rounded-full border border-transparent whitespace-nowrap"
                             style={(() => {
                               const style = getGradeStyle(result.item.level);
                               return {
