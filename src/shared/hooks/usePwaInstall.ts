@@ -33,6 +33,11 @@ function isSafari(): boolean {
   return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 }
 
+function canAttemptBrowserInstall(): boolean {
+  if (typeof window === 'undefined' || typeof navigator === 'undefined') return false;
+  return window.isSecureContext && 'serviceWorker' in navigator;
+}
+
 let deferredPrompt: BeforeInstallPromptEvent | null = null;
 
 export const usePwaInstall = (copy: Copy) => {
@@ -71,12 +76,15 @@ export const usePwaInstall = (copy: Copy) => {
     }
 
     const existingPrompt = getStoredDeferredPrompt();
+    const supportsBrowserInstallFlow = canAttemptBrowserInstall();
     if (existingPrompt) {
       deferredPrompt = existingPrompt;
       setInstallPromptEvent(existingPrompt);
       setIsInstallable(true);
     } else {
-      setIsInstallable(false);
+      // Chromium may delay `beforeinstallprompt` until engagement criteria are met.
+      // Keep the action enabled so users can still use browser-menu install paths.
+      setIsInstallable(supportsBrowserInstallFlow);
     }
 
     const handleBeforeInstallPrompt = (e: Event) => {
@@ -91,6 +99,7 @@ export const usePwaInstall = (copy: Copy) => {
     const handleInstallAvailable = () => {
       const prompt = getStoredDeferredPrompt();
       if (!prompt) {
+        setIsInstallable(canAttemptBrowserInstall());
         return;
       }
       deferredPrompt = prompt;

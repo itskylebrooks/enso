@@ -40,17 +40,8 @@ export const metadata: Metadata = {
   title: 'Enso',
   description: 'Aikidō study companion',
   applicationName: 'Enso',
-  manifest: '/manifest.json',
   alternates: {
     canonical: '/',
-  },
-  icons: {
-    apple: [{ url: '/icons/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }],
-  },
-  appleWebApp: {
-    capable: true,
-    statusBarStyle: 'default',
-    title: 'Enso',
   },
 };
 
@@ -139,6 +130,12 @@ export default function RootLayout({
       <head>
         <meta name="color-scheme" content="light dark" />
         <meta name="darkreader-lock" />
+        <link rel="manifest" href="/manifest.webmanifest" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-title" content="Enso" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <script dangerouslySetInnerHTML={{ __html: pwaInstallPromptScript }} />
       </head>
