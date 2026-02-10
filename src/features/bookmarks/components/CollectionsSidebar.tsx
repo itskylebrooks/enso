@@ -230,7 +230,7 @@ const SidebarButton = ({
       )}
       <span className="truncate min-w-0">{label}</span>
     </span>
-    <span className="text-xs font-medium text-subtle flex-shrink-0">{count}</span>
+    <span className="text-xs font-medium text-current flex-shrink-0">{count}</span>
   </button>
 );
 

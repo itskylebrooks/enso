@@ -243,7 +243,9 @@ export const HomePage = ({
                   aria-label={ariaLabel}
                 >
                   <div className="space-y-3">
-                    <h2 className="text-lg md:text-xl font-semibold">{copy.homeTermToLearnTitle}</h2>
+                    <h2 className="text-lg md:text-xl font-semibold text-center">
+                      {copy.homeTermToLearnTitle}
+                    </h2>
                     <p className="text-sm md:text-base leading-6 md:leading-7 text-subtle italic">
                       {truncatedDefinition}
                     </p>
@@ -260,7 +262,7 @@ export const HomePage = ({
             className="rounded-2xl border surface-border surface card-hover-shadow pt-2 pb-4 px-4 md:pt-3 md:pb-5 md:px-5 text-left focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] flex flex-col justify-start"
           >
             <div className="space-y-3">
-              <h2 className="text-lg md:text-xl font-semibold">
+              <h2 className="text-lg md:text-xl font-semibold text-center">
                 <AnimatePresence mode="wait" initial={false}>
                   <motion.span
                     key={quoteCopied ? 'copied' : 'default'}

@@ -31,23 +31,28 @@ const baseColors: Record<Grade, string> = {
   dan5: '#0B0B0B', // Black
 };
 
-// Default text color for belt labels (app-wide requirement): always white.
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const getTextColorAlwaysWhite = (_grade: Grade): string => '#FFFFFF';
-
-// Adaptive text color used only by the Guide page table (ExamMatrix).
-// Preserves previous contrast logic: dan belts always white; kyu belts
-// switch to black in dark mode for readability.
+// Belt-label text colors:
+// - Dark mode: Kyū labels use pure black text for readability.
+// - Light mode: 5th Kyū uses #909090 on yellow; other Kyū grades use white.
+// - Dan labels remain white for contrast on black belts.
 const getAdaptiveTextColor = (grade: Grade, isDark: boolean): string => {
   if (grade.startsWith('dan')) return '#FFFFFF';
-  return isDark ? '#000000' : '#FFFFFF';
+  if (isDark) return '#000000';
+  if (grade === 'kyu5') return '#909090';
+  return '#FFFFFF';
+};
+
+const getCssVariableTextColor = (grade: Grade): string => {
+  if (grade.startsWith('dan')) return 'var(--belt-label-text-dan, #FFFFFF)';
+  if (grade === 'kyu5') return 'var(--belt-label-text-kyu5, #909090)';
+  return 'var(--belt-label-text-kyu, #FFFFFF)';
 };
 
 // Legacy palette for compatibility (defaults to light mode)
 const palette: Record<Grade, { bg: string; fg: string }> = Object.fromEntries(
   Object.entries(baseColors).map(([grade, bg]) => [
     grade,
-    { bg, fg: getTextColorAlwaysWhite(grade as Grade) },
+    { bg, fg: getAdaptiveTextColor(grade as Grade, false) },
   ]),
 ) as Record<Grade, { bg: string; fg: string }>;
 
@@ -77,12 +82,10 @@ export const getGradeStyle = (
   isDark?: boolean,
 ): { backgroundColor: string; color: string; borderColor?: string } => {
   const backgroundColor = baseColors[grade];
-  // If isDark is provided use adaptive contrast (used by ExamMatrix table).
-  // Otherwise return the default always-white text color for belt labels.
+  // If isDark is provided, use direct theme-aware colors.
+  // Otherwise use CSS variables so labels adapt to runtime theme changes.
   const color =
-    typeof isDark === 'boolean'
-      ? getAdaptiveTextColor(grade, isDark)
-      : getTextColorAlwaysWhite(grade);
+    typeof isDark === 'boolean' ? getAdaptiveTextColor(grade, isDark) : getCssVariableTextColor(grade);
   const borderColor = grade.startsWith('dan') ? 'var(--belt-dan-border)' : undefined;
   return { backgroundColor, color, borderColor };
 };

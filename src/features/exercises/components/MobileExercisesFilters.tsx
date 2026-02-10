@@ -62,8 +62,8 @@ export const MobileExercisesFilters = ({
     values.includes(value) ? values.filter((item) => item !== value) : [...values, value];
 
   return (
-    <div className="rounded-2xl border surface-border bg-[var(--color-surface)] p-4 space-y-4">
-      <div className="flex items-center justify-between">
+    <div className="rounded-2xl border surface-border bg-[var(--color-surface)] p-4">
+      <div className="mb-3 flex items-center justify-between">
         <SectionTitle>{copy.filters}</SectionTitle>
         {hasActiveFilters && (
           <button
@@ -76,111 +76,117 @@ export const MobileExercisesFilters = ({
         )}
       </div>
 
-      <section>
-        <button
-          type="button"
-          aria-expanded={open.category}
-          onClick={() => toggleOpen('category')}
-          className="flex w-full items-center justify-between text-left"
-        >
-          <SectionTitle>{copy.category}</SectionTitle>
-          <motion.span
-            aria-hidden
-            className="text-subtle"
-            animate={{ rotate: open.category ? 0 : -90 }}
-            transition={{ duration: 0.2, ease: 'easeInOut' }}
-          >
-            <ChevronDown className="w-4 h-4" />
-          </motion.span>
-        </button>
-        <motion.div
-          className="overflow-hidden"
-          initial={false}
-          animate={open.category ? 'open' : 'closed'}
-          variants={collapseMotion.variants}
-          transition={collapseMotion.transition}
-        >
-          <div className="pt-3 space-y-2">
-            {categories.map((category) => {
-              const active = filters.categories.includes(category);
-              return (
-                <button
-                  key={category}
-                  type="button"
-                  className={classNames(
-                    'w-full rounded-lg border px-3 py-2.5 text-sm flex items-center justify-between gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
-                    active
-                      ? 'bg-[var(--color-text)] text-[var(--color-bg)] border-[var(--color-text)] font-semibold shadow-sm'
-                      : 'surface surface-border hover:border-[var(--color-text)]',
-                  )}
-                  aria-pressed={active}
-                  onClick={() =>
-                    onChange({
-                      ...filters,
-                      categories: toggleArrayValue(filters.categories, category),
-                    })
-                  }
-                >
-                  <span className="truncate">{getExerciseCategoryLabel(category, copy)}</span>
-                </button>
-              );
-            })}
-          </div>
-        </motion.div>
-      </section>
+      <FilterSection
+        title={copy.category}
+        isOpen={open.category}
+        onToggle={() => toggleOpen('category')}
+        collapseMotion={collapseMotion}
+      >
+        {categories.map((category) => {
+          const active = filters.categories.includes(category);
+          return (
+            <button
+              key={category}
+              type="button"
+              className={classNames(
+                'w-full rounded-lg border px-3 py-2.5 text-sm flex items-center justify-between gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+                active
+                  ? 'bg-[var(--color-text)] text-[var(--color-bg)] border-[var(--color-text)] font-semibold shadow-sm'
+                  : 'surface surface-border hover:border-[var(--color-text)]',
+              )}
+              aria-pressed={active}
+              onClick={() =>
+                onChange({
+                  ...filters,
+                  categories: toggleArrayValue(filters.categories, category),
+                })
+              }
+            >
+              <span className="truncate">{getExerciseCategoryLabel(category, copy)}</span>
+            </button>
+          );
+        })}
+      </FilterSection>
 
-      <section>
-        <button
-          type="button"
-          aria-expanded={open.equipment}
-          onClick={() => toggleOpen('equipment')}
-          className="flex w-full items-center justify-between text-left"
-        >
-          <SectionTitle>{copy.practiceEquipment}</SectionTitle>
-          <motion.span
-            aria-hidden
-            className="text-subtle"
-            animate={{ rotate: open.equipment ? 0 : -90 }}
-            transition={{ duration: 0.2, ease: 'easeInOut' }}
-          >
-            <ChevronDown className="w-4 h-4" />
-          </motion.span>
-        </button>
-        <motion.div
-          className="overflow-hidden"
-          initial={false}
-          animate={open.equipment ? 'open' : 'closed'}
-          variants={collapseMotion.variants}
-          transition={collapseMotion.transition}
-        >
-          <div className="pt-3 space-y-2">
-            {(['none', 'mat', 'resistance-band'] as PracticeEquipment[]).map((value) => {
-              const active = filters.equipment.includes(value);
-              return (
-                <button
-                  key={value}
-                  type="button"
-                  className={classNames(
-                    'w-full rounded-lg border px-3 py-2.5 text-sm flex items-center justify-between gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
-                    active
-                      ? 'bg-[var(--color-text)] text-[var(--color-bg)] border-[var(--color-text)] font-semibold shadow-sm'
-                      : 'surface surface-border hover:border-[var(--color-text)]',
-                  )}
-                  aria-pressed={active}
-                  onClick={() =>
-                    onChange({
-                      ...filters,
-                      equipment: toggleArrayValue(filters.equipment, value),
-                    })
-                  }
-                >
-                  <span className="truncate">{getEquipmentLabel(value, copy)}</span>
-                </button>
-              );
-            })}
-          </div>
-        </motion.div>
-      </section>
+      <FilterSection
+        title={copy.practiceEquipment}
+        isOpen={open.equipment}
+        onToggle={() => toggleOpen('equipment')}
+        collapseMotion={collapseMotion}
+      >
+        {(['none', 'mat', 'resistance-band'] as PracticeEquipment[]).map((value) => {
+          const active = filters.equipment.includes(value);
+          return (
+            <button
+              key={value}
+              type="button"
+              className={classNames(
+                'w-full rounded-lg border px-3 py-2.5 text-sm flex items-center justify-between gap-3 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+                active
+                  ? 'bg-[var(--color-text)] text-[var(--color-bg)] border-[var(--color-text)] font-semibold shadow-sm'
+                  : 'surface surface-border hover:border-[var(--color-text)]',
+              )}
+              aria-pressed={active}
+              onClick={() =>
+                onChange({
+                  ...filters,
+                  equipment: toggleArrayValue(filters.equipment, value),
+                })
+              }
+            >
+              <span className="truncate">{getEquipmentLabel(value, copy)}</span>
+            </button>
+          );
+        })}
+      </FilterSection>
     </div>
   );
 };
+
+type FilterSectionProps = {
+  title: string;
+  isOpen: boolean;
+  onToggle: () => void;
+  collapseMotion: ReturnType<typeof useMotionPreferences>['collapseMotion'];
+  children: ReactElement[] | ReactElement;
+};
+
+const FilterSection = ({
+  title,
+  isOpen,
+  onToggle,
+  collapseMotion,
+  children,
+}: FilterSectionProps): ReactElement => (
+  <section className="mb-3">
+    <button
+      type="button"
+      aria-expanded={isOpen}
+      onClick={onToggle}
+      className="flex w-full items-center justify-between text-left rounded-lg px-3 py-2 bg-[var(--color-surface)]/0 hover:bg-[var(--color-surface-hover)] focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] touch-manipulation"
+      style={{ minHeight: 40 }}
+    >
+      <SectionTitle>
+        <span className="text-sm">{title}</span>
+      </SectionTitle>
+      <motion.span
+        aria-hidden
+        className="text-subtle"
+        animate={{ rotate: isOpen ? 0 : -90 }}
+        transition={{ duration: 0.2, ease: 'easeInOut' }}
+      >
+        <ChevronDown className="w-4 h-4" />
+      </motion.span>
+    </button>
+
+    <motion.div
+      className="overflow-hidden"
+      initial={false}
+      animate={isOpen ? 'open' : 'closed'}
+      variants={collapseMotion.variants}
+      transition={collapseMotion.transition}
+    >
+      <div className="pt-3 space-y-2">{children}</div>
+    </motion.div>
+  </section>
+);

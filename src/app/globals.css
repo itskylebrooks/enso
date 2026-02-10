@@ -48,6 +48,9 @@ html.dark {
   --color-subtle: #6b7280;
   --belt-prompt-stripe: #9ca3af;
   --belt-dan-border: transparent;
+  --belt-label-text-kyu: #ffffff;
+  --belt-label-text-kyu5: #909090;
+  --belt-label-text-dan: #ffffff;
 
   --glossary-movement-bg: #dbeafe;
   --glossary-movement-fg: #1e40af;
@@ -86,6 +89,9 @@ html.dark {
   --color-subtle: rgba(255, 255, 255, 0.62);
   --belt-prompt-stripe: #3c4048;
   --belt-dan-border: #333333;
+  --belt-label-text-kyu: #000000;
+  --belt-label-text-kyu5: #000000;
+  --belt-label-text-dan: #ffffff;
 
   --glossary-movement-bg: rgba(30, 58, 138, 0.3);
   --glossary-movement-fg: #93c5fd;
