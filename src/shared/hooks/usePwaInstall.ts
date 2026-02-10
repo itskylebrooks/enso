@@ -33,6 +33,21 @@ function isSafari(): boolean {
   return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 }
 
+function isChromiumFamily(): boolean {
+  if (typeof navigator === 'undefined') return false;
+  const ua = navigator.userAgent.toLowerCase();
+  const hasChromiumToken = /chrom(e|ium)|edg|opr|brave|vivaldi/.test(ua);
+
+  const brands = (
+    navigator as Navigator & { userAgentData?: { brands?: Array<{ brand: string; version: string }> } }
+  ).userAgentData?.brands;
+  const hasChromiumBrand = Array.isArray(brands)
+    ? brands.some((entry) => /chrom|edge|opera|brave|vivaldi/i.test(entry.brand))
+    : false;
+
+  return hasChromiumToken || hasChromiumBrand;
+}
+
 let deferredPrompt: BeforeInstallPromptEvent | null = null;
 
 export const usePwaInstall = (copy: Copy) => {
@@ -76,7 +91,7 @@ export const usePwaInstall = (copy: Copy) => {
       setInstallPromptEvent(existingPrompt);
       setIsInstallable(true);
     } else {
-      setIsInstallable(false);
+      setIsInstallable(isChromiumFamily());
     }
 
     const handleBeforeInstallPrompt = (e: Event) => {
