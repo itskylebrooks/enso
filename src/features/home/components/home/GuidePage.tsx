@@ -114,10 +114,11 @@ export const GuidePage = ({
                       <span className="text-sm font-medium">{gradeLabel(grade, locale)}</span>
                       <span
                         aria-hidden
-                        className="inline-flex items-center justify-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide"
+                        className="inline-flex items-center justify-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wide border border-transparent"
                         style={{
                           backgroundColor: style.backgroundColor,
                           color: style.color,
+                          borderColor: style.borderColor,
                         }}
                       >
                         {guideCopy.beltNames[grade]}

@@ -139,10 +139,11 @@ export const TechniqueCard = ({
   const levelBadge =
     levelBadgeStyle === 'number-circle' ? (
       <span
-        className="glossary-tag text-xs font-medium px-2 py-1 rounded-full shrink-0"
+        className="glossary-tag text-xs font-medium px-2 py-1 rounded-full shrink-0 border border-transparent"
         style={{
           backgroundColor: levelStyle.backgroundColor,
           color: levelStyle.color,
+          borderColor: levelStyle.borderColor,
         }}
       >
         {levelNumber}

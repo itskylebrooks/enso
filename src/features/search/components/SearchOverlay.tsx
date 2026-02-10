@@ -588,10 +588,14 @@ export const SearchOverlay = ({
                       {result.type === 'technique' ? (
                         <>
                           <span
-                            className="text-[0.65rem] font-medium px-2 py-0.5 rounded-full"
+                            className="text-[0.65rem] font-medium px-2 py-0.5 rounded-full border border-transparent"
                             style={(() => {
                               const style = getGradeStyle(result.item.level);
-                              return { backgroundColor: style.backgroundColor, color: style.color };
+                              return {
+                                backgroundColor: style.backgroundColor,
+                                color: style.color,
+                                borderColor: style.borderColor,
+                              };
                             })()}
                           >
                             {gradeLabel(result.item.level, locale)}

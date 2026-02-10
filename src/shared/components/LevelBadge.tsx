@@ -13,10 +13,11 @@ export const LevelBadge = ({ level, locale }: LevelBadgeProps): ReactElement => 
   const style = getGradeStyle(level);
   return (
     <span
-      className="text-xs px-2 py-0.5 rounded-full font-semibold tracking-tight"
+      className="text-xs px-2 py-0.5 rounded-full font-semibold tracking-tight border border-transparent"
       style={{
         backgroundColor: style.backgroundColor,
         color: style.color,
+        borderColor: style.borderColor,
       }}
     >
       {gradeLabel(level, locale)}

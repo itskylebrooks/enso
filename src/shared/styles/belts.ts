@@ -75,7 +75,7 @@ export const gradeLabel = (grade: Grade, locale: Locale): string => {
 export const getGradeStyle = (
   grade: Grade,
   isDark?: boolean,
-): { backgroundColor: string; color: string } => {
+): { backgroundColor: string; color: string; borderColor?: string } => {
   const backgroundColor = baseColors[grade];
   // If isDark is provided use adaptive contrast (used by ExamMatrix table).
   // Otherwise return the default always-white text color for belt labels.
@@ -83,5 +83,6 @@ export const getGradeStyle = (
     typeof isDark === 'boolean'
       ? getAdaptiveTextColor(grade, isDark)
       : getTextColorAlwaysWhite(grade);
-  return { backgroundColor, color };
+  const borderColor = grade.startsWith('dan') ? 'var(--belt-dan-border)' : undefined;
+  return { backgroundColor, color, borderColor };
 };

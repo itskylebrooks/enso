@@ -1,5 +1,5 @@
 import type { ReactElement } from 'react';
-import { useEffect, useState, Fragment } from 'react';
+import { useState, Fragment } from 'react';
 import type { Locale } from '@shared/types';
 import type { GradeCell } from '@shared/types/exam';
 import { ATTACK_COLUMNS, MATRIX_ROWS, KATAME_ROWS } from '@shared/data/examMatrixData';
@@ -16,12 +16,18 @@ type ExamMatrixProps = {
   onCellClick: (slug: string, attackKey: string) => void;
 };
 
+type BeltFilterKey = 'kyu5' | 'kyu4' | 'kyu3' | 'kyu2' | 'kyu1' | 'dan1';
+
+const BELT_FILTER_ORDER: BeltFilterKey[] = ['kyu5', 'kyu4', 'kyu3', 'kyu2', 'kyu1', 'dan1'];
+
 const GradeCellComponent = ({
   cell,
   isDark,
+  activeBelts,
 }: {
   cell: GradeCell;
   isDark: boolean;
+  activeBelts: BeltFilterKey[];
 }): ReactElement | null => {
   if (cell.kind === 'empty') {
     return null;
@@ -30,13 +36,17 @@ const GradeCellComponent = ({
   if (cell.kind === 'kyu') {
     const gradeKey = `kyu${cell.kyu}` as const;
     const style = getGradeStyle(gradeKey, isDark);
+    const isHidden = activeBelts.length > 0 && !activeBelts.includes(gradeKey);
 
     return (
       <span
-        className="inline-flex items-center justify-center rounded-full w-7 h-7 text-xs font-semibold"
+        className={`inline-flex items-center justify-center rounded-full w-7 h-7 text-xs font-semibold ${
+          isHidden ? 'invisible' : ''
+        } border border-transparent`}
         style={{
           backgroundColor: style.backgroundColor,
           color: style.color,
+          borderColor: style.borderColor,
         }}
       >
         {cell.kyu}
@@ -46,13 +56,17 @@ const GradeCellComponent = ({
 
   if (cell.kind === 'dan') {
     const style = getGradeStyle('dan1', isDark);
+    const isHidden = activeBelts.length > 0 && !activeBelts.includes('dan1');
 
     return (
       <span
-        className="inline-flex items-center justify-center rounded-full px-2 h-7 text-xs font-semibold"
+        className={`inline-flex items-center justify-center rounded-full px-2 h-7 text-xs font-semibold ${
+          isHidden ? 'invisible' : ''
+        } border border-transparent`}
         style={{
           backgroundColor: style.backgroundColor,
           color: style.color,
+          borderColor: style.borderColor,
         }}
       >
         1.D.
@@ -85,31 +99,20 @@ export const ExamMatrix = ({
 }: ExamMatrixProps): ReactElement => {
   const [focusedCell, setFocusedCell] = useState<{ row: number; col: number } | null>(null);
   const [isFullWidth, setIsFullWidth] = useState<boolean>(false);
-
-  // Restore width mode from session (defaults to page-width)
-  useEffect(() => {
-    try {
-      const saved = sessionStorage.getItem('examMatrixWidthMode');
-      setIsFullWidth(saved === 'full');
-    } catch {
-      // no-op
-    }
-  }, []);
+  const [activeBelts, setActiveBelts] = useState<BeltFilterKey[]>([]);
 
   const toggleWidth = () => {
-    setIsFullWidth((prev) => {
-      const next = !prev;
-      try {
-        sessionStorage.setItem('examMatrixWidthMode', next ? 'full' : 'page');
-      } catch {
-        // no-op
-      }
-      return next;
-    });
+    setIsFullWidth((prev) => !prev);
   };
 
   const allRows = [...MATRIX_ROWS, ...KATAME_ROWS];
   const insertKatameSeparator = MATRIX_ROWS.length;
+
+  const toggleBeltFilter = (belt: BeltFilterKey): void => {
+    setActiveBelts((current) =>
+      current.includes(belt) ? current.filter((item) => item !== belt) : [...current, belt],
+    );
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent, rowIndex: number, colIndex: number) => {
     let newRow = rowIndex;
@@ -223,7 +226,52 @@ export const ExamMatrix = ({
                       className="md:sticky left-0 surface z-10 px-3 py-1 text-left font-semibold text-xs uppercase tracking-wide border-r surface-border"
                       style={{ minWidth: '220px', width: '220px' }}
                     >
-                      {locale === 'en' ? 'Technique' : 'Technik'}
+                      <div className="relative h-[200px]">
+                        <span className="absolute left-0 top-1/2 -translate-y-1/2">
+                          {locale === 'en' ? 'Technique' : 'Technik'}
+                        </span>
+                        <div className="absolute inset-x-0 bottom-1 grid grid-cols-6 gap-1">
+                          {BELT_FILTER_ORDER.map((belt) => {
+                            const isActive = activeBelts.includes(belt);
+                            const gradeStyle = getGradeStyle(belt, isDark);
+                            const isDan = belt === 'dan1';
+                            const label = isDan ? '1.D.' : `${belt.replace('kyu', '')}`;
+
+                            return (
+                              <button
+                                key={belt}
+                                type="button"
+                                onClick={() => toggleBeltFilter(belt)}
+                                aria-pressed={isActive}
+                                aria-label={
+                                  locale === 'de'
+                                    ? `${label} Filter ${isActive ? 'deaktivieren' : 'aktivieren'}`
+                                    : `${label} filter ${isActive ? 'disable' : 'enable'}`
+                                }
+                                title={
+                                  locale === 'de'
+                                    ? `${label} ${isActive ? '(aktiv)' : ''}`.trim()
+                                    : `${label} ${isActive ? '(active)' : ''}`.trim()
+                                }
+                                className={`inline-flex w-full items-center justify-center rounded-md text-[10px] font-semibold border transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-[var(--color-text)] h-5 px-1 ${
+                                  isActive
+                                    ? 'opacity-100 border-[var(--color-text)]'
+                                    : 'opacity-65 border-transparent'
+                                }`}
+                                style={{
+                                  backgroundColor: gradeStyle.backgroundColor,
+                                  color: gradeStyle.color,
+                                  borderColor: isActive
+                                    ? 'var(--color-text)'
+                                    : gradeStyle.borderColor,
+                                }}
+                              >
+                                {label}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
                     </th>
                     {ATTACK_COLUMNS.map((col) => {
                       const isBoldSeparator =
@@ -302,7 +350,11 @@ export const ExamMatrix = ({
                                 tabIndex={isEmpty ? -1 : 0}
                                 role="gridcell"
                               >
-                                <GradeCellComponent cell={cell} isDark={isDark} />
+                                <GradeCellComponent
+                                  cell={cell}
+                                  isDark={isDark}
+                                  activeBelts={activeBelts}
+                                />
                               </td>
                             );
                           })}
