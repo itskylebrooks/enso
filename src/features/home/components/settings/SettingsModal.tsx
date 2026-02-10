@@ -358,12 +358,11 @@ export const SettingsModal = ({
                       try {
                         const importedData = parseIncomingDB(String(reader.result));
                         const mergedDB = importData(db, importedData);
-                        // Save the merged DB directly to localStorage before reloading
-                        // This ensures data persists before the page reload happens
                         saveDB(mergedDB);
                         onChangeDB(mergedDB);
-                        // Reload the page to apply imported preferences
-                        window.location.reload();
+                        if (typeof importedData.animationsDisabled === 'boolean') {
+                          onChangeAnimations(importedData.animationsDisabled);
+                        }
                       } catch (error) {
                         const reason = error instanceof Error ? error.message : 'Unknown error';
                         window.alert(`Import failed: ${reason}`);
