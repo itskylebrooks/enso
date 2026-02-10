@@ -32,6 +32,11 @@ import {
 import { scoreSearchResult, applyTieBreakers, type ScoredSearchResult } from '../scorer';
 import { useMotionPreferences } from '@shared/components/ui/motion';
 import { loadAllTerms } from '../../terms/loader';
+import {
+  matchesSearchTokenFilter,
+  parseSearchFilterToken,
+  type SearchTokenFilter,
+} from '../tokenFilters';
 
 type SearchResult =
   | { type: 'technique'; item: Technique }
@@ -77,6 +82,7 @@ export const SearchOverlay = ({
   openedBy,
 }: SearchOverlayProps): ReactElement => {
   const [query, setQuery] = useState('');
+  const [activeFilter, setActiveFilter] = useState<SearchTokenFilter | null>(null);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [glossaryTerms, setGlossaryTerms] = useState<GlossaryTerm[]>([]);
   const [highlightPosition, setHighlightPosition] = useState({ y: 0, height: 0 });
@@ -127,8 +133,28 @@ export const SearchOverlay = ({
   const exerciseIndex = useMemo(() => buildExerciseSearchIndex(exercises), [exercises]);
 
   const normalizedQuery = useMemo(() => normalizeSearchQuery(query), [query]);
+  const removeFilterLabel = locale === 'de' ? 'Filter entfernen' : 'Remove filter';
+
+  const activeFilterLabel = useMemo(() => {
+    if (!activeFilter) return null;
+
+    if (activeFilter.kind === 'type') {
+      if (activeFilter.value === 'technique') return copy.library;
+      if (activeFilter.value === 'exercise') return copy.practice;
+      return copy.glossary;
+    }
+
+    return gradeLabel(activeFilter.grade, locale);
+  }, [activeFilter, copy.glossary, copy.library, copy.practice, locale]);
 
   const results = useMemo((): SearchResult[] => {
+    const matchesFilter = (result: SearchResult): boolean =>
+      matchesSearchTokenFilter(
+        activeFilter,
+        result.type,
+        result.type === 'technique' ? result.item.level : undefined,
+      );
+
     // Require minimum query length to avoid too many partial matches
     if (normalizedQuery.length === 0 || query.trim().length < 2) {
       // Return a deterministic default ordering when search is empty.
@@ -158,42 +184,84 @@ export const SearchOverlay = ({
         .filter(Boolean)
         .map((item) => ({ type: 'glossary', item: item as GlossaryTerm }));
 
-      return [...recentTechniques, ...someGlossaryTerms];
+      if (!activeFilter) {
+        return [...recentTechniques, ...someGlossaryTerms];
+      }
+
+      const exerciseDefaults: SearchResult[] = [...exercises]
+        .sort((a, b) =>
+          (a.name[locale] || a.name.en).localeCompare(b.name[locale] || b.name.en, locale),
+        )
+        .slice(0, 3)
+        .map((item) => ({ type: 'exercise', item }));
+
+      const filteredDefaults = [...recentTechniques, ...someGlossaryTerms, ...exerciseDefaults]
+        .filter(matchesFilter)
+        .slice(0, 20);
+
+      if (activeFilter.kind === 'belt' && filteredDefaults.length === 0) {
+        return [...techniques]
+          .filter((technique) => technique.level === activeFilter.grade)
+          .sort((a, b) =>
+            (a.name[locale] || a.name.en).localeCompare(b.name[locale] || b.name.en, locale),
+          )
+          .slice(0, 20)
+          .map((item) => ({ type: 'technique', item }));
+      }
+
+      return filteredDefaults;
     }
 
+    const allowTechniques =
+      !activeFilter || activeFilter.kind === 'belt' || activeFilter.value === 'technique';
+    const allowGlossary = !activeFilter || (activeFilter.kind === 'type' && activeFilter.value === 'glossary');
+    const allowExercises = !activeFilter || (activeFilter.kind === 'type' && activeFilter.value === 'exercise');
+    const gradeConstraint = activeFilter?.kind === 'belt' ? activeFilter.grade : undefined;
+
     // Get all matching results using the existing haystack filtering
-    const allTechniqueResults: ScoredSearchResult[] = techniqueIndex
-      .filter((entry) => matchSearch(entry.haystack, normalizedQuery))
-      .map((entry) => {
-        const score = scoreSearchResult(
-          { type: 'technique', item: entry.technique },
-          normalizedQuery,
-          locale,
-        );
-        return { type: 'technique', item: entry.technique, score };
-      });
+    const allTechniqueResults: ScoredSearchResult[] = allowTechniques
+      ? techniqueIndex
+          .filter((entry) => {
+            if (gradeConstraint && entry.technique.level !== gradeConstraint) {
+              return false;
+            }
+            return matchSearch(entry.haystack, normalizedQuery);
+          })
+          .map((entry) => {
+            const score = scoreSearchResult(
+              { type: 'technique', item: entry.technique },
+              normalizedQuery,
+              locale,
+            );
+            return { type: 'technique', item: entry.technique, score };
+          })
+      : [];
 
-    const allGlossaryResults: ScoredSearchResult[] = glossaryIndex
-      .filter((entry) => matchSearch(entry.haystack, normalizedQuery))
-      .map((entry) => {
-        const score = scoreSearchResult(
-          { type: 'glossary', item: entry.term },
-          normalizedQuery,
-          locale,
-        );
-        return { type: 'glossary', item: entry.term, score };
-      });
+    const allGlossaryResults: ScoredSearchResult[] = allowGlossary
+      ? glossaryIndex
+          .filter((entry) => matchSearch(entry.haystack, normalizedQuery))
+          .map((entry) => {
+            const score = scoreSearchResult(
+              { type: 'glossary', item: entry.term },
+              normalizedQuery,
+              locale,
+            );
+            return { type: 'glossary', item: entry.term, score };
+          })
+      : [];
 
-    const allExerciseResults: ScoredSearchResult[] = exerciseIndex
-      .filter((entry) => matchSearch(entry.haystack, normalizedQuery))
-      .map((entry) => {
-        const score = scoreSearchResult(
-          { type: 'exercise', item: entry.exercise },
-          normalizedQuery,
-          locale,
-        );
-        return { type: 'exercise', item: entry.exercise, score };
-      });
+    const allExerciseResults: ScoredSearchResult[] = allowExercises
+      ? exerciseIndex
+          .filter((entry) => matchSearch(entry.haystack, normalizedQuery))
+          .map((entry) => {
+            const score = scoreSearchResult(
+              { type: 'exercise', item: entry.exercise },
+              normalizedQuery,
+              locale,
+            );
+            return { type: 'exercise', item: entry.exercise, score };
+          })
+      : [];
 
     // Combine and sort by score with tie-breaking rules
     const allResults = [...allTechniqueResults, ...allGlossaryResults, ...allExerciseResults];
@@ -210,9 +278,11 @@ export const SearchOverlay = ({
     exerciseIndex,
     normalizedQuery,
     techniques,
+    exercises,
     glossaryTerms,
     query,
     locale,
+    activeFilter,
   ]);
 
   // Reset selection when results change
@@ -292,6 +362,21 @@ export const SearchOverlay = ({
 
   // Keyboard navigation handlers
   const handleInputKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === ' ') {
+      const parsedFilter = parseSearchFilterToken(query, locale);
+      if (parsedFilter) {
+        event.preventDefault();
+        setActiveFilter(parsedFilter);
+        setQuery('');
+      }
+    }
+
+    if ((event.key === 'Backspace' || event.key === 'Delete') && query.length === 0 && activeFilter) {
+      event.preventDefault();
+      setActiveFilter(null);
+      return;
+    }
+
     if (event.key === 'ArrowDown') {
       event.preventDefault();
       if (results.length > 0) {
@@ -357,6 +442,22 @@ export const SearchOverlay = ({
               <span className="text-muted" aria-hidden>
                 <Search className="h-4 w-4" />
               </span>
+              {activeFilterLabel && (
+                <span className="ml-2 inline-flex items-center gap-1 rounded-full border px-2 py-1 text-xs font-medium btn-contrast shadow-sm">
+                  <span>{activeFilterLabel}</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setActiveFilter(null);
+                      inputRef.current?.focus();
+                    }}
+                    className="inline-flex h-4 w-4 items-center justify-center rounded-full text-[color:var(--color-text)]/80 hover:text-[color:var(--color-text)] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-[var(--color-text)]"
+                    aria-label={removeFilterLabel}
+                  >
+                    <X className="h-3 w-3" aria-hidden />
+                  </button>
+                </span>
+              )}
               <input
                 ref={inputRef}
                 type="text"
@@ -367,7 +468,7 @@ export const SearchOverlay = ({
                 autoComplete="off"
                 spellCheck={false}
                 maxLength={60}
-                className="ml-2 h-10 flex-1 bg-transparent text-base text-[color:var(--color-text)] placeholder:text-subtle focus:outline-none"
+                className="ml-2 h-10 min-w-0 flex-1 bg-transparent text-base text-[color:var(--color-text)] placeholder:text-subtle focus:outline-none"
               />
             </div>
             <motion.button
@@ -565,7 +666,7 @@ export const SearchOverlay = ({
                             className="text-[0.65rem] font-medium px-2 py-0.5 rounded-full"
                             style={{ backgroundColor: '#7C3AED', color: '#FFFFFF' }}
                           >
-                            Exercise
+                            {copy.practice}
                           </span>
                           <button
                             type="button"
