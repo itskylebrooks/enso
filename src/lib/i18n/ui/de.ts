@@ -134,7 +134,7 @@ export const de = {
   installPwa: 'App installieren',
   installPwaTitle: 'Enso installieren',
   installPwaDescription: 'Installiere Enso als App für Offline-Zugriff und ein natives Erlebnis.',
-  installPwaButton: 'Installieren',
+  installPwaButton: 'Starten',
   installPwaInstalled: 'Installiert',
   installPwaUnavailable: 'Nutze das Browsermenü oder die Adressleiste zum Installieren.',
   installPwaIosInstructions:
@@ -651,8 +651,7 @@ export const de = {
       {
         id: 'recovery',
         title: 'Recovery',
-        description:
-          'Atmung, regeneratives Dehnen, Nervensystem-Reset (Ruhetag / Abendroutine).',
+        description: 'Atmung, regeneratives Dehnen, Nervensystem-Reset (Ruhetag / Abendroutine).',
       },
     ],
     etiquetteLead:
