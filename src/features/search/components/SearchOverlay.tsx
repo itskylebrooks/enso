@@ -608,19 +608,7 @@ export const SearchOverlay = ({
                         )}
                       </div>
                       {/* Right-side label: technique belt or glossary label */}
-                      <div className="flex-shrink-0 ml-3 min-w-[3.5rem] flex flex-col items-center gap-2">
-                        {resultStudyStatus !== 'none' && (
-                          <span
-                            className="inline-flex h-5 w-5 items-center justify-center rounded-full border surface-border bg-[var(--color-surface)] text-subtle"
-                            title={
-                              resultStudyStatus === 'practice'
-                                ? copy.collectionsStudyPractice
-                                : copy.collectionsStudyStable
-                            }
-                          >
-                            <StudyStatusIcon status={resultStudyStatus} className="h-3 w-3" />
-                          </span>
-                        )}
+                      <div className="flex-shrink-0 ml-3 min-w-[4.5rem] flex flex-col items-center gap-1.5">
                         {result.type === 'technique' ? (
                           <>
                             <span
@@ -649,18 +637,32 @@ export const SearchOverlay = ({
                               }
                               className="p-1 -mt-1"
                             >
-                              {progress.find(
-                                (p) => p.techniqueId === result.item.id && p.bookmarked,
-                              ) ? (
-                                <Bookmark
-                                  className="w-4 h-4 text-subtle"
-                                  aria-hidden
-                                  fill="currentColor"
-                                  stroke="none"
-                                />
-                              ) : (
-                                <Bookmark className="w-4 h-4 text-subtle" aria-hidden />
-                              )}
+                              <span className="inline-flex items-center justify-center gap-1.5 min-h-5">
+                                {resultStudyStatus !== 'none' && (
+                                  <span
+                                    className="inline-flex h-5 w-5 items-center justify-center rounded-full border surface-border bg-[var(--color-surface)] text-subtle"
+                                    title={
+                                      resultStudyStatus === 'practice'
+                                        ? copy.collectionsStudyPractice
+                                        : copy.collectionsStudyStable
+                                    }
+                                  >
+                                    <StudyStatusIcon status={resultStudyStatus} className="h-3 w-3" />
+                                  </span>
+                                )}
+                                {progress.find(
+                                  (p) => p.techniqueId === result.item.id && p.bookmarked,
+                                ) ? (
+                                  <Bookmark
+                                    className="w-4 h-4 text-subtle"
+                                    aria-hidden
+                                    fill="currentColor"
+                                    stroke="none"
+                                  />
+                                ) : (
+                                  <Bookmark className="w-4 h-4 text-subtle" aria-hidden />
+                                )}
+                              </span>
                             </button>
                           </>
                         ) : result.type === 'glossary' ? (
@@ -686,18 +688,32 @@ export const SearchOverlay = ({
                               }
                               className="p-1 -mt-1"
                             >
-                              {glossaryProgress.find(
-                                (g) => g.termId === result.item.id && g.bookmarked,
-                              ) ? (
-                                <Bookmark
-                                  className="w-4 h-4 text-subtle"
-                                  aria-hidden
-                                  fill="currentColor"
-                                  stroke="none"
-                                />
-                              ) : (
-                                <Bookmark className="w-4 h-4 text-subtle" aria-hidden />
-                              )}
+                              <span className="inline-flex items-center justify-center gap-1.5 min-h-5">
+                                {resultStudyStatus !== 'none' && (
+                                  <span
+                                    className="inline-flex h-5 w-5 items-center justify-center rounded-full border surface-border bg-[var(--color-surface)] text-subtle"
+                                    title={
+                                      resultStudyStatus === 'practice'
+                                        ? copy.collectionsStudyPractice
+                                        : copy.collectionsStudyStable
+                                    }
+                                  >
+                                    <StudyStatusIcon status={resultStudyStatus} className="h-3 w-3" />
+                                  </span>
+                                )}
+                                {glossaryProgress.find(
+                                  (g) => g.termId === result.item.id && g.bookmarked,
+                                ) ? (
+                                  <Bookmark
+                                    className="w-4 h-4 text-subtle"
+                                    aria-hidden
+                                    fill="currentColor"
+                                    stroke="none"
+                                  />
+                                ) : (
+                                  <Bookmark className="w-4 h-4 text-subtle" aria-hidden />
+                                )}
+                              </span>
                             </button>
                           </>
                         ) : (
@@ -723,18 +739,32 @@ export const SearchOverlay = ({
                               }
                               className="p-1 -mt-1"
                             >
-                              {exerciseProgress.find(
-                                (p) => p.exerciseId === result.item.id && p.bookmarked,
-                              ) ? (
-                                <Bookmark
-                                  className="w-4 h-4 text-subtle"
-                                  aria-hidden
-                                  fill="currentColor"
-                                  stroke="none"
-                                />
-                              ) : (
-                                <Bookmark className="w-4 h-4 text-subtle" aria-hidden />
-                              )}
+                              <span className="inline-flex items-center justify-center gap-1.5 min-h-5">
+                                {resultStudyStatus !== 'none' && (
+                                  <span
+                                    className="inline-flex h-5 w-5 items-center justify-center rounded-full border surface-border bg-[var(--color-surface)] text-subtle"
+                                    title={
+                                      resultStudyStatus === 'practice'
+                                        ? copy.collectionsStudyPractice
+                                        : copy.collectionsStudyStable
+                                    }
+                                  >
+                                    <StudyStatusIcon status={resultStudyStatus} className="h-3 w-3" />
+                                  </span>
+                                )}
+                                {exerciseProgress.find(
+                                  (p) => p.exerciseId === result.item.id && p.bookmarked,
+                                ) ? (
+                                  <Bookmark
+                                    className="w-4 h-4 text-subtle"
+                                    aria-hidden
+                                    fill="currentColor"
+                                    stroke="none"
+                                  />
+                                ) : (
+                                  <Bookmark className="w-4 h-4 text-subtle" aria-hidden />
+                                )}
+                              </span>
                             </button>
                           </>
                         )}

@@ -7,9 +7,24 @@ import { NameModal } from '@shared/components/ui/modals/NameModal';
 import { useMotionPreferences } from '@shared/components/ui/motion';
 import { useIncrementalList } from '@shared/hooks/useIncrementalList';
 import { createCollectionItemId, normalizeCollectionItemIds } from '@shared/utils/collectionItems';
+import {
+  getStudyStatusForTechniqueVariant,
+  getStudyStatusForCollectionId,
+  getStudyStatusForItem,
+  hasTechniqueStudyStatus,
+  STUDY_PRACTICE_COLLECTION_ID,
+  STUDY_STABLE_COLLECTION_ID,
+} from '@shared/utils/studyStatus';
+import { ENTRY_MODE_ORDER } from '@shared/constants/entryModes';
+import {
+  fromVariantStorageKey,
+  getBookmarkedVariantKeys,
+  toVariantStorageKey,
+} from '@shared/utils/variantKeys';
 import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp } from 'lucide-react';
 import { AnimatePresence } from 'motion/react';
 import {
+  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -30,6 +45,7 @@ import type {
   GlossaryTerm,
   Locale,
   Progress,
+  StudyStatus,
   StudyStatusMap,
   Technique,
   TechniqueVariantKey,
@@ -37,14 +53,6 @@ import type {
 import { AddToCollectionMenu } from './AddToCollectionMenu';
 import { CollectionsSidebar } from './CollectionsSidebar';
 import { TermBookmarkCard } from './TermBookmarkCard';
-import {
-  getAggregateTechniqueStudyStatus,
-  getStudyStatusForCollectionId,
-  getStudyStatusForItem,
-  hasTechniqueStudyStatus,
-  STUDY_PRACTICE_COLLECTION_ID,
-  STUDY_STABLE_COLLECTION_ID,
-} from '@shared/utils/studyStatus';
 
 type SelectedCollectionId = 'all' | 'ungrouped' | string;
 
@@ -96,6 +104,9 @@ type VisibleBookmarkItem =
       name: string;
       id: string;
       itemId: string;
+      collectionItemId: string;
+      studyStatus: StudyStatus;
+      cardProgress: Progress;
     }
   | {
       type: 'glossary';
@@ -103,6 +114,7 @@ type VisibleBookmarkItem =
       name: string;
       id: string;
       itemId: string;
+      collectionItemId: string;
     }
   | {
       type: 'exercise';
@@ -110,6 +122,7 @@ type VisibleBookmarkItem =
       name: string;
       id: string;
       itemId: string;
+      collectionItemId: string;
     };
 
 type ReorderControlsProps = {
@@ -189,6 +202,23 @@ const ReorderControls = ({
   );
 };
 
+const getFallbackVariantForTechnique = (technique: Technique): TechniqueVariantKey => {
+  const firstVersion = technique.versions[0];
+  const availableDirections = ENTRY_MODE_ORDER.filter((mode) =>
+    Boolean(firstVersion?.stepsByEntry?.[mode]),
+  );
+
+  return {
+    hanmi: firstVersion?.hanmi ?? 'ai-hanmi',
+    direction: (availableDirections[0] ?? 'irimi') as TechniqueVariantKey['direction'],
+    weapon:
+      technique.weapon && technique.weapon !== 'empty-hand'
+        ? (technique.weapon as TechniqueVariantKey['weapon'])
+        : 'empty',
+    versionId: firstVersion?.id ?? null,
+  };
+};
+
 export const BookmarksView = ({
   copy,
   locale,
@@ -243,8 +273,7 @@ export const BookmarksView = ({
   );
 
   const activeCollection = useMemo(
-    () =>
-      orderedCollections.find((collection) => collection.id === selectedCollectionId) ?? null,
+    () => orderedCollections.find((collection) => collection.id === selectedCollectionId) ?? null,
     [orderedCollections, selectedCollectionId],
   );
 
@@ -456,6 +485,64 @@ export const BookmarksView = ({
     [exercises, bookmarkedExerciseIds],
   );
 
+  const techniqueById = useMemo(
+    () => new Map(techniques.map((technique) => [technique.id, technique] as const)),
+    [techniques],
+  );
+
+  const getBookmarkedTechniqueVariants = useCallback((
+    technique: Technique,
+    entry: Progress | undefined,
+  ): TechniqueVariantKey[] => {
+    const parsedFromKeys = getBookmarkedVariantKeys(entry)
+      .map((value) => fromVariantStorageKey(value))
+      .filter((value): value is TechniqueVariantKey => value !== null);
+
+    if (parsedFromKeys.length > 0) {
+      return parsedFromKeys;
+    }
+
+    if (entry?.bookmarkedVariant) {
+      return [entry.bookmarkedVariant];
+    }
+
+    if (entry?.bookmarked) {
+      return [getFallbackVariantForTechnique(technique)];
+    }
+
+    return [];
+  }, []);
+
+  const getTechniqueVariantsByStudyStatus = useCallback((
+    technique: Technique,
+    status: Exclude<StudyStatus, 'none'>,
+  ): TechniqueVariantKey[] => {
+    const prefix = `technique:${technique.slug}:`;
+    const variantsFromMap = Object.entries(studyStatus)
+      .filter(([key, value]) => key.startsWith(prefix) && value.status === status)
+      .map(([key, value]) => ({
+        variant: fromVariantStorageKey(key.slice(prefix.length)),
+        updatedAt: value.updatedAt,
+      }))
+      .filter((entry): entry is { variant: TechniqueVariantKey; updatedAt: number } =>
+        Boolean(entry.variant),
+      )
+      .sort((a, b) => b.updatedAt - a.updatedAt)
+      .map((entry) => entry.variant);
+
+    if (variantsFromMap.length > 0) {
+      return variantsFromMap;
+    }
+
+    const legacy = studyStatus[`technique:${technique.slug}`];
+    if (legacy?.status === status) {
+      const progressEntry = progressById[technique.id];
+      return [progressEntry?.bookmarkedVariant ?? getFallbackVariantForTechnique(technique)];
+    }
+
+    return [];
+  }, [progressById, studyStatus]);
+
   const visibleTechniqueIds = useMemo(() => {
     const studyStatusSelection = getStudyStatusForCollectionId(selectedCollectionId);
     if (studyStatusSelection === 'practice') {
@@ -539,38 +626,100 @@ export const BookmarksView = ({
 
   const visibleTechniques = useMemo(
     () =>
-      (
-        getStudyStatusForCollectionId(selectedCollectionId) ? techniques : allBookmarkedTechniques
+      (getStudyStatusForCollectionId(selectedCollectionId)
+        ? techniques
+        : allBookmarkedTechniques
       ).filter((technique) => visibleTechniqueIds.has(technique.id)),
-    [selectedCollectionId, techniques, allBookmarkedTechniques, visibleTechniqueIds],
+    [allBookmarkedTechniques, selectedCollectionId, techniques, visibleTechniqueIds],
   );
+
+  const visibleTechniqueCards = useMemo((): VisibleBookmarkItem[] => {
+    const rawStudyStatus = getStudyStatusForCollectionId(selectedCollectionId);
+    const selectedStudyStatus =
+      rawStudyStatus === 'practice' || rawStudyStatus === 'stable' ? rawStudyStatus : null;
+
+    return visibleTechniques.flatMap((technique) => {
+      const progressEntry = progressById[technique.id];
+      const variants = selectedStudyStatus
+        ? getTechniqueVariantsByStudyStatus(technique, selectedStudyStatus)
+        : getBookmarkedTechniqueVariants(technique, progressEntry);
+
+      if (variants.length === 0) {
+        return [];
+      }
+
+      const variantsToRender =
+        isCollectionEditMode && activeCollection ? variants.slice(0, 1) : variants;
+      const dedupedKeys = new Set<string>();
+      const baseCollectionItemId = createCollectionItemId('technique', technique.id);
+      const bookmarkedKeys = getBookmarkedVariantKeys(progressEntry);
+
+      return variantsToRender
+        .filter((variant) => {
+          const storageKey = toVariantStorageKey(variant);
+          if (dedupedKeys.has(storageKey)) return false;
+          dedupedKeys.add(storageKey);
+          return true;
+        })
+        .map((variant) => {
+          const storageKey = toVariantStorageKey(variant);
+          const isBookmarkedVariant =
+            bookmarkedKeys.length > 0
+              ? bookmarkedKeys.includes(storageKey)
+              : Boolean(progressEntry?.bookmarked);
+
+          return {
+            type: 'technique' as const,
+            item: technique,
+            name: technique.name[locale] || technique.name.en,
+            id: technique.id,
+            itemId: `${baseCollectionItemId}::${storageKey}`,
+            collectionItemId: baseCollectionItemId,
+            studyStatus:
+              selectedStudyStatus ??
+              getStudyStatusForTechniqueVariant(studyStatus, technique.slug, variant),
+            cardProgress: {
+              techniqueId: technique.id,
+              bookmarked: isBookmarkedVariant,
+              bookmarkedVariant: variant,
+              bookmarkedVariantKeys: [storageKey],
+              updatedAt: progressEntry?.updatedAt ?? 0,
+            },
+          };
+        });
+    });
+  }, [
+    activeCollection,
+    getBookmarkedTechniqueVariants,
+    getTechniqueVariantsByStudyStatus,
+    isCollectionEditMode,
+    locale,
+    progressById,
+    selectedCollectionId,
+    studyStatus,
+    visibleTechniques,
+  ]);
 
   const visibleGlossaryTerms = useMemo(
     () =>
-      (
-        getStudyStatusForCollectionId(selectedCollectionId)
-          ? glossaryTerms
-          : allBookmarkedGlossaryTerms
+      (getStudyStatusForCollectionId(selectedCollectionId)
+        ? glossaryTerms
+        : allBookmarkedGlossaryTerms
       ).filter((term) => visibleGlossaryIds.has(term.id)),
     [selectedCollectionId, glossaryTerms, allBookmarkedGlossaryTerms, visibleGlossaryIds],
   );
 
   const visibleExercises = useMemo(
     () =>
-      (
-        getStudyStatusForCollectionId(selectedCollectionId) ? exercises : allBookmarkedExercises
+      (getStudyStatusForCollectionId(selectedCollectionId)
+        ? exercises
+        : allBookmarkedExercises
       ).filter((exercise) => visibleExerciseIds.has(exercise.id)),
     [selectedCollectionId, exercises, allBookmarkedExercises, visibleExerciseIds],
   );
 
   const sortedVisibleItems = useMemo((): VisibleBookmarkItem[] => {
-    const techniqueItems: VisibleBookmarkItem[] = visibleTechniques.map((technique) => ({
-      type: 'technique',
-      item: technique,
-      name: technique.name[locale] || technique.name.en,
-      id: technique.id,
-      itemId: createCollectionItemId('technique', technique.id),
-    }));
+    const techniqueItems: VisibleBookmarkItem[] = visibleTechniqueCards;
 
     const glossaryItems: VisibleBookmarkItem[] = visibleGlossaryTerms.map((term) => ({
       type: 'glossary',
@@ -578,6 +727,7 @@ export const BookmarksView = ({
       name: term.romaji,
       id: term.id,
       itemId: createCollectionItemId('glossary', term.id),
+      collectionItemId: createCollectionItemId('glossary', term.id),
     }));
 
     const exerciseItems: VisibleBookmarkItem[] = visibleExercises.map((exercise) => ({
@@ -586,32 +736,46 @@ export const BookmarksView = ({
       name: exercise.name[locale] || exercise.name.en,
       id: exercise.id,
       itemId: createCollectionItemId('exercise', exercise.id),
+      collectionItemId: createCollectionItemId('exercise', exercise.id),
     }));
 
     const combined = [...techniqueItems, ...glossaryItems, ...exerciseItems];
     const alphaSorted = [...combined].sort((a, b) =>
-      a.name.localeCompare(b.name, locale, {
-        sensitivity: 'accent',
-        caseFirst: 'upper',
-      }),
+      a.name === b.name
+        ? a.itemId.localeCompare(b.itemId)
+        : a.name.localeCompare(b.name, locale, {
+            sensitivity: 'accent',
+            caseFirst: 'upper',
+          }),
     );
 
     if (!activeCollection) {
       return alphaSorted;
     }
 
-    const orderMap = new Map(combined.map((entry) => [entry.itemId, entry] as const));
-    const presentIds = combined.map((entry) => entry.itemId);
-    const normalizedIds = normalizeCollectionItemIds(activeCollection.itemIds, presentIds, presentIds);
-    const normalizedIdSet = new Set(normalizedIds);
+    const presentCollectionIds = Array.from(
+      new Set(combined.map((entry) => entry.collectionItemId)),
+    );
+    const normalizedIds = normalizeCollectionItemIds(
+      activeCollection.itemIds,
+      presentCollectionIds,
+      presentCollectionIds,
+    );
+    const orderedFromCollection: VisibleBookmarkItem[] = [];
+    const usedItemIds = new Set<string>();
 
-    const orderedFromCollection = normalizedIds
-      .map((itemId) => orderMap.get(itemId))
-      .filter((entry): entry is VisibleBookmarkItem => Boolean(entry));
+    normalizedIds.forEach((collectionItemId) => {
+      combined
+        .filter((entry) => entry.collectionItemId === collectionItemId)
+        .forEach((entry) => {
+          orderedFromCollection.push(entry);
+          usedItemIds.add(entry.itemId);
+        });
+    });
 
-    const missingItems = alphaSorted.filter((entry) => !normalizedIdSet.has(entry.itemId));
+    const missingItems = alphaSorted.filter((entry) => !usedItemIds.has(entry.itemId));
     return [...orderedFromCollection, ...missingItems];
-  }, [activeCollection, locale, visibleExercises, visibleGlossaryTerms, visibleTechniques]);
+  }, [activeCollection, locale, visibleExercises, visibleGlossaryTerms, visibleTechniqueCards]);
 
   const sortedKey = useMemo(
     () => sortedVisibleItems.map((item) => item.itemId).join(','),
@@ -632,6 +796,11 @@ export const BookmarksView = ({
     () => new Map(sortedVisibleItems.map((item, index) => [item.itemId, index] as const)),
     [sortedVisibleItems],
   );
+  const reorderItemIdByRenderItemId = useMemo(
+    () =>
+      new Map(sortedVisibleItems.map((item) => [item.itemId, item.collectionItemId] as const)),
+    [sortedVisibleItems],
+  );
 
   useEffect(() => {
     if (!pendingFocusItemId.current) return;
@@ -645,7 +814,12 @@ export const BookmarksView = ({
   const collectionCounts = useMemo(() => {
     const map = new Map<string, number>();
     orderedCollections.forEach((collection) => {
-      const techniqueCount = membershipByCollection.get(collection.id)?.size ?? 0;
+      const collectionTechniqueIds = membershipByCollection.get(collection.id) ?? new Set<string>();
+      const techniqueCount = Array.from(collectionTechniqueIds).reduce((sum, techniqueId) => {
+        const technique = techniqueById.get(techniqueId);
+        if (!technique) return sum;
+        return sum + getBookmarkedTechniqueVariants(technique, progressById[techniqueId]).length;
+      }, 0);
       const glossaryCount = glossaryMembershipByCollection.get(collection.id)?.size ?? 0;
       const exerciseCount = exerciseMembershipByCollection.get(collection.id)?.size ?? 0;
       map.set(collection.id, techniqueCount + glossaryCount + exerciseCount);
@@ -656,21 +830,30 @@ export const BookmarksView = ({
     membershipByCollection,
     glossaryMembershipByCollection,
     exerciseMembershipByCollection,
+    getBookmarkedTechniqueVariants,
+    progressById,
+    techniqueById,
   ]);
 
-  const studyCollectionCounts = useMemo(
-    () => ({
+  const studyCollectionCounts = useMemo(() => {
+    const practiceTechniqueCount = techniques.reduce(
+      (sum, technique) => sum + getTechniqueVariantsByStudyStatus(technique, 'practice').length,
+      0,
+    );
+    const stableTechniqueCount = techniques.reduce(
+      (sum, technique) => sum + getTechniqueVariantsByStudyStatus(technique, 'stable').length,
+      0,
+    );
+
+    return {
       [STUDY_PRACTICE_COLLECTION_ID]:
-        studyTechniqueIdsByStatus.practice.size +
+        practiceTechniqueCount +
         studyGlossaryIdsByStatus.practice.size +
         studyExerciseIdsByStatus.practice.size,
       [STUDY_STABLE_COLLECTION_ID]:
-        studyTechniqueIdsByStatus.stable.size +
-        studyGlossaryIdsByStatus.stable.size +
-        studyExerciseIdsByStatus.stable.size,
-    }),
-    [studyExerciseIdsByStatus, studyGlossaryIdsByStatus, studyTechniqueIdsByStatus],
-  );
+        stableTechniqueCount + studyGlossaryIdsByStatus.stable.size + studyExerciseIdsByStatus.stable.size,
+    };
+  }, [getTechniqueVariantsByStudyStatus, techniques, studyExerciseIdsByStatus, studyGlossaryIdsByStatus]);
 
   const studyCollections = useMemo(
     () => [
@@ -690,8 +873,30 @@ export const BookmarksView = ({
     [copy.collectionsStudyPractice, copy.collectionsStudyStable, studyCollectionCounts],
   );
 
-  const allCount = bookmarkedIds.size + bookmarkedGlossaryIds.size + bookmarkedExerciseIds.size;
-  const ungroupedCount = ungroupedIds.size + ungroupedGlossaryIds.size + ungroupedExerciseIds.size;
+  const allBookmarkedTechniqueCount = useMemo(
+    () =>
+      allBookmarkedTechniques.reduce(
+        (sum, technique) =>
+          sum + getBookmarkedTechniqueVariants(technique, progressById[technique.id]).length,
+        0,
+      ),
+    [allBookmarkedTechniques, getBookmarkedTechniqueVariants, progressById],
+  );
+
+  const ungroupedTechniqueCount = useMemo(
+    () =>
+      Array.from(ungroupedIds).reduce((sum, techniqueId) => {
+        const technique = techniqueById.get(techniqueId);
+        if (!technique) return sum;
+        return sum + getBookmarkedTechniqueVariants(technique, progressById[techniqueId]).length;
+      }, 0),
+    [getBookmarkedTechniqueVariants, progressById, techniqueById, ungroupedIds],
+  );
+
+  const allCount =
+    allBookmarkedTechniqueCount + bookmarkedGlossaryIds.size + bookmarkedExerciseIds.size;
+  const ungroupedCount =
+    ungroupedTechniqueCount + ungroupedGlossaryIds.size + ungroupedExerciseIds.size;
 
   const emptyStateMessage = useMemo(() => {
     if (selectedCollectionId === 'all') {
@@ -743,13 +948,14 @@ export const BookmarksView = ({
     if (!activeCollection || !isCollectionEditMode) return;
     const index = itemIndexById.get(itemId);
     if (index == null) return;
+    const reorderItemId = reorderItemIdByRenderItemId.get(itemId) ?? itemId;
     const isOutOfBounds =
       (direction === 'backward' && index <= 0) ||
       (direction === 'forward' && index >= sortedVisibleItems.length - 1);
     if (isOutOfBounds) return;
 
     pendingFocusItemId.current = itemId;
-    onReorderCollectionItem(activeCollection.id, itemId, direction);
+    onReorderCollectionItem(activeCollection.id, reorderItemId, direction);
   };
 
   const handleCardKeyDown = (event: KeyboardEvent<HTMLDivElement>, itemId: string) => {
@@ -846,7 +1052,8 @@ export const BookmarksView = ({
               {renderedBookmarks.map((item, index) => {
                 const itemIndex = itemIndexById.get(item.itemId) ?? -1;
                 const disableBackward = itemIndex <= 0;
-                const disableForward = itemIndex === -1 || itemIndex >= sortedVisibleItems.length - 1;
+                const disableForward =
+                  itemIndex === -1 || itemIndex >= sortedVisibleItems.length - 1;
                 const reorderControls =
                   isCollectionEditMode && itemIndex !== -1 ? (
                     <ReorderControls
@@ -868,10 +1075,15 @@ export const BookmarksView = ({
                       cardRef={(element) => setCardRef(item.itemId, element)}
                       technique={technique}
                       locale={locale}
-                      progress={progressById[technique.id]}
+                      progress={item.cardProgress}
                       copy={copy}
                       onSelect={onOpenTechnique}
-                      studyStatus={getAggregateTechniqueStudyStatus(studyStatus, technique.slug)}
+                      studyStatus={item.studyStatus}
+                      showJapanese={false}
+                      showVariantMeta
+                      variantMetaPlacement="footer"
+                      showEntryTags={false}
+                      headerAlign="center"
                       motionIndex={index}
                       variants={listMotion.item}
                       getTransition={getItemTransition}
@@ -899,7 +1111,9 @@ export const BookmarksView = ({
                           }}
                           onCreate={openCreateModal}
                           onOpen={() => setActiveCardId(item.itemId)}
-                          onClose={() => setActiveCardId((cur) => (cur === item.itemId ? null : cur))}
+                          onClose={() =>
+                            setActiveCardId((cur) => (cur === item.itemId ? null : cur))
+                          }
                         />
                       }
                     />
@@ -919,6 +1133,8 @@ export const BookmarksView = ({
                         copy={copy}
                         onSelect={onOpenGlossaryTerm}
                         studyStatus={getStudyStatusForItem(studyStatus, 'term', term.slug)}
+                        showJapanese={false}
+                        headerAlign="center"
                         motionIndex={index}
                         variants={listMotion.item}
                         getTransition={getItemTransition}
@@ -945,7 +1161,9 @@ export const BookmarksView = ({
                             }}
                             onCreate={openCreateModal}
                             onOpen={() => setActiveCardId(item.itemId)}
-                            onClose={() => setActiveCardId((cur) => (cur === item.itemId ? null : cur))}
+                            onClose={() =>
+                              setActiveCardId((cur) => (cur === item.itemId ? null : cur))
+                            }
                           />
                         }
                       />
@@ -992,7 +1210,9 @@ export const BookmarksView = ({
                           }}
                           onCreate={openCreateModal}
                           onOpen={() => setActiveCardId(item.itemId)}
-                          onClose={() => setActiveCardId((cur) => (cur === item.itemId ? null : cur))}
+                          onClose={() =>
+                            setActiveCardId((cur) => (cur === item.itemId ? null : cur))
+                          }
                         />
                       }
                     />

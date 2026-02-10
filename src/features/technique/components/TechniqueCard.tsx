@@ -42,8 +42,10 @@ export type TechniqueCardProps = {
   showVariantMeta?: boolean;
   compactSpacing?: boolean;
   showEntryTags?: boolean;
+  headerAlign?: 'start' | 'center';
   levelBadgePlacement?: 'footer' | 'header';
   levelBadgeStyle?: 'default' | 'number-circle';
+  variantMetaPlacement?: 'header' | 'footer';
   studyStatus?: StudyStatus;
 } & MotionProps;
 
@@ -69,8 +71,10 @@ export const TechniqueCard = ({
   showVariantMeta = true,
   compactSpacing = false,
   showEntryTags = true,
+  headerAlign = 'start',
   levelBadgePlacement = 'footer',
   levelBadgeStyle = 'default',
+  variantMetaPlacement = 'header',
   studyStatus = 'none',
 }: TechniqueCardProps): ReactElement => {
   const bookmarkedVariant = progress?.bookmarkedVariant;
@@ -108,6 +112,7 @@ export const TechniqueCard = ({
       ? copy.hanmiAiHanmi
       : copy.hanmiGyakuHanmi
     : null;
+  const directionTagLabel = bookmarkedVariant ? labelByMode[bookmarkedVariant.direction] : null;
 
   const selectedVersion = bookmarkedVariant?.versionId
     ? technique.versions.find(
@@ -116,9 +121,10 @@ export const TechniqueCard = ({
       ) ?? technique.versions.find((version) => version.id === bookmarkedVariant.versionId)
     : undefined;
 
-  const trainerInitials = selectedVersion?.trainerId
-    ? getTrainerInitialsById(selectedVersion.trainerId)
-    : null;
+  const trainerInitials =
+    selectedVersion?.trainerId && selectedVersion.id !== 'v-base'
+      ? getTrainerInitialsById(selectedVersion.trainerId)
+      : null;
 
   const weaponFullLabel = bookmarkedVariant
     ? {
@@ -128,6 +134,15 @@ export const TechniqueCard = ({
         tanto: copy.weaponTanto,
       }[bookmarkedVariant.weapon]
     : null;
+  const variantMetaText = [versionTagLabel, directionTagLabel, trainerInitials, weaponFullLabel]
+    .filter(Boolean)
+    .join(' · ');
+  const showVariantMetaInline =
+    !showJapanese && showVariantMeta && Boolean(bookmarkedVariant) && variantMetaText.length > 0;
+  const showVariantMetaInHeader = showVariantMetaInline && variantMetaPlacement === 'header';
+  const showVariantMetaInFooter = showVariantMetaInline && variantMetaPlacement === 'footer';
+  const hasTagFooter =
+    (showEntryTags && entryLabels.length > 0) || Boolean(weaponLabel && !showVariantMetaInFooter);
 
   const handleActivate = () => {
     onSelect(technique.slug, bookmarkedVariant);
@@ -183,7 +198,11 @@ export const TechniqueCard = ({
       animate={isDimmed ? {} : {}}
       title={technique.name[locale]}
     >
-      <div className="flex items-start justify-between gap-3">
+      <div
+        className={`flex justify-between gap-3 ${
+          headerAlign === 'center' ? 'items-center' : 'items-start'
+        }`}
+      >
         <div className="min-w-0 space-y-1">
           <div className="flex items-start gap-2">
             <div
@@ -202,11 +221,7 @@ export const TechniqueCard = ({
           {showJapanese && technique.jp && (
             <div className="text-xs text-subtle truncate">{technique.jp}</div>
           )}
-          {!showJapanese && showVariantMeta && bookmarkedVariant && (
-            <div className="text-xs text-subtle truncate">
-              {[versionTagLabel, trainerInitials, weaponFullLabel].filter(Boolean).join(' · ')}
-            </div>
-          )}
+          {showVariantMetaInHeader && <div className="text-xs text-subtle truncate">{variantMetaText}</div>}
         </div>
         <div
           className={
@@ -232,20 +247,30 @@ export const TechniqueCard = ({
         {summarySlot && <div className="absolute inset-0 flex items-center">{summarySlot}</div>}
       </div>
 
-      <div className={`mt-auto flex items-end justify-between gap-4 ${compactSpacing ? '' : 'pt-1'}`}>
-        <div className="flex flex-wrap items-center gap-2 text-xs font-medium uppercase tracking-wide text-subtle">
-          {showEntryTags &&
-            entryLabels.map((label) => (
-              <span key={label} className="rounded-sm bg-black/5 px-2 py-0.5 dark:bg-white/10">
-                {label}
-              </span>
-            ))}
-          {weaponLabel && (
-            <span className="rounded-sm bg-black/5 px-2 py-0.5 dark:bg-white/10">
-              {weaponLabel}
-            </span>
-          )}
-        </div>
+      <div
+        className={`mt-auto flex items-end gap-4 ${compactSpacing ? '' : 'pt-1'} ${
+          showVariantMetaInFooter || hasTagFooter ? 'justify-between' : 'justify-end'
+        }`}
+      >
+        {showVariantMetaInFooter ? (
+          <div className="min-w-0 text-xs text-subtle truncate">{variantMetaText}</div>
+        ) : (
+          hasTagFooter && (
+            <div className="flex flex-wrap items-center gap-2 text-xs font-medium uppercase tracking-wide text-subtle">
+              {showEntryTags &&
+                entryLabels.map((label) => (
+                  <span key={label} className="rounded-sm bg-black/5 px-2 py-0.5 dark:bg-white/10">
+                    {label}
+                  </span>
+                ))}
+              {weaponLabel && (
+                <span className="rounded-sm bg-black/5 px-2 py-0.5 dark:bg-white/10">
+                  {weaponLabel}
+                </span>
+              )}
+            </div>
+          )
+        )}
         {levelBadgePlacement === 'footer' && (
           <div className="shrink-0 self-end">
             {levelBadge}

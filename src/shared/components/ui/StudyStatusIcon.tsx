@@ -1,5 +1,5 @@
 import type { ReactElement } from 'react';
-import { Circle, Dumbbell, ShieldCheck } from 'lucide-react';
+import { BicepsFlexed, Circle, Dumbbell } from 'lucide-react';
 import type { StudyStatus } from '@shared/types';
 import { classNames } from '@shared/utils/classNames';
 
@@ -14,7 +14,7 @@ export const StudyStatusIcon = ({ status, className }: StudyStatusIconProps): Re
   }
 
   if (status === 'stable') {
-    return <ShieldCheck className={className} aria-hidden />;
+    return <BicepsFlexed className={className} aria-hidden />;
   }
 
   return <Circle className={className} aria-hidden />;

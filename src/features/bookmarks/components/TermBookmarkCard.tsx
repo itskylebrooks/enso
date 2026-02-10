@@ -21,6 +21,8 @@ type TermBookmarkCardProps = {
   isDimmed?: boolean;
   actionSlot?: ReactElement;
   descriptionSlot?: ReactNode;
+  showJapanese?: boolean;
+  headerAlign?: 'start' | 'center';
   onCardKeyDown?: (event: KeyboardEvent<HTMLDivElement>) => void;
   cardRef?: Ref<HTMLDivElement>;
   enableLayoutAnimation?: boolean;
@@ -39,6 +41,8 @@ export const TermBookmarkCard = ({
   isDimmed = false,
   actionSlot,
   descriptionSlot,
+  showJapanese = true,
+  headerAlign = 'start',
   onCardKeyDown,
   cardRef,
   enableLayoutAnimation = false,
@@ -81,7 +85,11 @@ export const TermBookmarkCard = ({
       /* Hover and tap motion removed to disable hover effects completely */
       animate={isDimmed ? {} : {}}
     >
-      <div className="flex items-start justify-between gap-3">
+      <div
+        className={`flex justify-between gap-3 ${
+          headerAlign === 'center' ? 'items-center' : 'items-start'
+        }`}
+      >
         <div className="min-w-0 space-y-1">
           <div className="flex items-start gap-2">
             <h3
@@ -97,7 +105,7 @@ export const TermBookmarkCard = ({
               className="mt-0.5"
             />
           </div>
-          {term.jp && <div className="text-xs text-subtle truncate">{term.jp}</div>}
+          {showJapanese && term.jp && <div className="text-xs text-subtle truncate">{term.jp}</div>}
         </div>
         <div className="flex items-center gap-2">{actionSlot}</div>
       </div>
