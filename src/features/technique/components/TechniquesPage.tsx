@@ -1,10 +1,11 @@
 import type { ReactElement } from 'react';
 import { motion } from 'motion/react';
-import type { Locale, Progress, Technique } from '@shared/types';
+import type { Locale, Progress, StudyStatusMap, Technique } from '@shared/types';
 import type { Copy } from '@shared/constants/i18n';
 import { TechniqueCard } from './TechniqueCard';
 import { useMotionPreferences } from '@shared/components/ui/motion';
 import { useIncrementalList } from '@shared/hooks/useIncrementalList';
+import { getAggregateTechniqueStudyStatus } from '@shared/utils/studyStatus';
 
 const buildProgressMap = (entries: Progress[]): Record<string, Progress> =>
   Object.fromEntries(entries.map((entry) => [entry.techniqueId, entry]));
@@ -14,6 +15,7 @@ type TechniquesPageProps = {
   locale: Locale;
   techniques: Technique[];
   progress: Progress[];
+  studyStatus: StudyStatusMap;
   onOpen: (slug: string) => void;
 };
 
@@ -22,6 +24,7 @@ export const TechniquesPage = ({
   locale,
   techniques,
   progress,
+  studyStatus,
   onOpen,
 }: TechniquesPageProps): ReactElement => {
   const progressById = buildProgressMap(progress);
@@ -56,6 +59,7 @@ export const TechniquesPage = ({
           onSelect={onOpen}
           showJapanese
           showVariantMeta={false}
+          studyStatus={getAggregateTechniqueStudyStatus(studyStatus, technique.slug)}
           motionIndex={index}
           variants={listMotion.item}
           getTransition={getItemTransition}

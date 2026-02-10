@@ -1,8 +1,9 @@
 import type { KeyboardEvent, ReactElement, ReactNode, Ref } from 'react';
 import { motion, type Transition, type Variants } from 'motion/react';
 import type { Copy } from '@shared/constants/i18n';
-import type { Exercise, Locale } from '@shared/types';
+import type { Exercise, Locale, StudyStatus } from '@shared/types';
 import { getExerciseCategoryLabel, getExerciseCategoryStyle } from '@shared/styles/exercises';
+import { StudyStatusIndicator } from '@shared/components/ui/StudyStatusIcon';
 
 type MotionProps = {
   variants: Variants;
@@ -26,6 +27,7 @@ type ExerciseCardProps = {
   onCardKeyDown?: (event: KeyboardEvent<HTMLDivElement>) => void;
   cardRef?: Ref<HTMLDivElement>;
   enableLayoutAnimation?: boolean;
+  studyStatus?: StudyStatus;
 } & MotionProps;
 
 export const ExerciseCard = ({
@@ -46,6 +48,7 @@ export const ExerciseCard = ({
   onCardKeyDown,
   cardRef,
   enableLayoutAnimation = false,
+  studyStatus = 'none',
 }: ExerciseCardProps): ReactElement => {
   const categoryLabel = getExerciseCategoryLabel(exercise.category, copy);
   const categoryStyle = getExerciseCategoryStyle(exercise.category);
@@ -92,7 +95,15 @@ export const ExerciseCard = ({
         }`}
       >
         <div className="min-w-0">
-          <h3 className="text-base font-semibold leading-tight">{name}</h3>
+          <div className="flex items-start gap-2">
+            <h3 className="min-w-0 flex-1 text-base font-semibold leading-tight">{name}</h3>
+            <StudyStatusIndicator
+              status={studyStatus}
+              practiceLabel={copy.collectionsStudyPractice}
+              stableLabel={copy.collectionsStudyStable}
+              className="mt-0.5"
+            />
+          </div>
         </div>
         <div className="flex flex-col items-end gap-2 shrink-0">
           {actionSlot && <div className="flex items-center gap-2">{actionSlot}</div>}

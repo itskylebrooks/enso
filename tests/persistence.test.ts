@@ -44,6 +44,7 @@ describe('local-first persistence defaults', () => {
     expect(db.techniques.length).toBe(techniquesData.length);
     expect(db.progress.length).toBe(techniquesData.length);
     expect(db.collections).toEqual([]);
+    expect(db.studyStatus).toEqual({});
   });
 
   it('auto-detects German locale when browser language is German', async () => {
@@ -94,6 +95,10 @@ describe('local-first persistence defaults', () => {
         exerciseBookmarkCollections: [
           { id: 'ec-1', exerciseId: 'exercise-a', collectionId: 'collection-1', createdAt: 30 },
         ],
+        studyStatus: {
+          [`technique:${techniquesData[0]?.slug}`]: { status: 'practice', updatedAt: 123 },
+          bad: { status: 'practice', updatedAt: 1 },
+        },
       }),
     });
 
@@ -105,5 +110,7 @@ describe('local-first persistence defaults', () => {
       'glossary:term-a',
       'exercise:exercise-a',
     ]);
+    expect(db.studyStatus[`technique:${techniquesData[0]?.slug}`]?.status).toBe('practice');
+    expect(db.studyStatus.bad).toBeUndefined();
   });
 });

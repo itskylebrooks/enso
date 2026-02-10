@@ -8,6 +8,7 @@ import type {
   ExerciseProgress,
   Locale,
   PracticeEquipment,
+  StudyStatus,
 } from '@shared/types';
 import { loadExerciseBySlug } from '../loader';
 import { useMotionPreferences } from '@shared/components/ui/motion';
@@ -22,6 +23,7 @@ import { classNames } from '@shared/utils/classNames';
 import { NameModal } from '@shared/components/ui/modals/NameModal';
 import type { ExerciseFilters } from './ExercisesPage';
 import { addRecent } from '@shared/services/recentsService';
+import { StudyStatusButton } from '@shared/components/ui/StudyStatusButton';
 
 type ExerciseDetailPageProps = {
   slug: string;
@@ -30,6 +32,8 @@ type ExerciseDetailPageProps = {
   collections: Collection[];
   exerciseProgress: ExerciseProgress[];
   exerciseBookmarkCollections: ExerciseBookmarkCollection[];
+  studyStatus: StudyStatus;
+  onToggleStudyStatus: () => void;
   onToggleBookmark: (exerciseId: string, nextBookmarked: boolean) => void;
   onAssignToCollection: (exerciseId: string, collectionId: string) => void;
   onRemoveFromCollection: (exerciseId: string, collectionId: string) => void;
@@ -55,6 +59,8 @@ export const ExerciseDetailPage = ({
   collections,
   exerciseProgress,
   exerciseBookmarkCollections,
+  studyStatus,
+  onToggleStudyStatus,
   onToggleBookmark,
   onAssignToCollection,
   onRemoveFromCollection,
@@ -142,6 +148,12 @@ export const ExerciseDetailPage = ({
       onAssignToCollection(exercise.id, newId);
     }
   };
+  const studyLabel =
+    studyStatus === 'none'
+      ? copy.studyMarkPractice
+      : studyStatus === 'practice'
+        ? copy.studyMarkStable
+        : copy.studyClearStatus;
 
   return (
     <motion.main
@@ -189,6 +201,16 @@ export const ExerciseDetailPage = ({
               </div>
             </div>
             <div className="flex items-center gap-2">
+              <StudyStatusButton
+                status={studyStatus}
+                label={studyLabel}
+                onClick={onToggleStudyStatus}
+                popupTextByStatus={{
+                  none: copy.toastStudyCleared,
+                  practice: copy.toastStudyPractice,
+                  stable: copy.toastStudyStable,
+                }}
+              />
               <AddToCollectionMenu
                 copy={copy}
                 collections={collectionOptions}

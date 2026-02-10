@@ -108,6 +108,7 @@ export type Progress = {
   techniqueId: string;
   bookmarked: boolean;
   bookmarkedVariant?: TechniqueVariantKey;
+  bookmarkedVariantKeys?: string[];
   updatedAt: number;
 };
 
@@ -122,6 +123,15 @@ export type ExerciseProgress = {
   bookmarked: boolean;
   updatedAt: number;
 };
+
+export type StudyStatus = 'none' | 'practice' | 'stable';
+
+export type StudyStatusEntry = {
+  status: StudyStatus;
+  updatedAt: number;
+};
+
+export type StudyStatusMap = Record<string, StudyStatusEntry>;
 
 export type Collection = {
   id: string;
@@ -162,6 +172,7 @@ export type DB = {
   progress: Progress[];
   glossaryProgress: GlossaryProgress[];
   exerciseProgress: ExerciseProgress[];
+  studyStatus: StudyStatusMap;
   collections: Collection[];
   bookmarkCollections: BookmarkCollection[];
   glossaryBookmarkCollections: GlossaryBookmarkCollection[];

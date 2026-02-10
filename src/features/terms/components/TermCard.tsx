@@ -1,9 +1,9 @@
 import type { KeyboardEvent, ReactElement } from 'react';
 import { motion, type Variants, type Transition } from 'motion/react';
-import type { GlossaryTerm } from '../../../shared/types';
-import type { Locale } from '../../../shared/types';
+import type { GlossaryTerm, Locale, StudyStatus } from '../../../shared/types';
 import type { Copy } from '../../../shared/constants/i18n';
 import { getCategoryStyle, getCategoryLabel } from '../../../shared/styles/terms';
+import { StudyStatusIndicator } from '@shared/components/ui/StudyStatusIcon';
 
 type MotionProps = {
   variants: Variants;
@@ -19,6 +19,7 @@ type TermCardProps = {
   motionIndex: number;
   showJapanese?: boolean;
   compactSpacing?: boolean;
+  studyStatus?: StudyStatus;
 } & MotionProps;
 
 const truncateDefinition = (text: string, maxLength: number = 120): string => {
@@ -36,6 +37,7 @@ export const TermCard = ({
   motionIndex,
   showJapanese = true,
   compactSpacing = false,
+  studyStatus = 'none',
   variants,
   getTransition,
   // prefersReducedMotion removed (no hover motion)
@@ -63,7 +65,7 @@ export const TermCard = ({
       tabIndex={0}
       onClick={handleActivate}
       onKeyDown={handleKeyDown}
-      className={`surface border surface-border rounded-2xl p-4 flex flex-col ${
+      className={`relative surface border surface-border rounded-2xl p-4 flex flex-col ${
         compactSpacing ? 'gap-2' : 'gap-3'
       } text-left card-hover-shadow`}
       initial={false}
@@ -75,7 +77,15 @@ export const TermCard = ({
       {/* Header with romaji and badges */}
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 space-y-1">
-          <h3 className="text-base font-semibold leading-tight">{term.romaji}</h3>
+          <div className="flex items-start gap-2">
+            <h3 className="min-w-0 flex-1 text-base font-semibold leading-tight">{term.romaji}</h3>
+            <StudyStatusIndicator
+              status={studyStatus}
+              practiceLabel={copy.collectionsStudyPractice}
+              stableLabel={copy.collectionsStudyStable}
+              className="mt-0.5"
+            />
+          </div>
           {showJapanese && term.jp && <div className="text-xs text-subtle truncate">{term.jp}</div>}
         </div>
         <span

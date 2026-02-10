@@ -6,8 +6,9 @@ import { useTermsStore } from '../store';
 import { useMotionPreferences } from '@shared/components/ui/motion';
 import { TermCard } from './TermCard';
 import { useIncrementalList } from '@shared/hooks/useIncrementalList';
-import type { Locale } from '../../../shared/types';
+import type { Locale, StudyStatusMap } from '../../../shared/types';
 import type { Copy } from '../../../shared/constants/i18n';
+import { getStudyStatusForItem } from '@shared/utils/studyStatus';
 
 type GlossaryFilters = {
   category?: 'movement' | 'stance' | 'attack' | 'etiquette' | 'philosophy' | 'other';
@@ -16,6 +17,7 @@ type GlossaryFilters = {
 type TermsPageProps = {
   locale: Locale;
   copy: Copy;
+  studyStatus: StudyStatusMap;
   filters?: GlossaryFilters;
   onOpenTerm: (slug: string) => void;
 };
@@ -23,6 +25,7 @@ type TermsPageProps = {
 export const TermsPage = ({
   locale,
   copy,
+  studyStatus,
   filters = {},
   onOpenTerm,
 }: TermsPageProps): ReactElement => {
@@ -110,6 +113,7 @@ export const TermsPage = ({
               locale={locale}
               copy={copy}
               onSelect={onOpenTerm}
+              studyStatus={getStudyStatusForItem(studyStatus, 'term', term.slug)}
               motionIndex={index}
               variants={listMotion.item}
               getTransition={getItemTransition}

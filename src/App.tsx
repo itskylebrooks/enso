@@ -102,6 +102,19 @@ import {
   rememberScrollPosition,
 } from './shared/utils/navigationLifecycle';
 import { createCollectionItemId, swapCollectionItemIds } from './shared/utils/collectionItems';
+import {
+  buildStudyItemKey,
+  buildTechniqueVariantStudyKey,
+  getStudyStatusForTechniqueVariant,
+  cycleStudyStatus,
+  getStudyStatusForItem,
+  isStudyCollectionId,
+} from './shared/utils/studyStatus';
+import {
+  fromVariantStorageKey,
+  getBookmarkedVariantKeys,
+  toVariantStorageKey,
+} from './shared/utils/variantKeys';
 
 const defaultFilters: Filters = {};
 
@@ -1025,7 +1038,10 @@ export default function App({
       return;
     }
 
-    if (!db.collections.some((collection) => collection.id === selectedCollectionId)) {
+    if (
+      !db.collections.some((collection) => collection.id === selectedCollectionId) &&
+      !isStudyCollectionId(selectedCollectionId)
+    ) {
       setSelectedCollectionId('all');
     }
   }, [db.collections, selectedCollectionId]);
@@ -1202,14 +1218,32 @@ export default function App({
     return db.glossaryProgress.find((entry) => entry.termId === activeSlug) ?? null;
   }, [db.glossaryProgress, activeSlug, currentGlossaryTerm]);
 
+  const currentGlossaryStudyStatus = useMemo(
+    () =>
+      currentGlossaryTerm
+        ? getStudyStatusForItem(db.studyStatus, 'term', currentGlossaryTerm.slug)
+        : 'none',
+    [currentGlossaryTerm, db.studyStatus],
+  );
+
   const glossaryCollectionOptions = useMemo(() => {
     if (!activeSlug || !currentGlossaryTerm) return [];
     return getGlossaryCollectionOptions(db.collections, db.glossaryBookmarkCollections, activeSlug);
   }, [db.collections, db.glossaryBookmarkCollections, activeSlug, currentGlossaryTerm]);
 
+  const currentExerciseStudyStatus = useMemo(
+    () =>
+      route === 'exercises' && activeSlug
+        ? getStudyStatusForItem(db.studyStatus, 'exercise', activeSlug)
+        : 'none',
+    [activeSlug, db.studyStatus, route],
+  );
+
   const updateProgress = (id: string, patch: Partial<Progress>): void => {
     const normalizedPatch: Partial<Progress> =
-      patch.bookmarked === false ? { ...patch, bookmarkedVariant: undefined } : patch;
+      patch.bookmarked === false
+        ? { ...patch, bookmarkedVariant: undefined, bookmarkedVariantKeys: [] }
+        : patch;
 
     setDB((prev) => {
       const nextProgress = updateProgressEntry(prev.progress, id, normalizedPatch);
@@ -1279,6 +1313,33 @@ export default function App({
         exerciseBookmarkCollections: nextExerciseBookmarkCollections,
       };
     });
+  };
+
+  const cycleItemStudyStatus = (
+    itemType: 'technique' | 'term' | 'exercise',
+    slug: string,
+    variant?: TechniqueVariantKey,
+  ): void => {
+    const current =
+      itemType === 'technique' && variant
+        ? getStudyStatusForTechniqueVariant(db.studyStatus, slug, variant)
+        : getStudyStatusForItem(db.studyStatus, itemType, slug);
+    const nextStatus = cycleStudyStatus(current);
+    const key =
+      itemType === 'technique' && variant
+        ? buildTechniqueVariantStudyKey(slug, variant)
+        : buildStudyItemKey(itemType, slug);
+
+    setDB((prev) => ({
+      ...prev,
+      studyStatus: {
+        ...prev.studyStatus,
+        [key]: {
+          status: nextStatus,
+          updatedAt: Date.now(),
+        },
+      },
+    }));
   };
 
   const sanitizeCollectionName = (name: string): string => name.trim().slice(0, 40);
@@ -1365,15 +1426,39 @@ export default function App({
       // Automatically bookmark if not already bookmarked
       const progressEntry = prev.progress.find((entry) => entry.techniqueId === techniqueId);
       const isBookmarked = progressEntry?.bookmarked;
+      const technique = prev.techniques.find((entry) => entry.id === techniqueId);
+      const fallbackVariant =
+        progressEntry?.bookmarkedVariant ?? (technique ? getFallbackVariantForTechnique(technique) : null);
+      const fallbackKey = fallbackVariant ? toVariantStorageKey(fallbackVariant) : null;
 
       let nextProgress = prev.progress;
       if (!isBookmarked) {
         if (progressEntry) {
           nextProgress = prev.progress.map((p) =>
-            p.techniqueId === techniqueId ? { ...p, bookmarked: true, updatedAt: now } : p,
+            p.techniqueId === techniqueId
+              ? {
+                  ...p,
+                  bookmarked: true,
+                  bookmarkedVariant: fallbackVariant ?? p.bookmarkedVariant,
+                  bookmarkedVariantKeys:
+                    fallbackKey && getBookmarkedVariantKeys(progressEntry).length === 0
+                      ? [fallbackKey]
+                      : p.bookmarkedVariantKeys,
+                  updatedAt: now,
+                }
+              : p,
           );
         } else {
-          nextProgress = [...prev.progress, { techniqueId, bookmarked: true, updatedAt: now }];
+          nextProgress = [
+            ...prev.progress,
+            {
+              techniqueId,
+              bookmarked: true,
+              bookmarkedVariant: fallbackVariant ?? undefined,
+              bookmarkedVariantKeys: fallbackKey ? [fallbackKey] : [],
+              updatedAt: now,
+            },
+          ];
         }
       }
 
@@ -1874,15 +1959,43 @@ export default function App({
 
   // focus/confident toggles removed — using bookmark only now
 
+  const getFallbackVariantForTechnique = (technique: Technique): TechniqueVariantKey => {
+    const firstVersion = technique.versions[0];
+    const availableDirections = ENTRY_MODE_ORDER.filter((mode) =>
+      Boolean(firstVersion?.stepsByEntry?.[mode]),
+    );
+
+    return {
+      hanmi: firstVersion?.hanmi ?? 'ai-hanmi',
+      direction: (availableDirections[0] ?? 'irimi') as Direction,
+      weapon:
+        technique.weapon && technique.weapon !== 'empty-hand'
+          ? (technique.weapon as WeaponKind)
+          : 'empty',
+      versionId: firstVersion?.id ?? null,
+    };
+  };
+
   const toggleBookmark = (
     technique: Technique,
     entry: Progress | null,
     bookmarkedVariant: TechniqueVariantKey,
   ): void => {
-    const nextBookmarked = !entry?.bookmarked;
+    const currentKeys = getBookmarkedVariantKeys(entry);
+    const activeKey = toVariantStorageKey(bookmarkedVariant);
+    const hasLegacyGlobalBookmark = currentKeys.length === 0 && Boolean(entry?.bookmarked);
+    const hasCurrent = hasLegacyGlobalBookmark || currentKeys.includes(activeKey);
+    const nextKeys = hasCurrent
+      ? currentKeys.filter((key) => key !== activeKey)
+      : [...currentKeys, activeKey];
+    const nextBookmarked = nextKeys.length > 0;
+    const latestKey = nextKeys[nextKeys.length - 1];
+    const latestVariant = latestKey ? fromVariantStorageKey(latestKey) : null;
+
     updateProgress(technique.id, {
       bookmarked: nextBookmarked,
-      bookmarkedVariant: nextBookmarked ? bookmarkedVariant : undefined,
+      bookmarkedVariant: nextBookmarked ? latestVariant ?? bookmarkedVariant : undefined,
+      bookmarkedVariantKeys: nextKeys,
     });
   };
 
@@ -2024,6 +2137,10 @@ export default function App({
           onToggleBookmark={(bookmarkedVariant) =>
             toggleBookmark(currentTechnique, currentProgress ?? null, bookmarkedVariant)
           }
+          studyStatusMap={db.studyStatus}
+          onToggleStudyStatus={(variant) =>
+            cycleItemStudyStatus('technique', currentTechnique.slug, variant)
+          }
           collections={db.collections}
           bookmarkCollections={db.bookmarkCollections}
           onAssignToCollection={(collectionId) =>
@@ -2056,6 +2173,10 @@ export default function App({
         onToggleBookmark={() =>
           updateGlossaryProgress(activeSlug!, { bookmarked: !currentGlossaryProgress?.bookmarked })
         }
+        studyStatus={currentGlossaryStudyStatus}
+        onToggleStudyStatus={() =>
+          cycleItemStudyStatus('term', currentGlossaryTerm?.slug ?? activeSlug!)
+        }
         collections={glossaryCollectionOptions}
         onToggleCollection={(collectionId, nextChecked) => {
           if (nextChecked) {
@@ -2081,6 +2202,8 @@ export default function App({
         collections={db.collections}
         exerciseProgress={db.exerciseProgress}
         exerciseBookmarkCollections={db.exerciseBookmarkCollections}
+        studyStatus={currentExerciseStudyStatus}
+        onToggleStudyStatus={() => cycleItemStudyStatus('exercise', activeSlug)}
         onToggleBookmark={toggleExerciseBookmark}
         onAssignToCollection={assignExerciseToCollection}
         onRemoveFromCollection={removeExerciseFromCollection}
@@ -2247,6 +2370,7 @@ export default function App({
                   locale={locale}
                   techniques={filteredTechniques}
                   progress={db.progress}
+                  studyStatus={db.studyStatus}
                   onOpen={openTechnique}
                 />
               </section>
@@ -2277,6 +2401,7 @@ export default function App({
                 <ExercisesPage
                   copy={copy}
                   locale={locale}
+                  studyStatus={db.studyStatus}
                   filters={practiceFilters}
                   onOpenExercise={openPracticeExercise}
                 />
@@ -2295,6 +2420,7 @@ export default function App({
             progress={db.progress}
             glossaryProgress={db.glossaryProgress}
             exerciseProgress={db.exerciseProgress}
+            studyStatus={db.studyStatus}
             collections={db.collections}
             bookmarkCollections={db.bookmarkCollections}
             glossaryBookmarkCollections={db.glossaryBookmarkCollections}
@@ -2341,6 +2467,8 @@ export default function App({
                     bookmarked: !currentGlossaryProgress?.bookmarked,
                   })
                 }
+                studyStatus={currentGlossaryStudyStatus}
+                onToggleStudyStatus={() => cycleItemStudyStatus('term', activeSlug)}
                 collections={glossaryCollectionOptions}
                 onToggleCollection={(collectionId, nextChecked) => {
                   if (nextChecked) {
@@ -2378,6 +2506,7 @@ export default function App({
                     <TermsPage
                       locale={locale}
                       copy={copy}
+                      studyStatus={db.studyStatus}
                       filters={glossaryFilters}
                       onOpenTerm={openGlossaryTerm}
                     />
@@ -2443,6 +2572,7 @@ export default function App({
               progress={db.progress}
               glossaryProgress={db.glossaryProgress}
               exerciseProgress={db.exerciseProgress}
+              studyStatus={db.studyStatus}
               onClose={closeSearch}
               onOpen={(slug) => {
                 openTechnique(slug);
@@ -2456,11 +2586,25 @@ export default function App({
                 openPracticeExercise(slug);
                 closeSearch();
               }}
-              onToggleTechniqueBookmark={(techniqueId: string) =>
+              onToggleTechniqueBookmark={(techniqueId: string) => {
+                const progressEntry = db.progress.find((p) => p.techniqueId === techniqueId) ?? null;
+                const techniqueEntry = db.techniques.find((t) => t.id === techniqueId);
+                if (!techniqueEntry) return;
+
+                const currentKeys = getBookmarkedVariantKeys(progressEntry);
+                if (currentKeys.length > 0) {
+                  updateProgress(techniqueId, { bookmarked: false });
+                  return;
+                }
+
+                const fallbackVariant =
+                  progressEntry?.bookmarkedVariant ?? getFallbackVariantForTechnique(techniqueEntry);
                 updateProgress(techniqueId, {
-                  bookmarked: !db.progress.find((p) => p.techniqueId === techniqueId)?.bookmarked,
-                })
-              }
+                  bookmarked: true,
+                  bookmarkedVariant: fallbackVariant,
+                  bookmarkedVariantKeys: [toVariantStorageKey(fallbackVariant)],
+                });
+              }}
               onToggleGlossaryBookmark={(termId: string) =>
                 updateGlossaryProgress(termId, {
                   bookmarked: !db.glossaryProgress.find((g) => g.termId === termId)?.bookmarked,

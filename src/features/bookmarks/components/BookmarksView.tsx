@@ -8,7 +8,7 @@ import { useMotionPreferences } from '@shared/components/ui/motion';
 import { useIncrementalList } from '@shared/hooks/useIncrementalList';
 import { createCollectionItemId, normalizeCollectionItemIds } from '@shared/utils/collectionItems';
 import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp } from 'lucide-react';
-import { AnimatePresence, motion } from 'motion/react';
+import { AnimatePresence } from 'motion/react';
 import {
   useEffect,
   useMemo,
@@ -30,12 +30,21 @@ import type {
   GlossaryTerm,
   Locale,
   Progress,
+  StudyStatusMap,
   Technique,
   TechniqueVariantKey,
 } from '../../../shared/types';
 import { AddToCollectionMenu } from './AddToCollectionMenu';
 import { CollectionsSidebar } from './CollectionsSidebar';
 import { TermBookmarkCard } from './TermBookmarkCard';
+import {
+  getAggregateTechniqueStudyStatus,
+  getStudyStatusForCollectionId,
+  getStudyStatusForItem,
+  hasTechniqueStudyStatus,
+  STUDY_PRACTICE_COLLECTION_ID,
+  STUDY_STABLE_COLLECTION_ID,
+} from '@shared/utils/studyStatus';
 
 type SelectedCollectionId = 'all' | 'ungrouped' | string;
 
@@ -48,6 +57,7 @@ type BookmarksViewProps = {
   progress: Progress[];
   glossaryProgress: GlossaryProgress[];
   exerciseProgress: ExerciseProgress[];
+  studyStatus: StudyStatusMap;
   collections: Collection[];
   bookmarkCollections: BookmarkCollection[];
   glossaryBookmarkCollections: GlossaryBookmarkCollection[];
@@ -188,6 +198,7 @@ export const BookmarksView = ({
   progress,
   glossaryProgress,
   exerciseProgress,
+  studyStatus,
   collections,
   bookmarkCollections,
   glossaryBookmarkCollections,
@@ -231,17 +242,13 @@ export const BookmarksView = ({
     [collections, locale],
   );
 
-  const isSpecificCollectionSelected =
-    selectedCollectionId !== 'all' && selectedCollectionId !== 'ungrouped';
-
   const activeCollection = useMemo(
     () =>
-      isSpecificCollectionSelected
-        ? orderedCollections.find((collection) => collection.id === selectedCollectionId) ?? null
-        : null,
-    [isSpecificCollectionSelected, orderedCollections, selectedCollectionId],
+      orderedCollections.find((collection) => collection.id === selectedCollectionId) ?? null,
+    [orderedCollections, selectedCollectionId],
   );
 
+  const isUserCollectionSelected = Boolean(activeCollection);
   const isCollectionEditMode = Boolean(
     activeCollection && editingByCollection[activeCollection.id] === true,
   );
@@ -280,6 +287,54 @@ export const BookmarksView = ({
     });
     return set;
   }, [exerciseProgress]);
+
+  const studyTechniqueIdsByStatus = useMemo(() => {
+    const practice = new Set<string>();
+    const stable = new Set<string>();
+
+    techniques.forEach((technique) => {
+      if (hasTechniqueStudyStatus(studyStatus, technique.slug, 'practice')) {
+        practice.add(technique.id);
+      }
+      if (hasTechniqueStudyStatus(studyStatus, technique.slug, 'stable')) {
+        stable.add(technique.id);
+      }
+    });
+
+    return { practice, stable };
+  }, [studyStatus, techniques]);
+
+  const studyGlossaryIdsByStatus = useMemo(() => {
+    const practice = new Set<string>();
+    const stable = new Set<string>();
+
+    glossaryTerms.forEach((term) => {
+      const status = getStudyStatusForItem(studyStatus, 'term', term.slug);
+      if (status === 'practice') {
+        practice.add(term.id);
+      } else if (status === 'stable') {
+        stable.add(term.id);
+      }
+    });
+
+    return { practice, stable };
+  }, [glossaryTerms, studyStatus]);
+
+  const studyExerciseIdsByStatus = useMemo(() => {
+    const practice = new Set<string>();
+    const stable = new Set<string>();
+
+    exercises.forEach((exercise) => {
+      const status = getStudyStatusForItem(studyStatus, 'exercise', exercise.slug);
+      if (status === 'practice') {
+        practice.add(exercise.id);
+      } else if (status === 'stable') {
+        stable.add(exercise.id);
+      }
+    });
+
+    return { practice, stable };
+  }, [exercises, studyStatus]);
 
   const membershipByTechnique = useMemo(() => {
     const map = new Map<string, Set<string>>();
@@ -402,6 +457,15 @@ export const BookmarksView = ({
   );
 
   const visibleTechniqueIds = useMemo(() => {
+    const studyStatusSelection = getStudyStatusForCollectionId(selectedCollectionId);
+    if (studyStatusSelection === 'practice') {
+      return studyTechniqueIdsByStatus.practice;
+    }
+
+    if (studyStatusSelection === 'stable') {
+      return studyTechniqueIdsByStatus.stable;
+    }
+
     if (selectedCollectionId === 'all') {
       return new Set(allBookmarkedTechniques.map((technique) => technique.id));
     }
@@ -411,9 +475,24 @@ export const BookmarksView = ({
     }
 
     return membershipByCollection.get(selectedCollectionId) ?? new Set<string>();
-  }, [selectedCollectionId, allBookmarkedTechniques, ungroupedIds, membershipByCollection]);
+  }, [
+    selectedCollectionId,
+    allBookmarkedTechniques,
+    ungroupedIds,
+    membershipByCollection,
+    studyTechniqueIdsByStatus,
+  ]);
 
   const visibleGlossaryIds = useMemo(() => {
+    const studyStatusSelection = getStudyStatusForCollectionId(selectedCollectionId);
+    if (studyStatusSelection === 'practice') {
+      return studyGlossaryIdsByStatus.practice;
+    }
+
+    if (studyStatusSelection === 'stable') {
+      return studyGlossaryIdsByStatus.stable;
+    }
+
     if (selectedCollectionId === 'all') {
       return new Set(allBookmarkedGlossaryTerms.map((term) => term.id));
     }
@@ -428,9 +507,19 @@ export const BookmarksView = ({
     allBookmarkedGlossaryTerms,
     ungroupedGlossaryIds,
     glossaryMembershipByCollection,
+    studyGlossaryIdsByStatus,
   ]);
 
   const visibleExerciseIds = useMemo(() => {
+    const studyStatusSelection = getStudyStatusForCollectionId(selectedCollectionId);
+    if (studyStatusSelection === 'practice') {
+      return studyExerciseIdsByStatus.practice;
+    }
+
+    if (studyStatusSelection === 'stable') {
+      return studyExerciseIdsByStatus.stable;
+    }
+
     if (selectedCollectionId === 'all') {
       return new Set(allBookmarkedExercises.map((exercise) => exercise.id));
     }
@@ -445,21 +534,33 @@ export const BookmarksView = ({
     allBookmarkedExercises,
     ungroupedExerciseIds,
     exerciseMembershipByCollection,
+    studyExerciseIdsByStatus,
   ]);
 
   const visibleTechniques = useMemo(
-    () => allBookmarkedTechniques.filter((technique) => visibleTechniqueIds.has(technique.id)),
-    [allBookmarkedTechniques, visibleTechniqueIds],
+    () =>
+      (
+        getStudyStatusForCollectionId(selectedCollectionId) ? techniques : allBookmarkedTechniques
+      ).filter((technique) => visibleTechniqueIds.has(technique.id)),
+    [selectedCollectionId, techniques, allBookmarkedTechniques, visibleTechniqueIds],
   );
 
   const visibleGlossaryTerms = useMemo(
-    () => allBookmarkedGlossaryTerms.filter((term) => visibleGlossaryIds.has(term.id)),
-    [allBookmarkedGlossaryTerms, visibleGlossaryIds],
+    () =>
+      (
+        getStudyStatusForCollectionId(selectedCollectionId)
+          ? glossaryTerms
+          : allBookmarkedGlossaryTerms
+      ).filter((term) => visibleGlossaryIds.has(term.id)),
+    [selectedCollectionId, glossaryTerms, allBookmarkedGlossaryTerms, visibleGlossaryIds],
   );
 
   const visibleExercises = useMemo(
-    () => allBookmarkedExercises.filter((exercise) => visibleExerciseIds.has(exercise.id)),
-    [allBookmarkedExercises, visibleExerciseIds],
+    () =>
+      (
+        getStudyStatusForCollectionId(selectedCollectionId) ? exercises : allBookmarkedExercises
+      ).filter((exercise) => visibleExerciseIds.has(exercise.id)),
+    [selectedCollectionId, exercises, allBookmarkedExercises, visibleExerciseIds],
   );
 
   const sortedVisibleItems = useMemo((): VisibleBookmarkItem[] => {
@@ -556,6 +657,38 @@ export const BookmarksView = ({
     glossaryMembershipByCollection,
     exerciseMembershipByCollection,
   ]);
+
+  const studyCollectionCounts = useMemo(
+    () => ({
+      [STUDY_PRACTICE_COLLECTION_ID]:
+        studyTechniqueIdsByStatus.practice.size +
+        studyGlossaryIdsByStatus.practice.size +
+        studyExerciseIdsByStatus.practice.size,
+      [STUDY_STABLE_COLLECTION_ID]:
+        studyTechniqueIdsByStatus.stable.size +
+        studyGlossaryIdsByStatus.stable.size +
+        studyExerciseIdsByStatus.stable.size,
+    }),
+    [studyExerciseIdsByStatus, studyGlossaryIdsByStatus, studyTechniqueIdsByStatus],
+  );
+
+  const studyCollections = useMemo(
+    () => [
+      {
+        id: STUDY_PRACTICE_COLLECTION_ID,
+        name: copy.collectionsStudyPractice,
+        icon: null,
+        count: studyCollectionCounts[STUDY_PRACTICE_COLLECTION_ID],
+      },
+      {
+        id: STUDY_STABLE_COLLECTION_ID,
+        name: copy.collectionsStudyStable,
+        icon: null,
+        count: studyCollectionCounts[STUDY_STABLE_COLLECTION_ID],
+      },
+    ],
+    [copy.collectionsStudyPractice, copy.collectionsStudyStable, studyCollectionCounts],
+  );
 
   const allCount = bookmarkedIds.size + bookmarkedGlossaryIds.size + bookmarkedExerciseIds.size;
   const ungroupedCount = ungroupedIds.size + ungroupedGlossaryIds.size + ungroupedExerciseIds.size;
@@ -671,6 +804,7 @@ export const BookmarksView = ({
               icon: collection.icon ?? null,
               count: collectionCounts.get(collection.id) ?? 0,
             }))}
+            studyCollections={studyCollections}
             selectedId={selectedCollectionId}
             allCount={allCount}
             ungroupedCount={ungroupedCount}
@@ -679,7 +813,7 @@ export const BookmarksView = ({
             onRename={openRenameModal}
             onDelete={openDeleteModal}
             isEditing={isCollectionEditMode}
-            isEditDisabled={!isSpecificCollectionSelected}
+            isEditDisabled={!isUserCollectionSelected}
             onToggleEdit={handleToggleEdit}
           />
         </div>
@@ -693,6 +827,7 @@ export const BookmarksView = ({
                 icon: collection.icon ?? null,
                 count: collectionCounts.get(collection.id) ?? 0,
               }))}
+              studyCollections={studyCollections}
               selectedId={selectedCollectionId}
               allCount={allCount}
               ungroupedCount={ungroupedCount}
@@ -701,20 +836,13 @@ export const BookmarksView = ({
               onRename={openRenameModal}
               onDelete={openDeleteModal}
               isEditing={isCollectionEditMode}
-              isEditDisabled={!isSpecificCollectionSelected}
+              isEditDisabled={!isUserCollectionSelected}
               onToggleEdit={handleToggleEdit}
             />
           </ExpandableFilterBar>
 
           <section>
-            <motion.div
-              key={selectedCollectionId}
-              className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
-              variants={listMotion.container}
-              initial={false}
-              animate="show"
-              layout
-            >
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {renderedBookmarks.map((item, index) => {
                 const itemIndex = itemIndexById.get(item.itemId) ?? -1;
                 const disableBackward = itemIndex <= 0;
@@ -743,6 +871,7 @@ export const BookmarksView = ({
                       progress={progressById[technique.id]}
                       copy={copy}
                       onSelect={onOpenTechnique}
+                      studyStatus={getAggregateTechniqueStudyStatus(studyStatus, technique.slug)}
                       motionIndex={index}
                       variants={listMotion.item}
                       getTransition={getItemTransition}
@@ -751,7 +880,7 @@ export const BookmarksView = ({
                       summaryLines={3}
                       summarySlot={reorderControls}
                       onCardKeyDown={(event) => handleCardKeyDown(event, item.itemId)}
-                      enableLayoutAnimation
+                      enableLayoutAnimation={isCollectionEditMode}
                       actionSlot={
                         <AddToCollectionMenu
                           copy={copy}
@@ -789,6 +918,7 @@ export const BookmarksView = ({
                         progress={glossaryProgressById[term.id]}
                         copy={copy}
                         onSelect={onOpenGlossaryTerm}
+                        studyStatus={getStudyStatusForItem(studyStatus, 'term', term.slug)}
                         motionIndex={index}
                         variants={listMotion.item}
                         getTransition={getItemTransition}
@@ -796,7 +926,7 @@ export const BookmarksView = ({
                         isDimmed={activeCardId === item.itemId}
                         descriptionSlot={reorderControls}
                         onCardKeyDown={(event) => handleCardKeyDown(event, item.itemId)}
-                        enableLayoutAnimation
+                        enableLayoutAnimation={isCollectionEditMode}
                         actionSlot={
                           <AddToCollectionMenu
                             copy={copy}
@@ -832,6 +962,7 @@ export const BookmarksView = ({
                       exercise={exercise}
                       copy={copy}
                       locale={locale}
+                      studyStatus={getStudyStatusForItem(studyStatus, 'exercise', exercise.slug)}
                       onSelect={onOpenExercise}
                       motionIndex={index}
                       variants={listMotion.item}
@@ -842,7 +973,7 @@ export const BookmarksView = ({
                       headerAlign="center"
                       summarySlot={reorderControls}
                       onCardKeyDown={(event) => handleCardKeyDown(event, item.itemId)}
-                      enableLayoutAnimation
+                      enableLayoutAnimation={isCollectionEditMode}
                       actionSlot={
                         <AddToCollectionMenu
                           copy={copy}
@@ -882,15 +1013,11 @@ export const BookmarksView = ({
               )}
 
               {sortedVisibleItems.length === 0 && (
-                <motion.div
-                  className="col-span-full flex items-center justify-center min-h-[280px] py-6 text-sm text-subtle text-center border border-dashed border-[var(--color-border)] rounded-2xl mt-6 md:mt-0"
-                  variants={listMotion.item}
-                  transition={getItemTransition(0)}
-                >
+                <div className="col-span-full flex items-center justify-center min-h-[280px] py-6 text-sm text-subtle text-center border border-dashed border-[var(--color-border)] rounded-2xl mt-6 md:mt-0">
                   <div className="max-w-lg px-4">{emptyStateMessage}</div>
-                </motion.div>
+                </div>
               )}
-            </motion.div>
+            </div>
           </section>
         </div>
       </div>

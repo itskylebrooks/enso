@@ -15,6 +15,7 @@ type SidebarCollection = {
 type CollectionsSidebarProps = {
   copy: Copy;
   collections: SidebarCollection[];
+  studyCollections?: SidebarCollection[];
   selectedId: 'all' | 'ungrouped' | string;
   allCount: number;
   ungroupedCount: number;
@@ -30,6 +31,7 @@ type CollectionsSidebarProps = {
 export const CollectionsSidebar = ({
   copy,
   collections,
+  studyCollections = [],
   selectedId,
   allCount,
   ungroupedCount,
@@ -170,6 +172,27 @@ export const CollectionsSidebar = ({
             </motion.ul>
           </AnimatePresence>
         </LayoutGroup>
+
+        {studyCollections.length > 0 && (
+          <div className="pt-3">
+            <p className="px-2 pb-1 text-[11px] font-semibold tracking-wide uppercase text-subtle">
+              {copy.collectionsStudyGroup}
+            </p>
+            <ul className="space-y-1 text-sm">
+              {studyCollections.map((collection) => (
+                <li key={collection.id}>
+                  <SidebarButton
+                    active={selectedId === collection.id}
+                    label={collection.name}
+                    icon={collection.icon}
+                    count={collection.count}
+                    onClick={() => onSelect(collection.id)}
+                  />
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </nav>
     </div>
   );

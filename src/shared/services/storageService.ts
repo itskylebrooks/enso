@@ -24,6 +24,7 @@ import type {
   Locale,
   MediaType,
   Progress,
+  StudyStatusMap,
   StepsByEntry,
   Technique,
   TechniqueVersion,
@@ -34,6 +35,7 @@ import {
   normalizeCollectionItemIds,
   sanitizeCollectionItemIds,
 } from '../utils/collectionItems';
+import { sanitizeStudyStatusMap } from '../utils/studyStatus';
 
 const normalizeOptional = (value: string | undefined | null): string | undefined => {
   if (value == null) return undefined;
@@ -160,6 +162,7 @@ const buildDefaultDB = (): DB => ({
   progress: seedTechniques.map((technique) => buildDefaultProgress(technique.id)),
   glossaryProgress: [],
   exerciseProgress: [],
+  studyStatus: {},
   collections: [],
   bookmarkCollections: [],
   glossaryBookmarkCollections: [],
@@ -478,6 +481,7 @@ export const loadDB = (): DB => {
         progress: Array.isArray(parsed.progress) ? (parsed.progress as Progress[]) : [],
         glossaryProgress: [],
         exerciseProgress: [],
+        studyStatus: {},
         collections: normalizedCollections,
         bookmarkCollections: [],
         glossaryBookmarkCollections: [],
@@ -486,6 +490,7 @@ export const loadDB = (): DB => {
       }),
       glossaryProgress: ensureGlossaryProgress(parsed.glossaryProgress ?? []),
       exerciseProgress: ensureExerciseProgress(parsed.exerciseProgress ?? []),
+      studyStatus: sanitizeStudyStatusMap(parsed.studyStatus),
       collections: normalizedCollections,
       bookmarkCollections,
       glossaryBookmarkCollections,
@@ -645,6 +650,7 @@ export const exportDB = (db: DB): string => {
       bookmarkCollections: exportBookmarkCollections,
       glossaryBookmarkCollections: exportGlossaryBookmarkCollections,
       exerciseBookmarkCollections: exportExerciseBookmarkCollections,
+      studyStatus: db.studyStatus,
       animationsDisabled: loadAnimationsDisabled(),
     },
     null,
@@ -662,6 +668,7 @@ export const parseIncomingDB = (
   bookmarkCollections?: Array<{ techniqueId: string; collectionName: string }>;
   glossaryBookmarkCollections?: Array<{ termId: string; collectionName: string }>;
   exerciseBookmarkCollections?: Array<{ exerciseId: string; collectionName: string }>;
+  studyStatus?: StudyStatusMap;
   animationsDisabled?: boolean;
 } => {
   const parsed = JSON.parse(raw) as {
@@ -673,6 +680,7 @@ export const parseIncomingDB = (
     bookmarkCollections?: Array<{ techniqueId: string; collectionName: string }>;
     glossaryBookmarkCollections?: Array<{ termId: string; collectionName: string }>;
     exerciseBookmarkCollections?: Array<{ exerciseId: string; collectionName: string }>;
+    studyStatus?: StudyStatusMap;
     animationsDisabled?: boolean;
   };
 
@@ -698,6 +706,7 @@ export const parseIncomingDB = (
     exerciseBookmarkCollections: Array.isArray(parsed.exerciseBookmarkCollections)
       ? parsed.exerciseBookmarkCollections
       : [],
+    studyStatus: parsed.studyStatus ? sanitizeStudyStatusMap(parsed.studyStatus) : undefined,
     animationsDisabled:
       typeof parsed.animationsDisabled === 'boolean' ? parsed.animationsDisabled : undefined,
   };
@@ -859,6 +868,10 @@ export const importData = (currentDB: DB, importedData: ReturnType<typeof parseI
     progress: updatedProgress,
     glossaryProgress: finalGlossaryProgress,
     exerciseProgress: finalExerciseProgress,
+    studyStatus:
+      importedData.studyStatus !== undefined
+        ? sanitizeStudyStatusMap(importedData.studyStatus)
+        : currentDB.studyStatus,
     collections: normalizedImportedCollections,
     bookmarkCollections: importedBookmarkCollections,
     glossaryBookmarkCollections: importedGlossaryBookmarkCollections,

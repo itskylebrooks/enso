@@ -2,12 +2,20 @@ import type { KeyboardEvent, ReactElement, ReactNode, Ref } from 'react';
 import { motion, type Variants, type Transition } from 'motion/react';
 import type { Copy } from '@shared/constants/i18n';
 import { getTrainerInitialsById } from '@shared/constants/versionLabels';
-import type { EntryMode, Locale, Progress, Technique, TechniqueVariantKey } from '@shared/types';
+import type {
+  EntryMode,
+  Locale,
+  Progress,
+  StudyStatus,
+  Technique,
+  TechniqueVariantKey,
+} from '@shared/types';
 import { LevelBadge } from '@shared/components';
 import { EmphasizedName } from '@shared/components';
 import { getTaxonomyLabel } from '@shared/i18n/taxonomy';
 import { ENTRY_MODE_ORDER } from '@shared/constants/entryModes';
 import { getGradeStyle } from '@shared/styles/belts';
+import { StudyStatusIndicator } from '@shared/components/ui/StudyStatusIcon';
 
 type MotionProps = {
   variants: Variants;
@@ -36,6 +44,7 @@ export type TechniqueCardProps = {
   showEntryTags?: boolean;
   levelBadgePlacement?: 'footer' | 'header';
   levelBadgeStyle?: 'default' | 'number-circle';
+  studyStatus?: StudyStatus;
 } & MotionProps;
 
 export const TechniqueCard = ({
@@ -62,6 +71,7 @@ export const TechniqueCard = ({
   showEntryTags = true,
   levelBadgePlacement = 'footer',
   levelBadgeStyle = 'default',
+  studyStatus = 'none',
 }: TechniqueCardProps): ReactElement => {
   const bookmarkedVariant = progress?.bookmarkedVariant;
 
@@ -175,11 +185,19 @@ export const TechniqueCard = ({
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 space-y-1">
-          <div
-            className="text-base font-medium leading-snug line-clamp-2"
-            title={technique.name[locale]}
-          >
-            <EmphasizedName name={technique.name[locale]} />
+          <div className="flex items-start gap-2">
+            <div
+              className="min-w-0 flex-1 text-base font-medium leading-snug line-clamp-2"
+              title={technique.name[locale]}
+            >
+              <EmphasizedName name={technique.name[locale]} />
+            </div>
+            <StudyStatusIndicator
+              status={studyStatus}
+              practiceLabel={copy.collectionsStudyPractice}
+              stableLabel={copy.collectionsStudyStable}
+              className="mt-0.5"
+            />
           </div>
           {showJapanese && technique.jp && (
             <div className="text-xs text-subtle truncate">{technique.jp}</div>

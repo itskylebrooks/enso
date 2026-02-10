@@ -16,6 +16,7 @@ type CollectionOption = {
 type MobileCollectionsProps = {
   copy: Copy;
   collections: CollectionOption[];
+  studyCollections?: CollectionOption[];
   selectedId: SelectedCollectionId;
   allCount: number;
   ungroupedCount: number;
@@ -31,6 +32,7 @@ type MobileCollectionsProps = {
 export const MobileCollections = ({
   copy,
   collections,
+  studyCollections = [],
   selectedId,
   allCount,
   ungroupedCount,
@@ -170,6 +172,27 @@ export const MobileCollections = ({
             </motion.ul>
           </AnimatePresence>
         </LayoutGroup>
+
+        {studyCollections.length > 0 && (
+          <div className="pt-3">
+            <p className="px-2 pb-1 text-[11px] font-semibold tracking-wide uppercase text-subtle">
+              {copy.collectionsStudyGroup}
+            </p>
+            <ul className="space-y-1 text-sm">
+              {studyCollections.map((collection) => (
+                <li key={collection.id}>
+                  <SidebarButton
+                    active={selectedId === collection.id}
+                    label={collection.name}
+                    icon={collection.icon}
+                    count={collection.count}
+                    onClick={() => onSelect(collection.id)}
+                  />
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </nav>
     </div>
   );

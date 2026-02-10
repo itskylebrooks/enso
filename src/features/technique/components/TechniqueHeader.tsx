@@ -1,7 +1,7 @@
 import type { ReactElement } from 'react';
 import { motion } from 'motion/react';
 import type { Copy } from '@shared/constants/i18n';
-import type { Grade, Locale, Technique } from '@shared/types';
+import type { GlossaryTerm, Grade, Locale, StudyStatus, Technique } from '@shared/types';
 import { EmphasizedName } from '@shared/components';
 import { LevelBadge } from '@shared/components';
 import { AddToCollectionMenu } from '@features/bookmarks/components/AddToCollectionMenu';
@@ -9,8 +9,8 @@ import { Bookmark, BookmarkCheck } from 'lucide-react';
 import { useMotionPreferences } from '@shared/components/ui/motion';
 import { classNames } from '@shared/utils/classNames';
 import { getCategoryStyle } from '@shared/styles/terms';
-import type { GlossaryTerm } from '@shared/types';
 import { gradeLabel } from '@shared/utils/grades';
+import { StudyStatusButton } from '@shared/components/ui/StudyStatusButton';
 
 export type CollectionOption = {
   id: string;
@@ -34,6 +34,8 @@ export type TechniqueHeaderProps = {
   tags: TagItem[];
   isBookmarked: boolean;
   onToggleBookmark: () => void;
+  studyStatus: StudyStatus;
+  onToggleStudyStatus: () => void;
   collections: CollectionOption[];
   onToggleCollection: (collectionId: string, nextChecked: boolean) => void;
   onCreateCollection?: () => void;
@@ -51,6 +53,8 @@ export const TechniqueHeader = ({
   tags,
   isBookmarked,
   onToggleBookmark,
+  studyStatus,
+  onToggleStudyStatus,
   collections,
   onToggleCollection,
   onCreateCollection,
@@ -59,6 +63,12 @@ export const TechniqueHeader = ({
 }: TechniqueHeaderProps): ReactElement => {
   const { toggleTransition, prefersReducedMotion } = useMotionPreferences();
   const levelLabel = gradeLabel(technique.level, locale);
+  const studyLabel =
+    studyStatus === 'none'
+      ? copy.studyMarkPractice
+      : studyStatus === 'practice'
+        ? copy.studyMarkStable
+        : copy.studyClearStatus;
 
   // Map tag to glossary category for appropriate styling
   const getTagCategory = (tag: string): GlossaryTerm['category'] => {
@@ -224,6 +234,16 @@ export const TechniqueHeader = ({
               )}
             </div>
             <div className="flex gap-2">
+              <StudyStatusButton
+                status={studyStatus}
+                label={studyLabel}
+                onClick={onToggleStudyStatus}
+                popupTextByStatus={{
+                  none: copy.toastStudyCleared,
+                  practice: copy.toastStudyPractice,
+                  stable: copy.toastStudyStable,
+                }}
+              />
               <AddToCollectionMenu
                 copy={copy}
                 collections={collections}

@@ -1,9 +1,9 @@
 import type { KeyboardEvent, ReactElement, ReactNode, Ref } from 'react';
 import { motion, type Variants, type Transition } from 'motion/react';
-import type { GlossaryTerm, GlossaryProgress } from '../../../shared/types';
-import type { Locale } from '../../../shared/types';
+import type { GlossaryTerm, GlossaryProgress, Locale, StudyStatus } from '../../../shared/types';
 import type { Copy } from '../../../shared/constants/i18n';
 import { getCategoryStyle, getCategoryLabel } from '../../../shared/styles/terms';
+import { StudyStatusIndicator } from '@shared/components/ui/StudyStatusIcon';
 
 type MotionProps = {
   variants: Variants;
@@ -24,6 +24,7 @@ type TermBookmarkCardProps = {
   onCardKeyDown?: (event: KeyboardEvent<HTMLDivElement>) => void;
   cardRef?: Ref<HTMLDivElement>;
   enableLayoutAnimation?: boolean;
+  studyStatus?: StudyStatus;
 } & MotionProps;
 
 export const TermBookmarkCard = ({
@@ -41,6 +42,7 @@ export const TermBookmarkCard = ({
   onCardKeyDown,
   cardRef,
   enableLayoutAnimation = false,
+  studyStatus = 'none',
 }: TermBookmarkCardProps): ReactElement => {
   const definition = term.def[locale] || term.def.en;
   const categoryLabel = getCategoryLabel(term.category, copy);
@@ -69,7 +71,7 @@ export const TermBookmarkCard = ({
       onClick={handleActivate}
       onKeyDown={handleKeyDown}
       className={
-        `relative surface border surface-border rounded-2xl p-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] flex flex-col gap-3 text-left card-hover-shadow` +
+        `surface border surface-border rounded-2xl p-4 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] flex flex-col gap-3 text-left card-hover-shadow` +
         (isDimmed ? ' pointer-events-none opacity-70 blur-card' : '')
       }
       initial={false}
@@ -81,9 +83,20 @@ export const TermBookmarkCard = ({
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 space-y-1">
-          <h3 className="text-base font-medium leading-snug line-clamp-2" title={term.romaji}>
-            {term.romaji}
-          </h3>
+          <div className="flex items-start gap-2">
+            <h3
+              className="min-w-0 flex-1 text-base font-medium leading-snug line-clamp-2"
+              title={term.romaji}
+            >
+              {term.romaji}
+            </h3>
+            <StudyStatusIndicator
+              status={studyStatus}
+              practiceLabel={copy.collectionsStudyPractice}
+              stableLabel={copy.collectionsStudyStable}
+              className="mt-0.5"
+            />
+          </div>
           {term.jp && <div className="text-xs text-subtle truncate">{term.jp}</div>}
         </div>
         <div className="flex items-center gap-2">{actionSlot}</div>

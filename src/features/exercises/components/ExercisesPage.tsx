@@ -2,11 +2,18 @@ import { useEffect, useMemo, useState } from 'react';
 import type { ReactElement } from 'react';
 import { motion } from 'motion/react';
 import type { Copy } from '@shared/constants/i18n';
-import type { Exercise, Locale, PracticeCategory, PracticeEquipment } from '@shared/types';
+import type {
+  Exercise,
+  Locale,
+  PracticeCategory,
+  PracticeEquipment,
+  StudyStatusMap,
+} from '@shared/types';
 import { useMotionPreferences } from '@shared/components/ui/motion';
 import { useIncrementalList } from '@shared/hooks/useIncrementalList';
 import { ExerciseCard } from './ExerciseCard';
 import { loadAllExercises } from '../loader';
+import { getStudyStatusForItem } from '@shared/utils/studyStatus';
 
 export type ExerciseFilters = {
   categories: PracticeCategory[];
@@ -16,6 +23,7 @@ export type ExerciseFilters = {
 type ExercisesPageProps = {
   copy: Copy;
   locale: Locale;
+  studyStatus: StudyStatusMap;
   filters: ExerciseFilters;
   onOpenExercise: (slug: string) => void;
 };
@@ -23,6 +31,7 @@ type ExercisesPageProps = {
 export const ExercisesPage = ({
   copy,
   locale,
+  studyStatus,
   filters,
   onOpenExercise,
 }: ExercisesPageProps): ReactElement => {
@@ -122,6 +131,7 @@ export const ExercisesPage = ({
           exercise={exercise}
           copy={copy}
           locale={locale}
+          studyStatus={getStudyStatusForItem(studyStatus, 'exercise', exercise.slug)}
           onSelect={onOpenExercise}
           motionIndex={index}
           variants={listMotion.item}

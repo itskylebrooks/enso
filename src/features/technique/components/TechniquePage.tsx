@@ -18,6 +18,7 @@ import type {
   Grade,
   Locale,
   Progress,
+  StudyStatusMap,
   Technique,
   TechniqueVariantKey,
   WeaponKind,
@@ -32,6 +33,8 @@ import { StepsList } from './StepsList';
 import { TechniqueHeader, type CollectionOption } from './TechniqueHeader';
 import { TechniqueToolbar, type TechniqueToolbarValue } from './TechniqueToolbar';
 import { UkePanel } from './UkePanel';
+import { isVariantBookmarked } from '@shared/utils/variantKeys';
+import { getStudyStatusForTechniqueVariant } from '@shared/utils/studyStatus';
 
 type TagItem = { label: string; kind: 'category' | 'stance' | 'attack' | 'weapon' | 'entry' };
 
@@ -113,6 +116,8 @@ type TechniquePageProps = {
   backLabel: string;
   onBack: () => void;
   onToggleBookmark: (bookmarkedVariant: TechniqueVariantKey) => void;
+  studyStatusMap: StudyStatusMap;
+  onToggleStudyStatus: (variant: TechniqueVariantKey) => void;
   collections: Collection[];
   bookmarkCollections: BookmarkCollection[];
   onAssignToCollection: (collectionId: string) => void;
@@ -231,6 +236,8 @@ export const TechniquePage = ({
   backLabel,
   onBack,
   onToggleBookmark,
+  studyStatusMap,
+  onToggleStudyStatus,
   collections,
   bookmarkCollections,
   onAssignToCollection,
@@ -477,7 +484,18 @@ export const TechniquePage = ({
     [onVariantChange, variantExists, availableVariants, toolbarValue, technique.slug],
   );
 
-  const bookmarkedActive = Boolean(progress?.bookmarked);
+  const currentBookmarkVariant: TechniqueVariantKey = {
+    hanmi: toolbarValue.hanmi,
+    direction: toolbarValue.direction,
+    weapon: toolbarValue.weapon,
+    versionId: toolbarValue.versionId ?? null,
+  };
+  const bookmarkedActive = isVariantBookmarked(progress, currentBookmarkVariant);
+  const currentStudyStatus = getStudyStatusForTechniqueVariant(
+    studyStatusMap,
+    technique.slug,
+    currentBookmarkVariant,
+  );
   const collectionOptions = useMemo(
     () => getCollectionOptions(collections, bookmarkCollections, technique.id),
     [collections, bookmarkCollections, technique.id],
@@ -540,13 +558,6 @@ export const TechniquePage = ({
     standard: copy.versionBase ?? 'Base',
   };
 
-  const currentBookmarkVariant: TechniqueVariantKey = {
-    hanmi: toolbarValue.hanmi,
-    direction: toolbarValue.direction,
-    weapon: toolbarValue.weapon,
-    versionId: toolbarValue.versionId ?? null,
-  };
-
   return (
     <motion.main
       className="mx-auto max-w-4xl px-4 sm:px-6 py-6 space-y-6"
@@ -564,6 +575,8 @@ export const TechniquePage = ({
         tags={tags}
         isBookmarked={bookmarkedActive}
         onToggleBookmark={() => onToggleBookmark(currentBookmarkVariant)}
+        studyStatus={currentStudyStatus}
+        onToggleStudyStatus={() => onToggleStudyStatus(currentBookmarkVariant)}
         collections={collectionOptions}
         onToggleCollection={handleCollectionToggle}
         onCreateCollection={openCreateDialog}

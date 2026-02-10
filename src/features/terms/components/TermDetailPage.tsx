@@ -13,6 +13,8 @@ import { getCategoryStyle, getCategoryLabel } from '../../../shared/styles/terms
 import BreathingDot from '@shared/components/ui/BreathingDot';
 import { NameModal } from '@shared/components/ui/modals/NameModal';
 import { addRecent } from '@shared/services/recentsService';
+import type { StudyStatus } from '@shared/types';
+import { StudyStatusButton } from '@shared/components/ui/StudyStatusButton';
 
 export type CollectionOption = {
   id: string;
@@ -29,6 +31,8 @@ type TermDetailPageProps = {
   backLabel?: string;
   isBookmarked: boolean;
   onToggleBookmark: () => void;
+  studyStatus: StudyStatus;
+  onToggleStudyStatus: () => void;
   collections: CollectionOption[];
   onToggleCollection: (collectionId: string, nextChecked: boolean) => void;
   onCreateCollection?: (name: string) => string | null;
@@ -43,6 +47,8 @@ export const TermDetailPage = ({
   backLabel,
   isBookmarked,
   onToggleBookmark,
+  studyStatus,
+  onToggleStudyStatus,
   collections,
   onToggleCollection,
   onCreateCollection,
@@ -117,6 +123,12 @@ export const TermDetailPage = ({
   const categoryStyle = getCategoryStyle(term.category);
   const definitionLabel = locale === 'de' ? 'Definition' : 'Definition';
   const literalLabel = locale === 'de' ? 'Wortbedeutung' : 'Literal Translation';
+  const studyLabel =
+    studyStatus === 'none'
+      ? copy.studyMarkPractice
+      : studyStatus === 'practice'
+        ? copy.studyMarkStable
+        : copy.studyClearStatus;
 
   return (
     <motion.main
@@ -164,6 +176,16 @@ export const TermDetailPage = ({
             </div>
 
             <div className="flex items-center gap-2">
+              <StudyStatusButton
+                status={studyStatus}
+                label={studyLabel}
+                onClick={onToggleStudyStatus}
+                popupTextByStatus={{
+                  none: copy.toastStudyCleared,
+                  practice: copy.toastStudyPractice,
+                  stable: copy.toastStudyStable,
+                }}
+              />
               <AddToCollectionMenu
                 copy={copy}
                 collections={collections}

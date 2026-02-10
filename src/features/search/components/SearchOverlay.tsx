@@ -21,6 +21,7 @@ import type {
   GlossaryTerm,
   Locale,
   Progress,
+  StudyStatusMap,
   Technique,
 } from '../../../shared/types';
 import { loadAllTerms } from '../../terms/loader';
@@ -37,6 +38,8 @@ import {
   parseSearchFilterToken,
   type SearchTokenFilter,
 } from '../tokenFilters';
+import { getAggregateTechniqueStudyStatus, getStudyStatusForItem } from '@shared/utils/studyStatus';
+import { StudyStatusIcon } from '@shared/components/ui/StudyStatusIcon';
 
 type SearchResult =
   | { type: 'technique'; item: Technique }
@@ -51,6 +54,7 @@ type SearchOverlayProps = {
   progress: Progress[];
   glossaryProgress: GlossaryProgress[];
   exerciseProgress: ExerciseProgress[];
+  studyStatus: StudyStatusMap;
   onClose: () => void;
   onOpen: (slug: string) => void;
   onOpenGlossary: (slug: string) => void;
@@ -72,6 +76,7 @@ export const SearchOverlay = ({
   progress,
   glossaryProgress,
   exerciseProgress,
+  studyStatus,
   onClose,
   onOpen,
   onOpenGlossary,
@@ -411,6 +416,16 @@ export const SearchOverlay = ({
     }
   };
 
+  const getResultStudyStatus = (result: SearchResult) => {
+    if (result.type === 'technique') {
+      return getAggregateTechniqueStudyStatus(studyStatus, result.item.slug);
+    }
+    if (result.type === 'glossary') {
+      return getStudyStatusForItem(studyStatus, 'term', result.item.slug);
+    }
+    return getStudyStatusForItem(studyStatus, 'exercise', result.item.slug);
+  };
+
   return (
     <motion.div
       className="fixed inset-0 z-40 flex items-start justify-center pt-4 sm:pt-[15vh] px-4 bg-black/45"
@@ -522,195 +537,211 @@ export const SearchOverlay = ({
               )}
 
               {results.length > 0 ? (
-                results.map((result, index) => (
-                  <div
-                    key={result.type === 'technique' ? result.item.id : result.item.id}
-                    ref={(el) => {
-                      resultRefs.current[index] = el;
-                    }}
-                    role="button"
-                    tabIndex={-1}
-                    onClick={(event) => {
-                      const openInNewTab = event.metaKey || event.ctrlKey;
-                      if (result.type === 'technique') {
-                        onOpen(result.item.slug);
-                      } else if (result.type === 'glossary') {
-                        onOpenGlossary(result.item.slug);
-                      } else {
-                        onOpenExercise(result.item.slug);
+                results.map((result, index) => {
+                  const resultStudyStatus = getResultStudyStatus(result);
+
+                  return (
+                    <div
+                      key={result.type === 'technique' ? result.item.id : result.item.id}
+                      ref={(el) => {
+                        resultRefs.current[index] = el;
+                      }}
+                      role="button"
+                      tabIndex={-1}
+                      onClick={(event) => {
+                        const openInNewTab = event.metaKey || event.ctrlKey;
+                        if (result.type === 'technique') {
+                          onOpen(result.item.slug);
+                        } else if (result.type === 'glossary') {
+                          onOpenGlossary(result.item.slug);
+                        } else {
+                          onOpenExercise(result.item.slug);
+                        }
+                        if (!openInNewTab) {
+                          onClose();
+                        }
+                      }}
+                      onMouseEnter={() => {
+                        if (!pointerEnabled) return;
+                        setSelectedIndex(index);
+                      }}
+                      className="relative flex w-full items-baseline justify-between gap-4 rounded-xl px-3 py-3 text-left transition-colors z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--color-text)]"
+                      title={
+                        result.type === 'technique'
+                          ? result.item.name[locale]
+                          : result.type === 'glossary'
+                            ? result.item.romaji
+                            : result.item.name[locale]
                       }
-                      if (!openInNewTab) {
-                        onClose();
-                      }
-                    }}
-                    onMouseEnter={() => {
-                      if (!pointerEnabled) return;
-                      setSelectedIndex(index);
-                    }}
-                    className="relative flex w-full items-baseline justify-between gap-4 rounded-xl px-3 py-3 text-left transition-colors z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[color:var(--color-text)]"
-                    title={
-                      result.type === 'technique'
-                        ? result.item.name[locale]
-                        : result.type === 'glossary'
-                          ? result.item.romaji
-                          : result.item.name[locale]
-                    }
-                  >
-                    <div className="min-w-0 flex-1">
-                      {result.type === 'technique' ? (
-                        <>
-                          <div className="truncate text-sm font-semibold text-[color:var(--color-text)]">
-                            <EmphasizedName name={result.item.name[locale]} />
-                          </div>
-                          <div className="mt-1 text-xs font-medium text-subtle truncate mb-1">
-                            {result.item.summary?.[locale] ?? result.item.summary?.en}
-                          </div>
-                        </>
-                      ) : result.type === 'glossary' ? (
-                        <>
-                          <div className="flex items-center gap-2 mb-1">
+                    >
+                      <div className="min-w-0 flex-1">
+                        {result.type === 'technique' ? (
+                          <>
                             <div className="truncate text-sm font-semibold text-[color:var(--color-text)]">
-                              {result.item.romaji}
+                              <EmphasizedName name={result.item.name[locale]} />
                             </div>
-                          </div>
-                          <div className="text-xs font-medium text-subtle truncate mb-1">
-                            {result.item.def[locale] || result.item.def.en}
-                          </div>
-                          {/* Japanese name intentionally omitted in search results */}
-                        </>
-                      ) : (
-                        <>
-                          <div className="truncate text-sm font-semibold text-[color:var(--color-text)]">
-                            <EmphasizedName name={result.item.name[locale]} />
-                          </div>
-                          <div className="mt-1 text-xs font-medium text-subtle truncate mb-1">
-                            {result.item.summary?.[locale] ?? result.item.summary?.en}
-                          </div>
-                        </>
-                      )}
-                    </div>
-                    {/* Right-side label: technique belt or glossary label */}
-                    <div className="flex-shrink-0 ml-3 min-w-[3.5rem] flex flex-col items-center gap-2">
-                      {result.type === 'technique' ? (
-                        <>
+                            <div className="mt-1 text-xs font-medium text-subtle truncate mb-1">
+                              {result.item.summary?.[locale] ?? result.item.summary?.en}
+                            </div>
+                          </>
+                        ) : result.type === 'glossary' ? (
+                          <>
+                            <div className="flex items-center gap-2 mb-1">
+                              <div className="truncate text-sm font-semibold text-[color:var(--color-text)]">
+                                {result.item.romaji}
+                              </div>
+                            </div>
+                            <div className="text-xs font-medium text-subtle truncate mb-1">
+                              {result.item.def[locale] || result.item.def.en}
+                            </div>
+                            {/* Japanese name intentionally omitted in search results */}
+                          </>
+                        ) : (
+                          <>
+                            <div className="truncate text-sm font-semibold text-[color:var(--color-text)]">
+                              <EmphasizedName name={result.item.name[locale]} />
+                            </div>
+                            <div className="mt-1 text-xs font-medium text-subtle truncate mb-1">
+                              {result.item.summary?.[locale] ?? result.item.summary?.en}
+                            </div>
+                          </>
+                        )}
+                      </div>
+                      {/* Right-side label: technique belt or glossary label */}
+                      <div className="flex-shrink-0 ml-3 min-w-[3.5rem] flex flex-col items-center gap-2">
+                        {resultStudyStatus !== 'none' && (
                           <span
-                            className="text-[0.65rem] font-medium px-2 py-0.5 rounded-full border border-transparent whitespace-nowrap"
-                            style={(() => {
-                              const style = getGradeStyle(result.item.level);
-                              return {
-                                backgroundColor: style.backgroundColor,
-                                color: style.color,
-                                borderColor: style.borderColor,
-                              };
-                            })()}
-                          >
-                            {gradeLabel(result.item.level, locale)}
-                          </span>
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onToggleTechniqueBookmark?.(result.item.id);
-                            }}
-                            aria-label={
-                              progress.find((p) => p.techniqueId === result.item.id && p.bookmarked)
-                                ? 'Unbookmark'
-                                : 'Bookmark'
+                            className="inline-flex h-5 w-5 items-center justify-center rounded-full border surface-border bg-[var(--color-surface)] text-subtle"
+                            title={
+                              resultStudyStatus === 'practice'
+                                ? copy.collectionsStudyPractice
+                                : copy.collectionsStudyStable
                             }
-                            className="p-1 -mt-1"
                           >
-                            {progress.find(
-                              (p) => p.techniqueId === result.item.id && p.bookmarked,
-                            ) ? (
-                              <Bookmark
-                                className="w-4 h-4 text-subtle"
-                                aria-hidden
-                                fill="currentColor"
-                                stroke="none"
-                              />
-                            ) : (
-                              <Bookmark className="w-4 h-4 text-subtle" aria-hidden />
-                            )}
-                          </button>
-                        </>
-                      ) : result.type === 'glossary' ? (
-                        <>
-                          <span
-                            className="text-[0.65rem] font-medium px-2 py-0.5 rounded-full"
-                            style={{ backgroundColor: '#474747', color: '#FFFFFF' }}
-                          >
-                            {copy.glossary}
+                            <StudyStatusIcon status={resultStudyStatus} className="h-3 w-3" />
                           </span>
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onToggleGlossaryBookmark?.(result.item.id);
-                            }}
-                            aria-label={
-                              glossaryProgress.find(
+                        )}
+                        {result.type === 'technique' ? (
+                          <>
+                            <span
+                              className="text-[0.65rem] font-medium px-2 py-0.5 rounded-full border border-transparent whitespace-nowrap"
+                              style={(() => {
+                                const style = getGradeStyle(result.item.level);
+                                return {
+                                  backgroundColor: style.backgroundColor,
+                                  color: style.color,
+                                  borderColor: style.borderColor,
+                                };
+                              })()}
+                            >
+                              {gradeLabel(result.item.level, locale)}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onToggleTechniqueBookmark?.(result.item.id);
+                              }}
+                              aria-label={
+                                progress.find((p) => p.techniqueId === result.item.id && p.bookmarked)
+                                  ? 'Unbookmark'
+                                  : 'Bookmark'
+                              }
+                              className="p-1 -mt-1"
+                            >
+                              {progress.find(
+                                (p) => p.techniqueId === result.item.id && p.bookmarked,
+                              ) ? (
+                                <Bookmark
+                                  className="w-4 h-4 text-subtle"
+                                  aria-hidden
+                                  fill="currentColor"
+                                  stroke="none"
+                                />
+                              ) : (
+                                <Bookmark className="w-4 h-4 text-subtle" aria-hidden />
+                              )}
+                            </button>
+                          </>
+                        ) : result.type === 'glossary' ? (
+                          <>
+                            <span
+                              className="text-[0.65rem] font-medium px-2 py-0.5 rounded-full"
+                              style={{ backgroundColor: '#474747', color: '#FFFFFF' }}
+                            >
+                              {copy.glossary}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onToggleGlossaryBookmark?.(result.item.id);
+                              }}
+                              aria-label={
+                                glossaryProgress.find(
+                                  (g) => g.termId === result.item.id && g.bookmarked,
+                                )
+                                  ? 'Unbookmark'
+                                  : 'Bookmark'
+                              }
+                              className="p-1 -mt-1"
+                            >
+                              {glossaryProgress.find(
                                 (g) => g.termId === result.item.id && g.bookmarked,
-                              )
-                                ? 'Unbookmark'
-                                : 'Bookmark'
-                            }
-                            className="p-1 -mt-1"
-                          >
-                            {glossaryProgress.find(
-                              (g) => g.termId === result.item.id && g.bookmarked,
-                            ) ? (
-                              <Bookmark
-                                className="w-4 h-4 text-subtle"
-                                aria-hidden
-                                fill="currentColor"
-                                stroke="none"
-                              />
-                            ) : (
-                              <Bookmark className="w-4 h-4 text-subtle" aria-hidden />
-                            )}
-                          </button>
-                        </>
-                      ) : (
-                        <>
-                          <span
-                            className="text-[0.65rem] font-medium px-2 py-0.5 rounded-full"
-                            style={{ backgroundColor: '#7C3AED', color: '#FFFFFF' }}
-                          >
-                            {copy.practice}
-                          </span>
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              onToggleExerciseBookmark?.(result.item.id);
-                            }}
-                            aria-label={
-                              exerciseProgress.find(
+                              ) ? (
+                                <Bookmark
+                                  className="w-4 h-4 text-subtle"
+                                  aria-hidden
+                                  fill="currentColor"
+                                  stroke="none"
+                                />
+                              ) : (
+                                <Bookmark className="w-4 h-4 text-subtle" aria-hidden />
+                              )}
+                            </button>
+                          </>
+                        ) : (
+                          <>
+                            <span
+                              className="text-[0.65rem] font-medium px-2 py-0.5 rounded-full"
+                              style={{ backgroundColor: '#7C3AED', color: '#FFFFFF' }}
+                            >
+                              {copy.practice}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                onToggleExerciseBookmark?.(result.item.id);
+                              }}
+                              aria-label={
+                                exerciseProgress.find(
+                                  (p) => p.exerciseId === result.item.id && p.bookmarked,
+                                )
+                                  ? 'Unbookmark'
+                                  : 'Bookmark'
+                              }
+                              className="p-1 -mt-1"
+                            >
+                              {exerciseProgress.find(
                                 (p) => p.exerciseId === result.item.id && p.bookmarked,
-                              )
-                                ? 'Unbookmark'
-                                : 'Bookmark'
-                            }
-                            className="p-1 -mt-1"
-                          >
-                            {exerciseProgress.find(
-                              (p) => p.exerciseId === result.item.id && p.bookmarked,
-                            ) ? (
-                              <Bookmark
-                                className="w-4 h-4 text-subtle"
-                                aria-hidden
-                                fill="currentColor"
-                                stroke="none"
-                              />
-                            ) : (
-                              <Bookmark className="w-4 h-4 text-subtle" aria-hidden />
-                            )}
-                          </button>
-                        </>
-                      )}
+                              ) ? (
+                                <Bookmark
+                                  className="w-4 h-4 text-subtle"
+                                  aria-hidden
+                                  fill="currentColor"
+                                  stroke="none"
+                                />
+                              ) : (
+                                <Bookmark className="w-4 h-4 text-subtle" aria-hidden />
+                              )}
+                            </button>
+                          </>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))
+                  );
+                })
               ) : (
                 <div className="px-3 py-6 text-sm text-subtle">
                   {query.trim().length === 0 ? 'Start typing to search...' : 'No results'}
