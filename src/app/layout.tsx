@@ -3,8 +3,40 @@ import type { ReactNode } from 'react';
 import { PwaRegistration } from './_components/PwaRegistration';
 import './globals.css';
 
+const resolveMetadataBase = (): URL => {
+  const parseCandidate = (value: string): URL | null => {
+    try {
+      return new URL(value);
+    } catch {
+      try {
+        return new URL(`https://${value}`);
+      } catch {
+        return null;
+      }
+    }
+  };
+
+  const explicitSiteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? process.env.SITE_URL;
+  if (explicitSiteUrl) {
+    const parsed = parseCandidate(explicitSiteUrl);
+    if (parsed) {
+      return parsed;
+    }
+  }
+
+  const vercelUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL ?? process.env.VERCEL_URL;
+  if (vercelUrl) {
+    const parsed = parseCandidate(vercelUrl);
+    if (parsed) {
+      return parsed;
+    }
+  }
+
+  return new URL('http://localhost:3000');
+};
+
 export const metadata: Metadata = {
-  metadataBase: new URL('https://enso.jetzt'),
+  metadataBase: resolveMetadataBase(),
   title: 'Enso',
   description: 'Aikidō study companion',
   applicationName: 'Enso',
@@ -75,6 +107,28 @@ const themeInitScript = `
 })();
 `;
 
+const pwaInstallPromptScript = `
+(() => {
+  if (typeof window === 'undefined' || window.__ensoPwaPromptInit) {
+    return;
+  }
+
+  window.__ensoPwaPromptInit = true;
+  window.__ensoDeferredPrompt = window.__ensoDeferredPrompt ?? null;
+
+  window.addEventListener('beforeinstallprompt', (event) => {
+    event.preventDefault();
+    window.__ensoDeferredPrompt = event;
+    window.dispatchEvent(new Event('enso:pwa-install-available'));
+  });
+
+  window.addEventListener('appinstalled', () => {
+    window.__ensoDeferredPrompt = null;
+    window.dispatchEvent(new Event('enso:pwa-installed'));
+  });
+})();
+`;
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -86,6 +140,7 @@ export default function RootLayout({
         <meta name="color-scheme" content="light dark" />
         <meta name="darkreader-lock" />
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        <script dangerouslySetInnerHTML={{ __html: pwaInstallPromptScript }} />
       </head>
       <body suppressHydrationWarning>
         <PwaRegistration />

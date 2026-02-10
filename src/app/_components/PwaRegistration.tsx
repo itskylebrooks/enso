@@ -4,15 +4,6 @@ import { useEffect } from 'react';
 
 const UPDATE_INTERVAL_MS = 60 * 60 * 1000;
 
-interface BeforeInstallPromptEvent extends Event {
-  prompt: () => Promise<void>;
-  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
-}
-
-type PwaWindow = Window & {
-  __ensoDeferredPrompt?: BeforeInstallPromptEvent | null;
-};
-
 export const PwaRegistration = () => {
   useEffect(() => {
     if (typeof window === 'undefined') {
@@ -77,29 +68,12 @@ export const PwaRegistration = () => {
       }
     };
 
-    const handleBeforeInstallPrompt = (event: Event) => {
-      event.preventDefault();
-      const installEvent = event as BeforeInstallPromptEvent;
-      (window as PwaWindow).__ensoDeferredPrompt = installEvent;
-      window.dispatchEvent(new Event('enso:pwa-install-available'));
-    };
-
-    const handleAppInstalled = () => {
-      (window as PwaWindow).__ensoDeferredPrompt = null;
-      window.dispatchEvent(new Event('enso:pwa-installed'));
-    };
-
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-    window.addEventListener('appinstalled', handleAppInstalled);
-
     if (canRegisterServiceWorker) {
       navigator.serviceWorker.addEventListener('controllerchange', handleControllerChange);
       void registerServiceWorker();
     }
 
     return () => {
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-      window.removeEventListener('appinstalled', handleAppInstalled);
       if (canRegisterServiceWorker) {
         navigator.serviceWorker.removeEventListener('controllerchange', handleControllerChange);
       }
