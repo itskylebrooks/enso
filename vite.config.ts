@@ -58,7 +58,7 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,png,svg,json,woff2}'],
         runtimeCaching: [
           {
-            urlPattern: /^https:\/\/enso-kb\.vercel\.app\/.*$/,
+            urlPattern: /^https:\/\/enso\.jetzt\/.*$/,
             handler: 'NetworkFirst',
             options: {
               cacheName: 'enso-pages',

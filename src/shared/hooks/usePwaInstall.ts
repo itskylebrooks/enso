@@ -6,6 +6,17 @@ interface BeforeInstallPromptEvent extends Event {
   userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
 }
 
+type PwaWindow = Window & {
+  __ensoDeferredPrompt?: BeforeInstallPromptEvent | null;
+};
+
+const getStoredDeferredPrompt = (): BeforeInstallPromptEvent | null => {
+  if (typeof window === 'undefined') {
+    return deferredPrompt;
+  }
+  return (window as PwaWindow).__ensoDeferredPrompt ?? deferredPrompt;
+};
+
 function isIOS(): boolean {
   if (typeof navigator === 'undefined') return false;
   return /iPad|iPhone|iPod/.test(navigator.userAgent);
@@ -22,23 +33,13 @@ function isSafari(): boolean {
   return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 }
 
-// Store the event globally to catch it even before the component mounts
 let deferredPrompt: BeforeInstallPromptEvent | null = null;
-
-// Catch the event as early as possible
-if (typeof window !== 'undefined') {
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e as BeforeInstallPromptEvent;
-    console.log('PWA: beforeinstallprompt event captured globally');
-  });
-}
 
 export const usePwaInstall = (copy: Copy) => {
   const [installPromptEvent, setInstallPromptEvent] = useState<BeforeInstallPromptEvent | null>(
-    deferredPrompt,
+    getStoredDeferredPrompt(),
   );
-  const [isInstallable, setIsInstallable] = useState(true); // Default to true, assume installable until proven otherwise
+  const [isInstallable, setIsInstallable] = useState(Boolean(getStoredDeferredPrompt()));
   const [isInstalled, setIsInstalled] = useState(false);
   const [isIosDevice, setIsIosDevice] = useState(false);
   const [isAndroidDevice, setIsAndroidDevice] = useState(false);
@@ -63,28 +64,38 @@ export const usePwaInstall = (copy: Copy) => {
       return;
     }
 
-    // On iOS, always show as installable (since they use Share menu)
-    if (iosDevice) {
+    // iOS/Safari desktop install flows are browser-menu based, not beforeinstallprompt.
+    if (iosDevice || safariDesktop) {
       setIsInstallable(true);
       return;
     }
 
-    // If we already caught the event globally, use it
-    if (deferredPrompt) {
-      setInstallPromptEvent(deferredPrompt);
+    const existingPrompt = getStoredDeferredPrompt();
+    if (existingPrompt) {
+      deferredPrompt = existingPrompt;
+      setInstallPromptEvent(existingPrompt);
       setIsInstallable(true);
-      console.log('PWA: Using globally captured install prompt');
+    } else {
+      setIsInstallable(false);
     }
 
     const handleBeforeInstallPrompt = (e: Event) => {
-      // Prevent the mini-infobar from appearing on mobile
       e.preventDefault();
       const event = e as BeforeInstallPromptEvent;
-      // Save the event for later use
       deferredPrompt = event;
+      (window as PwaWindow).__ensoDeferredPrompt = event;
       setInstallPromptEvent(event);
       setIsInstallable(true);
-      console.log('PWA: beforeinstallprompt event captured in hook');
+    };
+
+    const handleInstallAvailable = () => {
+      const prompt = getStoredDeferredPrompt();
+      if (!prompt) {
+        return;
+      }
+      deferredPrompt = prompt;
+      setInstallPromptEvent(prompt);
+      setIsInstallable(true);
     };
 
     const handleAppInstalled = () => {
@@ -92,72 +103,54 @@ export const usePwaInstall = (copy: Copy) => {
       setIsInstallable(false);
       setInstallPromptEvent(null);
       deferredPrompt = null;
-      console.log('PWA: App installed');
+      (window as PwaWindow).__ensoDeferredPrompt = null;
     };
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    window.addEventListener('enso:pwa-install-available', handleInstallAvailable);
     window.addEventListener('appinstalled', handleAppInstalled);
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      window.removeEventListener('enso:pwa-install-available', handleInstallAvailable);
       window.removeEventListener('appinstalled', handleAppInstalled);
     };
   }, []);
 
   const install = async () => {
-    console.log('PWA: Install button clicked');
-    console.log('PWA: isIosDevice:', isIosDevice);
-    console.log('PWA: isSafariDesktop:', isSafariDesktop);
-    console.log('PWA: installPromptEvent:', installPromptEvent);
-    console.log('PWA: deferredPrompt:', deferredPrompt);
-
-    // For iOS, show instructions
     if (isIosDevice) {
       alert(copy.installPwaIosInstructions);
       return true;
     }
 
-    // For desktop Safari, show instructions
     if (isSafariDesktop) {
       alert(copy.installPwaSafariInstructions);
       return true;
     }
 
-    // Use the global deferred prompt or the state one
-    const promptToUse = installPromptEvent || deferredPrompt;
-
-    // For Android/Chrome
+    const promptToUse = installPromptEvent || getStoredDeferredPrompt();
     if (!promptToUse) {
-      console.warn(
-        'PWA: Install prompt not available. The beforeinstallprompt event may not have fired.',
-      );
-      console.warn(
-        'PWA: This can happen if the app is already installed, or PWA criteria are not met.',
-      );
       alert(copy.installPwaUnavailable);
       return false;
     }
 
     try {
-      console.log('PWA: Showing install prompt...');
-      // Show the install prompt
       await promptToUse.prompt();
-
-      // Wait for the user to respond to the prompt
       const choiceResult = await promptToUse.userChoice;
-      console.log('PWA: User choice:', choiceResult.outcome);
 
       if (choiceResult.outcome === 'accepted') {
         setIsInstalled(true);
         setIsInstallable(false);
         setInstallPromptEvent(null);
         deferredPrompt = null;
+        (window as PwaWindow).__ensoDeferredPrompt = null;
         return true;
       }
 
       // Clear the saved prompt since it can't be used again
       setInstallPromptEvent(null);
       deferredPrompt = null;
+      (window as PwaWindow).__ensoDeferredPrompt = null;
       return false;
     } catch (error) {
       console.error('PWA: Error showing install prompt:', error);

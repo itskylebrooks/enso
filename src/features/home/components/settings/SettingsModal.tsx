@@ -237,12 +237,12 @@ export const SettingsModal = ({
                 {isInstalled ? (
                   <>
                     <Check className="h-4 w-4" aria-hidden />
-                    Installed
+                    {copy.installPwaInstalled}
                   </>
                 ) : (
                   <>
                     <Download className="h-4 w-4" aria-hidden />
-                    Install
+                    {copy.installPwaButton}
                   </>
                 )}
               </button>

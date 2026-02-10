@@ -2,6 +2,7 @@
   "name": "Enso",
   "short_name": "Enso",
   "description": "Aikidō study companion — offline, bilingual, and calm.",
+  "id": "https://enso.jetzt/",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
