@@ -158,40 +158,34 @@ export const de = {
   viewProgressCta: 'Lesezeichen ansehen',
   aboutTitle: 'Über Enso',
   aboutIntro:
-    'Enso wurde entwickelt, um Schüler:innen zu helfen, Techniken zu erkunden, Begriffe zu lernen und mit dem Geist des Aikidō in einer klaren, modernen und ablenkungsfreien Umgebung verbunden zu bleiben.',
-  aboutFeaturesTitle: 'Mit Enso kannst du:',
-  aboutFeature1: 'Techniken durchsuchen, filtern und speichern.',
-  aboutFeature2: 'Lesezeichen in eigenen Sammlungen organisieren.',
-  aboutFeature3: 'Prüfungsprogramme und Begriffe nachschlagen.',
-  aboutFeature4: 'Nahtlos zwischen Deutsch und Englisch wechseln.',
-  aboutPrivacyTitle: 'Datenschutz zuerst',
-  aboutPrivacyIntro: 'Enso respektiert deine Privatsphäre:',
-  aboutPrivacy1: 'Keine Konten, kein Tracking, keine Datensammlung.',
-  aboutPrivacy2: 'Alle Daten bleiben lokal in deinem Browser.',
-  aboutPrivacy3: 'Export und Import deiner Daten jederzeit möglich.',
-  aboutPrivacy4: 'Enso ist Open Source – den Quellcode findet man auf GitHub.',
-  aboutTechTitle: 'Technische Basis',
-  aboutTechIntro: 'Enso ist eine moderne Web-App, entwickelt mit:',
-  aboutTech1: 'React + TypeScript',
-  aboutTech2: 'Tailwind CSS für das Design',
-  aboutTech3: 'Vite für Geschwindigkeit und Einfachheit',
-  aboutTech4: 'Local-first Speicher (kein Server notwendig)',
+    'Enso ist ein ruhiger, ablenkungsfreier Begleiter zum Aikidō-Studium. Die App hilft dir, Techniken zu erkunden, Begriffe zu lernen und dein Training mit einfachen Übungen zu unterstützen — alles an einem Ort, ohne sich wie eine laute Plattform anzufühlen.',
+  aboutFeaturesTitle: 'Was du damit machen kannst',
+  aboutFeaturesBody:
+    'In Enso kannst du Techniken durchsuchen und filtern, für jeden Eintrag eine eigene Seite öffnen und Varianten strukturiert studieren. Du kannst ein Glossar mit Begriffen und Kategorien nutzen, um besser zu verstehen, was du im Dōjō hörst, und du kannst im Bereich Übungen an Mobilität, Kraft, Balance, Koordination, Explosivität und Regeneration arbeiten — praktisch und wiederholbar. Lesezeichen und Sammlungen helfen dir dabei, das zu speichern, was für dich wichtig ist, und dir mit der Zeit deinen eigenen Lernpfad aufzubauen.',
   aboutDisclaimerTitle: 'Hinweis',
   aboutDisclaimer:
-    'Alle Technikbeschreibungen und Notizen sind meine persönlichen Interpretationen als Schüler.\nSie wurden nicht offiziell von meinen Lehrer:innen überprüft oder freigegeben. Alle Fehler liegen bei mir.\nBitte nutze Enso nur als Lernhilfe und trainiere stets unter Anleitung einer qualifizierten Lehrkraft.',
+    'Alle Technikbeschreibungen und Notizen hier spiegeln mein persönliches Verständnis als Schüler wider. Sie wurden nicht offiziell von meinen Lehrern überprüft oder freigegeben, und mögliche Fehler gehen ausschließlich auf mich zurück. Bitte nutze Enso nur als Lernhilfe und trainiere immer unter Anleitung einer qualifizierten Lehrkraft.',
+  aboutPrivacyTitle: 'Datenschutz zuerst',
+  aboutPrivacyBody:
+    'Datenschutz ist ein Kernprinzip von Enso. Die App kommt ohne Tracking, Analytics oder Datensammlung aus. Deine Lesezeichen, Notizen und Einstellungen werden lokal in deinem Browser gespeichert, und du kannst deine Daten jederzeit exportieren und importieren. Enso ist Open Source, und der Code ist auf GitHub verfügbar.',
+  aboutTechTitle: 'Wie Enso gebaut ist',
+  aboutTechBody:
+    'Enso ist eine moderne Web-App, entwickelt mit React und TypeScript, gestaltet mit Tailwind CSS und gebaut mit Vite für Geschwindigkeit und Einfachheit. Der Local-first-Ansatz sorgt dafür, dass sich alles schnell, zuverlässig und unabhängig von Servern anfühlt.',
   aboutVisionTitle: 'Vision',
   aboutVision:
-    'Enso wird weiter wachsen: mit einer größeren Techniksammlung, Katas, historischem Kontext und Beiträgen von verschiedenen Dojos und Trainer:innen.\nZiel ist es, die Harmonie des Aikidō zu bewahren und eine vertrauenswürdige, datenschutzfreundliche Lernressource für alle zu schaffen.',
+    'Enso wird sich mit der Zeit weiterentwickeln — auf eine Weise, die einfach und vertrauenswürdig bleibt. Ich möchte die Bibliothek erweitern, geführte Lernabläufe verbessern, kuratierte Routinen hinzufügen und die Seiten zu Prüfungsprogrammen und fortgeschrittenen Programmen vertiefen. Das Ziel ist, die Harmonie im Herzen des Aikidō zu würdigen und zugleich eine datenschutzfreundliche Ressource zu bauen, die ruhig, fokussiert und wirklich nützlich ist.',
   // Autor / Über den Autor
   aboutAuthorTitle: 'Autor',
   aboutAuthorPart1:
-    'Ich bin Kyle Brooks (offiziell Kirill Bobrov), Student für Software Systems Development und Aikidō-Praktizierender in Hamburg.',
+    'Ich bin Kyle Brooks (offiziell Kirill Bobrov), Softwareentwicklungsstudent und Aikidō-Praktizierender aus Hamburg.',
   aboutAuthorPart2:
-    'Mit Aikidō habe ich im August 2022 begonnen, und Enso entstand im Oktober 2025 — aus meiner Liebe zu achtsamer Bewegung und klarer digitaler Gestaltung. Was als kleines Lernhilfsmittel begann, wurde nach und nach zu einer Möglichkeit, mein Wissen zu bewahren und den ruhigen, verbindenden Geist des Aikidō mit moderner Technologie zu teilen.',
-  aboutAuthorPart3:
-    'Das Foto unten entstand während eines Aikidō-Lehrgangs mit Werner Lättig im WSV Walddörfer Sportverein im November 2024 — ein stiller Moment, der mich daran erinnert, warum ich übe: Harmonie, Konzentration und Dankbarkeit.',
-  aboutAuthorPart4:
-    'Außerhalb des Dōjō studiere ich an der Universität Hamburg und arbeite mit React, TypeScript und lokalen Speicherprinzipien. Enso ist der Ort, an dem sich diese beiden Wege treffen — Code und Budō — wo Einfachheit zur Übung wird, und Übung zu Klarheit.',
+    'Ich habe im August 2022 mit Aikidō begonnen und Enso im Oktober 2025 entwickelt — als Möglichkeit, das Gelernte festzuhalten und Budō-Praxis mit ruhigem, modernem Digitaldesign zu verbinden.',
+  aboutGratitudeTitle: 'Mit Dankbarkeit',
+  aboutGratitudeBody:
+    'Mit Dankbarkeit an meine Lehrer Joachim Eiselen und Markus Möller sowie an meine Gemeinschaft beim WSV (Walddörfer Sportverein) und BSV (Bramfelder Sportverein), die mich als Gast immer freundlich aufnehmen — besonders Karen und Stefan Jakuszeit sowie Alfred Haase. Danke, dass ihr mich inspiriert, mir helft, jedes Training zu genießen, und mich daran erinnert, wie Aikidō uns alles andere für einen Moment vergessen lässt, indem wir uns auf Harmonie konzentrieren.',
+  aboutPhotoTitle: 'Foto',
+  aboutPhotoBody:
+    'Das Foto unten entstand während eines Aikidō-Lehrgangs unter der Leitung von Werner Lättig beim WSV Walddörfer Sportverein im November 2024 — ein stiller Moment, der mich daran erinnert, warum ich trainiere: Harmonie, Fokus und Dankbarkeit.',
   aboutLink: 'Über',
   portfolio: 'Portfolio',
   iconsBy: 'Icons von',
@@ -222,12 +216,6 @@ export const de = {
     'Aikidō wurde zu Beginn des 20. Jahrhunderts in Japan von Morihei Ueshiba (1883–1969) gegründet.',
   homeHistoricalNotePart2:
     'Es verbindet Kampftradition mit einer Philosophie der Harmonie und leitet Kraft um, anstatt sie zu bekämpfen.',
-  homeDojoCreditTitle: 'Mit Dankbarkeit',
-  homeDojoCreditSubtitle: 'Mit Dankbarkeit:',
-  homeDojoCreditPart1:
-    'Meinen Lehrern Joachim Eiselen und Markus Möller, meiner herzlichen Gemeinschaft im WSV (Walddörfer Sportverein) und dem BSV (Bramfelder Sportverein), die mich immer freundlich als Gast aufnehmen – besonders Karen und Stefan Jakuszeit sowie Alfred Haase.',
-  homeDojoCreditPart2:
-    'Danke, dass ihr mich inspiriert, mir helft, jedes Training zu genießen, und mich daran erinnert, wie Aikidō uns alles andere vergessen lässt, wenn wir uns auf Harmonie konzentrieren.',
   openAriaPrefix: 'Öffne',
   // Feedback
   feedback: 'Feedback',

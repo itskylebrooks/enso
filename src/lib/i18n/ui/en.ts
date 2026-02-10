@@ -26,7 +26,8 @@ export const en = {
   collectionsConfirmDeleteTitle: 'Delete collection?',
   collectionsConfirmDeleteBody: 'Items remain bookmarked but will be ungrouped.',
   collectionsAddTo: 'Add to Collection',
-  collectionsEmptyAll: 'No bookmarks yet. Browse the Techniques and tap the icon to save techniques.',
+  collectionsEmptyAll:
+    'No bookmarks yet. Browse the Techniques and tap the icon to save techniques.',
   collectionsEmptyCollection: 'Nothing here yet. Add items from the menu on each card.',
   collectionsEmptyUngrouped: 'Everything’s filed. Neat.',
   collectionsNone: 'No collections yet.',
@@ -155,40 +156,34 @@ export const en = {
   viewProgressCta: 'View Bookmarks',
   aboutTitle: 'About Enso',
   aboutIntro:
-    'Enso is built to help students explore techniques, learn terminology, and connect with the spirit of Aikidō through a clean, modern, and distraction-free experience.',
-  aboutFeaturesTitle: 'With Enso, you can:',
-  aboutFeature1: 'Browse, search, and filter techniques.',
-  aboutFeature2: 'Save bookmarks and organize them into collections.',
-  aboutFeature3: 'Review exam programs and terms.',
-  aboutFeature4: 'Switch seamlessly between English and German.',
-  aboutPrivacyTitle: 'Privacy First',
-  aboutPrivacyIntro: 'Enso is built with respect for your privacy.',
-  aboutPrivacy1: 'No accounts, no tracking, no data collection.',
-  aboutPrivacy2: 'Everything is stored locally in your browser.',
-  aboutPrivacy3: 'You can export and import your data whenever you wish.',
-  aboutPrivacy4: 'Enso is open source — the code is available on GitHub.',
-  aboutTechTitle: "How it's Built",
-  aboutTechIntro: 'Enso is a modern web app, built with:',
-  aboutTech1: 'React + TypeScript',
-  aboutTech2: 'Tailwind CSS for design',
-  aboutTech3: 'Vite for speed and simplicity',
-  aboutTech4: 'Local-first storage (no servers required)',
+    'Enso is a calm, distraction-free Aikidō study companion. It’s built to help you explore techniques, learn terminology, and support training with simple exercises — all in one place, without feeling like a noisy platform.',
+  aboutFeaturesTitle: 'What you can do',
+  aboutFeaturesBody:
+    'In Enso you can browse and filter techniques, open a dedicated page for each entry, and study variations in a structured way. You can explore a glossary of terms and categories to build clearer understanding of what you hear in the dōjō, and you can use the exercises section to work on mobility, strength, balance, coordination, power, and recovery in a practical, repeatable way. Bookmarks and collections let you save what matters to you and shape your own study path over time.',
   aboutDisclaimerTitle: 'Disclaimer',
   aboutDisclaimer:
-    'All technique descriptions and notes here are my personal interpretations as a student.\nThey have not been formally reviewed or approved by my teachers. Any mistakes are mine alone.\nPlease use Enso only as a study aid, and always train under the guidance of a qualified instructor.',
+    'All technique descriptions and notes here reflect my personal understanding as a student. They have not been formally reviewed or approved by my teachers, and any mistakes are mine alone. Please use Enso only as a study aid, and always train under the guidance of a qualified instructor.',
+  aboutPrivacyTitle: 'Privacy first',
+  aboutPrivacyBody:
+    'Privacy is a core principle of Enso. The app is built without tracking, analytics, or data collection. Your bookmarks, notes, and settings are stored locally in your browser, and you can export and import your data whenever you wish. Enso is open source, and the code is available on GitHub.',
+  aboutTechTitle: "How it's built",
+  aboutTechBody:
+    'Enso is a modern web app built with React and TypeScript, styled with Tailwind CSS, and developed with Vite for speed and simplicity. The local-first approach keeps the experience fast, predictable, and independent of servers.',
   aboutVisionTitle: 'Vision',
   aboutVision:
-    'Enso will continue to grow: expanding the library, adding kata pages, historical context, and eventually inviting contributions from different dojos and trainers.\nThe goal is to honor the harmony at the heart of Aikidō, while providing a trustworthy, privacy-friendly study resource for everyone.',
+    'Over time, Enso will continue to grow in a way that stays simple and trustworthy. I want to expand the library, improve guided study flows, add curated routines, and deepen the exam and advanced-program pages. The goal is to honor the harmony at the heart of Aikidō while building a privacy-friendly resource that feels quiet, focused, and genuinely useful.',
   // Author / About the author
   aboutAuthorTitle: 'Author',
   aboutAuthorPart1:
     'I’m Kyle Brooks (officially Kirill Bobrov), a software development student and Aikidō practitioner based in Hamburg, Germany.',
   aboutAuthorPart2:
-    'I began practicing Aikidō in August 2022, and I built Enso in October 2025 — combining my love for mindful movement and clean digital design. What started as a small study aid slowly became a way to preserve what I learn, and to share the calm, connected spirit of Aikidō through modern technology.',
-  aboutAuthorPart3:
+    'I began practicing Aikidō in August 2022, and I built Enso in October 2025 as a way to preserve what I learn and to connect budō practice with calm digital design.',
+  aboutGratitudeTitle: 'With gratitude',
+  aboutGratitudeBody:
+    'With gratitude to my teachers Joachim Eiselen and Markus Möller, and to my community at WSV (Walddörfer Sportverein) and BSV (Bramfelder Sportverein), who always welcome me kindly as a guest — especially Karen and Stefan Jakuszeit, and Alfred Haase. Thank you for inspiring me, for helping me enjoy every training, and for reminding me how Aikidō lets us leave everything else behind by focusing on harmony.',
+  aboutPhotoTitle: 'Photo',
+  aboutPhotoBody:
     'The photo below was taken during an Aikidō Lehrgang led by Werner Lättig at the WSV Walddörfer Sportverein in November 2024 — a quiet moment that reminds me why I practice: harmony, focus, and gratitude.',
-  aboutAuthorPart4:
-    'Outside the dojo, I study Software Systems Development at the University of Hamburg, and I build with React, TypeScript, and local-first principles. Enso is where those two paths meet — code and budō — where simplicity becomes practice, and practice becomes clarity.',
   aboutLink: 'About',
   portfolio: 'Portfolio',
   iconsBy: 'Icons by',
@@ -219,12 +214,6 @@ export const en = {
     'Aikidō was founded in Japan in the early 20th century by Morihei Ueshiba (1883–1969).',
   homeHistoricalNotePart2:
     'It blends martial tradition with a philosophy of harmony, redirecting force rather than opposing it.',
-  homeDojoCreditTitle: 'With Gratitude',
-  homeDojoCreditSubtitle: 'With gratitude:',
-  homeDojoCreditPart1:
-    'To my teachers Joachim Eiselen and Markus Möller, my warm community at WSV (Walddörfer Sportverein), and BSV (Bramfelder Sportverein), who always welcome me kindly as a guest — especially Karen and Stefan Jakuszeit, and Alfred Haase.',
-  homeDojoCreditPart2:
-    'Thank you for inspiring me, for helping me enjoy every training, and for reminding me how Aikidō lets us leave everything else behind by focusing on harmony.',
   openAriaPrefix: 'Open',
   // Feedback
   feedback: 'Feedback',
