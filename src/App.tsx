@@ -719,6 +719,7 @@ export default function App({
   const settingsClearButtonRef = useRef<HTMLButtonElement | null>(null);
   const toastTimeoutRef = useRef<number | null>(null);
   const pendingScrollToTopRef = useRef(false);
+  const isInitialMountRef = useRef(true);
   // Detect if this render follows a back/forward restore and skip entrance
   // animations to avoid the brief re-appearance/flicker on iOS Safari.
   const skipEntranceAnimations = cameFromBackForwardNavigation();
@@ -1908,11 +1909,23 @@ export default function App({
   useEffect(() => {
     if (typeof window === 'undefined') return;
     if (consumeBFCacheRestoreFlag()) {
+      isInitialMountRef.current = false;
       return;
     }
     pendingScrollToTopRef.current = true;
     if (skipEntranceAnimations || animationsDisabled) {
       flushScrollToTop();
+      isInitialMountRef.current = false;
+      return;
+    }
+
+    if (isInitialMountRef.current) {
+      // On initial mount there is no AnimatePresence exit cycle, so flush once
+      // after first paint to avoid compounded browser scroll restoration on reload.
+      isInitialMountRef.current = false;
+      window.requestAnimationFrame(() => {
+        flushScrollToTop();
+      });
     }
   }, [
     route,

@@ -105,7 +105,7 @@ export const HomePage = ({
 
   return (
     <div className="min-h-dvh font-sans">
-      <div className="container max-w-4xl mx-auto px-4 md:px-6 pt-6 space-y-6 pb-16 md:pb-24">
+      <div className="container max-w-4xl mx-auto px-4 md:px-6 pt-8 space-y-6 pb-16 md:pb-24">
         {!pinnedBeltGrade &&
           !beltPromptDismissed &&
           (() => {
@@ -216,19 +216,17 @@ export const HomePage = ({
             );
           })()}
 
-        <div className="-mt-2">
-          <ContinueCard
-            copy={copy}
-            locale={locale}
-            techniques={techniques}
-            techniqueProgress={techniqueProgress}
-            glossaryTerms={glossaryTerms}
-            exercises={exercises}
-            onOpenTechnique={onOpenTechnique}
-            onOpenTerm={onOpenGlossaryTerm}
-            onOpenExercise={onOpenExercise}
-          />
-        </div>
+        <ContinueCard
+          copy={copy}
+          locale={locale}
+          techniques={techniques}
+          techniqueProgress={techniqueProgress}
+          glossaryTerms={glossaryTerms}
+          exercises={exercises}
+          onOpenTechnique={onOpenTechnique}
+          onOpenTerm={onOpenGlossaryTerm}
+          onOpenExercise={onOpenExercise}
+        />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {termToLearn &&
