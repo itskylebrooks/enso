@@ -97,6 +97,8 @@ export const MobileFilters = ({
   onContributePrefetch,
 }: MobileFiltersProps): ReactElement => {
   const hasActiveFilters = useMemo(() => Object.values(filters).some(Boolean), [filters]);
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
+  const { collapseMotion } = useMotionPreferences();
 
   const [open, setOpen] = useState<Record<SectionKey, boolean>>(() => ({
     category: Boolean(filters.category),
@@ -179,87 +181,105 @@ export const MobileFilters = ({
 
   return (
     <div className="rounded-2xl border surface-border bg-[var(--color-surface)] p-4">
-      <div className="flex items-center justify-between mb-3">
-        <SectionTitle>{copy.filters}</SectionTitle>
-        {hasActiveFilters && (
-          <button
-            type="button"
-            onClick={handleReset}
-            className="text-xs font-medium underline-offset-4 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
-          >
-            {copy.resetFilters}
-          </button>
-        )}
-      </div>
+      <button
+        type="button"
+        aria-expanded={isPanelOpen}
+        onClick={() => setIsPanelOpen((prev) => !prev)}
+        className="flex w-full items-center justify-center rounded-lg px-3 py-2 text-base font-semibold leading-tight focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+      >
+        <span>{copy.filters}</span>
+      </button>
 
-      <FilterSection
-        title={copy.category}
-        options={categoryOptions}
-        selected={filters.category}
-        onSelect={(value) => handleToggle('category', value)}
-        isOpen={open.category}
-        onToggle={() => toggleOpen('category')}
-      />
+      <motion.div
+        className="overflow-hidden"
+        initial={false}
+        animate={isPanelOpen ? 'open' : 'closed'}
+        variants={collapseMotion.variants}
+        transition={collapseMotion.transition}
+      >
+        <div className="pt-3">
+          <div className="mb-3 flex items-center justify-end">
+            {hasActiveFilters && (
+              <button
+                type="button"
+                onClick={handleReset}
+                className="text-xs font-medium underline-offset-4 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+              >
+                {copy.resetFilters}
+              </button>
+            )}
+          </div>
 
-      <FilterSection
-        title={copy.attack}
-        options={attackOptions}
-        selected={filters.attack}
-        onSelect={(value) => handleToggle('attack', value)}
-        isOpen={open.attack}
-        onToggle={() => toggleOpen('attack')}
-      />
+          <FilterSection
+            title={copy.category}
+            options={categoryOptions}
+            selected={filters.category}
+            onSelect={(value) => handleToggle('category', value)}
+            isOpen={open.category}
+            onToggle={() => toggleOpen('category')}
+          />
 
-      <FilterSection
-        title={copy.stance}
-        options={stanceOptions}
-        selected={filters.stance}
-        onSelect={(value) => handleToggle('stance', value)}
-        isOpen={open.stance}
-        onToggle={() => toggleOpen('stance')}
-      />
+          <FilterSection
+            title={copy.attack}
+            options={attackOptions}
+            selected={filters.attack}
+            onSelect={(value) => handleToggle('attack', value)}
+            isOpen={open.attack}
+            onToggle={() => toggleOpen('attack')}
+          />
 
-      <FilterSection
-        title={copy.weapon}
-        options={weaponOptions}
-        selected={filters.weapon}
-        onSelect={(value) => handleToggle('weapon', value)}
-        isOpen={open.weapon}
-        onToggle={() => toggleOpen('weapon')}
-      />
+          <FilterSection
+            title={copy.stance}
+            options={stanceOptions}
+            selected={filters.stance}
+            onSelect={(value) => handleToggle('stance', value)}
+            isOpen={open.stance}
+            onToggle={() => toggleOpen('stance')}
+          />
 
-      <FilterSection
-        title={copy.trainer}
-        options={trainerOptions}
-        selected={filters.trainer}
-        onSelect={(value) => handleToggle('trainer', value)}
-        isOpen={open.trainer}
-        onToggle={() => toggleOpen('trainer')}
-      />
+          <FilterSection
+            title={copy.weapon}
+            options={weaponOptions}
+            selected={filters.weapon}
+            onSelect={(value) => handleToggle('weapon', value)}
+            isOpen={open.weapon}
+            onToggle={() => toggleOpen('weapon')}
+          />
 
-      <FilterSection
-        title={copy.level}
-        options={levelOptions}
-        selected={filters.level}
-        onSelect={(value) => handleToggle('level', value as Grade | undefined)}
-        isOpen={open.level}
-        onToggle={() => toggleOpen('level')}
-      />
+          <FilterSection
+            title={copy.trainer}
+            options={trainerOptions}
+            selected={filters.trainer}
+            onSelect={(value) => handleToggle('trainer', value)}
+            isOpen={open.trainer}
+            onToggle={() => toggleOpen('trainer')}
+          />
 
-      {onContribute && (
-        <div className="mt-4">
-          <button
-            type="button"
-            onClick={onContribute}
-            onMouseEnter={onContributePrefetch}
-            onFocus={onContributePrefetch}
-            className="w-full inline-flex items-center justify-center gap-2 rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2 text-sm transition-soft hover-border-adaptive"
-          >
-            <PencilLine width={20} height={20} aria-hidden />
-            {copy.feedbackAddTechniqueCta}
-          </button>
+          <FilterSection
+            title={copy.level}
+            options={levelOptions}
+            selected={filters.level}
+            onSelect={(value) => handleToggle('level', value as Grade | undefined)}
+            isOpen={open.level}
+            onToggle={() => toggleOpen('level')}
+          />
+
+          {onContribute && (
+            <div className="mt-4">
+              <button
+                type="button"
+                onClick={onContribute}
+                onMouseEnter={onContributePrefetch}
+                onFocus={onContributePrefetch}
+                className="w-full inline-flex items-center justify-center gap-2 rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2 text-sm transition-soft hover-border-adaptive"
+              >
+                <PencilLine width={20} height={20} aria-hidden />
+                {copy.feedbackAddTechniqueCta}
+              </button>
+            </div>
+          )}
         </div>
-      )}
+      </motion.div>
     </div>
   );
 };
