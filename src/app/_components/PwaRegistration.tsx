@@ -15,18 +15,25 @@ type PwaWindow = Window & {
 
 export const PwaRegistration = () => {
   useEffect(() => {
-    if (process.env.NODE_ENV !== 'production') {
+    if (typeof window === 'undefined') {
       return;
     }
 
-    if (typeof window === 'undefined' || !('serviceWorker' in navigator)) {
-      return;
-    }
+    const isProduction = process.env.NODE_ENV === 'production';
+    const isLocalDevHost =
+      window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    const canRegisterServiceWorker =
+      'serviceWorker' in navigator && (isProduction || isLocalDevHost);
 
     let updateIntervalId: number | undefined;
     let hasRefreshed = false;
 
     const handleControllerChange = () => {
+      // In development, avoid force-reloading on controller updates to keep
+      // hot-reload workflows stable.
+      if (!isProduction) {
+        return;
+      }
       if (hasRefreshed) {
         return;
       }
@@ -60,9 +67,11 @@ export const PwaRegistration = () => {
           });
         });
 
-        updateIntervalId = window.setInterval(() => {
-          void registration.update();
-        }, UPDATE_INTERVAL_MS);
+        if (isProduction) {
+          updateIntervalId = window.setInterval(() => {
+            void registration.update();
+          }, UPDATE_INTERVAL_MS);
+        }
       } catch (error) {
         console.error('Failed to register service worker:', error);
       }
@@ -82,13 +91,18 @@ export const PwaRegistration = () => {
 
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     window.addEventListener('appinstalled', handleAppInstalled);
-    navigator.serviceWorker.addEventListener('controllerchange', handleControllerChange);
-    void registerServiceWorker();
+
+    if (canRegisterServiceWorker) {
+      navigator.serviceWorker.addEventListener('controllerchange', handleControllerChange);
+      void registerServiceWorker();
+    }
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
       window.removeEventListener('appinstalled', handleAppInstalled);
-      navigator.serviceWorker.removeEventListener('controllerchange', handleControllerChange);
+      if (canRegisterServiceWorker) {
+        navigator.serviceWorker.removeEventListener('controllerchange', handleControllerChange);
+      }
       if (updateIntervalId !== undefined) {
         window.clearInterval(updateIntervalId);
       }
