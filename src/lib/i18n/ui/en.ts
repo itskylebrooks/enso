@@ -130,7 +130,7 @@ export const en = {
   sync: 'Sync',
   syncComingSoon: 'Coming soon.',
   dangerZone: 'Danger Zone',
-  clear: 'Erase',
+  clear: 'Reset',
   installPwa: 'Install App',
   installPwaTitle: 'Install Enso',
   installPwaDescription: 'Install Enso as an app for offline access and a native experience.',
@@ -151,11 +151,9 @@ export const en = {
   toastStudyPractice: 'Practice',
   toastStudyStable: 'Stable',
   toastStudyCleared: 'Cleared',
-  confirmClearTitle: 'Clear all data?',
-  confirmClearBody:
-    'This removes your local progress and notes from this device. Type CLEAR to confirm.',
-  confirmClearLabel: 'Type CLEAR to proceed',
-  confirmClearAction: 'Erase local data',
+  confirmClearTitle: 'Delete all local data?',
+  confirmClearBody: 'This will clear all Enso data in this browser. This cannot be undone.',
+  confirmClearAction: 'Delete',
   confirmClearCancel: 'Cancel',
   toastDataCleared: 'Data cleared.',
   homeTagline:

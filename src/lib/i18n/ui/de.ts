@@ -152,11 +152,10 @@ export const de = {
   toastStudyPractice: 'Übung',
   toastStudyStable: 'Stabil',
   toastStudyCleared: 'Zurückgesetzt',
-  confirmClearTitle: 'Alle Daten löschen?',
+  confirmClearTitle: 'Alle lokalen Daten löschen?',
   confirmClearBody:
-    'Dadurch werden deine lokalen Fortschritte und Notizen auf diesem Gerät entfernt. Tippe CLEAR zur Bestätigung.',
-  confirmClearLabel: 'CLEAR eingeben',
-  confirmClearAction: 'Lokale Daten l\u00f6schen',
+    'Dadurch werden alle Enso-Daten in diesem Browser gelöscht. Dies kann nicht rückgängig gemacht werden.',
+  confirmClearAction: 'Löschen',
   confirmClearCancel: 'Abbrechen',
   toastDataCleared: 'Daten gelöscht.',
   homeTagline:

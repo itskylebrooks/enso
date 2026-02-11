@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactElement } from 'react';
+import { useRef, type ReactElement } from 'react';
 import { createPortal } from 'react-dom';
 import { motion } from 'motion/react';
 import type { Copy } from '../../constants/i18n';
@@ -16,18 +16,10 @@ export const ConfirmClearModal = ({
   onCancel,
   onConfirm,
 }: ConfirmClearModalProps): ReactElement | null => {
-  const [value, setValue] = useState('');
   const dialogRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
   const { overlayMotion, toggleTransition, prefersReducedMotion } = useMotionPreferences();
 
   useFocusTrap(true, dialogRef, onCancel);
-
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
-
-  const canConfirm = value === 'CLEAR';
 
   const content = (
     <motion.div
@@ -61,22 +53,10 @@ export const ConfirmClearModal = ({
           {copy.confirmClearTitle}
         </h2>
         <p className="text-sm text-subtle leading-relaxed">{copy.confirmClearBody}</p>
-        <label className="text-sm text-left space-y-2">
-          <span>{copy.confirmClearLabel}</span>
-          <input
-            ref={inputRef}
-            value={value}
-            onChange={(event) => setValue(event.target.value.toUpperCase())}
-            className="w-full px-3 py-2 rounded-lg border surface surface-border focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] uppercase tracking-[0.3em]"
-            autoComplete="off"
-            aria-required="true"
-          />
-        </label>
         <div className="flex justify-end gap-2 pt-2">
           <motion.button
             type="button"
             onClick={() => {
-              setValue('');
               onCancel();
             }}
             className="px-4 py-2 rounded-lg border btn-tonal surface-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
@@ -87,16 +67,10 @@ export const ConfirmClearModal = ({
           </motion.button>
           <motion.button
             type="button"
-            onClick={() => {
-              if (canConfirm) {
-                onConfirm();
-                setValue('');
-              }
-            }}
-            className="px-4 py-2 rounded-lg border btn-contrast focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] disabled:opacity-60 disabled:cursor-not-allowed"
+            onClick={onConfirm}
+            className="px-4 py-2 rounded-lg border border-red-600 bg-red-600 text-white hover:bg-red-700 dark:border-red-500 dark:bg-red-500 dark:hover:bg-red-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
             whileTap={prefersReducedMotion ? undefined : { scale: 0.97 }}
             transition={toggleTransition}
-            disabled={!canConfirm}
           >
             {copy.confirmClearAction}
           </motion.button>
