@@ -1,28 +1,5 @@
 import { useReducedMotion, type Transition, type Variants } from 'motion/react';
-import { useCallback, useMemo, useSyncExternalStore } from 'react';
-
-type AnimationPreferenceListener = () => void;
-
-let animationsDisabledState = false;
-const animationListeners = new Set<AnimationPreferenceListener>();
-
-const subscribeToAnimationsDisabled = (listener: AnimationPreferenceListener): (() => void) => {
-  animationListeners.add(listener);
-  return () => {
-    animationListeners.delete(listener);
-  };
-};
-
-export const getAnimationsDisabled = (): boolean => animationsDisabledState;
-
-export const setAnimationsDisabled = (value: boolean): void => {
-  if (animationsDisabledState === value) return;
-  animationsDisabledState = value;
-  animationListeners.forEach((listener) => listener());
-};
-
-const useAnimationsDisabled = (): boolean =>
-  useSyncExternalStore(subscribeToAnimationsDisabled, getAnimationsDisabled, getAnimationsDisabled);
+import { useCallback, useMemo } from 'react';
 
 export const defaultEase = [0.2, 0.8, 0.2, 1] as const;
 export const pageEase = [0.4, 0, 0.2, 1] as const;
@@ -176,38 +153,24 @@ export const mediaVariants: Variants = {
 
 export const reducedMediaVariants = mediaVariants;
 
-const zeroTransition: Transition = { duration: 0 };
-
 export const useMotionPreferences = () => {
-  const animationsDisabled = useAnimationsDisabled();
-  const prefersReducedMotionRaw = useReducedMotion();
-  const prefersReducedMotion = animationsDisabled || Boolean(prefersReducedMotionRaw);
+  const prefersReducedMotion = Boolean(useReducedMotion());
 
   const pageMotion = useMemo(
     () => ({
       variants: prefersReducedMotion ? reducedPageVariants : pageVariants,
-      transition: animationsDisabled
-        ? zeroTransition
-        : prefersReducedMotion
-          ? reducedPageTransition
-          : pageTransition,
+      transition: prefersReducedMotion ? reducedPageTransition : pageTransition,
     }),
-    [animationsDisabled, prefersReducedMotion],
+    [prefersReducedMotion],
   );
 
   const overlayMotion = useMemo(() => {
     const backdrop = prefersReducedMotion ? reducedBackdropVariants : backdropVariants;
     const panel = prefersReducedMotion ? reducedPanelVariants : panelVariants;
-    const transition = animationsDisabled
-      ? zeroTransition
-      : prefersReducedMotion
-        ? reducedPageTransition
-        : { duration: 0.18, ease: defaultEase };
-    const panelTransition = animationsDisabled
-      ? zeroTransition
-      : prefersReducedMotion
-        ? reducedPageTransition
-        : springEase;
+    const transition = prefersReducedMotion
+      ? reducedPageTransition
+      : { duration: 0.18, ease: defaultEase };
+    const panelTransition = prefersReducedMotion ? reducedPageTransition : springEase;
     const closeButton = prefersReducedMotion ? reducedCloseButtonVariants : closeButtonVariants;
 
     return {
@@ -217,7 +180,7 @@ export const useMotionPreferences = () => {
       panelTransition,
       closeButton,
     };
-  }, [animationsDisabled, prefersReducedMotion]);
+  }, [prefersReducedMotion]);
 
   const listMotion = useMemo(
     () => ({
@@ -230,13 +193,9 @@ export const useMotionPreferences = () => {
   const mediaMotion = useMemo(
     () => ({
       variants: prefersReducedMotion ? reducedMediaVariants : mediaVariants,
-      transition: animationsDisabled
-        ? zeroTransition
-        : prefersReducedMotion
-          ? reducedPageTransition
-          : pageTransition,
+      transition: prefersReducedMotion ? reducedPageTransition : pageTransition,
     }),
-    [animationsDisabled, prefersReducedMotion],
+    [prefersReducedMotion],
   );
 
   const collapseMotion = useMemo(
@@ -244,43 +203,31 @@ export const useMotionPreferences = () => {
       // Use the same collapse animation across platforms so mobile panels
       // behave consistently. Only the backdrop animation is platform-specific.
       variants: prefersReducedMotion ? reducedCollapseVariants : reducedCollapseVariants,
-      transition: animationsDisabled
-        ? zeroTransition
-        : prefersReducedMotion
-          ? reducedPageTransition
-          : { duration: 0.25, ease: defaultEase },
+      transition: prefersReducedMotion ? reducedPageTransition : { duration: 0.25, ease: defaultEase },
     }),
-    [animationsDisabled, prefersReducedMotion],
+    [prefersReducedMotion],
   );
 
   const getItemTransition = useCallback(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     (_index: number): Transition => {
-      if (animationsDisabled) {
-        return zeroTransition;
-      }
       if (prefersReducedMotion) {
         return { duration: 0.05 };
       }
       return { duration: 0.18, ease: defaultEase };
     },
-    [animationsDisabled, prefersReducedMotion],
+    [prefersReducedMotion],
   );
 
-  const toggleTransition: Transition = animationsDisabled
-    ? zeroTransition
-    : prefersReducedMotion
-      ? { duration: 0.05 }
-      : { duration: 0.15, ease: defaultEase };
+  const toggleTransition: Transition = prefersReducedMotion
+    ? { duration: 0.05 }
+    : { duration: 0.15, ease: defaultEase };
 
-  const chipTransition: Transition = animationsDisabled
-    ? zeroTransition
-    : prefersReducedMotion
-      ? { duration: 0.05 }
-      : { duration: 0.12, ease: defaultEase };
+  const chipTransition: Transition = prefersReducedMotion
+    ? { duration: 0.05 }
+    : { duration: 0.12, ease: defaultEase };
 
   return {
-    animationsDisabled,
     prefersReducedMotion,
     pageMotion,
     overlayMotion,

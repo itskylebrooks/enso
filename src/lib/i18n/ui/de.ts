@@ -128,12 +128,6 @@ export const de = {
   import: 'Import',
   data: 'Daten (Lesezeichen)',
   clear: 'Löschen',
-  motionSettings: 'Animationen',
-  disableAnimations: 'Animationen deaktivieren',
-  disableAnimationsDescription:
-    'Schaltet alle Übergänge und Bewegungseffekte in der gesamten Anwendung aus.',
-  disableAnimationsOn: 'An',
-  disableAnimationsOff: 'Aus',
   installPwa: 'App installieren',
   installPwaTitle: 'Enso installieren',
   installPwaDescription: 'Installiere Enso als App für Offline-Zugriff und ein natives Erlebnis.',

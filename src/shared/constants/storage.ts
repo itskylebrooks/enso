@@ -2,7 +2,6 @@ export const STORAGE_KEY = 'enso-prototype-db-v4';
 export const THEME_KEY = 'enso-theme';
 export const LOCALE_KEY = 'enso-locale';
 export const FILTERS_KEY = 'enso-filters-v1';
-export const ANIMATION_PREFERENCE_KEY = 'enso-animations-disabled';
 export const FILTER_PANEL_PINNED_KEY = 'enso-filter-panel-pinned';
 export const HOME_PINNED_BELT_KEY = 'enso-home-pinned-belt';
 export const HOME_BELT_PROMPT_DISMISSED_KEY = 'enso-home-belt-prompt-dismissed';

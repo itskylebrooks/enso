@@ -29,12 +29,10 @@ type SettingsModalProps = {
   theme: Theme;
   isSystemTheme: boolean;
   db: DB;
-  animationsDisabled: boolean;
   onClose: () => void;
   onRequestClear: () => void;
   onChangeLocale: (locale: Locale) => void;
   onChangeTheme: (theme: Theme | 'system') => void;
-  onChangeAnimations: (disabled: boolean) => void;
   onChangeDB: (db: DB) => void;
   clearButtonRef?: RefObject<HTMLButtonElement | null>;
   trapEnabled?: boolean;
@@ -46,12 +44,10 @@ export const SettingsModal = ({
   theme,
   isSystemTheme,
   db,
-  animationsDisabled,
   onClose,
   onRequestClear,
   onChangeLocale,
   onChangeTheme,
-  onChangeAnimations,
   onChangeDB,
   clearButtonRef,
   trapEnabled = true,
@@ -286,42 +282,6 @@ export const SettingsModal = ({
           </div>
           <div className="border-t surface-border" />
 
-          {/* Animations */}
-          <div>
-            <div className="grid grid-cols-3 gap-2 items-center">
-              <div className="col-span-2">
-                <SectionTitle muted={false}>{copy.motionSettings}</SectionTitle>
-              </div>
-              <div className="col-span-1 flex gap-2">
-                <button
-                  type="button"
-                  onClick={() => onChangeAnimations(true)}
-                  className={classNames(
-                    'flex-1 px-3 py-2 text-sm rounded-lg border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
-                    animationsDisabled ? 'btn-contrast' : 'btn-tonal surface-hover',
-                  )}
-                  aria-pressed={animationsDisabled}
-                  aria-label={copy.disableAnimationsOff}
-                >
-                  {copy.disableAnimationsOff}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => onChangeAnimations(false)}
-                  className={classNames(
-                    'flex-1 px-3 py-2 text-sm rounded-lg border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
-                    !animationsDisabled ? 'btn-contrast' : 'btn-tonal surface-hover',
-                  )}
-                  aria-pressed={!animationsDisabled}
-                  aria-label={copy.disableAnimationsOn}
-                >
-                  {copy.disableAnimationsOn}
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className="border-t surface-border" />
-
           {/* Data */}
           <div>
             <SectionTitle muted={false}>{copy.data}</SectionTitle>
@@ -360,9 +320,6 @@ export const SettingsModal = ({
                         const mergedDB = importData(db, importedData);
                         saveDB(mergedDB);
                         onChangeDB(mergedDB);
-                        if (typeof importedData.animationsDisabled === 'boolean') {
-                          onChangeAnimations(importedData.animationsDisabled);
-                        }
                       } catch (error) {
                         const reason = error instanceof Error ? error.message : 'Unknown error';
                         window.alert(`Import failed: ${reason}`);

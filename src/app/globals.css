@@ -270,26 +270,6 @@ button {
   --motion-ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.disable-animations {
-  --motion-duration-short: 0ms;
-  --motion-duration-medium: 0ms;
-  scroll-behavior: auto !important;
-}
-
-.disable-animations *,
-.disable-animations *::before,
-.disable-animations *::after {
-  animation-delay: 0s !important;
-  animation-duration: 0s !important;
-  animation-iteration-count: 1 !important;
-  animation-name: none !important;
-  animation-play-state: paused !important;
-  transition-delay: 0s !important;
-  transition-duration: 0s !important;
-  transition-property: none !important;
-  scroll-behavior: auto !important;
-}
-
 @media (prefers-reduced-motion: reduce) {
   :root {
     --motion-duration-short: 1ms;

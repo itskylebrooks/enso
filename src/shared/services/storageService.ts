@@ -1,7 +1,6 @@
 import techniquesData from '@generated/content/techniques.json';
 import { ENTRY_MODE_ORDER } from '../constants/entryModes';
 import {
-  ANIMATION_PREFERENCE_KEY,
   APP_NAME,
   DB_VERSION,
   FILTERS_KEY,
@@ -528,19 +527,6 @@ export const clearThemePreference = (): void => {
   removeLocalStorage(THEME_KEY);
 };
 
-export const loadAnimationsDisabled = (): boolean => {
-  const value = readLocalStorage(ANIMATION_PREFERENCE_KEY);
-  return value === '1' || value === 'true';
-};
-
-export const saveAnimationsDisabled = (disabled: boolean): void => {
-  if (disabled) {
-    writeLocalStorage(ANIMATION_PREFERENCE_KEY, '1');
-  } else {
-    removeLocalStorage(ANIMATION_PREFERENCE_KEY);
-  }
-};
-
 const detectBrowserLanguage = (fallback: Locale = fallbackLocale): Locale => {
   if (!isBrowser) {
     return fallback;
@@ -651,7 +637,6 @@ export const exportDB = (db: DB): string => {
       glossaryBookmarkCollections: exportGlossaryBookmarkCollections,
       exerciseBookmarkCollections: exportExerciseBookmarkCollections,
       studyStatus: db.studyStatus,
-      animationsDisabled: loadAnimationsDisabled(),
     },
     null,
     2,
@@ -669,7 +654,6 @@ export const parseIncomingDB = (
   glossaryBookmarkCollections?: Array<{ termId: string; collectionName: string }>;
   exerciseBookmarkCollections?: Array<{ exerciseId: string; collectionName: string }>;
   studyStatus?: StudyStatusMap;
-  animationsDisabled?: boolean;
 } => {
   const parsed = JSON.parse(raw) as {
     appName?: string;
@@ -681,7 +665,6 @@ export const parseIncomingDB = (
     glossaryBookmarkCollections?: Array<{ termId: string; collectionName: string }>;
     exerciseBookmarkCollections?: Array<{ exerciseId: string; collectionName: string }>;
     studyStatus?: StudyStatusMap;
-    animationsDisabled?: boolean;
   };
 
   if (!parsed || typeof parsed !== 'object') {
@@ -707,8 +690,6 @@ export const parseIncomingDB = (
       ? parsed.exerciseBookmarkCollections
       : [],
     studyStatus: parsed.studyStatus ? sanitizeStudyStatusMap(parsed.studyStatus) : undefined,
-    animationsDisabled:
-      typeof parsed.animationsDisabled === 'boolean' ? parsed.animationsDisabled : undefined,
   };
 };
 
@@ -858,11 +839,6 @@ export const importData = (currentDB: DB, importedData: ReturnType<typeof parseI
     importedExerciseBookmarkCollections,
   );
 
-  // Restore preferences if they were included in the export
-  if (typeof importedData.animationsDisabled === 'boolean') {
-    saveAnimationsDisabled(importedData.animationsDisabled);
-  }
-
   return {
     ...currentDB,
     progress: updatedProgress,
@@ -885,8 +861,6 @@ export const clearDB = (): DB => {
   }
   removeLocalStorage(HOME_PINNED_BELT_KEY);
   removeLocalStorage(HOME_BELT_PROMPT_DISMISSED_KEY);
-  // Reset preferences to defaults (animations OFF)
-  saveAnimationsDisabled(false);
   return buildDefaultDB();
 };
 

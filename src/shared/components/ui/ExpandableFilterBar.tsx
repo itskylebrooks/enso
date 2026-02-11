@@ -27,7 +27,7 @@ export const ExpandableFilterBar = ({
   const [isExpanded, setIsExpanded] = useState(false);
   const [isPinned, setIsPinned] = useState(() => loadFilterPanelPinned());
   const [isInitialMount, setIsInitialMount] = useState(true);
-  const { animationsDisabled } = useMotionPreferences();
+  const { prefersReducedMotion } = useMotionPreferences();
 
   // Mark initial mount as complete after first render
   useEffect(() => {
@@ -104,7 +104,7 @@ export const ExpandableFilterBar = ({
               initial={isInitialMount ? false : { opacity: 0, scale: 0.95, x: -10 }}
               animate={{ opacity: 1, scale: 1, x: 0 }}
               exit={{ opacity: 0, scale: 0.95, x: -10 }}
-              transition={{ duration: animationsDisabled ? 0 : 0.2, ease: [0.4, 0, 0.2, 1] }}
+              transition={{ duration: prefersReducedMotion ? 0 : 0.2, ease: [0.4, 0, 0.2, 1] }}
             >
               {children}
             </motion.div>
@@ -120,7 +120,7 @@ export const ExpandableFilterBar = ({
             initial={isInitialMount ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: animationsDisabled ? 0 : 0.2, ease: [0.4, 0, 0.2, 1] }}
+            transition={{ duration: prefersReducedMotion ? 0 : 0.2, ease: [0.4, 0, 0.2, 1] }}
           >
             {/* Vertical Tab */}
             <div
@@ -144,7 +144,10 @@ export const ExpandableFilterBar = ({
                   initial={{ opacity: 0, scale: 0.95, x: -10 }}
                   animate={{ opacity: 1, scale: 1, x: 0 }}
                   exit={{ opacity: 0, scale: 0.95, x: -10 }}
-                  transition={{ duration: animationsDisabled ? 0 : 0.2, ease: [0.4, 0, 0.2, 1] }}
+                  transition={{
+                    duration: prefersReducedMotion ? 0 : 0.2,
+                    ease: [0.4, 0, 0.2, 1],
+                  }}
                 >
                   {children}
                 </motion.div>

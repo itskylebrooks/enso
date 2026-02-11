@@ -16,7 +16,7 @@ import { Header } from '@shared/components/layout/Header';
 import { MobileTabBar } from '@shared/components/layout/MobileTabBar';
 import { ExpandableFilterBar } from '@shared/components/ui/ExpandableFilterBar';
 import { MobileFilters } from '@shared/components/ui/MobileFilters';
-import { setAnimationsDisabled, useMotionPreferences } from '@shared/components/ui/motion';
+import { useMotionPreferences } from '@shared/components/ui/motion';
 import { Toast } from '@shared/components/ui/Toast';
 import {
   buildTechniqueUrlWithVariant,
@@ -55,14 +55,12 @@ import {
   clearFilters,
   clearThemePreference,
   hasStoredTheme,
-  loadAnimationsDisabled,
   loadBeltPromptDismissed,
   loadDB,
   loadFilters,
   loadStoredLocale,
   loadPinnedBeltGrade,
   loadTheme,
-  saveAnimationsDisabled,
   saveBeltPromptDismissed,
   saveDB,
   saveFilters,
@@ -687,11 +685,6 @@ export default function App({
   const [isHomePrefsReady, setIsHomePrefsReady] = useState(false);
   const [theme, setTheme] = useState<Theme>(() => loadTheme());
   const [hasManualTheme, setHasManualTheme] = useState<boolean>(() => hasStoredTheme());
-  const [animationsDisabled, setAnimationsDisabledState] = useState<boolean>(() => {
-    const initial = loadAnimationsDisabled();
-    setAnimationsDisabled(initial);
-    return initial;
-  });
   const [db, setDB] = useState<DB>(() => loadDB());
   const [filters, setFilters] = useState<Filters>(() => {
     try {
@@ -726,7 +719,7 @@ export default function App({
   const [beltPromptDismissed, setBeltPromptDismissed] = useState<boolean>(false);
 
   const copy = getCopy(locale);
-  const { pageMotion } = useMotionPreferences();
+  const { pageMotion, prefersReducedMotion } = useMotionPreferences();
   const searchTriggerRef = useRef<HTMLButtonElement | null>(null);
   const settingsTriggerRef = useRef<HTMLButtonElement | null>(null);
   const settingsClearButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -736,23 +729,6 @@ export default function App({
   // Detect if this render follows a back/forward restore and skip entrance
   // animations to avoid the brief re-appearance/flicker on iOS Safari.
   const skipEntranceAnimations = cameFromBackForwardNavigation();
-
-  useEffect(() => {
-    setAnimationsDisabled(animationsDisabled);
-  }, [animationsDisabled]);
-
-  useEffect(() => {
-    if (typeof document === 'undefined') {
-      return;
-    }
-
-    const root = document.documentElement;
-    const { body } = document;
-    root.classList.toggle('disable-animations', animationsDisabled);
-    if (body) {
-      body.classList.toggle('disable-animations', animationsDisabled);
-    }
-  }, [animationsDisabled]);
 
   // Prefetch helpers - no longer needed since pages are statically imported
   const prefetchTechniquePage = useCallback(() => {
@@ -960,8 +936,6 @@ export default function App({
 
   const handleConfirmClear = useCallback(() => {
     setDB(clearDB());
-    // Reload preferences after clearing (clearDB resets them to defaults)
-    setAnimationsDisabledState(loadAnimationsDisabled());
     handleCancelClear();
     showToast(copy.toastDataCleared);
   }, [copy.toastDataCleared, handleCancelClear, setDB, showToast]);
@@ -1673,12 +1647,6 @@ export default function App({
     setTheme(next);
   };
 
-  const handleAnimationsPreferenceChange = (disabled: boolean): void => {
-    setAnimationsDisabledState(disabled);
-    setAnimationsDisabled(disabled);
-    saveAnimationsDisabled(disabled);
-  };
-
   const handleDBChange = (next: DB): void => {
     setDB(next);
   };
@@ -2024,7 +1992,7 @@ export default function App({
       return;
     }
     pendingScrollToTopRef.current = true;
-    if (skipEntranceAnimations || animationsDisabled) {
+    if (skipEntranceAnimations || prefersReducedMotion) {
       flushScrollToTop();
       isInitialMountRef.current = false;
       return;
@@ -2043,7 +2011,7 @@ export default function App({
     activeSlug,
     currentTechnique?.id,
     skipEntranceAnimations,
-    animationsDisabled,
+    prefersReducedMotion,
     flushScrollToTop,
   ]);
 
@@ -2541,7 +2509,7 @@ export default function App({
         : route;
 
   return (
-    <MotionConfig reducedMotion={animationsDisabled ? 'always' : 'user'}>
+    <MotionConfig reducedMotion="user">
       <div className="min-h-dvh flex flex-col app-bg">
         <Header
           copy={copy}
@@ -2642,12 +2610,10 @@ export default function App({
               theme={theme}
               isSystemTheme={!hasManualTheme}
               db={db}
-              animationsDisabled={animationsDisabled}
               onClose={closeSettings}
               onRequestClear={handleRequestClear}
               onChangeLocale={handleLocaleChange}
               onChangeTheme={handleThemeChange}
-              onChangeAnimations={handleAnimationsPreferenceChange}
               onChangeDB={handleDBChange}
               clearButtonRef={settingsClearButtonRef}
               trapEnabled={!confirmClearOpen}
