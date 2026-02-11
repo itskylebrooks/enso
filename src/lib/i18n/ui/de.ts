@@ -130,7 +130,7 @@ export const de = {
   data: 'Daten',
   sync: 'Synchronisierung',
   syncComingSoon: 'Kommt bald.',
-  dangerZone: 'Gefahrenbereich',
+  dangerZone: 'Daten löschen',
   clear: 'Löschen',
   installPwa: 'App installieren',
   installPwaTitle: 'Enso installieren',
