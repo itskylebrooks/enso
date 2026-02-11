@@ -245,6 +245,8 @@ const routeToPath = (route: AppRoute): string => {
       return '/guide/skill';
     case 'guideRoutineRecovery':
       return '/guide/recovery';
+    case 'sync':
+      return '/sync';
     case 'feedback':
       return '/feedback';
     case 'techniques':
@@ -415,6 +417,10 @@ const parseLocation = (
 
   if (pathname === '/about') {
     return { route: 'about', slug: null };
+  }
+
+  if (pathname === '/sync') {
+    return { route: 'sync', slug: null };
   }
 
   if (pathname === '/guide') {
@@ -1647,6 +1653,11 @@ export default function App({
     setTheme(next);
   };
 
+  const handleManageSync = useCallback((): void => {
+    closeSettings();
+    navigateTo('sync');
+  }, [closeSettings, navigateTo]);
+
   const handleDBChange = (next: DB): void => {
     setDB(next);
   };
@@ -2215,6 +2226,15 @@ export default function App({
     );
   } else if (route === 'about') {
     mainContent = <AboutPage copy={copy} />;
+  } else if (route === 'sync') {
+    mainContent = (
+      <div className="max-w-4xl mx-auto px-4 md:px-6 py-10">
+        <section className="rounded-2xl border surface-border bg-[var(--color-surface)] p-6 md:p-8">
+          <h1 className="text-xl font-semibold tracking-tight">{copy.sync}</h1>
+          <p className="mt-2 text-sm text-muted">{copy.syncComingSoon}</p>
+        </section>
+      </div>
+    );
   } else if (route === 'guideAdvanced') {
     mainContent = (
       <AdvancedPrograms
@@ -2614,6 +2634,7 @@ export default function App({
               onRequestClear={handleRequestClear}
               onChangeLocale={handleLocaleChange}
               onChangeTheme={handleThemeChange}
+              onManageSync={handleManageSync}
               onChangeDB={handleDBChange}
               clearButtonRef={settingsClearButtonRef}
               trapEnabled={!confirmClearOpen}

@@ -45,6 +45,7 @@ const resolveInitialRoute = (pathname: string): { route: AppRoute; slug: string 
   if (pathname === '/exercises' || pathname === '/practice') return { route: 'exercises', slug: null };
   if (pathname === '/terms' || pathname === '/glossary') return { route: 'terms', slug: null };
   if (pathname === '/about') return { route: 'about', slug: null };
+  if (pathname === '/sync') return { route: 'sync', slug: null };
   if (pathname === '/guide') return { route: 'guide', slug: null };
   if (pathname === '/guide/advanced') return { route: 'guideAdvanced', slug: null };
   if (pathname === '/guide/dan') return { route: 'guideDan', slug: null };

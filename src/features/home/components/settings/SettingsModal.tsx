@@ -33,6 +33,7 @@ type SettingsModalProps = {
   onRequestClear: () => void;
   onChangeLocale: (locale: Locale) => void;
   onChangeTheme: (theme: Theme | 'system') => void;
+  onManageSync: () => void;
   onChangeDB: (db: DB) => void;
   clearButtonRef?: RefObject<HTMLButtonElement | null>;
   trapEnabled?: boolean;
@@ -48,6 +49,7 @@ export const SettingsModal = ({
   onRequestClear,
   onChangeLocale,
   onChangeTheme,
+  onManageSync,
   onChangeDB,
   clearButtonRef,
   trapEnabled = true,
@@ -164,7 +166,9 @@ export const SettingsModal = ({
           <div>
             <div className="grid grid-cols-2 gap-2 items-center">
               <div>
-                <SectionTitle muted={false}>{copy.theme}</SectionTitle>
+                <SectionTitle muted={false} variant="settings">
+                  {copy.theme}
+                </SectionTitle>
               </div>
               <div className="flex gap-2">
                 <button
@@ -214,7 +218,9 @@ export const SettingsModal = ({
           <div>
             <div className="grid grid-cols-3 gap-2 items-center">
               <div className="col-span-2">
-                <SectionTitle muted={false}>{copy.installPwa}</SectionTitle>
+                <SectionTitle muted={false} variant="settings">
+                  {copy.installPwa}
+                </SectionTitle>
               </div>
               <button
                 type="button"
@@ -232,12 +238,12 @@ export const SettingsModal = ({
               >
                 {isInstalled ? (
                   <>
-                    <Check className="h-4 w-4" aria-hidden />
+                    <Check className="h-4 w-4 shrink-0" aria-hidden />
                     {copy.installPwaInstalled}
                   </>
                 ) : (
                   <>
-                    <Download className="h-4 w-4" aria-hidden />
+                    <Download className="h-4 w-4 shrink-0" aria-hidden />
                     {copy.installPwaButton}
                   </>
                 )}
@@ -250,7 +256,9 @@ export const SettingsModal = ({
           <div>
             <div className="grid grid-cols-3 gap-2 items-center">
               <div className="col-span-2">
-                <SectionTitle muted={false}>{copy.language}</SectionTitle>
+                <SectionTitle muted={false} variant="settings">
+                  {copy.language}
+                </SectionTitle>
               </div>
               <div className="col-span-1 flex gap-2">
                 <button
@@ -284,10 +292,14 @@ export const SettingsModal = ({
 
           {/* Data */}
           <div>
-            <SectionTitle muted={false}>{copy.data}</SectionTitle>
-            <div className="mt-2 grid grid-cols-3 gap-2">
-              {/* Import */}
-              <label className="w-full flex items-center justify-center gap-1.5 rounded-lg h-10 px-3 text-xs font-medium border btn-tonal surface-hover transition-soft motion-ease cursor-pointer">
+            <div className="grid grid-cols-3 gap-2 items-center">
+              <div>
+                <SectionTitle muted={false} variant="settings">
+                  {copy.data}
+                </SectionTitle>
+              </div>
+              {/* Import (middle) */}
+              <label className="w-full h-10 flex items-center justify-center gap-1.5 rounded-lg px-3 text-xs font-medium border btn-tonal surface-hover transition-soft motion-ease cursor-pointer">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="18"
@@ -333,55 +345,86 @@ export const SettingsModal = ({
                 />
               </label>
 
-              {/* Reset (center) */}
-              <button
-                type="button"
-                ref={clearButtonRef}
-                onClick={onRequestClear}
-                className="w-full flex items-center justify-center gap-1.5 rounded-lg h-10 px-3 text-xs font-medium border border-red-500/50 text-red-600 dark:text-red-400 hover:bg-red-500/10 transition-soft motion-ease"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="lucide lucide-eraser-icon lucide-eraser"
-                >
-                  <path d="M21 21H8a2 2 0 0 1-1.42-.587l-3.994-3.999a2 2 0 0 1 0-2.828l10-10a2 2 0 0 1 2.829 0l5.999 6a2 2 0 0 1 0 2.828L12.834 21" />
-                  <path d="m5.082 11.09 8.828 8.828" />
-                </svg>
-                <span>{copy.clear}</span>
-              </button>
-
-              {/* Export */}
+              {/* Export (right) */}
               <button
                 type="button"
                 onClick={handleExport}
-                className="w-full flex items-center justify-center gap-1.5 rounded-lg h-10 px-3 text-xs font-medium border btn-tonal surface-hover transition-soft motion-ease"
+                className="w-full h-10 flex items-center justify-center gap-1.5 rounded-lg px-3 text-xs font-medium border btn-tonal surface-hover transition-soft motion-ease"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="lucide lucide-folder-output-icon lucide-folder-output"
-                >
-                  <path d="M2 7.5V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H20a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-1.5" />
-                  <path d="M2 13h10" />
-                  <path d="m5 10-3 3 3 3" />
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="lucide lucide-folder-input-icon lucide-folder-input"
+                  >
+                    <path d="M2 9V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H20a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-1" />
+                    <path d="M2 13h10" />
+                    <path d="m9 16 3-3-3-3" />
                 </svg>
                 <span>{copy.export}</span>
               </button>
+            </div>
+          </div>
+          <div className="border-t surface-border" />
+
+          {/* Sync */}
+          <div>
+            <div className="grid grid-cols-3 gap-2 items-center">
+              <div className="col-span-2">
+                <SectionTitle muted={false} variant="settings">
+                  {copy.sync}
+                </SectionTitle>
+              </div>
+              <button
+                type="button"
+                onClick={onManageSync}
+                className="col-span-1 w-full px-3 py-2 text-sm rounded-lg border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] btn-tonal surface-hover"
+              >
+                {copy.manage}
+              </button>
+            </div>
+          </div>
+          <div className="border-t surface-border" />
+
+          {/* Danger Zone */}
+          <div>
+            <div className="grid grid-cols-3 gap-2 items-center">
+              <div className="col-span-2">
+                <SectionTitle muted={false} variant="settings">
+                  {copy.dangerZone}
+                </SectionTitle>
+              </div>
+              <div className="col-span-1">
+                <button
+                  type="button"
+                  ref={clearButtonRef}
+                  onClick={onRequestClear}
+                  className="w-full h-10 flex items-center justify-center gap-1.5 rounded-lg px-3 text-xs font-medium border border-red-500/50 text-red-600 dark:text-red-400 hover:bg-red-500/10 transition-soft motion-ease"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="lucide lucide-eraser-icon lucide-eraser"
+                  >
+                    <path d="M21 21H8a2 2 0 0 1-1.42-.587l-3.994-3.999a2 2 0 0 1 0-2.828l10-10a2 2 0 0 1 2.829 0l5.999 6a2 2 0 0 1 0 2.828L12.834 21" />
+                    <path d="m5.082 11.09 8.828 8.828" />
+                  </svg>
+                  <span>{copy.clear}</span>
+                </button>
+              </div>
             </div>
           </div>
           {/* Footer: divider and single-line with centered name and icons */}

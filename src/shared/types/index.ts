@@ -184,6 +184,7 @@ export type AppRoute =
   | 'techniques'
   | 'exercises'
   | 'bookmarks'
+  | 'sync'
   | 'about'
   | 'guide'
   | 'guideAdvanced'
