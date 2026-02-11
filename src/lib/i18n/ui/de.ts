@@ -126,7 +126,7 @@ export const de = {
   system: 'System',
   export: 'Export',
   import: 'Import',
-  data: 'Daten (Lesezeichen)',
+  data: 'Daten',
   clear: 'Löschen',
   installPwa: 'App installieren',
   installPwaTitle: 'Enso installieren',

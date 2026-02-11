@@ -125,7 +125,7 @@ export const en = {
   system: 'System',
   export: 'Export',
   import: 'Import',
-  data: 'Data (Bookmarks)',
+  data: 'Data',
   clear: 'Erase',
   installPwa: 'Install App',
   installPwaTitle: 'Install Enso',
