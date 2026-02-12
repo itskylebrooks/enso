@@ -176,8 +176,8 @@ export const ONBOARDING_TOUR_SEGMENTS: OnboardingTourSegment[] = [
       de: 'Suchkürzel',
     },
     description: {
-      en: 'Search everything from one place. Tip: press Tab after typing a filter token — T for techniques, E for exercises, G for terms. Belt filters also work: 1K–5K.',
-      de: 'Suche alles an einem Ort. Tipp: Drücke Tab nach einem Filterkürzel — T für Techniken, U/Ü für Übungen, B für Begriffe. Gürtel-Filter funktionieren auch: 1K–5K.',
+      en: 'Search everything from one place. Tip: press Space after typing a filter token — T for techniques, E for exercises, G for terms. Belt filters also work: 1K–5K and 1D–5D.',
+      de: 'Suche alles an einem Ort. Tipp: Drücke Space nach einem Filterkürzel — T für Techniken, U/Ü für Übungen, B für Begriffe. Gürtel-Filter funktionieren auch: 1K–5K und 1D–5D.',
     },
   },
 ];
