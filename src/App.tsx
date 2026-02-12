@@ -376,6 +376,8 @@ const getPracticeSlugFromPath = (pathname: string): string | null => {
   return match ? decodeURIComponent(match[1]) : null;
 };
 
+const isGuideLikeRoute = (value: AppRoute): boolean => value.startsWith('guide');
+
 const parseLocation = (
   pathname: string,
   state?: HistoryState,
@@ -2090,7 +2092,7 @@ export default function App({
         ? copy.backToHome
         : techniqueBackRoute === 'about'
           ? copy.backToAbout
-          : techniqueBackRoute === 'guide'
+          : isGuideLikeRoute(techniqueBackRoute)
               ? copy.backToGuide
               : techniqueBackRoute === 'terms'
                 ? copy.backToGlossary
@@ -2108,7 +2110,7 @@ export default function App({
         ? copy.backToHome
         : glossaryBackRoute === 'about'
           ? copy.backToAbout
-          : glossaryBackRoute === 'guide'
+          : isGuideLikeRoute(glossaryBackRoute)
               ? copy.backToGuide
               : glossaryBackRoute === 'feedback'
                 ? copy.backToFeedback
@@ -2125,10 +2127,8 @@ export default function App({
         ? copy.backToHome
         : practiceBackRoute === 'about'
           ? copy.backToAbout
-          : practiceBackRoute === 'guide'
+          : isGuideLikeRoute(practiceBackRoute)
               ? copy.backToGuide
-              : guideRouteToRoutine(practiceBackRoute)
-                ? copy.backToGuide
                 : practiceBackRoute === 'feedback'
                 ? copy.backToFeedback
                 : copy.backToPractice;
@@ -2343,10 +2343,14 @@ export default function App({
         copy={copy}
         locale={locale}
         grade={grade}
+        techniques={db.techniques}
+        glossaryTerms={glossaryTerms}
         backLabel={guideBackLabel}
         onBack={handleGuideBack}
         pinnedBeltGrade={pinnedBeltGrade}
         onTogglePin={togglePinnedBeltGrade}
+        onOpenTechnique={(slug) => openTechnique(slug, undefined, undefined, false)}
+        onOpenTerm={openGlossaryTerm}
       />
     );
   } else if (route === 'guide') {
