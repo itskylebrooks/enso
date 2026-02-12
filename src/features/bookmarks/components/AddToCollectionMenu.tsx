@@ -20,6 +20,7 @@ type AddToCollectionMenuProps = {
   onCreate?: () => void;
   onOpen?: () => void;
   onClose?: () => void;
+  size?: 'compact' | 'header';
 };
 
 export const AddToCollectionMenu = ({
@@ -29,6 +30,7 @@ export const AddToCollectionMenu = ({
   onCreate,
   onOpen,
   onClose,
+  size = 'compact',
 }: AddToCollectionMenuProps): ReactElement => {
   const [open, setOpen] = useState(false);
   const [position, setPosition] = useState({ top: 0, left: 0 });
@@ -42,6 +44,9 @@ export const AddToCollectionMenu = ({
 
   const hasCollections = collections.length > 0;
   const hasCheckedCollections = collections.some((collection) => collection.checked);
+  const isHeaderSize = size === 'header';
+  const triggerSizeClass = isHeaderSize ? 'px-3 py-2' : 'p-2';
+  const triggerIconClass = isHeaderSize ? 'w-5 h-5 md:w-4 md:h-4' : 'w-4 h-4';
 
   const updatePosition = () => {
     if (!triggerRef.current) return;
@@ -171,17 +176,17 @@ export const AddToCollectionMenu = ({
         }}
         className={
           hasCheckedCollections
-            ? 'p-2 rounded-lg border bg-[var(--color-text)] text-[var(--color-bg)] border-[var(--color-text)] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-bg)]'
-            : 'p-2 rounded-lg border btn-tonal surface-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]'
+            ? `${triggerSizeClass} rounded-lg border inline-flex items-center justify-center bg-[var(--color-text)] text-[var(--color-bg)] border-[var(--color-text)] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-bg)]`
+            : `${triggerSizeClass} rounded-lg border inline-flex items-center justify-center btn-tonal surface-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]`
         }
         aria-haspopup="true"
         aria-expanded={open}
         aria-label={copy.collectionsAddTo}
       >
         {hasCheckedCollections ? (
-          <FolderCheck className="w-4 h-4" />
+          <FolderCheck className={triggerIconClass} />
         ) : (
-          <FolderPlus className="w-4 h-4" />
+          <FolderPlus className={triggerIconClass} />
         )}
       </button>
       {open &&

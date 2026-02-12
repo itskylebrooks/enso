@@ -153,8 +153,8 @@ export const TermDetailPage = ({
         </a>
 
         <div className="space-y-3">
-          <div className="flex flex-wrap items-start justify-between gap-4">
-            <div className="space-y-2">
+          <div className="grid gap-x-6 gap-y-4 sm:grid-cols-[minmax(0,1fr)_auto]">
+            <div className="space-y-2 sm:col-start-1 sm:row-start-1">
               <h1 className="text-3xl font-semibold leading-tight" title={term.romaji}>
                 {term.romaji}
               </h1>
@@ -175,7 +175,7 @@ export const TermDetailPage = ({
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex w-full items-center justify-end gap-2 sm:col-start-2 sm:row-start-1 sm:w-auto sm:justify-end sm:self-start">
               <StudyStatusButton
                 status={studyStatus}
                 label={studyLabel}
@@ -194,6 +194,7 @@ export const TermDetailPage = ({
                   onToggleCollection(collectionId, nextChecked)
                 }
                 onCreate={openCreateDialog}
+                size="header"
               />
               <div className="inline-flex rounded-lg border surface-border overflow-hidden">
                 <motion.button
@@ -204,16 +205,16 @@ export const TermDetailPage = ({
                   transition={{ duration: 0.15 }}
                   whileTap={{ scale: 0.96 }}
                   className={classNames(
-                    'p-2 text-sm flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] transition-colors duration-150',
+                    'px-3 py-2 text-sm inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] transition-colors duration-150',
                     isBookmarked
                       ? 'bg-[var(--color-text)] text-[var(--color-bg)]'
                       : 'bg-[var(--color-surface)] text-[var(--color-text)] hover:bg-[var(--color-surface-hover)]',
                   )}
                 >
                   {isBookmarked ? (
-                    <BookmarkCheck className="w-4 h-4" />
+                    <BookmarkCheck className="w-5 h-5 md:h-4 md:w-4" />
                   ) : (
-                    <Bookmark className="w-4 h-4" />
+                    <Bookmark className="w-5 h-5 md:h-4 md:w-4" />
                   )}
                 </motion.button>
               </div>

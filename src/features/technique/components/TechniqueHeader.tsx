@@ -256,6 +256,7 @@ export const TechniqueHeader = ({
                   onToggleCollection(collectionId, nextChecked)
                 }
                 onCreate={onCreateCollection}
+                size="header"
               />
               <div className="inline-flex rounded-lg border surface-border overflow-hidden">
                 <motion.button
@@ -266,7 +267,7 @@ export const TechniqueHeader = ({
                   transition={toggleTransition}
                   whileTap={prefersReducedMotion ? undefined : { scale: 0.96 }}
                   className={classNames(
-                    'p-2 text-sm flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] transition-colors duration-150',
+                    'px-3 py-2 text-sm inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] transition-colors duration-150',
                     isBookmarked
                       ? 'bg-[var(--color-text)] text-[var(--color-bg)]'
                       : 'bg-[var(--color-surface)] text-[var(--color-text)] hover:bg-[var(--color-surface-hover)]',
@@ -274,16 +275,16 @@ export const TechniqueHeader = ({
                 >
                   <motion.span
                     aria-hidden
-                    className="w-4 h-4 flex items-center justify-center"
+                    className="w-5 h-5 flex items-center justify-center md:h-4 md:w-4"
                     animate={
                       isBookmarked ? { scale: 1, opacity: 1 } : { scale: 0.86, opacity: 0.85 }
                     }
                     transition={toggleTransition}
                   >
                     {isBookmarked ? (
-                      <BookmarkCheck className="w-4 h-4" />
+                      <BookmarkCheck className="w-5 h-5 md:h-4 md:w-4" />
                     ) : (
-                      <Bookmark className="w-4 h-4" />
+                      <Bookmark className="w-5 h-5 md:h-4 md:w-4" />
                     )}
                   </motion.span>
                 </motion.button>
