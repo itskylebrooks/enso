@@ -78,7 +78,7 @@ Enso is **content-driven**.
 Main content areas:
 
 - Techniques: `content/techniques/*.json`
-- Terms: `content/glossary/*.json`
+- Terms: `content/terms/*.json`
 - Trainers / dojos: `content/trainers.json`, `content/dojos.json`
 - Quotes: `content/quotes.json`, `content/quotes-de.json`
 

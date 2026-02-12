@@ -1,21 +1,21 @@
-import { loadAllGlossaryTerms } from './loaders/glossary';
-import { loadAllPracticeExercises } from './loaders/practice';
+import { loadAllExercises } from './loaders/exercises';
+import { loadAllTerms } from './loaders/terms';
 import { loadAllTechniques } from './loaders/techniques';
 
 export const validateAllContent = async (): Promise<{
   techniques: number;
-  glossaryTerms: number;
-  practiceExercises: number;
+  terms: number;
+  exercises: number;
 }> => {
-  const [techniques, glossaryTerms, practiceExercises] = await Promise.all([
+  const [techniques, terms, exercises] = await Promise.all([
     loadAllTechniques(),
-    loadAllGlossaryTerms(),
-    loadAllPracticeExercises(),
+    loadAllTerms(),
+    loadAllExercises(),
   ]);
 
   return {
     techniques: techniques.length,
-    glossaryTerms: glossaryTerms.length,
-    practiceExercises: practiceExercises.length,
+    terms: terms.length,
+    exercises: exercises.length,
   };
 };

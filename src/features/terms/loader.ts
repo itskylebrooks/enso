@@ -1,4 +1,4 @@
-import termsData from '@generated/content/glossary.json';
+import termsData from '@generated/content/terms.json';
 import type { GlossaryTerm } from '../../shared/types';
 
 let termsCache: GlossaryTerm[] | null = null;

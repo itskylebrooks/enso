@@ -3,23 +3,23 @@ import path from 'node:path';
 import type { GlossaryTerm } from '../../../shared/types';
 import { parseGlossaryTerm } from '../schemas/glossary';
 
-const glossaryDir = path.join(process.cwd(), 'content', 'glossary');
+const termsDir = path.join(process.cwd(), 'content', 'terms');
 
 const slugRedirects: Record<string, string> = {
   'irimi-omote': 'irimi',
   'tenkan-ura': 'tenkan',
 };
 
-const readGlossaryFiles = async (): Promise<string[]> => {
-  const entries = await readdir(glossaryDir, { withFileTypes: true });
+const readTermFiles = async (): Promise<string[]> => {
+  const entries = await readdir(termsDir, { withFileTypes: true });
   return entries
     .filter((entry) => entry.isFile() && entry.name.toLowerCase().endsWith('.json'))
-    .map((entry) => path.join(glossaryDir, entry.name))
+    .map((entry) => path.join(termsDir, entry.name))
     .sort();
 };
 
-export const loadAllGlossaryTerms = async (): Promise<GlossaryTerm[]> => {
-  const files = await readGlossaryFiles();
+export const loadAllTerms = async (): Promise<GlossaryTerm[]> => {
+  const files = await readTermFiles();
   const terms: GlossaryTerm[] = [];
   const seenSlugs = new Set<string>();
 
@@ -30,7 +30,7 @@ export const loadAllGlossaryTerms = async (): Promise<GlossaryTerm[]> => {
     const term = parseGlossaryTerm(json, expectedSlug);
 
     if (seenSlugs.has(term.slug)) {
-      throw new Error(`Duplicate glossary slug detected: ${term.slug}`);
+      throw new Error(`Duplicate term slug detected: ${term.slug}`);
     }
 
     seenSlugs.add(term.slug);
@@ -41,8 +41,8 @@ export const loadAllGlossaryTerms = async (): Promise<GlossaryTerm[]> => {
   return terms;
 };
 
-export const loadGlossaryTermBySlug = async (slug: string): Promise<GlossaryTerm | undefined> => {
-  const terms = await loadAllGlossaryTerms();
+export const loadTermBySlug = async (slug: string): Promise<GlossaryTerm | undefined> => {
+  const terms = await loadAllTerms();
   const finalSlug = slugRedirects[slug] || slug;
   return terms.find((term) => term.slug === finalSlug);
 };

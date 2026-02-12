@@ -1,9 +1,9 @@
 import App from '../../../App';
-import { loadAllGlossaryTerms } from '../../../lib/content/loaders/glossary';
+import { loadAllTerms } from '../../../lib/content/loaders/terms';
 import { detectRequestLocale } from '../../_lib/locale';
 
 export async function generateStaticParams() {
-  const terms = await loadAllGlossaryTerms();
+  const terms = await loadAllTerms();
   return terms.map((term) => ({ termSlug: term.slug }));
 }
 

@@ -1,4 +1,4 @@
-import exercisesData from '@generated/content/practice.json';
+import exercisesData from '@generated/content/exercises.json';
 import type { Exercise } from '../../shared/types';
 
 let exercisesCache: Exercise[] | null = null;
@@ -27,7 +27,7 @@ export async function loadExerciseBySlug(slug: string): Promise<Exercise | undef
   return exercisesBySlugCache?.get(slug);
 }
 
-export function clearPracticeCache(): void {
+export function clearExercisesCache(): void {
   exercisesCache = null;
   exercisesBySlugCache = null;
 }

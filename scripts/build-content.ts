@@ -4,9 +4,9 @@ import process from 'node:process';
 import prettier from 'prettier';
 import { z } from 'zod';
 import { validateAllContent } from '../src/lib/content/validate-all';
-import { loadAllGlossaryTerms } from '../src/lib/content/loaders/glossary';
-import { loadAllPracticeExercises } from '../src/lib/content/loaders/practice';
+import { loadAllExercises } from '../src/lib/content/loaders/exercises';
 import { loadAllTechniques } from '../src/lib/content/loaders/techniques';
+import { loadAllTerms } from '../src/lib/content/loaders/terms';
 
 const rootDir = process.cwd();
 const generatedDir = path.join(rootDir, 'src', 'generated', 'content');
@@ -54,10 +54,10 @@ const copyAuthorImage = async () => {
 
 async function run(): Promise<void> {
   const summary = await validateAllContent();
-  const [techniques, glossaryTerms, practiceExercises, quotesEn, quotesDe] = await Promise.all([
+  const [techniques, terms, exercises, quotesEn, quotesDe] = await Promise.all([
     loadAllTechniques(),
-    loadAllGlossaryTerms(),
-    loadAllPracticeExercises(),
+    loadAllTerms(),
+    loadAllExercises(),
     readAndParseQuotes('quotes.json'),
     readAndParseQuotes('quotes-de.json'),
   ]);
@@ -66,15 +66,15 @@ async function run(): Promise<void> {
 
   await Promise.all([
     writeJsonFile('techniques.json', techniques),
-    writeJsonFile('glossary.json', glossaryTerms),
-    writeJsonFile('practice.json', practiceExercises),
+    writeJsonFile('terms.json', terms),
+    writeJsonFile('exercises.json', exercises),
     writeJsonFile('quotes-en.json', quotesEn),
     writeJsonFile('quotes-de.json', quotesDe),
     copyAuthorImage(),
   ]);
 
   console.log(
-    `Validated content: techniques=${summary.techniques}, glossary=${summary.glossaryTerms}, practice=${summary.practiceExercises}`,
+    `Validated content: techniques=${summary.techniques}, terms=${summary.terms}, exercises=${summary.exercises}`,
   );
   console.log(`Generated content artifacts in ${generatedDir}`);
 }

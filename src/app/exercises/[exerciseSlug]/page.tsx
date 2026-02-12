@@ -1,9 +1,9 @@
 import App from '../../../App';
-import { loadAllPracticeExercises } from '../../../lib/content/loaders/practice';
+import { loadAllExercises } from '../../../lib/content/loaders/exercises';
 import { detectRequestLocale } from '../../_lib/locale';
 
 export async function generateStaticParams() {
-  const exercises = await loadAllPracticeExercises();
+  const exercises = await loadAllExercises();
   return exercises.map((exercise) => ({ exerciseSlug: exercise.slug }));
 }
 

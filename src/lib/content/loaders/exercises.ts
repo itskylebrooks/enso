@@ -3,18 +3,18 @@ import path from 'node:path';
 import type { Exercise } from '../../../shared/types';
 import { parsePracticeExercise } from '../schemas/practice';
 
-const practiceDir = path.join(process.cwd(), 'content', 'practice');
+const exercisesDir = path.join(process.cwd(), 'content', 'exercises');
 
-const readPracticeFiles = async (): Promise<string[]> => {
-  const entries = await readdir(practiceDir, { withFileTypes: true });
+const readExerciseFiles = async (): Promise<string[]> => {
+  const entries = await readdir(exercisesDir, { withFileTypes: true });
   return entries
     .filter((entry) => entry.isFile() && entry.name.toLowerCase().endsWith('.json'))
-    .map((entry) => path.join(practiceDir, entry.name))
+    .map((entry) => path.join(exercisesDir, entry.name))
     .sort();
 };
 
-export const loadAllPracticeExercises = async (): Promise<Exercise[]> => {
-  const files = await readPracticeFiles();
+export const loadAllExercises = async (): Promise<Exercise[]> => {
+  const files = await readExerciseFiles();
   const exercises: Exercise[] = [];
   const seenSlugs = new Set<string>();
 
@@ -25,7 +25,7 @@ export const loadAllPracticeExercises = async (): Promise<Exercise[]> => {
     const exercise = parsePracticeExercise(json, expectedSlug);
 
     if (seenSlugs.has(exercise.slug)) {
-      throw new Error(`Duplicate practice slug detected: ${exercise.slug}`);
+      throw new Error(`Duplicate exercise slug detected: ${exercise.slug}`);
     }
 
     seenSlugs.add(exercise.slug);
@@ -41,7 +41,7 @@ export const loadAllPracticeExercises = async (): Promise<Exercise[]> => {
   return exercises;
 };
 
-export const loadPracticeExerciseBySlug = async (slug: string): Promise<Exercise | undefined> => {
-  const exercises = await loadAllPracticeExercises();
+export const loadExerciseBySlug = async (slug: string): Promise<Exercise | undefined> => {
+  const exercises = await loadAllExercises();
   return exercises.find((exercise) => exercise.slug === slug);
 };
