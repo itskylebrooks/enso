@@ -1,7 +1,7 @@
 import type { Copy } from '@shared/constants/i18n';
 import type { ReactElement } from 'react';
 
-const authorPhotoUrl = '/images/Lehrgang-2024-09.jpeg';
+const authorPhotoUrl = '/images/Lehrgang-November-2025.jpeg';
 
 type AboutPageProps = {
   copy: Copy;
@@ -94,8 +94,8 @@ export const AboutPage = ({ copy }: AboutPageProps): ReactElement => {
           <div className="mb-4">
             <img
               src={authorPhotoUrl}
-              alt="Kyle Brooks — Aikidō Lehrgang, November 2024"
-              className="w-full h-auto rounded-lg object-cover"
+              alt="Kyle Brooks — Aikidō Lehrgang, November 2025"
+              className="w-full max-w-md md:max-w-lg h-auto rounded-lg object-cover mx-auto"
             />
           </div>
           {renderParagraphs(copy.aboutPhotoBody)}

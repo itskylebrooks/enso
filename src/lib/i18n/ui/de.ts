@@ -284,7 +284,7 @@ export const de = {
     'Mit Dankbarkeit an meine Lehrer Joachim Eiselen und Markus Möller sowie an meine Gemeinschaft beim WSV (Walddörfer Sportverein) und BSV (Bramfelder Sportverein), die mich als Gast immer freundlich aufnehmen — besonders Karen und Stefan Jakuszeit sowie Alfred Haase. Danke, dass ihr mich inspiriert, mir helft, jedes Training zu genießen, und mich daran erinnert, wie Aikidō uns alles andere für einen Moment vergessen lässt, indem wir uns auf Harmonie konzentrieren.',
   aboutPhotoTitle: 'Foto',
   aboutPhotoBody:
-    'Das Foto unten entstand während eines Aikidō-Lehrgangs unter der Leitung von Werner Lättig beim WSV Walddörfer Sportverein im November 2024 — ein stiller Moment, der mich daran erinnert, warum ich trainiere: Harmonie, Fokus und Dankbarkeit.',
+    'Das Foto oben entstand während eines Aikidō-Lehrgangs unter der Leitung von Werner Lättig beim WSV Walddörfer Sportverein im November 2025 — ein stiller Moment, der mich daran erinnert, warum ich trainiere: Harmonie, Fokus und Dankbarkeit.',
   aboutLink: 'Über',
   portfolio: 'Portfolio',
   iconsBy: 'Icons von',

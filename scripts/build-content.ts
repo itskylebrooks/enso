@@ -12,6 +12,7 @@ const rootDir = process.cwd();
 const generatedDir = path.join(rootDir, 'src', 'generated', 'content');
 const contentDir = path.join(rootDir, 'content');
 const publicImagesDir = path.join(rootDir, 'public', 'images');
+const authorImageName = 'Lehrgang-November-2025.jpeg';
 
 const quoteSchema = z.array(
   z.object({
@@ -45,8 +46,8 @@ const writeJsonFile = async (fileName: string, value: unknown) => {
 };
 
 const copyAuthorImage = async () => {
-  const source = path.join(contentDir, 'Lehrgang-2024-09.jpeg');
-  const destination = path.join(publicImagesDir, 'Lehrgang-2024-09.jpeg');
+  const source = path.join(contentDir, authorImageName);
+  const destination = path.join(publicImagesDir, authorImageName);
   await mkdir(publicImagesDir, { recursive: true });
   await copyFile(source, destination);
 };

@@ -282,7 +282,7 @@ export const en = {
     'With gratitude to my teachers Joachim Eiselen and Markus Möller, and to my community at WSV (Walddörfer Sportverein) and BSV (Bramfelder Sportverein), who always welcome me kindly as a guest — especially Karen and Stefan Jakuszeit, and Alfred Haase. Thank you for inspiring me, for helping me enjoy every training, and for reminding me how Aikidō lets us leave everything else behind by focusing on harmony.',
   aboutPhotoTitle: 'Photo',
   aboutPhotoBody:
-    'The photo below was taken during an Aikidō Lehrgang led by Werner Lättig at the WSV Walddörfer Sportverein in November 2024 — a quiet moment that reminds me why I practice: harmony, focus, and gratitude.',
+    'The photo above was taken during an Aikidō Lehrgang led by Werner Lättig at the WSV Walddörfer Sportverein in November 2025 — a quiet moment that reminds me why I practice: harmony, focus, and gratitude.',
   aboutLink: 'About',
   portfolio: 'Portfolio',
   iconsBy: 'Icons by',
