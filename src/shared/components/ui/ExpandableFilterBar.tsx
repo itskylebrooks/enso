@@ -7,6 +7,8 @@ import { useMotionPreferences } from './motion';
 type ExpandableFilterBarProps = {
   children: ReactNode;
   label?: string;
+  tourTargetId?: string;
+  forceOpen?: boolean;
 };
 
 type FilterBarContextValue = {
@@ -23,6 +25,8 @@ export const usePinButton = (): FilterBarContextValue | null => {
 export const ExpandableFilterBar = ({
   children,
   label = 'Filters',
+  tourTargetId,
+  forceOpen = false,
 }: ExpandableFilterBarProps): ReactNode => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isPinned, setIsPinned] = useState(() => loadFilterPanelPinned());
@@ -80,6 +84,7 @@ export const ExpandableFilterBar = ({
   const togglePin = () => {
     setIsPinned((prev) => !prev);
   };
+  const effectiveExpanded = forceOpen || isExpanded;
 
   return (
     <FilterBarContext.Provider value={{ isPinned, togglePin }}>
@@ -100,6 +105,7 @@ export const ExpandableFilterBar = ({
             </div>
             {/* Pinned panel overlaying - right edge aligned with animation */}
             <motion.div
+              data-tour-target={tourTargetId}
               className="absolute right-0 top-0 w-64 surface border surface-border rounded-2xl p-3 panel-shadow max-h-[calc(100vh-7rem)] overflow-y-auto no-select"
               initial={isInitialMount ? false : { opacity: 0, scale: 0.95, x: -10 }}
               animate={{ opacity: 1, scale: 1, x: 0 }}
@@ -115,8 +121,12 @@ export const ExpandableFilterBar = ({
             key="unpinned"
             className="hidden lg:block sticky top-20 z-30 float-left -ml-16"
             style={{ left: '-3.5rem' }}
-            onMouseEnter={() => setIsExpanded(true)}
-            onMouseLeave={() => setIsExpanded(false)}
+            onMouseEnter={() => {
+              if (!forceOpen) setIsExpanded(true);
+            }}
+            onMouseLeave={() => {
+              if (!forceOpen) setIsExpanded(false);
+            }}
             initial={isInitialMount ? false : { opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -124,8 +134,9 @@ export const ExpandableFilterBar = ({
           >
             {/* Vertical Tab */}
             <div
+              data-tour-target={tourTargetId}
               className={`transition-all duration-300 ${
-                isExpanded ? 'opacity-0 pointer-events-none' : 'opacity-100'
+                effectiveExpanded ? 'opacity-0 pointer-events-none' : 'opacity-100'
               }`}
             >
               <div className="surface border surface-border rounded-xl px-2.5 py-4 flex flex-col items-center gap-3 shadow-sm cursor-pointer hover:bg-[var(--color-surface-hover)] transition-colors">
@@ -138,8 +149,9 @@ export const ExpandableFilterBar = ({
 
             {/* Expanded Panel - Rectangle popup matching original design */}
             <AnimatePresence>
-              {isExpanded && (
+              {effectiveExpanded && (
                 <motion.div
+                  data-tour-target={tourTargetId}
                   className="absolute left-0 top-0 w-64 surface border surface-border rounded-2xl p-3 panel-shadow max-h-[calc(100vh-7rem)] overflow-y-auto no-select"
                   initial={{ opacity: 0, scale: 0.95, x: -10 }}
                   animate={{ opacity: 1, scale: 1, x: 0 }}

@@ -89,6 +89,7 @@ type BookmarksViewProps = {
   onOpenTechnique: (slug: string, bookmarkedVariant?: TechniqueVariantKey) => void;
   onOpenGlossaryTerm: (slug: string) => void;
   onOpenExercise: (slug: string) => void;
+  forceCollectionsSidebarOpen?: boolean;
 };
 
 type DialogState =
@@ -248,6 +249,7 @@ export const BookmarksView = ({
   onOpenTechnique,
   onOpenGlossaryTerm,
   onOpenExercise,
+  forceCollectionsSidebarOpen = false,
 }: BookmarksViewProps): ReactElement => {
   const { listMotion, getItemTransition, prefersReducedMotion } = useMotionPreferences();
   const [dialog, setDialog] = useState<DialogState>(null);
@@ -1024,7 +1026,11 @@ export const BookmarksView = ({
           />
         </div>
         <div className="relative">
-          <ExpandableFilterBar label={copy.collectionsTitle}>
+          <ExpandableFilterBar
+            label={copy.collectionsTitle}
+            tourTargetId="bookmarks-collections-sidebar"
+            forceOpen={forceCollectionsSidebarOpen}
+          >
             <CollectionsSidebar
               copy={copy}
               collections={orderedCollections.map((collection) => ({

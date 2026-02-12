@@ -9,6 +9,10 @@ import { DanOverview } from '@features/home/components/home/DanOverview';
 import { GuidePage } from '@features/home/components/home/GuidePage';
 import { GuideRoutinePage } from '@features/home/components/home/GuideRoutinePage';
 import { SettingsModal } from '@features/home/components/settings/SettingsModal';
+import {
+  ONBOARDING_TOUR_SEGMENTS,
+  OnboardingTourOverlay,
+} from '@features/onboarding/components/OnboardingTourOverlay';
 import { TechniquesPage } from '@features/technique/components/TechniquesPage';
 import { type CollectionOption } from '@features/technique/components/TechniqueHeader';
 import { TechniquePage } from '@features/technique/components/TechniquePage';
@@ -58,6 +62,9 @@ import {
   loadBeltPromptDismissed,
   loadDB,
   loadFilters,
+  loadOnboardingCompleted,
+  loadOnboardingDismissed,
+  loadOnboardingStep,
   loadStoredLocale,
   loadPinnedBeltGrade,
   loadTheme,
@@ -65,6 +72,9 @@ import {
   saveDB,
   saveFilters,
   saveLocale,
+  saveOnboardingCompleted,
+  saveOnboardingDismissed,
+  saveOnboardingStep,
   savePinnedBeltGrade,
   saveTheme,
 } from './shared/services/storageService';
@@ -115,6 +125,13 @@ import {
 } from './shared/utils/variantKeys';
 
 const defaultFilters: Filters = {};
+const normalizeTourSegmentIndex = (value: number | null | undefined): number => {
+  if (typeof value !== 'number' || !Number.isFinite(value)) return 0;
+  const maxIndex = ONBOARDING_TOUR_SEGMENTS.length - 1;
+  if (value < 0) return 0;
+  if (value > maxIndex) return maxIndex;
+  return Math.trunc(value);
+};
 
 type SelectedCollectionId = 'all' | 'ungrouped' | string;
 
@@ -734,6 +751,17 @@ export default function App({
   const [feedbackInitialType, setFeedbackInitialType] = useState<FeedbackType | null>(null);
   const [pinnedBeltGrade, setPinnedBeltGrade] = useState<Grade | null>(null);
   const [beltPromptDismissed, setBeltPromptDismissed] = useState<boolean>(false);
+  const [onboardingDismissed, setOnboardingDismissed] = useState<boolean>(() =>
+    loadOnboardingDismissed(),
+  );
+  const [onboardingCompleted, setOnboardingCompleted] = useState<boolean>(() =>
+    loadOnboardingCompleted(),
+  );
+  const [tourOpen, setTourOpen] = useState(false);
+  const [tourSegmentIndex, setTourSegmentIndex] = useState<number>(() =>
+    normalizeTourSegmentIndex(loadOnboardingStep()),
+  );
+  const [tourCompletionVisible, setTourCompletionVisible] = useState(false);
 
   const copy = getCopy(locale);
   const { pageMotion, prefersReducedMotion } = useMotionPreferences();
@@ -856,7 +884,7 @@ export default function App({
   );
 
   // Prevent page scroll while overlays/modals are open
-  useLockBodyScroll(searchOpen || settingsOpen || confirmClearOpen);
+  useLockBodyScroll(searchOpen || settingsOpen || confirmClearOpen || tourOpen);
 
   // Load glossary terms on component mount
   useEffect(() => {
@@ -1012,6 +1040,14 @@ export default function App({
     if (!isHomePrefsReady) return;
     saveBeltPromptDismissed(beltPromptDismissed);
   }, [beltPromptDismissed, isHomePrefsReady]);
+
+  useEffect(() => {
+    saveOnboardingDismissed(onboardingDismissed);
+  }, [onboardingDismissed]);
+
+  useEffect(() => {
+    saveOnboardingCompleted(onboardingCompleted);
+  }, [onboardingCompleted]);
 
   // Persist filters to local storage so they survive reloads/navigation
   useEffect(() => {
@@ -1196,6 +1232,8 @@ export default function App({
         : null,
     [db.progress, currentTechnique],
   );
+  const isTechniqueDetailOpen = Boolean(currentTechnique);
+  const tourTechniqueSlug = db.techniques[0]?.slug ?? null;
 
   const currentGlossaryTerm = useMemo(
     () => (activeSlug ? (glossaryTerms.find((term) => term.slug === activeSlug) ?? null) : null),
@@ -1673,14 +1711,15 @@ export default function App({
     setDB(next);
   };
 
-  const openTechnique = (
-    slug: string,
-    trainerId?: string,
-    entry?: EntryMode,
-    skipExistenceCheck?: boolean,
-    options?: { originRoute?: AppRoute },
-    bookmarkedVariant?: TechniqueVariantKey,
-  ): void => {
+  const openTechnique = useCallback(
+    (
+      slug: string,
+      trainerId?: string,
+      entry?: EntryMode,
+      skipExistenceCheck?: boolean,
+      options?: { originRoute?: AppRoute },
+      bookmarkedVariant?: TechniqueVariantKey,
+    ): void => {
     rememberScrollPosition();
     if (!skipExistenceCheck && !db.techniques.some((technique) => technique.slug === slug)) {
       return;
@@ -1825,8 +1864,10 @@ export default function App({
       }
     }
 
-    setActiveSlug(slug);
-  };
+      setActiveSlug(slug);
+    },
+    [db.techniques, filters.stance, filters.trainer, filters.weapon, route],
+  );
 
   const openGlossaryTerm = (slug: string): void => {
     rememberScrollPosition();
@@ -1885,6 +1926,170 @@ export default function App({
     }
     setActiveSlug(slug);
   };
+
+  const syncTourSegment = useCallback(
+    (segmentIndex: number): void => {
+      const segment = ONBOARDING_TOUR_SEGMENTS[normalizeTourSegmentIndex(segmentIndex)];
+      if (!segment) return;
+
+      if (segment.id !== 'search-input' && searchOpen) {
+        setSearchOpen(false);
+      }
+
+      switch (segment.id) {
+        case 'guide-tab': {
+          if (route !== 'guide' || activeSlug) {
+            navigateTo('guide');
+          }
+          return;
+        }
+        case 'techniques-tab':
+        case 'techniques-filters': {
+          if (route !== 'techniques' || activeSlug) {
+            navigateTo('techniques');
+          }
+          return;
+        }
+        case 'terms-tab': {
+          if (route !== 'terms' || activeSlug) {
+            navigateTo('terms');
+          }
+          return;
+        }
+        case 'exercises-tab': {
+          if (route !== 'exercises' || activeSlug) {
+            navigateTo('exercises');
+          }
+          return;
+        }
+        case 'detail-study-status':
+        case 'detail-bookmarks-collections': {
+          if (!tourTechniqueSlug) return;
+          if (!currentTechnique || currentTechnique.slug !== tourTechniqueSlug) {
+            openTechnique(tourTechniqueSlug, undefined, undefined, false, {
+              originRoute: 'techniques',
+            });
+          }
+          return;
+        }
+        case 'bookmarks-collections': {
+          if (route !== 'bookmarks' || activeSlug) {
+            navigateTo('bookmarks');
+          }
+          return;
+        }
+        case 'search-input': {
+          if (route !== 'bookmarks' || activeSlug) {
+            navigateTo('bookmarks');
+            if (!searchOpen) {
+              window.setTimeout(() => {
+                setSearchOpen(true);
+              }, 0);
+            }
+            return;
+          }
+          if (!searchOpen) {
+            setSearchOpen(true);
+          }
+          return;
+        }
+      }
+    },
+    [
+      activeSlug,
+      currentTechnique,
+      navigateTo,
+      openTechnique,
+      route,
+      searchOpen,
+      tourTechniqueSlug,
+    ],
+  );
+
+  const handleSkipOnboarding = useCallback((): void => {
+    setTourOpen(false);
+    setTourCompletionVisible(false);
+    setSearchOpen(false);
+    setOnboardingDismissed(true);
+    saveOnboardingStep(null);
+  }, []);
+
+  const handleStartOnboardingTour = useCallback((): void => {
+    const nextSegment = normalizeTourSegmentIndex(loadOnboardingStep());
+    setTourSegmentIndex(nextSegment);
+    setTourCompletionVisible(false);
+    setSearchOpen(false);
+    setTourOpen(true);
+    setOnboardingDismissed(false);
+    setOnboardingCompleted(false);
+    saveOnboardingStep(nextSegment);
+  }, []);
+
+  const isTourSegmentAligned = useMemo(() => {
+    const segment = ONBOARDING_TOUR_SEGMENTS[normalizeTourSegmentIndex(tourSegmentIndex)];
+    if (!segment) return false;
+
+    switch (segment.id) {
+      case 'guide-tab':
+        return route === 'guide';
+      case 'techniques-tab':
+      case 'techniques-filters':
+        return route === 'techniques' && !isTechniqueDetailOpen;
+      case 'terms-tab':
+        return route === 'terms';
+      case 'exercises-tab':
+        return route === 'exercises';
+      case 'detail-study-status':
+      case 'detail-bookmarks-collections':
+        return isTechniqueDetailOpen;
+      case 'bookmarks-collections':
+        return route === 'bookmarks' && !searchOpen;
+      case 'search-input':
+        return route === 'bookmarks' && searchOpen;
+      default:
+        return false;
+    }
+  }, [isTechniqueDetailOpen, route, searchOpen, tourSegmentIndex]);
+
+  const handleTourBack = useCallback(() => {
+    if (tourCompletionVisible) {
+      setTourCompletionVisible(false);
+      return;
+    }
+    setTourSegmentIndex((current) => normalizeTourSegmentIndex(current - 1));
+  }, [tourCompletionVisible]);
+
+  const handleTourNext = useCallback(() => {
+    if (!isTourSegmentAligned) {
+      syncTourSegment(tourSegmentIndex);
+      return;
+    }
+
+    const lastIndex = ONBOARDING_TOUR_SEGMENTS.length - 1;
+    if (tourSegmentIndex >= lastIndex) {
+      setTourCompletionVisible(true);
+      setOnboardingCompleted(true);
+      setOnboardingDismissed(false);
+      saveOnboardingStep(null);
+      return;
+    }
+
+    setTourSegmentIndex((current) => normalizeTourSegmentIndex(current + 1));
+  }, [isTourSegmentAligned, syncTourSegment, tourSegmentIndex]);
+
+  const handleTourGoHome = useCallback(() => {
+    setTourOpen(false);
+    setTourCompletionVisible(false);
+    setSearchOpen(false);
+    navigateTo('home');
+  }, [navigateTo]);
+
+  useEffect(() => {
+    if (!tourOpen || tourCompletionVisible) return;
+    const normalized = normalizeTourSegmentIndex(tourSegmentIndex);
+    saveOnboardingStep(normalized);
+    syncTourSegment(normalized);
+  }, [tourCompletionVisible, tourOpen, tourSegmentIndex, syncTourSegment]);
 
   const togglePinnedBeltGrade = useCallback((grade: Grade) => {
     setPinnedBeltGrade((current) => (current === grade ? null : grade));
@@ -2043,6 +2248,10 @@ export default function App({
     route !== 'terms' &&
     route !== 'exercises' &&
     !guideRouteToRoutine(route);
+  const activeTourSegment = tourOpen
+    ? ONBOARDING_TOUR_SEGMENTS[normalizeTourSegmentIndex(tourSegmentIndex)] ?? null
+    : null;
+  const showHomeOnboardingCard = !tourOpen && !onboardingDismissed && !onboardingCompleted;
 
   const flushScrollToTop = useCallback(() => {
     if (typeof window === 'undefined') return;
@@ -2299,6 +2508,9 @@ export default function App({
         onOpenPinnedBeltGrade={(grade) => navigateToGuideGrade(grade, 'home')}
         beltPromptDismissed={beltPromptDismissed}
         onOpenGuideFromPrompt={handleOpenGuideFromPrompt}
+        showOnboardingCard={showHomeOnboardingCard}
+        onStartOnboardingTour={handleStartOnboardingTour}
+        onSkipOnboarding={handleSkipOnboarding}
       />
     );
   } else if (route === 'about') {
@@ -2401,11 +2613,16 @@ export default function App({
                 onChange={setFilters}
                 onContribute={() => goToFeedback('newTechnique')}
                 onContributePrefetch={prefetchFeedbackPage}
+                forceOpen={activeTourSegment?.id === 'techniques-filters'}
               />
             </div>
             {/* Mobile CTA removed here — now rendered inside the MobileFilters panel */}
             <div className="relative">
-              <ExpandableFilterBar label={copy.filters}>
+              <ExpandableFilterBar
+                label={copy.filters}
+                tourTargetId="techniques-filters-trigger"
+                forceOpen={activeTourSegment?.id === 'techniques-filters'}
+              >
                 <FilterPanel
                   copy={copy}
                   locale={locale}
@@ -2417,6 +2634,7 @@ export default function App({
                   levels={gradeOrder}
                   trainers={trainers}
                   onChange={setFilters}
+                  forceExpandAll={activeTourSegment?.id === 'techniques-filters'}
                 />
                 {/* Desktop CTA under filter panel */}
                 <div className="mt-3">
@@ -2532,6 +2750,7 @@ export default function App({
             }
             onOpenGlossaryTerm={(slug) => openGlossaryTerm(slug)}
             onOpenExercise={openPracticeExercise}
+            forceCollectionsSidebarOpen={activeTourSegment?.id === 'bookmarks-collections'}
           />
         )}
 
@@ -2702,6 +2921,7 @@ export default function App({
               openedBy={
                 (openSearch as { lastOpenedBy?: 'keyboard' | 'mouse' }).lastOpenedBy ?? 'mouse'
               }
+              trapEnabled={!tourOpen}
             />
           )}
 
@@ -2720,7 +2940,7 @@ export default function App({
               onManageSync={handleManageSync}
               onChangeDB={handleDBChange}
               clearButtonRef={settingsClearButtonRef}
-              trapEnabled={!confirmClearOpen}
+              trapEnabled={!confirmClearOpen && !tourOpen}
             />
           )}
 
@@ -2735,6 +2955,28 @@ export default function App({
         </AnimatePresence>
 
         <MobileTabBar copy={copy} route={route} onNavigate={navigateTo} />
+
+        {tourOpen && (
+          <OnboardingTourOverlay
+            locale={locale}
+            isOpen={tourOpen}
+            segmentIndex={tourSegmentIndex}
+            route={route}
+            isTechniqueDetailOpen={isTechniqueDetailOpen}
+            searchOpen={searchOpen}
+            completionVisible={tourCompletionVisible}
+            onBack={handleTourBack}
+            onNext={handleTourNext}
+            onSkip={handleSkipOnboarding}
+            onReturnToStep={() => syncTourSegment(tourSegmentIndex)}
+            onGoHome={handleTourGoHome}
+            onOpenSettings={() => {
+              setTourOpen(false);
+              setTourCompletionVisible(false);
+              openSettings();
+            }}
+          />
+        )}
 
         {toast && <Toast>{toast}</Toast>}
       </div>

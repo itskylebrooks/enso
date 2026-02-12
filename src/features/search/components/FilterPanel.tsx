@@ -28,6 +28,7 @@ type FilterPanelProps = {
   levels: Grade[];
   trainers: string[];
   onChange: (filters: Filters) => void;
+  forceExpandAll?: boolean;
 };
 
 type Option = {
@@ -106,6 +107,7 @@ export const FilterPanel = ({
   levels,
   trainers,
   onChange,
+  forceExpandAll = false,
 }: FilterPanelProps): ReactNode => {
   const hasActiveFilters = useMemo(() => Object.values(filters).some(Boolean), [filters]);
 
@@ -194,6 +196,18 @@ export const FilterPanel = ({
     filters.level,
     filters.trainer,
   ]);
+
+  useEffect(() => {
+    if (!forceExpandAll) return;
+    setOpen({
+      category: true,
+      attack: true,
+      stance: true,
+      weapon: true,
+      level: true,
+      trainer: true,
+    });
+  }, [forceExpandAll]);
 
   const handleReset = (): void => onChange({});
   const pinButtonContext = usePinButton();

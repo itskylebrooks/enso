@@ -8,6 +8,9 @@ import {
   HOME_BELT_PROMPT_DISMISSED_KEY,
   HOME_PINNED_BELT_KEY,
   LOCALE_KEY,
+  ONBOARDING_COMPLETED_KEY,
+  ONBOARDING_DISMISSED_KEY,
+  ONBOARDING_STEP_KEY,
   STORAGE_KEY,
   THEME_KEY,
 } from '../constants/storage';
@@ -924,5 +927,49 @@ export const saveBeltPromptDismissed = (dismissed: boolean): void => {
     writeLocalStorage(HOME_BELT_PROMPT_DISMISSED_KEY, '1');
   } else {
     removeLocalStorage(HOME_BELT_PROMPT_DISMISSED_KEY);
+  }
+};
+
+export const loadOnboardingDismissed = (): boolean => {
+  const value = readLocalStorage(ONBOARDING_DISMISSED_KEY);
+  return value === '1' || value === 'true';
+};
+
+export const saveOnboardingDismissed = (dismissed: boolean): void => {
+  if (dismissed) {
+    writeLocalStorage(ONBOARDING_DISMISSED_KEY, '1');
+  } else {
+    removeLocalStorage(ONBOARDING_DISMISSED_KEY);
+  }
+};
+
+export const loadOnboardingCompleted = (): boolean => {
+  const value = readLocalStorage(ONBOARDING_COMPLETED_KEY);
+  return value === '1' || value === 'true';
+};
+
+export const saveOnboardingCompleted = (completed: boolean): void => {
+  if (completed) {
+    writeLocalStorage(ONBOARDING_COMPLETED_KEY, '1');
+  } else {
+    removeLocalStorage(ONBOARDING_COMPLETED_KEY);
+  }
+};
+
+export const loadOnboardingStep = (): number | null => {
+  const value = readLocalStorage(ONBOARDING_STEP_KEY);
+  if (!value) return null;
+  const parsed = Number.parseInt(value, 10);
+  if (!Number.isFinite(parsed) || parsed < 0) {
+    return null;
+  }
+  return parsed;
+};
+
+export const saveOnboardingStep = (step: number | null): void => {
+  if (typeof step === 'number' && Number.isFinite(step) && step >= 0) {
+    writeLocalStorage(ONBOARDING_STEP_KEY, String(Math.trunc(step)));
+  } else {
+    removeLocalStorage(ONBOARDING_STEP_KEY);
   }
 };

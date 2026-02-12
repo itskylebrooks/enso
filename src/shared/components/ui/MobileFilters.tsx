@@ -29,6 +29,7 @@ type MobileFiltersProps = {
   onChange: (filters: Filters) => void;
   onContribute?: () => void;
   onContributePrefetch?: () => void;
+  forceOpen?: boolean;
 };
 
 type SectionKey = 'category' | 'attack' | 'stance' | 'weapon' | 'level' | 'trainer';
@@ -95,9 +96,11 @@ export const MobileFilters = ({
   onChange,
   onContribute,
   onContributePrefetch,
+  forceOpen = false,
 }: MobileFiltersProps): ReactElement => {
   const hasActiveFilters = useMemo(() => Object.values(filters).some(Boolean), [filters]);
   const [isPanelOpen, setIsPanelOpen] = useState(false);
+  const effectivePanelOpen = forceOpen || isPanelOpen;
   const { collapseMotion } = useMotionPreferences();
 
   const [open, setOpen] = useState<Record<SectionKey, boolean>>(() => ({
@@ -177,14 +180,30 @@ export const MobileFilters = ({
     filters.trainer,
   ]);
 
+  useEffect(() => {
+    if (!forceOpen) return;
+    setOpen({
+      category: true,
+      attack: true,
+      stance: true,
+      weapon: true,
+      level: true,
+      trainer: true,
+    });
+  }, [forceOpen]);
+
   const handleReset = (): void => onChange({});
 
   return (
     <div className="rounded-2xl border surface-border bg-[var(--color-surface)] p-4">
       <button
         type="button"
-        aria-expanded={isPanelOpen}
-        onClick={() => setIsPanelOpen((prev) => !prev)}
+        aria-expanded={effectivePanelOpen}
+        data-tour-target="techniques-filters-trigger"
+        onClick={() => {
+          if (forceOpen) return;
+          setIsPanelOpen((prev) => !prev);
+        }}
         className="flex w-full items-center justify-center rounded-lg px-3 py-2 text-base font-semibold leading-tight focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
       >
         <span>{copy.filters}</span>
@@ -193,7 +212,7 @@ export const MobileFilters = ({
       <motion.div
         className="overflow-hidden"
         initial={false}
-        animate={isPanelOpen ? 'open' : 'closed'}
+        animate={effectivePanelOpen ? 'open' : 'closed'}
         variants={collapseMotion.variants}
         transition={collapseMotion.transition}
       >

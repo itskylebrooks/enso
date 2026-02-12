@@ -46,7 +46,11 @@ export const CollectionsSidebar = ({
   const pinButtonContext = usePinButton();
 
   return (
-    <div className="space-y-4 no-select" aria-label={copy.collectionsTitle}>
+    <div
+      className="space-y-4 no-select"
+      aria-label={copy.collectionsTitle}
+      data-tour-target="bookmarks-collections-sidebar"
+    >
       <div className="flex items-center justify-between gap-2">
         <h2 className="text-sm font-semibold tracking-wide uppercase text-subtle">
           {copy.collectionsTitle}

@@ -190,7 +190,7 @@ export const Header = ({
             event.preventDefault();
             onNavigate('home');
           }}
-          className="flex items-center gap-3 rounded-lg px-1 py-1 -m-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] transition-colors hover:opacity-90"
+          className="flex items-center gap-3 rounded-lg px-1 py-1 -m-1 focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text)] transition-colors hover:opacity-90"
           aria-label={copy.app}
         >
           <Logo className="shrink-0" />
@@ -201,8 +201,9 @@ export const Header = ({
           <button
             type="button"
             onClick={() => onNavigate('guide')}
+            data-tour-target="nav-guide"
             className={classNames(
-              'px-3 py-2 rounded-lg border inline-flex items-center gap-2 justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] !transition-colors !duration-150 !ease-in-out',
+              'px-3 py-2 rounded-lg border inline-flex items-center gap-2 justify-center focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text)] !transition-colors !duration-150 !ease-in-out',
               isGuideActive ? 'btn-contrast' : 'btn-tonal surface-hover',
             )}
             aria-pressed={isGuideActive}
@@ -215,8 +216,9 @@ export const Header = ({
           <button
             type="button"
             onClick={() => onNavigate('techniques')}
+            data-tour-target="nav-techniques"
             className={classNames(
-              'px-3 py-2 rounded-lg border inline-flex items-center gap-2 justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] !transition-colors !duration-150 !ease-in-out',
+              'px-3 py-2 rounded-lg border inline-flex items-center gap-2 justify-center focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text)] !transition-colors !duration-150 !ease-in-out',
               route === 'techniques' ? 'btn-contrast' : 'btn-tonal surface-hover',
             )}
             aria-pressed={route === 'techniques'}
@@ -229,8 +231,9 @@ export const Header = ({
           <button
             type="button"
             onClick={() => onNavigate('exercises')}
+            data-tour-target="nav-exercises"
             className={classNames(
-              'px-3 py-2 rounded-lg border inline-flex items-center gap-2 justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] !transition-colors !duration-150 !ease-in-out',
+              'px-3 py-2 rounded-lg border inline-flex items-center gap-2 justify-center focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text)] !transition-colors !duration-150 !ease-in-out',
               route === 'exercises' ? 'btn-contrast' : 'btn-tonal surface-hover',
             )}
             aria-pressed={route === 'exercises'}
@@ -243,8 +246,9 @@ export const Header = ({
           <button
             type="button"
             onClick={() => onNavigate('terms')}
+            data-tour-target="nav-terms"
             className={classNames(
-              'px-3 py-2 rounded-lg border inline-flex items-center gap-2 justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] !transition-colors !duration-150 !ease-in-out',
+              'px-3 py-2 rounded-lg border inline-flex items-center gap-2 justify-center focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text)] !transition-colors !duration-150 !ease-in-out',
               route === 'terms' ? 'btn-contrast' : 'btn-tonal surface-hover',
             )}
             aria-pressed={route === 'terms'}
@@ -262,7 +266,7 @@ export const Header = ({
                 ref={searchButtonRef}
                 type="button"
                 onClick={() => onSearch?.('mouse')}
-                className="px-3 py-2 rounded-lg border btn-tonal surface-hover inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+                className="px-3 py-2 rounded-lg border btn-tonal surface-hover inline-flex items-center justify-center focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text)]"
                 aria-label={copy.searchBtn}
               >
                 <Search className="w-4 h-4" />
@@ -272,7 +276,7 @@ export const Header = ({
               type="button"
               onClick={() => onNavigate('bookmarks')}
               className={classNames(
-                'px-3 py-2 rounded-lg border inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] !transition-colors !duration-150 !ease-in-out',
+                'px-3 py-2 rounded-lg border inline-flex items-center justify-center focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text)] !transition-colors !duration-150 !ease-in-out',
                 route === 'bookmarks' ? 'btn-contrast' : 'btn-tonal surface-hover',
               )}
               aria-pressed={route === 'bookmarks'}
@@ -287,7 +291,7 @@ export const Header = ({
                 ref={moreButtonRef}
                 type="button"
                 onClick={() => setMoreDesktopOpen((v) => !v)}
-                className="px-3 py-2 rounded-lg border btn-tonal surface-hover inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+                className="px-3 py-2 rounded-lg border btn-tonal surface-hover inline-flex items-center justify-center focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text)]"
                 aria-haspopup="menu"
                 aria-expanded={moreDesktopOpen}
                 aria-label={copy.more}
@@ -379,7 +383,7 @@ export const Header = ({
                 type="button"
                 onClick={() => onNavigate('bookmarks')}
                 className={classNames(
-                  'px-3 py-2 rounded-lg border inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] !transition-colors !duration-150 !ease-in-out',
+                  'px-3 py-2 rounded-lg border inline-flex items-center justify-center focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text)] !transition-colors !duration-150 !ease-in-out',
                   route === 'bookmarks' ? 'btn-contrast' : 'btn-tonal surface-hover',
                 )}
                 aria-pressed={route === 'bookmarks'}
@@ -392,7 +396,7 @@ export const Header = ({
                 ref={moreMobileButtonRef}
                 type="button"
                 onClick={() => setMoreMobileOpen((v) => !v)}
-                className="px-3 py-2 rounded-lg border btn-tonal surface-hover inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+                className="px-3 py-2 rounded-lg border btn-tonal surface-hover inline-flex items-center justify-center focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text)]"
                 aria-haspopup="menu"
                 aria-expanded={moreMobileOpen}
                 aria-label={copy.more}
@@ -479,7 +483,7 @@ const TextButton = forwardRef<HTMLButtonElement, ButtonProps>(({ children, onCli
     ref={ref}
     type="button"
     onClick={onClick}
-    className="px-3 py-1.5 rounded-lg text-sm border btn-tonal surface-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+    className="px-3 py-1.5 rounded-lg text-sm border btn-tonal surface-hover focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text)]"
   >
     {children}
   </button>
@@ -493,7 +497,7 @@ const IconButton = forwardRef<HTMLButtonElement, ButtonProps>(
       ref={ref}
       type="button"
       onClick={onClick}
-      className="px-3 py-2 rounded-lg border btn-tonal surface-hover inline-flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+      className="px-3 py-2 rounded-lg border btn-tonal surface-hover inline-flex items-center justify-center focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text)]"
       title={label}
       aria-label={label}
     >

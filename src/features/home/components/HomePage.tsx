@@ -38,6 +38,9 @@ type HomePageProps = {
   onOpenPinnedBeltGrade: (grade: Grade) => void;
   beltPromptDismissed: boolean;
   onOpenGuideFromPrompt: () => void;
+  showOnboardingCard: boolean;
+  onStartOnboardingTour: () => void;
+  onSkipOnboarding: () => void;
 };
 
 export const HomePage = ({
@@ -54,6 +57,9 @@ export const HomePage = ({
   onOpenPinnedBeltGrade,
   beltPromptDismissed,
   onOpenGuideFromPrompt,
+  showOnboardingCard,
+  onStartOnboardingTour,
+  onSkipOnboarding,
 }: HomePageProps): ReactElement => {
   const quotes = getAllQuotes(locale);
   const [currentQuote, setCurrentQuote] = useState<Quote | null>(null);
@@ -103,9 +109,42 @@ export const HomePage = ({
     }
   };
 
+  const onboardingTitle = locale === 'de' ? 'Willkommen bei Enso' : 'Welcome to Enso';
+  const onboardingBody =
+    locale === 'de'
+      ? 'Ein ruhiger Lernbegleiter für Techniken, Begriffe und Trainingsübungen. Starte eine 1-Minuten-Tour, um die Grundlagen kennenzulernen.'
+      : 'A calm study companion for techniques, terms, and training exercises. Take a 1-minute tour to learn the essentials.';
+  const onboardingStart = locale === 'de' ? 'Tour starten' : 'Start tour';
+  const onboardingSkip = locale === 'de' ? 'Überspringen' : 'Skip';
+
   return (
     <div className="min-h-dvh font-sans">
       <div className="container max-w-4xl mx-auto px-4 md:px-6 pt-8 space-y-6 pb-16 md:pb-24">
+        {showOnboardingCard && (
+          <section className="w-full rounded-2xl border surface-border surface card-hover-shadow p-6 md:p-8 space-y-4">
+            <div className="space-y-2">
+              <h2 className="text-lg md:text-xl font-semibold">{onboardingTitle}</h2>
+              <p className="text-sm text-subtle">{onboardingBody}</p>
+            </div>
+            <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+              <button
+                type="button"
+                onClick={onSkipOnboarding}
+                className="px-4 py-2 rounded-lg border btn-tonal surface-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+              >
+                {onboardingSkip}
+              </button>
+              <button
+                type="button"
+                onClick={onStartOnboardingTour}
+                className="px-4 py-2 rounded-lg border btn-contrast focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+              >
+                {onboardingStart}
+              </button>
+            </div>
+          </section>
+        )}
+
         {!pinnedBeltGrade &&
           !beltPromptDismissed &&
           (() => {

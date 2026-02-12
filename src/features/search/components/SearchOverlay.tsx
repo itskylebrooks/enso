@@ -66,6 +66,7 @@ type SearchOverlayProps = {
   // (mouse) interactions should not affect selection until the user actually
   // moves or clicks the mouse.
   openedBy?: 'keyboard' | 'mouse';
+  trapEnabled?: boolean;
 };
 
 export const SearchOverlay = ({
@@ -85,6 +86,7 @@ export const SearchOverlay = ({
   onToggleGlossaryBookmark,
   onToggleExerciseBookmark,
   openedBy,
+  trapEnabled = true,
 }: SearchOverlayProps): ReactElement => {
   const [query, setQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState<SearchTokenFilter | null>(null);
@@ -131,7 +133,7 @@ export const SearchOverlay = ({
     loadAllTerms().then(setGlossaryTerms);
   }, []);
 
-  useFocusTrap(true, dialogRef, onClose);
+  useFocusTrap(trapEnabled, dialogRef, onClose);
 
   const techniqueIndex = useMemo(() => buildSearchIndex(techniques), [techniques]);
   const glossaryIndex = useMemo(() => buildGlossarySearchIndex(glossaryTerms), [glossaryTerms]);
@@ -481,6 +483,7 @@ export const SearchOverlay = ({
               )}
               <input
                 ref={inputRef}
+                data-tour-target="search-input"
                 type="text"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}

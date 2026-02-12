@@ -235,53 +235,59 @@ export const TechniqueHeader = ({
             )}
           </div>
           <div className="flex gap-2">
-            <StudyStatusButton
-              status={studyStatus}
-              label={studyLabel}
-              onClick={onToggleStudyStatus}
-              popupTrigger="click"
-              popupTextByStatus={{
-                none: copy.toastStudyCleared,
-                practice: copy.toastStudyPractice,
-                stable: copy.toastStudyStable,
-              }}
-            />
-            <AddToCollectionMenu
-              copy={copy}
-              collections={collections}
-              onToggle={(collectionId, nextChecked) =>
-                onToggleCollection(collectionId, nextChecked)
-              }
-              onCreate={onCreateCollection}
-            />
-            <div className="inline-flex rounded-lg border surface-border overflow-hidden">
-              <motion.button
-                type="button"
-                onClick={onToggleBookmark}
-                aria-pressed={isBookmarked}
-                aria-label={copy.bookmark}
-                transition={toggleTransition}
-                whileTap={prefersReducedMotion ? undefined : { scale: 0.96 }}
-                className={classNames(
-                  'p-2 text-sm flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] transition-colors duration-150',
-                  isBookmarked
-                    ? 'bg-[var(--color-text)] text-[var(--color-bg)]'
-                    : 'bg-[var(--color-surface)] text-[var(--color-text)] hover:bg-[var(--color-surface-hover)]',
-                )}
-              >
-                <motion.span
-                  aria-hidden
-                  className="w-4 h-4 flex items-center justify-center"
-                  animate={isBookmarked ? { scale: 1, opacity: 1 } : { scale: 0.86, opacity: 0.85 }}
+            <div data-tour-target="detail-study-status">
+              <StudyStatusButton
+                status={studyStatus}
+                label={studyLabel}
+                onClick={onToggleStudyStatus}
+                popupTrigger="click"
+                popupTextByStatus={{
+                  none: copy.toastStudyCleared,
+                  practice: copy.toastStudyPractice,
+                  stable: copy.toastStudyStable,
+                }}
+              />
+            </div>
+            <div className="flex gap-2" data-tour-target="detail-bookmarks-collections">
+              <AddToCollectionMenu
+                copy={copy}
+                collections={collections}
+                onToggle={(collectionId, nextChecked) =>
+                  onToggleCollection(collectionId, nextChecked)
+                }
+                onCreate={onCreateCollection}
+              />
+              <div className="inline-flex rounded-lg border surface-border overflow-hidden">
+                <motion.button
+                  type="button"
+                  onClick={onToggleBookmark}
+                  aria-pressed={isBookmarked}
+                  aria-label={copy.bookmark}
                   transition={toggleTransition}
-                >
-                  {isBookmarked ? (
-                    <BookmarkCheck className="w-4 h-4" />
-                  ) : (
-                    <Bookmark className="w-4 h-4" />
+                  whileTap={prefersReducedMotion ? undefined : { scale: 0.96 }}
+                  className={classNames(
+                    'p-2 text-sm flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] transition-colors duration-150',
+                    isBookmarked
+                      ? 'bg-[var(--color-text)] text-[var(--color-bg)]'
+                      : 'bg-[var(--color-surface)] text-[var(--color-text)] hover:bg-[var(--color-surface-hover)]',
                   )}
-                </motion.span>
-              </motion.button>
+                >
+                  <motion.span
+                    aria-hidden
+                    className="w-4 h-4 flex items-center justify-center"
+                    animate={
+                      isBookmarked ? { scale: 1, opacity: 1 } : { scale: 0.86, opacity: 0.85 }
+                    }
+                    transition={toggleTransition}
+                  >
+                    {isBookmarked ? (
+                      <BookmarkCheck className="w-4 h-4" />
+                    ) : (
+                      <Bookmark className="w-4 h-4" />
+                    )}
+                  </motion.span>
+                </motion.button>
+              </div>
             </div>
           </div>
         </div>

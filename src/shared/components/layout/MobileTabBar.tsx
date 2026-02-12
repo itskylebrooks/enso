@@ -110,6 +110,15 @@ export const MobileTabBar = ({ copy, route, onNavigate }: MobileTabBarProps): Re
                 <button
                   key={tab.id}
                   type="button"
+                  data-tour-target={
+                    tab.id === 'guide'
+                      ? 'nav-guide'
+                      : tab.id === 'techniques'
+                        ? 'nav-techniques'
+                        : tab.id === 'exercises'
+                          ? 'nav-exercises'
+                          : 'nav-terms'
+                  }
                   onClick={() => {
                     if (isActive) return;
                     onNavigate(tab.id);
