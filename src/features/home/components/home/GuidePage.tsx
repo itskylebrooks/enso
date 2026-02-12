@@ -135,13 +135,13 @@ export const GuidePage = ({
           <header className="space-y-2">
             <h2 className="text-xl font-semibold leading-tight">{guideCopy.headings.routines}</h2>
           </header>
-          <ul className="grid gap-3 sm:grid-cols-2">
+          <ul className="grid items-stretch gap-3 sm:grid-cols-2">
             {guideCopy.routines.map((routine) => (
-              <li key={routine.id}>
+              <li key={routine.id} className="h-full">
                 <button
                   type="button"
                   onClick={() => onNavigateToRoutine(routine.id as GuideRoutine)}
-                  className="w-full rounded-xl border surface-border bg-[var(--color-surface)]/70 px-4 py-3 flex items-start justify-between gap-3 text-left cursor-pointer hover:bg-[var(--color-surface-hover)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+                  className="h-full w-full rounded-xl border surface-border bg-[var(--color-surface)]/70 px-4 py-3 flex items-start justify-between gap-3 text-left cursor-pointer hover:bg-[var(--color-surface-hover)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
                 >
                   <span className="space-y-1">
                     <span className="block text-sm font-medium">{routine.title}</span>
