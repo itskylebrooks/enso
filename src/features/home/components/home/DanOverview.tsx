@@ -23,7 +23,7 @@ export const DanOverview = ({ locale, onBack }: Props): ReactElement => {
       };
 
   return (
-    <section className="py-12">
+    <section className="pt-0 pb-12">
       <div className="container max-w-4xl mx-auto px-4 md:px-6 space-y-6">
         <div className="space-y-3">
           <button

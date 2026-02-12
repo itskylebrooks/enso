@@ -2469,7 +2469,7 @@ export default function App({
     );
   } else if (techniqueNotFound) {
     mainContent = (
-      <div className="max-w-5xl mx-auto px-6 py-10 space-y-4 text-center">
+      <div className="max-w-5xl mx-auto px-6 pt-0 pb-10 space-y-4 text-center">
         <p className="text-lg font-semibold">Technique not found.</p>
         <button
           type="button"
@@ -2505,7 +2505,7 @@ export default function App({
     mainContent = <AboutPage copy={copy} />;
   } else if (route === 'sync') {
     mainContent = (
-      <div className="max-w-4xl mx-auto px-4 md:px-6 py-10">
+      <div className="max-w-4xl mx-auto px-4 md:px-6 pt-0 pb-10">
         <section className="rounded-2xl border surface-border bg-[var(--color-surface)] p-6 md:p-8">
           <h1 className="text-xl font-semibold tracking-tight">{copy.sync}</h1>
           <p className="mt-2 text-sm text-muted">{copy.syncComingSoon}</p>
@@ -2584,7 +2584,7 @@ export default function App({
     );
   } else {
     mainContent = (
-      <div className="container max-w-4xl mx-auto px-4 md:px-6 py-4 space-y-4">
+      <div className="container max-w-4xl mx-auto px-4 md:px-6 pt-0 pb-4 space-y-4 lg:space-y-0">
         {route === 'techniques' && (
           <>
             <div className="lg:hidden">
@@ -2841,7 +2841,7 @@ export default function App({
             initial={skipEntranceAnimations ? 'animate' : 'initial'}
             animate="animate"
             transition={pageMotion.transition}
-            className="flex-1 pb-24 md:pb-0"
+            className="flex-1 pt-8 pb-24 md:pb-0"
             style={{ willChange: 'opacity' }}
           >
             {mainContent}

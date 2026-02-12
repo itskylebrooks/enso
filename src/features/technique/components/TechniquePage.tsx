@@ -560,7 +560,7 @@ export const TechniquePage = ({
 
   return (
     <motion.main
-      className="mx-auto max-w-4xl px-4 sm:px-6 py-6 space-y-6"
+      className="mx-auto max-w-4xl px-4 sm:px-6 pt-0 pb-6 space-y-6"
       initial={motionInitial}
       animate={motionAnimate}
       transition={variantMotionTransition}

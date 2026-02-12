@@ -119,7 +119,7 @@ export const HomePage = ({
 
   return (
     <div className="min-h-dvh font-sans">
-      <div className="container max-w-4xl mx-auto px-4 md:px-6 pt-8 space-y-6 pb-16 md:pb-24">
+      <div className="container max-w-4xl mx-auto px-4 md:px-6 pt-0 space-y-6 pb-16 md:pb-24">
         {showOnboardingCard && (
           <section className="w-full rounded-2xl border surface-border surface card-hover-shadow p-6 md:p-8 space-y-4">
             <div className="space-y-2">

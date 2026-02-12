@@ -109,7 +109,7 @@ export const ExerciseDetailPage = ({
 
   if (error || !exercise) {
     return (
-      <div className="max-w-5xl mx-auto px-6 py-10 space-y-4 text-center">
+      <div className="max-w-5xl mx-auto px-6 pt-0 pb-10 space-y-4 text-center">
         <p className="text-lg font-semibold">Exercise not found.</p>
         <button type="button" onClick={onBack} className="text-sm underline">
           {backLabel ?? copy.backToPractice}
@@ -157,7 +157,7 @@ export const ExerciseDetailPage = ({
 
   return (
     <motion.main
-      className="mx-auto max-w-4xl px-4 sm:px-6 py-6 space-y-6"
+      className="mx-auto max-w-4xl px-4 sm:px-6 pt-0 pb-6 space-y-6"
       variants={pageMotion.variants}
       initial="initial"
       animate="animate"

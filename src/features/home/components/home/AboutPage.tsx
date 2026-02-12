@@ -40,7 +40,7 @@ export const AboutPage = ({ copy }: AboutPageProps): ReactElement => {
     });
 
   return (
-    <section className="py-12 font-sans">
+    <section className="pt-0 pb-12 font-sans">
       <div className="container max-w-4xl mx-auto px-4 md:px-6 space-y-8">
         <header className="space-y-2">
           <h1 className="text-3xl md:text-4xl font-semibold tracking-tight text-center">
