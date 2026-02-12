@@ -82,7 +82,7 @@ export const GuideGradePage = ({
       : 'No terms are mapped for this grade yet.';
 
   return (
-    <section className="mx-auto max-w-5xl px-4 sm:px-6 pt-0 pb-10 space-y-8">
+    <section className="mx-auto max-w-4xl px-4 sm:px-6 pt-0 pb-10 space-y-8">
       <div className="flex items-center justify-between gap-4">
         <button
           type="button"

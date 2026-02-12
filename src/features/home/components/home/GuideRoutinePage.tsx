@@ -63,7 +63,7 @@ export const GuideRoutinePage = ({
 
   if (loading) {
     return (
-      <section className="mx-auto max-w-5xl px-4 sm:px-6 pt-0 pb-10">
+      <section className="mx-auto max-w-4xl px-4 sm:px-6 pt-0 pb-10">
         <p className="text-sm text-subtle">{copy.loading}</p>
       </section>
     );
@@ -71,7 +71,7 @@ export const GuideRoutinePage = ({
 
   if (error) {
     return (
-      <section className="mx-auto max-w-5xl px-4 sm:px-6 pt-0 pb-10 space-y-4">
+      <section className="mx-auto max-w-4xl px-4 sm:px-6 pt-0 pb-10 space-y-4">
         <button
           type="button"
           onClick={onBack}
@@ -87,7 +87,7 @@ export const GuideRoutinePage = ({
 
   if (activeRoutineSlug && !selectedPreset) {
     return (
-      <section className="mx-auto max-w-5xl px-4 sm:px-6 pt-0 pb-10 space-y-4">
+      <section className="mx-auto max-w-4xl px-4 sm:px-6 pt-0 pb-10 space-y-4">
         <button
           type="button"
           onClick={onBackToOverview}
@@ -103,7 +103,7 @@ export const GuideRoutinePage = ({
 
   if (!selectedPreset) {
     return (
-      <section className="mx-auto max-w-5xl px-4 sm:px-6 pt-0 pb-10 space-y-6">
+      <section className="mx-auto max-w-4xl px-4 sm:px-6 pt-0 pb-10 space-y-6">
         <header className="space-y-3">
           <button
             type="button"
@@ -154,7 +154,7 @@ export const GuideRoutinePage = ({
   const presetDescription = getLocalized(selectedPreset.description, locale);
 
   return (
-    <section className="mx-auto max-w-5xl px-4 sm:px-6 pt-0 pb-10 space-y-6">
+    <section className="mx-auto max-w-4xl px-4 sm:px-6 pt-0 pb-10 space-y-6">
       <header className="space-y-3">
         <button
           type="button"
