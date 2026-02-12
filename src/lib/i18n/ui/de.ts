@@ -160,6 +160,76 @@ export const de = {
   toastDataCleared: 'Daten gelöscht.',
   homeTagline:
     'Verwalte dein Dojo-Curriculum, fokussiere wichtige Techniken und behalte deine Daten offline bei dir.',
+  onboarding: {
+    homeCard: {
+      title: 'Willkommen bei Enso',
+      body: 'Ein ruhiger Lernbegleiter für Techniken, Begriffe und Trainingsübungen. Starte eine 1-Minuten-Tour, um die Grundlagen kennenzulernen.',
+      start: 'Tour starten',
+      skip: 'Überspringen',
+    },
+    tour: {
+      step: 'Schritt',
+      of: 'von',
+      back: 'Zurück',
+      next: 'Weiter',
+      finish: 'Fertig',
+      skip: 'Überspringen',
+      returnPrompt: 'Du hast diese Tour-Stufe verlassen.',
+      returnButton: 'Zur Tour-Stufe zurück',
+      completionTitle: 'Du bist bereit.',
+      completionBody:
+        'Enso ist local-first und datenschutzfreundlich. Du kannst deine Daten jederzeit in den Einstellungen exportieren oder löschen.',
+      goHome: 'Zur Startseite',
+      settings: 'Einstellungen',
+      segments: {
+        'guide-tab': {
+          title: 'Guide',
+          description:
+            'Der Guide ist deine Karte. Hier findest du Gürtelprogramme, Prüfungstabellen und Übersichten, damit du immer weißt, was als Nächstes dran ist.',
+        },
+        'techniques-tab': {
+          title: 'Techniken',
+          description:
+            'Entdecke Technikseiten mit Varianten und Medien. Jede Technik hat eine eigene URL, so kannst du jederzeit zurückkehren.',
+        },
+        'techniques-filters': {
+          title: 'Filter',
+          description:
+            'Nutze Filter, um die Liste einzugrenzen, zum Beispiel nach Gürtelstufe, Richtung, Stand oder anderen Merkmalen.',
+        },
+        'terms-tab': {
+          title: 'Begriffe',
+          description:
+            'Begriffe sind kurze Erklärungen für die Sprache im Dōjō. Sie helfen dir, das Gehörte im Training besser einzuordnen.',
+        },
+        'exercises-tab': {
+          title: 'Übungen',
+          description:
+            'Übungen unterstützen dein Training außerhalb des Dōjō: Mobilität, Kraft, Balance, Koordination, Explosivität und Regeneration.',
+        },
+        'detail-study-status': {
+          title: 'Lernstatus',
+          description:
+            'Markiere einen Eintrag als Kein Status, Üben oder Stabil. Das ist getrennt von Lesezeichen und hilft dir, deinen Lernfortschritt lokal zu verfolgen.',
+        },
+        'detail-bookmarks-collections': {
+          title: 'Lesezeichen und Sammlungen',
+          description:
+            'Speichere wichtige Einträge als Lesezeichen und ordne sie in Sammlungen, die zu deinem persönlichen Lernweg passen.',
+        },
+        'bookmarks-collections': {
+          title: 'Lesezeichen',
+          description:
+            'Lesezeichen sind dein Lernbereich. Erstelle Sammlungen und gruppiere Techniken, Begriffe und Übungen so, wie du trainierst.',
+        },
+        'search-input': {
+          title: 'Suchkürzel',
+          description:
+            'Suche alles an einem Ort. Tipp: Drücke Space nach einem Filterkürzel: T für Techniken, U/Ü für Übungen, B für Begriffe. Gürtel-Filter funktionieren auch: 1K-5K und 1D-5D.',
+        },
+      },
+    },
+  },
   openLibraryCta: 'Techniken öffnen',
   viewProgressCta: 'Lesezeichen ansehen',
   aboutTitle: 'Über Enso',
@@ -225,6 +295,7 @@ export const de = {
   openAriaPrefix: 'Öffne',
   // Feedback
   feedback: 'Feedback',
+  startTour: 'Tour',
   feedbackTitle: 'Feedback &  Beiträge (Beta)',
   feedbackDescription:
     'Hilf Enso zu wachsen, indem du bestehende Inhalte verbesserst oder deine Perspektive einbringst. Ob kleine Korrektur oder komplette Variante – dein Aikidō-Wissen zählt.',

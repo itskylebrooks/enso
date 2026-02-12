@@ -33,6 +33,7 @@ type HeaderProps = {
   onNavigate: (route: AppRoute, options?: { replace?: boolean }) => void;
   onSearch: (method?: 'keyboard' | 'mouse') => void;
   onSettings: () => void;
+  onStartTour: () => void;
   searchButtonRef: RefObject<HTMLButtonElement | null>;
   settingsButtonRef: RefObject<HTMLButtonElement | null>;
 };
@@ -77,6 +78,7 @@ export const Header = ({
   onNavigate,
   onSearch,
   onSettings,
+  onStartTour,
   searchButtonRef,
   settingsButtonRef,
 }: HeaderProps): ReactElement => {
@@ -344,6 +346,22 @@ export const Header = ({
                           </span>
                         </button>
                       </li>
+                      <li>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setMoreDesktopOpen(false);
+                            onStartTour();
+                          }}
+                          className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
+                          role="menuitem"
+                        >
+                          <span className="flex items-center gap-2">
+                            <Compass className="w-4 h-4" />
+                            {copy.startTour}
+                          </span>
+                        </button>
+                      </li>
 
                       <li>
                         <button
@@ -446,6 +464,22 @@ export const Header = ({
                         <span className="flex items-center gap-2">
                           <MessageSquare className="w-4 h-4" />
                           {copy.feedback}
+                        </span>
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setMoreMobileOpen(false);
+                          onStartTour();
+                        }}
+                        className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
+                        role="menuitem"
+                      >
+                        <span className="flex items-center gap-2">
+                          <Compass className="w-4 h-4" />
+                          {copy.startTour}
                         </span>
                       </button>
                     </li>

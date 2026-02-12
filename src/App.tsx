@@ -9,15 +9,14 @@ import { DanOverview } from '@features/home/components/home/DanOverview';
 import { GuidePage } from '@features/home/components/home/GuidePage';
 import { GuideRoutinePage } from '@features/home/components/home/GuideRoutinePage';
 import { SettingsModal } from '@features/home/components/settings/SettingsModal';
-import {
-  ONBOARDING_TOUR_SEGMENTS,
-  OnboardingTourOverlay,
-} from '@features/onboarding/components/OnboardingTourOverlay';
+import { ONBOARDING_TOUR_SEGMENTS } from '@features/onboarding/constants';
+import { OnboardingTourOverlay } from '@features/onboarding/components/OnboardingTourOverlay';
 import { type CollectionOption } from '@features/technique/components/TechniqueHeader';
 import { TechniquePage } from '@features/technique/components/TechniquePage';
 import { TechniquesPage } from '@features/technique/components/TechniquesPage';
 import { Header } from '@shared/components/layout/Header';
 import { MobileTabBar } from '@shared/components/layout/MobileTabBar';
+import { ConfettiBurst } from '@shared/components/ui/ConfettiBurst';
 import { ExpandableFilterBar } from '@shared/components/ui/ExpandableFilterBar';
 import { MobileFilters } from '@shared/components/ui/MobileFilters';
 import { useMotionPreferences } from '@shared/components/ui/motion';
@@ -760,6 +759,7 @@ export default function App({
     normalizeTourSegmentIndex(loadOnboardingStep()),
   );
   const [tourCompletionVisible, setTourCompletionVisible] = useState(false);
+  const [showTourCompletionConfetti, setShowTourCompletionConfetti] = useState(false);
 
   const copy = getCopy(locale);
   const { pageMotion, prefersReducedMotion } = useMotionPreferences();
@@ -2006,7 +2006,7 @@ export default function App({
   }, []);
 
   const handleStartOnboardingTour = useCallback((): void => {
-    const nextSegment = normalizeTourSegmentIndex(loadOnboardingStep());
+    const nextSegment = 0;
     setTourSegmentIndex(nextSegment);
     setTourCompletionVisible(false);
     setSearchOpen(false);
@@ -2073,7 +2073,10 @@ export default function App({
     setTourCompletionVisible(false);
     setSearchOpen(false);
     navigateTo('home');
-  }, [navigateTo]);
+    if (!prefersReducedMotion) {
+      setShowTourCompletionConfetti(true);
+    }
+  }, [navigateTo, prefersReducedMotion]);
 
   useEffect(() => {
     if (!tourOpen || tourCompletionVisible) return;
@@ -2081,6 +2084,14 @@ export default function App({
     saveOnboardingStep(normalized);
     syncTourSegment(normalized);
   }, [tourCompletionVisible, tourOpen, tourSegmentIndex, syncTourSegment]);
+
+  useEffect(() => {
+    if (!showTourCompletionConfetti) return;
+    const timeoutId = window.setTimeout(() => {
+      setShowTourCompletionConfetti(false);
+    }, 2200);
+    return () => window.clearTimeout(timeoutId);
+  }, [showTourCompletionConfetti]);
 
   const togglePinnedBeltGrade = useCallback((grade: Grade) => {
     setPinnedBeltGrade((current) => (current === grade ? null : grade));
@@ -2826,6 +2837,7 @@ export default function App({
           onNavigate={navigateTo}
           onSearch={openSearch}
           onSettings={openSettings}
+          onStartTour={handleStartOnboardingTour}
           searchButtonRef={searchTriggerRef}
           settingsButtonRef={settingsTriggerRef}
         />
@@ -2945,9 +2957,11 @@ export default function App({
 
         <MobileTabBar copy={copy} route={route} onNavigate={navigateTo} />
 
+        {showTourCompletionConfetti && <ConfettiBurst />}
+
         {tourOpen && (
           <OnboardingTourOverlay
-            locale={locale}
+            copy={copy}
             isOpen={tourOpen}
             segmentIndex={tourSegmentIndex}
             route={route}

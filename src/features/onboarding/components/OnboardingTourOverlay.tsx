@@ -1,6 +1,7 @@
 import { useMotionPreferences } from '@shared/components/ui/motion';
+import type { Copy } from '@shared/constants/i18n';
 import { useFocusTrap } from '@shared/hooks/useFocusTrap';
-import type { AppRoute, Locale } from '@shared/types';
+import type { AppRoute } from '@shared/types';
 import { motion } from 'motion/react';
 import {
   useCallback,
@@ -12,176 +13,12 @@ import {
   type CSSProperties,
   type ReactElement,
 } from 'react';
-
-type TourSegmentId =
-  | 'guide-tab'
-  | 'techniques-tab'
-  | 'techniques-filters'
-  | 'terms-tab'
-  | 'exercises-tab'
-  | 'detail-study-status'
-  | 'detail-bookmarks-collections'
-  | 'bookmarks-collections'
-  | 'search-input';
-
-type LocalizedText = {
-  en: string;
-  de: string;
-};
-
-export type OnboardingTourSegment = {
-  id: TourSegmentId;
-  stepNumber: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
-  targetSelectors: string[];
-  title: LocalizedText;
-  description: LocalizedText;
-  spotlightOffsetY?: number;
-  spotlightHeightOffset?: number;
-  preferredPanelSide?: 'right' | 'auto';
-};
-
-export const ONBOARDING_TOUR_STEP_COUNT = 8;
-
-export const ONBOARDING_TOUR_SEGMENTS: OnboardingTourSegment[] = [
-  {
-    id: 'guide-tab',
-    stepNumber: 1,
-    targetSelectors: [
-      '.mobile-tab-bar [data-tour-target="nav-guide"]',
-      '[data-tour-target="nav-guide"]',
-    ],
-    title: {
-      en: 'Guide',
-      de: 'Guide',
-    },
-    description: {
-      en: 'The Guide is your map. Use it to navigate belt programs, exam tables, and structured overviews so you always know what to practice next.',
-      de: 'Der Guide ist deine Karte. Hier findest du Gürtelprogramme, Prüfungstabellen und Übersichten, damit du immer weißt, was als Nächstes dran ist.',
-    },
-  },
-  {
-    id: 'techniques-tab',
-    stepNumber: 2,
-    targetSelectors: [
-      '.mobile-tab-bar [data-tour-target="nav-techniques"]',
-      '[data-tour-target="nav-techniques"]',
-    ],
-    title: {
-      en: 'Techniques',
-      de: 'Techniken',
-    },
-    description: {
-      en: 'Browse technique pages with clear variants and media. Each technique has its own URL, so you can return to it anytime.',
-      de: 'Entdecke Technikseiten mit Varianten und Medien. Jede Technik hat eine eigene URL — so kannst du jederzeit zurückkehren.',
-    },
-  },
-  {
-    id: 'techniques-filters',
-    stepNumber: 3,
-    targetSelectors: [
-      '[data-tour-target="techniques-filters-trigger"][data-tour-panel="true"]',
-      '[data-tour-target="techniques-filters-trigger"]',
-    ],
-    spotlightHeightOffset: 30,
-    title: {
-      en: 'Filters',
-      de: 'Filter',
-    },
-    description: {
-      en: 'Use filters to narrow down the list — for example by belt level, direction, stance, or other technique attributes.',
-      de: 'Nutze Filter, um die Liste einzugrenzen — zum Beispiel nach Gürtelstufe, Richtung, Stand oder anderen Merkmalen.',
-    },
-  },
-  {
-    id: 'terms-tab',
-    stepNumber: 4,
-    targetSelectors: [
-      '.mobile-tab-bar [data-tour-target="nav-terms"]',
-      '[data-tour-target="nav-terms"]',
-    ],
-    title: {
-      en: 'Terms',
-      de: 'Begriffe',
-    },
-    description: {
-      en: 'Terms are short definitions for dojo language. Use them to build clarity around what you hear in training.',
-      de: 'Begriffe sind kurze Erklärungen für die Sprache im Dōjō. Sie helfen dir, das Gehörte im Training besser einzuordnen.',
-    },
-  },
-  {
-    id: 'exercises-tab',
-    stepNumber: 5,
-    targetSelectors: [
-      '.mobile-tab-bar [data-tour-target="nav-exercises"]',
-      '[data-tour-target="nav-exercises"]',
-    ],
-    title: {
-      en: 'Exercises',
-      de: 'Übungen',
-    },
-    description: {
-      en: 'Exercises support your training outside the dojo — mobility, strength, balance, coordination, power, and recovery.',
-      de: 'Übungen unterstützen dein Training außerhalb des Dōjō — Mobilität, Kraft, Balance, Koordination, Explosivität und Regeneration.',
-    },
-  },
-  {
-    id: 'detail-study-status',
-    stepNumber: 6,
-    targetSelectors: ['[data-tour-target="detail-study-status"]'],
-    title: {
-      en: 'Study status',
-      de: 'Lernstatus',
-    },
-    description: {
-      en: 'Mark an item as None, Practice, or Stable. This is separate from bookmarks and helps you track your study progress locally.',
-      de: 'Markiere einen Eintrag als Kein Status, Üben oder Stabil. Das ist getrennt von Lesezeichen und hilft dir, deinen Lernfortschritt lokal zu verfolgen.',
-    },
-  },
-  {
-    id: 'detail-bookmarks-collections',
-    stepNumber: 6,
-    targetSelectors: ['[data-tour-target="detail-bookmarks-collections"]'],
-    title: {
-      en: 'Bookmarks and collections',
-      de: 'Lesezeichen und Sammlungen',
-    },
-    description: {
-      en: 'Bookmark items you want to keep close, and organize them into collections that match your personal study paths.',
-      de: 'Speichere wichtige Einträge als Lesezeichen und ordne sie in Sammlungen, die zu deinem persönlichen Lernweg passen.',
-    },
-  },
-  {
-    id: 'bookmarks-collections',
-    stepNumber: 7,
-    targetSelectors: [
-      '[data-tour-target="bookmarks-collections-sidebar"][data-tour-panel="true"]',
-      '[data-tour-target="bookmarks-collections-sidebar"]',
-    ],
-    spotlightHeightOffset: 30,
-    preferredPanelSide: 'right',
-    title: {
-      en: 'Bookmarks',
-      de: 'Lesezeichen',
-    },
-    description: {
-      en: 'Your bookmarks are your study space. Create collections to group techniques, terms, and exercises the way you train.',
-      de: 'Lesezeichen sind dein Lernbereich. Erstelle Sammlungen und gruppiere Techniken, Begriffe und Übungen so, wie du trainierst.',
-    },
-  },
-  {
-    id: 'search-input',
-    stepNumber: 8,
-    targetSelectors: ['[data-tour-target="search-input"]'],
-    title: {
-      en: 'Search shortcuts',
-      de: 'Suchkürzel',
-    },
-    description: {
-      en: 'Search everything from one place. Tip: press Space after typing a filter token — T for techniques, E for exercises, G for terms. Belt filters also work: 1K–5K and 1D–5D.',
-      de: 'Suche alles an einem Ort. Tipp: Drücke Space nach einem Filterkürzel — T für Techniken, U/Ü für Übungen, B für Begriffe. Gürtel-Filter funktionieren auch: 1K–5K und 1D–5D.',
-    },
-  },
-];
+import {
+  ONBOARDING_TOUR_SEGMENTS,
+  ONBOARDING_TOUR_STEP_COUNT,
+  type OnboardingTourSegment,
+  type TourSegmentId,
+} from '../constants';
 
 const SEGMENT_BY_ID = ONBOARDING_TOUR_SEGMENTS.reduce(
   (acc, item) => {
@@ -192,7 +29,7 @@ const SEGMENT_BY_ID = ONBOARDING_TOUR_SEGMENTS.reduce(
 );
 
 type OnboardingTourOverlayProps = {
-  locale: Locale;
+  copy: Copy;
   isOpen: boolean;
   segmentIndex: number;
   route: AppRoute;
@@ -276,7 +113,7 @@ const getSegmentAligned = (
 };
 
 export const OnboardingTourOverlay = ({
-  locale,
+  copy,
   isOpen,
   segmentIndex,
   route,
@@ -293,10 +130,16 @@ export const OnboardingTourOverlay = ({
   const { prefersReducedMotion } = useMotionPreferences();
   const panelRef = useRef<HTMLDivElement | null>(null);
   const scrolledSegmentsRef = useRef<Set<TourSegmentId>>(new Set());
+  const clearTargetTimeoutRef = useRef<number | null>(null);
   const wasOpenRef = useRef(false);
+  const [targetElement, setTargetElement] = useState<HTMLElement | null>(null);
   const [targetRect, setTargetRect] = useState<DOMRect | null>(null);
   const [geometrySegmentId, setGeometrySegmentId] = useState<TourSegmentId>('guide-tab');
   const [isEntering, setIsEntering] = useState(false);
+  const segmentEntryRef = useRef<{ id: TourSegmentId; enteredAt: number }>({
+    id: 'guide-tab',
+    enteredAt: Date.now(),
+  });
   const [panelLayout, setPanelLayout] = useState<PanelLayout>({
     style: { width: 'min(360px, calc(100vw - 32px))', left: '16px', top: '16px' },
   });
@@ -308,63 +151,59 @@ export const OnboardingTourOverlay = ({
     () => getSegmentAligned(segment, route, isTechniqueDetailOpen, searchOpen),
     [isTechniqueDetailOpen, route, searchOpen, segment],
   );
+  if (segmentEntryRef.current.id !== segment.id) {
+    segmentEntryRef.current = { id: segment.id, enteredAt: Date.now() };
+  }
   const geometrySegment = SEGMENT_BY_ID[geometrySegmentId] ?? segment;
+  const tourCopy = copy.onboarding.tour;
 
-  const labels = useMemo(
-    () =>
-      locale === 'de'
-        ? {
-            step: 'Schritt',
-            of: 'von',
-            back: 'Zurück',
-            next: 'Weiter',
-            finish: 'Fertig',
-            skip: 'Tour überspringen',
-            returnPrompt: 'Du hast diese Tour-Stufe verlassen.',
-            returnButton: 'Zur Tour-Stufe zurück',
-            completionTitle: 'Du bist bereit.',
-            completionBody:
-              'Enso ist local-first und datenschutzfreundlich. Du kannst deine Daten jederzeit in den Einstellungen exportieren oder löschen.',
-            goHome: 'Zur Startseite',
-            settings: 'Einstellungen',
-          }
-        : {
-            step: 'Step',
-            of: 'of',
-            back: 'Back',
-            next: 'Next',
-            finish: 'Finish',
-            skip: 'Skip tour',
-            returnPrompt: 'You moved away from this step.',
-            returnButton: 'Return to tour step',
-            completionTitle: 'You’re ready.',
-            completionBody:
-              'Enso is local-first and privacy-friendly. You can export or erase your data anytime in Settings.',
-            goHome: 'Go to Home',
-            settings: 'Settings',
-          },
-    [locale],
-  );
+  const clearScheduledTargetClear = useCallback(() => {
+    if (clearTargetTimeoutRef.current) {
+      window.clearTimeout(clearTargetTimeoutRef.current);
+      clearTargetTimeoutRef.current = null;
+    }
+  }, []);
+
+  const scheduleTargetClear = useCallback(() => {
+    if (clearTargetTimeoutRef.current) return;
+    clearTargetTimeoutRef.current = window.setTimeout(() => {
+      setTargetElement(null);
+      setTargetRect(null);
+      clearTargetTimeoutRef.current = null;
+    }, prefersReducedMotion ? 80 : 320);
+  }, [prefersReducedMotion]);
 
   useFocusTrap(isOpen, panelRef, onSkip);
 
   useEffect(() => {
     if (isOpen && !wasOpenRef.current) {
+      clearScheduledTargetClear();
       setIsEntering(true);
+      setTargetElement(null);
       setTargetRect(null);
+      segmentEntryRef.current = { id: segment.id, enteredAt: Date.now() };
       scrolledSegmentsRef.current.clear();
       wasOpenRef.current = true;
       return undefined;
     }
 
     if (!isOpen && wasOpenRef.current) {
+      clearScheduledTargetClear();
       setIsEntering(false);
+      setTargetElement(null);
       setTargetRect(null);
       wasOpenRef.current = false;
     }
 
     return undefined;
-  }, [isOpen]);
+  }, [clearScheduledTargetClear, isOpen, segment.id]);
+
+  useEffect(
+    () => () => {
+      clearScheduledTargetClear();
+    },
+    [clearScheduledTargetClear],
+  );
 
   useEffect(() => {
     if (!isEntering) return undefined;
@@ -390,14 +229,44 @@ export const OnboardingTourOverlay = ({
   }, [isOpen, onSkip]);
 
   const measureTarget = useCallback(() => {
-    if (!isOpen || completionVisible || !isSegmentAligned) {
+    if (!isOpen || completionVisible) {
+      scheduleTargetClear();
+      return;
+    }
+    if (!isSegmentAligned) {
       return;
     }
 
-    const target = findVisibleTarget(segment.targetSelectors);
+    const panelSelector = segment.targetSelectors.find((selector) =>
+      selector.includes('[data-tour-panel="true"]'),
+    );
+    const shouldPreferExpandedPanel =
+      (segment.id === 'techniques-filters' || segment.id === 'bookmarks-collections') &&
+      Boolean(panelSelector);
+    let target: HTMLElement | null = null;
+
+    if (shouldPreferExpandedPanel && panelSelector) {
+      target = findVisibleTarget([panelSelector]);
+      if (!target) {
+        const elapsed = Date.now() - segmentEntryRef.current.enteredAt;
+        const expandedPanelWaitMs = prefersReducedMotion ? 120 : 420;
+        if (elapsed < expandedPanelWaitMs) {
+          clearScheduledTargetClear();
+          return;
+        }
+      }
+    }
+
     if (!target) {
+      target = findVisibleTarget(segment.targetSelectors);
+    }
+
+    if (!target) {
+      scheduleTargetClear();
       return;
     }
+    clearScheduledTargetClear();
+    setTargetElement(target);
 
     const rect = target.getBoundingClientRect();
     const viewportHeight = window.innerHeight;
@@ -427,6 +296,7 @@ export const OnboardingTourOverlay = ({
       return;
     }
 
+    clearScheduledTargetClear();
     setTargetRect(rect);
     setGeometrySegmentId(segment.id);
 
@@ -443,10 +313,12 @@ export const OnboardingTourOverlay = ({
       });
     }
   }, [
+    clearScheduledTargetClear,
     completionVisible,
     isOpen,
     isSegmentAligned,
     prefersReducedMotion,
+    scheduleTargetClear,
     segment.id,
     segment.targetSelectors,
   ]);
@@ -478,6 +350,18 @@ export const OnboardingTourOverlay = ({
     };
   }, [isOpen, measureTarget, segmentIndex]);
 
+  useLayoutEffect(() => {
+    if (!isOpen || !targetElement || typeof ResizeObserver === 'undefined') {
+      return undefined;
+    }
+
+    const observer = new ResizeObserver(() => {
+      measureTarget();
+    });
+    observer.observe(targetElement);
+    return () => observer.disconnect();
+  }, [isOpen, measureTarget, targetElement]);
+
   const spotlightRect = useMemo(() => {
     if (!targetRect || completionVisible) return null;
     const viewportWidth =
@@ -493,13 +377,17 @@ export const OnboardingTourOverlay = ({
     const paddingX = Math.min(preferredPadding, availableLeft, availableRight);
     const paddingY = Math.min(preferredPadding, availableTop, availableBottom);
     const spotlightWidth = Math.min(targetRect.width + paddingX * 2, viewportWidth - minInset * 2);
-    const heightOffset = geometrySegment.spotlightHeightOffset ?? 0;
+    const isMobile = viewportWidth < 768;
+    const applyMobilePanelOffsets =
+      isMobile &&
+      (geometrySegment.id === 'techniques-filters' || geometrySegment.id === 'bookmarks-collections');
+    const heightOffset = applyMobilePanelOffsets ? (geometrySegment.spotlightHeightOffset ?? 0) : 0;
     const spotlightHeight = Math.min(
       targetRect.height + paddingY * 2 + heightOffset,
       viewportHeight - minInset * 2,
     );
     const unclampedLeft = targetRect.left - paddingX;
-    const offsetY = geometrySegment.spotlightOffsetY ?? 0;
+    const offsetY = applyMobilePanelOffsets ? (geometrySegment.spotlightOffsetY ?? 0) : 0;
     const unclampedTop = targetRect.top - paddingY + offsetY - heightOffset;
     const left = clamp(unclampedLeft, minInset, viewportWidth - spotlightWidth - minInset);
     const top = clamp(unclampedTop, minInset, viewportHeight - spotlightHeight - minInset);
@@ -507,6 +395,7 @@ export const OnboardingTourOverlay = ({
     return { top, left, width: spotlightWidth, height: spotlightHeight };
   }, [
     completionVisible,
+    geometrySegment.id,
     geometrySegment.spotlightOffsetY,
     geometrySegment.spotlightHeightOffset,
     targetRect,
@@ -573,8 +462,22 @@ export const OnboardingTourOverlay = ({
       const belowTop = spotlightRect.top + spotlightRect.height + gap;
       const aboveTop = spotlightRect.top - panelHeight - gap;
       const maxTop = viewportHeight - panelHeight - mobileBottomClearance;
+      const preferBelowFallback = geometrySegment.id === 'techniques-filters';
       const comfortMaxTop =
         spotlightRect.top > viewportHeight * 0.6 ? Math.min(maxTop, centeredTop + 40) : maxTop;
+
+      if (preferBelowFallback) {
+        // Keep step 3 attached under the filter panel. If it overflows, choose the lowest valid top.
+        const top = clamp(belowTop, mobileTopPadding, Math.max(mobileTopPadding, maxTop));
+        setPanelLayout({
+          style: {
+            width: `${panelWidth}px`,
+            left: `${Math.round((viewportWidth - panelWidth) / 2)}px`,
+            top: `${Math.round(top)}px`,
+          },
+        });
+        return;
+      }
 
       let top = centeredTop;
       if (belowTop <= maxTop) {
@@ -595,6 +498,13 @@ export const OnboardingTourOverlay = ({
       return;
     }
     if (!spotlightRect) {
+      setPanelLayout({
+        style: {
+          width: `${panelWidth}px`,
+          left: `${Math.round((viewportWidth - panelWidth) / 2)}px`,
+          top: `${Math.round(Math.max(16, (viewportHeight - panelHeight) / 2))}px`,
+        },
+      });
       return;
     }
 
@@ -673,14 +583,22 @@ export const OnboardingTourOverlay = ({
         top: `${fallbackTop}px`,
       },
     });
-  }, [completionVisible, geometrySegment.preferredPanelSide, isOpen, spotlightRect, segmentIndex]);
+  }, [
+    completionVisible,
+    geometrySegment.id,
+    geometrySegment.preferredPanelSide,
+    isOpen,
+    spotlightRect,
+    segmentIndex,
+  ]);
 
   if (!isOpen) return null;
 
-  const stepLabel = `${labels.step} ${segment.stepNumber} ${labels.of} ${ONBOARDING_TOUR_STEP_COUNT}`;
-  const title = segment.title[locale];
-  const description = segment.description[locale];
-  const nextLabel = isLastSegment ? labels.finish : labels.next;
+  const segmentCopy = tourCopy.segments[segment.id];
+  const stepLabel = `${tourCopy.step} ${segment.stepNumber} ${tourCopy.of} ${ONBOARDING_TOUR_STEP_COUNT}`;
+  const nextLabel = isLastSegment ? tourCopy.finish : tourCopy.next;
+  const progressWidth = `${Math.round((segment.stepNumber / ONBOARDING_TOUR_STEP_COUNT) * 100)}%`;
+  const isGuideStepEntering = isEntering && segment.id === 'guide-tab';
   const panelPosition = {
     top: panelLayout.style.top ?? '16px',
     left: panelLayout.style.left ?? '16px',
@@ -689,6 +607,52 @@ export const OnboardingTourOverlay = ({
     bottom: 'unset',
     height: 'auto',
   };
+  const spotlightTransition = prefersReducedMotion
+    ? ({ duration: 0.01 } as const)
+    : isGuideStepEntering
+      ? ({
+          top: { duration: 0 },
+          left: { duration: 0 },
+          width: { duration: 0 },
+          height: { duration: 0 },
+          opacity: { duration: 0.28, ease: 'easeOut' },
+        } as const)
+    : isEntering
+      ? ({
+          top: { duration: 0 },
+          left: { duration: 0 },
+          width: { duration: 0 },
+          height: { duration: 0 },
+          opacity: { duration: 0.14, ease: 'easeOut' },
+        } as const)
+      : ({ duration: 0.2, ease: [0.22, 1, 0.36, 1] } as const);
+  const panelTransition = prefersReducedMotion
+    ? ({ duration: 0.01 } as const)
+    : isGuideStepEntering
+      ? ({
+          top: { duration: 0 },
+          left: { duration: 0 },
+          width: { duration: 0 },
+          y: { duration: 0 },
+          scale: { duration: 0 },
+          opacity: { duration: 0.28, ease: 'easeOut' },
+        } as const)
+    : isEntering
+      ? ({
+          top: { duration: 0 },
+          left: { duration: 0 },
+          width: { duration: 0 },
+          y: { duration: 0 },
+          scale: { duration: 0 },
+          opacity: { duration: 0.12, ease: 'easeOut' },
+        } as const)
+      : ({ duration: 0.2, ease: [0.22, 1, 0.36, 1] } as const);
+  const dialogTitleId = completionVisible
+    ? 'onboarding-tour-complete-title'
+    : `onboarding-tour-${segment.id}-title`;
+  const dialogDescriptionId = completionVisible
+    ? 'onboarding-tour-complete-description'
+    : `onboarding-tour-${segment.id}-description`;
 
   return (
     <div className="fixed inset-0 z-[70]">
@@ -703,19 +667,7 @@ export const OnboardingTourOverlay = ({
             height: spotlightRect.height,
             opacity: 1,
           }}
-          transition={
-            prefersReducedMotion
-              ? { duration: 0.01 }
-              : isEntering
-                ? {
-                    top: { duration: 0 },
-                    left: { duration: 0 },
-                    width: { duration: 0 },
-                    height: { duration: 0 },
-                    opacity: { duration: 0.2, ease: 'easeOut' },
-                  }
-                : { type: 'spring', stiffness: 260, damping: 30, mass: 0.95 }
-          }
+          transition={spotlightTransition}
           style={{
             boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.68)',
           }}
@@ -735,21 +687,31 @@ export const OnboardingTourOverlay = ({
             height: spotlightRect.height + 4,
             opacity: 0.9,
           }}
-          transition={
-            prefersReducedMotion
-              ? { duration: 0.01 }
-              : isEntering
-                ? {
-                    top: { duration: 0 },
-                    left: { duration: 0 },
-                    width: { duration: 0 },
-                    height: { duration: 0 },
-                    opacity: { duration: 0.2, ease: 'easeOut' },
-                  }
-                : { type: 'spring', stiffness: 260, damping: 30, mass: 0.95 }
-          }
+          transition={spotlightTransition}
           style={{
             boxShadow: '0 0 22px rgba(255, 255, 255, 0.2)',
+          }}
+        />
+      )}
+      {!completionVisible && spotlightRect && !prefersReducedMotion && (
+        <motion.div
+          initial={isGuideStepEntering ? { opacity: 0 } : false}
+          className="pointer-events-none absolute rounded-2xl border border-white/35"
+          style={{
+            top: spotlightRect.top - 5,
+            left: spotlightRect.left - 5,
+            width: spotlightRect.width + 10,
+            height: spotlightRect.height + 10,
+          }}
+          animate={
+            isGuideStepEntering
+              ? { opacity: [0, 0.18, 0.38, 0.18], scale: [1, 1, 1.03, 1] }
+              : { opacity: [0.18, 0.38, 0.18], scale: [1, 1.03, 1] }
+          }
+          transition={{
+            duration: isGuideStepEntering ? 2.0 : 1.8,
+            repeat: Infinity,
+            ease: 'easeInOut',
           }}
         />
       )}
@@ -759,6 +721,8 @@ export const OnboardingTourOverlay = ({
           ref={panelRef}
           role="dialog"
           aria-modal="true"
+          aria-labelledby={dialogTitleId}
+          aria-describedby={dialogDescriptionId}
           className="pointer-events-auto absolute rounded-2xl border surface-border surface panel-shadow p-4 md:p-5 space-y-4 max-h-[calc(100vh-24px)] overflow-y-auto"
           style={{ position: 'absolute' }}
           initial={isEntering ? { opacity: 0, y: 0, scale: 1 } : false}
@@ -768,31 +732,17 @@ export const OnboardingTourOverlay = ({
             y: 0,
             scale: 1,
           }}
-          transition={
-            prefersReducedMotion
-              ? { duration: 0.01 }
-              : isEntering
-                ? {
-                    top: { duration: 0 },
-                    left: { duration: 0 },
-                    width: { duration: 0 },
-                    y: { duration: 0 },
-                    scale: { duration: 0 },
-                    opacity: { duration: 0.22, ease: 'easeOut' },
-                  }
-                : {
-                    type: 'spring',
-                    stiffness: 280,
-                    damping: 32,
-                    mass: 0.9,
-                  }
-          }
+          transition={panelTransition}
         >
           {completionVisible ? (
-            <>
+            <div className="space-y-4">
               <div className="space-y-2">
-                <h2 className="text-lg font-semibold leading-tight">{labels.completionTitle}</h2>
-                <p className="text-sm text-subtle">{labels.completionBody}</p>
+                <h2 id={dialogTitleId} className="text-lg font-semibold leading-tight">
+                  {tourCopy.completionTitle}
+                </h2>
+                <p id={dialogDescriptionId} className="text-sm text-subtle">
+                  {tourCopy.completionBody}
+                </p>
               </div>
               <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
                 {onOpenSettings && (
@@ -801,7 +751,7 @@ export const OnboardingTourOverlay = ({
                     onClick={onOpenSettings}
                     className="px-4 py-2 rounded-lg border btn-tonal surface-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
                   >
-                    {labels.settings}
+                    {tourCopy.settings}
                   </button>
                 )}
                 <button
@@ -809,27 +759,39 @@ export const OnboardingTourOverlay = ({
                   onClick={onGoHome}
                   className="px-4 py-2 rounded-lg border btn-contrast focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
                 >
-                  {labels.goHome}
+                  {tourCopy.goHome}
                 </button>
               </div>
-            </>
+            </div>
           ) : (
-            <>
+            <div className="space-y-4">
+              <div className="h-1.5 w-full rounded-full bg-[var(--color-surface-hover)] overflow-hidden">
+                <motion.div
+                  className="h-full rounded-full bg-[var(--color-text)]"
+                  initial={false}
+                  animate={{ width: progressWidth }}
+                  transition={prefersReducedMotion ? { duration: 0.01 } : { duration: 0.24 }}
+                />
+              </div>
               <div className="space-y-2">
                 <p className="text-xs uppercase tracking-wide text-subtle">{stepLabel}</p>
-                <h2 className="text-lg font-semibold leading-tight">{title}</h2>
-                <p className="text-sm text-subtle line-clamp-3 md:line-clamp-none">{description}</p>
+                <h2 id={dialogTitleId} className="text-lg font-semibold leading-tight">
+                  {segmentCopy.title}
+                </h2>
+                <p id={dialogDescriptionId} className="text-sm text-subtle line-clamp-3 md:line-clamp-none">
+                  {segmentCopy.description}
+                </p>
               </div>
 
               {!isSegmentAligned && (
                 <div className="rounded-xl border surface-border bg-[var(--color-surface-hover)] px-3 py-2 text-xs text-subtle space-y-2">
-                  <p>{labels.returnPrompt}</p>
+                  <p>{tourCopy.returnPrompt}</p>
                   <button
                     type="button"
                     onClick={onReturnToStep}
                     className="px-3 py-1.5 rounded-lg border btn-tonal surface-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
                   >
-                    {labels.returnButton}
+                    {tourCopy.returnButton}
                   </button>
                 </div>
               )}
@@ -841,14 +803,14 @@ export const OnboardingTourOverlay = ({
                   disabled={segmentIndex === 0}
                   className="justify-self-start px-3 py-2 rounded-lg border btn-tonal surface-hover disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
                 >
-                  {labels.back}
+                  {tourCopy.back}
                 </button>
                 <button
                   type="button"
                   onClick={onSkip}
                   className="justify-self-center text-sm text-subtle underline-offset-4 hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] rounded"
                 >
-                  {labels.skip}
+                  {tourCopy.skip}
                 </button>
                 <button
                   type="button"
@@ -858,7 +820,7 @@ export const OnboardingTourOverlay = ({
                   {nextLabel}
                 </button>
               </div>
-            </>
+            </div>
           )}
         </motion.div>
       </div>

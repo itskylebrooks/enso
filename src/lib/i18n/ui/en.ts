@@ -158,6 +158,76 @@ export const en = {
   toastDataCleared: 'Data cleared.',
   homeTagline:
     'Track your dojo curriculum, stay focused on key techniques, and keep your data with you offline.',
+  onboarding: {
+    homeCard: {
+      title: 'Welcome to Enso',
+      body: 'A calm study companion for techniques, terms, and training exercises. Take a 1-minute tour to learn the essentials.',
+      start: 'Start tour',
+      skip: 'Skip',
+    },
+    tour: {
+      step: 'Step',
+      of: 'of',
+      back: 'Back',
+      next: 'Next',
+      finish: 'Finish',
+      skip: 'Skip',
+      returnPrompt: 'You moved away from this step.',
+      returnButton: 'Return to tour step',
+      completionTitle: "You're ready.",
+      completionBody:
+        'Enso is local-first and privacy-friendly. You can export or erase your data anytime in Settings.',
+      goHome: 'Go to Home',
+      settings: 'Settings',
+      segments: {
+        'guide-tab': {
+          title: 'Guide',
+          description:
+            'The Guide is your map. Use it to navigate belt programs, exam tables, and structured overviews so you always know what to practice next.',
+        },
+        'techniques-tab': {
+          title: 'Techniques',
+          description:
+            'Browse technique pages with clear variants and media. Each technique has its own URL, so you can return to it anytime.',
+        },
+        'techniques-filters': {
+          title: 'Filters',
+          description:
+            'Use filters to narrow down the list, for example by belt level, direction, stance, or other technique attributes.',
+        },
+        'terms-tab': {
+          title: 'Terms',
+          description:
+            'Terms are short definitions for dojo language. Use them to build clarity around what you hear in training.',
+        },
+        'exercises-tab': {
+          title: 'Exercises',
+          description:
+            'Exercises support your training outside the dojo: mobility, strength, balance, coordination, power, and recovery.',
+        },
+        'detail-study-status': {
+          title: 'Study status',
+          description:
+            'Mark an item as None, Practice, or Stable. This is separate from bookmarks and helps you track your study progress locally.',
+        },
+        'detail-bookmarks-collections': {
+          title: 'Bookmarks and collections',
+          description:
+            'Bookmark items you want to keep close, and organize them into collections that match your personal study paths.',
+        },
+        'bookmarks-collections': {
+          title: 'Bookmarks',
+          description:
+            'Your bookmarks are your study space. Create collections to group techniques, terms, and exercises the way you train.',
+        },
+        'search-input': {
+          title: 'Search shortcuts',
+          description:
+            'Search everything from one place. Tip: press Space after typing a filter token: T for techniques, E for exercises, G for terms. Belt filters also work: 1K-5K and 1D-5D.',
+        },
+      },
+    },
+  },
   openLibraryCta: 'Open Techniques',
   viewProgressCta: 'View Bookmarks',
   aboutTitle: 'About Enso',
@@ -223,6 +293,7 @@ export const en = {
   openAriaPrefix: 'Open',
   // Feedback
   feedback: 'Feedback',
+  startTour: 'Tour',
   feedbackTitle: 'Feedback & Contributions (Beta)',
   feedbackDescription:
     'Help Enso grow by improving what’s here or adding your own insight. Whether it’s a small correction or a full variation — your Aikidō knowledge matters.',

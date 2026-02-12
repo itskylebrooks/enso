@@ -17,4 +17,16 @@ describe('UI i18n navigation labels', () => {
     expect(copy.glossary).toBe('Begriffe');
     expect(copy.practice).toBe('Übungen');
   });
+
+  it('defines onboarding copy for EN and DE', () => {
+    const copyEn = getCopy('en');
+    const copyDe = getCopy('de');
+
+    expect(copyEn.onboarding.homeCard.title).toBeTruthy();
+    expect(copyDe.onboarding.homeCard.title).toBeTruthy();
+    expect(copyEn.onboarding.tour.segments['guide-tab'].description).toBeTruthy();
+    expect(copyDe.onboarding.tour.segments['guide-tab'].description).toBeTruthy();
+    expect(copyEn.onboarding.tour.segments['search-input'].title).toBeTruthy();
+    expect(copyDe.onboarding.tour.segments['search-input'].title).toBeTruthy();
+  });
 });
