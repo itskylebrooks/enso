@@ -462,12 +462,14 @@ export const OnboardingTourOverlay = ({
       const belowTop = spotlightRect.top + spotlightRect.height + gap;
       const aboveTop = spotlightRect.top - panelHeight - gap;
       const maxTop = viewportHeight - panelHeight - mobileBottomClearance;
-      const preferBelowFallback = geometrySegment.id === 'techniques-filters';
+      const preferBelowFallback =
+        geometrySegment.id === 'techniques-filters' ||
+        geometrySegment.id === 'bookmarks-collections';
       const comfortMaxTop =
         spotlightRect.top > viewportHeight * 0.6 ? Math.min(maxTop, centeredTop + 40) : maxTop;
 
       if (preferBelowFallback) {
-        // Keep step 3 attached under the filter panel. If it overflows, choose the lowest valid top.
+        // Keep mobile panel steps attached under the target panel; if it overflows, use the lowest valid top.
         const top = clamp(belowTop, mobileTopPadding, Math.max(mobileTopPadding, maxTop));
         setPanelLayout({
           style: {
