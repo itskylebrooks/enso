@@ -640,6 +640,15 @@ export const en = {
           'Breathing, restorative stretching, nervous system reset (rest day / evening).',
       },
     ],
+    routineOverviewLead:
+      'Choose a preset and follow the listed sequence. Keep transitions smooth and prioritize quality over pace.',
+    routineDurationLabel: 'Estimated duration',
+    routineExerciseCountLabel: 'Exercises',
+    routineBackToList: 'Back to routine list',
+    routineNotFound: 'Routine not found.',
+    routineMissingExercise: 'Exercise currently unavailable in the library.',
+    routineExerciseListHeading: 'How to do it',
+    routineOpenExerciseCta: 'Open exercise',
     etiquetteLead:
       'Etiquette keeps everyone safe and training pleasant. The following points reflect common dōjō practice.',
     etiquettePoints: [

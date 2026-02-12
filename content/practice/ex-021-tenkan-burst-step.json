@@ -1,0 +1,38 @@
+{
+  "id": "ex-021",
+  "slug": "tenkan-burst-step",
+  "name": { "en": "Tenkan burst step", "de": "Tenkan-Burst-Schritt" },
+  "category": "power",
+  "summary": {
+    "en": "Build quick rotational acceleration with controlled stopping mechanics.",
+    "de": "Baut schnelle Rotationsbeschleunigung mit kontrolliertem Abbremsen auf."
+  },
+  "howTo": {
+    "en": [
+      "Begin in hanmi and load lightly through the rear leg.",
+      "Rotate into a fast tenkan turn and stop with posture upright.",
+      "Reset fully before the next rep and complete 6-10 reps each side."
+    ],
+    "de": [
+      "In hanmi starten und leicht ueber das hintere Bein vorspannen.",
+      "In einen schnellen tenkan drehen und aufrecht stabil abbremsen.",
+      "Vollstaendig zuruecksetzen und 6-10 Wiederholungen pro Seite ausfuehren."
+    ]
+  },
+  "equipment": ["none"],
+  "safetyNotes": {
+    "en": ["Stay on a non-slippery surface and prioritize control over speed."],
+    "de": ["Auf rutschfester Flaeche bleiben und Kontrolle vor Tempo priorisieren."]
+  },
+  "aikidoContext": {
+    "en": "Develops explosive tenkan response for evasive and blending entries.",
+    "de": "Entwickelt explosive tenkan-Reaktion fuer ausweichende und verbindende Eintritte."
+  },
+  "media": [
+    {
+      "type": "youtube",
+      "url": "https://www.youtube.com/embed/rRfsb1eu0i4"
+    }
+  ],
+  "updatedAt": "2026-02-12T00:00:00Z"
+}

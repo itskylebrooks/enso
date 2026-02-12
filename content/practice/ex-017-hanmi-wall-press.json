@@ -1,0 +1,32 @@
+{
+  "id": "ex-017",
+  "slug": "hanmi-wall-press",
+  "name": { "en": "Hanmi wall press", "de": "Hanmi-Wanddruck" },
+  "category": "strength",
+  "summary": {
+    "en": "Build whole-body tension and posture integrity from the ground up.",
+    "de": "Baut Ganzkoerperspannung und Haltungsstabilitaet vom Boden auf."
+  },
+  "howTo": {
+    "en": [
+      "Stand in hanmi facing a wall at arm's length.",
+      "Place palms on the wall and press without shrugging shoulders.",
+      "Hold 15-25 seconds while keeping hips and ribs aligned, then switch stance."
+    ],
+    "de": [
+      "In hanmi eine Armlaenge vor einer Wand stehen.",
+      "Handflaechen an die Wand setzen und druecken, ohne die Schultern hochzuziehen.",
+      "15-25 Sekunden halten, Huefte und Rippen ausgerichtet lassen, dann Stand wechseln."
+    ]
+  },
+  "equipment": ["none"],
+  "safetyNotes": {
+    "en": ["Use moderate effort and keep elbows softly unlocked."],
+    "de": ["Mit moderater Intensitaet arbeiten und Ellbogen leicht gebeugt lassen."]
+  },
+  "aikidoContext": {
+    "en": "Improves connected structure for stable contact and kuzushi control.",
+    "de": "Verbessert verbundene Struktur fuer stabilen Kontakt und kuzushi-Kontrolle."
+  },
+  "updatedAt": "2026-02-12T00:00:00Z"
+}

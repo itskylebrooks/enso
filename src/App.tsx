@@ -342,6 +342,11 @@ const routineToGuideRoute = (routine: GuideRoutine): AppRoute => {
   }
 };
 
+const buildGuideRoutinePath = (routine: GuideRoutine, routineSlug?: string): string => {
+  const basePath = `/guide/${routine}`;
+  return routineSlug ? `${basePath}/${encodeURIComponent(routineSlug)}` : basePath;
+};
+
 const guideRouteToRoutine = (route: AppRoute): GuideRoutine | null => {
   switch (route) {
     case 'guideRoutineWarmUp':
@@ -435,12 +440,16 @@ const parseLocation = (
     return { route: 'guideDan', slug: null };
   }
 
-  const guideRoutineMatch = /^\/guide\/(warm-up|cooldown|mobility|strength|skill|recovery)$/.exec(
-    pathname,
-  );
+  const guideRoutineMatch =
+    /^\/guide\/(warm-up|cooldown|mobility|strength|skill|recovery)(?:\/([^/?#]+))?$/.exec(
+      pathname,
+    );
   if (guideRoutineMatch) {
-    const [, routine] = guideRoutineMatch;
-    return { route: routineToGuideRoute(routine as GuideRoutine), slug: null };
+    const [, routine, routineSlug] = guideRoutineMatch;
+    return {
+      route: routineToGuideRoute(routine as GuideRoutine),
+      slug: routineSlug ? decodeURIComponent(routineSlug) : null,
+    };
   }
 
   const guideGradeMatch = /^\/guide\/(\d+)-(kyu|dan)$/.exec(pathname);
@@ -1850,12 +1859,17 @@ export default function App({
 
   const openPracticeExercise = (slug: string): void => {
     rememberScrollPosition();
-    const nextRoute = route === 'home' || route === 'bookmarks' ? 'exercises' : route;
+    const nextRoute: AppRoute = 'exercises';
 
     if (typeof window !== 'undefined') {
       const encodedSlug = encodeURIComponent(slug);
       const practicePath = `/exercises/${encodedSlug}`;
-      const state: HistoryState = { route: nextRoute, slug, sourceRoute: route };
+      const state: HistoryState = {
+        route: nextRoute,
+        slug,
+        sourceRoute: route,
+        sourceSlug: activeSlug ?? undefined,
+      };
 
       if (window.location.pathname !== practicePath) {
         window.history.pushState(state, '', practicePath);
@@ -1864,7 +1878,7 @@ export default function App({
       }
     }
 
-    if (route === 'home' || route === 'bookmarks') {
+    if (route !== 'exercises') {
       setRoute('exercises');
     }
     setActiveSlug(slug);
@@ -1927,6 +1941,45 @@ export default function App({
     [navigateTo],
   );
 
+  const openGuideRoutinePreset = useCallback(
+    (routine: GuideRoutine, routineSlug: string) => {
+      rememberScrollPosition();
+      const nextRoute = routineToGuideRoute(routine);
+      const nextPath = buildGuideRoutinePath(routine, routineSlug);
+
+      setRoute(nextRoute);
+      setActiveSlug(routineSlug);
+
+      if (typeof window !== 'undefined') {
+        const state: HistoryState = {
+          route: nextRoute,
+          slug: routineSlug,
+          sourceRoute: 'guide',
+        };
+        if (`${window.location.pathname}${window.location.search}` !== nextPath) {
+          window.history.pushState(state, '', nextPath);
+        } else {
+          window.history.replaceState(state, '', nextPath);
+        }
+      }
+    },
+    [],
+  );
+
+  const closeGuideRoutinePreset = useCallback((routine: GuideRoutine) => {
+    rememberScrollPosition();
+    const nextRoute = routineToGuideRoute(routine);
+    const nextPath = buildGuideRoutinePath(routine);
+
+    setRoute(nextRoute);
+    setActiveSlug(null);
+
+    if (typeof window !== 'undefined') {
+      const state: HistoryState = { route: nextRoute, sourceRoute: 'guide' };
+      window.history.replaceState(state, '', nextPath);
+    }
+  }, []);
+
   const techniqueHistoryState =
     typeof window !== 'undefined' ? (window.history.state as HistoryState | null) : null;
   const techniqueBackRoute = techniqueHistoryState?.sourceRoute ?? route;
@@ -1983,7 +2036,11 @@ export default function App({
   };
 
   const techniqueNotFound =
-    Boolean(activeSlug) && !currentTechnique && route !== 'terms' && route !== 'exercises';
+    Boolean(activeSlug) &&
+    !currentTechnique &&
+    route !== 'terms' &&
+    route !== 'exercises' &&
+    !guideRouteToRoutine(route);
 
   const flushScrollToTop = useCallback(() => {
     if (typeof window === 'undefined') return;
@@ -2060,6 +2117,7 @@ export default function App({
   const practiceHistoryState =
     typeof window !== 'undefined' ? (window.history.state as HistoryState | null) : null;
   const practiceBackRoute = practiceHistoryState?.sourceRoute ?? route;
+  const practiceBackSourceSlug = practiceHistoryState?.sourceSlug ?? null;
   const practiceBackLabel =
     practiceBackRoute === 'bookmarks'
       ? copy.backToBookmarks
@@ -2069,9 +2127,28 @@ export default function App({
           ? copy.backToAbout
           : practiceBackRoute === 'guide'
               ? copy.backToGuide
-              : practiceBackRoute === 'feedback'
+              : guideRouteToRoutine(practiceBackRoute)
+                ? copy.backToGuide
+                : practiceBackRoute === 'feedback'
                 ? copy.backToFeedback
                 : copy.backToPractice;
+  const handlePracticeBack = () => {
+    const guideRoutine = guideRouteToRoutine(practiceBackRoute);
+    if (guideRoutine && practiceBackSourceSlug) {
+      const path = buildGuideRoutinePath(guideRoutine, practiceBackSourceSlug);
+      setRoute(practiceBackRoute);
+      setActiveSlug(practiceBackSourceSlug);
+      if (typeof window !== 'undefined') {
+        window.history.replaceState(
+          { route: practiceBackRoute, slug: practiceBackSourceSlug, sourceRoute: 'guide' },
+          '',
+          path,
+        );
+      }
+      return;
+    }
+    navigateTo(practiceBackRoute, { replace: true });
+  };
 
   const guideHistoryState =
     typeof window !== 'undefined' ? (window.history.state as HistoryState | null) : null;
@@ -2190,7 +2267,7 @@ export default function App({
           setPracticeFilters(nextFilters);
           navigateTo('exercises', { replace: true });
         }}
-        onBack={() => navigateTo(practiceBackRoute, { replace: true })}
+        onBack={handlePracticeBack}
       />
     );
   } else if (techniqueNotFound) {
@@ -2247,14 +2324,16 @@ export default function App({
     mainContent = <DanOverview locale={locale} onBack={() => navigateTo('guide')} />;
   } else if (guideRouteToRoutine(route)) {
     const routine = guideRouteToRoutine(route) as GuideRoutine;
-    const routineContent = copy.guidePage.routines.find((entry) => entry.id === routine);
     mainContent = (
       <GuideRoutinePage
         copy={copy}
         locale={locale}
-        title={routineContent?.title ?? ''}
-        description={routineContent?.description ?? ''}
+        routine={routine}
+        activeRoutineSlug={activeSlug}
         onBack={() => navigateTo('guide')}
+        onBackToOverview={() => closeGuideRoutinePreset(routine)}
+        onOpenRoutine={(routineSlug) => openGuideRoutinePreset(routine, routineSlug)}
+        onOpenExercise={openPracticeExercise}
       />
     );
   } else if (guideRouteToGrade(route)) {

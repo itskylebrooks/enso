@@ -1,0 +1,32 @@
+{
+  "id": "ex-019",
+  "slug": "line-walk-pause-turn",
+  "name": { "en": "Line walk pause turn", "de": "Liniengang mit Stopp-Drehung" },
+  "category": "balance",
+  "summary": {
+    "en": "Refine foot placement and posture control while turning from narrow support.",
+    "de": "Verfeinert Fussplatzierung und Haltungskontrolle bei Drehungen aus schmaler Basis."
+  },
+  "howTo": {
+    "en": [
+      "Walk slowly along an imaginary straight line in hanmi steps.",
+      "After every two steps, pause and rotate 90 degrees without drifting.",
+      "Continue for 1-2 minutes, then change lead side."
+    ],
+    "de": [
+      "Langsam auf einer gedachten geraden Linie in hanmi-Schritten gehen.",
+      "Nach jeweils zwei Schritten stoppen und ohne Versetzen 90 Grad drehen.",
+      "1-2 Minuten fortsetzen, dann Fuehrseite wechseln."
+    ]
+  },
+  "equipment": ["none"],
+  "safetyNotes": {
+    "en": ["Shorten the step if you lose heel-to-toe control."],
+    "de": ["Schrittlaenge verkuerzen, wenn die Fersen-Zehen-Kontrolle verloren geht."]
+  },
+  "aikidoContext": {
+    "en": "Helps keep axis and ma-ai awareness during directional changes.",
+    "de": "Hilft, Achse und ma-ai-Bewusstsein bei Richtungswechseln zu halten."
+  },
+  "updatedAt": "2026-02-12T00:00:00Z"
+}

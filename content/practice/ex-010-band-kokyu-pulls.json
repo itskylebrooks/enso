@@ -1,0 +1,32 @@
+{
+  "id": "ex-010",
+  "slug": "band-kokyu-pulls",
+  "name": { "en": "Band kokyu pulls", "de": "Kokyu-Zuege mit Band" },
+  "category": "strength",
+  "summary": {
+    "en": "Build connected back and shoulder strength for stable kuzushi and control.",
+    "de": "Baut verbundene Ruecken- und Schulterkraft fuer stabiles kuzushi und Kontrolle auf."
+  },
+  "howTo": {
+    "en": [
+      "Anchor a resistance band at chest height and stand in hanmi.",
+      "Hold the band with both hands and step irimi while pulling elbows to the ribs.",
+      "Return with control and repeat 8-12 reps each side."
+    ],
+    "de": [
+      "Ein Widerstandsband auf Brusthoehe fixieren und in hanmi stehen.",
+      "Band mit beiden Haenden greifen, mit irimi eintreten und Ellbogen zu den Rippen ziehen.",
+      "Kontrolliert zurueckgehen und 8-12 Wiederholungen pro Seite ausfuehren."
+    ]
+  },
+  "equipment": ["resistance-band"],
+  "safetyNotes": {
+    "en": ["Keep shoulders down and stop if the front of the shoulder pinches."],
+    "de": ["Schultern tief halten und bei Einklemmen an der Schultervorderseite stoppen."]
+  },
+  "aikidoContext": {
+    "en": "Reinforces kokyu power transfer from legs through center into the hands.",
+    "de": "Staerkt die Uebertragung von kokyu-Kraft aus den Beinen ueber das Zentrum in die Haende."
+  },
+  "updatedAt": "2026-02-12T00:00:00Z"
+}

@@ -1,0 +1,38 @@
+{
+  "id": "ex-014",
+  "slug": "irimi-step-drive",
+  "name": { "en": "Irimi step drive", "de": "Irimi-Schritt-Drive" },
+  "category": "power",
+  "summary": {
+    "en": "Develop fast, connected leg drive for committed but controlled entries.",
+    "de": "Entwickelt schnellen, verbundenen Beinantrieb fuer entschlossene und kontrollierte Eintritte."
+  },
+  "howTo": {
+    "en": [
+      "From hanmi, push from the rear leg and step sharply forward into irimi.",
+      "Stop in a stable stance with hips square and posture tall.",
+      "Reset and repeat 6-10 reps per side with full control."
+    ],
+    "de": [
+      "Aus hanmi mit dem hinteren Bein abdruecken und kraftvoll in irimi nach vorn treten.",
+      "In stabilem Stand stoppen, Huefte ausgerichtet und Haltung aufrecht.",
+      "Zuruecksetzen und 6-10 Wiederholungen pro Seite kontrolliert ausfuehren."
+    ]
+  },
+  "equipment": ["none"],
+  "safetyNotes": {
+    "en": ["Prioritize clean stopping mechanics over speed."],
+    "de": ["Sauberes Abbremsen hat Vorrang vor hoher Geschwindigkeit."]
+  },
+  "aikidoContext": {
+    "en": "Transfers directly to decisive entering actions in techniques like irimi-nage.",
+    "de": "Uebertraegt sich direkt auf entschlossene Eintritte in Techniken wie irimi-nage."
+  },
+  "media": [
+    {
+      "type": "youtube",
+      "url": "https://www.youtube.com/embed/Ekhih7wwiHw"
+    }
+  ],
+  "updatedAt": "2026-02-12T00:00:00Z"
+}

@@ -1,0 +1,34 @@
+{
+  "id": "ex-015",
+  "slug": "extended-exhale-reset",
+  "name": { "en": "Extended exhale reset", "de": "Verlaengerte-Ausatmung-Reset" },
+  "category": "recovery",
+  "summary": {
+    "en": "Lower tension quickly after intense rounds using longer exhalations.",
+    "de": "Senkt Spannung nach intensiven Runden schnell durch laengere Ausatmung."
+  },
+  "howTo": {
+    "en": [
+      "Sit or stand tall with one hand on the lower ribs.",
+      "Inhale gently for 3-4 counts through the nose.",
+      "Exhale for 6-8 counts through the nose or lightly parted lips.",
+      "Repeat for 2-4 minutes."
+    ],
+    "de": [
+      "Aufrecht sitzen oder stehen, eine Hand auf die unteren Rippen.",
+      "Sanft fuer 3-4 Zaehler durch die Nase einatmen.",
+      "Fuer 6-8 Zaehler durch die Nase oder leicht geoeffnete Lippen ausatmen.",
+      "2-4 Minuten wiederholen."
+    ]
+  },
+  "equipment": ["none"],
+  "safetyNotes": {
+    "en": ["Keep effort low and return to normal breathing if dizzy."],
+    "de": ["Anstrengung gering halten und bei Schwindel zur normalen Atmung zurueckkehren."]
+  },
+  "aikidoContext": {
+    "en": "Supports zanshin and calm focus between partner rounds.",
+    "de": "Unterstuetzt zanshin und ruhigen Fokus zwischen Partner-Runden."
+  },
+  "updatedAt": "2026-02-12T00:00:00Z"
+}

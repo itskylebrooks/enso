@@ -1,0 +1,32 @@
+{
+  "id": "ex-009",
+  "slug": "ankle-knee-line-rocks",
+  "name": { "en": "Ankle-knee line rocks", "de": "Sprunggelenk-Knie-Linien-Wippen" },
+  "category": "mobility",
+  "summary": {
+    "en": "Open ankle and knee range for lower, smoother Aikido stances.",
+    "de": "Öffnet Sprunggelenk und Knie für tiefere, flüssige Aikido-Stände."
+  },
+  "howTo": {
+    "en": [
+      "Stand in a short lunge with both heels on the floor.",
+      "Slowly shift weight forward until the front knee tracks over the toes.",
+      "Rock back and repeat for 8-12 reps, then switch sides."
+    ],
+    "de": [
+      "In einen kurzen Ausfallschritt gehen, beide Fersen am Boden.",
+      "Gewicht langsam nach vorn verlagern, bis das vordere Knie über die Zehen wandert.",
+      "Zurückwippen und 8-12 Wiederholungen ausfuehren, dann Seite wechseln."
+    ]
+  },
+  "equipment": ["none"],
+  "safetyNotes": {
+    "en": ["Keep the heel grounded and reduce range if the knee feels pinched."],
+    "de": ["Ferse am Boden halten und den Bewegungsumfang reduzieren, wenn das Knie eingeengt wirkt."]
+  },
+  "aikidoContext": {
+    "en": "Helps maintain stable alignment in hanmi, irimi, and tenkan footwork.",
+    "de": "Hilft, stabile Ausrichtung in hanmi-, irimi- und tenkan-Fussarbeit zu halten."
+  },
+  "updatedAt": "2026-02-12T00:00:00Z"
+}

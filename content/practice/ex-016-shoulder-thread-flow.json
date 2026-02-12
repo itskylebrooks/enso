@@ -1,0 +1,32 @@
+{
+  "id": "ex-016",
+  "slug": "shoulder-thread-flow",
+  "name": { "en": "Shoulder thread flow", "de": "Schulter-Thread-Flow" },
+  "category": "mobility",
+  "summary": {
+    "en": "Mobilize shoulder rotation and scapular glide for smoother circular arm paths.",
+    "de": "Mobilisiert Schulterrotation und Schulterblattfuehrung fuer weichere kreisfoermige Armwege."
+  },
+  "howTo": {
+    "en": [
+      "Stand tall and raise both arms to shoulder height.",
+      "Thread one elbow under the other forearm in front of the chest, then unwind.",
+      "Alternate sides for 8-12 controlled reps."
+    ],
+    "de": [
+      "Aufrecht stehen und beide Arme auf Schulterhoehe anheben.",
+      "Einen Ellbogen vor der Brust unter den anderen Unterarm einfuehren und wieder aufdrehen.",
+      "Seiten abwechseln und 8-12 kontrollierte Wiederholungen ausfuehren."
+    ]
+  },
+  "equipment": ["none"],
+  "safetyNotes": {
+    "en": ["Keep neck relaxed and reduce range if the shoulder pinches."],
+    "de": ["Nacken entspannt halten und den Bewegungsumfang bei Einklemmen in der Schulter reduzieren."]
+  },
+  "aikidoContext": {
+    "en": "Supports circular arm connection in kokyu-ho, tenkan, and projection entries.",
+    "de": "Unterstuetzt kreisfoermige Armverbindung in kokyu-ho, tenkan und Wurf-Einstiegen."
+  },
+  "updatedAt": "2026-02-12T00:00:00Z"
+}

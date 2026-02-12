@@ -1,0 +1,32 @@
+{
+  "id": "ex-011",
+  "slug": "seiza-knee-hover",
+  "name": { "en": "Seiza knee hover", "de": "Seiza-Knie-Hover" },
+  "category": "core",
+  "summary": {
+    "en": "Train trunk bracing and hip control for cleaner rises from kneeling.",
+    "de": "Trainiert Rumpfspannung und Hueftkontrolle fuer saubereres Aufstehen aus dem Knien."
+  },
+  "howTo": {
+    "en": [
+      "Begin in seiza on a mat with a tall spine.",
+      "Lift knees 1-2 cm off the mat while keeping hips level.",
+      "Hold 5-10 seconds, lower, and repeat for 5-8 reps."
+    ],
+    "de": [
+      "In seiza auf einer Matte beginnen, Wirbelsaeule aufrecht.",
+      "Knie 1-2 cm von der Matte abheben und die Huefte waagerecht halten.",
+      "5-10 Sekunden halten, absetzen und 5-8 Wiederholungen ausfuehren."
+    ]
+  },
+  "equipment": ["mat"],
+  "safetyNotes": {
+    "en": ["Use folded padding under knees if needed and keep breathing steadily."],
+    "de": ["Bei Bedarf gefaltete Polster unter die Knie legen und gleichmaessig weiteratmen."]
+  },
+  "aikidoContext": {
+    "en": "Supports suwari-waza stability and smooth transitions to standing.",
+    "de": "Unterstuetzt suwari-waza-Stabilitaet und weiche Uebergaenge zum Stand."
+  },
+  "updatedAt": "2026-02-12T00:00:00Z"
+}

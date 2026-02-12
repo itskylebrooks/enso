@@ -1,5 +1,71 @@
 [
   {
+    "id": "ex-009",
+    "slug": "ankle-knee-line-rocks",
+    "name": { "en": "Ankle-knee line rocks", "de": "Sprunggelenk-Knie-Linien-Wippen" },
+    "category": "mobility",
+    "summary": {
+      "en": "Open ankle and knee range for lower, smoother Aikido stances.",
+      "de": "Öffnet Sprunggelenk und Knie für tiefere, flüssige Aikido-Stände."
+    },
+    "howTo": {
+      "en": [
+        "Stand in a short lunge with both heels on the floor.",
+        "Slowly shift weight forward until the front knee tracks over the toes.",
+        "Rock back and repeat for 8-12 reps, then switch sides."
+      ],
+      "de": [
+        "In einen kurzen Ausfallschritt gehen, beide Fersen am Boden.",
+        "Gewicht langsam nach vorn verlagern, bis das vordere Knie über die Zehen wandert.",
+        "Zurückwippen und 8-12 Wiederholungen ausfuehren, dann Seite wechseln."
+      ]
+    },
+    "equipment": ["none"],
+    "safetyNotes": {
+      "en": ["Keep the heel grounded and reduce range if the knee feels pinched."],
+      "de": [
+        "Ferse am Boden halten und den Bewegungsumfang reduzieren, wenn das Knie eingeengt wirkt."
+      ]
+    },
+    "aikidoContext": {
+      "en": "Helps maintain stable alignment in hanmi, irimi, and tenkan footwork.",
+      "de": "Hilft, stabile Ausrichtung in hanmi-, irimi- und tenkan-Fussarbeit zu halten."
+    },
+    "updatedAt": "2026-02-12T00:00:00Z"
+  },
+  {
+    "id": "ex-010",
+    "slug": "band-kokyu-pulls",
+    "name": { "en": "Band kokyu pulls", "de": "Kokyu-Zuege mit Band" },
+    "category": "strength",
+    "summary": {
+      "en": "Build connected back and shoulder strength for stable kuzushi and control.",
+      "de": "Baut verbundene Ruecken- und Schulterkraft fuer stabiles kuzushi und Kontrolle auf."
+    },
+    "howTo": {
+      "en": [
+        "Anchor a resistance band at chest height and stand in hanmi.",
+        "Hold the band with both hands and step irimi while pulling elbows to the ribs.",
+        "Return with control and repeat 8-12 reps each side."
+      ],
+      "de": [
+        "Ein Widerstandsband auf Brusthoehe fixieren und in hanmi stehen.",
+        "Band mit beiden Haenden greifen, mit irimi eintreten und Ellbogen zu den Rippen ziehen.",
+        "Kontrolliert zurueckgehen und 8-12 Wiederholungen pro Seite ausfuehren."
+      ]
+    },
+    "equipment": ["resistance-band"],
+    "safetyNotes": {
+      "en": ["Keep shoulders down and stop if the front of the shoulder pinches."],
+      "de": ["Schultern tief halten und bei Einklemmen an der Schultervorderseite stoppen."]
+    },
+    "aikidoContext": {
+      "en": "Reinforces kokyu power transfer from legs through center into the hands.",
+      "de": "Staerkt die Uebertragung von kokyu-Kraft aus den Beinen ueber das Zentrum in die Haende."
+    },
+    "updatedAt": "2026-02-12T00:00:00Z"
+  },
+  {
     "id": "ex-006",
     "slug": "box-breathing",
     "name": { "en": "Box breathing", "de": "Box-Atmung" },
@@ -98,6 +164,105 @@
     "updatedAt": "2024-10-01T00:00:00Z"
   },
   {
+    "id": "ex-015",
+    "slug": "extended-exhale-reset",
+    "name": { "en": "Extended exhale reset", "de": "Verlaengerte-Ausatmung-Reset" },
+    "category": "recovery",
+    "summary": {
+      "en": "Lower tension quickly after intense rounds using longer exhalations.",
+      "de": "Senkt Spannung nach intensiven Runden schnell durch laengere Ausatmung."
+    },
+    "howTo": {
+      "en": [
+        "Sit or stand tall with one hand on the lower ribs.",
+        "Inhale gently for 3-4 counts through the nose.",
+        "Exhale for 6-8 counts through the nose or lightly parted lips.",
+        "Repeat for 2-4 minutes."
+      ],
+      "de": [
+        "Aufrecht sitzen oder stehen, eine Hand auf die unteren Rippen.",
+        "Sanft fuer 3-4 Zaehler durch die Nase einatmen.",
+        "Fuer 6-8 Zaehler durch die Nase oder leicht geoeffnete Lippen ausatmen.",
+        "2-4 Minuten wiederholen."
+      ]
+    },
+    "equipment": ["none"],
+    "safetyNotes": {
+      "en": ["Keep effort low and return to normal breathing if dizzy."],
+      "de": ["Anstrengung gering halten und bei Schwindel zur normalen Atmung zurueckkehren."]
+    },
+    "aikidoContext": {
+      "en": "Supports zanshin and calm focus between partner rounds.",
+      "de": "Unterstuetzt zanshin und ruhigen Fokus zwischen Partner-Runden."
+    },
+    "updatedAt": "2026-02-12T00:00:00Z"
+  },
+  {
+    "id": "ex-013",
+    "slug": "four-corner-irimi-tenkan",
+    "name": { "en": "Four-corner irimi-tenkan", "de": "Vier-Ecken-Irimi-Tenkan" },
+    "category": "coordination",
+    "summary": {
+      "en": "Link entry and turn patterns across directions without losing timing.",
+      "de": "Verbindet Eintritts- und Drehmuster in alle Richtungen ohne Timing-Verlust."
+    },
+    "howTo": {
+      "en": [
+        "Imagine a square on the floor and stand in one corner.",
+        "Step irimi to the next corner, then tenkan and face the center.",
+        "Continue around all four corners for 2-4 rounds each direction."
+      ],
+      "de": [
+        "Ein Quadrat auf dem Boden vorstellen und in einer Ecke starten.",
+        "Mit irimi zur naechsten Ecke eintreten, dann tenkan und zur Mitte ausrichten.",
+        "Rund um alle vier Ecken fuer 2-4 Runden pro Richtung fortsetzen."
+      ]
+    },
+    "equipment": ["none"],
+    "safetyNotes": {
+      "en": ["Keep steps short enough to stay smooth and upright."],
+      "de": ["Schritte kurz genug halten, um weich und aufrecht zu bleiben."]
+    },
+    "aikidoContext": {
+      "en": "Builds tai sabaki coordination for adapting to moving uke angles.",
+      "de": "Baut tai-sabaki-Koordination auf, um auf bewegte uke-Winkel zu reagieren."
+    },
+    "media": [{ "type": "youtube", "url": "https://www.youtube.com/embed/daL9Bf0jZ10" }],
+    "updatedAt": "2026-02-12T00:00:00Z"
+  },
+  {
+    "id": "ex-017",
+    "slug": "hanmi-wall-press",
+    "name": { "en": "Hanmi wall press", "de": "Hanmi-Wanddruck" },
+    "category": "strength",
+    "summary": {
+      "en": "Build whole-body tension and posture integrity from the ground up.",
+      "de": "Baut Ganzkoerperspannung und Haltungsstabilitaet vom Boden auf."
+    },
+    "howTo": {
+      "en": [
+        "Stand in hanmi facing a wall at arm's length.",
+        "Place palms on the wall and press without shrugging shoulders.",
+        "Hold 15-25 seconds while keeping hips and ribs aligned, then switch stance."
+      ],
+      "de": [
+        "In hanmi eine Armlaenge vor einer Wand stehen.",
+        "Handflaechen an die Wand setzen und druecken, ohne die Schultern hochzuziehen.",
+        "15-25 Sekunden halten, Huefte und Rippen ausgerichtet lassen, dann Stand wechseln."
+      ]
+    },
+    "equipment": ["none"],
+    "safetyNotes": {
+      "en": ["Use moderate effort and keep elbows softly unlocked."],
+      "de": ["Mit moderater Intensitaet arbeiten und Ellbogen leicht gebeugt lassen."]
+    },
+    "aikidoContext": {
+      "en": "Improves connected structure for stable contact and kuzushi control.",
+      "de": "Verbessert verbundene Struktur fuer stabilen Kontakt und kuzushi-Kontrolle."
+    },
+    "updatedAt": "2026-02-12T00:00:00Z"
+  },
+  {
     "id": "ex-002",
     "slug": "hip-figure-eights",
     "name": { "en": "Hip figure-eights", "de": "Hüft-Achten" },
@@ -128,6 +293,233 @@
       "de": "Fördert entspannte Rotation für tenkan und Verbindung."
     },
     "updatedAt": "2024-10-01T00:00:00Z"
+  },
+  {
+    "id": "ex-014",
+    "slug": "irimi-step-drive",
+    "name": { "en": "Irimi step drive", "de": "Irimi-Schritt-Drive" },
+    "category": "power",
+    "summary": {
+      "en": "Develop fast, connected leg drive for committed but controlled entries.",
+      "de": "Entwickelt schnellen, verbundenen Beinantrieb fuer entschlossene und kontrollierte Eintritte."
+    },
+    "howTo": {
+      "en": [
+        "From hanmi, push from the rear leg and step sharply forward into irimi.",
+        "Stop in a stable stance with hips square and posture tall.",
+        "Reset and repeat 6-10 reps per side with full control."
+      ],
+      "de": [
+        "Aus hanmi mit dem hinteren Bein abdruecken und kraftvoll in irimi nach vorn treten.",
+        "In stabilem Stand stoppen, Huefte ausgerichtet und Haltung aufrecht.",
+        "Zuruecksetzen und 6-10 Wiederholungen pro Seite kontrolliert ausfuehren."
+      ]
+    },
+    "equipment": ["none"],
+    "safetyNotes": {
+      "en": ["Prioritize clean stopping mechanics over speed."],
+      "de": ["Sauberes Abbremsen hat Vorrang vor hoher Geschwindigkeit."]
+    },
+    "aikidoContext": {
+      "en": "Transfers directly to decisive entering actions in techniques like irimi-nage.",
+      "de": "Uebertraegt sich direkt auf entschlossene Eintritte in Techniken wie irimi-nage."
+    },
+    "media": [{ "type": "youtube", "url": "https://www.youtube.com/embed/Ekhih7wwiHw" }],
+    "updatedAt": "2026-02-12T00:00:00Z"
+  },
+  {
+    "id": "ex-020",
+    "slug": "jo-grip-switches",
+    "name": { "en": "Jo grip switches", "de": "Jo-Griffwechsel" },
+    "category": "coordination",
+    "summary": {
+      "en": "Improve hand timing and bilateral coordination during weapon transitions.",
+      "de": "Verbessert Hand-Timing und beidseitige Koordination bei Waffenuebergaengen."
+    },
+    "howTo": {
+      "en": [
+        "Use a jo or a light stick held horizontally at navel height.",
+        "Alternate lead hand positions smoothly without looking down.",
+        "Keep shoulders relaxed and continue for 45-75 seconds per set."
+      ],
+      "de": [
+        "Einen jo oder leichten Stab waagerecht auf Nabelhoehe halten.",
+        "Fuehrhand-Positionen abwechselnd weich wechseln, ohne nach unten zu schauen.",
+        "Schultern entspannt halten und 45-75 Sekunden pro Satz fortsetzen."
+      ]
+    },
+    "equipment": ["none"],
+    "safetyNotes": {
+      "en": ["Start slow and keep clear space around you before increasing speed."],
+      "de": ["Langsam beginnen und vor schnellerem Tempo fuer freien Raum um dich sorgen."]
+    },
+    "aikidoContext": {
+      "en": "Carries over to jo suburi rhythm and cleaner weapon-hand transitions.",
+      "de": "Uebertraegt sich auf jo-suburi-Rhythmus und sauberere Waffen-Hand-Uebergaenge."
+    },
+    "updatedAt": "2026-02-12T00:00:00Z"
+  },
+  {
+    "id": "ex-019",
+    "slug": "line-walk-pause-turn",
+    "name": { "en": "Line walk pause turn", "de": "Liniengang mit Stopp-Drehung" },
+    "category": "balance",
+    "summary": {
+      "en": "Refine foot placement and posture control while turning from narrow support.",
+      "de": "Verfeinert Fussplatzierung und Haltungskontrolle bei Drehungen aus schmaler Basis."
+    },
+    "howTo": {
+      "en": [
+        "Walk slowly along an imaginary straight line in hanmi steps.",
+        "After every two steps, pause and rotate 90 degrees without drifting.",
+        "Continue for 1-2 minutes, then change lead side."
+      ],
+      "de": [
+        "Langsam auf einer gedachten geraden Linie in hanmi-Schritten gehen.",
+        "Nach jeweils zwei Schritten stoppen und ohne Versetzen 90 Grad drehen.",
+        "1-2 Minuten fortsetzen, dann Fuehrseite wechseln."
+      ]
+    },
+    "equipment": ["none"],
+    "safetyNotes": {
+      "en": ["Shorten the step if you lose heel-to-toe control."],
+      "de": ["Schrittlaenge verkuerzen, wenn die Fersen-Zehen-Kontrolle verloren geht."]
+    },
+    "aikidoContext": {
+      "en": "Helps keep axis and ma-ai awareness during directional changes.",
+      "de": "Hilft, Achse und ma-ai-Bewusstsein bei Richtungswechseln zu halten."
+    },
+    "updatedAt": "2026-02-12T00:00:00Z"
+  },
+  {
+    "id": "ex-022",
+    "slug": "nasal-walkdown-breath",
+    "name": { "en": "Nasal walkdown breath", "de": "Nasenatmung-Geh-Reset" },
+    "category": "recovery",
+    "summary": {
+      "en": "Use slow walking with nasal breathing to downshift after intense practice.",
+      "de": "Nutzt langsames Gehen mit Nasenatmung zum Runterfahren nach intensiver Praxis."
+    },
+    "howTo": {
+      "en": [
+        "Walk slowly in a straight line or small circle.",
+        "Inhale through the nose for 3 steps, exhale for 5 steps.",
+        "Keep shoulders soft and continue for 3-6 minutes."
+      ],
+      "de": [
+        "Langsam auf einer geraden Linie oder in kleinem Kreis gehen.",
+        "Durch die Nase fuer 3 Schritte einatmen, fuer 5 Schritte ausatmen.",
+        "Schultern weich halten und 3-6 Minuten fortsetzen."
+      ]
+    },
+    "equipment": ["none"],
+    "safetyNotes": {
+      "en": ["Return to normal breathing if you feel lightheaded."],
+      "de": ["Bei Schwindel zur normalen Atmung zurueckkehren."]
+    },
+    "aikidoContext": {
+      "en": "Helps restore calm attention and breath rhythm between rounds.",
+      "de": "Hilft, ruhige Aufmerksamkeit und Atemrhythmus zwischen Runden wiederherzustellen."
+    },
+    "updatedAt": "2026-02-12T00:00:00Z"
+  },
+  {
+    "id": "ex-011",
+    "slug": "seiza-knee-hover",
+    "name": { "en": "Seiza knee hover", "de": "Seiza-Knie-Hover" },
+    "category": "core",
+    "summary": {
+      "en": "Train trunk bracing and hip control for cleaner rises from kneeling.",
+      "de": "Trainiert Rumpfspannung und Hueftkontrolle fuer saubereres Aufstehen aus dem Knien."
+    },
+    "howTo": {
+      "en": [
+        "Begin in seiza on a mat with a tall spine.",
+        "Lift knees 1-2 cm off the mat while keeping hips level.",
+        "Hold 5-10 seconds, lower, and repeat for 5-8 reps."
+      ],
+      "de": [
+        "In seiza auf einer Matte beginnen, Wirbelsaeule aufrecht.",
+        "Knie 1-2 cm von der Matte abheben und die Huefte waagerecht halten.",
+        "5-10 Sekunden halten, absetzen und 5-8 Wiederholungen ausfuehren."
+      ]
+    },
+    "equipment": ["mat"],
+    "safetyNotes": {
+      "en": ["Use folded padding under knees if needed and keep breathing steadily."],
+      "de": ["Bei Bedarf gefaltete Polster unter die Knie legen und gleichmaessig weiteratmen."]
+    },
+    "aikidoContext": {
+      "en": "Supports suwari-waza stability and smooth transitions to standing.",
+      "de": "Unterstuetzt suwari-waza-Stabilitaet und weiche Uebergaenge zum Stand."
+    },
+    "updatedAt": "2026-02-12T00:00:00Z"
+  },
+  {
+    "id": "ex-016",
+    "slug": "shoulder-thread-flow",
+    "name": { "en": "Shoulder thread flow", "de": "Schulter-Thread-Flow" },
+    "category": "mobility",
+    "summary": {
+      "en": "Mobilize shoulder rotation and scapular glide for smoother circular arm paths.",
+      "de": "Mobilisiert Schulterrotation und Schulterblattfuehrung fuer weichere kreisfoermige Armwege."
+    },
+    "howTo": {
+      "en": [
+        "Stand tall and raise both arms to shoulder height.",
+        "Thread one elbow under the other forearm in front of the chest, then unwind.",
+        "Alternate sides for 8-12 controlled reps."
+      ],
+      "de": [
+        "Aufrecht stehen und beide Arme auf Schulterhoehe anheben.",
+        "Einen Ellbogen vor der Brust unter den anderen Unterarm einfuehren und wieder aufdrehen.",
+        "Seiten abwechseln und 8-12 kontrollierte Wiederholungen ausfuehren."
+      ]
+    },
+    "equipment": ["none"],
+    "safetyNotes": {
+      "en": ["Keep neck relaxed and reduce range if the shoulder pinches."],
+      "de": [
+        "Nacken entspannt halten und den Bewegungsumfang bei Einklemmen in der Schulter reduzieren."
+      ]
+    },
+    "aikidoContext": {
+      "en": "Supports circular arm connection in kokyu-ho, tenkan, and projection entries.",
+      "de": "Unterstuetzt kreisfoermige Armverbindung in kokyu-ho, tenkan und Wurf-Einstiegen."
+    },
+    "updatedAt": "2026-02-12T00:00:00Z"
+  },
+  {
+    "id": "ex-018",
+    "slug": "side-plank-knee-drive",
+    "name": { "en": "Side plank knee drive", "de": "Seitstuetz-Kniezug" },
+    "category": "core",
+    "summary": {
+      "en": "Train lateral core stability for rotational control and safer ukemi transitions.",
+      "de": "Trainiert seitliche Rumpfstabilitaet fuer Rotationskontrolle und sicherere ukemi-Uebergaenge."
+    },
+    "howTo": {
+      "en": [
+        "Set up in a side plank with elbow under shoulder.",
+        "Drive the top knee toward the chest while keeping hips lifted.",
+        "Return with control for 6-10 reps, then switch sides."
+      ],
+      "de": [
+        "In den Seitstuetz gehen, Ellbogen unter der Schulter.",
+        "Oberes Knie zur Brust ziehen und die Huefte angehoben halten.",
+        "Kontrolliert zurueckfuehren, 6-10 Wiederholungen, dann Seite wechseln."
+      ]
+    },
+    "equipment": ["mat"],
+    "safetyNotes": {
+      "en": ["Lower the bottom knee to the mat if shoulder or core control breaks."],
+      "de": ["Unteres Knie aufsetzen, wenn Schulter- oder Rumpfkontrolle nachlaesst."]
+    },
+    "aikidoContext": {
+      "en": "Supports stable center while changing level and direction under load.",
+      "de": "Unterstuetzt stabiles Zentrum bei Niveau- und Richtungswechseln unter Belastung."
+    },
+    "updatedAt": "2026-02-12T00:00:00Z"
   },
   {
     "id": "ex-004",
@@ -198,34 +590,106 @@
   {
     "id": "ex-005",
     "slug": "squat-hops",
-    "name": { "en": "Squat hops", "de": "Kniebeugen-Hops" },
+    "name": { "en": "Squat hops (soft landing)", "de": "Kniebeugen-Hops (weich landen)" },
     "category": "power",
     "summary": {
-      "en": "Wake up leg drive for quick entries.",
-      "de": "Aktiviert den Beinantrieb für schnelle Eintritte."
+      "en": "Build explosive leg drive while keeping controlled and quiet landings.",
+      "de": "Baut explosiven Beinantrieb mit kontrollierten und leisen Landungen auf."
     },
     "howTo": {
       "en": [
-        "Start in a shallow squat with feet hip-width apart.",
-        "Hop gently, landing softly back into the squat.",
-        "Perform 6–8 controlled reps."
+        "Start in a shallow squat with feet hip-width apart and chest tall.",
+        "Drive up quickly and perform a small hop, then land softly through the whole foot.",
+        "Pause one second to stabilize before the next rep.",
+        "Perform 5-8 controlled reps."
       ],
       "de": [
-        "In eine flache Kniebeuge gehen, Füße hüftbreit.",
-        "Sanft hüpfen und weich in die Kniebeuge landen.",
-        "6–8 kontrollierte Wiederholungen."
+        "In eine flache Kniebeuge gehen, Fuesse hueftbreit und Brust aufrecht.",
+        "Schnell aufrichten, klein abspringen und weich ueber den ganzen Fuss landen.",
+        "Vor der naechsten Wiederholung eine Sekunde stabilisieren.",
+        "5-8 kontrollierte Wiederholungen."
       ]
     },
     "equipment": ["mat"],
     "safetyNotes": {
-      "en": ["Land quietly and stop if knees feel unstable."],
-      "de": ["Leise landen und stoppen, wenn sich die Knie instabil anfühlen."]
+      "en": [
+        "Use a rise-to-toes version instead of hopping if knees, ankles, or back feel stressed."
+      ],
+      "de": [
+        "Bei Belastungsgefuehl in Knie, Sprunggelenk oder Ruecken statt Hops nur auf die Zehen aufrichten."
+      ]
     },
     "aikidoContext": {
-      "en": "Reinforces springy legs for entering actions.",
-      "de": "Stärkt federnde Beine für Eintritte."
+      "en": "Supports springy leg response for committed irimi while maintaining structure.",
+      "de": "Unterstuetzt federnde Beinreaktion fuer entschlossenes irimi bei erhaltener Struktur."
     },
-    "updatedAt": "2024-10-01T00:00:00Z"
+    "updatedAt": "2026-02-12T00:00:00Z"
+  },
+  {
+    "id": "ex-021",
+    "slug": "tenkan-burst-step",
+    "name": { "en": "Tenkan burst step", "de": "Tenkan-Burst-Schritt" },
+    "category": "power",
+    "summary": {
+      "en": "Build quick rotational acceleration with controlled stopping mechanics.",
+      "de": "Baut schnelle Rotationsbeschleunigung mit kontrolliertem Abbremsen auf."
+    },
+    "howTo": {
+      "en": [
+        "Begin in hanmi and load lightly through the rear leg.",
+        "Rotate into a fast tenkan turn and stop with posture upright.",
+        "Reset fully before the next rep and complete 6-10 reps each side."
+      ],
+      "de": [
+        "In hanmi starten und leicht ueber das hintere Bein vorspannen.",
+        "In einen schnellen tenkan drehen und aufrecht stabil abbremsen.",
+        "Vollstaendig zuruecksetzen und 6-10 Wiederholungen pro Seite ausfuehren."
+      ]
+    },
+    "equipment": ["none"],
+    "safetyNotes": {
+      "en": ["Stay on a non-slippery surface and prioritize control over speed."],
+      "de": ["Auf rutschfester Flaeche bleiben und Kontrolle vor Tempo priorisieren."]
+    },
+    "aikidoContext": {
+      "en": "Develops explosive tenkan response for evasive and blending entries.",
+      "de": "Entwickelt explosive tenkan-Reaktion fuer ausweichende und verbindende Eintritte."
+    },
+    "media": [{ "type": "youtube", "url": "https://www.youtube.com/embed/rRfsb1eu0i4" }],
+    "updatedAt": "2026-02-12T00:00:00Z"
+  },
+  {
+    "id": "ex-012",
+    "slug": "tenkan-pivot-balance",
+    "name": { "en": "Tenkan pivot balance", "de": "Tenkan-Pivot-Balance" },
+    "category": "balance",
+    "summary": {
+      "en": "Improve axis control while turning so weight stays centered.",
+      "de": "Verbessert Achsenkontrolle beim Drehen, damit das Gewicht zentriert bleibt."
+    },
+    "howTo": {
+      "en": [
+        "Start in left hanmi with soft knees and relaxed shoulders.",
+        "Pivot 180 degrees into right hanmi without letting heels lift abruptly.",
+        "Pause for two breaths in balance, then return. Repeat 6-10 reps each side."
+      ],
+      "de": [
+        "In linkem hanmi starten, Knie weich und Schultern entspannt.",
+        "180 Grad in rechtes hanmi drehen, ohne die Fersen abrupt abheben zu lassen.",
+        "Zwei Atemzuege in Balance halten, dann zurueck. 6-10 Wiederholungen pro Seite."
+      ]
+    },
+    "equipment": ["none"],
+    "safetyNotes": {
+      "en": ["Slow down if you lose alignment or feel ankle wobble."],
+      "de": ["Tempo reduzieren, wenn Ausrichtung verloren geht oder das Sprunggelenk wackelt."]
+    },
+    "aikidoContext": {
+      "en": "Directly supports stable tenkan during partner entries.",
+      "de": "Unterstuetzt direkt einen stabilen tenkan bei Partner-Einstiegen."
+    },
+    "media": [{ "type": "youtube", "url": "https://www.youtube.com/embed/rRfsb1eu0i4" }],
+    "updatedAt": "2026-02-12T00:00:00Z"
   },
   {
     "id": "ex-001",

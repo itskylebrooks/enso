@@ -649,6 +649,15 @@ export const de = {
         description: 'Atmung, regeneratives Dehnen, Nervensystem-Reset (Ruhetag / Abendroutine).',
       },
     ],
+    routineOverviewLead:
+      'Waehle eine Vorlage und folge der Sequenz. Uebergaenge weich halten und Qualitaet vor Tempo setzen.',
+    routineDurationLabel: 'Geschaetzte Dauer',
+    routineExerciseCountLabel: 'Uebungen',
+    routineBackToList: 'Zurueck zur Routinenliste',
+    routineNotFound: 'Routine nicht gefunden.',
+    routineMissingExercise: 'Uebung derzeit nicht in der Bibliothek verfuegbar.',
+    routineExerciseListHeading: 'Ausfuehrung',
+    routineOpenExerciseCta: 'Uebung oeffnen',
     etiquetteLead:
       'Etikette schafft Sicherheit und eine gute Trainingsatmosphäre. Die folgenden Punkte sind weit verbreitet.',
     etiquettePoints: [

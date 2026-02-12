@@ -1,0 +1,32 @@
+{
+  "id": "ex-022",
+  "slug": "nasal-walkdown-breath",
+  "name": { "en": "Nasal walkdown breath", "de": "Nasenatmung-Geh-Reset" },
+  "category": "recovery",
+  "summary": {
+    "en": "Use slow walking with nasal breathing to downshift after intense practice.",
+    "de": "Nutzt langsames Gehen mit Nasenatmung zum Runterfahren nach intensiver Praxis."
+  },
+  "howTo": {
+    "en": [
+      "Walk slowly in a straight line or small circle.",
+      "Inhale through the nose for 3 steps, exhale for 5 steps.",
+      "Keep shoulders soft and continue for 3-6 minutes."
+    ],
+    "de": [
+      "Langsam auf einer geraden Linie oder in kleinem Kreis gehen.",
+      "Durch die Nase fuer 3 Schritte einatmen, fuer 5 Schritte ausatmen.",
+      "Schultern weich halten und 3-6 Minuten fortsetzen."
+    ]
+  },
+  "equipment": ["none"],
+  "safetyNotes": {
+    "en": ["Return to normal breathing if you feel lightheaded."],
+    "de": ["Bei Schwindel zur normalen Atmung zurueckkehren."]
+  },
+  "aikidoContext": {
+    "en": "Helps restore calm attention and breath rhythm between rounds.",
+    "de": "Hilft, ruhige Aufmerksamkeit und Atemrhythmus zwischen Runden wiederherzustellen."
+  },
+  "updatedAt": "2026-02-12T00:00:00Z"
+}

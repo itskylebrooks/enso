@@ -1,32 +1,38 @@
 {
   "id": "ex-005",
   "slug": "squat-hops",
-  "name": { "en": "Squat hops", "de": "Kniebeugen-Hops" },
+  "name": { "en": "Squat hops (soft landing)", "de": "Kniebeugen-Hops (weich landen)" },
   "category": "power",
   "summary": {
-    "en": "Wake up leg drive for quick entries.",
-    "de": "Aktiviert den Beinantrieb für schnelle Eintritte."
+    "en": "Build explosive leg drive while keeping controlled and quiet landings.",
+    "de": "Baut explosiven Beinantrieb mit kontrollierten und leisen Landungen auf."
   },
   "howTo": {
     "en": [
-      "Start in a shallow squat with feet hip-width apart.",
-      "Hop gently, landing softly back into the squat.",
-      "Perform 6–8 controlled reps."
+      "Start in a shallow squat with feet hip-width apart and chest tall.",
+      "Drive up quickly and perform a small hop, then land softly through the whole foot.",
+      "Pause one second to stabilize before the next rep.",
+      "Perform 5-8 controlled reps."
     ],
     "de": [
-      "In eine flache Kniebeuge gehen, Füße hüftbreit.",
-      "Sanft hüpfen und weich in die Kniebeuge landen.",
-      "6–8 kontrollierte Wiederholungen."
+      "In eine flache Kniebeuge gehen, Fuesse hueftbreit und Brust aufrecht.",
+      "Schnell aufrichten, klein abspringen und weich ueber den ganzen Fuss landen.",
+      "Vor der naechsten Wiederholung eine Sekunde stabilisieren.",
+      "5-8 kontrollierte Wiederholungen."
     ]
   },
   "equipment": ["mat"],
   "safetyNotes": {
-    "en": ["Land quietly and stop if knees feel unstable."],
-    "de": ["Leise landen und stoppen, wenn sich die Knie instabil anfühlen."]
+    "en": [
+      "Use a rise-to-toes version instead of hopping if knees, ankles, or back feel stressed."
+    ],
+    "de": [
+      "Bei Belastungsgefuehl in Knie, Sprunggelenk oder Ruecken statt Hops nur auf die Zehen aufrichten."
+    ]
   },
   "aikidoContext": {
-    "en": "Reinforces springy legs for entering actions.",
-    "de": "Stärkt federnde Beine für Eintritte."
+    "en": "Supports springy leg response for committed irimi while maintaining structure.",
+    "de": "Unterstuetzt federnde Beinreaktion fuer entschlossenes irimi bei erhaltener Struktur."
   },
-  "updatedAt": "2024-10-01T00:00:00Z"
+  "updatedAt": "2026-02-12T00:00:00Z"
 }

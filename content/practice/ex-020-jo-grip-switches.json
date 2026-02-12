@@ -1,0 +1,32 @@
+{
+  "id": "ex-020",
+  "slug": "jo-grip-switches",
+  "name": { "en": "Jo grip switches", "de": "Jo-Griffwechsel" },
+  "category": "coordination",
+  "summary": {
+    "en": "Improve hand timing and bilateral coordination during weapon transitions.",
+    "de": "Verbessert Hand-Timing und beidseitige Koordination bei Waffenuebergaengen."
+  },
+  "howTo": {
+    "en": [
+      "Use a jo or a light stick held horizontally at navel height.",
+      "Alternate lead hand positions smoothly without looking down.",
+      "Keep shoulders relaxed and continue for 45-75 seconds per set."
+    ],
+    "de": [
+      "Einen jo oder leichten Stab waagerecht auf Nabelhoehe halten.",
+      "Fuehrhand-Positionen abwechselnd weich wechseln, ohne nach unten zu schauen.",
+      "Schultern entspannt halten und 45-75 Sekunden pro Satz fortsetzen."
+    ]
+  },
+  "equipment": ["none"],
+  "safetyNotes": {
+    "en": ["Start slow and keep clear space around you before increasing speed."],
+    "de": ["Langsam beginnen und vor schnellerem Tempo fuer freien Raum um dich sorgen."]
+  },
+  "aikidoContext": {
+    "en": "Carries over to jo suburi rhythm and cleaner weapon-hand transitions.",
+    "de": "Uebertraegt sich auf jo-suburi-Rhythmus und sauberere Waffen-Hand-Uebergaenge."
+  },
+  "updatedAt": "2026-02-12T00:00:00Z"
+}

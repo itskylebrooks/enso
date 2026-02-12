@@ -1,0 +1,38 @@
+{
+  "id": "ex-013",
+  "slug": "four-corner-irimi-tenkan",
+  "name": { "en": "Four-corner irimi-tenkan", "de": "Vier-Ecken-Irimi-Tenkan" },
+  "category": "coordination",
+  "summary": {
+    "en": "Link entry and turn patterns across directions without losing timing.",
+    "de": "Verbindet Eintritts- und Drehmuster in alle Richtungen ohne Timing-Verlust."
+  },
+  "howTo": {
+    "en": [
+      "Imagine a square on the floor and stand in one corner.",
+      "Step irimi to the next corner, then tenkan and face the center.",
+      "Continue around all four corners for 2-4 rounds each direction."
+    ],
+    "de": [
+      "Ein Quadrat auf dem Boden vorstellen und in einer Ecke starten.",
+      "Mit irimi zur naechsten Ecke eintreten, dann tenkan und zur Mitte ausrichten.",
+      "Rund um alle vier Ecken fuer 2-4 Runden pro Richtung fortsetzen."
+    ]
+  },
+  "equipment": ["none"],
+  "safetyNotes": {
+    "en": ["Keep steps short enough to stay smooth and upright."],
+    "de": ["Schritte kurz genug halten, um weich und aufrecht zu bleiben."]
+  },
+  "aikidoContext": {
+    "en": "Builds tai sabaki coordination for adapting to moving uke angles.",
+    "de": "Baut tai-sabaki-Koordination auf, um auf bewegte uke-Winkel zu reagieren."
+  },
+  "media": [
+    {
+      "type": "youtube",
+      "url": "https://www.youtube.com/embed/daL9Bf0jZ10"
+    }
+  ],
+  "updatedAt": "2026-02-12T00:00:00Z"
+}

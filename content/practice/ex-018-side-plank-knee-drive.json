@@ -1,0 +1,32 @@
+{
+  "id": "ex-018",
+  "slug": "side-plank-knee-drive",
+  "name": { "en": "Side plank knee drive", "de": "Seitstuetz-Kniezug" },
+  "category": "core",
+  "summary": {
+    "en": "Train lateral core stability for rotational control and safer ukemi transitions.",
+    "de": "Trainiert seitliche Rumpfstabilitaet fuer Rotationskontrolle und sicherere ukemi-Uebergaenge."
+  },
+  "howTo": {
+    "en": [
+      "Set up in a side plank with elbow under shoulder.",
+      "Drive the top knee toward the chest while keeping hips lifted.",
+      "Return with control for 6-10 reps, then switch sides."
+    ],
+    "de": [
+      "In den Seitstuetz gehen, Ellbogen unter der Schulter.",
+      "Oberes Knie zur Brust ziehen und die Huefte angehoben halten.",
+      "Kontrolliert zurueckfuehren, 6-10 Wiederholungen, dann Seite wechseln."
+    ]
+  },
+  "equipment": ["mat"],
+  "safetyNotes": {
+    "en": ["Lower the bottom knee to the mat if shoulder or core control breaks."],
+    "de": ["Unteres Knie aufsetzen, wenn Schulter- oder Rumpfkontrolle nachlaesst."]
+  },
+  "aikidoContext": {
+    "en": "Supports stable center while changing level and direction under load.",
+    "de": "Unterstuetzt stabiles Zentrum bei Niveau- und Richtungswechseln unter Belastung."
+  },
+  "updatedAt": "2026-02-12T00:00:00Z"
+}

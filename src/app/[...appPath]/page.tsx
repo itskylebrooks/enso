@@ -50,17 +50,23 @@ const resolveInitialRoute = (pathname: string): { route: AppRoute; slug: string 
   if (pathname === '/guide/advanced') return { route: 'guideAdvanced', slug: null };
   if (pathname === '/guide/dan') return { route: 'guideDan', slug: null };
 
-  const guideRoutineMatch = /^\/guide\/(warm-up|cooldown|mobility|strength|skill|recovery)$/.exec(
-    pathname,
-  );
+  const guideRoutineMatch =
+    /^\/guide\/(warm-up|cooldown|mobility|strength|skill|recovery)(?:\/([^/?#]+))?$/.exec(
+      pathname,
+    );
   if (guideRoutineMatch) {
-    const [, routine] = guideRoutineMatch;
-    if (routine === 'warm-up') return { route: 'guideRoutineWarmUp', slug: null };
-    if (routine === 'cooldown') return { route: 'guideRoutineCooldown', slug: null };
-    if (routine === 'mobility') return { route: 'guideRoutineMobility', slug: null };
-    if (routine === 'strength') return { route: 'guideRoutineStrength', slug: null };
-    if (routine === 'skill') return { route: 'guideRoutineSkill', slug: null };
-    if (routine === 'recovery') return { route: 'guideRoutineRecovery', slug: null };
+    const [, routine, routineSlug] = guideRoutineMatch;
+    const decodedRoutineSlug = routineSlug ? decodePathSegment(routineSlug) : null;
+    if (routine === 'warm-up') return { route: 'guideRoutineWarmUp', slug: decodedRoutineSlug };
+    if (routine === 'cooldown')
+      return { route: 'guideRoutineCooldown', slug: decodedRoutineSlug };
+    if (routine === 'mobility')
+      return { route: 'guideRoutineMobility', slug: decodedRoutineSlug };
+    if (routine === 'strength')
+      return { route: 'guideRoutineStrength', slug: decodedRoutineSlug };
+    if (routine === 'skill') return { route: 'guideRoutineSkill', slug: decodedRoutineSlug };
+    if (routine === 'recovery')
+      return { route: 'guideRoutineRecovery', slug: decodedRoutineSlug };
   }
 
   const guideGradeMatch = /^\/guide\/(\d+)-(kyu|dan)$/.exec(pathname);

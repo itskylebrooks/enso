@@ -1,0 +1,38 @@
+{
+  "id": "ex-012",
+  "slug": "tenkan-pivot-balance",
+  "name": { "en": "Tenkan pivot balance", "de": "Tenkan-Pivot-Balance" },
+  "category": "balance",
+  "summary": {
+    "en": "Improve axis control while turning so weight stays centered.",
+    "de": "Verbessert Achsenkontrolle beim Drehen, damit das Gewicht zentriert bleibt."
+  },
+  "howTo": {
+    "en": [
+      "Start in left hanmi with soft knees and relaxed shoulders.",
+      "Pivot 180 degrees into right hanmi without letting heels lift abruptly.",
+      "Pause for two breaths in balance, then return. Repeat 6-10 reps each side."
+    ],
+    "de": [
+      "In linkem hanmi starten, Knie weich und Schultern entspannt.",
+      "180 Grad in rechtes hanmi drehen, ohne die Fersen abrupt abheben zu lassen.",
+      "Zwei Atemzuege in Balance halten, dann zurueck. 6-10 Wiederholungen pro Seite."
+    ]
+  },
+  "equipment": ["none"],
+  "safetyNotes": {
+    "en": ["Slow down if you lose alignment or feel ankle wobble."],
+    "de": ["Tempo reduzieren, wenn Ausrichtung verloren geht oder das Sprunggelenk wackelt."]
+  },
+  "aikidoContext": {
+    "en": "Directly supports stable tenkan during partner entries.",
+    "de": "Unterstuetzt direkt einen stabilen tenkan bei Partner-Einstiegen."
+  },
+  "media": [
+    {
+      "type": "youtube",
+      "url": "https://www.youtube.com/embed/rRfsb1eu0i4"
+    }
+  ],
+  "updatedAt": "2026-02-12T00:00:00Z"
+}
