@@ -8,6 +8,7 @@ import { AdvancedPrograms } from '@features/home/components/home/AdvancedProgram
 import { DanOverview } from '@features/home/components/home/DanOverview';
 import { GuidePage } from '@features/home/components/home/GuidePage';
 import { GuideRoutinePage } from '@features/home/components/home/GuideRoutinePage';
+import { SyncPage } from '@features/home/components/home/SyncPage';
 import { SettingsModal } from '@features/home/components/settings/SettingsModal';
 import { ONBOARDING_TOUR_SEGMENTS } from '@features/onboarding/constants';
 import { OnboardingTourOverlay } from '@features/onboarding/components/OnboardingTourOverlay';
@@ -2515,14 +2516,7 @@ export default function App({
   } else if (route === 'about') {
     mainContent = <AboutPage copy={copy} />;
   } else if (route === 'sync') {
-    mainContent = (
-      <div className="max-w-4xl mx-auto px-4 md:px-6 pt-0 pb-10">
-        <section className="rounded-2xl border surface-border bg-[var(--color-surface)] p-6 md:p-8">
-          <h1 className="text-xl font-semibold tracking-tight">{copy.sync}</h1>
-          <p className="mt-2 text-sm text-muted">{copy.syncComingSoon}</p>
-        </section>
-      </div>
-    );
+    mainContent = <SyncPage copy={copy} />;
   } else if (route === 'guideAdvanced') {
     mainContent = (
       <AdvancedPrograms

@@ -130,6 +130,29 @@ export const de = {
   data: 'Daten',
   sync: 'Synchronisierung',
   syncComingSoon: 'Kommt bald.',
+  syncPage: {
+    title: 'Synchronisierung',
+    intro:
+      'Die Synchronisierung ist eine optionale Funktion, mit der deine Enso-Daten auf mehreren Geräten gleich bleiben. Sie ist für alle gedacht, die Enso sowohl am Handy als auch am Desktop nutzen und möchten, dass Lesezeichen, Sammlungen und Lernfortschritt automatisch übernommen werden.',
+    whatItWillDoTitle: 'Was die Synchronisierung macht',
+    whatItWillDoBody:
+      'Wenn die Synchronisierung aktiviert ist, speichert Enso eine sichere Kopie deiner persönlichen Daten in der Cloud und hält sie aktuell. Das Ziel ist einfach: Du öffnest Enso irgendwo und siehst dieselben Sammlungen, dieselben gespeicherten Einträge und denselben Status wie zuvor. Die Synchronisierung betrifft nur deine persönlichen Daten. Sie verändert die Inhalte von Enso selbst nicht.',
+    whatItWillNotDoTitle: 'Was die Synchronisierung nicht macht',
+    whatItWillNotDoBody:
+      'Die Synchronisierung sperrt keine Inhalte oder Funktionen hinter einer Paywall. Techniken, Begriffe, Übungen und das gesamte Lernerlebnis bleiben auch ohne Account vollständig nutzbar. Enso bleibt standardmäßig eine Local-first-App, so wie heute.',
+    localFirstTitle: 'Local-first bleibt der Standard',
+    localFirstBody:
+      'Auch mit Synchronisierung bleiben deine Daten lokal auf deinem Gerät gespeichert. Die Synchronisierung ist eine zusätzliche Komfortfunktion, keine Voraussetzung. Wenn du lieber offline bleibst, ändert sich nichts. Und wenn du die Synchronisierung aktivierst und später wieder deaktivierst oder kündigst, behältst du deine lokalen Daten weiterhin.',
+    exportImportTitle: 'Export und Import sind immer verfügbar',
+    exportImportBody:
+      'Du kannst deine Daten jederzeit exportieren, mit oder ohne Synchronisierung. Du kannst auch jederzeit ein Backup importieren. Die Synchronisierung soll manuelle Arbeit reduzieren, nicht deine Kontrolle ersetzen.',
+    paidFeatureTitle: 'Warum das eine bezahlte Funktion ist',
+    paidFeatureBody:
+      'Synchronisierung kostet Geld. Dafür braucht es Server, Speicherplatz und laufende Wartung. Ein kleines Abo hilft, diese Kosten zu decken und unterstützt die Weiterentwicklung von Enso. Wenn du abonnierst, bezahlst du für Komfort und unterstützt das Projekt, nicht für den Zugang zu Aikidō-Wissen.',
+    statusTitle: 'Status',
+    statusBody:
+      'Die Synchronisierung ist noch nicht implementiert. Diese Seite soll die Richtung früh erklären und Erwartungen klar halten. Wenn die Synchronisierung verfügbar wird, kannst du selbst entscheiden, ob du sie aktivierst, und Enso bleibt in jedem Fall vollständig nutzbar.',
+  },
   dangerZone: 'Daten löschen',
   clear: 'Löschen',
   installPwa: 'App installieren',

@@ -129,6 +129,29 @@ export const en = {
   data: 'Data',
   sync: 'Sync',
   syncComingSoon: 'Coming soon.',
+  syncPage: {
+    title: 'Sync',
+    intro:
+      "Sync is an optional feature that will let you keep your Enso data consistent across devices. It's designed for people who use Enso on both phone and desktop and want their bookmarks, collections, and study progress to follow them automatically.",
+    whatItWillDoTitle: 'What Sync will do',
+    whatItWillDoBody:
+      'When Sync is enabled, Enso will securely store a copy of your personal data in the cloud and keep it up to date. The goal is simple: open Enso anywhere and see the same collections, the same saved items, and the same status you set before. Sync is only about your personal data. It does not change the content of Enso itself.',
+    whatItWillNotDoTitle: 'What Sync will not do',
+    whatItWillNotDoBody:
+      'Sync will not lock content or features behind a paywall. Techniques, terms, exercises, and the whole study experience will remain fully usable without an account. Enso will continue to work as a local-first app by default, just like it does today.',
+    localFirstTitle: 'Local-first stays the default',
+    localFirstBody:
+      'Even with Sync, your data will still live locally on your device. Sync is an extra layer of convenience, not a requirement. If you prefer to stay offline, nothing changes. If you enable Sync and later cancel or disable it, you will still keep your local data.',
+    exportImportTitle: 'Export and import are always available',
+    exportImportBody:
+      'You can export your data at any time, with or without Sync. You can also import a backup whenever you want. Sync is meant to reduce manual work, not replace your control over your data.',
+    paidFeatureTitle: "Why it's a paid feature",
+    paidFeatureBody:
+      "Sync costs money to run. It requires servers, storage, and ongoing maintenance. A small subscription helps cover those costs and supports continued development of Enso. If you choose to subscribe, you're paying for convenience and supporting the project, not for access to Aikidō knowledge.",
+    statusTitle: 'Status',
+    statusBody:
+      "Sync is not implemented yet. This page exists to explain the direction early and to keep expectations clear. When Sync becomes available, you'll be able to decide whether to enable it, and Enso will remain fully usable either way.",
+  },
   dangerZone: 'Erase data',
   clear: 'Erase',
   installPwa: 'Install App',
