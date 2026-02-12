@@ -1023,6 +1023,7 @@ export const BookmarksView = ({
             isEditing={isCollectionEditMode}
             isEditDisabled={!isUserCollectionSelected}
             onToggleEdit={handleToggleEdit}
+            forceOpen={forceCollectionsSidebarOpen}
           />
         </div>
         <div className="relative">

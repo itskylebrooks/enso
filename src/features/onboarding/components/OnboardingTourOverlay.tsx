@@ -157,6 +157,7 @@ export const ONBOARDING_TOUR_SEGMENTS: OnboardingTourSegment[] = [
       '[data-tour-target="bookmarks-collections-sidebar"][data-tour-panel="true"]',
       '[data-tour-target="bookmarks-collections-sidebar"]',
     ],
+    spotlightHeightOffset: 30,
     preferredPanelSide: 'right',
     title: {
       en: 'Bookmarks',
