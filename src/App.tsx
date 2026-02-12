@@ -13,9 +13,9 @@ import {
   ONBOARDING_TOUR_SEGMENTS,
   OnboardingTourOverlay,
 } from '@features/onboarding/components/OnboardingTourOverlay';
-import { TechniquesPage } from '@features/technique/components/TechniquesPage';
 import { type CollectionOption } from '@features/technique/components/TechniqueHeader';
 import { TechniquePage } from '@features/technique/components/TechniquePage';
+import { TechniquesPage } from '@features/technique/components/TechniquesPage';
 import { Header } from '@shared/components/layout/Header';
 import { MobileTabBar } from '@shared/components/layout/MobileTabBar';
 import { ExpandableFilterBar } from '@shared/components/ui/ExpandableFilterBar';
@@ -32,24 +32,24 @@ import { PencilLine } from 'lucide-react';
 import { AnimatePresence, MotionConfig, motion } from 'motion/react';
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactElement } from 'react';
 import { BookmarksView } from './features/bookmarks/components/BookmarksView';
+import type { ExerciseFilters } from './features/exercises';
 import {
-  TermDetailPage,
-  TermsFilterPanel,
-  TermsPage,
-  MobileTermsFilters,
-  loadAllTerms,
-} from './features/terms';
-import {
-  MobileExercisesFilters,
   ExerciseDetailPage,
   ExercisesFilterPanel,
   ExercisesPage,
+  MobileExercisesFilters,
   loadAllExercises,
 } from './features/exercises';
-import type { ExerciseFilters } from './features/exercises';
 import { HomePage } from './features/home';
 import { FilterPanel } from './features/search/components/FilterPanel';
 import { SearchOverlay } from './features/search/components/SearchOverlay';
+import {
+  MobileTermsFilters,
+  TermDetailPage,
+  TermsFilterPanel,
+  TermsPage,
+  loadAllTerms,
+} from './features/terms';
 import { ConfirmClearModal } from './shared/components/dialogs/ConfirmClearDialog';
 import { ENTRY_MODE_ORDER, isEntryMode } from './shared/constants/entryModes';
 import { getCopy } from './shared/constants/i18n';
@@ -65,8 +65,8 @@ import {
   loadOnboardingCompleted,
   loadOnboardingDismissed,
   loadOnboardingStep,
-  loadStoredLocale,
   loadPinnedBeltGrade,
+  loadStoredLocale,
   loadTheme,
   saveBeltPromptDismissed,
   saveDB,
@@ -78,14 +78,15 @@ import {
   savePinnedBeltGrade,
   saveTheme,
 } from './shared/services/storageService';
+import { getExerciseCategoryLabel } from './shared/styles/exercises';
 import type {
   AppRoute,
   Collection,
   DB,
   Direction,
+  EntryMode,
   Exercise,
   ExerciseProgress,
-  EntryMode,
   Filters,
   GlossaryBookmarkCollection,
   GlossaryProgress,
@@ -93,8 +94,8 @@ import type {
   Grade,
   GuideRoutine,
   Locale,
-  Progress,
   PracticeCategory,
+  Progress,
   Technique,
   TechniqueVariant,
   TechniqueVariantKey,
@@ -102,20 +103,19 @@ import type {
   WeaponKind,
 } from './shared/types';
 import { unique, upsert } from './shared/utils/array';
+import { createCollectionItemId, swapCollectionItemIds } from './shared/utils/collectionItems';
 import { gradeOrder } from './shared/utils/grades';
-import { getExerciseCategoryLabel } from './shared/styles/exercises';
 import {
   cameFromBackForwardNavigation,
   consumeBFCacheRestoreFlag,
   rememberScrollPosition,
 } from './shared/utils/navigationLifecycle';
-import { createCollectionItemId, swapCollectionItemIds } from './shared/utils/collectionItems';
 import {
   buildStudyItemKey,
   buildTechniqueVariantStudyKey,
-  getStudyStatusForTechniqueVariant,
   cycleStudyStatus,
   getStudyStatusForItem,
+  getStudyStatusForTechniqueVariant,
   isStudyCollectionId,
 } from './shared/utils/studyStatus';
 import {
@@ -460,9 +460,7 @@ const parseLocation = (
   }
 
   const guideRoutineMatch =
-    /^\/guide\/(warm-up|cooldown|mobility|strength|skill|recovery)(?:\/([^/?#]+))?$/.exec(
-      pathname,
-    );
+    /^\/guide\/(warm-up|cooldown|mobility|strength|skill|recovery)(?:\/([^/?#]+))?$/.exec(pathname);
   if (guideRoutineMatch) {
     const [, routine, routineSlug] = guideRoutineMatch;
     return {
@@ -1455,7 +1453,8 @@ export default function App({
       const isBookmarked = progressEntry?.bookmarked;
       const technique = prev.techniques.find((entry) => entry.id === techniqueId);
       const fallbackVariant =
-        progressEntry?.bookmarkedVariant ?? (technique ? getFallbackVariantForTechnique(technique) : null);
+        progressEntry?.bookmarkedVariant ??
+        (technique ? getFallbackVariantForTechnique(technique) : null);
       const fallbackKey = fallbackVariant ? toVariantStorageKey(fallbackVariant) : null;
 
       let nextProgress = prev.progress;
@@ -1720,149 +1719,149 @@ export default function App({
       options?: { originRoute?: AppRoute },
       bookmarkedVariant?: TechniqueVariantKey,
     ): void => {
-    rememberScrollPosition();
-    if (!skipExistenceCheck && !db.techniques.some((technique) => technique.slug === slug)) {
-      return;
-    }
+      rememberScrollPosition();
+      if (!skipExistenceCheck && !db.techniques.some((technique) => technique.slug === slug)) {
+        return;
+      }
 
-    const sourceRoute = options?.originRoute ?? route;
-    const tabRoute = sourceRoute === 'bookmarks' ? 'techniques' : sourceRoute;
-    if (tabRoute !== route) {
-      setRoute(tabRoute);
-    }
+      const sourceRoute = options?.originRoute ?? route;
+      const tabRoute = sourceRoute === 'bookmarks' ? 'techniques' : sourceRoute;
+      if (tabRoute !== route) {
+        setRoute(tabRoute);
+      }
 
-    // If the caller didn't pass explicit trainer/entry params, try to apply
-    // the current global filters so the technique opens to the matching
-    // version/variation (direction/weapon/version). Fallback to the
-    // legacy trainer/entry URL shape when no matching variant is found.
-    let finalPath: string;
-    let state: HistoryState = { route: tabRoute, slug, trainerId, entry, sourceRoute };
+      // If the caller didn't pass explicit trainer/entry params, try to apply
+      // the current global filters so the technique opens to the matching
+      // version/variation (direction/weapon/version). Fallback to the
+      // legacy trainer/entry URL shape when no matching variant is found.
+      let finalPath: string;
+      let state: HistoryState = { route: tabRoute, slug, trainerId, entry, sourceRoute };
 
-    if (bookmarkedVariant) {
-      finalPath = buildTechniqueUrlWithVariant(slug, {
-        hanmi: bookmarkedVariant.hanmi,
-        direction: bookmarkedVariant.direction,
-        weapon: bookmarkedVariant.weapon,
-        versionId: bookmarkedVariant.versionId ?? null,
-      });
-      state = {
-        route: tabRoute,
-        slug,
-        entry: bookmarkedVariant.direction,
-        sourceRoute,
-      };
-    } else {
-      const shouldAutoApplyFilters =
-        !trainerId && !entry && (filters.trainer || filters.stance || filters.weapon);
+      if (bookmarkedVariant) {
+        finalPath = buildTechniqueUrlWithVariant(slug, {
+          hanmi: bookmarkedVariant.hanmi,
+          direction: bookmarkedVariant.direction,
+          weapon: bookmarkedVariant.weapon,
+          versionId: bookmarkedVariant.versionId ?? null,
+        });
+        state = {
+          route: tabRoute,
+          slug,
+          entry: bookmarkedVariant.direction,
+          sourceRoute,
+        };
+      } else {
+        const shouldAutoApplyFilters =
+          !trainerId && !entry && (filters.trainer || filters.stance || filters.weapon);
 
-      if (shouldAutoApplyFilters) {
-        const technique = db.techniques.find((t) => t.slug === slug);
-        if (technique) {
-          const enriched = enrichTechniqueWithVariants(technique);
+        if (shouldAutoApplyFilters) {
+          const technique = db.techniques.find((t) => t.slug === slug);
+          if (technique) {
+            const enriched = enrichTechniqueWithVariants(technique);
 
-          // Map filter values to toolbar/variant values
-          const direction = (filters.stance as Direction | undefined) ?? undefined; // irimi/tenkan/omote/ura
-          const weaponFilter = filters.weapon as string | undefined;
-          const weapon = weaponFilter
-            ? weaponFilter === 'empty-hand'
-              ? 'empty'
-              : (weaponFilter as WeaponKind)
-            : undefined;
+            // Map filter values to toolbar/variant values
+            const direction = (filters.stance as Direction | undefined) ?? undefined; // irimi/tenkan/omote/ura
+            const weaponFilter = filters.weapon as string | undefined;
+            const weapon = weaponFilter
+              ? weaponFilter === 'empty-hand'
+                ? 'empty'
+                : (weaponFilter as WeaponKind)
+              : undefined;
 
-          // Determine versionId candidate from trainer filter
-          let versionIdCandidate: string | null | undefined = undefined;
-          if (filters.trainer) {
-            if (filters.trainer === 'base-forms') {
-              // prefer a base version (null) if available
-              const hasBase = (technique.versions || []).some(
-                (v) => !v.trainerId || v.id === 'v-base',
-              );
-              versionIdCandidate = hasBase ? null : undefined;
+            // Determine versionId candidate from trainer filter
+            let versionIdCandidate: string | null | undefined = undefined;
+            if (filters.trainer) {
+              if (filters.trainer === 'base-forms') {
+                // prefer a base version (null) if available
+                const hasBase = (technique.versions || []).some(
+                  (v) => !v.trainerId || v.id === 'v-base',
+                );
+                versionIdCandidate = hasBase ? null : undefined;
+              }
+              if (versionIdCandidate === undefined) {
+                // try to find a version authored by the selected trainer
+                const authorVersion = (technique.versions || []).find(
+                  (v) => v.trainerId === filters.trainer,
+                );
+                if (authorVersion) versionIdCandidate = authorVersion.id;
+              }
             }
-            if (versionIdCandidate === undefined) {
-              // try to find a version authored by the selected trainer
-              const authorVersion = (technique.versions || []).find(
-                (v) => v.trainerId === filters.trainer,
-              );
-              if (authorVersion) versionIdCandidate = authorVersion.id;
-            }
-          }
 
-          // Try to find the best matching variant
-          const variants = enriched.variants || [];
+            // Try to find the best matching variant
+            const variants = enriched.variants || [];
 
-          const matchPredicate = (v: TechniqueVariant) => {
-            if (direction && v.key.direction !== direction) return false;
-            if (weapon && v.key.weapon !== weapon) return false;
-            if (versionIdCandidate !== undefined) {
-              // if candidate explicitly null, require null; otherwise allow matching id
-              if (versionIdCandidate === null) {
-                if (v.key.versionId !== null && v.key.versionId !== undefined) return false;
-              } else if (v.key.versionId !== versionIdCandidate) return false;
-            }
-            return true;
-          };
-
-          let found = variants.find(matchPredicate);
-
-          // If no strict match, relax version constraint (allow any version) if direction/weapon match
-          if (!found && (direction || weapon)) {
-            found = variants.find((v) => {
+            const matchPredicate = (v: TechniqueVariant) => {
               if (direction && v.key.direction !== direction) return false;
               if (weapon && v.key.weapon !== weapon) return false;
+              if (versionIdCandidate !== undefined) {
+                // if candidate explicitly null, require null; otherwise allow matching id
+                if (versionIdCandidate === null) {
+                  if (v.key.versionId !== null && v.key.versionId !== undefined) return false;
+                } else if (v.key.versionId !== versionIdCandidate) return false;
+              }
               return true;
-            });
-          }
+            };
 
-          if (found) {
-            // Build variant path so TechniquePage will pick the correct toolbar state
-            finalPath = buildTechniqueUrlWithVariant(slug, {
-              hanmi: found.key.hanmi,
-              direction: found.key.direction,
-              weapon: found.key.weapon,
-              versionId: found.key.versionId,
-            });
-            // store state for history (also include trainer/entry for back navigation)
-            state = {
-              route: tabRoute,
-              slug,
-              trainerId: filters.trainer,
-              entry: (filters.stance as EntryMode) ?? undefined,
-              sourceRoute,
-            };
+            let found = variants.find(matchPredicate);
+
+            // If no strict match, relax version constraint (allow any version) if direction/weapon match
+            if (!found && (direction || weapon)) {
+              found = variants.find((v) => {
+                if (direction && v.key.direction !== direction) return false;
+                if (weapon && v.key.weapon !== weapon) return false;
+                return true;
+              });
+            }
+
+            if (found) {
+              // Build variant path so TechniquePage will pick the correct toolbar state
+              finalPath = buildTechniqueUrlWithVariant(slug, {
+                hanmi: found.key.hanmi,
+                direction: found.key.direction,
+                weapon: found.key.weapon,
+                versionId: found.key.versionId,
+              });
+              // store state for history (also include trainer/entry for back navigation)
+              state = {
+                route: tabRoute,
+                slug,
+                trainerId: filters.trainer,
+                entry: (filters.stance as EntryMode) ?? undefined,
+                sourceRoute,
+              };
+            } else {
+              // fallback to legacy path with trainer/entry if available
+              finalPath = buildTechniqueUrl(
+                slug,
+                filters.trainer ?? undefined,
+                (filters.stance as EntryMode | undefined) ?? undefined,
+              );
+              state = {
+                route: tabRoute,
+                slug,
+                trainerId: filters.trainer,
+                entry: (filters.stance as EntryMode) ?? undefined,
+                sourceRoute,
+              };
+            }
           } else {
-            // fallback to legacy path with trainer/entry if available
-            finalPath = buildTechniqueUrl(
-              slug,
-              filters.trainer ?? undefined,
-              (filters.stance as EntryMode | undefined) ?? undefined,
-            );
-            state = {
-              route: tabRoute,
-              slug,
-              trainerId: filters.trainer,
-              entry: (filters.stance as EntryMode) ?? undefined,
-              sourceRoute,
-            };
+            // technique not found in DB (edge case) - fallback to basic path
+            finalPath = buildTechniqueUrl(slug, trainerId, entry);
           }
         } else {
-          // technique not found in DB (edge case) - fallback to basic path
+          // explicit params were provided — respect them
           finalPath = buildTechniqueUrl(slug, trainerId, entry);
         }
-      } else {
-        // explicit params were provided — respect them
-        finalPath = buildTechniqueUrl(slug, trainerId, entry);
       }
-    }
 
-    if (typeof window !== 'undefined') {
-      const currentPath = `${window.location.pathname}${window.location.search}`;
-      if (currentPath !== finalPath) {
-        window.history.pushState(state, '', finalPath);
-      } else {
-        window.history.replaceState(state, '', finalPath);
+      if (typeof window !== 'undefined') {
+        const currentPath = `${window.location.pathname}${window.location.search}`;
+        if (currentPath !== finalPath) {
+          window.history.pushState(state, '', finalPath);
+        } else {
+          window.history.replaceState(state, '', finalPath);
+        }
       }
-    }
 
       setActiveSlug(slug);
     },
@@ -1995,15 +1994,7 @@ export default function App({
         }
       }
     },
-    [
-      activeSlug,
-      currentTechnique,
-      navigateTo,
-      openTechnique,
-      route,
-      searchOpen,
-      tourTechniqueSlug,
-    ],
+    [activeSlug, currentTechnique, navigateTo, openTechnique, route, searchOpen, tourTechniqueSlug],
   );
 
   const handleSkipOnboarding = useCallback((): void => {
@@ -2148,30 +2139,27 @@ export default function App({
     [navigateTo],
   );
 
-  const openGuideRoutinePreset = useCallback(
-    (routine: GuideRoutine, routineSlug: string) => {
-      rememberScrollPosition();
-      const nextRoute = routineToGuideRoute(routine);
-      const nextPath = buildGuideRoutinePath(routine, routineSlug);
+  const openGuideRoutinePreset = useCallback((routine: GuideRoutine, routineSlug: string) => {
+    rememberScrollPosition();
+    const nextRoute = routineToGuideRoute(routine);
+    const nextPath = buildGuideRoutinePath(routine, routineSlug);
 
-      setRoute(nextRoute);
-      setActiveSlug(routineSlug);
+    setRoute(nextRoute);
+    setActiveSlug(routineSlug);
 
-      if (typeof window !== 'undefined') {
-        const state: HistoryState = {
-          route: nextRoute,
-          slug: routineSlug,
-          sourceRoute: 'guide',
-        };
-        if (`${window.location.pathname}${window.location.search}` !== nextPath) {
-          window.history.pushState(state, '', nextPath);
-        } else {
-          window.history.replaceState(state, '', nextPath);
-        }
+    if (typeof window !== 'undefined') {
+      const state: HistoryState = {
+        route: nextRoute,
+        slug: routineSlug,
+        sourceRoute: 'guide',
+      };
+      if (`${window.location.pathname}${window.location.search}` !== nextPath) {
+        window.history.pushState(state, '', nextPath);
+      } else {
+        window.history.replaceState(state, '', nextPath);
       }
-    },
-    [],
-  );
+    }
+  }, []);
 
   const closeGuideRoutinePreset = useCallback((routine: GuideRoutine) => {
     rememberScrollPosition();
@@ -2231,7 +2219,7 @@ export default function App({
 
     updateProgress(technique.id, {
       bookmarked: nextBookmarked,
-      bookmarkedVariant: nextBookmarked ? latestVariant ?? bookmarkedVariant : undefined,
+      bookmarkedVariant: nextBookmarked ? (latestVariant ?? bookmarkedVariant) : undefined,
       bookmarkedVariantKeys: nextKeys,
     });
   };
@@ -2249,7 +2237,7 @@ export default function App({
     route !== 'exercises' &&
     !guideRouteToRoutine(route);
   const activeTourSegment = tourOpen
-    ? ONBOARDING_TOUR_SEGMENTS[normalizeTourSegmentIndex(tourSegmentIndex)] ?? null
+    ? (ONBOARDING_TOUR_SEGMENTS[normalizeTourSegmentIndex(tourSegmentIndex)] ?? null)
     : null;
   const showHomeOnboardingCard = !tourOpen && !onboardingDismissed && !onboardingCompleted;
 
@@ -2302,12 +2290,12 @@ export default function App({
         : techniqueBackRoute === 'about'
           ? copy.backToAbout
           : isGuideLikeRoute(techniqueBackRoute)
-              ? copy.backToGuide
-              : techniqueBackRoute === 'terms'
-                ? copy.backToGlossary
-                : techniqueBackRoute === 'feedback'
-                  ? copy.backToFeedback
-                  : copy.backToLibrary;
+            ? copy.backToGuide
+            : techniqueBackRoute === 'terms'
+              ? copy.backToGlossary
+              : techniqueBackRoute === 'feedback'
+                ? copy.backToFeedback
+                : copy.backToLibrary;
 
   const glossaryHistoryState =
     typeof window !== 'undefined' ? (window.history.state as HistoryState | null) : null;
@@ -2320,10 +2308,10 @@ export default function App({
         : glossaryBackRoute === 'about'
           ? copy.backToAbout
           : isGuideLikeRoute(glossaryBackRoute)
-              ? copy.backToGuide
-              : glossaryBackRoute === 'feedback'
-                ? copy.backToFeedback
-                : copy.backToGlossary;
+            ? copy.backToGuide
+            : glossaryBackRoute === 'feedback'
+              ? copy.backToFeedback
+              : copy.backToGlossary;
 
   const practiceHistoryState =
     typeof window !== 'undefined' ? (window.history.state as HistoryState | null) : null;
@@ -2337,10 +2325,10 @@ export default function App({
         : practiceBackRoute === 'about'
           ? copy.backToAbout
           : isGuideLikeRoute(practiceBackRoute)
-              ? copy.backToGuide
-                : practiceBackRoute === 'feedback'
-                ? copy.backToFeedback
-                : copy.backToPractice;
+            ? copy.backToGuide
+            : practiceBackRoute === 'feedback'
+              ? copy.backToFeedback
+              : copy.backToPractice;
   const handlePracticeBack = () => {
     const guideRoutine = guideRouteToRoutine(practiceBackRoute);
     if (guideRoutine && practiceBackSourceSlug) {
@@ -2634,7 +2622,6 @@ export default function App({
                   levels={gradeOrder}
                   trainers={trainers}
                   onChange={setFilters}
-                  forceExpandAll={activeTourSegment?.id === 'techniques-filters'}
                 />
                 {/* Desktop CTA under filter panel */}
                 <div className="mt-3">
@@ -2889,7 +2876,8 @@ export default function App({
                 closeSearch();
               }}
               onToggleTechniqueBookmark={(techniqueId: string) => {
-                const progressEntry = db.progress.find((p) => p.techniqueId === techniqueId) ?? null;
+                const progressEntry =
+                  db.progress.find((p) => p.techniqueId === techniqueId) ?? null;
                 const techniqueEntry = db.techniques.find((t) => t.id === techniqueId);
                 if (!techniqueEntry) return;
 
@@ -2900,7 +2888,8 @@ export default function App({
                 }
 
                 const fallbackVariant =
-                  progressEntry?.bookmarkedVariant ?? getFallbackVariantForTechnique(techniqueEntry);
+                  progressEntry?.bookmarkedVariant ??
+                  getFallbackVariantForTechnique(techniqueEntry);
                 updateProgress(techniqueId, {
                   bookmarked: true,
                   bookmarkedVariant: fallbackVariant,

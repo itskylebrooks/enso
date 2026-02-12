@@ -31,15 +31,16 @@ type LocalizedText = {
 
 export type OnboardingTourSegment = {
   id: TourSegmentId;
-  stepNumber: 1 | 2 | 3 | 4 | 5 | 6 | 7;
+  stepNumber: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
   targetSelectors: string[];
   title: LocalizedText;
   description: LocalizedText;
   spotlightOffsetY?: number;
+  spotlightHeightOffset?: number;
   preferredPanelSide?: 'right' | 'auto';
 };
 
-export const ONBOARDING_TOUR_STEP_COUNT = 7;
+export const ONBOARDING_TOUR_STEP_COUNT = 8;
 
 export const ONBOARDING_TOUR_SEGMENTS: OnboardingTourSegment[] = [
   {
@@ -77,7 +78,11 @@ export const ONBOARDING_TOUR_SEGMENTS: OnboardingTourSegment[] = [
   {
     id: 'techniques-filters',
     stepNumber: 3,
-    targetSelectors: ['[data-tour-target="techniques-filters-trigger"]'],
+    targetSelectors: [
+      '[data-tour-target="techniques-filters-trigger"][data-tour-panel="true"]',
+      '[data-tour-target="techniques-filters-trigger"]',
+    ],
+    spotlightHeightOffset: 30,
     title: {
       en: 'Filters',
       de: 'Filter',
@@ -148,7 +153,10 @@ export const ONBOARDING_TOUR_SEGMENTS: OnboardingTourSegment[] = [
   {
     id: 'bookmarks-collections',
     stepNumber: 7,
-    targetSelectors: ['[data-tour-target="bookmarks-collections-sidebar"]'],
+    targetSelectors: [
+      '[data-tour-target="bookmarks-collections-sidebar"][data-tour-panel="true"]',
+      '[data-tour-target="bookmarks-collections-sidebar"]',
+    ],
     preferredPanelSide: 'right',
     title: {
       en: 'Bookmarks',
@@ -161,7 +169,7 @@ export const ONBOARDING_TOUR_SEGMENTS: OnboardingTourSegment[] = [
   },
   {
     id: 'search-input',
-    stepNumber: 7,
+    stepNumber: 8,
     targetSelectors: ['[data-tour-target="search-input"]'],
     title: {
       en: 'Search shortcuts',
@@ -202,7 +210,8 @@ type PanelLayout = {
   style: CSSProperties;
 };
 
-const clamp = (value: number, min: number, max: number): number => Math.min(Math.max(value, min), max);
+const clamp = (value: number, min: number, max: number): number =>
+  Math.min(Math.max(value, min), max);
 
 const isElementVisible = (element: HTMLElement): boolean => {
   const style = window.getComputedStyle(element);
@@ -283,13 +292,16 @@ export const OnboardingTourOverlay = ({
   const { prefersReducedMotion } = useMotionPreferences();
   const panelRef = useRef<HTMLDivElement | null>(null);
   const scrolledSegmentsRef = useRef<Set<TourSegmentId>>(new Set());
+  const wasOpenRef = useRef(false);
   const [targetRect, setTargetRect] = useState<DOMRect | null>(null);
   const [geometrySegmentId, setGeometrySegmentId] = useState<TourSegmentId>('guide-tab');
+  const [isEntering, setIsEntering] = useState(false);
   const [panelLayout, setPanelLayout] = useState<PanelLayout>({
     style: { width: 'min(360px, calc(100vw - 32px))', left: '16px', top: '16px' },
   });
 
-  const segment = ONBOARDING_TOUR_SEGMENTS[clamp(segmentIndex, 0, ONBOARDING_TOUR_SEGMENTS.length - 1)];
+  const segment =
+    ONBOARDING_TOUR_SEGMENTS[clamp(segmentIndex, 0, ONBOARDING_TOUR_SEGMENTS.length - 1)];
   const isLastSegment = segmentIndex >= ONBOARDING_TOUR_SEGMENTS.length - 1;
   const isSegmentAligned = useMemo(
     () => getSegmentAligned(segment, route, isTechniqueDetailOpen, searchOpen),
@@ -334,6 +346,33 @@ export const OnboardingTourOverlay = ({
   );
 
   useFocusTrap(isOpen, panelRef, onSkip);
+
+  useEffect(() => {
+    if (isOpen && !wasOpenRef.current) {
+      setIsEntering(true);
+      setTargetRect(null);
+      scrolledSegmentsRef.current.clear();
+      wasOpenRef.current = true;
+      return undefined;
+    }
+
+    if (!isOpen && wasOpenRef.current) {
+      setIsEntering(false);
+      setTargetRect(null);
+      wasOpenRef.current = false;
+    }
+
+    return undefined;
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isEntering) return undefined;
+    const timeoutId = window.setTimeout(
+      () => setIsEntering(false),
+      prefersReducedMotion ? 16 : 220,
+    );
+    return () => window.clearTimeout(timeoutId);
+  }, [isEntering, prefersReducedMotion]);
 
   useEffect(() => {
     if (!isOpen) return undefined;
@@ -440,18 +479,37 @@ export const OnboardingTourOverlay = ({
 
   const spotlightRect = useMemo(() => {
     if (!targetRect || completionVisible) return null;
-    const viewportWidth = typeof window === 'undefined' ? Number.POSITIVE_INFINITY : window.innerWidth;
+    const viewportWidth =
+      typeof window === 'undefined' ? Number.POSITIVE_INFINITY : window.innerWidth;
     const viewportHeight =
       typeof window === 'undefined' ? Number.POSITIVE_INFINITY : window.innerHeight;
-    const padding = 8;
-    const top = Math.max(8, targetRect.top - padding);
-    const left = Math.max(8, targetRect.left - padding);
+    const minInset = 8;
+    const preferredPadding = 8;
+    const availableLeft = Math.max(0, targetRect.left - minInset);
+    const availableRight = Math.max(0, viewportWidth - minInset - targetRect.right);
+    const availableTop = Math.max(0, targetRect.top - minInset);
+    const availableBottom = Math.max(0, viewportHeight - minInset - targetRect.bottom);
+    const paddingX = Math.min(preferredPadding, availableLeft, availableRight);
+    const paddingY = Math.min(preferredPadding, availableTop, availableBottom);
+    const spotlightWidth = Math.min(targetRect.width + paddingX * 2, viewportWidth - minInset * 2);
+    const heightOffset = geometrySegment.spotlightHeightOffset ?? 0;
+    const spotlightHeight = Math.min(
+      targetRect.height + paddingY * 2 + heightOffset,
+      viewportHeight - minInset * 2,
+    );
+    const unclampedLeft = targetRect.left - paddingX;
     const offsetY = geometrySegment.spotlightOffsetY ?? 0;
-    const width = Math.min(viewportWidth - left - 8, targetRect.width + padding * 2);
-    const height = Math.min(viewportHeight - top - 8, targetRect.height + padding * 2);
+    const unclampedTop = targetRect.top - paddingY + offsetY - heightOffset;
+    const left = clamp(unclampedLeft, minInset, viewportWidth - spotlightWidth - minInset);
+    const top = clamp(unclampedTop, minInset, viewportHeight - spotlightHeight - minInset);
 
-    return { top: top + offsetY, left, width, height };
-  }, [completionVisible, geometrySegment.spotlightOffsetY, targetRect]);
+    return { top, left, width: spotlightWidth, height: spotlightHeight };
+  }, [
+    completionVisible,
+    geometrySegment.spotlightOffsetY,
+    geometrySegment.spotlightHeightOffset,
+    targetRect,
+  ]);
 
   useLayoutEffect(() => {
     if (!isOpen) return;
@@ -515,9 +573,7 @@ export const OnboardingTourOverlay = ({
       const aboveTop = spotlightRect.top - panelHeight - gap;
       const maxTop = viewportHeight - panelHeight - mobileBottomClearance;
       const comfortMaxTop =
-        spotlightRect.top > viewportHeight * 0.6
-          ? Math.min(maxTop, centeredTop + 40)
-          : maxTop;
+        spotlightRect.top > viewportHeight * 0.6 ? Math.min(maxTop, centeredTop + 40) : maxTop;
 
       let top = centeredTop;
       if (belowTop <= maxTop) {
@@ -547,7 +603,8 @@ export const OnboardingTourOverlay = ({
     const canPlaceRight =
       spotlightRect.left + spotlightRect.width + gap + panelWidth <= viewportWidth - minPadding;
     const canPlaceLeft = spotlightRect.left - gap - panelWidth >= minPadding;
-    const canPlaceBottom = spotlightRect.top + spotlightRect.height + gap + panelHeight <= viewportHeight - minPadding;
+    const canPlaceBottom =
+      spotlightRect.top + spotlightRect.height + gap + panelHeight <= viewportHeight - minPadding;
     const canPlaceTop = spotlightRect.top - gap - panelHeight >= minPadding;
 
     if (geometrySegment.preferredPanelSide === 'right' && canPlaceRight) {
@@ -636,18 +693,27 @@ export const OnboardingTourOverlay = ({
     <div className="fixed inset-0 z-[70]">
       {!completionVisible && spotlightRect ? (
         <motion.div
-          initial={false}
+          initial={isEntering ? { opacity: 0 } : false}
           className="pointer-events-none absolute rounded-2xl"
           animate={{
             top: spotlightRect.top,
             left: spotlightRect.left,
             width: spotlightRect.width,
             height: spotlightRect.height,
+            opacity: 1,
           }}
           transition={
             prefersReducedMotion
               ? { duration: 0.01 }
-              : { type: 'spring', stiffness: 260, damping: 30, mass: 0.95 }
+              : isEntering
+                ? {
+                    top: { duration: 0 },
+                    left: { duration: 0 },
+                    width: { duration: 0 },
+                    height: { duration: 0 },
+                    opacity: { duration: 0.2, ease: 'easeOut' },
+                  }
+                : { type: 'spring', stiffness: 260, damping: 30, mass: 0.95 }
           }
           style={{
             boxShadow: '0 0 0 9999px rgba(0, 0, 0, 0.68)',
@@ -659,7 +725,7 @@ export const OnboardingTourOverlay = ({
 
       {!completionVisible && spotlightRect && (
         <motion.div
-          initial={false}
+          initial={isEntering ? { opacity: 0 } : false}
           className="pointer-events-none absolute rounded-2xl border border-white/70"
           animate={{
             top: spotlightRect.top - 2,
@@ -671,7 +737,15 @@ export const OnboardingTourOverlay = ({
           transition={
             prefersReducedMotion
               ? { duration: 0.01 }
-              : { type: 'spring', stiffness: 260, damping: 30, mass: 0.95 }
+              : isEntering
+                ? {
+                    top: { duration: 0 },
+                    left: { duration: 0 },
+                    width: { duration: 0 },
+                    height: { duration: 0 },
+                    opacity: { duration: 0.2, ease: 'easeOut' },
+                  }
+                : { type: 'spring', stiffness: 260, damping: 30, mass: 0.95 }
           }
           style={{
             boxShadow: '0 0 22px rgba(255, 255, 255, 0.2)',
@@ -686,7 +760,7 @@ export const OnboardingTourOverlay = ({
           aria-modal="true"
           className="pointer-events-auto absolute rounded-2xl border surface-border surface panel-shadow p-4 md:p-5 space-y-4 max-h-[calc(100vh-24px)] overflow-y-auto"
           style={{ position: 'absolute' }}
-          initial={false}
+          initial={isEntering ? { opacity: 0, y: 0, scale: 1 } : false}
           animate={{
             ...(panelPosition as Record<string, string | number>),
             opacity: 1,
@@ -696,12 +770,21 @@ export const OnboardingTourOverlay = ({
           transition={
             prefersReducedMotion
               ? { duration: 0.01 }
-              : {
-                  type: 'spring',
-                  stiffness: 280,
-                  damping: 32,
-                  mass: 0.9,
-                }
+              : isEntering
+                ? {
+                    top: { duration: 0 },
+                    left: { duration: 0 },
+                    width: { duration: 0 },
+                    y: { duration: 0 },
+                    scale: { duration: 0 },
+                    opacity: { duration: 0.22, ease: 'easeOut' },
+                  }
+                : {
+                    type: 'spring',
+                    stiffness: 280,
+                    damping: 32,
+                    mass: 0.9,
+                  }
           }
         >
           {completionVisible ? (

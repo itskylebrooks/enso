@@ -81,6 +81,13 @@ export const ExpandableFilterBar = ({
     };
   }, []);
 
+  // Synchronize expanded state with forceOpen
+  useEffect(() => {
+    if (forceOpen) {
+      setIsExpanded(true);
+    }
+  }, [forceOpen]);
+
   const togglePin = () => {
     setIsPinned((prev) => !prev);
   };
@@ -152,6 +159,7 @@ export const ExpandableFilterBar = ({
               {effectiveExpanded && (
                 <motion.div
                   data-tour-target={tourTargetId}
+                  data-tour-panel="true"
                   className="absolute left-0 top-0 w-64 surface border surface-border rounded-2xl p-3 panel-shadow max-h-[calc(100vh-7rem)] overflow-y-auto no-select"
                   initial={{ opacity: 0, scale: 0.95, x: -10 }}
                   animate={{ opacity: 1, scale: 1, x: 0 }}

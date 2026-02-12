@@ -1,20 +1,20 @@
-import { useMemo, useState, useEffect } from 'react';
-import type { ReactElement } from 'react';
-import { motion } from 'motion/react';
+import { ENTRY_MODE_ORDER } from '@shared/constants/entryModes';
 import type { Copy } from '@shared/constants/i18n';
-import type { Filters, Grade, Locale } from '@shared/types';
-import { classNames } from '../../utils/classNames';
-import { gradePalette } from '@shared/styles/belts';
 import {
   getLevelLabel,
   getOrderedTaxonomyValues,
   getTaxonomyLabel,
   type TaxonomyType,
 } from '@shared/i18n/taxonomy';
-import { ENTRY_MODE_ORDER } from '@shared/constants/entryModes';
+import { gradePalette } from '@shared/styles/belts';
+import type { Filters, Grade, Locale } from '@shared/types';
+import { ChevronDown, PencilLine } from 'lucide-react';
+import { motion } from 'motion/react';
+import type { ReactElement } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { classNames } from '../../utils/classNames';
 import { SectionTitle } from '../index';
 import { useMotionPreferences } from './motion';
-import { ChevronDown, PencilLine } from 'lucide-react';
 
 type MobileFiltersProps = {
   copy: Copy;
@@ -180,16 +180,31 @@ export const MobileFilters = ({
     filters.trainer,
   ]);
 
+  // Ensure sections open when a filter becomes active after mount (e.g. via persisted filters)
   useEffect(() => {
-    if (!forceOpen) return;
-    setOpen({
-      category: true,
-      attack: true,
-      stance: true,
-      weapon: true,
-      level: true,
-      trainer: true,
-    });
+    setOpen((prev) => ({
+      ...prev,
+      category: prev.category || Boolean(filters.category),
+      attack: prev.attack || Boolean(filters.attack),
+      stance: prev.stance || Boolean(filters.stance),
+      weapon: prev.weapon || Boolean(filters.weapon),
+      level: prev.level || Boolean(filters.level),
+      trainer: prev.trainer || Boolean(filters.trainer),
+    }));
+  }, [
+    filters.category,
+    filters.attack,
+    filters.stance,
+    filters.weapon,
+    filters.level,
+    filters.trainer,
+  ]);
+
+  // Synchronize panel open state with forceOpen
+  useEffect(() => {
+    if (forceOpen) {
+      setIsPanelOpen(true);
+    }
   }, [forceOpen]);
 
   const handleReset = (): void => onChange({});
@@ -215,6 +230,8 @@ export const MobileFilters = ({
         animate={effectivePanelOpen ? 'open' : 'closed'}
         variants={collapseMotion.variants}
         transition={collapseMotion.transition}
+        data-tour-target="techniques-filters-trigger"
+        data-tour-panel="true"
       >
         <div className="pt-3">
           <div className="mb-3 flex items-center justify-end">
