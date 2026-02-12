@@ -205,6 +205,7 @@ export const ExerciseDetailPage = ({
                 status={studyStatus}
                 label={studyLabel}
                 onClick={onToggleStudyStatus}
+                popupTrigger="click"
                 popupTextByStatus={{
                   none: copy.toastStudyCleared,
                   practice: copy.toastStudyPractice,
