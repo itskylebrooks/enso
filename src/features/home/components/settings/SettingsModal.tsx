@@ -449,7 +449,7 @@ export const SettingsModal = ({
 
                 <div className="absolute right-4 inset-y-0 flex items-center">
                   <a
-                    href="https://brooksstudio.tech/"
+                    href="https://brooks.tools/"
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Brooks Studio website"
@@ -470,7 +470,7 @@ export const SettingsModal = ({
                 <div className="flex items-center justify-center gap-2.5 leading-snug mt-1">
                   <a
                     className="underline"
-                    href="https://brooksstudio.tech/en/imprint"
+                    href="https://brooks.tools/imprint"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -478,7 +478,7 @@ export const SettingsModal = ({
                   </a>
                   <a
                     className="underline"
-                    href="https://brooksstudio.tech/en/privacy"
+                    href="https://brooks.tools/privacy"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -486,7 +486,7 @@ export const SettingsModal = ({
                   </a>
                   <a
                     className="underline"
-                    href="https://brooksstudio.tech/en/license"
+                    href="https://brooks.tools/license"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
