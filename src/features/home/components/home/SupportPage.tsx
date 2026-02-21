@@ -1,5 +1,5 @@
 import type { Copy } from '@shared/constants/i18n';
-import { Server, Video, Zap } from 'lucide-react';
+import { HandHeart, Server, Video, Zap } from 'lucide-react';
 import type { ReactElement } from 'react';
 
 type SupportPageProps = {
@@ -36,10 +36,12 @@ export const SupportPage = ({ copy }: SupportPageProps): ReactElement => {
     <section className="pt-0 pb-12 font-sans">
       <div className="container max-w-4xl mx-auto px-4 md:px-6 space-y-8">
         <header className="rounded-2xl border surface-border bg-gradient-to-br from-emerald-500/10 via-sky-500/10 to-amber-500/10 p-6 md:p-8 space-y-3">
-          <p className="text-xs uppercase tracking-[0.24em] text-subtle">{copy.supportLink}</p>
-          <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">
-            {copy.supportPage.title}
-          </h1>
+          <div className="flex items-center justify-between gap-3">
+            <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">
+              {copy.supportPage.title}
+            </h1>
+            <HandHeart className="w-7 h-7 text-subtle shrink-0" aria-hidden />
+          </div>
           <div className="space-y-3 text-base md:text-lg text-muted leading-relaxed">
             {renderParagraphs(copy.supportPage.intro)}
           </div>
@@ -66,11 +68,6 @@ export const SupportPage = ({ copy }: SupportPageProps): ReactElement => {
         <div className="space-y-4">
           <h2 className="text-xl font-semibold">{copy.supportPage.impactTitle}</h2>
           {renderParagraphs(copy.supportPage.impactBody)}
-        </div>
-
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold">{copy.supportPage.costsTitle}</h2>
-          {renderParagraphs(copy.supportPage.costsBody)}
         </div>
 
         <div className="space-y-4">

@@ -133,19 +133,19 @@ export const de = {
   syncPage: {
     title: 'Synchronisierung',
     intro:
-      'Die Synchronisierung ist eine optionale Funktion, mit der deine Enso-Daten auf mehreren Geräten gleich bleiben. Sie ist für alle gedacht, die Enso sowohl am Handy als auch am Desktop nutzen und möchten, dass Lesezeichen, Sammlungen und Lernfortschritt automatisch übernommen werden.\n\nDie Synchronisierung wird kostenlos sein.',
+      'Die Synchronisierung ist eine optionale Funktion, die deine Enso-Daten auf mehreren Geräten konsistent hält. Wenn du Enso auf Handy und Desktop nutzt, bleiben Lesezeichen, Sammlungen und Lernfortschritt synchron, damit du nahtlos weitermachen kannst.\n\nDie Synchronisierung betrifft nur deine persönlichen Daten und verändert die Inhalte von Enso selbst nicht.',
     whatItWillDoTitle: 'Was die Synchronisierung macht',
     whatItWillDoBody:
-      'Wenn die Synchronisierung aktiviert ist, speichert Enso eine sichere Kopie deiner persönlichen Daten in der Cloud und hält sie aktuell. Das Ziel ist einfach: Du öffnest Enso irgendwo und siehst dieselben Sammlungen, dieselben gespeicherten Einträge und denselben Status wie zuvor. Die Synchronisierung betrifft nur deine persönlichen Daten. Sie verändert die Inhalte von Enso selbst nicht.',
-    localFirstTitle: 'Local-first bleibt der Standard',
+      'Wenn die Synchronisierung aktiviert ist, speichert Enso eine sichere Kopie deiner persönlichen Daten und hält sie auf deinen Geräten aktuell.',
+    localFirstTitle: 'Local-first ist der Standard',
     localFirstBody:
-      'Auch mit Synchronisierung bleiben deine Daten lokal auf deinem Gerät gespeichert. Die Synchronisierung ist eine zusätzliche Komfortfunktion, keine Voraussetzung. Wenn du lieber offline bleibst, ändert sich nichts. Und wenn du die Synchronisierung aktivierst und später wieder deaktivierst oder kündigst, behältst du deine lokalen Daten weiterhin.',
-    exportImportTitle: 'Export und Import sind immer verfügbar',
+      'Deine Daten bleiben immer zuerst lokal auf deinem Gerät. Die Synchronisierung ist optionaler Komfort, keine Voraussetzung. Du kannst vollständig offline bleiben, und Export sowie Import sind jederzeit verfügbar.',
+    exportImportTitle: 'Kostenlos nutzbar',
     exportImportBody:
-      'Du kannst deine Daten jederzeit exportieren, mit oder ohne Synchronisierung. Du kannst auch jederzeit ein Backup importieren. Die Synchronisierung soll manuelle Arbeit reduzieren, nicht deine Kontrolle ersetzen.',
-    paidFeatureTitle: 'Kostenlos, offen und privat',
+      'Die Synchronisierung wird kostenlos nutzbar sein. Für die Kernfunktionen ist kein Abo erforderlich.',
+    paidFeatureTitle: 'Offen und privat',
     paidFeatureBody:
-      'Die Synchronisierung ist kostenlos. Enso ist Open Source, und der Code ist online verfügbar, damit jede Person sehen kann, wie alles funktioniert.\n\nDeine persönlichen Synchronisierungsdaten bleiben privat. Als Entwickler kann ich deine persönlichen Lerndaten im normalen Betrieb nicht einsehen.\n\nWenn du das Projekt unterstützen möchtest, ist eine Spendenfunktion für die Zukunft geplant.',
+      'Enso ist Open Source, und der Code ist online verfügbar, damit jede Person nachvollziehen kann, wie die Synchronisierung funktioniert. Deine persönlichen Synchronisierungsdaten bleiben privat, und deine Lerndaten sind im normalen Betrieb nicht einsehbar.',
     statusTitle: 'Status',
     statusBody:
       'Die Synchronisierung ist noch nicht implementiert. Diese Seite soll die Richtung früh erklären und Erwartungen klar halten. Wenn die Synchronisierung verfügbar wird, kannst du selbst entscheiden, ob du sie aktivierst, und Enso bleibt in jedem Fall vollständig nutzbar.',
@@ -301,9 +301,6 @@ export const de = {
     impactTitle: 'Was deine Unterstützung bewirkt',
     impactBody:
       '1) Sie beschleunigt die Entwicklung, weil ich mehr feste Zeit für Enso einplanen kann.\n\n2) Sie deckt reale Betriebskosten, damit die App online und zuverlässig bleibt.',
-    costsTitle: 'Wofür das Geld genutzt wird',
-    costsBody:
-      'Unterstützung fließt in Website-Hosting, Infrastruktur und Video-Hosting.\n\nEin Teil der Videos ist selbst gehostet, deshalb steigen Speicher- und Auslieferungskosten mit wachsender Bibliothek.',
     statusTitle: 'Status',
     statusBody:
       'Unterstützungszahlungen sind aktuell noch nicht aktiviert.\n\nDiese Seite ist schon jetzt da, damit der Zweck klar ist, bevor die Funktion live geht.',

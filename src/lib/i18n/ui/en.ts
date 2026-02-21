@@ -132,19 +132,19 @@ export const en = {
   syncPage: {
     title: 'Sync',
     intro:
-      "Sync is an optional feature that will let you keep your Enso data consistent across devices. It's designed for people who use Enso on both phone and desktop and want their bookmarks, collections, and study progress to follow them automatically.\n\nSync will be free to use.",
+      "Sync is an optional feature that keeps your Enso data consistent across devices. If you use Enso on phone and desktop, your bookmarks, collections, and study progress stay in sync so you can continue where you left off.\n\nSync only affects your personal data and does not change Enso content itself.",
     whatItWillDoTitle: 'What Sync will do',
     whatItWillDoBody:
-      'When Sync is enabled, Enso will securely store a copy of your personal data in the cloud and keep it up to date. The goal is simple: open Enso anywhere and see the same collections, the same saved items, and the same status you set before. Sync is only about your personal data. It does not change the content of Enso itself.',
-    localFirstTitle: 'Local-first stays the default',
+      'When Sync is enabled, Enso securely stores a copy of your personal data and keeps it up to date across your devices.',
+    localFirstTitle: 'Local-first is the default',
     localFirstBody:
-      'Even with Sync, your data will still live locally on your device. Sync is an extra layer of convenience, not a requirement. If you prefer to stay offline, nothing changes. If you enable Sync and later cancel or disable it, you will still keep your local data.',
-    exportImportTitle: 'Export and import are always available',
+      'Your data always lives on your device first. Sync is optional convenience, not a requirement. You can stay fully offline if you want, and export or import is always available at any time.',
+    exportImportTitle: 'Free to use',
     exportImportBody:
-      'You can export your data at any time, with or without Sync. You can also import a backup whenever you want. Sync is meant to reduce manual work, not replace your control over your data.',
-    paidFeatureTitle: 'Free, open, and private',
+      'Sync will be free to use. No subscription is required to use core sync when it launches.',
+    paidFeatureTitle: 'Open and private',
     paidFeatureBody:
-      "Sync is free. Enso is open source, and the code is available online so anyone can inspect how it works.\n\nYour personal sync data stays private. As the developer, I can't read your personal study data in normal use.\n\nIf you want to support the project, a donation option is planned for the future.",
+      'Enso is open source, and the code is available online so anyone can inspect how Sync works. Your personal sync data stays private, and your personal study data is not readable in normal use.',
     statusTitle: 'Status',
     statusBody:
       "Sync is not implemented yet. This page exists to explain the direction early and to keep expectations clear. When Sync becomes available, you'll be able to decide whether to enable it, and Enso will remain fully usable either way.",
@@ -299,9 +299,6 @@ export const en = {
     impactTitle: 'What your support changes',
     impactBody:
       '1) It speeds up development by giving me dedicated time to build and improve Enso.\n\n2) It covers real operating costs so the app can stay online and dependable.',
-    costsTitle: 'What the money helps pay for',
-    costsBody:
-      'Support will be used for website hosting, infrastructure, and video hosting.\n\nSome videos are self-hosted, so storage and delivery costs grow as the library grows.',
     statusTitle: 'Status',
     statusBody:
       'Support payments are not enabled yet.\n\nThis page is here now so the purpose is clear before the feature goes live.',
