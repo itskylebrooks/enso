@@ -1,0 +1,64 @@
+{
+  "id": "t-exam-shomen-tsuki-ude-kime-osae-rokkyo",
+  "slug": "shomen-tsuki-ude-kime-osae-rokkyo",
+  "name": {
+    "en": "Shōmen-tsuki Ude-kime-osae (rokkyo)",
+    "de": "Shōmen-tsuki Ude-kime-osae (rokkyo)"
+  },
+  "category": "control",
+  "attack": "shomen-tsuki",
+  "weapon": "empty-hand",
+  "level": "dan1",
+  "summary": {
+    "en": "Coming soon.",
+    "de": "Kommt bald."
+  },
+  "tags": [
+    "exam-program",
+    "german-aikido-federation",
+    "shomen-tsuki",
+    "ude-kime-osae-rokkyo"
+  ],
+  "versions": [
+    {
+      "id": "v-base",
+      "hanmi": "ai-hanmi",
+      "stepsByEntry": {
+        "irimi": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "uke": {
+        "role": {
+          "en": "Coming soon.",
+          "de": "Kommt bald."
+        },
+        "notes": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "commonMistakes": {
+        "en": [
+          "Coming soon."
+        ],
+        "de": [
+          "Kommt bald."
+        ]
+      },
+      "context": {
+        "en": "Coming soon.",
+        "de": "Kommt bald."
+      }
+    }
+  ]
+}

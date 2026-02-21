@@ -1,0 +1,64 @@
+{
+  "id": "t-exam-mune-tori-kote-hineri-sankyo",
+  "slug": "mune-tori-kote-hineri-sankyo",
+  "name": {
+    "en": "Mune-tori Kote-hineri (sankyo)",
+    "de": "Mune-tori Kote-hineri (sankyo)"
+  },
+  "category": "control",
+  "attack": "mune-tori",
+  "weapon": "empty-hand",
+  "level": "kyu2",
+  "summary": {
+    "en": "Coming soon.",
+    "de": "Kommt bald."
+  },
+  "tags": [
+    "exam-program",
+    "german-aikido-federation",
+    "mune-tori",
+    "kote-hineri-sankyo"
+  ],
+  "versions": [
+    {
+      "id": "v-base",
+      "hanmi": "ai-hanmi",
+      "stepsByEntry": {
+        "irimi": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "uke": {
+        "role": {
+          "en": "Coming soon.",
+          "de": "Kommt bald."
+        },
+        "notes": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "commonMistakes": {
+        "en": [
+          "Coming soon."
+        ],
+        "de": [
+          "Kommt bald."
+        ]
+      },
+      "context": {
+        "en": "Coming soon.",
+        "de": "Kommt bald."
+      }
+    }
+  ]
+}

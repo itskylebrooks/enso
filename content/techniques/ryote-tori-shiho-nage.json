@@ -1,0 +1,64 @@
+{
+  "id": "t-exam-ryote-tori-shiho-nage",
+  "slug": "ryote-tori-shiho-nage",
+  "name": {
+    "en": "Ryōte-tori Shiho-nage",
+    "de": "Ryōte-tori Shiho-nage"
+  },
+  "category": "throw",
+  "attack": "ryote-tori",
+  "weapon": "empty-hand",
+  "level": "kyu5",
+  "summary": {
+    "en": "Coming soon.",
+    "de": "Kommt bald."
+  },
+  "tags": [
+    "exam-program",
+    "german-aikido-federation",
+    "ryote-tori",
+    "shiho-nage"
+  ],
+  "versions": [
+    {
+      "id": "v-base",
+      "hanmi": "ai-hanmi",
+      "stepsByEntry": {
+        "irimi": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "uke": {
+        "role": {
+          "en": "Coming soon.",
+          "de": "Kommt bald."
+        },
+        "notes": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "commonMistakes": {
+        "en": [
+          "Coming soon."
+        ],
+        "de": [
+          "Kommt bald."
+        ]
+      },
+      "context": {
+        "en": "Coming soon.",
+        "de": "Kommt bald."
+      }
+    }
+  ]
+}

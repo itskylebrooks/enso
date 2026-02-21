@@ -1,0 +1,64 @@
+{
+  "id": "t-exam-ryote-tori-tekubi-osae-yonkyo",
+  "slug": "ryote-tori-tekubi-osae-yonkyo",
+  "name": {
+    "en": "Ryōte-tori Tekubi-osae (yonkyo)",
+    "de": "Ryōte-tori Tekubi-osae (yonkyo)"
+  },
+  "category": "control",
+  "attack": "ryote-tori",
+  "weapon": "empty-hand",
+  "level": "kyu1",
+  "summary": {
+    "en": "Coming soon.",
+    "de": "Kommt bald."
+  },
+  "tags": [
+    "exam-program",
+    "german-aikido-federation",
+    "ryote-tori",
+    "tekubi-osae-yonkyo"
+  ],
+  "versions": [
+    {
+      "id": "v-base",
+      "hanmi": "ai-hanmi",
+      "stepsByEntry": {
+        "irimi": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "uke": {
+        "role": {
+          "en": "Coming soon.",
+          "de": "Kommt bald."
+        },
+        "notes": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "commonMistakes": {
+        "en": [
+          "Coming soon."
+        ],
+        "de": [
+          "Kommt bald."
+        ]
+      },
+      "context": {
+        "en": "Coming soon.",
+        "de": "Kommt bald."
+      }
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "id": "t-exam-shomen-tsuki-kaiten-nage-soto",
+  "slug": "shomen-tsuki-kaiten-nage-soto",
+  "name": {
+    "en": "Shōmen-tsuki Kaiten-nage (soto)",
+    "de": "Shōmen-tsuki Kaiten-nage (soto)"
+  },
+  "category": "throw",
+  "attack": "shomen-tsuki",
+  "weapon": "empty-hand",
+  "level": "kyu3",
+  "summary": {
+    "en": "Coming soon.",
+    "de": "Kommt bald."
+  },
+  "tags": [
+    "exam-program",
+    "german-aikido-federation",
+    "shomen-tsuki",
+    "kaiten-nage-soto"
+  ],
+  "versions": [
+    {
+      "id": "v-base",
+      "hanmi": "ai-hanmi",
+      "stepsByEntry": {
+        "irimi": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "uke": {
+        "role": {
+          "en": "Coming soon.",
+          "de": "Kommt bald."
+        },
+        "notes": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "commonMistakes": {
+        "en": [
+          "Coming soon."
+        ],
+        "de": [
+          "Kommt bald."
+        ]
+      },
+      "context": {
+        "en": "Coming soon.",
+        "de": "Kommt bald."
+      }
+    }
+  ]
+}

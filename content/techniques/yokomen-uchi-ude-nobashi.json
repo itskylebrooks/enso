@@ -1,0 +1,64 @@
+{
+  "id": "t-exam-yokomen-uchi-ude-nobashi",
+  "slug": "yokomen-uchi-ude-nobashi",
+  "name": {
+    "en": "Yokomen-uchi Ude-nobashi (gokyo)",
+    "de": "Yokomen-uchi Ude-nobashi (gokyo)"
+  },
+  "category": "control",
+  "attack": "yokomen-uchi",
+  "weapon": "empty-hand",
+  "level": "kyu1",
+  "summary": {
+    "en": "Coming soon.",
+    "de": "Kommt bald."
+  },
+  "tags": [
+    "exam-program",
+    "german-aikido-federation",
+    "yokomen-uchi",
+    "ude-nobashi"
+  ],
+  "versions": [
+    {
+      "id": "v-base",
+      "hanmi": "ai-hanmi",
+      "stepsByEntry": {
+        "irimi": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "uke": {
+        "role": {
+          "en": "Coming soon.",
+          "de": "Kommt bald."
+        },
+        "notes": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "commonMistakes": {
+        "en": [
+          "Coming soon."
+        ],
+        "de": [
+          "Kommt bald."
+        ]
+      },
+      "context": {
+        "en": "Coming soon.",
+        "de": "Kommt bald."
+      }
+    }
+  ]
+}

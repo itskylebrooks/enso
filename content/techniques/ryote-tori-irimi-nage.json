@@ -1,0 +1,64 @@
+{
+  "id": "t-exam-ryote-tori-irimi-nage",
+  "slug": "ryote-tori-irimi-nage",
+  "name": {
+    "en": "Ryōte-tori Irimi-nage",
+    "de": "Ryōte-tori Irimi-nage"
+  },
+  "category": "throw",
+  "attack": "ryote-tori",
+  "weapon": "empty-hand",
+  "level": "kyu4",
+  "summary": {
+    "en": "Coming soon.",
+    "de": "Kommt bald."
+  },
+  "tags": [
+    "exam-program",
+    "german-aikido-federation",
+    "ryote-tori",
+    "irimi-nage"
+  ],
+  "versions": [
+    {
+      "id": "v-base",
+      "hanmi": "ai-hanmi",
+      "stepsByEntry": {
+        "irimi": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "uke": {
+        "role": {
+          "en": "Coming soon.",
+          "de": "Kommt bald."
+        },
+        "notes": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "commonMistakes": {
+        "en": [
+          "Coming soon."
+        ],
+        "de": [
+          "Kommt bald."
+        ]
+      },
+      "context": {
+        "en": "Coming soon.",
+        "de": "Kommt bald."
+      }
+    }
+  ]
+}

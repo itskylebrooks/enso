@@ -1,0 +1,64 @@
+{
+  "id": "t-exam-ushiro-ryote-tori-koshi-nage-hiji-garami",
+  "slug": "ushiro-ryote-tori-koshi-nage-hiji-garami",
+  "name": {
+    "en": "Ushiro-ryōte-tori Koshi-nage-hiji-garami",
+    "de": "Ushiro-ryōte-tori Koshi-nage-hiji-garami"
+  },
+  "category": "throw",
+  "attack": "ushiro-ryote-tori",
+  "weapon": "empty-hand",
+  "level": "kyu1",
+  "summary": {
+    "en": "Coming soon.",
+    "de": "Kommt bald."
+  },
+  "tags": [
+    "exam-program",
+    "german-aikido-federation",
+    "ushiro-ryote-tori",
+    "koshi-nage-hiji-garami"
+  ],
+  "versions": [
+    {
+      "id": "v-base",
+      "hanmi": "ai-hanmi",
+      "stepsByEntry": {
+        "irimi": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "uke": {
+        "role": {
+          "en": "Coming soon.",
+          "de": "Kommt bald."
+        },
+        "notes": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "commonMistakes": {
+        "en": [
+          "Coming soon."
+        ],
+        "de": [
+          "Kommt bald."
+        ]
+      },
+      "context": {
+        "en": "Coming soon.",
+        "de": "Kommt bald."
+      }
+    }
+  ]
+}

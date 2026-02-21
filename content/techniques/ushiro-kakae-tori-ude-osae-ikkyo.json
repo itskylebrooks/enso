@@ -1,0 +1,64 @@
+{
+  "id": "t-exam-ushiro-kakae-tori-ude-osae-ikkyo",
+  "slug": "ushiro-kakae-tori-ude-osae-ikkyo",
+  "name": {
+    "en": "Ushiro-kakae-tori Ude-osae (ikkyo)",
+    "de": "Ushiro-kakae-tori Ude-osae (ikkyo)"
+  },
+  "category": "control",
+  "attack": "ushiro-kakae-tori",
+  "weapon": "empty-hand",
+  "level": "kyu4",
+  "summary": {
+    "en": "Coming soon.",
+    "de": "Kommt bald."
+  },
+  "tags": [
+    "exam-program",
+    "german-aikido-federation",
+    "ushiro-kakae-tori",
+    "ude-osae-ikkyo"
+  ],
+  "versions": [
+    {
+      "id": "v-base",
+      "hanmi": "ai-hanmi",
+      "stepsByEntry": {
+        "irimi": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "uke": {
+        "role": {
+          "en": "Coming soon.",
+          "de": "Kommt bald."
+        },
+        "notes": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "commonMistakes": {
+        "en": [
+          "Coming soon."
+        ],
+        "de": [
+          "Kommt bald."
+        ]
+      },
+      "context": {
+        "en": "Coming soon.",
+        "de": "Kommt bald."
+      }
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "id": "t-exam-yokomen-uchi-kote-gaeshi",
+  "slug": "yokomen-uchi-kote-gaeshi",
+  "name": {
+    "en": "Yokomen-uchi Kote-gaeshi",
+    "de": "Yokomen-uchi Kote-gaeshi"
+  },
+  "category": "throw",
+  "attack": "yokomen-uchi",
+  "weapon": "empty-hand",
+  "level": "kyu1",
+  "summary": {
+    "en": "Coming soon.",
+    "de": "Kommt bald."
+  },
+  "tags": [
+    "exam-program",
+    "german-aikido-federation",
+    "yokomen-uchi",
+    "kote-gaeshi"
+  ],
+  "versions": [
+    {
+      "id": "v-base",
+      "hanmi": "ai-hanmi",
+      "stepsByEntry": {
+        "irimi": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "uke": {
+        "role": {
+          "en": "Coming soon.",
+          "de": "Kommt bald."
+        },
+        "notes": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "commonMistakes": {
+        "en": [
+          "Coming soon."
+        ],
+        "de": [
+          "Kommt bald."
+        ]
+      },
+      "context": {
+        "en": "Coming soon.",
+        "de": "Kommt bald."
+      }
+    }
+  ]
+}

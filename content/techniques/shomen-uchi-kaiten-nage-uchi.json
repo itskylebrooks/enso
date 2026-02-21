@@ -1,0 +1,64 @@
+{
+  "id": "t-exam-shomen-uchi-kaiten-nage-uchi",
+  "slug": "shomen-uchi-kaiten-nage-uchi",
+  "name": {
+    "en": "Shōmen-uchi Kaiten-nage (uchi)",
+    "de": "Shōmen-uchi Kaiten-nage (uchi)"
+  },
+  "category": "throw",
+  "attack": "shomen-uchi",
+  "weapon": "empty-hand",
+  "level": "kyu4",
+  "summary": {
+    "en": "Coming soon.",
+    "de": "Kommt bald."
+  },
+  "tags": [
+    "exam-program",
+    "german-aikido-federation",
+    "shomen-uchi",
+    "kaiten-nage-uchi"
+  ],
+  "versions": [
+    {
+      "id": "v-base",
+      "hanmi": "ai-hanmi",
+      "stepsByEntry": {
+        "irimi": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "uke": {
+        "role": {
+          "en": "Coming soon.",
+          "de": "Kommt bald."
+        },
+        "notes": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "commonMistakes": {
+        "en": [
+          "Coming soon."
+        ],
+        "de": [
+          "Kommt bald."
+        ]
+      },
+      "context": {
+        "en": "Coming soon.",
+        "de": "Kommt bald."
+      }
+    }
+  ]
+}

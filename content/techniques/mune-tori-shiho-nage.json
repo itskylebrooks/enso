@@ -1,0 +1,64 @@
+{
+  "id": "t-exam-mune-tori-shiho-nage",
+  "slug": "mune-tori-shiho-nage",
+  "name": {
+    "en": "Mune-tori Shiho-nage",
+    "de": "Mune-tori Shiho-nage"
+  },
+  "category": "throw",
+  "attack": "mune-tori",
+  "weapon": "empty-hand",
+  "level": "kyu5",
+  "summary": {
+    "en": "Coming soon.",
+    "de": "Kommt bald."
+  },
+  "tags": [
+    "exam-program",
+    "german-aikido-federation",
+    "mune-tori",
+    "shiho-nage"
+  ],
+  "versions": [
+    {
+      "id": "v-base",
+      "hanmi": "ai-hanmi",
+      "stepsByEntry": {
+        "irimi": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "uke": {
+        "role": {
+          "en": "Coming soon.",
+          "de": "Kommt bald."
+        },
+        "notes": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "commonMistakes": {
+        "en": [
+          "Coming soon."
+        ],
+        "de": [
+          "Kommt bald."
+        ]
+      },
+      "context": {
+        "en": "Coming soon.",
+        "de": "Kommt bald."
+      }
+    }
+  ]
+}

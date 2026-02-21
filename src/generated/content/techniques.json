@@ -85,6 +85,234 @@
     ]
   },
   {
+    "id": "t-exam-katate-ryote-tori-irimi-nage",
+    "slug": "katate-ryote-tori-irimi-nage",
+    "name": { "en": "Katate-ryōte-tori Irimi-nage", "de": "Katate-ryōte-tori Irimi-nage" },
+    "category": "throw",
+    "attack": "katate-ryote-tori",
+    "weapon": "empty-hand",
+    "level": "kyu4",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "katate-ryote-tori", "irimi-nage"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-katate-ryote-tori-kokyu-nage",
+    "slug": "katate-ryote-tori-kokyu-nage",
+    "name": { "en": "Katate-ryōte-tori Kokyu-nage", "de": "Katate-ryōte-tori Kokyu-nage" },
+    "category": "throw",
+    "attack": "katate-ryote-tori",
+    "weapon": "empty-hand",
+    "level": "dan1",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "katate-ryote-tori", "kokyu-nage"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-katate-ryote-tori-kote-gaeshi",
+    "slug": "katate-ryote-tori-kote-gaeshi",
+    "name": { "en": "Katate-ryōte-tori Kote-gaeshi", "de": "Katate-ryōte-tori Kote-gaeshi" },
+    "category": "throw",
+    "attack": "katate-ryote-tori",
+    "weapon": "empty-hand",
+    "level": "kyu1",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "katate-ryote-tori", "kote-gaeshi"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-katate-ryote-tori-kote-hineri-sankyo",
+    "slug": "katate-ryote-tori-kote-hineri-sankyo",
+    "name": {
+      "en": "Katate-ryōte-tori Kote-hineri (sankyo)",
+      "de": "Katate-ryōte-tori Kote-hineri (sankyo)"
+    },
+    "category": "control",
+    "attack": "katate-ryote-tori",
+    "weapon": "empty-hand",
+    "level": "kyu2",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "katate-ryote-tori", "kote-hineri-sankyo"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-katate-ryote-tori-kote-mawashi-nikyo",
+    "slug": "katate-ryote-tori-kote-mawashi-nikyo",
+    "name": {
+      "en": "Katate-ryōte-tori Kote-mawashi (nikyo)",
+      "de": "Katate-ryōte-tori Kote-mawashi (nikyo)"
+    },
+    "category": "control",
+    "attack": "katate-ryote-tori",
+    "weapon": "empty-hand",
+    "level": "kyu3",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "katate-ryote-tori", "kote-mawashi-nikyo"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-katate-ryote-tori-shiho-nage",
+    "slug": "katate-ryote-tori-shiho-nage",
+    "name": { "en": "Katate-ryōte-tori Shiho-nage", "de": "Katate-ryōte-tori Shiho-nage" },
+    "category": "throw",
+    "attack": "katate-ryote-tori",
+    "weapon": "empty-hand",
+    "level": "kyu5",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "katate-ryote-tori", "shiho-nage"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-katate-ryote-tori-tekubi-osae-yonkyo",
+    "slug": "katate-ryote-tori-tekubi-osae-yonkyo",
+    "name": {
+      "en": "Katate-ryōte-tori Tekubi-osae (yonkyo)",
+      "de": "Katate-ryōte-tori Tekubi-osae (yonkyo)"
+    },
+    "category": "control",
+    "attack": "katate-ryote-tori",
+    "weapon": "empty-hand",
+    "level": "kyu1",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "katate-ryote-tori", "tekubi-osae-yonkyo"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-katate-ryote-tori-ude-kime-nage",
+    "slug": "katate-ryote-tori-ude-kime-nage",
+    "name": { "en": "Katate-ryōte-tori Ude-kime-nage", "de": "Katate-ryōte-tori Ude-kime-nage" },
+    "category": "throw",
+    "attack": "katate-ryote-tori",
+    "weapon": "empty-hand",
+    "level": "dan1",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "katate-ryote-tori", "ude-kime-nage"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-katate-ryote-tori-ude-osae-ikkyo",
+    "slug": "katate-ryote-tori-ude-osae-ikkyo",
+    "name": {
+      "en": "Katate-ryōte-tori Ude-osae (ikkyo)",
+      "de": "Katate-ryōte-tori Ude-osae (ikkyo)"
+    },
+    "category": "control",
+    "attack": "katate-ryote-tori",
+    "weapon": "empty-hand",
+    "level": "kyu5",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "katate-ryote-tori", "ude-osae-ikkyo"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
     "id": "t-irn-katatetori",
     "slug": "katate-tori-irimi-nage",
     "name": { "en": "Katate-tori Irimi-nage", "de": "Katate-tori Irimi-nage" },
@@ -433,6 +661,57 @@
     ]
   },
   {
+    "id": "t-exam-katate-tori-kaiten-nage-uchi",
+    "slug": "katate-tori-kaiten-nage-uchi",
+    "name": { "en": "Katate-tori Kaiten-nage (uchi)", "de": "Katate-tori Kaiten-nage (uchi)" },
+    "category": "throw",
+    "attack": "katate-tori",
+    "weapon": "empty-hand",
+    "level": "kyu4",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "katate-tori", "kaiten-nage-uchi"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-katate-tori-koshi-nage-kote-hineri",
+    "slug": "katate-tori-koshi-nage-kote-hineri",
+    "name": {
+      "en": "Katate-tori Koshi-nage-kote-hineri",
+      "de": "Katate-tori Koshi-nage-kote-hineri"
+    },
+    "category": "throw",
+    "attack": "katate-tori",
+    "weapon": "empty-hand",
+    "level": "kyu1",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "katate-tori", "koshi-nage-kote-hineri"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
     "id": "t-ktg-katatetori",
     "slug": "katate-tori-kote-gaeshi",
     "name": { "en": "Katate-tori Kote-gaeshi", "de": "Katate-tori Kote-gaeshi" },
@@ -598,6 +877,54 @@
           "en": "This is the classical tenkan (ura) form of kote-gaeshi from ai-hanmi katate-tori. Instead of entering forward, tori pivots off the line, blending with uke's pulling energy and redirecting it into a spiral. The balance breaks through rotation, not collision. It embodies the principle of tenkan — yielding while maintaining control — and teaches how to use circular motion to transform attack into harmony.",
           "de": "Dies ist die klassische Tenkan-Variante von Kote-gaeshi aus Ai-hanmi Katate-tori. Statt nach vorn zu gehen, weichst du mit einer Drehung aus, nimmst Ukes Energie auf und leitest sie spiralförmig um. Das Gleichgewicht wird durch Rotation, nicht durch Kraft gebrochen. Sie zeigt das Prinzip des Tenkan – Nachgeben ohne Aufgeben – und wie kreisförmige Bewegung einen Angriff harmonisch neutralisiert."
         }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-katate-tori-kote-hineri-sankyo",
+    "slug": "katate-tori-kote-hineri-sankyo",
+    "name": { "en": "Katate-tori Kote-hineri (sankyo)", "de": "Katate-tori Kote-hineri (sankyo)" },
+    "category": "control",
+    "attack": "katate-tori",
+    "weapon": "empty-hand",
+    "level": "kyu2",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "katate-tori", "kote-hineri-sankyo"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-katate-tori-kote-mawashi-nikyo",
+    "slug": "katate-tori-kote-mawashi-nikyo",
+    "name": { "en": "Katate-tori Kote-mawashi (nikyo)", "de": "Katate-tori Kote-mawashi (nikyo)" },
+    "category": "control",
+    "attack": "katate-tori",
+    "weapon": "empty-hand",
+    "level": "kyu3",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "katate-tori", "kote-mawashi-nikyo"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
       }
     ]
   },
@@ -1078,6 +1405,105 @@
     ]
   },
   {
+    "id": "t-exam-katate-tori-tekubi-osae-yonkyo",
+    "slug": "katate-tori-tekubi-osae-yonkyo",
+    "name": { "en": "Katate-tori Tekubi-osae (yonkyo)", "de": "Katate-tori Tekubi-osae (yonkyo)" },
+    "category": "control",
+    "attack": "katate-tori",
+    "weapon": "empty-hand",
+    "level": "kyu1",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "katate-tori", "tekubi-osae-yonkyo"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-katate-tori-ude-garami",
+    "slug": "katate-tori-ude-garami",
+    "name": { "en": "Katate-tori Ude-garami", "de": "Katate-tori Ude-garami" },
+    "category": "control",
+    "attack": "katate-tori",
+    "weapon": "empty-hand",
+    "level": "dan1",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "katate-tori", "ude-garami"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-katate-tori-ude-kime-osae-rokkyo",
+    "slug": "katate-tori-ude-kime-osae-rokkyo",
+    "name": {
+      "en": "Katate-tori Ude-kime-osae (rokkyo)",
+      "de": "Katate-tori Ude-kime-osae (rokkyo)"
+    },
+    "category": "control",
+    "attack": "katate-tori",
+    "weapon": "empty-hand",
+    "level": "dan1",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "katate-tori", "ude-kime-osae-rokkyo"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-katate-tori-ude-nobashi",
+    "slug": "katate-tori-ude-nobashi",
+    "name": { "en": "Katate-tori Ude-nobashi (gokyo)", "de": "Katate-tori Ude-nobashi (gokyo)" },
+    "category": "control",
+    "attack": "katate-tori",
+    "weapon": "empty-hand",
+    "level": "kyu1",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "katate-tori", "ude-nobashi"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
     "id": "t-uds-katatetori",
     "slug": "katate-tori-ude-osae-ikkyo",
     "name": { "en": "Katate-tori Ude-osae (Ikkyo)", "de": "Katate-tori Ude-osae (Ikkyo)" },
@@ -1269,6 +1695,198 @@
     ]
   },
   {
+    "id": "t-exam-mune-tori-koshi-nage",
+    "slug": "mune-tori-koshi-nage",
+    "name": { "en": "Mune-tori Koshi-nage", "de": "Mune-tori Koshi-nage" },
+    "category": "throw",
+    "attack": "mune-tori",
+    "weapon": "empty-hand",
+    "level": "kyu2",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "mune-tori", "koshi-nage"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-mune-tori-kote-hineri-sankyo",
+    "slug": "mune-tori-kote-hineri-sankyo",
+    "name": { "en": "Mune-tori Kote-hineri (sankyo)", "de": "Mune-tori Kote-hineri (sankyo)" },
+    "category": "control",
+    "attack": "mune-tori",
+    "weapon": "empty-hand",
+    "level": "kyu2",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "mune-tori", "kote-hineri-sankyo"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-mune-tori-kote-mawashi-nikyo",
+    "slug": "mune-tori-kote-mawashi-nikyo",
+    "name": { "en": "Mune-tori Kote-mawashi (nikyo)", "de": "Mune-tori Kote-mawashi (nikyo)" },
+    "category": "control",
+    "attack": "mune-tori",
+    "weapon": "empty-hand",
+    "level": "kyu3",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "mune-tori", "kote-mawashi-nikyo"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-mune-tori-shiho-nage",
+    "slug": "mune-tori-shiho-nage",
+    "name": { "en": "Mune-tori Shiho-nage", "de": "Mune-tori Shiho-nage" },
+    "category": "throw",
+    "attack": "mune-tori",
+    "weapon": "empty-hand",
+    "level": "kyu5",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "mune-tori", "shiho-nage"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-mune-tori-tekubi-osae-yonkyo",
+    "slug": "mune-tori-tekubi-osae-yonkyo",
+    "name": { "en": "Mune-tori Tekubi-osae (yonkyo)", "de": "Mune-tori Tekubi-osae (yonkyo)" },
+    "category": "control",
+    "attack": "mune-tori",
+    "weapon": "empty-hand",
+    "level": "kyu1",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "mune-tori", "tekubi-osae-yonkyo"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-mune-tori-ude-osae-ikkyo",
+    "slug": "mune-tori-ude-osae-ikkyo",
+    "name": { "en": "Mune-tori Ude-osae (ikkyo)", "de": "Mune-tori Ude-osae (ikkyo)" },
+    "category": "control",
+    "attack": "mune-tori",
+    "weapon": "empty-hand",
+    "level": "kyu5",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "mune-tori", "ude-osae-ikkyo"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-ryote-tori-irimi-nage",
+    "slug": "ryote-tori-irimi-nage",
+    "name": { "en": "Ryōte-tori Irimi-nage", "de": "Ryōte-tori Irimi-nage" },
+    "category": "throw",
+    "attack": "ryote-tori",
+    "weapon": "empty-hand",
+    "level": "kyu4",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "ryote-tori", "irimi-nage"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-ryote-tori-kokyu-nage",
+    "slug": "ryote-tori-kokyu-nage",
+    "name": { "en": "Ryōte-tori Kokyu-nage", "de": "Ryōte-tori Kokyu-nage" },
+    "category": "throw",
+    "attack": "ryote-tori",
+    "weapon": "empty-hand",
+    "level": "dan1",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "ryote-tori", "kokyu-nage"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
     "id": "t-ksn-ryotetori",
     "slug": "ryote-tori-koshi-nage",
     "name": { "en": "Ryote-tori Koshi-nage", "de": "Ryote-tori Koshi-nage" },
@@ -1422,6 +2040,1843 @@
             "url": "https://www.youtube-nocookie.com/embed/8EzPsCrFMyg?si=86FatcLB2iH_ruhV"
           }
         ]
+      }
+    ]
+  },
+  {
+    "id": "t-exam-ryote-tori-kote-gaeshi",
+    "slug": "ryote-tori-kote-gaeshi",
+    "name": { "en": "Ryōte-tori Kote-gaeshi", "de": "Ryōte-tori Kote-gaeshi" },
+    "category": "throw",
+    "attack": "ryote-tori",
+    "weapon": "empty-hand",
+    "level": "kyu1",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "ryote-tori", "kote-gaeshi"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-ryote-tori-kote-hineri-sankyo",
+    "slug": "ryote-tori-kote-hineri-sankyo",
+    "name": { "en": "Ryōte-tori Kote-hineri (sankyo)", "de": "Ryōte-tori Kote-hineri (sankyo)" },
+    "category": "control",
+    "attack": "ryote-tori",
+    "weapon": "empty-hand",
+    "level": "kyu2",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "ryote-tori", "kote-hineri-sankyo"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-ryote-tori-kote-mawashi-nikyo",
+    "slug": "ryote-tori-kote-mawashi-nikyo",
+    "name": { "en": "Ryōte-tori Kote-mawashi (nikyo)", "de": "Ryōte-tori Kote-mawashi (nikyo)" },
+    "category": "control",
+    "attack": "ryote-tori",
+    "weapon": "empty-hand",
+    "level": "kyu3",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "ryote-tori", "kote-mawashi-nikyo"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-ryote-tori-shiho-nage",
+    "slug": "ryote-tori-shiho-nage",
+    "name": { "en": "Ryōte-tori Shiho-nage", "de": "Ryōte-tori Shiho-nage" },
+    "category": "throw",
+    "attack": "ryote-tori",
+    "weapon": "empty-hand",
+    "level": "kyu5",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "ryote-tori", "shiho-nage"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-ryote-tori-sumi-otoshi",
+    "slug": "ryote-tori-sumi-otoshi",
+    "name": { "en": "Ryōte-tori Sumi-otoshi", "de": "Ryōte-tori Sumi-otoshi" },
+    "category": "throw",
+    "attack": "ryote-tori",
+    "weapon": "empty-hand",
+    "level": "dan1",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "ryote-tori", "sumi-otoshi"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-ryote-tori-tekubi-osae-yonkyo",
+    "slug": "ryote-tori-tekubi-osae-yonkyo",
+    "name": { "en": "Ryōte-tori Tekubi-osae (yonkyo)", "de": "Ryōte-tori Tekubi-osae (yonkyo)" },
+    "category": "control",
+    "attack": "ryote-tori",
+    "weapon": "empty-hand",
+    "level": "kyu1",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "ryote-tori", "tekubi-osae-yonkyo"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-ryote-tori-tenchi-nage",
+    "slug": "ryote-tori-tenchi-nage",
+    "name": { "en": "Ryōte-tori Tenchi-nage", "de": "Ryōte-tori Tenchi-nage" },
+    "category": "throw",
+    "attack": "ryote-tori",
+    "weapon": "empty-hand",
+    "level": "dan1",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "ryote-tori", "tenchi-nage"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-ryote-tori-ude-osae-ikkyo",
+    "slug": "ryote-tori-ude-osae-ikkyo",
+    "name": { "en": "Ryōte-tori Ude-osae (ikkyo)", "de": "Ryōte-tori Ude-osae (ikkyo)" },
+    "category": "control",
+    "attack": "ryote-tori",
+    "weapon": "empty-hand",
+    "level": "kyu5",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "ryote-tori", "ude-osae-ikkyo"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-shomen-tsuki-irimi-nage",
+    "slug": "shomen-tsuki-irimi-nage",
+    "name": { "en": "Shōmen-tsuki Irimi-nage", "de": "Shōmen-tsuki Irimi-nage" },
+    "category": "throw",
+    "attack": "shomen-tsuki",
+    "weapon": "empty-hand",
+    "level": "kyu3",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "shomen-tsuki", "irimi-nage"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-shomen-tsuki-kaiten-nage-soto",
+    "slug": "shomen-tsuki-kaiten-nage-soto",
+    "name": { "en": "Shōmen-tsuki Kaiten-nage (soto)", "de": "Shōmen-tsuki Kaiten-nage (soto)" },
+    "category": "throw",
+    "attack": "shomen-tsuki",
+    "weapon": "empty-hand",
+    "level": "kyu3",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "shomen-tsuki", "kaiten-nage-soto"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-shomen-tsuki-kaiten-nage-uchi",
+    "slug": "shomen-tsuki-kaiten-nage-uchi",
+    "name": { "en": "Shōmen-tsuki Kaiten-nage (uchi)", "de": "Shōmen-tsuki Kaiten-nage (uchi)" },
+    "category": "throw",
+    "attack": "shomen-tsuki",
+    "weapon": "empty-hand",
+    "level": "kyu4",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "shomen-tsuki", "kaiten-nage-uchi"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-shomen-tsuki-koshi-nage",
+    "slug": "shomen-tsuki-koshi-nage",
+    "name": { "en": "Shōmen-tsuki Koshi-nage", "de": "Shōmen-tsuki Koshi-nage" },
+    "category": "throw",
+    "attack": "shomen-tsuki",
+    "weapon": "empty-hand",
+    "level": "kyu2",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "shomen-tsuki", "koshi-nage"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-shomen-tsuki-kote-gaeshi",
+    "slug": "shomen-tsuki-kote-gaeshi",
+    "name": { "en": "Shōmen-tsuki Kote-gaeshi", "de": "Shōmen-tsuki Kote-gaeshi" },
+    "category": "throw",
+    "attack": "shomen-tsuki",
+    "weapon": "empty-hand",
+    "level": "kyu1",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "shomen-tsuki", "kote-gaeshi"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-shomen-tsuki-kote-hineri-sankyo",
+    "slug": "shomen-tsuki-kote-hineri-sankyo",
+    "name": {
+      "en": "Shōmen-tsuki Kote-hineri (sankyo)",
+      "de": "Shōmen-tsuki Kote-hineri (sankyo)"
+    },
+    "category": "control",
+    "attack": "shomen-tsuki",
+    "weapon": "empty-hand",
+    "level": "kyu2",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "shomen-tsuki", "kote-hineri-sankyo"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-shomen-tsuki-kote-mawashi-nikyo",
+    "slug": "shomen-tsuki-kote-mawashi-nikyo",
+    "name": {
+      "en": "Shōmen-tsuki Kote-mawashi (nikyo)",
+      "de": "Shōmen-tsuki Kote-mawashi (nikyo)"
+    },
+    "category": "control",
+    "attack": "shomen-tsuki",
+    "weapon": "empty-hand",
+    "level": "kyu3",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "shomen-tsuki", "kote-mawashi-nikyo"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-shomen-tsuki-tekubi-osae-yonkyo",
+    "slug": "shomen-tsuki-tekubi-osae-yonkyo",
+    "name": {
+      "en": "Shōmen-tsuki Tekubi-osae (yonkyo)",
+      "de": "Shōmen-tsuki Tekubi-osae (yonkyo)"
+    },
+    "category": "control",
+    "attack": "shomen-tsuki",
+    "weapon": "empty-hand",
+    "level": "kyu1",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "shomen-tsuki", "tekubi-osae-yonkyo"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-shomen-tsuki-tenchi-nage",
+    "slug": "shomen-tsuki-tenchi-nage",
+    "name": { "en": "Shōmen-tsuki Tenchi-nage", "de": "Shōmen-tsuki Tenchi-nage" },
+    "category": "throw",
+    "attack": "shomen-tsuki",
+    "weapon": "empty-hand",
+    "level": "dan1",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "shomen-tsuki", "tenchi-nage"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-shomen-tsuki-ude-kime-nage",
+    "slug": "shomen-tsuki-ude-kime-nage",
+    "name": { "en": "Shōmen-tsuki Ude-kime-nage", "de": "Shōmen-tsuki Ude-kime-nage" },
+    "category": "throw",
+    "attack": "shomen-tsuki",
+    "weapon": "empty-hand",
+    "level": "dan1",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "shomen-tsuki", "ude-kime-nage"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-shomen-tsuki-ude-kime-osae-rokkyo",
+    "slug": "shomen-tsuki-ude-kime-osae-rokkyo",
+    "name": {
+      "en": "Shōmen-tsuki Ude-kime-osae (rokkyo)",
+      "de": "Shōmen-tsuki Ude-kime-osae (rokkyo)"
+    },
+    "category": "control",
+    "attack": "shomen-tsuki",
+    "weapon": "empty-hand",
+    "level": "dan1",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "shomen-tsuki", "ude-kime-osae-rokkyo"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-shomen-tsuki-ude-osae-ikkyo",
+    "slug": "shomen-tsuki-ude-osae-ikkyo",
+    "name": { "en": "Shōmen-tsuki Ude-osae (ikkyo)", "de": "Shōmen-tsuki Ude-osae (ikkyo)" },
+    "category": "control",
+    "attack": "shomen-tsuki",
+    "weapon": "empty-hand",
+    "level": "kyu4",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "shomen-tsuki", "ude-osae-ikkyo"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-shomen-uchi-irimi-nage",
+    "slug": "shomen-uchi-irimi-nage",
+    "name": { "en": "Shōmen-uchi Irimi-nage", "de": "Shōmen-uchi Irimi-nage" },
+    "category": "throw",
+    "attack": "shomen-uchi",
+    "weapon": "empty-hand",
+    "level": "kyu3",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "shomen-uchi", "irimi-nage"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-shomen-uchi-kaiten-nage-soto",
+    "slug": "shomen-uchi-kaiten-nage-soto",
+    "name": { "en": "Shōmen-uchi Kaiten-nage (soto)", "de": "Shōmen-uchi Kaiten-nage (soto)" },
+    "category": "throw",
+    "attack": "shomen-uchi",
+    "weapon": "empty-hand",
+    "level": "kyu3",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "shomen-uchi", "kaiten-nage-soto"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-shomen-uchi-kaiten-nage-uchi",
+    "slug": "shomen-uchi-kaiten-nage-uchi",
+    "name": { "en": "Shōmen-uchi Kaiten-nage (uchi)", "de": "Shōmen-uchi Kaiten-nage (uchi)" },
+    "category": "throw",
+    "attack": "shomen-uchi",
+    "weapon": "empty-hand",
+    "level": "kyu4",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "shomen-uchi", "kaiten-nage-uchi"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-shomen-uchi-koshi-nage",
+    "slug": "shomen-uchi-koshi-nage",
+    "name": { "en": "Shōmen-uchi Koshi-nage", "de": "Shōmen-uchi Koshi-nage" },
+    "category": "throw",
+    "attack": "shomen-uchi",
+    "weapon": "empty-hand",
+    "level": "kyu2",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "shomen-uchi", "koshi-nage"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-shomen-uchi-kote-gaeshi",
+    "slug": "shomen-uchi-kote-gaeshi",
+    "name": { "en": "Shōmen-uchi Kote-gaeshi", "de": "Shōmen-uchi Kote-gaeshi" },
+    "category": "throw",
+    "attack": "shomen-uchi",
+    "weapon": "empty-hand",
+    "level": "kyu1",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "shomen-uchi", "kote-gaeshi"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-shomen-uchi-kote-hineri-sankyo",
+    "slug": "shomen-uchi-kote-hineri-sankyo",
+    "name": { "en": "Shōmen-uchi Kote-hineri (sankyo)", "de": "Shōmen-uchi Kote-hineri (sankyo)" },
+    "category": "control",
+    "attack": "shomen-uchi",
+    "weapon": "empty-hand",
+    "level": "kyu2",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "shomen-uchi", "kote-hineri-sankyo"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-shomen-uchi-kote-mawashi-nikyo",
+    "slug": "shomen-uchi-kote-mawashi-nikyo",
+    "name": { "en": "Shōmen-uchi Kote-mawashi (nikyo)", "de": "Shōmen-uchi Kote-mawashi (nikyo)" },
+    "category": "control",
+    "attack": "shomen-uchi",
+    "weapon": "empty-hand",
+    "level": "kyu3",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "shomen-uchi", "kote-mawashi-nikyo"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-shomen-uchi-tekubi-osae-yonkyo",
+    "slug": "shomen-uchi-tekubi-osae-yonkyo",
+    "name": { "en": "Shōmen-uchi Tekubi-osae (yonkyo)", "de": "Shōmen-uchi Tekubi-osae (yonkyo)" },
+    "category": "control",
+    "attack": "shomen-uchi",
+    "weapon": "empty-hand",
+    "level": "kyu1",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "shomen-uchi", "tekubi-osae-yonkyo"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-shomen-uchi-ude-garami",
+    "slug": "shomen-uchi-ude-garami",
+    "name": { "en": "Shōmen-uchi Ude-garami", "de": "Shōmen-uchi Ude-garami" },
+    "category": "control",
+    "attack": "shomen-uchi",
+    "weapon": "empty-hand",
+    "level": "dan1",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "shomen-uchi", "ude-garami"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-shomen-uchi-ude-osae-ikkyo",
+    "slug": "shomen-uchi-ude-osae-ikkyo",
+    "name": { "en": "Shōmen-uchi Ude-osae (ikkyo)", "de": "Shōmen-uchi Ude-osae (ikkyo)" },
+    "category": "control",
+    "attack": "shomen-uchi",
+    "weapon": "empty-hand",
+    "level": "kyu4",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "shomen-uchi", "ude-osae-ikkyo"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-ushiro-eri-tori-kote-hineri-sankyo",
+    "slug": "ushiro-eri-tori-kote-hineri-sankyo",
+    "name": {
+      "en": "Ushiro-eri-tori Kote-hineri (sankyo)",
+      "de": "Ushiro-eri-tori Kote-hineri (sankyo)"
+    },
+    "category": "control",
+    "attack": "ushiro-eri-tori",
+    "weapon": "empty-hand",
+    "level": "kyu2",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "ushiro-eri-tori", "kote-hineri-sankyo"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-ushiro-eri-tori-kote-mawashi-nikyo",
+    "slug": "ushiro-eri-tori-kote-mawashi-nikyo",
+    "name": {
+      "en": "Ushiro-eri-tori Kote-mawashi (nikyo)",
+      "de": "Ushiro-eri-tori Kote-mawashi (nikyo)"
+    },
+    "category": "control",
+    "attack": "ushiro-eri-tori",
+    "weapon": "empty-hand",
+    "level": "kyu3",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "ushiro-eri-tori", "kote-mawashi-nikyo"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-ushiro-eri-tori-tekubi-osae-yonkyo",
+    "slug": "ushiro-eri-tori-tekubi-osae-yonkyo",
+    "name": {
+      "en": "Ushiro-eri-tori Tekubi-osae (yonkyo)",
+      "de": "Ushiro-eri-tori Tekubi-osae (yonkyo)"
+    },
+    "category": "control",
+    "attack": "ushiro-eri-tori",
+    "weapon": "empty-hand",
+    "level": "kyu1",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "ushiro-eri-tori", "tekubi-osae-yonkyo"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-ushiro-eri-tori-ude-osae-ikkyo",
+    "slug": "ushiro-eri-tori-ude-osae-ikkyo",
+    "name": { "en": "Ushiro-eri-tori Ude-osae (ikkyo)", "de": "Ushiro-eri-tori Ude-osae (ikkyo)" },
+    "category": "control",
+    "attack": "ushiro-eri-tori",
+    "weapon": "empty-hand",
+    "level": "kyu4",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "ushiro-eri-tori", "ude-osae-ikkyo"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-ushiro-kakae-tori-aiki-otoshi",
+    "slug": "ushiro-kakae-tori-aiki-otoshi",
+    "name": { "en": "Ushiro-kakae-tori Aiki-otoshi", "de": "Ushiro-kakae-tori Aiki-otoshi" },
+    "category": "throw",
+    "attack": "ushiro-kakae-tori",
+    "weapon": "empty-hand",
+    "level": "kyu2",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "ushiro-kakae-tori", "aiki-otoshi"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-ushiro-kakae-tori-kokyu-nage",
+    "slug": "ushiro-kakae-tori-kokyu-nage",
+    "name": { "en": "Ushiro-kakae-tori Kokyu-nage", "de": "Ushiro-kakae-tori Kokyu-nage" },
+    "category": "throw",
+    "attack": "ushiro-kakae-tori",
+    "weapon": "empty-hand",
+    "level": "dan1",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "ushiro-kakae-tori", "kokyu-nage"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-ushiro-kakae-tori-kote-hineri-sankyo",
+    "slug": "ushiro-kakae-tori-kote-hineri-sankyo",
+    "name": {
+      "en": "Ushiro-kakae-tori Kote-hineri (sankyo)",
+      "de": "Ushiro-kakae-tori Kote-hineri (sankyo)"
+    },
+    "category": "control",
+    "attack": "ushiro-kakae-tori",
+    "weapon": "empty-hand",
+    "level": "kyu2",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "ushiro-kakae-tori", "kote-hineri-sankyo"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-ushiro-kakae-tori-kote-mawashi-nikyo",
+    "slug": "ushiro-kakae-tori-kote-mawashi-nikyo",
+    "name": {
+      "en": "Ushiro-kakae-tori Kote-mawashi (nikyo)",
+      "de": "Ushiro-kakae-tori Kote-mawashi (nikyo)"
+    },
+    "category": "control",
+    "attack": "ushiro-kakae-tori",
+    "weapon": "empty-hand",
+    "level": "kyu3",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "ushiro-kakae-tori", "kote-mawashi-nikyo"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-ushiro-kakae-tori-tekubi-osae-yonkyo",
+    "slug": "ushiro-kakae-tori-tekubi-osae-yonkyo",
+    "name": {
+      "en": "Ushiro-kakae-tori Tekubi-osae (yonkyo)",
+      "de": "Ushiro-kakae-tori Tekubi-osae (yonkyo)"
+    },
+    "category": "control",
+    "attack": "ushiro-kakae-tori",
+    "weapon": "empty-hand",
+    "level": "kyu1",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "ushiro-kakae-tori", "tekubi-osae-yonkyo"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-ushiro-kakae-tori-ude-osae-ikkyo",
+    "slug": "ushiro-kakae-tori-ude-osae-ikkyo",
+    "name": {
+      "en": "Ushiro-kakae-tori Ude-osae (ikkyo)",
+      "de": "Ushiro-kakae-tori Ude-osae (ikkyo)"
+    },
+    "category": "control",
+    "attack": "ushiro-kakae-tori",
+    "weapon": "empty-hand",
+    "level": "kyu4",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "ushiro-kakae-tori", "ude-osae-ikkyo"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-ushiro-katate-tori-kubi-shime-juji-garami",
+    "slug": "ushiro-katate-tori-kubi-shime-juji-garami",
+    "name": {
+      "en": "Ushiro-katate-tori / kubi-shime Juji-garami",
+      "de": "Ushiro-katate-tori / kubi-shime Juji-garami"
+    },
+    "category": "throw",
+    "attack": "ushiro-katate-tori-kubi-shime",
+    "weapon": "empty-hand",
+    "level": "kyu1",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": [
+      "exam-program",
+      "german-aikido-federation",
+      "ushiro-katate-tori-kubi-shime",
+      "juji-garami"
+    ],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-ushiro-katate-tori-kubi-shime-koshi-nage",
+    "slug": "ushiro-katate-tori-kubi-shime-koshi-nage",
+    "name": {
+      "en": "Ushiro-katate-tori / kubi-shime Koshi-nage",
+      "de": "Ushiro-katate-tori / kubi-shime Koshi-nage"
+    },
+    "category": "throw",
+    "attack": "ushiro-katate-tori-kubi-shime",
+    "weapon": "empty-hand",
+    "level": "kyu2",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": [
+      "exam-program",
+      "german-aikido-federation",
+      "ushiro-katate-tori-kubi-shime",
+      "koshi-nage"
+    ],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-ushiro-katate-tori-kubi-shime-kote-hineri-sankyo",
+    "slug": "ushiro-katate-tori-kubi-shime-kote-hineri-sankyo",
+    "name": {
+      "en": "Ushiro-katate-tori / kubi-shime Kote-hineri (sankyo)",
+      "de": "Ushiro-katate-tori / kubi-shime Kote-hineri (sankyo)"
+    },
+    "category": "control",
+    "attack": "ushiro-katate-tori-kubi-shime",
+    "weapon": "empty-hand",
+    "level": "kyu2",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": [
+      "exam-program",
+      "german-aikido-federation",
+      "ushiro-katate-tori-kubi-shime",
+      "kote-hineri-sankyo"
+    ],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-ushiro-katate-tori-kubi-shime-kote-mawashi-nikyo",
+    "slug": "ushiro-katate-tori-kubi-shime-kote-mawashi-nikyo",
+    "name": {
+      "en": "Ushiro-katate-tori / kubi-shime Kote-mawashi (nikyo)",
+      "de": "Ushiro-katate-tori / kubi-shime Kote-mawashi (nikyo)"
+    },
+    "category": "control",
+    "attack": "ushiro-katate-tori-kubi-shime",
+    "weapon": "empty-hand",
+    "level": "kyu3",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": [
+      "exam-program",
+      "german-aikido-federation",
+      "ushiro-katate-tori-kubi-shime",
+      "kote-mawashi-nikyo"
+    ],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-ushiro-katate-tori-kubi-shime-tekubi-osae-yonkyo",
+    "slug": "ushiro-katate-tori-kubi-shime-tekubi-osae-yonkyo",
+    "name": {
+      "en": "Ushiro-katate-tori / kubi-shime Tekubi-osae (yonkyo)",
+      "de": "Ushiro-katate-tori / kubi-shime Tekubi-osae (yonkyo)"
+    },
+    "category": "control",
+    "attack": "ushiro-katate-tori-kubi-shime",
+    "weapon": "empty-hand",
+    "level": "kyu1",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": [
+      "exam-program",
+      "german-aikido-federation",
+      "ushiro-katate-tori-kubi-shime",
+      "tekubi-osae-yonkyo"
+    ],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-ushiro-katate-tori-kubi-shime-ude-osae-ikkyo",
+    "slug": "ushiro-katate-tori-kubi-shime-ude-osae-ikkyo",
+    "name": {
+      "en": "Ushiro-katate-tori / kubi-shime Ude-osae (ikkyo)",
+      "de": "Ushiro-katate-tori / kubi-shime Ude-osae (ikkyo)"
+    },
+    "category": "control",
+    "attack": "ushiro-katate-tori-kubi-shime",
+    "weapon": "empty-hand",
+    "level": "kyu4",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": [
+      "exam-program",
+      "german-aikido-federation",
+      "ushiro-katate-tori-kubi-shime",
+      "ude-osae-ikkyo"
+    ],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-ushiro-kubi-shime-koshi-nage",
+    "slug": "ushiro-kubi-shime-koshi-nage",
+    "name": { "en": "Ushiro-kubi-shime Koshi-nage", "de": "Ushiro-kubi-shime Koshi-nage" },
+    "category": "throw",
+    "attack": "ushiro-kubi-shime",
+    "weapon": "empty-hand",
+    "level": "kyu2",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "ushiro-kubi-shime", "koshi-nage"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-ushiro-ryokata-tori-aiki-otoshi",
+    "slug": "ushiro-ryokata-tori-aiki-otoshi",
+    "name": { "en": "Ushiro-ryokata-tori Aiki-otoshi", "de": "Ushiro-ryokata-tori Aiki-otoshi" },
+    "category": "throw",
+    "attack": "ushiro-ryokata-tori",
+    "weapon": "empty-hand",
+    "level": "kyu2",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "ushiro-ryokata-tori", "aiki-otoshi"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-ushiro-ryokata-tori-kokyu-nage",
+    "slug": "ushiro-ryokata-tori-kokyu-nage",
+    "name": { "en": "Ushiro-ryokata-tori Kokyu-nage", "de": "Ushiro-ryokata-tori Kokyu-nage" },
+    "category": "throw",
+    "attack": "ushiro-ryokata-tori",
+    "weapon": "empty-hand",
+    "level": "dan1",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "ushiro-ryokata-tori", "kokyu-nage"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-ushiro-ryote-tori-irimi-nage",
+    "slug": "ushiro-ryote-tori-irimi-nage",
+    "name": { "en": "Ushiro-ryōte-tori Irimi-nage", "de": "Ushiro-ryōte-tori Irimi-nage" },
+    "category": "throw",
+    "attack": "ushiro-ryote-tori",
+    "weapon": "empty-hand",
+    "level": "kyu3",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "ushiro-ryote-tori", "irimi-nage"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-ushiro-ryote-tori-juji-garami",
+    "slug": "ushiro-ryote-tori-juji-garami",
+    "name": { "en": "Ushiro-ryōte-tori Juji-garami", "de": "Ushiro-ryōte-tori Juji-garami" },
+    "category": "throw",
+    "attack": "ushiro-ryote-tori",
+    "weapon": "empty-hand",
+    "level": "kyu1",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "ushiro-ryote-tori", "juji-garami"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-ushiro-ryote-tori-koshi-nage-hiji-garami",
+    "slug": "ushiro-ryote-tori-koshi-nage-hiji-garami",
+    "name": {
+      "en": "Ushiro-ryōte-tori Koshi-nage-hiji-garami",
+      "de": "Ushiro-ryōte-tori Koshi-nage-hiji-garami"
+    },
+    "category": "throw",
+    "attack": "ushiro-ryote-tori",
+    "weapon": "empty-hand",
+    "level": "kyu1",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": [
+      "exam-program",
+      "german-aikido-federation",
+      "ushiro-ryote-tori",
+      "koshi-nage-hiji-garami"
+    ],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-ushiro-ryote-tori-koshi-nage-kote-hineri",
+    "slug": "ushiro-ryote-tori-koshi-nage-kote-hineri",
+    "name": {
+      "en": "Ushiro-ryōte-tori Koshi-nage-kote-hineri",
+      "de": "Ushiro-ryōte-tori Koshi-nage-kote-hineri"
+    },
+    "category": "throw",
+    "attack": "ushiro-ryote-tori",
+    "weapon": "empty-hand",
+    "level": "kyu1",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": [
+      "exam-program",
+      "german-aikido-federation",
+      "ushiro-ryote-tori",
+      "koshi-nage-kote-hineri"
+    ],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-ushiro-ryote-tori-kote-gaeshi",
+    "slug": "ushiro-ryote-tori-kote-gaeshi",
+    "name": { "en": "Ushiro-ryōte-tori Kote-gaeshi", "de": "Ushiro-ryōte-tori Kote-gaeshi" },
+    "category": "throw",
+    "attack": "ushiro-ryote-tori",
+    "weapon": "empty-hand",
+    "level": "kyu1",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "ushiro-ryote-tori", "kote-gaeshi"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-ushiro-ryote-tori-shiho-nage",
+    "slug": "ushiro-ryote-tori-shiho-nage",
+    "name": { "en": "Ushiro-ryōte-tori Shiho-nage", "de": "Ushiro-ryōte-tori Shiho-nage" },
+    "category": "throw",
+    "attack": "ushiro-ryote-tori",
+    "weapon": "empty-hand",
+    "level": "kyu4",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "ushiro-ryote-tori", "shiho-nage"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-yoko-kubi-shime-aiki-otoshi",
+    "slug": "yoko-kubi-shime-aiki-otoshi",
+    "name": { "en": "Yoko-kubi-shime Aiki-otoshi", "de": "Yoko-kubi-shime Aiki-otoshi" },
+    "category": "throw",
+    "attack": "yoko-kubi-shime",
+    "weapon": "empty-hand",
+    "level": "kyu2",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "yoko-kubi-shime", "aiki-otoshi"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-yoko-kubi-shime-koshi-nage",
+    "slug": "yoko-kubi-shime-koshi-nage",
+    "name": { "en": "Yoko-kubi-shime Koshi-nage", "de": "Yoko-kubi-shime Koshi-nage" },
+    "category": "throw",
+    "attack": "yoko-kubi-shime",
+    "weapon": "empty-hand",
+    "level": "kyu2",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "yoko-kubi-shime", "koshi-nage"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-yoko-tsuki-soto-ude-garami",
+    "slug": "yoko-tsuki-soto-ude-garami",
+    "name": { "en": "Yoko-tsuki (soto) Ude-garami", "de": "Yoko-tsuki (soto) Ude-garami" },
+    "category": "control",
+    "attack": "yoko-tsuki-soto",
+    "weapon": "empty-hand",
+    "level": "dan1",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "yoko-tsuki-soto", "ude-garami"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-yokomen-uchi-irimi-nage",
+    "slug": "yokomen-uchi-irimi-nage",
+    "name": { "en": "Yokomen-uchi Irimi-nage", "de": "Yokomen-uchi Irimi-nage" },
+    "category": "throw",
+    "attack": "yokomen-uchi",
+    "weapon": "empty-hand",
+    "level": "kyu3",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "yokomen-uchi", "irimi-nage"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-yokomen-uchi-kaiten-nage-uchi",
+    "slug": "yokomen-uchi-kaiten-nage-uchi",
+    "name": { "en": "Yokomen-uchi Kaiten-nage (uchi)", "de": "Yokomen-uchi Kaiten-nage (uchi)" },
+    "category": "throw",
+    "attack": "yokomen-uchi",
+    "weapon": "empty-hand",
+    "level": "kyu4",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "yokomen-uchi", "kaiten-nage-uchi"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-yokomen-uchi-kokyu-nage",
+    "slug": "yokomen-uchi-kokyu-nage",
+    "name": { "en": "Yokomen-uchi Kokyu-nage", "de": "Yokomen-uchi Kokyu-nage" },
+    "category": "throw",
+    "attack": "yokomen-uchi",
+    "weapon": "empty-hand",
+    "level": "dan1",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "yokomen-uchi", "kokyu-nage"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-yokomen-uchi-koshi-nage",
+    "slug": "yokomen-uchi-koshi-nage",
+    "name": { "en": "Yokomen-uchi Koshi-nage", "de": "Yokomen-uchi Koshi-nage" },
+    "category": "throw",
+    "attack": "yokomen-uchi",
+    "weapon": "empty-hand",
+    "level": "kyu2",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "yokomen-uchi", "koshi-nage"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-yokomen-uchi-kote-gaeshi",
+    "slug": "yokomen-uchi-kote-gaeshi",
+    "name": { "en": "Yokomen-uchi Kote-gaeshi", "de": "Yokomen-uchi Kote-gaeshi" },
+    "category": "throw",
+    "attack": "yokomen-uchi",
+    "weapon": "empty-hand",
+    "level": "kyu1",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "yokomen-uchi", "kote-gaeshi"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-yokomen-uchi-kote-hineri-sankyo",
+    "slug": "yokomen-uchi-kote-hineri-sankyo",
+    "name": {
+      "en": "Yokomen-uchi Kote-hineri (sankyo)",
+      "de": "Yokomen-uchi Kote-hineri (sankyo)"
+    },
+    "category": "control",
+    "attack": "yokomen-uchi",
+    "weapon": "empty-hand",
+    "level": "kyu2",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "yokomen-uchi", "kote-hineri-sankyo"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-yokomen-uchi-kote-mawashi-nikyo",
+    "slug": "yokomen-uchi-kote-mawashi-nikyo",
+    "name": {
+      "en": "Yokomen-uchi Kote-mawashi (nikyo)",
+      "de": "Yokomen-uchi Kote-mawashi (nikyo)"
+    },
+    "category": "control",
+    "attack": "yokomen-uchi",
+    "weapon": "empty-hand",
+    "level": "kyu3",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "yokomen-uchi", "kote-mawashi-nikyo"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-yokomen-uchi-shiho-nage",
+    "slug": "yokomen-uchi-shiho-nage",
+    "name": { "en": "Yokomen-uchi Shiho-nage", "de": "Yokomen-uchi Shiho-nage" },
+    "category": "throw",
+    "attack": "yokomen-uchi",
+    "weapon": "empty-hand",
+    "level": "kyu4",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "yokomen-uchi", "shiho-nage"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-yokomen-uchi-tekubi-osae-yonkyo",
+    "slug": "yokomen-uchi-tekubi-osae-yonkyo",
+    "name": {
+      "en": "Yokomen-uchi Tekubi-osae (yonkyo)",
+      "de": "Yokomen-uchi Tekubi-osae (yonkyo)"
+    },
+    "category": "control",
+    "attack": "yokomen-uchi",
+    "weapon": "empty-hand",
+    "level": "kyu1",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "yokomen-uchi", "tekubi-osae-yonkyo"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-yokomen-uchi-tenchi-nage",
+    "slug": "yokomen-uchi-tenchi-nage",
+    "name": { "en": "Yokomen-uchi Tenchi-nage", "de": "Yokomen-uchi Tenchi-nage" },
+    "category": "throw",
+    "attack": "yokomen-uchi",
+    "weapon": "empty-hand",
+    "level": "dan1",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "yokomen-uchi", "tenchi-nage"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-yokomen-uchi-ude-kime-nage",
+    "slug": "yokomen-uchi-ude-kime-nage",
+    "name": { "en": "Yokomen-uchi Ude-kime-nage", "de": "Yokomen-uchi Ude-kime-nage" },
+    "category": "throw",
+    "attack": "yokomen-uchi",
+    "weapon": "empty-hand",
+    "level": "dan1",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "yokomen-uchi", "ude-kime-nage"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-yokomen-uchi-ude-kime-osae-rokkyo",
+    "slug": "yokomen-uchi-ude-kime-osae-rokkyo",
+    "name": {
+      "en": "Yokomen-uchi Ude-kime-osae (rokkyo)",
+      "de": "Yokomen-uchi Ude-kime-osae (rokkyo)"
+    },
+    "category": "control",
+    "attack": "yokomen-uchi",
+    "weapon": "empty-hand",
+    "level": "dan1",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "yokomen-uchi", "ude-kime-osae-rokkyo"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-yokomen-uchi-ude-nobashi",
+    "slug": "yokomen-uchi-ude-nobashi",
+    "name": { "en": "Yokomen-uchi Ude-nobashi (gokyo)", "de": "Yokomen-uchi Ude-nobashi (gokyo)" },
+    "category": "control",
+    "attack": "yokomen-uchi",
+    "weapon": "empty-hand",
+    "level": "kyu1",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "yokomen-uchi", "ude-nobashi"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
+      }
+    ]
+  },
+  {
+    "id": "t-exam-yokomen-uchi-ude-osae-ikkyo",
+    "slug": "yokomen-uchi-ude-osae-ikkyo",
+    "name": { "en": "Yokomen-uchi Ude-osae (ikkyo)", "de": "Yokomen-uchi Ude-osae (ikkyo)" },
+    "category": "control",
+    "attack": "yokomen-uchi",
+    "weapon": "empty-hand",
+    "level": "kyu4",
+    "summary": { "en": "Coming soon.", "de": "Kommt bald." },
+    "tags": ["exam-program", "german-aikido-federation", "yokomen-uchi", "ude-osae-ikkyo"],
+    "versions": [
+      {
+        "id": "v-base",
+        "hanmi": "ai-hanmi",
+        "stepsByEntry": { "irimi": { "en": ["Coming soon."], "de": ["Kommt bald."] } },
+        "uke": {
+          "role": { "en": "Coming soon.", "de": "Kommt bald." },
+          "notes": { "en": ["Coming soon."], "de": ["Kommt bald."] }
+        },
+        "commonMistakes": { "en": ["Coming soon."], "de": ["Kommt bald."] },
+        "context": { "en": "Coming soon.", "de": "Kommt bald." }
       }
     ]
   }

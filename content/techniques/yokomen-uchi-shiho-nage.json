@@ -1,0 +1,64 @@
+{
+  "id": "t-exam-yokomen-uchi-shiho-nage",
+  "slug": "yokomen-uchi-shiho-nage",
+  "name": {
+    "en": "Yokomen-uchi Shiho-nage",
+    "de": "Yokomen-uchi Shiho-nage"
+  },
+  "category": "throw",
+  "attack": "yokomen-uchi",
+  "weapon": "empty-hand",
+  "level": "kyu4",
+  "summary": {
+    "en": "Coming soon.",
+    "de": "Kommt bald."
+  },
+  "tags": [
+    "exam-program",
+    "german-aikido-federation",
+    "yokomen-uchi",
+    "shiho-nage"
+  ],
+  "versions": [
+    {
+      "id": "v-base",
+      "hanmi": "ai-hanmi",
+      "stepsByEntry": {
+        "irimi": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "uke": {
+        "role": {
+          "en": "Coming soon.",
+          "de": "Kommt bald."
+        },
+        "notes": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "commonMistakes": {
+        "en": [
+          "Coming soon."
+        ],
+        "de": [
+          "Kommt bald."
+        ]
+      },
+      "context": {
+        "en": "Coming soon.",
+        "de": "Kommt bald."
+      }
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "id": "t-exam-yokomen-uchi-ude-osae-ikkyo",
+  "slug": "yokomen-uchi-ude-osae-ikkyo",
+  "name": {
+    "en": "Yokomen-uchi Ude-osae (ikkyo)",
+    "de": "Yokomen-uchi Ude-osae (ikkyo)"
+  },
+  "category": "control",
+  "attack": "yokomen-uchi",
+  "weapon": "empty-hand",
+  "level": "kyu4",
+  "summary": {
+    "en": "Coming soon.",
+    "de": "Kommt bald."
+  },
+  "tags": [
+    "exam-program",
+    "german-aikido-federation",
+    "yokomen-uchi",
+    "ude-osae-ikkyo"
+  ],
+  "versions": [
+    {
+      "id": "v-base",
+      "hanmi": "ai-hanmi",
+      "stepsByEntry": {
+        "irimi": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "uke": {
+        "role": {
+          "en": "Coming soon.",
+          "de": "Kommt bald."
+        },
+        "notes": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "commonMistakes": {
+        "en": [
+          "Coming soon."
+        ],
+        "de": [
+          "Kommt bald."
+        ]
+      },
+      "context": {
+        "en": "Coming soon.",
+        "de": "Kommt bald."
+      }
+    }
+  ]
+}

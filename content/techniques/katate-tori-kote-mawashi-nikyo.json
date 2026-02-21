@@ -1,0 +1,64 @@
+{
+  "id": "t-exam-katate-tori-kote-mawashi-nikyo",
+  "slug": "katate-tori-kote-mawashi-nikyo",
+  "name": {
+    "en": "Katate-tori Kote-mawashi (nikyo)",
+    "de": "Katate-tori Kote-mawashi (nikyo)"
+  },
+  "category": "control",
+  "attack": "katate-tori",
+  "weapon": "empty-hand",
+  "level": "kyu3",
+  "summary": {
+    "en": "Coming soon.",
+    "de": "Kommt bald."
+  },
+  "tags": [
+    "exam-program",
+    "german-aikido-federation",
+    "katate-tori",
+    "kote-mawashi-nikyo"
+  ],
+  "versions": [
+    {
+      "id": "v-base",
+      "hanmi": "ai-hanmi",
+      "stepsByEntry": {
+        "irimi": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "uke": {
+        "role": {
+          "en": "Coming soon.",
+          "de": "Kommt bald."
+        },
+        "notes": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "commonMistakes": {
+        "en": [
+          "Coming soon."
+        ],
+        "de": [
+          "Kommt bald."
+        ]
+      },
+      "context": {
+        "en": "Coming soon.",
+        "de": "Kommt bald."
+      }
+    }
+  ]
+}

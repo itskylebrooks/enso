@@ -1,0 +1,64 @@
+{
+  "id": "t-exam-shomen-tsuki-kote-hineri-sankyo",
+  "slug": "shomen-tsuki-kote-hineri-sankyo",
+  "name": {
+    "en": "Shōmen-tsuki Kote-hineri (sankyo)",
+    "de": "Shōmen-tsuki Kote-hineri (sankyo)"
+  },
+  "category": "control",
+  "attack": "shomen-tsuki",
+  "weapon": "empty-hand",
+  "level": "kyu2",
+  "summary": {
+    "en": "Coming soon.",
+    "de": "Kommt bald."
+  },
+  "tags": [
+    "exam-program",
+    "german-aikido-federation",
+    "shomen-tsuki",
+    "kote-hineri-sankyo"
+  ],
+  "versions": [
+    {
+      "id": "v-base",
+      "hanmi": "ai-hanmi",
+      "stepsByEntry": {
+        "irimi": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "uke": {
+        "role": {
+          "en": "Coming soon.",
+          "de": "Kommt bald."
+        },
+        "notes": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "commonMistakes": {
+        "en": [
+          "Coming soon."
+        ],
+        "de": [
+          "Kommt bald."
+        ]
+      },
+      "context": {
+        "en": "Coming soon.",
+        "de": "Kommt bald."
+      }
+    }
+  ]
+}

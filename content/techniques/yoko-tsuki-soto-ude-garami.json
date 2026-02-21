@@ -1,0 +1,64 @@
+{
+  "id": "t-exam-yoko-tsuki-soto-ude-garami",
+  "slug": "yoko-tsuki-soto-ude-garami",
+  "name": {
+    "en": "Yoko-tsuki (soto) Ude-garami",
+    "de": "Yoko-tsuki (soto) Ude-garami"
+  },
+  "category": "control",
+  "attack": "yoko-tsuki-soto",
+  "weapon": "empty-hand",
+  "level": "dan1",
+  "summary": {
+    "en": "Coming soon.",
+    "de": "Kommt bald."
+  },
+  "tags": [
+    "exam-program",
+    "german-aikido-federation",
+    "yoko-tsuki-soto",
+    "ude-garami"
+  ],
+  "versions": [
+    {
+      "id": "v-base",
+      "hanmi": "ai-hanmi",
+      "stepsByEntry": {
+        "irimi": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "uke": {
+        "role": {
+          "en": "Coming soon.",
+          "de": "Kommt bald."
+        },
+        "notes": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "commonMistakes": {
+        "en": [
+          "Coming soon."
+        ],
+        "de": [
+          "Kommt bald."
+        ]
+      },
+      "context": {
+        "en": "Coming soon.",
+        "de": "Kommt bald."
+      }
+    }
+  ]
+}

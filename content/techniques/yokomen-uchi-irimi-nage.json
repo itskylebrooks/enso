@@ -1,0 +1,64 @@
+{
+  "id": "t-exam-yokomen-uchi-irimi-nage",
+  "slug": "yokomen-uchi-irimi-nage",
+  "name": {
+    "en": "Yokomen-uchi Irimi-nage",
+    "de": "Yokomen-uchi Irimi-nage"
+  },
+  "category": "throw",
+  "attack": "yokomen-uchi",
+  "weapon": "empty-hand",
+  "level": "kyu3",
+  "summary": {
+    "en": "Coming soon.",
+    "de": "Kommt bald."
+  },
+  "tags": [
+    "exam-program",
+    "german-aikido-federation",
+    "yokomen-uchi",
+    "irimi-nage"
+  ],
+  "versions": [
+    {
+      "id": "v-base",
+      "hanmi": "ai-hanmi",
+      "stepsByEntry": {
+        "irimi": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "uke": {
+        "role": {
+          "en": "Coming soon.",
+          "de": "Kommt bald."
+        },
+        "notes": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "commonMistakes": {
+        "en": [
+          "Coming soon."
+        ],
+        "de": [
+          "Kommt bald."
+        ]
+      },
+      "context": {
+        "en": "Coming soon.",
+        "de": "Kommt bald."
+      }
+    }
+  ]
+}

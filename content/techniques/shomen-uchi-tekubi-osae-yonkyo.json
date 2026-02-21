@@ -1,0 +1,64 @@
+{
+  "id": "t-exam-shomen-uchi-tekubi-osae-yonkyo",
+  "slug": "shomen-uchi-tekubi-osae-yonkyo",
+  "name": {
+    "en": "Shōmen-uchi Tekubi-osae (yonkyo)",
+    "de": "Shōmen-uchi Tekubi-osae (yonkyo)"
+  },
+  "category": "control",
+  "attack": "shomen-uchi",
+  "weapon": "empty-hand",
+  "level": "kyu1",
+  "summary": {
+    "en": "Coming soon.",
+    "de": "Kommt bald."
+  },
+  "tags": [
+    "exam-program",
+    "german-aikido-federation",
+    "shomen-uchi",
+    "tekubi-osae-yonkyo"
+  ],
+  "versions": [
+    {
+      "id": "v-base",
+      "hanmi": "ai-hanmi",
+      "stepsByEntry": {
+        "irimi": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "uke": {
+        "role": {
+          "en": "Coming soon.",
+          "de": "Kommt bald."
+        },
+        "notes": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "commonMistakes": {
+        "en": [
+          "Coming soon."
+        ],
+        "de": [
+          "Kommt bald."
+        ]
+      },
+      "context": {
+        "en": "Coming soon.",
+        "de": "Kommt bald."
+      }
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "id": "t-exam-ushiro-kakae-tori-kokyu-nage",
+  "slug": "ushiro-kakae-tori-kokyu-nage",
+  "name": {
+    "en": "Ushiro-kakae-tori Kokyu-nage",
+    "de": "Ushiro-kakae-tori Kokyu-nage"
+  },
+  "category": "throw",
+  "attack": "ushiro-kakae-tori",
+  "weapon": "empty-hand",
+  "level": "dan1",
+  "summary": {
+    "en": "Coming soon.",
+    "de": "Kommt bald."
+  },
+  "tags": [
+    "exam-program",
+    "german-aikido-federation",
+    "ushiro-kakae-tori",
+    "kokyu-nage"
+  ],
+  "versions": [
+    {
+      "id": "v-base",
+      "hanmi": "ai-hanmi",
+      "stepsByEntry": {
+        "irimi": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "uke": {
+        "role": {
+          "en": "Coming soon.",
+          "de": "Kommt bald."
+        },
+        "notes": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "commonMistakes": {
+        "en": [
+          "Coming soon."
+        ],
+        "de": [
+          "Kommt bald."
+        ]
+      },
+      "context": {
+        "en": "Coming soon.",
+        "de": "Kommt bald."
+      }
+    }
+  ]
+}

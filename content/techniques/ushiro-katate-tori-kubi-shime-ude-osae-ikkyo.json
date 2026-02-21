@@ -1,0 +1,64 @@
+{
+  "id": "t-exam-ushiro-katate-tori-kubi-shime-ude-osae-ikkyo",
+  "slug": "ushiro-katate-tori-kubi-shime-ude-osae-ikkyo",
+  "name": {
+    "en": "Ushiro-katate-tori / kubi-shime Ude-osae (ikkyo)",
+    "de": "Ushiro-katate-tori / kubi-shime Ude-osae (ikkyo)"
+  },
+  "category": "control",
+  "attack": "ushiro-katate-tori-kubi-shime",
+  "weapon": "empty-hand",
+  "level": "kyu4",
+  "summary": {
+    "en": "Coming soon.",
+    "de": "Kommt bald."
+  },
+  "tags": [
+    "exam-program",
+    "german-aikido-federation",
+    "ushiro-katate-tori-kubi-shime",
+    "ude-osae-ikkyo"
+  ],
+  "versions": [
+    {
+      "id": "v-base",
+      "hanmi": "ai-hanmi",
+      "stepsByEntry": {
+        "irimi": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "uke": {
+        "role": {
+          "en": "Coming soon.",
+          "de": "Kommt bald."
+        },
+        "notes": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "commonMistakes": {
+        "en": [
+          "Coming soon."
+        ],
+        "de": [
+          "Kommt bald."
+        ]
+      },
+      "context": {
+        "en": "Coming soon.",
+        "de": "Kommt bald."
+      }
+    }
+  ]
+}

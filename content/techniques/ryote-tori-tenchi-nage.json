@@ -1,0 +1,64 @@
+{
+  "id": "t-exam-ryote-tori-tenchi-nage",
+  "slug": "ryote-tori-tenchi-nage",
+  "name": {
+    "en": "Ryōte-tori Tenchi-nage",
+    "de": "Ryōte-tori Tenchi-nage"
+  },
+  "category": "throw",
+  "attack": "ryote-tori",
+  "weapon": "empty-hand",
+  "level": "dan1",
+  "summary": {
+    "en": "Coming soon.",
+    "de": "Kommt bald."
+  },
+  "tags": [
+    "exam-program",
+    "german-aikido-federation",
+    "ryote-tori",
+    "tenchi-nage"
+  ],
+  "versions": [
+    {
+      "id": "v-base",
+      "hanmi": "ai-hanmi",
+      "stepsByEntry": {
+        "irimi": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "uke": {
+        "role": {
+          "en": "Coming soon.",
+          "de": "Kommt bald."
+        },
+        "notes": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "commonMistakes": {
+        "en": [
+          "Coming soon."
+        ],
+        "de": [
+          "Kommt bald."
+        ]
+      },
+      "context": {
+        "en": "Coming soon.",
+        "de": "Kommt bald."
+      }
+    }
+  ]
+}

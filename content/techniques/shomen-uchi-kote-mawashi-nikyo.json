@@ -1,0 +1,64 @@
+{
+  "id": "t-exam-shomen-uchi-kote-mawashi-nikyo",
+  "slug": "shomen-uchi-kote-mawashi-nikyo",
+  "name": {
+    "en": "Shōmen-uchi Kote-mawashi (nikyo)",
+    "de": "Shōmen-uchi Kote-mawashi (nikyo)"
+  },
+  "category": "control",
+  "attack": "shomen-uchi",
+  "weapon": "empty-hand",
+  "level": "kyu3",
+  "summary": {
+    "en": "Coming soon.",
+    "de": "Kommt bald."
+  },
+  "tags": [
+    "exam-program",
+    "german-aikido-federation",
+    "shomen-uchi",
+    "kote-mawashi-nikyo"
+  ],
+  "versions": [
+    {
+      "id": "v-base",
+      "hanmi": "ai-hanmi",
+      "stepsByEntry": {
+        "irimi": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "uke": {
+        "role": {
+          "en": "Coming soon.",
+          "de": "Kommt bald."
+        },
+        "notes": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "commonMistakes": {
+        "en": [
+          "Coming soon."
+        ],
+        "de": [
+          "Kommt bald."
+        ]
+      },
+      "context": {
+        "en": "Coming soon.",
+        "de": "Kommt bald."
+      }
+    }
+  ]
+}

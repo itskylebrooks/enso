@@ -1,0 +1,64 @@
+{
+  "id": "t-exam-ushiro-katate-tori-kubi-shime-kote-hineri-sankyo",
+  "slug": "ushiro-katate-tori-kubi-shime-kote-hineri-sankyo",
+  "name": {
+    "en": "Ushiro-katate-tori / kubi-shime Kote-hineri (sankyo)",
+    "de": "Ushiro-katate-tori / kubi-shime Kote-hineri (sankyo)"
+  },
+  "category": "control",
+  "attack": "ushiro-katate-tori-kubi-shime",
+  "weapon": "empty-hand",
+  "level": "kyu2",
+  "summary": {
+    "en": "Coming soon.",
+    "de": "Kommt bald."
+  },
+  "tags": [
+    "exam-program",
+    "german-aikido-federation",
+    "ushiro-katate-tori-kubi-shime",
+    "kote-hineri-sankyo"
+  ],
+  "versions": [
+    {
+      "id": "v-base",
+      "hanmi": "ai-hanmi",
+      "stepsByEntry": {
+        "irimi": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "uke": {
+        "role": {
+          "en": "Coming soon.",
+          "de": "Kommt bald."
+        },
+        "notes": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "commonMistakes": {
+        "en": [
+          "Coming soon."
+        ],
+        "de": [
+          "Kommt bald."
+        ]
+      },
+      "context": {
+        "en": "Coming soon.",
+        "de": "Kommt bald."
+      }
+    }
+  ]
+}

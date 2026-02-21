@@ -1,0 +1,64 @@
+{
+  "id": "t-exam-yokomen-uchi-koshi-nage",
+  "slug": "yokomen-uchi-koshi-nage",
+  "name": {
+    "en": "Yokomen-uchi Koshi-nage",
+    "de": "Yokomen-uchi Koshi-nage"
+  },
+  "category": "throw",
+  "attack": "yokomen-uchi",
+  "weapon": "empty-hand",
+  "level": "kyu2",
+  "summary": {
+    "en": "Coming soon.",
+    "de": "Kommt bald."
+  },
+  "tags": [
+    "exam-program",
+    "german-aikido-federation",
+    "yokomen-uchi",
+    "koshi-nage"
+  ],
+  "versions": [
+    {
+      "id": "v-base",
+      "hanmi": "ai-hanmi",
+      "stepsByEntry": {
+        "irimi": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "uke": {
+        "role": {
+          "en": "Coming soon.",
+          "de": "Kommt bald."
+        },
+        "notes": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "commonMistakes": {
+        "en": [
+          "Coming soon."
+        ],
+        "de": [
+          "Kommt bald."
+        ]
+      },
+      "context": {
+        "en": "Coming soon.",
+        "de": "Kommt bald."
+      }
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "id": "t-exam-ushiro-katate-tori-kubi-shime-koshi-nage",
+  "slug": "ushiro-katate-tori-kubi-shime-koshi-nage",
+  "name": {
+    "en": "Ushiro-katate-tori / kubi-shime Koshi-nage",
+    "de": "Ushiro-katate-tori / kubi-shime Koshi-nage"
+  },
+  "category": "throw",
+  "attack": "ushiro-katate-tori-kubi-shime",
+  "weapon": "empty-hand",
+  "level": "kyu2",
+  "summary": {
+    "en": "Coming soon.",
+    "de": "Kommt bald."
+  },
+  "tags": [
+    "exam-program",
+    "german-aikido-federation",
+    "ushiro-katate-tori-kubi-shime",
+    "koshi-nage"
+  ],
+  "versions": [
+    {
+      "id": "v-base",
+      "hanmi": "ai-hanmi",
+      "stepsByEntry": {
+        "irimi": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "uke": {
+        "role": {
+          "en": "Coming soon.",
+          "de": "Kommt bald."
+        },
+        "notes": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "commonMistakes": {
+        "en": [
+          "Coming soon."
+        ],
+        "de": [
+          "Kommt bald."
+        ]
+      },
+      "context": {
+        "en": "Coming soon.",
+        "de": "Kommt bald."
+      }
+    }
+  ]
+}

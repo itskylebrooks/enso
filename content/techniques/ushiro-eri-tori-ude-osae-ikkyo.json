@@ -1,0 +1,64 @@
+{
+  "id": "t-exam-ushiro-eri-tori-ude-osae-ikkyo",
+  "slug": "ushiro-eri-tori-ude-osae-ikkyo",
+  "name": {
+    "en": "Ushiro-eri-tori Ude-osae (ikkyo)",
+    "de": "Ushiro-eri-tori Ude-osae (ikkyo)"
+  },
+  "category": "control",
+  "attack": "ushiro-eri-tori",
+  "weapon": "empty-hand",
+  "level": "kyu4",
+  "summary": {
+    "en": "Coming soon.",
+    "de": "Kommt bald."
+  },
+  "tags": [
+    "exam-program",
+    "german-aikido-federation",
+    "ushiro-eri-tori",
+    "ude-osae-ikkyo"
+  ],
+  "versions": [
+    {
+      "id": "v-base",
+      "hanmi": "ai-hanmi",
+      "stepsByEntry": {
+        "irimi": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "uke": {
+        "role": {
+          "en": "Coming soon.",
+          "de": "Kommt bald."
+        },
+        "notes": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "commonMistakes": {
+        "en": [
+          "Coming soon."
+        ],
+        "de": [
+          "Kommt bald."
+        ]
+      },
+      "context": {
+        "en": "Coming soon.",
+        "de": "Kommt bald."
+      }
+    }
+  ]
+}

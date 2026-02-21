@@ -1,0 +1,64 @@
+{
+  "id": "t-exam-ryote-tori-ude-osae-ikkyo",
+  "slug": "ryote-tori-ude-osae-ikkyo",
+  "name": {
+    "en": "Ryōte-tori Ude-osae (ikkyo)",
+    "de": "Ryōte-tori Ude-osae (ikkyo)"
+  },
+  "category": "control",
+  "attack": "ryote-tori",
+  "weapon": "empty-hand",
+  "level": "kyu5",
+  "summary": {
+    "en": "Coming soon.",
+    "de": "Kommt bald."
+  },
+  "tags": [
+    "exam-program",
+    "german-aikido-federation",
+    "ryote-tori",
+    "ude-osae-ikkyo"
+  ],
+  "versions": [
+    {
+      "id": "v-base",
+      "hanmi": "ai-hanmi",
+      "stepsByEntry": {
+        "irimi": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "uke": {
+        "role": {
+          "en": "Coming soon.",
+          "de": "Kommt bald."
+        },
+        "notes": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "commonMistakes": {
+        "en": [
+          "Coming soon."
+        ],
+        "de": [
+          "Kommt bald."
+        ]
+      },
+      "context": {
+        "en": "Coming soon.",
+        "de": "Kommt bald."
+      }
+    }
+  ]
+}

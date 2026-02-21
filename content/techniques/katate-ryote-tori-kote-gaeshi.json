@@ -1,0 +1,64 @@
+{
+  "id": "t-exam-katate-ryote-tori-kote-gaeshi",
+  "slug": "katate-ryote-tori-kote-gaeshi",
+  "name": {
+    "en": "Katate-ryōte-tori Kote-gaeshi",
+    "de": "Katate-ryōte-tori Kote-gaeshi"
+  },
+  "category": "throw",
+  "attack": "katate-ryote-tori",
+  "weapon": "empty-hand",
+  "level": "kyu1",
+  "summary": {
+    "en": "Coming soon.",
+    "de": "Kommt bald."
+  },
+  "tags": [
+    "exam-program",
+    "german-aikido-federation",
+    "katate-ryote-tori",
+    "kote-gaeshi"
+  ],
+  "versions": [
+    {
+      "id": "v-base",
+      "hanmi": "ai-hanmi",
+      "stepsByEntry": {
+        "irimi": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "uke": {
+        "role": {
+          "en": "Coming soon.",
+          "de": "Kommt bald."
+        },
+        "notes": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "commonMistakes": {
+        "en": [
+          "Coming soon."
+        ],
+        "de": [
+          "Kommt bald."
+        ]
+      },
+      "context": {
+        "en": "Coming soon.",
+        "de": "Kommt bald."
+      }
+    }
+  ]
+}

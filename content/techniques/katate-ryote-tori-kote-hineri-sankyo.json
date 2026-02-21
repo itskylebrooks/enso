@@ -1,0 +1,64 @@
+{
+  "id": "t-exam-katate-ryote-tori-kote-hineri-sankyo",
+  "slug": "katate-ryote-tori-kote-hineri-sankyo",
+  "name": {
+    "en": "Katate-ryōte-tori Kote-hineri (sankyo)",
+    "de": "Katate-ryōte-tori Kote-hineri (sankyo)"
+  },
+  "category": "control",
+  "attack": "katate-ryote-tori",
+  "weapon": "empty-hand",
+  "level": "kyu2",
+  "summary": {
+    "en": "Coming soon.",
+    "de": "Kommt bald."
+  },
+  "tags": [
+    "exam-program",
+    "german-aikido-federation",
+    "katate-ryote-tori",
+    "kote-hineri-sankyo"
+  ],
+  "versions": [
+    {
+      "id": "v-base",
+      "hanmi": "ai-hanmi",
+      "stepsByEntry": {
+        "irimi": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "uke": {
+        "role": {
+          "en": "Coming soon.",
+          "de": "Kommt bald."
+        },
+        "notes": {
+          "en": [
+            "Coming soon."
+          ],
+          "de": [
+            "Kommt bald."
+          ]
+        }
+      },
+      "commonMistakes": {
+        "en": [
+          "Coming soon."
+        ],
+        "de": [
+          "Kommt bald."
+        ]
+      },
+      "context": {
+        "en": "Coming soon.",
+        "de": "Kommt bald."
+      }
+    }
+  ]
+}
