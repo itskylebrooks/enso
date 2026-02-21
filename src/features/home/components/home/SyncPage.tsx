@@ -30,11 +30,6 @@ export const SyncPage = ({ copy }: SyncPageProps): ReactElement => {
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-xl font-semibold">{copy.syncPage.whatItWillNotDoTitle}</h2>
-          {renderParagraphs(copy.syncPage.whatItWillNotDoBody)}
-        </div>
-
-        <div className="space-y-4">
           <h2 className="text-xl font-semibold">{copy.syncPage.localFirstTitle}</h2>
           {renderParagraphs(copy.syncPage.localFirstBody)}
         </div>
