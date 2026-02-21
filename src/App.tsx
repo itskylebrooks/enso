@@ -8,6 +8,7 @@ import { AdvancedPrograms } from '@features/home/components/home/AdvancedProgram
 import { DanOverview } from '@features/home/components/home/DanOverview';
 import { GuidePage } from '@features/home/components/home/GuidePage';
 import { GuideRoutinePage } from '@features/home/components/home/GuideRoutinePage';
+import { SupportPage } from '@features/home/components/home/SupportPage';
 import { SyncPage } from '@features/home/components/home/SyncPage';
 import { SettingsModal } from '@features/home/components/settings/SettingsModal';
 import { ONBOARDING_TOUR_SEGMENTS } from '@features/onboarding/constants';
@@ -224,6 +225,8 @@ const routeToPath = (route: AppRoute): string => {
       return '/';
     case 'about':
       return '/about';
+    case 'support':
+      return '/support';
     case 'guide':
       return '/guide';
     case 'guideAdvanced':
@@ -441,6 +444,10 @@ const parseLocation = (
 
   if (pathname === '/about') {
     return { route: 'about', slug: null };
+  }
+
+  if (pathname === '/support') {
+    return { route: 'support', slug: null };
   }
 
   if (pathname === '/sync') {
@@ -2299,6 +2306,8 @@ export default function App({
       ? copy.backToBookmarks
       : techniqueBackRoute === 'home'
         ? copy.backToHome
+        : techniqueBackRoute === 'support'
+          ? copy.supportLink
         : techniqueBackRoute === 'about'
           ? copy.backToAbout
           : isGuideLikeRoute(techniqueBackRoute)
@@ -2317,6 +2326,8 @@ export default function App({
       ? copy.backToBookmarks
       : glossaryBackRoute === 'home'
         ? copy.backToHome
+        : glossaryBackRoute === 'support'
+          ? copy.supportLink
         : glossaryBackRoute === 'about'
           ? copy.backToAbout
           : isGuideLikeRoute(glossaryBackRoute)
@@ -2334,6 +2345,8 @@ export default function App({
       ? copy.backToBookmarks
       : practiceBackRoute === 'home'
         ? copy.backToHome
+        : practiceBackRoute === 'support'
+          ? copy.supportLink
         : practiceBackRoute === 'about'
           ? copy.backToAbout
           : isGuideLikeRoute(practiceBackRoute)
@@ -2515,6 +2528,8 @@ export default function App({
     );
   } else if (route === 'about') {
     mainContent = <AboutPage copy={copy} />;
+  } else if (route === 'support') {
+    mainContent = <SupportPage copy={copy} />;
   } else if (route === 'sync') {
     mainContent = <SyncPage copy={copy} />;
   } else if (route === 'guideAdvanced') {
