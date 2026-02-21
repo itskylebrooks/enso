@@ -93,13 +93,13 @@ export const StudyStatusButton = ({
           )}
         >
           <span className="relative flex h-5 w-5 items-center justify-center md:h-4 md:w-4">
-            <AnimatePresence initial={false} mode="wait">
+            <AnimatePresence initial={false}>
               <motion.span
                 key={status}
-                initial={{ opacity: 0, scale: 0.8 }}
+                initial={{ opacity: 0, scale: 0.92 }}
                 animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                transition={{ duration: 0.16, ease: [0.22, 1, 0.36, 1] }}
+                exit={{ opacity: 0, scale: 1.08 }}
+                transition={{ duration: 0.09, ease: [0.22, 1, 0.36, 1] }}
                 className="absolute inset-0 flex items-center justify-center"
               >
                 <StudyStatusIcon status={status} className="h-5 w-5 md:h-4 md:w-4" />
