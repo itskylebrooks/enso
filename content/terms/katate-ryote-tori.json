@@ -1,0 +1,19 @@
+{
+  "id": "katate-ryote-tori",
+  "slug": "katate-ryote-tori",
+  "romaji": "Katate-ryōte-tori",
+  "jp": "片手両手取り",
+  "category": "attack",
+  "def": {
+    "en": "One wrist is seized with two hands.",
+    "de": "Ein Handgelenk wird mit beiden Händen gefasst."
+  },
+  "literal": {
+    "en": "one hand + both hands + seize",
+    "de": "eine Hand + beide Hände + greifen"
+  },
+  "notes": {
+    "en": "A control-heavy grab where uke commits both hands to one of your wrists, creating strong local pressure but also reducing uke’s free hand options. Keep posture tall, elbow heavy, and connect the captured arm to your center instead of pulling with the shoulder. Move feet first to set angle and kuzushi, then use whole-body rotation (irimi/tenkan) to redirect the grip. Typical study lines include irimi-nage, shiho-nage, kote-gaeshi, nikyo, and yonkyo/tekubi-osae depending on entry and spacing. Safety focus: avoid wrenching the wrist; lead from center and guide uke's structure, not just the hand.",
+    "de": "Ein kontrollstarker Griff, bei dem Uke beide Hände an einem deiner Handgelenke bindet. Dadurch entsteht lokal viel Druck, gleichzeitig sind Ukes freie Handoptionen eingeschränkt. Haltung aufrecht halten, Ellbogen „schwer“ führen und den gefassten Arm ans Zentrum koppeln statt über die Schulter zu ziehen. Zuerst die Fußarbeit für Winkel und Kuzushi setzen, dann den Griff mit Ganzkörperrotation (irimi/tenkan) umlenken. Häufige Studienlinien sind irimi-nage, shiho-nage, kote-gaeshi, nikyo sowie yonkyo/tekubi-osae – je nach Einstieg und Distanz. Sicherheitsfokus: kein Verdrehen am Handgelenk; aus dem Zentrum führen und Ukes Struktur leiten, nicht nur die Hand."
+  }
+}
