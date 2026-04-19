@@ -1,4 +1,5 @@
 import techniquesData from '@generated/content/techniques.json';
+import type { SyncMetaState } from '../../lib/supabase/types';
 import { ENTRY_MODE_ORDER } from '../constants/entryModes';
 import {
   APP_NAME,
@@ -12,6 +13,7 @@ import {
   ONBOARDING_DISMISSED_KEY,
   ONBOARDING_STEP_KEY,
   STORAGE_KEY,
+  SYNC_META_KEY,
   THEME_KEY,
 } from '../constants/storage';
 import type {
@@ -26,8 +28,8 @@ import type {
   Locale,
   MediaType,
   Progress,
-  StudyStatusMap,
   StepsByEntry,
+  StudyStatusMap,
   Technique,
   TechniqueVersion,
   Theme,
@@ -139,6 +141,13 @@ const isBrowser = typeof window !== 'undefined' && typeof window.localStorage !=
 
 const fallbackLocale: Locale = 'en';
 const fallbackTheme: Theme = 'light';
+
+const defaultSyncMetaState: SyncMetaState = {
+  dbUpdatedAt: 0,
+  settingsUpdatedAt: 0,
+  homepageUpdatedAt: 0,
+  lastSyncedAt: null,
+};
 
 const buildDefaultProgress = (techniqueId: string): Progress => ({
   techniqueId,
@@ -330,7 +339,8 @@ const ensureCollections = (rawCollections: Collection[]): Collection[] => {
 
   rawCollections.forEach((entry) => {
     if (!entry || typeof entry !== 'object') return;
-    const { id, name, icon, itemIds, sortOrder, createdAt, updatedAt } = entry as Partial<Collection>;
+    const { id, name, icon, itemIds, sortOrder, createdAt, updatedAt } =
+      entry as Partial<Collection>;
     if (typeof id !== 'string' || id.trim().length === 0) return;
     if (typeof name !== 'string' || name.trim().length === 0) return;
 
@@ -864,6 +874,7 @@ export const clearDB = (): DB => {
   }
   removeLocalStorage(HOME_PINNED_BELT_KEY);
   removeLocalStorage(HOME_BELT_PROMPT_DISMISSED_KEY);
+  removeLocalStorage(SYNC_META_KEY);
   return buildDefaultDB();
 };
 
@@ -972,4 +983,49 @@ export const saveOnboardingStep = (step: number | null): void => {
   } else {
     removeLocalStorage(ONBOARDING_STEP_KEY);
   }
+};
+
+const sanitizeTimestamp = (value: unknown): number => {
+  if (typeof value !== 'number' || !Number.isFinite(value) || value < 0) {
+    return 0;
+  }
+
+  return Math.trunc(value);
+};
+
+export const loadSyncMeta = (): SyncMetaState => {
+  const raw = readLocalStorage(SYNC_META_KEY);
+  if (!raw) {
+    return { ...defaultSyncMetaState };
+  }
+
+  try {
+    const parsed = JSON.parse(raw) as Partial<SyncMetaState>;
+    return {
+      dbUpdatedAt: sanitizeTimestamp(parsed.dbUpdatedAt),
+      settingsUpdatedAt: sanitizeTimestamp(parsed.settingsUpdatedAt),
+      homepageUpdatedAt: sanitizeTimestamp(parsed.homepageUpdatedAt),
+      lastSyncedAt:
+        typeof parsed.lastSyncedAt === 'number' && Number.isFinite(parsed.lastSyncedAt)
+          ? Math.trunc(parsed.lastSyncedAt)
+          : null,
+    };
+  } catch {
+    return { ...defaultSyncMetaState };
+  }
+};
+
+export const saveSyncMeta = (meta: SyncMetaState): void => {
+  writeLocalStorage(
+    SYNC_META_KEY,
+    JSON.stringify({
+      dbUpdatedAt: sanitizeTimestamp(meta.dbUpdatedAt),
+      settingsUpdatedAt: sanitizeTimestamp(meta.settingsUpdatedAt),
+      homepageUpdatedAt: sanitizeTimestamp(meta.homepageUpdatedAt),
+      lastSyncedAt:
+        typeof meta.lastSyncedAt === 'number' && Number.isFinite(meta.lastSyncedAt)
+          ? Math.trunc(meta.lastSyncedAt)
+          : null,
+    }),
+  );
 };

@@ -9,5 +9,6 @@ export const ONBOARDING_DISMISSED_KEY = 'enso-onboarding-dismissed';
 export const ONBOARDING_COMPLETED_KEY = 'enso-onboarding-completed';
 export const ONBOARDING_STEP_KEY = 'enso-onboarding-step';
 export const RECENTS_STORAGE_KEY = 'enso-recents-v1';
+export const SYNC_META_KEY = 'enso-sync-meta-v1';
 export const DB_VERSION = 7;
 export const APP_NAME = 'enso';

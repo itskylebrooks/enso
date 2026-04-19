@@ -182,6 +182,29 @@ GITHUB_REPO=your-repo
 
 Then mirror the same variables in Vercel.
 
+## Supabase sync setup
+
+Sync now supports bookmarks, progress/status, homepage state, and settings state across devices.
+
+1. Create a Supabase project.
+2. Add a `.env.local` with:
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL=***
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=***
+SUPABASE_SECRET_KEY=***
+```
+
+3. Run the SQL in `supabase/user_sync_state.sql` in the Supabase SQL editor.
+4. In Supabase Dashboard, keep Email auth enabled and configure your Site URL + redirect URLs.
+5. Optional: if you want one-time codes instead of magic links, update the Email template to use `{{ .Token }}` instead of `{{ .ConfirmationURL }}`.
+6. Users can sign in with email link/code. New emails are auto-created on first sign-in.
+
+Notes:
+
+- The app remains local-first; sync is optional.
+- `/api/sync/*` route handlers use bearer auth and upsert into `user_sync_state`.
+
 ## Contributing
 
 PRs and content improvements are welcome.

@@ -1,26 +1,26 @@
-import { useRef, type ReactElement, type RefObject } from 'react';
-import { motion } from 'motion/react';
-import type { ChangeEvent } from 'react';
+import { SectionTitle } from '@shared/components';
+import { useMotionPreferences } from '@shared/components/ui/motion';
 import type { Copy } from '@shared/constants/i18n';
+import { useFocusTrap } from '@shared/hooks/useFocusTrap';
+import { usePwaInstall } from '@shared/hooks/usePwaInstall';
+import { exportDB, importData, parseIncomingDB, saveDB } from '@shared/services/storageService';
 import type { DB, Locale, Theme } from '@shared/types';
 import { classNames } from '@shared/utils/classNames';
-import { exportDB, parseIncomingDB, importData, saveDB } from '@shared/services/storageService';
-import { SectionTitle } from '@shared/components';
-import { useFocusTrap } from '@shared/hooks/useFocusTrap';
-import { useMotionPreferences } from '@shared/components/ui/motion';
-import { usePwaInstall } from '@shared/hooks/usePwaInstall';
 import {
-  Linkedin,
-  Share2,
-  SquareArrowOutUpRight,
-  X,
-  Sun,
-  Moon,
-  Monitor,
-  Download,
   Check,
   Dot,
+  Download,
+  Linkedin,
+  Monitor,
+  Moon,
+  Share2,
+  SquareArrowOutUpRight,
+  Sun,
+  X,
 } from 'lucide-react';
+import { motion } from 'motion/react';
+import type { ChangeEvent } from 'react';
+import { useRef, type ReactElement, type RefObject } from 'react';
 // import version from package.json
 import pkg from '../../../../../package.json';
 
@@ -30,6 +30,10 @@ type SettingsModalProps = {
   theme: Theme;
   isSystemTheme: boolean;
   db: DB;
+  isOnline: boolean;
+  isSignedIn: boolean;
+  isAuthBootstrapping: boolean;
+  syncStatus: 'signed-out' | 'idle' | 'syncing' | 'error';
   onClose: () => void;
   onRequestClear: () => void;
   onChangeLocale: (locale: Locale) => void;
@@ -46,6 +50,10 @@ export const SettingsModal = ({
   theme,
   isSystemTheme,
   db,
+  isOnline,
+  isSignedIn,
+  isAuthBootstrapping,
+  syncStatus,
   onClose,
   onRequestClear,
   onChangeLocale,
@@ -58,6 +66,13 @@ export const SettingsModal = ({
   const dialogRef = useRef<HTMLDivElement>(null);
   const { overlayMotion, toggleTransition, prefersReducedMotion } = useMotionPreferences();
   const { isInstalled, isInstallable, install } = usePwaInstall(copy);
+
+  const syncIndicatorClass = (() => {
+    if (!isOnline) return 'text-red-500';
+    if (syncStatus === 'syncing') return 'text-amber-500';
+    if (isSignedIn || isAuthBootstrapping || syncStatus === 'idle') return 'text-emerald-500';
+    return 'text-emerald-500';
+  })();
 
   useFocusTrap(trapEnabled, dialogRef, onClose);
 
@@ -387,7 +402,11 @@ export const SettingsModal = ({
                 onClick={onManageSync}
                 className="col-span-1 w-full px-3 py-2 text-sm rounded-lg border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] btn-tonal surface-hover"
               >
-                <Dot className="h-6 w-6 shrink-0 text-subtle" strokeWidth={6} aria-hidden />
+                <Dot
+                  className={classNames('h-6 w-6 shrink-0', syncIndicatorClass)}
+                  strokeWidth={6}
+                  aria-hidden
+                />
                 {copy.manage}
               </button>
             </div>

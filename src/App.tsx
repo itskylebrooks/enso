@@ -11,8 +11,8 @@ import { GuideRoutinePage } from '@features/home/components/home/GuideRoutinePag
 import { SupportPage } from '@features/home/components/home/SupportPage';
 import { SyncPage } from '@features/home/components/home/SyncPage';
 import { SettingsModal } from '@features/home/components/settings/SettingsModal';
-import { ONBOARDING_TOUR_SEGMENTS } from '@features/onboarding/constants';
 import { OnboardingTourOverlay } from '@features/onboarding/components/OnboardingTourOverlay';
+import { ONBOARDING_TOUR_SEGMENTS } from '@features/onboarding/constants';
 import { type CollectionOption } from '@features/technique/components/TechniqueHeader';
 import { TechniquePage } from '@features/technique/components/TechniquePage';
 import { TechniquesPage } from '@features/technique/components/TechniquesPage';
@@ -51,6 +51,18 @@ import {
   TermsPage,
   loadAllTerms,
 } from './features/terms';
+import { authService } from './lib/backend/auth';
+import { syncClient } from './lib/backend/sync';
+import {
+  applySyncedDBState,
+  buildHomepageState,
+  buildSettingsState,
+  buildSyncPayloadData,
+  computeDBUpdatedAt,
+  mergeSyncPayload,
+  pickSyncedDBState,
+} from './lib/backend/syncMerge';
+import type { AuthSession, SyncMetaState, SyncPayloadData } from './lib/supabase/types';
 import { ConfirmClearModal } from './shared/components/dialogs/ConfirmClearDialog';
 import { ENTRY_MODE_ORDER, isEntryMode } from './shared/constants/entryModes';
 import { getCopy } from './shared/constants/i18n';
@@ -62,21 +74,25 @@ import {
   hasStoredTheme,
   loadBeltPromptDismissed,
   loadDB,
+  loadFilterPanelPinned,
   loadFilters,
   loadOnboardingCompleted,
   loadOnboardingDismissed,
   loadOnboardingStep,
   loadPinnedBeltGrade,
   loadStoredLocale,
+  loadSyncMeta,
   loadTheme,
   saveBeltPromptDismissed,
   saveDB,
+  saveFilterPanelPinned,
   saveFilters,
   saveLocale,
   saveOnboardingCompleted,
   saveOnboardingDismissed,
   saveOnboardingStep,
   savePinnedBeltGrade,
+  saveSyncMeta,
   saveTheme,
 } from './shared/services/storageService';
 import { getExerciseCategoryLabel } from './shared/styles/exercises';
@@ -126,6 +142,9 @@ import {
 } from './shared/utils/variantKeys';
 
 const defaultFilters: Filters = {};
+
+type SyncStatus = 'signed-out' | 'idle' | 'syncing' | 'error';
+
 const normalizeTourSegmentIndex = (value: number | null | undefined): number => {
   if (typeof value !== 'number' || !Number.isFinite(value)) return 0;
   const maxIndex = ONBOARDING_TOUR_SEGMENTS.length - 1;
@@ -768,6 +787,14 @@ export default function App({
   );
   const [tourCompletionVisible, setTourCompletionVisible] = useState(false);
   const [showTourCompletionConfetti, setShowTourCompletionConfetti] = useState(false);
+  const [authSession, setAuthSession] = useState<AuthSession | null>(null);
+  const [isAuthBootstrapping, setIsAuthBootstrapping] = useState(true);
+  const [syncStatus, setSyncStatus] = useState<SyncStatus>('signed-out');
+  const [syncError, setSyncError] = useState<string | null>(null);
+  const [syncMeta, setSyncMeta] = useState<SyncMetaState>(() => loadSyncMeta());
+  const [isOnline, setIsOnline] = useState<boolean>(
+    typeof navigator === 'undefined' ? true : navigator.onLine,
+  );
 
   const copy = getCopy(locale);
   const { pageMotion, prefersReducedMotion } = useMotionPreferences();
@@ -777,6 +804,19 @@ export default function App({
   const toastTimeoutRef = useRef<number | null>(null);
   const pendingScrollToTopRef = useRef(false);
   const isInitialMountRef = useRef(true);
+  const dbPersistedRef = useRef(false);
+  const settingsPersistedRef = useRef(false);
+  const localePersistedRef = useRef(false);
+  const filtersPersistedRef = useRef(false);
+  const pinnedBeltPersistedRef = useRef(false);
+  const beltPromptPersistedRef = useRef(false);
+  const onboardingDismissedPersistedRef = useRef(false);
+  const onboardingCompletedPersistedRef = useRef(false);
+  const syncPauseAutoPushRef = useRef(false);
+  const syncInFlightRef = useRef(false);
+  const syncDebounceTimeoutRef = useRef<number | null>(null);
+  const authAccessTokenRef = useRef<string | null>(null);
+  const filterPanelPinnedRef = useRef<boolean>(loadFilterPanelPinned());
   // Detect if this render follows a back/forward restore and skip entrance
   // animations to avoid the brief re-appearance/flicker on iOS Safari.
   const skipEntranceAnimations = cameFromBackForwardNavigation();
@@ -885,9 +925,301 @@ export default function App({
       if (toastTimeoutRef.current && typeof window !== 'undefined') {
         window.clearTimeout(toastTimeoutRef.current);
       }
+
+      if (syncDebounceTimeoutRef.current && typeof window !== 'undefined') {
+        window.clearTimeout(syncDebounceTimeoutRef.current);
+      }
     },
     [],
   );
+
+  const persistSyncMeta = useCallback((nextMeta: SyncMetaState): void => {
+    setSyncMeta(nextMeta);
+    saveSyncMeta(nextMeta);
+  }, []);
+
+  const buildLocalSyncPayload = useCallback((): SyncPayloadData => {
+    const syncedDB = pickSyncedDBState(db);
+    const computedDbUpdatedAt = computeDBUpdatedAt(syncedDB);
+    const dbTimestamp = Math.max(syncMeta.dbUpdatedAt, computedDbUpdatedAt);
+
+    return buildSyncPayloadData({
+      db: syncedDB,
+      settings: buildSettingsState({
+        themePreference: hasManualTheme ? theme : null,
+        locale,
+        filters,
+        filterPanelPinned: loadFilterPanelPinned(),
+      }),
+      homepage: buildHomepageState({
+        pinnedBeltGrade,
+        beltPromptDismissed,
+        onboardingDismissed,
+        onboardingCompleted,
+        onboardingStep: loadOnboardingStep(),
+      }),
+      timestamps: {
+        db: dbTimestamp,
+        settings: syncMeta.settingsUpdatedAt,
+        homepage: syncMeta.homepageUpdatedAt,
+      },
+    });
+  }, [
+    beltPromptDismissed,
+    db,
+    filters,
+    hasManualTheme,
+    locale,
+    onboardingCompleted,
+    onboardingDismissed,
+    pinnedBeltGrade,
+    syncMeta.dbUpdatedAt,
+    syncMeta.homepageUpdatedAt,
+    syncMeta.settingsUpdatedAt,
+    theme,
+  ]);
+
+  const applySyncPayloadToLocalState = useCallback(
+    (payload: SyncPayloadData, syncedAt?: number): void => {
+      syncPauseAutoPushRef.current = true;
+
+      setDB((prev) => applySyncedDBState(prev, payload.db));
+
+      const nextThemePreference = payload.settings.themePreference;
+      if (nextThemePreference === null) {
+        setHasManualTheme(false);
+        setTheme(getSystemTheme());
+      } else {
+        setHasManualTheme(true);
+        setTheme(nextThemePreference);
+      }
+
+      setLocale(payload.settings.locale);
+      setFilters(payload.settings.filters ?? defaultFilters);
+      saveFilterPanelPinned(payload.settings.filterPanelPinned);
+      filterPanelPinnedRef.current = payload.settings.filterPanelPinned;
+
+      setPinnedBeltGrade(payload.homepage.pinnedBeltGrade);
+      setBeltPromptDismissed(payload.homepage.beltPromptDismissed);
+      setOnboardingDismissed(payload.homepage.onboardingDismissed);
+      setOnboardingCompleted(payload.homepage.onboardingCompleted);
+      saveOnboardingStep(payload.homepage.onboardingStep);
+      setTourSegmentIndex(normalizeTourSegmentIndex(payload.homepage.onboardingStep));
+
+      const now = syncedAt ?? Date.now();
+      persistSyncMeta({
+        dbUpdatedAt: payload.timestamps.db,
+        settingsUpdatedAt: payload.timestamps.settings,
+        homepageUpdatedAt: payload.timestamps.homepage,
+        lastSyncedAt: now,
+      });
+
+      if (typeof window !== 'undefined') {
+        window.setTimeout(() => {
+          syncPauseAutoPushRef.current = false;
+        }, 0);
+      } else {
+        syncPauseAutoPushRef.current = false;
+      }
+    },
+    [persistSyncMeta],
+  );
+
+  const runSyncWithToken = useCallback(
+    async (accessToken: string): Promise<void> => {
+      if (syncInFlightRef.current) {
+        return;
+      }
+
+      syncInFlightRef.current = true;
+      setSyncStatus('syncing');
+      setSyncError(null);
+
+      try {
+        const localPayload = buildLocalSyncPayload();
+        const pullResponse = await syncClient.pull(accessToken);
+
+        const mergedPayload = pullResponse.payload
+          ? mergeSyncPayload(localPayload, pullResponse.payload)
+          : localPayload;
+
+        const pushResponse = await syncClient.push(accessToken, mergedPayload);
+        applySyncPayloadToLocalState(pushResponse.payload, Date.now());
+        setSyncStatus('idle');
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'Sync failed';
+        setSyncError(message);
+        setSyncStatus('error');
+      } finally {
+        syncInFlightRef.current = false;
+      }
+    },
+    [applySyncPayloadToLocalState, buildLocalSyncPayload],
+  );
+
+  const scheduleAutoSync = useCallback((): void => {
+    if (!authSession?.accessToken || syncPauseAutoPushRef.current) {
+      return;
+    }
+
+    if (syncDebounceTimeoutRef.current && typeof window !== 'undefined') {
+      window.clearTimeout(syncDebounceTimeoutRef.current);
+    }
+
+    if (typeof window !== 'undefined') {
+      syncDebounceTimeoutRef.current = window.setTimeout(() => {
+        void runSyncWithToken(authSession.accessToken);
+      }, 1200);
+    }
+  }, [authSession?.accessToken, runSyncWithToken]);
+
+  const syncNow = useCallback(async (): Promise<void> => {
+    if (!authSession?.accessToken) {
+      setSyncStatus('signed-out');
+      return;
+    }
+
+    await runSyncWithToken(authSession.accessToken);
+  }, [authSession?.accessToken, runSyncWithToken]);
+
+  const requestOtpForSync = useCallback(async (email: string): Promise<void> => {
+    try {
+      await authService.requestEmailOtp(email);
+      setSyncStatus('signed-out');
+      setSyncError(null);
+    } catch (error) {
+      setSyncStatus('error');
+      setSyncError(error instanceof Error ? error.message : 'Failed to send sign-in email');
+    }
+  }, []);
+
+  const verifyOtpForSync = useCallback(
+    async (email: string, token: string): Promise<void> => {
+      try {
+        const session = await authService.verifyEmailOtp(email, token);
+        authAccessTokenRef.current = session.accessToken;
+        setAuthSession(session);
+        setSyncStatus('idle');
+        setSyncError(null);
+        await runSyncWithToken(session.accessToken);
+      } catch (error) {
+        setSyncStatus('error');
+        setSyncError(error instanceof Error ? error.message : 'Code verification failed');
+      }
+    },
+    [runSyncWithToken],
+  );
+
+  const signOutFromSync = useCallback(async (): Promise<void> => {
+    await authService.signOut();
+    authAccessTokenRef.current = null;
+    setAuthSession(null);
+    setSyncStatus('signed-out');
+    setSyncError(null);
+  }, []);
+
+  useEffect(() => {
+    return authService.onAuthStateChange((session) => {
+      const nextAccessToken = session?.accessToken ?? null;
+      const didAccessTokenChange = authAccessTokenRef.current !== nextAccessToken;
+      authAccessTokenRef.current = nextAccessToken;
+
+      setAuthSession(session);
+
+      if (session) {
+        setSyncStatus((current) => (current === 'syncing' ? current : 'idle'));
+        setSyncError(null);
+
+        if (didAccessTokenChange) {
+          void runSyncWithToken(session.accessToken);
+        }
+      } else {
+        setSyncStatus('signed-out');
+        setSyncError(null);
+      }
+    });
+  }, [runSyncWithToken]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const bootstrapSession = async () => {
+      try {
+        const session = await authService.getSession();
+        if (cancelled) return;
+
+        if (session) {
+          const didAccessTokenChange = authAccessTokenRef.current !== session.accessToken;
+          authAccessTokenRef.current = session.accessToken;
+          setAuthSession(session);
+          setSyncStatus('idle');
+          if (didAccessTokenChange) {
+            void runSyncWithToken(session.accessToken);
+          }
+        } else {
+          authAccessTokenRef.current = null;
+          setAuthSession(null);
+          setSyncStatus('signed-out');
+        }
+      } catch (error) {
+        if (cancelled) return;
+        authAccessTokenRef.current = null;
+        setAuthSession(null);
+        setSyncStatus('error');
+        setSyncError(error instanceof Error ? error.message : 'Failed to load session');
+      } finally {
+        if (!cancelled) {
+          setIsAuthBootstrapping(false);
+        }
+      }
+    };
+
+    void bootstrapSession();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [runSyncWithToken]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const intervalId = window.setInterval(() => {
+      const pinned = loadFilterPanelPinned();
+      if (pinned !== filterPanelPinnedRef.current) {
+        filterPanelPinnedRef.current = pinned;
+        const now = Date.now();
+        setSyncMeta((prev) => {
+          const nextMeta: SyncMetaState = {
+            ...prev,
+            settingsUpdatedAt: now,
+          };
+          saveSyncMeta(nextMeta);
+          return nextMeta;
+        });
+        scheduleAutoSync();
+      }
+    }, 1500);
+
+    return () => {
+      window.clearInterval(intervalId);
+    };
+  }, [scheduleAutoSync]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
 
   // Prevent page scroll while overlays/modals are open
   useLockBodyScroll(searchOpen || settingsOpen || confirmClearOpen || tourOpen);
@@ -1000,6 +1332,45 @@ export default function App({
     }
   }, [db]);
 
+  const markDBChanged = useCallback(() => {
+    const now = Date.now();
+    setSyncMeta((prev) => {
+      const nextMeta: SyncMetaState = {
+        ...prev,
+        dbUpdatedAt: now,
+      };
+      saveSyncMeta(nextMeta);
+      return nextMeta;
+    });
+    scheduleAutoSync();
+  }, [scheduleAutoSync]);
+
+  const markSettingsChanged = useCallback(() => {
+    const now = Date.now();
+    setSyncMeta((prev) => {
+      const nextMeta: SyncMetaState = {
+        ...prev,
+        settingsUpdatedAt: now,
+      };
+      saveSyncMeta(nextMeta);
+      return nextMeta;
+    });
+    scheduleAutoSync();
+  }, [scheduleAutoSync]);
+
+  const markHomepageChanged = useCallback(() => {
+    const now = Date.now();
+    setSyncMeta((prev) => {
+      const nextMeta: SyncMetaState = {
+        ...prev,
+        homepageUpdatedAt: now,
+      };
+      saveSyncMeta(nextMeta);
+      return nextMeta;
+    });
+    scheduleAutoSync();
+  }, [scheduleAutoSync]);
+
   useEffect(() => {
     const root = document.documentElement;
     if (theme === 'dark') {
@@ -1015,7 +1386,18 @@ export default function App({
     } else {
       clearThemePreference();
     }
-  }, [hasManualTheme, theme]);
+
+    if (!settingsPersistedRef.current) {
+      settingsPersistedRef.current = true;
+      return;
+    }
+
+    if (syncPauseAutoPushRef.current) {
+      return;
+    }
+
+    markSettingsChanged();
+  }, [hasManualTheme, markSettingsChanged, theme]);
 
   useEffect(() => {
     setLocale(loadStoredLocale() ?? initialLocale);
@@ -1031,29 +1413,95 @@ export default function App({
   useEffect(() => {
     if (!isLocaleReady) return;
     saveLocale(locale);
-  }, [isLocaleReady, locale]);
+
+    if (!localePersistedRef.current) {
+      localePersistedRef.current = true;
+      return;
+    }
+
+    if (syncPauseAutoPushRef.current) {
+      return;
+    }
+
+    markSettingsChanged();
+  }, [isLocaleReady, locale, markSettingsChanged]);
 
   useEffect(() => {
     saveDB(db);
-  }, [db]);
+
+    if (!dbPersistedRef.current) {
+      dbPersistedRef.current = true;
+      return;
+    }
+
+    if (syncPauseAutoPushRef.current) {
+      return;
+    }
+
+    markDBChanged();
+  }, [db, markDBChanged]);
 
   useEffect(() => {
     if (!isHomePrefsReady) return;
     savePinnedBeltGrade(pinnedBeltGrade);
-  }, [isHomePrefsReady, pinnedBeltGrade]);
+
+    if (!pinnedBeltPersistedRef.current) {
+      pinnedBeltPersistedRef.current = true;
+      return;
+    }
+
+    if (syncPauseAutoPushRef.current) {
+      return;
+    }
+
+    markHomepageChanged();
+  }, [isHomePrefsReady, markHomepageChanged, pinnedBeltGrade]);
 
   useEffect(() => {
     if (!isHomePrefsReady) return;
     saveBeltPromptDismissed(beltPromptDismissed);
-  }, [beltPromptDismissed, isHomePrefsReady]);
+
+    if (!beltPromptPersistedRef.current) {
+      beltPromptPersistedRef.current = true;
+      return;
+    }
+
+    if (syncPauseAutoPushRef.current) {
+      return;
+    }
+
+    markHomepageChanged();
+  }, [beltPromptDismissed, isHomePrefsReady, markHomepageChanged]);
 
   useEffect(() => {
     saveOnboardingDismissed(onboardingDismissed);
-  }, [onboardingDismissed]);
+
+    if (!onboardingDismissedPersistedRef.current) {
+      onboardingDismissedPersistedRef.current = true;
+      return;
+    }
+
+    if (syncPauseAutoPushRef.current) {
+      return;
+    }
+
+    markHomepageChanged();
+  }, [markHomepageChanged, onboardingDismissed]);
 
   useEffect(() => {
     saveOnboardingCompleted(onboardingCompleted);
-  }, [onboardingCompleted]);
+
+    if (!onboardingCompletedPersistedRef.current) {
+      onboardingCompletedPersistedRef.current = true;
+      return;
+    }
+
+    if (syncPauseAutoPushRef.current) {
+      return;
+    }
+
+    markHomepageChanged();
+  }, [markHomepageChanged, onboardingCompleted]);
 
   // Persist filters to local storage so they survive reloads/navigation
   useEffect(() => {
@@ -1062,7 +1510,18 @@ export default function App({
     } catch {
       // noop
     }
-  }, [filters]);
+
+    if (!filtersPersistedRef.current) {
+      filtersPersistedRef.current = true;
+      return;
+    }
+
+    if (syncPauseAutoPushRef.current) {
+      return;
+    }
+
+    markSettingsChanged();
+  }, [filters, markSettingsChanged]);
 
   useEffect(() => {
     if (selectedCollectionId === 'all' || selectedCollectionId === 'ungrouped') {
@@ -2011,7 +2470,10 @@ export default function App({
     setSearchOpen(false);
     setOnboardingDismissed(true);
     saveOnboardingStep(null);
-  }, []);
+    if (!syncPauseAutoPushRef.current) {
+      markHomepageChanged();
+    }
+  }, [markHomepageChanged]);
 
   const handleStartOnboardingTour = useCallback((): void => {
     const nextSegment = 0;
@@ -2022,7 +2484,10 @@ export default function App({
     setOnboardingDismissed(false);
     setOnboardingCompleted(false);
     saveOnboardingStep(nextSegment);
-  }, []);
+    if (!syncPauseAutoPushRef.current) {
+      markHomepageChanged();
+    }
+  }, [markHomepageChanged]);
 
   const isTourSegmentAligned = useMemo(() => {
     const segment = ONBOARDING_TOUR_SEGMENTS[normalizeTourSegmentIndex(tourSegmentIndex)];
@@ -2070,11 +2535,14 @@ export default function App({
       setOnboardingCompleted(true);
       setOnboardingDismissed(false);
       saveOnboardingStep(null);
+      if (!syncPauseAutoPushRef.current) {
+        markHomepageChanged();
+      }
       return;
     }
 
     setTourSegmentIndex((current) => normalizeTourSegmentIndex(current + 1));
-  }, [isTourSegmentAligned, syncTourSegment, tourSegmentIndex]);
+  }, [isTourSegmentAligned, markHomepageChanged, syncTourSegment, tourSegmentIndex]);
 
   const handleTourGoHome = useCallback(() => {
     setTourOpen(false);
@@ -2090,8 +2558,11 @@ export default function App({
     if (!tourOpen || tourCompletionVisible) return;
     const normalized = normalizeTourSegmentIndex(tourSegmentIndex);
     saveOnboardingStep(normalized);
+    if (!syncPauseAutoPushRef.current) {
+      markHomepageChanged();
+    }
     syncTourSegment(normalized);
-  }, [tourCompletionVisible, tourOpen, tourSegmentIndex, syncTourSegment]);
+  }, [markHomepageChanged, tourCompletionVisible, tourOpen, tourSegmentIndex, syncTourSegment]);
 
   useEffect(() => {
     if (!showTourCompletionConfetti) return;
@@ -2308,15 +2779,15 @@ export default function App({
         ? copy.backToHome
         : techniqueBackRoute === 'support'
           ? copy.supportLink
-        : techniqueBackRoute === 'about'
-          ? copy.backToAbout
-          : isGuideLikeRoute(techniqueBackRoute)
-            ? copy.backToGuide
-            : techniqueBackRoute === 'terms'
-              ? copy.backToGlossary
-              : techniqueBackRoute === 'feedback'
-                ? copy.backToFeedback
-                : copy.backToLibrary;
+          : techniqueBackRoute === 'about'
+            ? copy.backToAbout
+            : isGuideLikeRoute(techniqueBackRoute)
+              ? copy.backToGuide
+              : techniqueBackRoute === 'terms'
+                ? copy.backToGlossary
+                : techniqueBackRoute === 'feedback'
+                  ? copy.backToFeedback
+                  : copy.backToLibrary;
 
   const glossaryHistoryState =
     typeof window !== 'undefined' ? (window.history.state as HistoryState | null) : null;
@@ -2328,13 +2799,13 @@ export default function App({
         ? copy.backToHome
         : glossaryBackRoute === 'support'
           ? copy.supportLink
-        : glossaryBackRoute === 'about'
-          ? copy.backToAbout
-          : isGuideLikeRoute(glossaryBackRoute)
-            ? copy.backToGuide
-            : glossaryBackRoute === 'feedback'
-              ? copy.backToFeedback
-              : copy.backToGlossary;
+          : glossaryBackRoute === 'about'
+            ? copy.backToAbout
+            : isGuideLikeRoute(glossaryBackRoute)
+              ? copy.backToGuide
+              : glossaryBackRoute === 'feedback'
+                ? copy.backToFeedback
+                : copy.backToGlossary;
 
   const practiceHistoryState =
     typeof window !== 'undefined' ? (window.history.state as HistoryState | null) : null;
@@ -2347,13 +2818,13 @@ export default function App({
         ? copy.backToHome
         : practiceBackRoute === 'support'
           ? copy.supportLink
-        : practiceBackRoute === 'about'
-          ? copy.backToAbout
-          : isGuideLikeRoute(practiceBackRoute)
-            ? copy.backToGuide
-            : practiceBackRoute === 'feedback'
-              ? copy.backToFeedback
-              : copy.backToPractice;
+          : practiceBackRoute === 'about'
+            ? copy.backToAbout
+            : isGuideLikeRoute(practiceBackRoute)
+              ? copy.backToGuide
+              : practiceBackRoute === 'feedback'
+                ? copy.backToFeedback
+                : copy.backToPractice;
   const handlePracticeBack = () => {
     const guideRoutine = guideRouteToRoutine(practiceBackRoute);
     if (guideRoutine && practiceBackSourceSlug) {
@@ -2531,7 +3002,20 @@ export default function App({
   } else if (route === 'support') {
     mainContent = <SupportPage copy={copy} />;
   } else if (route === 'sync') {
-    mainContent = <SyncPage copy={copy} />;
+    mainContent = (
+      <SyncPage
+        copy={copy}
+        isSignedIn={Boolean(authSession)}
+        isAuthBootstrapping={isAuthBootstrapping}
+        syncStatus={syncStatus}
+        syncError={syncError}
+        lastSyncedAt={syncMeta.lastSyncedAt}
+        onRequestOtp={requestOtpForSync}
+        onVerifyOtp={verifyOtpForSync}
+        onSignOut={signOutFromSync}
+        onSyncNow={syncNow}
+      />
+    );
   } else if (route === 'guideAdvanced') {
     mainContent = (
       <AdvancedPrograms
@@ -2949,6 +3433,10 @@ export default function App({
               onChangeTheme={handleThemeChange}
               onManageSync={handleManageSync}
               onChangeDB={handleDBChange}
+              isOnline={isOnline}
+              isSignedIn={Boolean(authSession)}
+              isAuthBootstrapping={isAuthBootstrapping}
+              syncStatus={syncStatus}
               clearButtonRef={settingsClearButtonRef}
               trapEnabled={!confirmClearOpen && !tourOpen}
             />

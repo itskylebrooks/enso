@@ -148,7 +148,7 @@ export const de = {
       'Enso ist Open Source, und der Code ist online verfügbar, damit jede Person nachvollziehen kann, wie die Synchronisierung funktioniert. Deine persönlichen Synchronisierungsdaten bleiben privat, und deine Lerndaten sind im normalen Betrieb nicht einsehbar.',
     statusTitle: 'Status',
     statusBody:
-      'Die Synchronisierung ist noch nicht implementiert. Diese Seite soll die Richtung früh erklären und Erwartungen klar halten. Wenn die Synchronisierung verfügbar wird, kannst du selbst entscheiden, ob du sie aktivierst, und Enso bleibt in jedem Fall vollständig nutzbar.',
+      'Die Synchronisierung ist jetzt verfügbar, sobald du dich mit E-Mail-Link oder Einmalcode anmeldest. Neue E-Mail-Adressen koennen beim ersten Anmelden automatisch als Konto erstellt werden. Deine Daten bleiben local-first, und die Synchronisierung ist optional. Du kannst dich jederzeit abmelden und Enso weiterhin offline nutzen.',
   },
   dangerZone: 'Daten löschen',
   clear: 'Löschen',

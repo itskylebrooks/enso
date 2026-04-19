@@ -132,7 +132,7 @@ export const en = {
   syncPage: {
     title: 'Sync',
     intro:
-      "Sync is an optional feature that keeps your Enso data consistent across devices. If you use Enso on phone and desktop, your bookmarks, collections, and study progress stay in sync so you can continue where you left off.\n\nSync only affects your personal data and does not change Enso content itself.",
+      'Sync is an optional feature that keeps your Enso data consistent across devices. If you use Enso on phone and desktop, your bookmarks, collections, and study progress stay in sync so you can continue where you left off.\n\nSync only affects your personal data and does not change Enso content itself.',
     whatItWillDoTitle: 'What Sync will do',
     whatItWillDoBody:
       'When Sync is enabled, Enso securely stores a copy of your personal data and keeps it up to date across your devices.',
@@ -147,7 +147,7 @@ export const en = {
       'Enso is open source, and the code is available online so anyone can inspect how Sync works. Your personal sync data stays private, and your personal study data is not readable in normal use.',
     statusTitle: 'Status',
     statusBody:
-      "Sync is not implemented yet. This page exists to explain the direction early and to keep expectations clear. When Sync becomes available, you'll be able to decide whether to enable it, and Enso will remain fully usable either way.",
+      'Sync is now available when you sign in with an email link or one-time code. New email addresses can be created automatically on first sign-in. Your data remains local-first, and syncing is optional. You can sign out at any time and continue using Enso offline.',
   },
   dangerZone: 'Erase data',
   clear: 'Erase',
