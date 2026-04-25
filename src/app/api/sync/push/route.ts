@@ -14,7 +14,7 @@ const MAX_BODY_BYTES = 1_000_000;
 
 const SyncPayloadSchema = z
   .object({
-    version: z.literal(1),
+    version: z.literal(2),
     db: z.object({
       progress: z.array(z.unknown()),
       glossaryProgress: z.array(z.unknown()),
@@ -57,6 +57,7 @@ const SyncPayloadSchema = z
       settings: z.number().nonnegative(),
       homepage: z.number().nonnegative(),
     }),
+    tombstones: z.record(z.number().positive()),
   })
   .strict();
 
@@ -69,8 +70,16 @@ const PushRequestSchema = z
 type SyncStateRow = {
   user_id: string;
   payload: SyncPayloadData;
+  revision: number;
   updated_at: string;
 };
+
+type SupabaseWriteError = {
+  message?: string;
+  code?: string;
+};
+
+const MAX_WRITE_ATTEMPTS = 3;
 
 const getBearerToken = (request: Request): string | null => {
   const header = request.headers.get('authorization');
@@ -141,54 +150,90 @@ export async function POST(request: Request) {
 
   const incomingPayload = validation.data.payload as SyncPayloadData;
 
-  const { data: existing, error: readError } = await serviceClient
-    .from('user_sync_state')
-    .select('user_id,payload,updated_at')
-    .eq('user_id', userId)
-    .maybeSingle();
+  let lastWriteError: SupabaseWriteError | null = null;
 
-  if (readError) {
-    return NextResponse.json(
-      {
-        message: readError.message || 'Failed to load current sync state',
-        requestId,
-      },
-      { status: 502 },
-    );
-  }
+  for (let attempt = 0; attempt < MAX_WRITE_ATTEMPTS; attempt += 1) {
+    const { data: existing, error: readError } = await serviceClient
+      .from('user_sync_state')
+      .select('user_id,payload,revision,updated_at')
+      .eq('user_id', userId)
+      .maybeSingle();
 
-  const existingRow = (existing as SyncStateRow | null) ?? null;
+    if (readError) {
+      return NextResponse.json(
+        {
+          message: readError.message || 'Failed to load current sync state',
+          requestId,
+        },
+        { status: 502 },
+      );
+    }
 
-  const mergedPayload = existingRow?.payload
-    ? mergeSyncPayload(incomingPayload, existingRow.payload)
-    : incomingPayload;
+    const existingRow = (existing as SyncStateRow | null) ?? null;
+    const mergedPayload = existingRow?.payload
+      ? mergeSyncPayload(incomingPayload, existingRow.payload)
+      : incomingPayload;
+    const nextRevision = (existingRow?.revision ?? 0) + 1;
+    const updatedAt = new Date().toISOString();
 
-  const { data: upserted, error: writeError } = await serviceClient
-    .from('user_sync_state')
-    .upsert(
-      {
-        user_id: userId,
+    if (!existingRow) {
+      const { data: inserted, error: insertError } = await serviceClient
+        .from('user_sync_state')
+        .insert({
+          user_id: userId,
+          payload: mergedPayload,
+          revision: nextRevision,
+          updated_at: updatedAt,
+        })
+        .select('user_id,payload,revision,updated_at')
+        .single();
+
+      if (!insertError) {
+        const insertedRow = inserted as SyncStateRow;
+        return NextResponse.json({
+          payload: insertedRow.payload,
+          revision: insertedRow.revision,
+          updatedAt: insertedRow.updated_at,
+        });
+      }
+
+      lastWriteError = insertError;
+      if (insertError.code === '23505') {
+        continue;
+      }
+
+      break;
+    }
+
+    const { data: updated, error: updateError } = await serviceClient
+      .from('user_sync_state')
+      .update({
         payload: mergedPayload,
-      },
-      { onConflict: 'user_id' },
-    )
-    .select('user_id,payload,updated_at')
-    .single();
+        revision: nextRevision,
+        updated_at: updatedAt,
+      })
+      .eq('user_id', userId)
+      .eq('revision', existingRow.revision)
+      .select('user_id,payload,revision,updated_at')
+      .maybeSingle();
 
-  if (writeError) {
-    return NextResponse.json(
-      {
-        message: writeError.message || 'Failed to save sync state',
-        requestId,
-      },
-      { status: 502 },
-    );
+    if (!updateError && updated) {
+      const updatedRow = updated as SyncStateRow;
+      return NextResponse.json({
+        payload: updatedRow.payload,
+        revision: updatedRow.revision,
+        updatedAt: updatedRow.updated_at,
+      });
+    }
+
+    lastWriteError = updateError;
   }
 
-  const upsertedRow = upserted as SyncStateRow;
-
-  return NextResponse.json({
-    payload: upsertedRow.payload,
-    updatedAt: upsertedRow.updated_at,
-  });
+  return NextResponse.json(
+    {
+      message: lastWriteError?.message || 'Failed to save sync state after concurrent updates',
+      requestId,
+    },
+    { status: 409 },
+  );
 }

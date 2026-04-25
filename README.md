@@ -203,7 +203,8 @@ SUPABASE_SECRET_KEY=***
 Notes:
 
 - The app remains local-first; sync is optional.
-- `/api/sync/*` route handlers use bearer auth and upsert into `user_sync_state`.
+- `/api/sync/*` route handlers use bearer auth and save revisioned Sync v2 payloads into
+  `user_sync_state`.
 
 ## Contributing
 

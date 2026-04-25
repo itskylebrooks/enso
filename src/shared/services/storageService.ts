@@ -147,6 +147,7 @@ const defaultSyncMetaState: SyncMetaState = {
   settingsUpdatedAt: 0,
   homepageUpdatedAt: 0,
   lastSyncedAt: null,
+  tombstones: {},
 };
 
 const buildDefaultProgress = (techniqueId: string): Progress => ({
@@ -1001,6 +1002,14 @@ export const loadSyncMeta = (): SyncMetaState => {
 
   try {
     const parsed = JSON.parse(raw) as Partial<SyncMetaState>;
+    const tombstones =
+      parsed.tombstones && typeof parsed.tombstones === 'object' && !Array.isArray(parsed.tombstones)
+        ? Object.fromEntries(
+            Object.entries(parsed.tombstones).filter(([, value]) => {
+              return typeof value === 'number' && Number.isFinite(value) && value > 0;
+            }),
+          )
+        : {};
     return {
       dbUpdatedAt: sanitizeTimestamp(parsed.dbUpdatedAt),
       settingsUpdatedAt: sanitizeTimestamp(parsed.settingsUpdatedAt),
@@ -1009,6 +1018,7 @@ export const loadSyncMeta = (): SyncMetaState => {
         typeof parsed.lastSyncedAt === 'number' && Number.isFinite(parsed.lastSyncedAt)
           ? Math.trunc(parsed.lastSyncedAt)
           : null,
+      tombstones,
     };
   } catch {
     return { ...defaultSyncMetaState };
@@ -1026,6 +1036,14 @@ export const saveSyncMeta = (meta: SyncMetaState): void => {
         typeof meta.lastSyncedAt === 'number' && Number.isFinite(meta.lastSyncedAt)
           ? Math.trunc(meta.lastSyncedAt)
           : null,
+      tombstones:
+        meta.tombstones && typeof meta.tombstones === 'object'
+          ? Object.fromEntries(
+              Object.entries(meta.tombstones).filter(([, value]) => {
+                return typeof value === 'number' && Number.isFinite(value) && value > 0;
+              }),
+            )
+          : {},
     }),
   );
 };

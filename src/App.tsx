@@ -57,11 +57,22 @@ import {
   buildHomepageState,
   buildSettingsState,
   buildSyncPayloadData,
+  buildTombstonesForSyncedState,
   computeDBUpdatedAt,
+  getBookmarkCollectionTombstoneKey,
+  getCollectionTombstoneKey,
+  getExerciseBookmarkCollectionTombstoneKey,
+  getGlossaryBookmarkCollectionTombstoneKey,
+  pruneSyncTombstones,
   mergeSyncPayload,
   pickSyncedDBState,
 } from './lib/backend/syncMerge';
-import type { AuthSession, SyncMetaState, SyncPayloadData } from './lib/supabase/types';
+import type {
+  AuthSession,
+  SyncMetaState,
+  SyncPayloadData,
+  SyncTombstones,
+} from './lib/supabase/types';
 import { ConfirmClearModal } from './shared/components/dialogs/ConfirmClearDialog';
 import { ConfirmModal } from './shared/components/ui/modals/ConfirmModal';
 import { ENTRY_MODE_ORDER, isEntryMode } from './shared/constants/entryModes';
@@ -809,6 +820,9 @@ export default function App({
   const onboardingCompletedPersistedRef = useRef(false);
   const syncPauseAutoPushRef = useRef(false);
   const syncInFlightRef = useRef(false);
+  const syncDirtyRef = useRef(false);
+  const syncDirtyDuringFlightRef = useRef(false);
+  const syncMutationVersionRef = useRef(0);
   const syncDebounceTimeoutRef = useRef<number | null>(null);
   const authAccessTokenRef = useRef<string | null>(null);
   const runSyncWithTokenRef = useRef<(accessToken: string) => Promise<void>>(async () => {});
@@ -934,9 +948,39 @@ export default function App({
     saveSyncMeta(nextMeta);
   }, []);
 
+  const markSyncMutationPending = useCallback((): void => {
+    if (syncPauseAutoPushRef.current) return;
+    syncMutationVersionRef.current += 1;
+    syncDirtyRef.current = true;
+    if (syncInFlightRef.current) {
+      syncDirtyDuringFlightRef.current = true;
+    }
+  }, []);
+
+  const addSyncTombstones = useCallback((tombstones: SyncTombstones): void => {
+    if (Object.keys(tombstones).length === 0) return;
+
+    markSyncMutationPending();
+
+    setSyncMeta((prev) => {
+      const nextTombstones: SyncTombstones = { ...prev.tombstones };
+      Object.entries(tombstones).forEach(([key, deletedAt]) => {
+        nextTombstones[key] = Math.max(nextTombstones[key] ?? 0, deletedAt);
+      });
+      const nextMeta: SyncMetaState = {
+        ...prev,
+        dbUpdatedAt: Math.max(prev.dbUpdatedAt, ...Object.values(tombstones)),
+        tombstones: pruneSyncTombstones(nextTombstones),
+      };
+      saveSyncMeta(nextMeta);
+      return nextMeta;
+    });
+  }, [markSyncMutationPending]);
+
   const buildLocalSyncPayload = useCallback((): SyncPayloadData => {
     const syncedDB = pickSyncedDBState(db);
-    const computedDbUpdatedAt = computeDBUpdatedAt(syncedDB);
+    const tombstones = pruneSyncTombstones(syncMeta.tombstones);
+    const computedDbUpdatedAt = computeDBUpdatedAt(syncedDB, tombstones);
     const dbTimestamp = Math.max(syncMeta.dbUpdatedAt, computedDbUpdatedAt);
 
     return buildSyncPayloadData({
@@ -959,6 +1003,7 @@ export default function App({
         settings: syncMeta.settingsUpdatedAt,
         homepage: syncMeta.homepageUpdatedAt,
       },
+      tombstones,
     });
   }, [
     beltPromptDismissed,
@@ -972,6 +1017,7 @@ export default function App({
     syncMeta.dbUpdatedAt,
     syncMeta.homepageUpdatedAt,
     syncMeta.settingsUpdatedAt,
+    syncMeta.tombstones,
     theme,
   ]);
 
@@ -1008,6 +1054,7 @@ export default function App({
         settingsUpdatedAt: payload.timestamps.settings,
         homepageUpdatedAt: payload.timestamps.homepage,
         lastSyncedAt: now,
+        tombstones: pruneSyncTombstones(payload.tombstones, now),
       });
 
       if (typeof window !== 'undefined') {
@@ -1024,6 +1071,8 @@ export default function App({
   const runSyncWithToken = useCallback(
     async (accessToken: string): Promise<void> => {
       if (syncInFlightRef.current) {
+        syncDirtyRef.current = true;
+        syncDirtyDuringFlightRef.current = true;
         return;
       }
 
@@ -1032,15 +1081,31 @@ export default function App({
       setSyncError(null);
 
       try {
-        const localPayload = buildLocalSyncPayload();
-        const pullResponse = await syncClient.pull(accessToken);
+        let shouldSyncAgain = true;
+        while (shouldSyncAgain) {
+          shouldSyncAgain = false;
+          syncDirtyDuringFlightRef.current = false;
+          const startedMutationVersion = syncMutationVersionRef.current;
+          const localPayload = buildLocalSyncPayload();
+          const pullResponse = await syncClient.pull(accessToken);
 
-        const mergedPayload = pullResponse.payload
-          ? mergeSyncPayload(localPayload, pullResponse.payload)
-          : localPayload;
+          const mergedPayload = pullResponse.payload
+            ? mergeSyncPayload(localPayload, pullResponse.payload)
+            : localPayload;
 
-        const pushResponse = await syncClient.push(accessToken, mergedPayload);
-        applySyncPayloadToLocalState(pushResponse.payload, Date.now());
+          const pushResponse = await syncClient.push(accessToken, mergedPayload);
+          const changedDuringFlight =
+            syncDirtyDuringFlightRef.current ||
+            syncMutationVersionRef.current !== startedMutationVersion;
+
+          if (changedDuringFlight) {
+            syncDirtyRef.current = true;
+            shouldSyncAgain = true;
+          } else {
+            applySyncPayloadToLocalState(pushResponse.payload, Date.now());
+            syncDirtyRef.current = false;
+          }
+        }
         setSyncStatus('idle');
       } catch (error) {
         const message = error instanceof Error ? error.message : 'Sync failed';
@@ -1050,6 +1115,7 @@ export default function App({
           setSyncError(null);
           setSyncStatus('signed-out');
         } else {
+          syncDirtyRef.current = true;
           setSyncError(message);
           setSyncStatus('error');
         }
@@ -1243,15 +1309,30 @@ export default function App({
   useEffect(() => {
     if (typeof window === 'undefined') return;
 
-    const handleOnline = () => setIsOnline(true);
+    const retryDirtySync = () => {
+      if (authAccessTokenRef.current && syncDirtyRef.current) {
+        void runSyncWithTokenRef.current(authAccessTokenRef.current);
+      }
+    };
+    const handleOnline = () => {
+      setIsOnline(true);
+      retryDirtySync();
+    };
     const handleOffline = () => setIsOnline(false);
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        retryDirtySync();
+      }
+    };
 
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
+    document.addEventListener('visibilitychange', handleVisibilityChange);
 
     return () => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, []);
 
@@ -1355,10 +1436,29 @@ export default function App({
   }, []);
 
   const handleConfirmClear = useCallback(() => {
-    setDB(clearDB());
+    const now = Date.now();
+    const tombstones = buildTombstonesForSyncedState(pickSyncedDBState(db), now);
+    const nextDB = clearDB();
+    const nextTombstones = pruneSyncTombstones({
+      ...syncMeta.tombstones,
+      ...tombstones,
+    });
+    const nextMeta: SyncMetaState = {
+      ...syncMeta,
+      dbUpdatedAt: now,
+      tombstones: nextTombstones,
+    };
+    syncMutationVersionRef.current += 1;
+    syncDirtyRef.current = true;
+    if (syncInFlightRef.current) {
+      syncDirtyDuringFlightRef.current = true;
+    }
+    saveSyncMeta(nextMeta);
+    setSyncMeta(nextMeta);
+    setDB(nextDB);
     handleCancelClear();
     showToast(copy.toastDataCleared);
-  }, [copy.toastDataCleared, handleCancelClear, setDB, showToast]);
+  }, [copy.toastDataCleared, db, handleCancelClear, setDB, showToast, syncMeta]);
 
   const handleRequestDeleteAccount = useCallback(() => {
     setConfirmDeleteAccountOpen(true);
@@ -1379,6 +1479,7 @@ export default function App({
 
   const markDBChanged = useCallback(() => {
     const now = Date.now();
+    markSyncMutationPending();
     setSyncMeta((prev) => {
       const nextMeta: SyncMetaState = {
         ...prev,
@@ -1388,10 +1489,11 @@ export default function App({
       return nextMeta;
     });
     scheduleAutoSync();
-  }, [scheduleAutoSync]);
+  }, [markSyncMutationPending, scheduleAutoSync]);
 
   const markSettingsChanged = useCallback(() => {
     const now = Date.now();
+    markSyncMutationPending();
     setSyncMeta((prev) => {
       const nextMeta: SyncMetaState = {
         ...prev,
@@ -1401,10 +1503,11 @@ export default function App({
       return nextMeta;
     });
     scheduleAutoSync();
-  }, [scheduleAutoSync]);
+  }, [markSyncMutationPending, scheduleAutoSync]);
 
   const markHomepageChanged = useCallback(() => {
     const now = Date.now();
+    markSyncMutationPending();
     setSyncMeta((prev) => {
       const nextMeta: SyncMetaState = {
         ...prev,
@@ -1414,7 +1517,7 @@ export default function App({
       return nextMeta;
     });
     scheduleAutoSync();
-  }, [scheduleAutoSync]);
+  }, [markSyncMutationPending, scheduleAutoSync]);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -1777,10 +1880,24 @@ export default function App({
   );
 
   const updateProgress = (id: string, patch: Partial<Progress>): void => {
+    markSyncMutationPending();
     const normalizedPatch: Partial<Progress> =
       patch.bookmarked === false
         ? { ...patch, bookmarkedVariant: undefined, bookmarkedVariantKeys: [] }
         : patch;
+    const deletedAt = Date.now();
+    if (normalizedPatch.bookmarked === false) {
+      addSyncTombstones(
+        Object.fromEntries(
+          db.bookmarkCollections
+            .filter((entry) => entry.techniqueId === id)
+            .map((entry) => [
+              getBookmarkCollectionTombstoneKey(entry.collectionId, entry.techniqueId),
+              deletedAt,
+            ]),
+        ),
+      );
+    }
 
     setDB((prev) => {
       const nextProgress = updateProgressEntry(prev.progress, id, normalizedPatch);
@@ -1803,6 +1920,21 @@ export default function App({
   };
 
   const updateGlossaryProgress = (termId: string, patch: Partial<GlossaryProgress>): void => {
+    markSyncMutationPending();
+    const deletedAt = Date.now();
+    if (patch.bookmarked === false) {
+      addSyncTombstones(
+        Object.fromEntries(
+          db.glossaryBookmarkCollections
+            .filter((entry) => entry.termId === termId)
+            .map((entry) => [
+              getGlossaryBookmarkCollectionTombstoneKey(entry.collectionId, entry.termId),
+              deletedAt,
+            ]),
+        ),
+      );
+    }
+
     setDB((prev) => {
       const nextGlossaryProgress = updateGlossaryProgressEntry(
         prev.glossaryProgress,
@@ -1828,6 +1960,21 @@ export default function App({
   };
 
   const updateExerciseProgress = (exerciseId: string, patch: Partial<ExerciseProgress>): void => {
+    markSyncMutationPending();
+    const deletedAt = Date.now();
+    if (patch.bookmarked === false) {
+      addSyncTombstones(
+        Object.fromEntries(
+          db.exerciseBookmarkCollections
+            .filter((entry) => entry.exerciseId === exerciseId)
+            .map((entry) => [
+              getExerciseBookmarkCollectionTombstoneKey(entry.collectionId, entry.exerciseId),
+              deletedAt,
+            ]),
+        ),
+      );
+    }
+
     setDB((prev) => {
       const nextExerciseProgress = updateExerciseProgressEntry(
         prev.exerciseProgress,
@@ -1857,6 +2004,7 @@ export default function App({
     slug: string,
     variant?: TechniqueVariantKey,
   ): void => {
+    markSyncMutationPending();
     const current =
       itemType === 'technique' && variant
         ? getStudyStatusForTechniqueVariant(db.studyStatus, slug, variant)
@@ -1897,6 +2045,7 @@ export default function App({
   const createCollection = (name: string): string | null => {
     const trimmed = name.trim();
     if (!trimmed) return null;
+    markSyncMutationPending();
     const now = Date.now();
     const id = generateId();
 
@@ -1922,6 +2071,7 @@ export default function App({
   const renameCollection = (id: string, name: string): void => {
     const trimmed = name.trim();
     if (!trimmed) return;
+    markSyncMutationPending();
     const now = Date.now();
 
     setDB((prev) => ({
@@ -1941,6 +2091,36 @@ export default function App({
   };
 
   const deleteCollection = (id: string): void => {
+    markSyncMutationPending();
+    const deletedAt = Date.now();
+    addSyncTombstones({
+      [getCollectionTombstoneKey(id)]: deletedAt,
+      ...Object.fromEntries(
+        db.bookmarkCollections
+          .filter((entry) => entry.collectionId === id)
+          .map((entry) => [
+            getBookmarkCollectionTombstoneKey(entry.collectionId, entry.techniqueId),
+            deletedAt,
+          ]),
+      ),
+      ...Object.fromEntries(
+        db.glossaryBookmarkCollections
+          .filter((entry) => entry.collectionId === id)
+          .map((entry) => [
+            getGlossaryBookmarkCollectionTombstoneKey(entry.collectionId, entry.termId),
+            deletedAt,
+          ]),
+      ),
+      ...Object.fromEntries(
+        db.exerciseBookmarkCollections
+          .filter((entry) => entry.collectionId === id)
+          .map((entry) => [
+            getExerciseBookmarkCollectionTombstoneKey(entry.collectionId, entry.exerciseId),
+            deletedAt,
+          ]),
+      ),
+    });
+
     setDB((prev) => ({
       ...prev,
       collections: sortCollectionsByName(
@@ -1957,6 +2137,7 @@ export default function App({
   };
 
   const assignToCollection = (techniqueId: string, collectionId: string): void => {
+    markSyncMutationPending();
     setDB((prev) => {
       const now = Date.now();
       const itemId = createCollectionItemId('technique', techniqueId);
@@ -2030,6 +2211,11 @@ export default function App({
   };
 
   const removeFromCollection = (techniqueId: string, collectionId: string): void => {
+    markSyncMutationPending();
+    addSyncTombstones({
+      [getBookmarkCollectionTombstoneKey(collectionId, techniqueId)]: Date.now(),
+    });
+
     setDB((prev) => {
       const now = Date.now();
       const itemId = createCollectionItemId('technique', techniqueId);
@@ -2044,6 +2230,7 @@ export default function App({
   };
 
   const assignGlossaryToCollection = (termId: string, collectionId: string): void => {
+    markSyncMutationPending();
     setDB((prev) => {
       const now = Date.now();
       const itemId = createCollectionItemId('glossary', termId);
@@ -2095,6 +2282,11 @@ export default function App({
   };
 
   const removeGlossaryFromCollection = (termId: string, collectionId: string): void => {
+    markSyncMutationPending();
+    addSyncTombstones({
+      [getGlossaryBookmarkCollectionTombstoneKey(collectionId, termId)]: Date.now(),
+    });
+
     setDB((prev) => {
       const now = Date.now();
       const itemId = createCollectionItemId('glossary', termId);
@@ -2109,6 +2301,7 @@ export default function App({
   };
 
   const assignExerciseToCollection = (exerciseId: string, collectionId: string): void => {
+    markSyncMutationPending();
     setDB((prev) => {
       const now = Date.now();
       const itemId = createCollectionItemId('exercise', exerciseId);
@@ -2159,6 +2352,11 @@ export default function App({
   };
 
   const removeExerciseFromCollection = (exerciseId: string, collectionId: string): void => {
+    markSyncMutationPending();
+    addSyncTombstones({
+      [getExerciseBookmarkCollectionTombstoneKey(collectionId, exerciseId)]: Date.now(),
+    });
+
     setDB((prev) => {
       const now = Date.now();
       const itemId = createCollectionItemId('exercise', exerciseId);
@@ -2177,6 +2375,7 @@ export default function App({
     itemId: string,
     direction: 'backward' | 'forward',
   ): void => {
+    markSyncMutationPending();
     setDB((prev) => {
       const collection = prev.collections.find((entry) => entry.id === collectionId);
       if (!collection) return prev;
@@ -2219,6 +2418,7 @@ export default function App({
   }, [closeSettings, navigateTo]);
 
   const handleDBChange = (next: DB): void => {
+    markSyncMutationPending();
     setDB(next);
   };
 

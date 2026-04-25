@@ -3,6 +3,7 @@
 create table if not exists public.user_sync_state (
   user_id uuid primary key references auth.users(id) on delete cascade,
   payload jsonb not null,
+  revision bigint not null default 0,
   updated_at timestamptz not null default now()
 );
 

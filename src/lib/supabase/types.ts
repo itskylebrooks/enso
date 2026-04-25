@@ -60,12 +60,15 @@ export type SyncDomainTimestamps = {
   homepage: number;
 };
 
+export type SyncTombstones = Record<string, number>;
+
 export type SyncPayloadData = {
-  version: 1;
+  version: 2;
   db: SyncedDBState;
   settings: SyncSettingsState;
   homepage: SyncHomepageState;
   timestamps: SyncDomainTimestamps;
+  tombstones: SyncTombstones;
 };
 
 export type SyncPayload = {
@@ -79,6 +82,7 @@ export type SyncMetaState = {
   settingsUpdatedAt: number;
   homepageUpdatedAt: number;
   lastSyncedAt: number | null;
+  tombstones: SyncTombstones;
 };
 
 export type SyncPushRequest = {
@@ -87,11 +91,13 @@ export type SyncPushRequest = {
 
 export type SyncPullResponse = {
   payload: SyncPayloadData | null;
+  revision: number | null;
   updatedAt: string | null;
 };
 
 export type SyncPushResponse = {
   payload: SyncPayloadData;
+  revision: number;
   updatedAt: string;
 };
 

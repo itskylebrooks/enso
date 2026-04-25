@@ -11,6 +11,7 @@ export const runtime = 'nodejs';
 type SyncStateRow = {
   user_id: string;
   payload: SyncPayloadData;
+  revision: number;
   updated_at: string;
 };
 
@@ -60,7 +61,7 @@ export async function POST(request: Request) {
 
   const { data, error } = await serviceClient
     .from('user_sync_state')
-    .select('user_id,payload,updated_at')
+    .select('user_id,payload,revision,updated_at')
     .eq('user_id', userId)
     .maybeSingle();
 
@@ -78,6 +79,7 @@ export async function POST(request: Request) {
 
   return NextResponse.json({
     payload: row?.payload ?? null,
+    revision: row?.revision ?? null,
     updatedAt: row?.updated_at ?? null,
   });
 }
