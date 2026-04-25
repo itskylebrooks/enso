@@ -158,6 +158,30 @@ type SyncStatus = 'signed-out' | 'idle' | 'syncing' | 'error';
 
 const AUTH_TRIGGERED_SYNC_MIN_INTERVAL_MS = 60_000;
 
+type LastAppliedSyncSnapshot = {
+  db: string;
+  settings: string;
+  homepage: string;
+};
+
+const stringifyForSyncCompare = (value: unknown): string => {
+  if (value === null || typeof value !== 'object') {
+    return JSON.stringify(value);
+  }
+
+  if (Array.isArray(value)) {
+    return `[${value.map(stringifyForSyncCompare).join(',')}]`;
+  }
+
+  const entries = Object.entries(value as Record<string, unknown>)
+    .filter(([, entryValue]) => entryValue !== undefined)
+    .sort(([left], [right]) => left.localeCompare(right));
+
+  return `{${entries
+    .map(([key, entryValue]) => `${JSON.stringify(key)}:${stringifyForSyncCompare(entryValue)}`)
+    .join(',')}}`;
+};
+
 const normalizeTourSegmentIndex = (value: number | null | undefined): number => {
   if (typeof value !== 'number' || !Number.isFinite(value)) return 0;
   const maxIndex = ONBOARDING_TOUR_SEGMENTS.length - 1;
@@ -832,6 +856,7 @@ export default function App({
   const authAccessTokenRef = useRef<string | null>(null);
   const lastAuthTriggeredSyncAtRef = useRef(0);
   const runSyncWithTokenRef = useRef<(accessToken: string) => Promise<void>>(async () => {});
+  const lastAppliedSyncSnapshotRef = useRef<Partial<LastAppliedSyncSnapshot>>({});
   const filterPanelPinnedRef = useRef<boolean>(loadFilterPanelPinned());
   // Detect if this render follows a back/forward restore and skip entrance
   // animations to avoid the brief re-appearance/flicker on iOS Safari.
@@ -1027,9 +1052,46 @@ export default function App({
     theme,
   ]);
 
+  const getCurrentDBSyncSnapshot = useCallback(
+    (): string => stringifyForSyncCompare(pickSyncedDBState(db)),
+    [db],
+  );
+
+  const getCurrentSettingsSyncSnapshot = useCallback(
+    (): string =>
+      stringifyForSyncCompare(
+        buildSettingsState({
+          themePreference: hasManualTheme ? theme : null,
+          locale,
+          filters,
+          filterPanelPinned: loadFilterPanelPinned(),
+        }),
+      ),
+    [filters, hasManualTheme, locale, theme],
+  );
+
+  const getCurrentHomepageSyncSnapshot = useCallback(
+    (): string =>
+      stringifyForSyncCompare(
+        buildHomepageState({
+          pinnedBeltGrade,
+          beltPromptDismissed,
+          onboardingDismissed,
+          onboardingCompleted,
+          onboardingStep: loadOnboardingStep(),
+        }),
+      ),
+    [beltPromptDismissed, onboardingCompleted, onboardingDismissed, pinnedBeltGrade],
+  );
+
   const applySyncPayloadToLocalState = useCallback(
     (payload: SyncPayloadData, syncedAt?: number): void => {
       syncPauseAutoPushRef.current = true;
+      lastAppliedSyncSnapshotRef.current = {
+        db: stringifyForSyncCompare(payload.db),
+        settings: stringifyForSyncCompare(payload.settings),
+        homepage: stringifyForSyncCompare(payload.homepage),
+      };
 
       setDB((prev) => applySyncedDBState(prev, payload.db));
 
@@ -1562,8 +1624,12 @@ export default function App({
       return;
     }
 
+    if (lastAppliedSyncSnapshotRef.current.settings === getCurrentSettingsSyncSnapshot()) {
+      return;
+    }
+
     markSettingsChanged();
-  }, [hasManualTheme, markSettingsChanged, theme]);
+  }, [getCurrentSettingsSyncSnapshot, hasManualTheme, markSettingsChanged, theme]);
 
   useEffect(() => {
     setLocale(loadStoredLocale() ?? initialLocale);
@@ -1589,8 +1655,12 @@ export default function App({
       return;
     }
 
+    if (lastAppliedSyncSnapshotRef.current.settings === getCurrentSettingsSyncSnapshot()) {
+      return;
+    }
+
     markSettingsChanged();
-  }, [isLocaleReady, locale, markSettingsChanged]);
+  }, [getCurrentSettingsSyncSnapshot, isLocaleReady, locale, markSettingsChanged]);
 
   useEffect(() => {
     saveDB(db);
@@ -1604,8 +1674,12 @@ export default function App({
       return;
     }
 
+    if (lastAppliedSyncSnapshotRef.current.db === getCurrentDBSyncSnapshot()) {
+      return;
+    }
+
     markDBChanged();
-  }, [db, markDBChanged]);
+  }, [db, getCurrentDBSyncSnapshot, markDBChanged]);
 
   useEffect(() => {
     if (!isHomePrefsReady) return;
@@ -1620,8 +1694,12 @@ export default function App({
       return;
     }
 
+    if (lastAppliedSyncSnapshotRef.current.homepage === getCurrentHomepageSyncSnapshot()) {
+      return;
+    }
+
     markHomepageChanged();
-  }, [isHomePrefsReady, markHomepageChanged, pinnedBeltGrade]);
+  }, [getCurrentHomepageSyncSnapshot, isHomePrefsReady, markHomepageChanged, pinnedBeltGrade]);
 
   useEffect(() => {
     if (!isHomePrefsReady) return;
@@ -1636,8 +1714,12 @@ export default function App({
       return;
     }
 
+    if (lastAppliedSyncSnapshotRef.current.homepage === getCurrentHomepageSyncSnapshot()) {
+      return;
+    }
+
     markHomepageChanged();
-  }, [beltPromptDismissed, isHomePrefsReady, markHomepageChanged]);
+  }, [beltPromptDismissed, getCurrentHomepageSyncSnapshot, isHomePrefsReady, markHomepageChanged]);
 
   useEffect(() => {
     saveOnboardingDismissed(onboardingDismissed);
@@ -1651,8 +1733,12 @@ export default function App({
       return;
     }
 
+    if (lastAppliedSyncSnapshotRef.current.homepage === getCurrentHomepageSyncSnapshot()) {
+      return;
+    }
+
     markHomepageChanged();
-  }, [markHomepageChanged, onboardingDismissed]);
+  }, [getCurrentHomepageSyncSnapshot, markHomepageChanged, onboardingDismissed]);
 
   useEffect(() => {
     saveOnboardingCompleted(onboardingCompleted);
@@ -1666,8 +1752,12 @@ export default function App({
       return;
     }
 
+    if (lastAppliedSyncSnapshotRef.current.homepage === getCurrentHomepageSyncSnapshot()) {
+      return;
+    }
+
     markHomepageChanged();
-  }, [markHomepageChanged, onboardingCompleted]);
+  }, [getCurrentHomepageSyncSnapshot, markHomepageChanged, onboardingCompleted]);
 
   // Persist filters to local storage so they survive reloads/navigation
   useEffect(() => {
@@ -1686,8 +1776,12 @@ export default function App({
       return;
     }
 
+    if (lastAppliedSyncSnapshotRef.current.settings === getCurrentSettingsSyncSnapshot()) {
+      return;
+    }
+
     markSettingsChanged();
-  }, [filters, markSettingsChanged]);
+  }, [filters, getCurrentSettingsSyncSnapshot, markSettingsChanged]);
 
   useEffect(() => {
     if (selectedCollectionId === 'all' || selectedCollectionId === 'ungrouped') {
