@@ -73,7 +73,7 @@ export const SettingsModal = ({
     if (!isOnline) return 'bg-red-500';
     if (syncStatus === 'syncing') return 'bg-amber-500';
     if (isSignedIn || isAuthBootstrapping || syncStatus === 'idle') return 'bg-emerald-500';
-    return 'bg-emerald-500';
+    return 'bg-zinc-400 dark:bg-zinc-500';
   })();
 
   useFocusTrap(trapEnabled, dialogRef, onClose);
