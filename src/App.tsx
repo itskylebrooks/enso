@@ -688,8 +688,11 @@ function applyFilters(techniques: Technique[], filters: Filters): Technique[] {
         }
 
         const requiredEntry: EntryMode = filters.stance;
-        const hasEntryMode = technique.versions.some((version) =>
-          Boolean(version.stepsByEntry?.[requiredEntry]),
+        const hasEntryMode = technique.versions.some(
+          (version) =>
+            version.entries?.includes(requiredEntry) ||
+            Boolean(version.stepsByEntry?.[requiredEntry]) ||
+            Boolean(version.mediaByEntry?.[requiredEntry]),
         );
         if (!hasEntryMode) return false;
       }
@@ -2921,8 +2924,11 @@ export default function App({
 
   const getFallbackVariantForTechnique = (technique: Technique): TechniqueVariantKey => {
     const firstVersion = technique.versions[0];
-    const availableDirections = ENTRY_MODE_ORDER.filter((mode) =>
-      Boolean(firstVersion?.stepsByEntry?.[mode]),
+    const availableDirections = ENTRY_MODE_ORDER.filter(
+      (mode) =>
+        firstVersion?.entries?.includes(mode) ||
+        Boolean(firstVersion?.stepsByEntry?.[mode]) ||
+        Boolean(firstVersion?.mediaByEntry?.[mode]),
     );
 
     return {

@@ -7,18 +7,32 @@ type MediaEmbedProps = {
   locale?: Locale;
 };
 
+const buildYouTubeEmbedUrl = (rawUrl: string): string => {
+  try {
+    const url = new URL(rawUrl);
+    url.searchParams.set('rel', '0');
+    url.searchParams.set('modestbranding', '1');
+    url.searchParams.set('playsinline', '1');
+    url.searchParams.set('iv_load_policy', '3');
+    return url.toString();
+  } catch {
+    return rawUrl;
+  }
+};
+
 export const MediaEmbed = ({ media, locale = 'en' }: MediaEmbedProps): ReactElement => {
   const copy = getCopy(locale);
   if (media.type === 'youtube') {
     return (
       <div className="aspect-video w-full overflow-hidden rounded-xl border surface-border surface">
         <iframe
-          className="h-full w-full"
-          src={media.url}
-          title="YouTube"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          className="block h-full w-full"
+          src={buildYouTubeEmbedUrl(media.url)}
+          title="YouTube video player"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowFullScreen
           loading="lazy"
+          referrerPolicy="strict-origin-when-cross-origin"
         />
       </div>
     );

@@ -15,6 +15,7 @@ import type {
   BookmarkCollection,
   Collection,
   Direction,
+  EntryMode,
   Grade,
   Locale,
   Progress,
@@ -24,12 +25,11 @@ import type {
   WeaponKind,
 } from '@shared/types';
 import { stripDiacritics } from '@shared/utils/text';
-import { Footprints } from 'lucide-react';
+import { MessageSquarePlus } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useCallback, useEffect, useMemo, useState, type ReactElement } from 'react';
 import { MediaPanel } from './MediaPanel';
 import { NotesPanel } from './NotesPanel';
-import { StepsList } from './StepsList';
 import { TechniqueHeader, type CollectionOption } from './TechniqueHeader';
 import { TechniqueToolbar, type TechniqueToolbarValue } from './TechniqueToolbar';
 import { UkePanel } from './UkePanel';
@@ -37,6 +37,8 @@ import { isVariantBookmarked } from '@shared/utils/variantKeys';
 import { getStudyStatusForTechniqueVariant } from '@shared/utils/studyStatus';
 
 type TagItem = { label: string; kind: 'category' | 'stance' | 'attack' | 'weapon' | 'entry' };
+
+const ENTRY_MODE_ORDER: EntryMode[] = ['irimi', 'tenkan', 'omote', 'ura'];
 
 const buildTags = (technique: Technique, locale: Locale): TagItem[] => {
   const title = technique.name[locale]?.toLowerCase?.() ?? '';
@@ -89,12 +91,15 @@ const buildTags = (technique: Technique, locale: Locale): TagItem[] => {
   // 4) Entry type tags (irimi/tenkan/omote/ura) - add last in this order
   const entrySet = new Set<string>();
   (technique.versions || []).forEach((v) => {
+    (v.entries || []).forEach((entry) => {
+      entrySet.add(entry);
+    });
+
     const stepsBy = (v as { stepsByEntry?: Record<string, unknown> }).stepsByEntry as
       | Record<string, unknown>
       | undefined;
-    if (!stepsBy) return;
-    ['irimi', 'tenkan', 'omote', 'ura'].forEach((entry) => {
-      if (stepsBy[entry]) entrySet.add(entry);
+    ENTRY_MODE_ORDER.forEach((entry) => {
+      if (stepsBy?.[entry] || v.mediaByEntry?.[entry]) entrySet.add(entry);
     });
   });
 
@@ -475,11 +480,11 @@ export const TechniquePage = ({
       // Notify parent
       onVariantChange?.(finalValue.direction, finalValue.weapon, finalValue.versionId);
 
-      // Preserve scroll to Steps heading
-      const stepsHeading = document.querySelector('[data-steps-section]');
-      if (stepsHeading) {
-        stepsHeading.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      }
+      window.requestAnimationFrame(() => {
+        document
+          .querySelector('[data-technique-content]')
+          ?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      });
     },
     [onVariantChange, variantExists, availableVariants, toolbarValue, technique.slug],
   );
@@ -536,8 +541,6 @@ export const TechniquePage = ({
   const motionAnimate = prefersReducedMotion ? undefined : { opacity: 1 };
   const motionExit = prefersReducedMotion ? undefined : { opacity: 0 };
   const variantMotionTransition = pageMotion.transition;
-
-  const stepsLabel = copy.steps;
 
   // Toolbar labels
   const toolbarLabels = {
@@ -605,51 +608,35 @@ export const TechniquePage = ({
           animate={motionAnimate}
           exit={motionExit}
           transition={variantMotionTransition}
+          className="space-y-6"
+          data-technique-content
         >
-          <div className="grid grid-cols-1 gap-10 lg:grid-cols-[2fr,1fr]">
-            <div className="space-y-8">
-              {activeVariant && activeVariant.steps && (
-                <section className="space-y-4" data-steps-section>
-                  <header className="flex items-center gap-2 text-xs uppercase tracking-[0.3em] text-subtle">
-                    <Footprints className="w-4 h-4" />
-                    <span>{stepsLabel}</span>
-                  </header>
-                  <StepsList
-                    steps={activeVariant.steps[locale] || activeVariant.steps.en}
-                    ariaLabel={`${enrichedTechnique.name[locale]} – ${copy.steps}`}
-                  />
-                </section>
-              )}
-              {activeVariant?.uke && (
-                <UkePanel
-                  role={activeVariant.uke.role[locale] || activeVariant.uke.role.en}
-                  notes={activeVariant.uke.notes[locale] || activeVariant.uke.notes.en}
-                  copy={copy}
-                />
-              )}
-            </div>
-            <div className="space-y-8">
-              {activeVariant?.media && activeVariant.media.length > 0 && (
-                <MediaPanel media={activeVariant.media} copy={copy} locale={locale} />
-              )}
-              {(activeVariant?.commonMistakes || activeVariant?.context) && (
-                <NotesPanel
-                  commonMistakes={
-                    activeVariant.commonMistakes
-                      ? activeVariant.commonMistakes[locale] || activeVariant.commonMistakes.en
-                      : undefined
-                  }
-                  context={
-                    activeVariant.context
-                      ? activeVariant.context[locale] || activeVariant.context.en
-                      : undefined
-                  }
-                  copy={copy}
-                  onFeedbackClick={onFeedbackClick}
-                />
-              )}
-            </div>
-          </div>
+          {activeVariant?.media && activeVariant.media.length > 0 && (
+            <MediaPanel media={activeVariant.media} copy={copy} locale={locale} />
+          )}
+          {activeVariant?.context && (
+            <NotesPanel
+              context={activeVariant.context[locale] || activeVariant.context.en}
+              copy={copy}
+            />
+          )}
+          {activeVariant?.uke && (
+            <UkePanel
+              role={activeVariant.uke.role[locale] || activeVariant.uke.role.en}
+              notes={activeVariant.uke.notes[locale] || activeVariant.uke.notes.en}
+              copy={copy}
+            />
+          )}
+          {onFeedbackClick && (
+            <button
+              type="button"
+              onClick={onFeedbackClick}
+              className="w-full rounded-xl border surface-border bg-[var(--color-surface)]/80 p-4 sm:p-5 flex items-center gap-3 surface-hover transition-soft motion-ease"
+            >
+              <MessageSquarePlus className="shrink-0" />
+              <span className="text-sm font-medium">{copy.feedback}</span>
+            </button>
+          )}
         </motion.section>
       </AnimatePresence>
       <AnimatePresence>

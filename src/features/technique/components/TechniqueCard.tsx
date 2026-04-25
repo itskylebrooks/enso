@@ -80,7 +80,13 @@ export const TechniqueCard = ({
   const bookmarkedVariant = progress?.bookmarkedVariant;
 
   // Get available entry modes from the first version (assume all versions have same entries)
-  const availableEntries = technique.versions[0]?.stepsByEntry || {};
+  const firstVersion = technique.versions[0];
+  const availableEntries = new Set<EntryMode>(firstVersion?.entries ?? []);
+  ENTRY_MODE_ORDER.forEach((mode) => {
+    if (firstVersion?.stepsByEntry?.[mode] || firstVersion?.mediaByEntry?.[mode]) {
+      availableEntries.add(mode);
+    }
+  });
   const entryLabels: string[] = [];
 
   const labelByMode: Record<EntryMode | 'irimi' | 'tenkan' | 'omote' | 'ura', string> = {
@@ -96,7 +102,7 @@ export const TechniqueCard = ({
     entryLabels.push(labelByMode[openedEntry]);
   } else {
     ENTRY_MODE_ORDER.forEach((mode) => {
-      if (availableEntries[mode]) {
+      if (availableEntries.has(mode)) {
         entryLabels.push(labelByMode[mode]);
       }
     });

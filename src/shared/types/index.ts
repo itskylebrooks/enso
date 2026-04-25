@@ -31,13 +31,14 @@ export type TechniqueVersion = {
   dojoId?: string;
   label?: string; // Optional, can be generated dynamically
   hanmi: Hanmi; // Required: ai-hanmi or gyaku-hanmi
-  stepsByEntry: StepsByEntry;
+  entries?: Direction[];
+  stepsByEntry?: StepsByEntry; // Legacy support for older imported data
   steps?: LocalizedSteps; // Legacy support for migration
   uke: {
     role: { en: string; de: string };
     notes: { en: string[]; de: string[] };
   };
-  commonMistakes: { en: string[]; de: string[] };
+  commonMistakes?: { en: string[]; de: string[] };
   context?: { en: string; de: string };
   media?: Array<{ type: MediaType; url: string }>;
   // Optional per-entry media (irimi/tenkan/omote/ura) - filename-level versions may include these
@@ -74,7 +75,7 @@ export type MediaItem = {
 
 export type TechniqueVariant = {
   key: TechniqueVariantKey;
-  steps: Localized<string[]>;
+  steps?: Localized<string[]>;
   uke?: {
     role: Localized<string>;
     notes: Localized<string[]>;

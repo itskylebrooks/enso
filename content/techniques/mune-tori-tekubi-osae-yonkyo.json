@@ -23,16 +23,6 @@
     {
       "id": "v-base",
       "hanmi": "ai-hanmi",
-      "stepsByEntry": {
-        "irimi": {
-          "en": [
-            "Coming soon."
-          ],
-          "de": [
-            "Kommt bald."
-          ]
-        }
-      },
       "uke": {
         "role": {
           "en": "Coming soon.",
@@ -47,18 +37,13 @@
           ]
         }
       },
-      "commonMistakes": {
-        "en": [
-          "Coming soon."
-        ],
-        "de": [
-          "Kommt bald."
-        ]
-      },
       "context": {
         "en": "Coming soon.",
         "de": "Kommt bald."
-      }
+      },
+      "entries": [
+        "irimi"
+      ]
     }
   ]
 }

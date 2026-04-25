@@ -205,8 +205,11 @@ const ReorderControls = ({
 
 const getFallbackVariantForTechnique = (technique: Technique): TechniqueVariantKey => {
   const firstVersion = technique.versions[0];
-  const availableDirections = ENTRY_MODE_ORDER.filter((mode) =>
-    Boolean(firstVersion?.stepsByEntry?.[mode]),
+  const availableDirections = ENTRY_MODE_ORDER.filter(
+    (mode) =>
+      firstVersion?.entries?.includes(mode) ||
+      Boolean(firstVersion?.stepsByEntry?.[mode]) ||
+      Boolean(firstVersion?.mediaByEntry?.[mode]),
   );
 
   return {

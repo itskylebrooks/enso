@@ -1,6 +1,5 @@
 import type { Exercise, Technique, GlossaryTerm, Locale } from '../../shared/types';
 import { stripDiacritics } from '@shared/utils/text';
-import { ENTRY_MODE_ORDER } from '../../shared/constants/entryModes';
 
 export type ScoredSearchResult =
   | { type: 'technique'; item: Technique; score: number }
@@ -155,6 +154,13 @@ export const scoreTechnique = (technique: Technique, query: string, locale: Loca
   score += getFieldMatchScore(technique.name.en, query, weights.nameEN);
   score += getFieldMatchScore(technique.name.de, query, weights.nameDE);
 
+  const localizedName = technique.name[locale] || technique.name.en;
+  const normalizedName = normalizeText(localizedName);
+  const normalizedQuery = normalizeText(query);
+  if (normalizedQuery && normalizedName.includes(normalizedQuery)) {
+    score += normalizedQuery.length / normalizedName.length;
+  }
+
   if (technique.jp) {
     score += getFieldMatchScore(technique.jp, query, weights.romaji);
   }
@@ -181,21 +187,9 @@ export const scoreTechnique = (technique: Technique, query: string, locale: Loca
   score +=
     (getFieldMatchScore(summary, query, weights.summary) * MATCH_BOOSTS.secondary) /
     MATCH_BOOSTS.contains;
-
-  // Steps and key points (lowest priority)
-  technique.versions.forEach((version) => {
-    // Steps across entry modes
-    ENTRY_MODE_ORDER.forEach((mode) => {
-      const entry = version.stepsByEntry?.[mode];
-      if (!entry) return;
-      const steps = entry[locale] || entry.en;
-      steps.forEach((step) => {
-        score +=
-          (getFieldMatchScore(step, query, weights.steps) * MATCH_BOOSTS.secondary) /
-          MATCH_BOOSTS.contains;
-      });
-    });
-  });
+  if (score > 0 && !['coming soon.', 'kommt bald.'].includes(summary.trim().toLowerCase())) {
+    score += 1;
+  }
 
   return score;
 };

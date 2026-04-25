@@ -1,5 +1,4 @@
 import { stripDiacritics } from '@shared/utils/text';
-import { ENTRY_MODE_ORDER } from '../../shared/constants/entryModes';
 import type { TaxonomyType } from '../../shared/i18n/taxonomy';
 import { expandWithSynonyms, getTaxonomyLabel } from '../../shared/i18n/taxonomy';
 import { gradeLabel } from '../../shared/styles/belts';
@@ -78,14 +77,6 @@ export const buildSearchIndex = (techniques: Technique[]): SearchEntry[] =>
       pushToken(tokens, version.trainerId);
       pushToken(tokens, version.dojoId);
 
-      // Index steps from stepsByEntry structure
-      ENTRY_MODE_ORDER.forEach((mode) => {
-        const entry = version.stepsByEntry?.[mode];
-        if (!entry) return;
-        entry.en.forEach((step) => pushToken(tokens, step));
-        entry.de.forEach((step) => pushToken(tokens, step));
-      });
-
       pushToken(tokens, version.uke.role.en);
       pushToken(tokens, version.uke.role.de);
       version.uke.notes.en.forEach((note) => pushToken(tokens, note));
@@ -113,8 +104,6 @@ export const buildSearchIndex = (techniques: Technique[]): SearchEntry[] =>
         });
       }
 
-      version.commonMistakes.en.forEach((item) => pushToken(tokens, item));
-      version.commonMistakes.de.forEach((item) => pushToken(tokens, item));
       if (version.context) {
         pushToken(tokens, version.context.en);
         pushToken(tokens, version.context.de);

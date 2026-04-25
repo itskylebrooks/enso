@@ -13,22 +13,30 @@ export type MediaPanelProps = {
 
 export const MediaPanel = ({ media, copy, locale = 'en' }: MediaPanelProps): ReactElement => {
   const { mediaMotion } = useMotionPreferences();
+  const mediaItems = media || [];
+  const hasOddFinalCard = mediaItems.length % 2 === 1;
 
   return (
-    <section className="space-y-4">
-      <header className="text-xs uppercase tracking-[0.3em] text-subtle">{copy.media}</header>
+    <section>
       <motion.div
-        className="space-y-3"
+        className="grid grid-cols-1 gap-3 lg:grid-cols-4"
         variants={mediaMotion.variants}
         initial="hidden"
         animate="show"
         transition={mediaMotion.transition}
       >
-        {(!media || media.length === 0) && (
+        {mediaItems.length === 0 && (
           <p className="text-sm text-muted leading-relaxed">{copy.mediaEmpty}</p>
         )}
-        {(media || []).map((item, index) => (
-          <MediaEmbed key={`${item.url}-${index}`} media={item} locale={locale} />
+        {mediaItems.map((item, index) => (
+          <div
+            key={`${item.url}-${index}`}
+            className={`w-full lg:col-span-2 ${
+              hasOddFinalCard && index === mediaItems.length - 1 ? 'lg:col-start-2' : ''
+            }`}
+          >
+            <MediaEmbed media={item} locale={locale} />
+          </div>
         ))}
       </motion.div>
     </section>

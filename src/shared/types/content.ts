@@ -54,6 +54,17 @@ const stepsByEntrySchema = z
     message: 'At least one entry type must be provided',
   });
 
+const directionSchema = z.enum(['irimi', 'tenkan', 'omote', 'ura']);
+
+const mediaByEntrySchema = z
+  .object({
+    irimi: z.array(mediaSchema).optional(),
+    tenkan: z.array(mediaSchema).optional(),
+    omote: z.array(mediaSchema).optional(),
+    ura: z.array(mediaSchema).optional(),
+  })
+  .optional();
+
 const versionSchema = z
   .object({
     id: z.string().min(1, 'version id is required'),
@@ -61,18 +72,28 @@ const versionSchema = z
     dojoId: z.string().optional(),
     label: z.string().optional(), // Now optional, can be generated dynamically
     hanmi: z.enum(['ai-hanmi', 'gyaku-hanmi']), // Required field
-    stepsByEntry: stepsByEntrySchema,
+    entries: z.array(directionSchema).min(1).optional(),
+    stepsByEntry: stepsByEntrySchema.optional(),
     uke: z.object({
       role: localizedString,
       notes: localizedStringArray,
     }),
-    commonMistakes: localizedStringArray,
+    commonMistakes: localizedStringArray.optional(),
     context: localizedStringOptional.optional(),
     media: z.array(mediaSchema).optional(),
+    mediaByEntry: mediaByEntrySchema,
   })
   .superRefine((value, ctx) => {
+    if (!value.entries?.length && !value.stepsByEntry) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'At least one entry type must be provided',
+        path: ['entries'],
+      });
+    }
+
     // Validate stepsByEntry arrays have matching lengths
-    if (value.stepsByEntry.irimi) {
+    if (value.stepsByEntry?.irimi) {
       if (value.stepsByEntry.irimi.en.length !== value.stepsByEntry.irimi.de.length) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
@@ -84,7 +105,7 @@ const versionSchema = z
     }
 
     const ensureMatchingLengths = (entryKey: 'irimi' | 'tenkan' | 'omote' | 'ura') => {
-      const entry = value.stepsByEntry[entryKey];
+      const entry = value.stepsByEntry?.[entryKey];
       if (!entry) return;
       if (entry.en.length !== entry.de.length) {
         ctx.addIssue({

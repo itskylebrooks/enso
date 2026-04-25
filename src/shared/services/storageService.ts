@@ -77,17 +77,38 @@ const normalizeVersion = (version: TechniqueVersion): TechniqueVersion => {
     }
   });
 
+  const normalizeMediaByEntry = () => {
+    const mediaObj =
+      version.mediaByEntry ?? (version.stepsByEntry as Record<string, unknown> | undefined)?.media;
+    if (!mediaObj || typeof mediaObj !== 'object') return undefined;
+    const out: Record<string, Array<{ type: MediaType; url: string; title?: string }>> = {};
+    ['irimi', 'tenkan', 'omote', 'ura'].forEach((k) => {
+      const arr = (mediaObj as Record<string, unknown>)[k];
+      if (Array.isArray(arr)) {
+        out[k] = arr.map((m: { type: string; url?: string; title?: string }) => ({
+          type: m.type as MediaType,
+          url: (m.url ?? '').trim(),
+          title: typeof m.title === 'string' ? m.title.trim() : undefined,
+        }));
+      }
+    });
+    return Object.keys(out).length > 0 ? out : undefined;
+  };
+
   const normalized: TechniqueVersion = {
     ...version,
     trainerId: normalizeOptional(version.trainerId),
     dojoId: normalizeOptional(version.dojoId),
     label: version.label ? version.label.trim() : undefined,
-    stepsByEntry: normalizedSteps,
+    entries: version.entries?.filter((entry) => ENTRY_MODE_ORDER.includes(entry)),
+    stepsByEntry: Object.keys(normalizedSteps).length > 0 ? normalizedSteps : undefined,
     uke: {
       role: normalizeLocalizedString(version.uke.role),
       notes: normalizeLocalizedArray(version.uke.notes),
     },
-    commonMistakes: normalizeLocalizedArray(version.commonMistakes),
+    commonMistakes: version.commonMistakes
+      ? normalizeLocalizedArray(version.commonMistakes)
+      : undefined,
     context: version.context ? normalizeLocalizedString(version.context) : undefined,
     media: Array.isArray(version.media)
       ? version.media.map((item: { type: string; url?: string; title?: string }) => ({
@@ -96,23 +117,7 @@ const normalizeVersion = (version: TechniqueVersion): TechniqueVersion => {
           title: typeof item.title === 'string' ? item.title.trim() : undefined,
         }))
       : [],
-    // support optional per-entry media block under stepsByEntry.media
-    mediaByEntry: (() => {
-      const mediaObj = (version.stepsByEntry as Record<string, unknown>)?.media;
-      if (!mediaObj || typeof mediaObj !== 'object') return undefined;
-      const out: Record<string, Array<{ type: MediaType; url: string; title?: string }>> = {};
-      ['irimi', 'tenkan', 'omote', 'ura'].forEach((k) => {
-        const arr = (mediaObj as Record<string, unknown>)[k];
-        if (Array.isArray(arr)) {
-          out[k] = arr.map((m: { type: string; url?: string; title?: string }) => ({
-            type: m.type as MediaType,
-            url: (m.url ?? '').trim(),
-            title: typeof m.title === 'string' ? m.title.trim() : undefined,
-          }));
-        }
-      });
-      return Object.keys(out).length > 0 ? out : undefined;
-    })(),
+    mediaByEntry: normalizeMediaByEntry(),
   };
 
   return normalized;

@@ -10,9 +10,26 @@ import type {
   Technique,
   TechniqueVariant,
   TechniqueVersionMeta,
+  TechniqueVersion,
   WeaponKind,
 } from '@shared/types';
 import { generateVersionLabel } from './versionLabels';
+
+const ENTRY_DIRECTIONS: Direction[] = ['irimi', 'tenkan', 'omote', 'ura'];
+
+const getVersionDirections = (version: TechniqueVersion): Direction[] => {
+  const directions = new Set<Direction>();
+
+  version.entries?.forEach((entry) => directions.add(entry));
+
+  ENTRY_DIRECTIONS.forEach((entry) => {
+    if (version.stepsByEntry?.[entry] || version.mediaByEntry?.[entry]) {
+      directions.add(entry);
+    }
+  });
+
+  return ENTRY_DIRECTIONS.filter((entry) => directions.has(entry));
+};
 
 /**
  * Extract version metadata from existing technique versions
@@ -57,14 +74,10 @@ export const convertToVariants = (technique: Technique): TechniqueVariant[] => {
 
   // For each version, create variants for available directions
   technique.versions.forEach((version) => {
-    if (!version.stepsByEntry) return;
-
-    // Extract available directions from stepsByEntry
-    const availableDirections = Object.keys(version.stepsByEntry) as Direction[];
+    const availableDirections = getVersionDirections(version);
 
     availableDirections.forEach((direction) => {
-      const steps = version.stepsByEntry[direction];
-      if (!steps) return;
+      const steps = version.stepsByEntry?.[direction];
 
       // Create variant for this (direction, weapon, version) combination
       const variant: TechniqueVariant = {
@@ -74,7 +87,7 @@ export const convertToVariants = (technique: Technique): TechniqueVariant[] => {
           weapon: defaultWeapon,
           versionId: version.id === 'v-base' ? null : version.id, // null for base versions
         },
-        steps: steps as Localized<string[]>,
+        steps: steps as Localized<string[]> | undefined,
         uke: version.uke
           ? {
               role: version.uke.role as Localized<string>,
@@ -125,8 +138,9 @@ export const getAvailableDirections = (technique: Technique): Direction[] => {
 
   // Fallback to checking first version's stepsByEntry
   const firstVersion = technique.versions[0];
-  if (firstVersion?.stepsByEntry) {
-    return Object.keys(firstVersion.stepsByEntry) as Direction[];
+  if (firstVersion) {
+    const directions = getVersionDirections(firstVersion);
+    if (directions.length > 0) return directions;
   }
 
   return ['irimi']; // Default fallback

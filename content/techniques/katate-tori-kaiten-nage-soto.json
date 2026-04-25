@@ -14,65 +14,19 @@
     "en": "Outside turning throw from a single-hand grab. Blend on the outside line, guide the elbow, turn under the arm, and cut a broad arc to project with clear space for ukemi.",
     "de": "Außenrotationswurf aus Einhandgriff. Auf der Außenlinie führen, Ellbogen leiten, unter dem Arm drehen und mit weitem Bogen projizieren – mit freier Bahn für Ukemi."
   },
-  "tags": ["kaiten-nage", "回転投げ", "soto", "throw", "katate-tori", "irimi", "tenkan"],
+  "tags": [
+    "kaiten-nage",
+    "回転投げ",
+    "soto",
+    "throw",
+    "katate-tori",
+    "irimi",
+    "tenkan"
+  ],
   "versions": [
     {
       "id": "v-base",
       "hanmi": "gyaku-hanmi",
-      "stepsByEntry": {
-        "irimi": {
-          "en": [
-            "Uke grips your wrist (katate-tori) from gyaku hanmi. Keep your spine tall, shoulders soft, and let your center settle down.",
-            "Enter (irimi) to uke’s outside line (soto): step forward and slightly off-line with your front foot to uke’s open side, turning your seized palm upward to release tension.",
-            "Raise and guide uke’s arm in a circular motion above their head, while your free hand moves to the back of uke’s neck. This gives you two-point control (wrist + neck).",
-            "Turn your hips and shoulders together, keeping uke’s arm extended and their balance forward. Guide their head down in a spiral arc, leading their body toward the mat.",
-            "Complete the throw by cutting a wide forward-downward circle with both hands, lowering uke smoothly to the ground. Maintain zanshin (awareness) and safe distance as uke rolls or falls."
-          ],
-          "de": [
-            "Uke greift dein Handgelenk (Katate-tori) aus Gyaku-Hanmi. Halte die Wirbelsäule aufrecht, Schultern weich und lass dein Zentrum sinken.",
-            "Tritt (Irimi) auf Ukes Außenlinie (Soto): mache mit dem Vorderfuß einen Schritt vorwärts und leicht aus der Linie zur offenen Seite von Uke und drehe die gefasste Handfläche nach oben, um die Spannung zu lösen.",
-            "Führe Ukes Arm kreisförmig über seinen Kopf, während deine freie Hand an den Hinterkopf von Uke geht. So erhältst du Zweipunkt-Kontrolle (Handgelenk + Nacken).",
-            "Drehe Hüfte und Schultern zusammen, halte Ukes Arm gestreckt und sein Gewicht nach vorn. Führe den Kopf in einem spiralförmigen Bogen nach unten und leite den Körper Richtung Matten.",
-            "Vollende den Wurf, indem du mit beiden Händen einen weiten vorwärts–abwärts Schnitt machst und Uke sanft zum Boden führst. Bewahre Zanshin (Achtsamkeit) und sicheren Abstand, während Uke rollt oder fällt."
-          ]
-        },
-        "tenkan": {
-          "en": [
-            "From gyaku-hanmi, receive uke’s grab with a heavy elbow and centered posture.",
-            "Turn (tenkan) outward to the soto side, rotating the seized palm upward and keeping elbows close.",
-            "Lead uke’s elbow forward-outward so the shoulder begins to open; do not pull with arm strength.",
-            "Complete the pivot under uke’s arm, stabilizing your stance and aligning your spine with uke’s axis.",
-            "Lift slightly to set uke’s shoulder, then guide smoothly into the outer circular cut.",
-            "Cut in a forward–downward arc, opening space for uke’s ukemi.",
-            "Release at the circle’s edge and maintain zanshin."
-          ],
-          "de": [
-            "Aus Gyaku-Hanmi den Griff mit schwerem Ellbogen und stabilem Zentrum annehmen.",
-            "Drehe (Tenkan) nach außen auf die Soto-Seite, rotiere die gefasste Handfläche nach oben und halte die Ellbogen körpernah.",
-            "Führe Ukes Ellbogen vor–außen, sodass die Schulter sich öffnet; nicht mit Armkraft ziehen.",
-            "Beende die Drehung unter Ukes Arm, stabilisiere deinen Stand und richte die Wirbelsäule auf Ukes Achse aus.",
-            "Setze die Schulter mit einem leichten Aufwärtsimpuls und leite dann den äußeren Kreis-Schnitt ein.",
-            "Schneide vorwärts–abwärts auf der Kreisbahn und schaffe Raum für Ukes Ukemi.",
-            "Am Ende des Kreises lösen und Zanshin bewahren."
-          ]
-        },
-        "media": {
-          "irimi": [
-            {
-              "type": "youtube",
-              "url": "https://www.youtube-nocookie.com/embed/lM83-VAld-Y"
-            },
-            {
-              "type": "youtube",
-              "url": "https://www.youtube-nocookie.com/embed/zTsuuTjkQgc"
-            },
-            {
-              "type": "gumlet-dab",
-              "url": "https://play.gumlet.io/embed/6908e1a6aa9e79860d8afa48?background=false&autoplay=false&loop=false&disableControls=false"
-            }
-          ]
-        }
-      },
       "uke": {
         "role": {
           "en": "Offer a committed wrist grab without clamping. Move your feet with the lead, stay upright, and receive along the circular path with safe ukemi.",
@@ -91,74 +45,34 @@
           ]
         }
       },
-      "commonMistakes": {
-        "en": [
-          "Spinning without first taking uke’s balance; substituting arm power for hip-led marui.",
-          "Letting the seized arm drift away during the pivot and losing axis control.",
-          "Cutting straight down or across after tenkan instead of following the circular path.",
-          "Leaning into uke or over-rotating, removing the safe exit or breaking your base."
-        ],
-        "de": [
-          "Drehen ohne vorheriges Kuzushi; Armkraft statt hüftgeführtem Marui.",
-          "Den gefassten Arm während der Drehung vom Körper lösen und die Achsenkontrolle verlieren.",
-          "Nach dem Tenkan gerade nach unten/quer schneiden statt der Kreisbahn zu folgen.",
-          "In Uke hineinkippen oder überdrehen, wodurch die sichere Ausweichbahn verschwindet oder dein Stand bricht."
-        ]
-      },
       "context": {
         "en": "In soto kaiten-nage with tenkan from gyaku-hanmi, tori first turns off the line to open uke and establish jōdan control (wrist + neck). The throw develops by shifting uke’s center through hip drop and spiral cutting rather than an arm lock. Because the initial grip crosses your line, gyaku-hanmi needs a clearer angle change before or during the pivot; tenkan supplies that angle while keeping you on the outside.",
         "de": "Im soto kaiten-nage mit Tenkan aus Gyaku-hanmi dreht Tori zunächst aus der Linie, öffnet Uke und etabliert Jōdan-Kontrolle (Handgelenk + Nacken). Der Wurf entsteht durch Schwerpunktverlagerung mittels Hüftsenken und spiralförmigem Schnitt – nicht durch einen Armhebel. Da der Anfangsgriff die Linie kreuzt, erfordert Gyaku-hanmi vor oder im Pivot eine deutlichere Winkeländerung; Tenkan liefert diesen Winkel bei Erhalt der Außenlinie."
-      }
+      },
+      "mediaByEntry": {
+        "irimi": [
+          {
+            "type": "youtube",
+            "url": "https://www.youtube-nocookie.com/embed/lM83-VAld-Y"
+          },
+          {
+            "type": "youtube",
+            "url": "https://www.youtube-nocookie.com/embed/zTsuuTjkQgc"
+          },
+          {
+            "type": "gumlet-dab",
+            "url": "https://play.gumlet.io/embed/6908e1a6aa9e79860d8afa48?background=false&autoplay=false&loop=false&disableControls=false"
+          }
+        ]
+      },
+      "entries": [
+        "irimi",
+        "tenkan"
+      ]
     },
     {
       "id": "v-base",
       "hanmi": "ai-hanmi",
-      "stepsByEntry": {
-        "irimi": {
-          "en": [
-            "Uke grips your wrist (katate-tori) from ai hanmi. Keep your stance natural, center low, and spine upright.",
-            "Step forward to the outside (soto), slightly off-line toward uke’s open side. As you move in, turn your seized hand palm-up, connecting to uke’s center without pulling.",
-            "Guide uke’s arm upward in a circular path, opening their posture. Place your free hand lightly at the back of uke’s neck or shoulder to establish two-point control.",
-            "Turn your hips and shoulders together, spiraling your movement forward. Your body drop (marui) leads uke’s head down, while the raised arm maintains extension without force.",
-            "Complete the throw by cutting a wide, downward-forward arc. Uke’s balance collapses as their head follows the circle, and you release into clear zanshin, leaving space for safe ukemi."
-          ],
-          "de": [
-            "Uke greift dein Handgelenk (katate-tori) aus Ai-hanmi. Halte deine Haltung aufrecht, Zentrum tief, Schultern entspannt.",
-            "Tritt vor auf die Außenlinie (soto), leicht außerhalb von Ukes Angriffslinie, zu seiner offenen Seite. Drehe die gefasste Handfläche nach oben, ohne zu ziehen, und verbinde dich so mit Ukes Zentrum.",
-            "Führe Ukes Arm nach oben in einer Kreisbewegung und öffne dadurch seine Haltung. Lege die freie Hand an Ukes Nacken oder Schulter, um die Zweipunkt-Kontrolle herzustellen.",
-            "Drehe Hüfte und Schultern gemeinsam, während du dich spiralförmig nach vorn bewegst. Dein Absenken (marui) bringt Ukes Kopf nach unten, während der Arm gestreckt bleibt, ohne Kraftaufwand.",
-            "Beende den Wurf mit einem weiten, vorwärts-abwärts gerichteten Bogen. Ukes Gleichgewicht bricht, der Kopf folgt der Kreisbahn, und du löst sauber mit Zanshin und Raum für Ukemi."
-          ]
-        },
-        "tenkan": {
-          "en": [
-            "From ai-hanmi, receive uke’s wrist grab with a soft shoulder, heavy elbow, and centered stance.",
-            "Turn (tenkan) to the outside line, rotating your seized palm upward; stay close with elbows in.",
-            "Guide uke’s elbow slightly outward so their posture opens; avoid forcing with your arms.",
-            "Pivot smoothly under the arm, grounding your stance and aligning with uke’s center line.",
-            "Lift gently to set uke’s shoulder, then spiral forward into the circular cut.",
-            "Cut forward–downward on the circle, giving uke a clear path for safe ukemi.",
-            "Release the connection at the arc’s edge and finish with awareness."
-          ],
-          "de": [
-            "Aus Ai-Hanmi den Handgelenkgriff mit entspanntem Schultergürtel, schwerem Ellbogen und stabilem Zentrum aufnehmen.",
-            "Drehe (Tenkan) auf die Außenlinie, drehe die gefasste Handfläche nach oben und halte die Ellbogen nah am Körper.",
-            "Führe Ukes Ellbogen leicht nach außen, damit sich seine Haltung öffnet; vermeide Armkraft.",
-            "Drehe dich fließend unter dem Arm hindurch, stabilisiere den Stand und richte dich auf Ukes Zentrumslinie aus.",
-            "Führe die Schulter mit einem sanften Aufwärtsimpuls und gehe dann spiralförmig in den Kreis-Schnitt.",
-            "Schneide vorwärts–abwärts entlang des Kreises und eröffne Uke eine klare Ukemi-Bahn.",
-            "Am Ende der Kreisbahn lösen und Achtsamkeit beibehalten."
-          ]
-        },
-        "media": {
-          "irimi": [
-            {
-              "type": "youtube",
-              "url": "https://www.youtube-nocookie.com/embed/HV0Q2_x3QPo?si=n2eDfuF5PGL2xF9c"
-            }
-          ]
-        }
-      },
       "uke": {
         "role": {
           "en": "Offer a steady wrist grab without clamping. Move with the lead, stay upright, and receive along the circular path with safe ukemi.",
@@ -177,24 +91,22 @@
           ]
         }
       },
-      "commonMistakes": {
-        "en": [
-          "Turning mostly with the shoulders instead of from the center and hips.",
-          "Letting the gripping hand wander away from your torso, weakening axis control.",
-          "Rushing the cut before the shoulder line is set.",
-          "Collapsing forward or crowding uke during or after the turn."
-        ],
-        "de": [
-          "Überwiegend mit den Schultern drehen statt aus Zentrum und Hüfte.",
-          "Die greifende Hand vom Körper wegdriften lassen und so die Achsenkontrolle schwächen.",
-          "Den Schnitt überhastet einleiten, bevor die Schulterlinie gesetzt ist.",
-          "Nach vorn kollabieren oder Uke während/nach der Drehung bedrängen."
-        ]
-      },
       "context": {
         "en": "In ai-hanmi, tenkan entry is naturally smoother because the grip is same-side. Tori pivots to the outside, opens uke’s posture, and maintains jōdan control to guide a broad spiral descent. The engine is hip work and body drop; the arm lock only supports the opening. Less angle correction is needed than in gyaku-hanmi, so emphasize continuous connection and extension through the turn.",
         "de": "Im Ai-hanmi ist der Tenkan-Einstieg naturgemäß fließender, da der Griff gleichseitig ist. Tori pivotiert auf die Außenlinie, öffnet Ukes Haltung und hält Jōdan-Kontrolle, um eine weite Spiralführung nach unten zu leiten. Antrieb sind Hüftarbeit und Absenken; der Armhebel unterstützt nur das Öffnen. Es ist weniger Winkelkorrektur nötig als im Gyaku-hanmi – betone daher die durchgängige Verbindung und Erweiterung über die Drehung."
-      }
+      },
+      "mediaByEntry": {
+        "irimi": [
+          {
+            "type": "youtube",
+            "url": "https://www.youtube-nocookie.com/embed/HV0Q2_x3QPo?si=n2eDfuF5PGL2xF9c"
+          }
+        ]
+      },
+      "entries": [
+        "irimi",
+        "tenkan"
+      ]
     }
   ]
 }
