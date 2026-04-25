@@ -143,7 +143,7 @@ High-level layout:
     - `components/` — reusable UI (modals, toasts, selects, layout)
 - `content/` — canonical JSON + assets
 - `scripts/build-content.ts` — content build/validation utility
-- `api/feedback.ts` — serverless endpoint for feedback submissions
+- `src/app/api/feedback/route.ts` — feedback endpoint
 - `public/` — fonts, icons, `manifest.json`
 
 ## Content workflow
