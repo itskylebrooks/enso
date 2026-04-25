@@ -185,7 +185,6 @@ export type AppRoute =
   | 'exercises'
   | 'bookmarks'
   | 'sync'
-  | 'support'
   | 'about'
   | 'guide'
   | 'guideAdvanced'

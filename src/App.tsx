@@ -8,7 +8,6 @@ import { AdvancedPrograms } from '@features/home/components/home/AdvancedProgram
 import { DanOverview } from '@features/home/components/home/DanOverview';
 import { GuidePage } from '@features/home/components/home/GuidePage';
 import { GuideRoutinePage } from '@features/home/components/home/GuideRoutinePage';
-import { SupportPage } from '@features/home/components/home/SupportPage';
 import { SyncPage } from '@features/home/components/home/SyncPage';
 import { SettingsModal } from '@features/home/components/settings/SettingsModal';
 import { OnboardingTourOverlay } from '@features/onboarding/components/OnboardingTourOverlay';
@@ -245,8 +244,6 @@ const routeToPath = (route: AppRoute): string => {
       return '/';
     case 'about':
       return '/about';
-    case 'support':
-      return '/support';
     case 'guide':
       return '/guide';
     case 'guideAdvanced':
@@ -464,10 +461,6 @@ const parseLocation = (
 
   if (pathname === '/about') {
     return { route: 'about', slug: null };
-  }
-
-  if (pathname === '/support') {
-    return { route: 'support', slug: null };
   }
 
   if (pathname === '/sync') {
@@ -2829,17 +2822,15 @@ export default function App({
       ? copy.backToBookmarks
       : techniqueBackRoute === 'home'
         ? copy.backToHome
-        : techniqueBackRoute === 'support'
-          ? copy.supportLink
-          : techniqueBackRoute === 'about'
-            ? copy.backToAbout
-            : isGuideLikeRoute(techniqueBackRoute)
-              ? copy.backToGuide
-              : techniqueBackRoute === 'terms'
-                ? copy.backToGlossary
-                : techniqueBackRoute === 'feedback'
-                  ? copy.backToFeedback
-                  : copy.backToLibrary;
+        : techniqueBackRoute === 'about'
+          ? copy.backToAbout
+          : isGuideLikeRoute(techniqueBackRoute)
+            ? copy.backToGuide
+            : techniqueBackRoute === 'terms'
+              ? copy.backToGlossary
+              : techniqueBackRoute === 'feedback'
+                ? copy.backToFeedback
+                : copy.backToLibrary;
 
   const glossaryHistoryState =
     typeof window !== 'undefined' ? (window.history.state as HistoryState | null) : null;
@@ -2849,15 +2840,13 @@ export default function App({
       ? copy.backToBookmarks
       : glossaryBackRoute === 'home'
         ? copy.backToHome
-        : glossaryBackRoute === 'support'
-          ? copy.supportLink
-          : glossaryBackRoute === 'about'
-            ? copy.backToAbout
-            : isGuideLikeRoute(glossaryBackRoute)
-              ? copy.backToGuide
-              : glossaryBackRoute === 'feedback'
-                ? copy.backToFeedback
-                : copy.backToGlossary;
+        : glossaryBackRoute === 'about'
+          ? copy.backToAbout
+          : isGuideLikeRoute(glossaryBackRoute)
+            ? copy.backToGuide
+            : glossaryBackRoute === 'feedback'
+              ? copy.backToFeedback
+              : copy.backToGlossary;
 
   const practiceHistoryState =
     typeof window !== 'undefined' ? (window.history.state as HistoryState | null) : null;
@@ -2868,15 +2857,13 @@ export default function App({
       ? copy.backToBookmarks
       : practiceBackRoute === 'home'
         ? copy.backToHome
-        : practiceBackRoute === 'support'
-          ? copy.supportLink
-          : practiceBackRoute === 'about'
-            ? copy.backToAbout
-            : isGuideLikeRoute(practiceBackRoute)
-              ? copy.backToGuide
-              : practiceBackRoute === 'feedback'
-                ? copy.backToFeedback
-                : copy.backToPractice;
+        : practiceBackRoute === 'about'
+          ? copy.backToAbout
+          : isGuideLikeRoute(practiceBackRoute)
+            ? copy.backToGuide
+            : practiceBackRoute === 'feedback'
+              ? copy.backToFeedback
+              : copy.backToPractice;
   const handlePracticeBack = () => {
     const guideRoutine = guideRouteToRoutine(practiceBackRoute);
     if (guideRoutine && practiceBackSourceSlug) {
@@ -3051,8 +3038,6 @@ export default function App({
     );
   } else if (route === 'about') {
     mainContent = <AboutPage copy={copy} />;
-  } else if (route === 'support') {
-    mainContent = <SupportPage copy={copy} />;
   } else if (route === 'sync') {
     mainContent = (
       <SyncPage

@@ -8,7 +8,6 @@ import {
   ChevronDown,
   Compass,
   Dumbbell,
-  Heart,
   Info,
   LibraryBig,
   MessageSquare,
@@ -369,23 +368,6 @@ export const Header = ({
                           type="button"
                           onClick={() => {
                             setMoreDesktopOpen(false);
-                            onNavigate('support');
-                          }}
-                          className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
-                          role="menuitem"
-                        >
-                          <span className="flex items-center gap-2">
-                            <Heart className="w-4 h-4" />
-                            {copy.supportLink}
-                          </span>
-                        </button>
-                      </li>
-
-                      <li>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setMoreDesktopOpen(false);
                             onNavigate('about');
                           }}
                           className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
@@ -498,22 +480,6 @@ export const Header = ({
                         <span className="flex items-center gap-2">
                           <Compass className="w-4 h-4" />
                           {copy.startTour}
-                        </span>
-                      </button>
-                    </li>
-                    <li>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setMoreMobileOpen(false);
-                          onNavigate('support');
-                        }}
-                        className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
-                        role="menuitem"
-                      >
-                        <span className="flex items-center gap-2">
-                          <Heart className="w-4 h-4" />
-                          {copy.supportLink}
                         </span>
                       </button>
                     </li>

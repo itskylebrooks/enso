@@ -300,31 +300,7 @@ export const en = {
   aboutPhotoTitle: 'Photo',
   aboutPhotoBody:
     'The photo above was taken during an Aikidō Lehrgang led by Werner Lättig at the WSV Walddörfer Sportverein in November 2025 — a quiet moment that reminds me why I practice: harmony, focus, and gratitude.',
-  supportPage: {
-    title: 'Support Enso',
-    intro:
-      'This page will become the place where you can support Enso directly.\n\nIn the future, you will be able to make a one-time donation or start a small subscription to support ongoing development.',
-    speedCardTitle: 'Faster development',
-    speedCardBody:
-      'Support lets me spend more focused time building features, refining content, and shipping updates faster.',
-    hostingCardTitle: 'Reliable hosting',
-    hostingCardBody:
-      'Support helps cover core website hosting, infrastructure, and uptime costs so Enso stays stable.',
-    videoCardTitle: 'Video delivery',
-    videoCardBody:
-      'Support helps pay for video hosting and bandwidth, including self-hosted technique videos.',
-    futureTitle: 'Donation options (planned)',
-    futureBody:
-      'When this launches, you will have two options: one-time donations and a recurring subscription.\n\nBoth options will support the same goal: keeping Enso sustainable and improving it consistently over time.',
-    impactTitle: 'What your support changes',
-    impactBody:
-      '1) It speeds up development by giving me dedicated time to build and improve Enso.\n\n2) It covers real operating costs so the app can stay online and dependable.',
-    statusTitle: 'Status',
-    statusBody:
-      'Support payments are not enabled yet.\n\nThis page is here now so the purpose is clear before the feature goes live.',
-  },
   aboutLink: 'About',
-  supportLink: 'Support',
   portfolio: 'Portfolio',
   iconsBy: 'Icons by',
   copyrightReserved: 'All rights reserved.',

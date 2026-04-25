@@ -306,31 +306,7 @@ export const de = {
   aboutPhotoTitle: 'Foto',
   aboutPhotoBody:
     'Das Foto oben entstand während eines Aikidō-Lehrgangs unter der Leitung von Werner Lättig beim WSV Walddörfer Sportverein im November 2025 — ein stiller Moment, der mich daran erinnert, warum ich trainiere: Harmonie, Fokus und Dankbarkeit.',
-  supportPage: {
-    title: 'Enso unterstützen',
-    intro:
-      'Diese Seite wird der Ort sein, an dem du Enso direkt unterstützen kannst.\n\nIn Zukunft kannst du entweder einmalig spenden oder ein kleines Abo starten, um die laufende Entwicklung zu unterstützen.',
-    speedCardTitle: 'Schnellere Entwicklung',
-    speedCardBody:
-      'Unterstützung gibt mir mehr fokussierte Zeit, um Features zu bauen, Inhalte zu verbessern und schneller Updates zu veröffentlichen.',
-    hostingCardTitle: 'Zuverlässiges Hosting',
-    hostingCardBody:
-      'Unterstützung hilft, Website-Hosting, Infrastruktur und laufende Betriebskosten zu decken, damit Enso stabil bleibt.',
-    videoCardTitle: 'Video-Bereitstellung',
-    videoCardBody:
-      'Unterstützung hilft bei Kosten für Video-Hosting und Bandbreite, auch bei selbst gehosteten Technikvideos.',
-    futureTitle: 'Spendenoptionen (geplant)',
-    futureBody:
-      'Sobald die Funktion live ist, gibt es zwei Möglichkeiten: einmalige Spenden und ein wiederkehrendes Abo.\n\nBeide Optionen verfolgen dasselbe Ziel: Enso langfristig tragfähig zu machen und kontinuierlich zu verbessern.',
-    impactTitle: 'Was deine Unterstützung bewirkt',
-    impactBody:
-      '1) Sie beschleunigt die Entwicklung, weil ich mehr feste Zeit für Enso einplanen kann.\n\n2) Sie deckt reale Betriebskosten, damit die App online und zuverlässig bleibt.',
-    statusTitle: 'Status',
-    statusBody:
-      'Unterstützungszahlungen sind aktuell noch nicht aktiviert.\n\nDiese Seite ist schon jetzt da, damit der Zweck klar ist, bevor die Funktion live geht.',
-  },
   aboutLink: 'Über',
-  supportLink: 'Support',
   portfolio: 'Portfolio',
   iconsBy: 'Icons von',
   copyrightReserved: 'Alle Rechte vorbehalten.',
