@@ -66,13 +66,10 @@ export const authService: AuthService = {
       );
     }
 
-    const emailRedirectTo = typeof window !== 'undefined' ? window.location.origin : undefined;
-
     const { error } = await supabase.auth.signInWithOtp({
       email,
       options: {
         shouldCreateUser: true,
-        emailRedirectTo,
       },
     });
     if (error) {

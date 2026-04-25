@@ -16,12 +16,14 @@ type ConfirmModalProps = {
   strings: ConfirmStrings;
   onCancel: () => void;
   onConfirm: () => void;
+  destructive?: boolean;
 };
 
 export const ConfirmModal = ({
   strings,
   onCancel,
   onConfirm,
+  destructive = false,
 }: ConfirmModalProps): ReactElement | null => {
   const dialogRef = useRef<HTMLDivElement>(null);
   const { overlayMotion, toggleTransition, prefersReducedMotion } = useMotionPreferences();
@@ -89,7 +91,11 @@ export const ConfirmModal = ({
           <motion.button
             type="button"
             onClick={onConfirm}
-            className="px-4 py-2 rounded-lg border btn-contrast focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+            className={
+              destructive
+                ? 'px-4 py-2 rounded-lg border border-red-600 bg-red-600 text-white hover:bg-red-700 dark:border-red-500 dark:bg-red-500 dark:hover:bg-red-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]'
+                : 'px-4 py-2 rounded-lg border btn-contrast focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]'
+            }
             whileTap={prefersReducedMotion ? undefined : { scale: 0.97 }}
             transition={toggleTransition}
           >

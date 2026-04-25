@@ -133,7 +133,7 @@ export const de = {
   syncPage: {
     title: 'Synchronisierung',
     intro:
-      'Die Synchronisierung ist eine optionale Funktion, die deine Enso-Daten auf mehreren Geräten konsistent hält. Wenn du Enso auf Handy und Desktop nutzt, bleiben Lesezeichen, Sammlungen und Lernfortschritt synchron, damit du nahtlos weitermachen kannst.\n\nDie Synchronisierung betrifft nur deine persönlichen Daten und verändert die Inhalte von Enso selbst nicht.',
+      'Die Synchronisierung hilft dir dabei, deine Enso-Lesezeichen, Sammlungen und Lernfortschritte auf allen deinen Geräten gleich zu halten, damit du ohne manuelles Übertragen dort weitermachen kannst, wo du aufgehört hast.',
     whatItWillDoTitle: 'Was die Synchronisierung macht',
     whatItWillDoBody:
       'Wenn die Synchronisierung aktiviert ist, speichert Enso eine sichere Kopie deiner persönlichen Daten und hält sie auf deinen Geräten aktuell.',
@@ -146,7 +146,26 @@ export const de = {
     paidFeatureTitle: 'Offen und privat',
     paidFeatureBody:
       'Enso ist Open Source, und der Code ist online verfügbar, damit jede Person nachvollziehen kann, wie die Synchronisierung funktioniert. Deine persönlichen Synchronisierungsdaten bleiben privat, und deine Lerndaten sind im normalen Betrieb nicht einsehbar.',
+    overviewTitle: 'Privat und optional',
+    overviewBody:
+      'Deine Enso-Daten bleiben weiterhin auf deinem Gerät, und die Synchronisierung ist nur da, wenn du eine Kopie auch auf anderen Geräten verfügbar haben möchtest. Du kannst Enso ohne Synchronisierung nutzen, sie später einschalten oder dich jederzeit wieder abmelden.',
     statusTitle: 'Status',
+    emailLabel: 'E-Mail',
+    lastSyncLabel: 'Letzte Synchronisierung',
+    errorLabel: 'Fehler',
+    signedInFallback: 'Angemeldet',
+    notSignedIn: 'Nicht angemeldet',
+    notSyncedYet: 'Noch nicht',
+    errorRateLimited:
+      'Zu viele Code-Anfragen. Bitte warte einen Moment und versuche es dann noch einmal.',
+    errorInvalidServiceResponse:
+      'Beim Kontakt mit dem Anmeldedienst ist ein Problem aufgetreten. Bitte versuche es noch einmal.',
+    errorSendCodeFailed:
+      'Der Anmeldecode konnte nicht gesendet werden. Bitte versuche es noch einmal.',
+    errorInvalidOrExpiredCode:
+      'Dieser Code ist ungültig oder abgelaufen. Bitte fordere einen neuen Code an.',
+    errorSyncFailed:
+      'Die Synchronisierung konnte nicht abgeschlossen werden. Bitte versuche es noch einmal.',
     statusBody:
       'Die Synchronisierung ist jetzt verfügbar, sobald du dich mit E-Mail-Link oder Einmalcode anmeldest. Neue E-Mail-Adressen koennen beim ersten Anmelden automatisch als Konto erstellt werden. Deine Daten bleiben local-first, und die Synchronisierung ist optional. Du kannst dich jederzeit abmelden und Enso weiterhin offline nutzen.',
   },
@@ -177,6 +196,11 @@ export const de = {
     'Dadurch werden alle Enso-Daten in diesem Browser gelöscht. Dies kann nicht rückgängig gemacht werden.',
   confirmClearAction: 'Löschen',
   confirmClearCancel: 'Abbrechen',
+  confirmDeleteAccountTitle: 'Cloud-Konto löschen?',
+  confirmDeleteAccountBody:
+    'Dadurch wird dein Enso-Cloud-Konto gelöscht und die Synchronisierung auf diesem Gerät ausgeschaltet. Deine lokalen Daten auf diesem Gerät bleiben erhalten.',
+  confirmDeleteAccountAction: 'Konto löschen',
+  confirmDeleteAccountCancel: 'Abbrechen',
   toastDataCleared: 'Daten gelöscht.',
   homeTagline:
     'Verwalte dein Dojo-Curriculum, fokussiere wichtige Techniken und behalte deine Daten offline bei dir.',

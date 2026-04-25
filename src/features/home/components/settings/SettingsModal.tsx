@@ -8,7 +8,6 @@ import type { DB, Locale, Theme } from '@shared/types';
 import { classNames } from '@shared/utils/classNames';
 import {
   Check,
-  Dot,
   Download,
   Linkedin,
   Monitor,
@@ -34,6 +33,7 @@ type SettingsModalProps = {
   isSignedIn: boolean;
   isAuthBootstrapping: boolean;
   syncStatus: 'signed-out' | 'idle' | 'syncing' | 'error';
+  hasSyncError: boolean;
   onClose: () => void;
   onRequestClear: () => void;
   onChangeLocale: (locale: Locale) => void;
@@ -54,6 +54,7 @@ export const SettingsModal = ({
   isSignedIn,
   isAuthBootstrapping,
   syncStatus,
+  hasSyncError,
   onClose,
   onRequestClear,
   onChangeLocale,
@@ -68,10 +69,11 @@ export const SettingsModal = ({
   const { isInstalled, isInstallable, install } = usePwaInstall(copy);
 
   const syncIndicatorClass = (() => {
-    if (!isOnline) return 'text-red-500';
-    if (syncStatus === 'syncing') return 'text-amber-500';
-    if (isSignedIn || isAuthBootstrapping || syncStatus === 'idle') return 'text-emerald-500';
-    return 'text-emerald-500';
+    if (hasSyncError) return 'bg-red-500';
+    if (!isOnline) return 'bg-red-500';
+    if (syncStatus === 'syncing') return 'bg-amber-500';
+    if (isSignedIn || isAuthBootstrapping || syncStatus === 'idle') return 'bg-emerald-500';
+    return 'bg-emerald-500';
   })();
 
   useFocusTrap(trapEnabled, dialogRef, onClose);
@@ -400,11 +402,10 @@ export const SettingsModal = ({
               <button
                 type="button"
                 onClick={onManageSync}
-                className="col-span-1 w-full px-3 py-2 text-sm rounded-lg border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] btn-tonal surface-hover"
+                className="col-span-1 w-full px-3 py-2 text-sm rounded-lg border inline-flex items-center justify-center gap-1.5 transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] btn-tonal surface-hover"
               >
-                <Dot
-                  className={classNames('h-6 w-6 shrink-0', syncIndicatorClass)}
-                  strokeWidth={6}
+                <span
+                  className={classNames('h-2.5 w-2.5 shrink-0 rounded-full', syncIndicatorClass)}
                   aria-hidden
                 />
                 {copy.manage}

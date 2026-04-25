@@ -64,6 +64,7 @@ import {
 } from './lib/backend/syncMerge';
 import type { AuthSession, SyncMetaState, SyncPayloadData } from './lib/supabase/types';
 import { ConfirmClearModal } from './shared/components/dialogs/ConfirmClearDialog';
+import { ConfirmModal } from './shared/components/ui/modals/ConfirmModal';
 import { ENTRY_MODE_ORDER, isEntryMode } from './shared/constants/entryModes';
 import { getCopy } from './shared/constants/i18n';
 import useLockBodyScroll from './shared/hooks/useLockBodyScroll';
@@ -769,6 +770,7 @@ export default function App({
   const [searchOpen, setSearchOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [confirmClearOpen, setConfirmClearOpen] = useState(false);
+  const [confirmDeleteAccountOpen, setConfirmDeleteAccountOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const [glossaryTerms, setGlossaryTerms] = useState<GlossaryTerm[]>([]);
   const [practiceExercises, setPracticeExercises] = useState<Exercise[]>([]);
@@ -816,6 +818,7 @@ export default function App({
   const syncInFlightRef = useRef(false);
   const syncDebounceTimeoutRef = useRef<number | null>(null);
   const authAccessTokenRef = useRef<string | null>(null);
+  const runSyncWithTokenRef = useRef<(accessToken: string) => Promise<void>>(async () => {});
   const filterPanelPinnedRef = useRef<boolean>(loadFilterPanelPinned());
   // Detect if this render follows a back/forward restore and skip entrance
   // animations to avoid the brief re-appearance/flicker on iOS Safari.
@@ -1048,8 +1051,15 @@ export default function App({
         setSyncStatus('idle');
       } catch (error) {
         const message = error instanceof Error ? error.message : 'Sync failed';
-        setSyncError(message);
-        setSyncStatus('error');
+        if (message === 'Unauthorized') {
+          authAccessTokenRef.current = null;
+          setAuthSession(null);
+          setSyncError(null);
+          setSyncStatus('signed-out');
+        } else {
+          setSyncError(message);
+          setSyncStatus('error');
+        }
       } finally {
         syncInFlightRef.current = false;
       }
@@ -1057,8 +1067,12 @@ export default function App({
     [applySyncPayloadToLocalState, buildLocalSyncPayload],
   );
 
+  useEffect(() => {
+    runSyncWithTokenRef.current = runSyncWithToken;
+  }, [runSyncWithToken]);
+
   const scheduleAutoSync = useCallback((): void => {
-    if (!authSession?.accessToken || syncPauseAutoPushRef.current) {
+    if (!authAccessTokenRef.current || syncPauseAutoPushRef.current) {
       return;
     }
 
@@ -1068,10 +1082,12 @@ export default function App({
 
     if (typeof window !== 'undefined') {
       syncDebounceTimeoutRef.current = window.setTimeout(() => {
-        void runSyncWithToken(authSession.accessToken);
+        if (authAccessTokenRef.current) {
+          void runSyncWithTokenRef.current(authAccessTokenRef.current);
+        }
       }, 1200);
     }
-  }, [authSession?.accessToken, runSyncWithToken]);
+  }, []);
 
   const syncNow = useCallback(async (): Promise<void> => {
     if (!authSession?.accessToken) {
@@ -1118,6 +1134,32 @@ export default function App({
     setSyncError(null);
   }, []);
 
+  const deleteAccountFromSync = useCallback(async (): Promise<void> => {
+    if (!authSession?.accessToken) {
+      setSyncStatus('signed-out');
+      return;
+    }
+
+    try {
+      await syncClient.deleteAccount(authSession.accessToken);
+      await authService.signOut();
+      authAccessTokenRef.current = null;
+      setAuthSession(null);
+      setSyncStatus('signed-out');
+      setSyncError(null);
+      showToast('Cloud account deleted. Local data stayed on this device.');
+    } catch (error) {
+      setSyncStatus('error');
+      setSyncError(error instanceof Error ? error.message : 'Failed to delete account');
+      throw error;
+    }
+  }, [authSession?.accessToken, showToast]);
+
+  const handleConfirmDeleteAccount = useCallback(async (): Promise<void> => {
+    await deleteAccountFromSync();
+    setConfirmDeleteAccountOpen(false);
+  }, [deleteAccountFromSync]);
+
   useEffect(() => {
     return authService.onAuthStateChange((session) => {
       const nextAccessToken = session?.accessToken ?? null;
@@ -1131,14 +1173,14 @@ export default function App({
         setSyncError(null);
 
         if (didAccessTokenChange) {
-          void runSyncWithToken(session.accessToken);
+          void runSyncWithTokenRef.current(session.accessToken);
         }
       } else {
         setSyncStatus('signed-out');
         setSyncError(null);
       }
     });
-  }, [runSyncWithToken]);
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -1154,7 +1196,7 @@ export default function App({
           setAuthSession(session);
           setSyncStatus('idle');
           if (didAccessTokenChange) {
-            void runSyncWithToken(session.accessToken);
+            void runSyncWithTokenRef.current(session.accessToken);
           }
         } else {
           authAccessTokenRef.current = null;
@@ -1179,7 +1221,7 @@ export default function App({
     return () => {
       cancelled = true;
     };
-  }, [runSyncWithToken]);
+  }, []);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -1222,7 +1264,9 @@ export default function App({
   }, []);
 
   // Prevent page scroll while overlays/modals are open
-  useLockBodyScroll(searchOpen || settingsOpen || confirmClearOpen || tourOpen);
+  useLockBodyScroll(
+    searchOpen || settingsOpen || confirmClearOpen || confirmDeleteAccountOpen || tourOpen,
+  );
 
   // Load glossary terms on component mount
   useEffect(() => {
@@ -1297,6 +1341,7 @@ export default function App({
   const closeSettings = useCallback(() => {
     setSettingsOpen(false);
     setConfirmClearOpen(false);
+    setConfirmDeleteAccountOpen(false);
     if (typeof window !== 'undefined') {
       window.setTimeout(() => {
         settingsTriggerRef.current?.focus();
@@ -1322,6 +1367,14 @@ export default function App({
     handleCancelClear();
     showToast(copy.toastDataCleared);
   }, [copy.toastDataCleared, handleCancelClear, setDB, showToast]);
+
+  const handleRequestDeleteAccount = useCallback(() => {
+    setConfirmDeleteAccountOpen(true);
+  }, []);
+
+  const handleCancelDeleteAccount = useCallback(() => {
+    setConfirmDeleteAccountOpen(false);
+  }, []);
 
   // When clearing the DB, also clear persisted filters to avoid stale state
   useEffect(() => {
@@ -3007,6 +3060,7 @@ export default function App({
         copy={copy}
         isSignedIn={Boolean(authSession)}
         isAuthBootstrapping={isAuthBootstrapping}
+        signedInEmail={authSession?.email ?? null}
         syncStatus={syncStatus}
         syncError={syncError}
         lastSyncedAt={syncMeta.lastSyncedAt}
@@ -3014,6 +3068,7 @@ export default function App({
         onVerifyOtp={verifyOtpForSync}
         onSignOut={signOutFromSync}
         onSyncNow={syncNow}
+        onRequestDeleteAccount={handleRequestDeleteAccount}
       />
     );
   } else if (route === 'guideAdvanced') {
@@ -3437,8 +3492,9 @@ export default function App({
               isSignedIn={Boolean(authSession)}
               isAuthBootstrapping={isAuthBootstrapping}
               syncStatus={syncStatus}
+              hasSyncError={Boolean(syncError && syncError !== 'Unauthorized')}
               clearButtonRef={settingsClearButtonRef}
-              trapEnabled={!confirmClearOpen && !tourOpen}
+              trapEnabled={!confirmClearOpen && !confirmDeleteAccountOpen && !tourOpen}
             />
           )}
 
@@ -3448,6 +3504,23 @@ export default function App({
               copy={copy}
               onCancel={handleCancelClear}
               onConfirm={handleConfirmClear}
+            />
+          )}
+
+          {confirmDeleteAccountOpen && (
+            <ConfirmModal
+              key="confirm-delete-account"
+              strings={{
+                title: copy.confirmDeleteAccountTitle,
+                body: copy.confirmDeleteAccountBody,
+                confirmLabel: copy.confirmDeleteAccountAction,
+                cancelLabel: copy.confirmDeleteAccountCancel,
+              }}
+              onCancel={handleCancelDeleteAccount}
+              onConfirm={() => {
+                void handleConfirmDeleteAccount();
+              }}
+              destructive
             />
           )}
         </AnimatePresence>

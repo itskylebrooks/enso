@@ -132,7 +132,7 @@ export const en = {
   syncPage: {
     title: 'Sync',
     intro:
-      'Sync is an optional feature that keeps your Enso data consistent across devices. If you use Enso on phone and desktop, your bookmarks, collections, and study progress stay in sync so you can continue where you left off.\n\nSync only affects your personal data and does not change Enso content itself.',
+      'Sync helps you keep your Enso bookmarks, collections, and study progress the same on each device you use, so you can continue where you left off without moving data by hand.',
     whatItWillDoTitle: 'What Sync will do',
     whatItWillDoBody:
       'When Sync is enabled, Enso securely stores a copy of your personal data and keeps it up to date across your devices.',
@@ -145,7 +145,22 @@ export const en = {
     paidFeatureTitle: 'Open and private',
     paidFeatureBody:
       'Enso is open source, and the code is available online so anyone can inspect how Sync works. Your personal sync data stays private, and your personal study data is not readable in normal use.',
+    overviewTitle: 'Private and optional',
+    overviewBody:
+      'Your Enso data still stays on your device, and Sync is only there if you want a copy available on your other devices. You can use Enso without Sync, turn Sync on later, or sign out again at any time.',
     statusTitle: 'Status',
+    emailLabel: 'Email',
+    lastSyncLabel: 'Last sync',
+    errorLabel: 'Error',
+    signedInFallback: 'Signed in',
+    notSignedIn: 'Not signed in',
+    notSyncedYet: 'Not yet',
+    errorRateLimited: 'Too many code requests. Please wait a moment and try again.',
+    errorInvalidServiceResponse:
+      'Something went wrong while contacting the sign-in service. Please try again.',
+    errorSendCodeFailed: 'Could not send the sign-in code. Please try again.',
+    errorInvalidOrExpiredCode: 'This code is invalid or has expired. Please request a new code.',
+    errorSyncFailed: 'Sync did not finish. Please try again.',
     statusBody:
       'Sync is now available when you sign in with an email link or one-time code. New email addresses can be created automatically on first sign-in. Your data remains local-first, and syncing is optional. You can sign out at any time and continue using Enso offline.',
   },
@@ -175,6 +190,11 @@ export const en = {
   confirmClearBody: 'This will clear all Enso data in this browser. This cannot be undone.',
   confirmClearAction: 'Delete',
   confirmClearCancel: 'Cancel',
+  confirmDeleteAccountTitle: 'Delete cloud account?',
+  confirmDeleteAccountBody:
+    'This will delete your Enso cloud account and turn off Sync on this device. Your local data on this device will stay here.',
+  confirmDeleteAccountAction: 'Delete account',
+  confirmDeleteAccountCancel: 'Cancel',
   toastDataCleared: 'Data cleared.',
   homeTagline:
     'Track your dojo curriculum, stay focused on key techniques, and keep your data with you offline.',

@@ -3,6 +3,7 @@ import type { SyncPayloadData, SyncPullResponse, SyncPushResponse } from '../sup
 export interface SyncClient {
   pull(accessToken: string): Promise<SyncPullResponse>;
   push(accessToken: string, payload: SyncPayloadData): Promise<SyncPushResponse>;
+  deleteAccount(accessToken: string): Promise<void>;
 }
 
 const buildAuthHeaders = (accessToken: string): HeadersInit => ({
@@ -44,5 +45,15 @@ export const syncClient: SyncClient = {
     }
 
     return (await response.json()) as SyncPushResponse;
+  },
+  async deleteAccount(accessToken: string) {
+    const response = await fetch('/api/auth/account', {
+      method: 'DELETE',
+      headers: buildAuthHeaders(accessToken),
+    });
+
+    if (!response.ok) {
+      throw new Error(await parseErrorMessage(response));
+    }
   },
 };
