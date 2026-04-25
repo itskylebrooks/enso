@@ -1147,13 +1147,12 @@ export default function App({
       setAuthSession(null);
       setSyncStatus('signed-out');
       setSyncError(null);
-      showToast('Cloud account deleted. Local data stayed on this device.');
     } catch (error) {
       setSyncStatus('error');
       setSyncError(error instanceof Error ? error.message : 'Failed to delete account');
       throw error;
     }
-  }, [authSession?.accessToken, showToast]);
+  }, [authSession?.accessToken]);
 
   const handleConfirmDeleteAccount = useCallback(async (): Promise<void> => {
     await deleteAccountFromSync();
