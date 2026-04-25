@@ -156,6 +156,8 @@ const defaultFilters: Filters = {};
 
 type SyncStatus = 'signed-out' | 'idle' | 'syncing' | 'error';
 
+const AUTH_TRIGGERED_SYNC_MIN_INTERVAL_MS = 60_000;
+
 const normalizeTourSegmentIndex = (value: number | null | undefined): number => {
   if (typeof value !== 'number' || !Number.isFinite(value)) return 0;
   const maxIndex = ONBOARDING_TOUR_SEGMENTS.length - 1;
@@ -828,6 +830,7 @@ export default function App({
   const syncMutationVersionRef = useRef(0);
   const syncDebounceTimeoutRef = useRef<number | null>(null);
   const authAccessTokenRef = useRef<string | null>(null);
+  const lastAuthTriggeredSyncAtRef = useRef(0);
   const runSyncWithTokenRef = useRef<(accessToken: string) => Promise<void>>(async () => {});
   const filterPanelPinnedRef = useRef<boolean>(loadFilterPanelPinned());
   // Detect if this render follows a back/forward restore and skip entrance
@@ -1160,6 +1163,18 @@ export default function App({
     await runSyncWithToken(authSession.accessToken);
   }, [authSession?.accessToken, runSyncWithToken]);
 
+  const runAuthTriggeredSync = useCallback((accessToken: string): void => {
+    const now = Date.now();
+    const shouldSync =
+      syncDirtyRef.current ||
+      now - lastAuthTriggeredSyncAtRef.current >= AUTH_TRIGGERED_SYNC_MIN_INTERVAL_MS;
+
+    if (!shouldSync) return;
+
+    lastAuthTriggeredSyncAtRef.current = now;
+    void runSyncWithTokenRef.current(accessToken);
+  }, []);
+
   const requestOtpForSync = useCallback(async (email: string): Promise<void> => {
     try {
       await authService.requestEmailOtp(email);
@@ -1234,14 +1249,14 @@ export default function App({
         setSyncError(null);
 
         if (didAccessTokenChange) {
-          void runSyncWithTokenRef.current(session.accessToken);
+          runAuthTriggeredSync(session.accessToken);
         }
       } else {
         setSyncStatus('signed-out');
         setSyncError(null);
       }
     });
-  }, []);
+  }, [runAuthTriggeredSync]);
 
   useEffect(() => {
     let cancelled = false;
@@ -1257,7 +1272,7 @@ export default function App({
           setAuthSession(session);
           setSyncStatus('idle');
           if (didAccessTokenChange) {
-            void runSyncWithTokenRef.current(session.accessToken);
+            runAuthTriggeredSync(session.accessToken);
           }
         } else {
           authAccessTokenRef.current = null;
@@ -1282,7 +1297,7 @@ export default function App({
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [runAuthTriggeredSync]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
