@@ -469,10 +469,10 @@ export const SettingsModal = ({
 
                 <div className="absolute right-4 inset-y-0 flex items-center">
                   <a
-                    href="https://brooks.tools/"
+                    href="https://kylebrooks.me/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    aria-label="Brooks Studio website"
+                    aria-label="Kyle Brooks website"
                     className="text-current opacity-90"
                   >
                     <SquareArrowOutUpRight className="h-5 w-5" aria-hidden />
@@ -481,7 +481,7 @@ export const SettingsModal = ({
 
                 {/* Center text: author • version on one line */}
                 <div className="leading-snug flex items-center justify-center gap-2">
-                  <span className="truncate font-medium text-strong">Brooks Studio</span>
+                  <span className="truncate font-medium text-strong">Kyle Brooks</span>
                   <span>•</span>
                   <span className="truncate">Enso {pkg.version}</span>
                 </div>
@@ -490,7 +490,7 @@ export const SettingsModal = ({
                 <div className="flex items-center justify-center gap-2.5 leading-snug mt-1">
                   <a
                     className="underline"
-                    href="https://brooks.tools/imprint"
+                    href="https://kylebrooks.me/imprint"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -498,7 +498,7 @@ export const SettingsModal = ({
                   </a>
                   <a
                     className="underline"
-                    href="https://brooks.tools/privacy"
+                    href="https://kylebrooks.me/privacy"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -506,7 +506,7 @@ export const SettingsModal = ({
                   </a>
                   <a
                     className="underline"
-                    href="https://brooks.tools/license"
+                    href="https://kylebrooks.me/license"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
