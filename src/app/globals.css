@@ -573,3 +573,39 @@ body.suppress-transitions *::after {
   -webkit-text-orientation: mixed;
   transform: rotate(180deg);
 }
+
+/* Keep long-form page content readable without enlarging header buttons or compact controls. */
+main :where(p, li, dd, dt, blockquote).text-xs,
+main :where(p, li, dd, dt, blockquote).text-sm,
+main :where(ul, ol, dl).text-xs,
+main :where(ul, ol, dl).text-sm,
+main :where(div).text-xs > p,
+main :where(div).text-sm > p {
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+main :where(h2, h3).text-xs,
+main :where(h2, h3).text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+main :where(table) {
+  font-size: 0.875rem;
+}
+
+main :where(article, section) :where(span, div).text-xs:not(.glossary-tag),
+main :where(article, section) :where(span, div).text-\[10px\]:not(.glossary-tag),
+main :where(article, section) :where(span, div).text-\[11px\]:not(.glossary-tag) {
+  font-size: 0.875rem;
+  line-height: 1.35;
+}
+
+main :where(th, td).text-xs,
+main :where(th, td).text-sm,
+main :where(th, td) :where(span, div).text-xs,
+main :where(th, td) :where(span, div).text-sm {
+  font-size: 0.875rem;
+  line-height: 1.35;
+}

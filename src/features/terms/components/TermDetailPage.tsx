@@ -228,8 +228,8 @@ export const TermDetailPage = ({
         <div className="order-2 space-y-8 lg:order-1">
           {notes && (
             <section className="space-y-3">
-              <h2 className="text-xs uppercase tracking-[0.3em] text-subtle">{copy.notes}</h2>
-              <div className="space-y-2 text-sm leading-relaxed text-muted">
+              <h2 className="text-sm uppercase tracking-[0.22em] text-subtle">{copy.notes}</h2>
+              <div className="space-y-2 text-base leading-relaxed text-muted">
                 {notes
                   .split('\n')
                   .map((paragraph) => paragraph.trim())
@@ -244,14 +244,16 @@ export const TermDetailPage = ({
 
         <div className="order-1 space-y-8 lg:order-2">
           <section className="space-y-3">
-            <h2 className="text-xs uppercase tracking-[0.3em] text-subtle">{definitionLabel}</h2>
-            <p className="text-sm leading-relaxed text-muted">{definition}</p>
+            <h2 className="text-sm uppercase tracking-[0.22em] text-subtle">
+              {definitionLabel}
+            </h2>
+            <p className="text-base leading-relaxed text-muted">{definition}</p>
           </section>
 
           {literal && (
             <section className="space-y-3">
-              <h2 className="text-xs uppercase tracking-[0.3em] text-subtle">{literalLabel}</h2>
-              <p className="text-sm italic leading-relaxed text-muted">{literal}</p>
+              <h2 className="text-sm uppercase tracking-[0.22em] text-subtle">{literalLabel}</h2>
+              <p className="text-base italic leading-relaxed text-muted">{literal}</p>
             </section>
           )}
         </div>

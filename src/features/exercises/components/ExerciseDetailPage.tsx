@@ -257,7 +257,7 @@ export const ExerciseDetailPage = ({
               </div>
             </div>
           </div>
-          <p className="text-sm text-muted leading-relaxed">{summary}</p>
+          <p className="text-base text-muted leading-relaxed">{summary}</p>
         </div>
       </header>
 
@@ -265,16 +265,16 @@ export const ExerciseDetailPage = ({
         <div className="space-y-8">
           {aikidoContext && (
             <section className="space-y-3">
-              <h2 className="text-xs uppercase tracking-[0.3em] text-subtle">
+              <h2 className="text-sm uppercase tracking-[0.22em] text-subtle">
                 {copy.practiceAikidoContext}
               </h2>
-              <p className="text-sm leading-relaxed text-muted">{aikidoContext}</p>
+              <p className="text-base leading-relaxed text-muted">{aikidoContext}</p>
             </section>
           )}
 
           {howTo && howTo.length > 0 && (
             <section className="space-y-3">
-              <h2 className="text-xs uppercase tracking-[0.3em] text-subtle">
+              <h2 className="text-sm uppercase tracking-[0.22em] text-subtle">
                 {copy.practiceHowTo}
               </h2>
               <StepsList steps={howTo} ariaLabel={`${name} steps`} />
@@ -283,10 +283,10 @@ export const ExerciseDetailPage = ({
 
           {safetyNotes && safetyNotes.length > 0 && (
             <section className="space-y-3">
-              <h2 className="text-xs uppercase tracking-[0.3em] text-subtle">
+              <h2 className="text-sm uppercase tracking-[0.22em] text-subtle">
                 {copy.practiceSafetyNotes}
               </h2>
-              <ul className="space-y-2 text-sm leading-relaxed text-muted">
+              <ul className="space-y-2 text-base leading-relaxed text-muted">
                 {safetyNotes.map((note, index) => (
                   <li key={index} className="flex gap-2">
                     <span className="text-subtle shrink-0">•</span>
@@ -305,7 +305,7 @@ export const ExerciseDetailPage = ({
 
           {exercise.equipment && exercise.equipment.length > 0 && (
             <section className="space-y-3">
-              <h2 className="text-xs uppercase tracking-[0.3em] text-subtle">
+              <h2 className="text-sm uppercase tracking-[0.22em] text-subtle">
                 {copy.practiceEquipment}
               </h2>
               <div className="flex flex-wrap gap-2">
