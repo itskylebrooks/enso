@@ -3,6 +3,13 @@
 import type { FeedbackType } from '@features/home/components/feedback/FeedbackPage';
 import { FeedbackPage } from '@features/home/components/feedback/FeedbackPage';
 import { GuideGradePage } from '@features/home/components/guide/GuideGradePage';
+import {
+  LearnSessionPage,
+  orderLearnCards,
+  type LearnCard,
+  type LearnSession,
+  type LearnSetupOptions,
+} from '@features/learn';
 import { AboutPage } from '@features/home/components/home/AboutPage';
 import { AdvancedPrograms } from '@features/home/components/home/AdvancedPrograms';
 import { DanOverview } from '@features/home/components/home/DanOverview';
@@ -85,6 +92,7 @@ import {
   hasStoredTheme,
   loadBeltPromptDismissed,
   loadDB,
+  loadDefaultDB,
   loadFilterPanelPinned,
   loadFilters,
   loadOnboardingCompleted,
@@ -331,6 +339,8 @@ const routeToPath = (route: AppRoute): string => {
       return '/terms';
     case 'bookmarks':
       return '/bookmarks';
+    case 'learn':
+      return '/learn';
     default:
       return '/';
   }
@@ -482,6 +492,10 @@ const parseLocation = (
 
   if (pathname === '/bookmarks') {
     return { route: 'bookmarks', slug: null };
+  }
+
+  if (pathname === '/learn') {
+    return { route: 'learn', slug: null };
   }
 
   if (pathname === '/techniques' || pathname === '/library') {
@@ -777,7 +791,8 @@ export default function App({
   const [isHomePrefsReady, setIsHomePrefsReady] = useState(false);
   const [theme, setTheme] = useState<Theme>(() => loadTheme());
   const [hasManualTheme, setHasManualTheme] = useState<boolean>(() => hasStoredTheme());
-  const [db, setDB] = useState<DB>(() => loadDB());
+  const [db, setDB] = useState<DB>(() => loadDefaultDB());
+  const [isDBReady, setIsDBReady] = useState(false);
   const [filters, setFilters] = useState<Filters>(() => {
     try {
       const persisted = loadFilters<Filters>();
@@ -808,6 +823,7 @@ export default function App({
   const [glossaryTerms, setGlossaryTerms] = useState<GlossaryTerm[]>([]);
   const [practiceExercises, setPracticeExercises] = useState<Exercise[]>([]);
   const [feedbackInitialType, setFeedbackInitialType] = useState<FeedbackType | null>(null);
+  const [learnSession, setLearnSession] = useState<LearnSession | null>(null);
   const [pinnedBeltGrade, setPinnedBeltGrade] = useState<Grade | null>(null);
   const [beltPromptDismissed, setBeltPromptDismissed] = useState<boolean>(false);
   const [onboardingDismissed, setOnboardingDismissed] = useState<boolean>(() =>
@@ -910,6 +926,26 @@ export default function App({
     [activeSlug, route],
   );
 
+  const startLearnSession = useCallback(
+    (
+      cards: LearnCard[],
+      options: LearnSetupOptions,
+      sourceRoute: AppRoute,
+      sourceLabel: string,
+    ) => {
+      if (cards.length === 0) return;
+      setLearnSession({
+        id: generateId(),
+        cards: orderLearnCards(cards, options.order),
+        options,
+        sourceRoute,
+        sourceLabel,
+      });
+      navigateTo('learn');
+    },
+    [navigateTo],
+  );
+
   const goToFeedback = useCallback(
     (type?: FeedbackType) => {
       setFeedbackInitialType(type ?? null);
@@ -988,25 +1024,28 @@ export default function App({
     }
   }, []);
 
-  const addSyncTombstones = useCallback((tombstones: SyncTombstones): void => {
-    if (Object.keys(tombstones).length === 0) return;
+  const addSyncTombstones = useCallback(
+    (tombstones: SyncTombstones): void => {
+      if (Object.keys(tombstones).length === 0) return;
 
-    markSyncMutationPending();
+      markSyncMutationPending();
 
-    setSyncMeta((prev) => {
-      const nextTombstones: SyncTombstones = { ...prev.tombstones };
-      Object.entries(tombstones).forEach(([key, deletedAt]) => {
-        nextTombstones[key] = Math.max(nextTombstones[key] ?? 0, deletedAt);
+      setSyncMeta((prev) => {
+        const nextTombstones: SyncTombstones = { ...prev.tombstones };
+        Object.entries(tombstones).forEach(([key, deletedAt]) => {
+          nextTombstones[key] = Math.max(nextTombstones[key] ?? 0, deletedAt);
+        });
+        const nextMeta: SyncMetaState = {
+          ...prev,
+          dbUpdatedAt: Math.max(prev.dbUpdatedAt, ...Object.values(tombstones)),
+          tombstones: pruneSyncTombstones(nextTombstones),
+        };
+        saveSyncMeta(nextMeta);
+        return nextMeta;
       });
-      const nextMeta: SyncMetaState = {
-        ...prev,
-        dbUpdatedAt: Math.max(prev.dbUpdatedAt, ...Object.values(tombstones)),
-        tombstones: pruneSyncTombstones(nextTombstones),
-      };
-      saveSyncMeta(nextMeta);
-      return nextMeta;
-    });
-  }, [markSyncMutationPending]);
+    },
+    [markSyncMutationPending],
+  );
 
   const buildLocalSyncPayload = useCallback((): SyncPayloadData => {
     const syncedDB = pickSyncedDBState(db);
@@ -1663,6 +1702,12 @@ export default function App({
   }, [getCurrentSettingsSyncSnapshot, isLocaleReady, locale, markSettingsChanged]);
 
   useEffect(() => {
+    setDB(loadDB());
+    setIsDBReady(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isDBReady) return;
     saveDB(db);
 
     if (!dbPersistedRef.current) {
@@ -1679,7 +1724,7 @@ export default function App({
     }
 
     markDBChanged();
-  }, [db, getCurrentDBSyncSnapshot, markDBChanged]);
+  }, [db, getCurrentDBSyncSnapshot, isDBReady, markDBChanged]);
 
   useEffect(() => {
     if (!isHomePrefsReady) return;
@@ -3409,6 +3454,9 @@ export default function App({
         onTogglePin={togglePinnedBeltGrade}
         onOpenTechnique={(slug) => openTechnique(slug, undefined, undefined, false)}
         onOpenTerm={openGlossaryTerm}
+        onStartLearn={(cards, options) =>
+          startLearnSession(cards, options, route, copy.backToGuide)
+        }
       />
     );
   } else if (route === 'guide') {
@@ -3439,6 +3487,16 @@ export default function App({
           onConsumeInitialType={() => setFeedbackInitialType(null)}
         />
       </motion.div>
+    );
+  } else if (route === 'learn') {
+    mainContent = (
+      <LearnSessionPage
+        copy={copy}
+        session={learnSession}
+        onBack={() => navigateTo(learnSession?.sourceRoute ?? 'bookmarks', { replace: true })}
+        onOpenBookmarks={() => navigateTo('bookmarks', { replace: true })}
+        onOpenGuide={() => navigateTo('guide', { replace: true })}
+      />
     );
   } else {
     mainContent = (
@@ -3595,6 +3653,9 @@ export default function App({
             }
             onOpenGlossaryTerm={(slug) => openGlossaryTerm(slug)}
             onOpenExercise={openPracticeExercise}
+            onStartLearn={(cards, options) =>
+              startLearnSession(cards, options, 'bookmarks', copy.backToBookmarks)
+            }
             forceCollectionsSidebarOpen={activeTourSegment?.id === 'bookmarks-collections'}
           />
         )}

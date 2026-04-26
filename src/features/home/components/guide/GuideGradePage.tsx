@@ -1,10 +1,12 @@
 import { useMemo, type ReactElement } from 'react';
+import { buildTechniqueLearnCard, buildTermLearnCard, LearnSetupMenu } from '@features/learn';
 import type { Copy } from '@shared/constants/i18n';
 import type { GlossaryTerm, Grade, Locale, Technique } from '@shared/types';
 import { gradeLabel } from '@shared/utils/grades';
 import { beltRequirements, pickLocalized } from './beltRequirements';
 import { getCategoryLabel, getCategoryStyle } from '@shared/styles/terms';
 import { getGradeStyle } from '@shared/styles/belts';
+import type { LearnCard, LearnSetupOptions } from '@features/learn';
 
 type GuideGradePageProps = {
   copy: Copy;
@@ -18,6 +20,7 @@ type GuideGradePageProps = {
   onTogglePin: (grade: Grade) => void;
   onOpenTechnique: (slug: string) => void;
   onOpenTerm: (slug: string) => void;
+  onStartLearn: (cards: LearnCard[], options: LearnSetupOptions) => void;
 };
 
 export const GuideGradePage = ({
@@ -32,6 +35,7 @@ export const GuideGradePage = ({
   onTogglePin,
   onOpenTechnique,
   onOpenTerm,
+  onStartLearn,
 }: GuideGradePageProps): ReactElement => {
   const isPinned = pinnedBeltGrade === grade;
   const pinLabel = isPinned ? copy.homeUnpinFromHome : copy.homePinToHome;
@@ -59,6 +63,26 @@ export const GuideGradePage = ({
     [glossaryTerms, requirement.termSlugs],
   );
 
+  const techniqueLearnCards = useMemo(
+    () =>
+      requiredTechniques.map((technique) =>
+        buildTechniqueLearnCard({
+          technique,
+          locale,
+          id: `guide:${grade}:technique:${technique.id}`,
+        }),
+      ),
+    [grade, locale, requiredTechniques],
+  );
+
+  const termLearnCards = useMemo(
+    () =>
+      requiredTerms.map((term) =>
+        buildTermLearnCard({ term, locale, copy, id: `guide:${grade}:term:${term.id}` }),
+      ),
+    [copy, grade, locale, requiredTerms],
+  );
+
   const techniquesTitle = locale === 'de' ? 'Techniken' : 'Techniques';
   const techniquesLead =
     locale === 'de'
@@ -69,7 +93,8 @@ export const GuideGradePage = ({
     locale === 'de'
       ? 'Wichtige Begriffe, die fuer diese Pruefung erwartet werden.'
       : 'Key terms expected as part of this exam.';
-  const basicsTitle = locale === 'de' ? 'Basics, Etikette & Sicherheit' : 'Basics, Etiquette & Safety';
+  const basicsTitle =
+    locale === 'de' ? 'Basics, Etikette & Sicherheit' : 'Basics, Etiquette & Safety';
   const examTitle = locale === 'de' ? 'Pruefungsbeschreibung' : 'Exam Description';
   const focusTitle = locale === 'de' ? 'Pruefungsfokus' : 'Exam Focus';
   const emptyTechniques =
@@ -121,9 +146,19 @@ export const GuideGradePage = ({
       </div>
 
       <section className="space-y-4">
-        <header className="space-y-1">
-          <h2 className="text-xl font-semibold">{techniquesTitle}</h2>
-          <p className="text-sm text-subtle">{techniquesLead}</p>
+        <header className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div className="space-y-1">
+            <h2 className="text-xl font-semibold">{techniquesTitle}</h2>
+            <p className="text-sm text-subtle">{techniquesLead}</p>
+          </div>
+          <div className="sm:w-64">
+            <LearnSetupMenu
+              copy={copy}
+              cardCount={techniqueLearnCards.length}
+              variant="popover"
+              onStart={(options) => onStartLearn(techniqueLearnCards, options)}
+            />
+          </div>
         </header>
         {requiredTechniques.length === 0 ? (
           <p className="text-sm text-subtle">{emptyTechniques}</p>
@@ -153,9 +188,19 @@ export const GuideGradePage = ({
       </section>
 
       <section className="space-y-4">
-        <header className="space-y-1">
-          <h2 className="text-xl font-semibold">{termsTitle}</h2>
-          <p className="text-sm text-subtle">{termsLead}</p>
+        <header className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div className="space-y-1">
+            <h2 className="text-xl font-semibold">{termsTitle}</h2>
+            <p className="text-sm text-subtle">{termsLead}</p>
+          </div>
+          <div className="sm:w-64">
+            <LearnSetupMenu
+              copy={copy}
+              cardCount={termLearnCards.length}
+              variant="popover"
+              onStart={(options) => onStartLearn(termLearnCards, options)}
+            />
+          </div>
         </header>
         {requiredTerms.length === 0 ? (
           <p className="text-sm text-subtle">{emptyTerms}</p>

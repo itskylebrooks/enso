@@ -1,4 +1,5 @@
 import { ExerciseCard } from '@features/exercises/components/ExerciseCard';
+import { getLearnableBookmarkCards, LearnSetupMenu } from '@features/learn';
 import { TechniqueCard } from '@features/technique/components/TechniqueCard';
 import { ExpandableFilterBar } from '@shared/components/ui/ExpandableFilterBar';
 import { MobileCollections } from '@shared/components/ui/MobileCollections';
@@ -21,8 +22,8 @@ import {
   getBookmarkedVariantKeys,
   toVariantStorageKey,
 } from '@shared/utils/variantKeys';
-import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp } from 'lucide-react';
-import { AnimatePresence } from 'motion/react';
+import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp, Brain } from 'lucide-react';
+import { AnimatePresence, motion } from 'motion/react';
 import {
   useCallback,
   useEffect,
@@ -50,6 +51,7 @@ import type {
   Technique,
   TechniqueVariantKey,
 } from '../../../shared/types';
+import type { LearnCard, LearnSetupOptions } from '@features/learn';
 import { AddToCollectionMenu } from './AddToCollectionMenu';
 import { CollectionsSidebar } from './CollectionsSidebar';
 import { TermBookmarkCard } from './TermBookmarkCard';
@@ -89,6 +91,7 @@ type BookmarksViewProps = {
   onOpenTechnique: (slug: string, bookmarkedVariant?: TechniqueVariantKey) => void;
   onOpenGlossaryTerm: (slug: string) => void;
   onOpenExercise: (slug: string) => void;
+  onStartLearn: (cards: LearnCard[], options: LearnSetupOptions) => void;
   forceCollectionsSidebarOpen?: boolean;
 };
 
@@ -132,6 +135,68 @@ type ReorderControlsProps = {
   disableForward: boolean;
   onMoveBackward: () => void;
   onMoveForward: () => void;
+};
+
+type DesktopLearnSidePanelProps = {
+  copy: Copy;
+  cardCount: number;
+  onStart: (options: LearnSetupOptions) => void;
+};
+
+const DesktopLearnSidePanel = ({
+  copy,
+  cardCount,
+  onStart,
+}: DesktopLearnSidePanelProps): ReactElement => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const { prefersReducedMotion } = useMotionPreferences();
+
+  return (
+    <motion.div
+      className="relative z-20"
+      onMouseEnter={() => setIsExpanded(true)}
+      onMouseLeave={() => setIsExpanded(false)}
+      initial={false}
+      animate={{ opacity: 1 }}
+      transition={{ duration: prefersReducedMotion ? 0 : 0.2, ease: [0.4, 0, 0.2, 1] }}
+    >
+      <div
+        className={`transition-all duration-300 ${
+          isExpanded ? 'opacity-0 pointer-events-none' : 'opacity-100'
+        }`}
+      >
+        <div className="surface border surface-border rounded-xl px-2.5 py-4 flex flex-col items-center gap-3 shadow-sm cursor-pointer hover:bg-[var(--color-surface-hover)] transition-colors">
+          <Brain className="w-4 h-4 text-subtle" aria-hidden />
+          <div className="writing-mode-vertical text-xs font-medium tracking-wider uppercase text-subtle">
+            {copy.learn}
+          </div>
+        </div>
+      </div>
+
+      <AnimatePresence>
+        {isExpanded && (
+          <motion.div
+            className="absolute left-0 top-0 z-30 w-64 surface border surface-border rounded-2xl p-3 panel-shadow max-h-[calc(100vh-10rem)] overflow-y-auto no-select"
+            initial={{ opacity: 0, scale: 0.95, x: -10 }}
+            animate={{ opacity: 1, scale: 1, x: 0 }}
+            exit={{ opacity: 0, scale: 0.95, x: -10 }}
+            transition={{
+              duration: prefersReducedMotion ? 0 : 0.2,
+              ease: [0.4, 0, 0.2, 1],
+            }}
+          >
+            <div className="mb-3 flex items-center justify-between gap-2">
+              <h2 className="text-sm font-semibold tracking-wide uppercase text-subtle">
+                {copy.learn}
+              </h2>
+              <span className="text-xs text-subtle">{cardCount}</span>
+            </div>
+            <LearnSetupMenu copy={copy} cardCount={cardCount} variant="panel" onStart={onStart} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
+  );
 };
 
 const ReorderControls = ({
@@ -252,6 +317,7 @@ export const BookmarksView = ({
   onOpenTechnique,
   onOpenGlossaryTerm,
   onOpenExercise,
+  onStartLearn,
   forceCollectionsSidebarOpen = false,
 }: BookmarksViewProps): ReactElement => {
   const { listMotion, getItemTransition, prefersReducedMotion } = useMotionPreferences();
@@ -495,58 +561,58 @@ export const BookmarksView = ({
     [techniques],
   );
 
-  const getBookmarkedTechniqueVariants = useCallback((
-    technique: Technique,
-    entry: Progress | undefined,
-  ): TechniqueVariantKey[] => {
-    const parsedFromKeys = getBookmarkedVariantKeys(entry)
-      .map((value) => fromVariantStorageKey(value))
-      .filter((value): value is TechniqueVariantKey => value !== null);
+  const getBookmarkedTechniqueVariants = useCallback(
+    (technique: Technique, entry: Progress | undefined): TechniqueVariantKey[] => {
+      const parsedFromKeys = getBookmarkedVariantKeys(entry)
+        .map((value) => fromVariantStorageKey(value))
+        .filter((value): value is TechniqueVariantKey => value !== null);
 
-    if (parsedFromKeys.length > 0) {
-      return parsedFromKeys;
-    }
+      if (parsedFromKeys.length > 0) {
+        return parsedFromKeys;
+      }
 
-    if (entry?.bookmarkedVariant) {
-      return [entry.bookmarkedVariant];
-    }
+      if (entry?.bookmarkedVariant) {
+        return [entry.bookmarkedVariant];
+      }
 
-    if (entry?.bookmarked) {
-      return [getFallbackVariantForTechnique(technique)];
-    }
+      if (entry?.bookmarked) {
+        return [getFallbackVariantForTechnique(technique)];
+      }
 
-    return [];
-  }, []);
+      return [];
+    },
+    [],
+  );
 
-  const getTechniqueVariantsByStudyStatus = useCallback((
-    technique: Technique,
-    status: Exclude<StudyStatus, 'none'>,
-  ): TechniqueVariantKey[] => {
-    const prefix = `technique:${technique.slug}:`;
-    const variantsFromMap = Object.entries(studyStatus)
-      .filter(([key, value]) => key.startsWith(prefix) && value.status === status)
-      .map(([key, value]) => ({
-        variant: fromVariantStorageKey(key.slice(prefix.length)),
-        updatedAt: value.updatedAt,
-      }))
-      .filter((entry): entry is { variant: TechniqueVariantKey; updatedAt: number } =>
-        Boolean(entry.variant),
-      )
-      .sort((a, b) => b.updatedAt - a.updatedAt)
-      .map((entry) => entry.variant);
+  const getTechniqueVariantsByStudyStatus = useCallback(
+    (technique: Technique, status: Exclude<StudyStatus, 'none'>): TechniqueVariantKey[] => {
+      const prefix = `technique:${technique.slug}:`;
+      const variantsFromMap = Object.entries(studyStatus)
+        .filter(([key, value]) => key.startsWith(prefix) && value.status === status)
+        .map(([key, value]) => ({
+          variant: fromVariantStorageKey(key.slice(prefix.length)),
+          updatedAt: value.updatedAt,
+        }))
+        .filter((entry): entry is { variant: TechniqueVariantKey; updatedAt: number } =>
+          Boolean(entry.variant),
+        )
+        .sort((a, b) => b.updatedAt - a.updatedAt)
+        .map((entry) => entry.variant);
 
-    if (variantsFromMap.length > 0) {
-      return variantsFromMap;
-    }
+      if (variantsFromMap.length > 0) {
+        return variantsFromMap;
+      }
 
-    const legacy = studyStatus[`technique:${technique.slug}`];
-    if (legacy?.status === status) {
-      const progressEntry = progressById[technique.id];
-      return [progressEntry?.bookmarkedVariant ?? getFallbackVariantForTechnique(technique)];
-    }
+      const legacy = studyStatus[`technique:${technique.slug}`];
+      if (legacy?.status === status) {
+        const progressEntry = progressById[technique.id];
+        return [progressEntry?.bookmarkedVariant ?? getFallbackVariantForTechnique(technique)];
+      }
 
-    return [];
-  }, [progressById, studyStatus]);
+      return [];
+    },
+    [progressById, studyStatus],
+  );
 
   const visibleTechniqueIds = useMemo(() => {
     const studyStatusSelection = getStudyStatusForCollectionId(selectedCollectionId);
@@ -787,6 +853,11 @@ export const BookmarksView = ({
     [sortedVisibleItems],
   );
 
+  const learnCards = useMemo(
+    () => getLearnableBookmarkCards(sortedVisibleItems, locale, copy),
+    [copy, locale, sortedVisibleItems],
+  );
+
   const {
     visibleItems: visibleBookmarks,
     hasMore,
@@ -802,8 +873,7 @@ export const BookmarksView = ({
     [sortedVisibleItems],
   );
   const reorderItemIdByRenderItemId = useMemo(
-    () =>
-      new Map(sortedVisibleItems.map((item) => [item.itemId, item.collectionItemId] as const)),
+    () => new Map(sortedVisibleItems.map((item) => [item.itemId, item.collectionItemId] as const)),
     [sortedVisibleItems],
   );
 
@@ -856,9 +926,16 @@ export const BookmarksView = ({
         studyGlossaryIdsByStatus.practice.size +
         studyExerciseIdsByStatus.practice.size,
       [STUDY_STABLE_COLLECTION_ID]:
-        stableTechniqueCount + studyGlossaryIdsByStatus.stable.size + studyExerciseIdsByStatus.stable.size,
+        stableTechniqueCount +
+        studyGlossaryIdsByStatus.stable.size +
+        studyExerciseIdsByStatus.stable.size,
     };
-  }, [getTechniqueVariantsByStudyStatus, techniques, studyExerciseIdsByStatus, studyGlossaryIdsByStatus]);
+  }, [
+    getTechniqueVariantsByStudyStatus,
+    techniques,
+    studyExerciseIdsByStatus,
+    studyGlossaryIdsByStatus,
+  ]);
 
   const studyCollections = useMemo(
     () => [
@@ -976,6 +1053,15 @@ export const BookmarksView = ({
     }
   };
 
+  const mobileLearnMenu = (
+    <LearnSetupMenu
+      copy={copy}
+      cardCount={learnCards.length}
+      variant="inline"
+      onStart={(options) => onStartLearn(learnCards, options)}
+    />
+  );
+
   const handleCreate = (name: string) => {
     const newId = onCreateCollection(name);
     closeDialog();
@@ -1006,7 +1092,7 @@ export const BookmarksView = ({
   return (
     <>
       <div className="no-select space-y-4 lg:space-y-0">
-        <div className="lg:hidden">
+        <div className="space-y-3 lg:hidden">
           <MobileCollections
             copy={copy}
             collections={orderedCollections.map((collection) => ({
@@ -1028,12 +1114,22 @@ export const BookmarksView = ({
             onToggleEdit={handleToggleEdit}
             forceOpen={forceCollectionsSidebarOpen}
           />
+          <div className="rounded-2xl border surface-border bg-[var(--color-surface)] p-4 no-select">
+            {mobileLearnMenu}
+          </div>
         </div>
         <div className="relative">
           <ExpandableFilterBar
             label={copy.collectionsTitle}
             tourTargetId="bookmarks-collections-sidebar"
             forceOpen={forceCollectionsSidebarOpen}
+            sideRailAfter={
+              <DesktopLearnSidePanel
+                copy={copy}
+                cardCount={learnCards.length}
+                onStart={(options) => onStartLearn(learnCards, options)}
+              />
+            }
           >
             <CollectionsSidebar
               copy={copy}

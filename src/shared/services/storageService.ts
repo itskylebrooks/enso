@@ -186,6 +186,8 @@ const buildDefaultDB = (): DB => ({
   exerciseBookmarkCollections: [],
 });
 
+export const loadDefaultDB = (): DB => buildDefaultDB();
+
 const readLocalStorage = (key: string): string | null => {
   if (!isBrowser) return null;
   try {
@@ -1008,7 +1010,9 @@ export const loadSyncMeta = (): SyncMetaState => {
   try {
     const parsed = JSON.parse(raw) as Partial<SyncMetaState>;
     const tombstones =
-      parsed.tombstones && typeof parsed.tombstones === 'object' && !Array.isArray(parsed.tombstones)
+      parsed.tombstones &&
+      typeof parsed.tombstones === 'object' &&
+      !Array.isArray(parsed.tombstones)
         ? Object.fromEntries(
             Object.entries(parsed.tombstones).filter(([, value]) => {
               return typeof value === 'number' && Number.isFinite(value) && value > 0;

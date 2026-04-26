@@ -185,6 +185,7 @@ export type AppRoute =
   | 'techniques'
   | 'exercises'
   | 'bookmarks'
+  | 'learn'
   | 'sync'
   | 'about'
   | 'guide'
@@ -209,13 +210,7 @@ export type AppRoute =
   | 'terms'
   | 'feedback';
 
-export type GuideRoutine =
-  | 'warm-up'
-  | 'cooldown'
-  | 'mobility'
-  | 'strength'
-  | 'skill'
-  | 'recovery';
+export type GuideRoutine = 'warm-up' | 'cooldown' | 'mobility' | 'strength' | 'skill' | 'recovery';
 
 export type PracticeCategory =
   | 'mobility'

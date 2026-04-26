@@ -37,12 +37,18 @@ const resolveInitialRoute = (pathname: string): { route: AppRoute; slug: string 
   }
 
   if (pathname.startsWith('/exercises/') || pathname.startsWith('/practice/')) {
-    return { route: 'exercises', slug: getSlugFromPath(pathname, /^\/(?:exercises|practice)\/([^/?#]+)/) };
+    return {
+      route: 'exercises',
+      slug: getSlugFromPath(pathname, /^\/(?:exercises|practice)\/([^/?#]+)/),
+    };
   }
 
   if (pathname === '/bookmarks') return { route: 'bookmarks', slug: null };
-  if (pathname === '/techniques' || pathname === '/library') return { route: 'techniques', slug: null };
-  if (pathname === '/exercises' || pathname === '/practice') return { route: 'exercises', slug: null };
+  if (pathname === '/learn') return { route: 'learn', slug: null };
+  if (pathname === '/techniques' || pathname === '/library')
+    return { route: 'techniques', slug: null };
+  if (pathname === '/exercises' || pathname === '/practice')
+    return { route: 'exercises', slug: null };
   if (pathname === '/terms' || pathname === '/glossary') return { route: 'terms', slug: null };
   if (pathname === '/about') return { route: 'about', slug: null };
   if (pathname === '/sync') return { route: 'sync', slug: null };
@@ -51,22 +57,16 @@ const resolveInitialRoute = (pathname: string): { route: AppRoute; slug: string 
   if (pathname === '/guide/dan') return { route: 'guideDan', slug: null };
 
   const guideRoutineMatch =
-    /^\/guide\/(warm-up|cooldown|mobility|strength|skill|recovery)(?:\/([^/?#]+))?$/.exec(
-      pathname,
-    );
+    /^\/guide\/(warm-up|cooldown|mobility|strength|skill|recovery)(?:\/([^/?#]+))?$/.exec(pathname);
   if (guideRoutineMatch) {
     const [, routine, routineSlug] = guideRoutineMatch;
     const decodedRoutineSlug = routineSlug ? decodePathSegment(routineSlug) : null;
     if (routine === 'warm-up') return { route: 'guideRoutineWarmUp', slug: decodedRoutineSlug };
-    if (routine === 'cooldown')
-      return { route: 'guideRoutineCooldown', slug: decodedRoutineSlug };
-    if (routine === 'mobility')
-      return { route: 'guideRoutineMobility', slug: decodedRoutineSlug };
-    if (routine === 'strength')
-      return { route: 'guideRoutineStrength', slug: decodedRoutineSlug };
+    if (routine === 'cooldown') return { route: 'guideRoutineCooldown', slug: decodedRoutineSlug };
+    if (routine === 'mobility') return { route: 'guideRoutineMobility', slug: decodedRoutineSlug };
+    if (routine === 'strength') return { route: 'guideRoutineStrength', slug: decodedRoutineSlug };
     if (routine === 'skill') return { route: 'guideRoutineSkill', slug: decodedRoutineSlug };
-    if (routine === 'recovery')
-      return { route: 'guideRoutineRecovery', slug: decodedRoutineSlug };
+    if (routine === 'recovery') return { route: 'guideRoutineRecovery', slug: decodedRoutineSlug };
   }
 
   const guideGradeMatch = /^\/guide\/(\d+)-(kyu|dan)$/.exec(pathname);
