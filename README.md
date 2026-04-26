@@ -193,18 +193,29 @@ Sync now supports bookmarks, progress/status, homepage state, and settings state
 NEXT_PUBLIC_SUPABASE_URL=***
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=***
 SUPABASE_SECRET_KEY=***
+RESEND_API_KEY=re_xxxxxxxxx
+RESEND_FROM_EMAIL=Enso <onboarding@resend.dev>
+SEND_EMAIL_HOOK_SECRET=v1,whsec_xxxxxxxxx
 ```
+
+Replace `re_xxxxxxxxx` with your real Resend API key before deploying. For production, replace
+`RESEND_FROM_EMAIL` with a sender on a verified Resend domain.
 
 3. Run the SQL in `supabase/user_sync_state.sql` in the Supabase SQL editor.
 4. In Supabase Dashboard, keep Email auth enabled and configure your Site URL + redirect URLs.
-5. Optional: if you want one-time codes instead of magic links, update the Email template to use `{{ .Token }}` instead of `{{ .ConfirmationURL }}`.
-6. Users can sign in with email link/code. New emails are auto-created on first sign-in.
+5. In Supabase Dashboard, create a Send Email Auth Hook with the HTTPS URL
+   `https://your-domain.example/api/auth/send-email`, then copy its generated secret into
+   `SEND_EMAIL_HOOK_SECRET`.
+6. Users can sign in with email codes sent through Resend. New emails are auto-created on first
+   sign-in.
 
 Notes:
 
 - The app remains local-first; sync is optional.
 - `/api/sync/*` route handlers use bearer auth and save revisioned Sync v2 payloads into
   `user_sync_state`.
+- `/api/auth/send-email` is the Supabase Send Email Hook endpoint. Supabase still generates and
+  verifies OTPs; Resend only sends the email.
 
 ## Contributing
 
