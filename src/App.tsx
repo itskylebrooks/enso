@@ -1,27 +1,14 @@
 'use client';
 
 import type { FeedbackType } from '@features/home/components/feedback/FeedbackPage';
-import { FeedbackPage } from '@features/home/components/feedback/FeedbackPage';
-import { GuideGradePage } from '@features/home/components/guide/GuideGradePage';
 import {
-  LearnSessionPage,
   orderLearnCards,
   type LearnCard,
   type LearnSession,
   type LearnSetupOptions,
 } from '@features/learn';
-import { AboutPage } from '@features/home/components/home/AboutPage';
-import { AdvancedPrograms } from '@features/home/components/home/AdvancedPrograms';
-import { DanOverview } from '@features/home/components/home/DanOverview';
-import { GuidePage } from '@features/home/components/home/GuidePage';
-import { GuideRoutinePage } from '@features/home/components/home/GuideRoutinePage';
-import { SyncPage } from '@features/home/components/home/SyncPage';
 import { ONBOARDING_TOUR_SEGMENTS } from '@features/onboarding/constants';
-import { TechniquePage } from '@features/technique/components/TechniquePage';
-import { TechniquesPage } from '@features/technique/components/TechniquesPage';
 import { AppShell } from '@shared/components/layout/AppShell';
-import { ExpandableFilterBar } from '@shared/components/ui/ExpandableFilterBar';
-import { MobileFilters } from '@shared/components/ui/MobileFilters';
 import { useMotionPreferences } from '@shared/components/ui/motion';
 import {
   buildTechniqueUrlWithVariant,
@@ -31,7 +18,6 @@ import { enrichTechniqueWithVariants } from '@shared/constants/variantMapping';
 import {
   buildGuideRoutinePath,
   gradeToGuideRoute,
-  guideRouteToGrade,
   guideRouteToRoutine,
   isGuideLikeRoute,
   routeToPath,
@@ -39,20 +25,8 @@ import {
   type HistoryState,
 } from '@shared/navigation/appRoutes';
 import { useAppNavigation } from '@shared/navigation/useAppNavigation';
-import { PencilLine } from 'lucide-react';
-import { motion } from 'motion/react';
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactElement } from 'react';
-import { BookmarksView } from './features/bookmarks/components/BookmarksView';
 import type { ExerciseFilters } from './features/exercises';
-import {
-  ExerciseDetailPage,
-  ExercisesFilterPanel,
-  ExercisesPage,
-  MobileExercisesFilters,
-} from './features/exercises';
-import { HomePage } from './features/home';
-import { FilterPanel } from './features/search/components/FilterPanel';
-import { MobileTermsFilters, TermDetailPage, TermsFilterPanel, TermsPage } from './features/terms';
 import { authService } from './lib/backend/auth';
 import { syncClient } from './lib/backend/sync';
 import {
@@ -72,6 +46,7 @@ import type {
   SyncPayloadData,
   SyncTombstones,
 } from './lib/supabase/types';
+import { AppScreenRouter } from './shared/app/AppScreenRouter';
 import { generateId, getGlossaryCollectionOptions, getSystemTheme } from './shared/app/appModel';
 import { useContentController } from './shared/app/useContentController';
 import { useUserLibraryController } from './shared/app/useUserLibraryController';
@@ -120,7 +95,6 @@ import type {
   Theme,
   WeaponKind,
 } from './shared/types';
-import { gradeOrder } from './shared/utils/grades';
 import {
   cameFromBackForwardNavigation,
   consumeBFCacheRestoreFlag,
@@ -1943,477 +1917,108 @@ export default function App({
     navigateTo('guide');
   };
 
-  let mainContent: ReactElement;
-
-  if (currentTechnique) {
-    mainContent = (
-      <motion.div
-        initial={skipEntranceAnimations ? { opacity: 1 } : { opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={pageMotion.transition}
-        style={{ willChange: 'opacity' }}
-      >
-        <TechniquePage
-          technique={currentTechnique}
-          progress={currentProgress ?? null}
-          copy={copy}
-          locale={locale}
-          backLabel={techniqueBackLabel}
-          onBack={() => closeTechnique()}
-          onToggleBookmark={(bookmarkedVariant) =>
-            toggleBookmark(currentTechnique, currentProgress ?? null, bookmarkedVariant)
-          }
-          studyStatusMap={db.studyStatus}
-          onToggleStudyStatus={(variant) =>
-            cycleItemStudyStatus('technique', currentTechnique.slug, variant)
-          }
-          collections={db.collections}
-          bookmarkCollections={db.bookmarkCollections}
-          onAssignToCollection={(collectionId) =>
-            assignToCollection(currentTechnique.id, collectionId)
-          }
-          onRemoveFromCollection={(collectionId) =>
-            removeFromCollection(currentTechnique.id, collectionId)
-          }
-          onOpenGlossary={openGlossaryTerm}
-          onOpenGuideGrade={(grade) => {
-            openGuideGrade(grade, { route, slug: currentTechnique.slug });
-          }}
-          onFeedbackClick={() => goToFeedback()}
-          onCreateCollection={createCollection}
-        />
-      </motion.div>
-    );
-  } else if (currentGlossaryTerm) {
-    // Render glossary detail when an active glossary term is set, regardless of current route
-    mainContent = (
-      <TermDetailPage
-        slug={activeSlug!}
-        copy={copy}
-        locale={locale}
-        backLabel={glossaryBackLabel}
-        // Back should navigate to the route the user came from (stored in history state) —
-        // when opened from bookmarks the current `route` will still be 'bookmarks', so navigate there.
-        onBack={() => navigateTo(glossaryBackRoute, { replace: true })}
-        isBookmarked={Boolean(currentGlossaryProgress?.bookmarked)}
-        onToggleBookmark={() =>
-          updateGlossaryProgress(activeSlug!, { bookmarked: !currentGlossaryProgress?.bookmarked })
-        }
-        studyStatus={currentGlossaryStudyStatus}
-        onToggleStudyStatus={() =>
-          cycleItemStudyStatus('term', currentGlossaryTerm?.slug ?? activeSlug!)
-        }
-        collections={glossaryCollectionOptions}
-        onToggleCollection={(collectionId, nextChecked) => {
-          if (nextChecked) {
-            assignGlossaryToCollection(activeSlug!, collectionId);
-          } else {
-            removeGlossaryFromCollection(activeSlug!, collectionId);
-          }
-        }}
-        onCreateCollection={createCollection}
-        onNavigateToTermsWithFilter={(category) => {
-          setGlossaryFilters({ category });
-          navigateTo('terms');
-        }}
-      />
-    );
-  } else if (route === 'exercises' && activeSlug) {
-    mainContent = (
-      <ExerciseDetailPage
-        slug={activeSlug}
-        copy={copy}
-        locale={locale}
-        collections={db.collections}
-        exerciseProgress={db.exerciseProgress}
-        exerciseBookmarkCollections={db.exerciseBookmarkCollections}
-        studyStatus={currentExerciseStudyStatus}
-        onToggleStudyStatus={() => cycleItemStudyStatus('exercise', activeSlug)}
-        onToggleBookmark={toggleExerciseBookmark}
-        onAssignToCollection={assignExerciseToCollection}
-        onRemoveFromCollection={removeExerciseFromCollection}
-        onCreateCollection={createCollection}
-        backLabel={practiceBackLabel}
-        onNavigateToExercisesWithFilter={(nextFilters) => {
-          setPracticeFilters(nextFilters);
-          navigateTo('exercises', { replace: true });
-        }}
-        onBack={handlePracticeBack}
-      />
-    );
-  } else if (techniqueNotFound) {
-    mainContent = (
-      <div className="max-w-5xl mx-auto px-6 pt-0 pb-10 space-y-4 text-center">
-        <p className="text-lg font-semibold">Technique not found.</p>
-        <button
-          type="button"
-          onClick={() => navigateTo('techniques', { replace: true })}
-          className="text-sm underline"
-        >
-          {copy.backToLibrary}
-        </button>
-      </div>
-    );
-  } else if (route === 'home') {
-    mainContent = (
-      <HomePage
-        copy={copy}
-        locale={locale}
-        techniques={db.techniques}
-        techniqueProgress={db.progress}
-        glossaryTerms={glossaryTerms}
-        exercises={practiceExercises}
-        onOpenTechnique={openTechnique}
-        onOpenGlossaryTerm={openGlossaryTerm}
-        onOpenExercise={openPracticeExercise}
-        pinnedBeltGrade={pinnedBeltGrade}
-        onOpenPinnedBeltGrade={(grade) => navigateToGuideGrade(grade, 'home')}
-        beltPromptDismissed={beltPromptDismissed}
-        onOpenGuideFromPrompt={handleOpenGuideFromPrompt}
-        showOnboardingCard={showHomeOnboardingCard}
-        onStartOnboardingTour={handleStartOnboardingTour}
-        onSkipOnboarding={handleSkipOnboarding}
-      />
-    );
-  } else if (route === 'about') {
-    mainContent = <AboutPage copy={copy} />;
-  } else if (route === 'sync') {
-    mainContent = (
-      <SyncPage
-        copy={copy}
-        isSignedIn={Boolean(authSession)}
-        isAuthBootstrapping={isAuthBootstrapping}
-        signedInEmail={authSession?.email ?? null}
-        syncStatus={syncStatus}
-        syncError={syncError}
-        lastSyncedAt={syncMeta.lastSyncedAt}
-        onRequestOtp={requestOtpForSync}
-        onVerifyOtp={verifyOtpForSync}
-        onSignOut={signOutFromSync}
-        onSyncNow={syncNow}
-        onRequestDeleteAccount={handleRequestDeleteAccount}
-      />
-    );
-  } else if (route === 'guideAdvanced') {
-    mainContent = (
-      <AdvancedPrograms
-        locale={locale}
-        onOpenTechnique={openTechnique}
-        onBack={() => navigateTo('guide')}
-      />
-    );
-  } else if (route === 'guideDan') {
-    mainContent = <DanOverview locale={locale} onBack={() => navigateTo('guide')} />;
-  } else if (guideRouteToRoutine(route)) {
-    const routine = guideRouteToRoutine(route) as GuideRoutine;
-    mainContent = (
-      <GuideRoutinePage
-        copy={copy}
-        locale={locale}
-        routine={routine}
-        activeRoutineSlug={activeSlug}
-        onBack={() => navigateTo('guide')}
-        onBackToOverview={() => closeGuideRoutinePreset(routine)}
-        onOpenRoutine={(routineSlug) => openGuideRoutinePreset(routine, routineSlug)}
-        onOpenExercise={openPracticeExercise}
-      />
-    );
-  } else if (guideRouteToGrade(route)) {
-    const grade = guideRouteToGrade(route) as Grade;
-    mainContent = (
-      <GuideGradePage
-        copy={copy}
-        locale={locale}
-        grade={grade}
-        techniques={db.techniques}
-        glossaryTerms={glossaryTerms}
-        backLabel={guideBackLabel}
-        onBack={handleGuideBack}
-        pinnedBeltGrade={pinnedBeltGrade}
-        onTogglePin={togglePinnedBeltGrade}
-        onOpenTechnique={(slug) => openTechnique(slug, undefined, undefined, false)}
-        onOpenTerm={openGlossaryTerm}
-        onStartLearn={(cards, options) =>
-          startLearnSession(cards, options, route, copy.backToGuide)
-        }
-      />
-    );
-  } else if (route === 'guide') {
-    mainContent = (
-      <GuidePage
-        locale={locale}
-        onNavigateToGuideGrade={navigateToGuideGrade}
-        onNavigateToRoutine={navigateToGuideRoutine}
-        onOpenTechnique={openTechnique}
-        onNavigateToAdvanced={() => navigateTo('guideAdvanced')}
-        onNavigateToDan={() => navigateTo('guideDan')}
-      />
-    );
-  } else if (route === 'feedback') {
-    mainContent = (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={pageMotion.transition}
-        style={{ willChange: 'opacity' }}
-      >
-        <FeedbackPage
-          copy={copy}
-          locale={locale}
-          techniques={db.techniques}
-          onBack={() => navigateTo('techniques')}
-          initialType={feedbackInitialType}
-          onConsumeInitialType={() => setFeedbackInitialType(null)}
-        />
-      </motion.div>
-    );
-  } else if (route === 'learn') {
-    mainContent = (
-      <LearnSessionPage
-        copy={copy}
-        session={learnSession}
-        onBack={() => navigateTo(learnSession?.sourceRoute ?? 'bookmarks', { replace: true })}
-        onOpenBookmarks={() => navigateTo('bookmarks', { replace: true })}
-        onOpenGuide={() => navigateTo('guide', { replace: true })}
-      />
-    );
-  } else {
-    mainContent = (
-      <div className="container max-w-4xl mx-auto px-4 md:px-6 pt-0 pb-4 space-y-4 lg:space-y-0">
-        {route === 'techniques' && (
-          <>
-            <div className="lg:hidden">
-              <MobileFilters
-                copy={copy}
-                locale={locale}
-                filters={filters}
-                categories={categories}
-                attacks={attacks}
-                stances={stances}
-                weapons={weapons}
-                levels={gradeOrder}
-                trainers={trainers}
-                onChange={setFilters}
-                onContribute={() => goToFeedback('newTechnique')}
-                onContributePrefetch={prefetchFeedbackPage}
-                forceOpen={activeTourSegment?.id === 'techniques-filters'}
-              />
-            </div>
-            {/* Mobile CTA removed here — now rendered inside the MobileFilters panel */}
-            <div className="relative">
-              <ExpandableFilterBar
-                label={copy.filters}
-                tourTargetId="techniques-filters-trigger"
-                forceOpen={activeTourSegment?.id === 'techniques-filters'}
-              >
-                <FilterPanel
-                  copy={copy}
-                  locale={locale}
-                  filters={filters}
-                  categories={categories}
-                  attacks={attacks}
-                  stances={stances}
-                  weapons={weapons}
-                  levels={gradeOrder}
-                  trainers={trainers}
-                  onChange={setFilters}
-                />
-                {/* Desktop CTA under filter panel */}
-                <div className="mt-3">
-                  <button
-                    type="button"
-                    onClick={() => goToFeedback('newTechnique')}
-                    onMouseEnter={prefetchFeedbackPage}
-                    onFocus={prefetchFeedbackPage}
-                    className="w-full inline-flex items-center justify-center gap-2 rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2 text-sm transition-soft hover-border-adaptive"
-                  >
-                    <PencilLine width={20} height={20} aria-hidden />
-                    {copy.feedbackAddTechniqueCta}
-                  </button>
-                </div>
-              </ExpandableFilterBar>
-              <section>
-                {/* Button moved to under filters (desktop) and above grid (mobile) */}
-                <TechniquesPage
-                  copy={copy}
-                  locale={locale}
-                  techniques={filteredTechniques}
-                  progress={db.progress}
-                  studyStatus={db.studyStatus}
-                  onOpen={openTechnique}
-                />
-              </section>
-            </div>
-          </>
-        )}
-
-        {route === 'exercises' && (
-          <>
-            <div className="lg:hidden">
-              <MobileExercisesFilters
-                copy={copy}
-                filters={practiceFilters}
-                categories={practiceCategories}
-                onChange={setPracticeFilters}
-                onContribute={() => goToFeedback()}
-                onContributePrefetch={prefetchFeedbackPage}
-              />
-            </div>
-            <div className="relative">
-              <ExpandableFilterBar label={copy.filters}>
-                <ExercisesFilterPanel
-                  copy={copy}
-                  filters={practiceFilters}
-                  categories={practiceCategories}
-                  onChange={setPracticeFilters}
-                />
-                <div className="mt-3">
-                  <button
-                    type="button"
-                    onClick={() => goToFeedback()}
-                    onMouseEnter={prefetchFeedbackPage}
-                    onFocus={prefetchFeedbackPage}
-                    className="w-full inline-flex items-center justify-center gap-2 rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2 text-sm transition-soft hover-border-adaptive"
-                  >
-                    <PencilLine width={20} height={20} aria-hidden />
-                    {copy.feedbackAddExerciseCta}
-                  </button>
-                </div>
-              </ExpandableFilterBar>
-              <section>
-                <ExercisesPage
-                  copy={copy}
-                  locale={locale}
-                  studyStatus={db.studyStatus}
-                  filters={practiceFilters}
-                  onOpenExercise={openPracticeExercise}
-                />
-              </section>
-            </div>
-          </>
-        )}
-
-        {route === 'bookmarks' && (
-          <BookmarksView
-            copy={copy}
-            locale={locale}
-            techniques={db.techniques}
-            exercises={practiceExercises}
-            glossaryTerms={glossaryTerms}
-            progress={db.progress}
-            glossaryProgress={db.glossaryProgress}
-            exerciseProgress={db.exerciseProgress}
-            studyStatus={db.studyStatus}
-            collections={db.collections}
-            bookmarkCollections={db.bookmarkCollections}
-            glossaryBookmarkCollections={db.glossaryBookmarkCollections}
-            exerciseBookmarkCollections={db.exerciseBookmarkCollections}
-            selectedCollectionId={selectedCollectionId}
-            onSelectCollection={(id) => setSelectedCollectionId(id)}
-            onCreateCollection={createCollection}
-            onRenameCollection={renameCollection}
-            onDeleteCollection={deleteCollection}
-            onAssign={assignToCollection}
-            onUnassign={removeFromCollection}
-            onAssignGlossary={assignGlossaryToCollection}
-            onUnassignGlossary={removeGlossaryFromCollection}
-            onAssignExercise={assignExerciseToCollection}
-            onUnassignExercise={removeExerciseFromCollection}
-            onReorderCollectionItem={reorderCollectionItem}
-            onOpenTechnique={(slug, bookmarkedVariant) =>
-              openTechnique(
-                slug,
-                undefined,
-                undefined,
-                undefined,
-                { originRoute: 'bookmarks' },
-                bookmarkedVariant,
-              )
-            }
-            onOpenGlossaryTerm={(slug) => openGlossaryTerm(slug)}
-            onOpenExercise={openPracticeExercise}
-            onStartLearn={(cards, options) =>
-              startLearnSession(cards, options, 'bookmarks', copy.backToBookmarks)
-            }
-            forceCollectionsSidebarOpen={activeTourSegment?.id === 'bookmarks-collections'}
-          />
-        )}
-
-        {route === 'terms' && (
-          <>
-            {activeSlug ? (
-              <TermDetailPage
-                slug={activeSlug}
-                copy={copy}
-                locale={locale}
-                backLabel={glossaryBackLabel}
-                onBack={() => navigateTo('terms', { replace: true })}
-                isBookmarked={Boolean(currentGlossaryProgress?.bookmarked)}
-                onToggleBookmark={() =>
-                  updateGlossaryProgress(activeSlug, {
-                    bookmarked: !currentGlossaryProgress?.bookmarked,
-                  })
-                }
-                studyStatus={currentGlossaryStudyStatus}
-                onToggleStudyStatus={() => cycleItemStudyStatus('term', activeSlug)}
-                collections={glossaryCollectionOptions}
-                onToggleCollection={(collectionId, nextChecked) => {
-                  if (nextChecked) {
-                    assignGlossaryToCollection(activeSlug, collectionId);
-                  } else {
-                    removeGlossaryFromCollection(activeSlug, collectionId);
-                  }
-                }}
-                onCreateCollection={createCollection}
-                onNavigateToTermsWithFilter={(category) => {
-                  setGlossaryFilters({ category });
-                  navigateTo('terms');
-                }}
-              />
-            ) : (
-              <>
-                <div className="lg:hidden">
-                  <MobileTermsFilters
-                    copy={copy}
-                    filters={glossaryFilters}
-                    categories={glossaryCategories}
-                    onChange={setGlossaryFilters}
-                  />
-                </div>
-                <div className="relative">
-                  <ExpandableFilterBar label={copy.filters}>
-                    <TermsFilterPanel
-                      copy={copy}
-                      filters={glossaryFilters}
-                      categories={glossaryCategories}
-                      onChange={setGlossaryFilters}
-                    />
-                  </ExpandableFilterBar>
-                  <section>
-                    <TermsPage
-                      locale={locale}
-                      copy={copy}
-                      studyStatus={db.studyStatus}
-                      filters={glossaryFilters}
-                      onOpenTerm={openGlossaryTerm}
-                    />
-                  </section>
-                </div>
-              </>
-            )}
-          </>
-        )}
-      </div>
-    );
-  }
-
-  const pageKey = currentTechnique
-    ? `technique-${currentTechnique.id}`
-    : route === 'exercises' && activeSlug
-      ? `exercises-${activeSlug}`
-      : activeSlug
-        ? `terms-${activeSlug}`
-        : route;
+  const { mainContent, pageKey } = AppScreenRouter({
+    state: {
+      route,
+      activeSlug,
+      activeTourSegment,
+      techniqueNotFound,
+      showHomeOnboardingCard,
+      skipEntranceAnimations,
+    },
+    data: {
+      db,
+      copy,
+      locale,
+      currentTechnique,
+      currentProgress,
+      currentGlossaryTerm,
+      currentGlossaryProgress,
+      currentGlossaryStudyStatus,
+      currentExerciseStudyStatus,
+      glossaryCollectionOptions,
+      glossaryTerms,
+      practiceExercises,
+      filteredTechniques,
+      categories,
+      attacks,
+      stances,
+      weapons,
+      trainers,
+      glossaryCategories,
+      practiceCategories,
+      authSession,
+      isAuthBootstrapping,
+      syncStatus,
+      syncError,
+      syncMeta,
+      learnSession,
+      feedbackInitialType,
+      pinnedBeltGrade,
+      beltPromptDismissed,
+    },
+    filters: {
+      filters,
+      setFilters,
+      glossaryFilters,
+      setGlossaryFilters,
+      practiceFilters,
+      setPracticeFilters,
+    },
+    navigation: {
+      navigateTo,
+      openTechnique,
+      closeTechnique,
+      openGlossaryTerm,
+      openPracticeExercise,
+      openGuideGrade,
+      navigateToGuideGrade,
+      navigateToGuideRoutine,
+      openGuideRoutinePreset,
+      closeGuideRoutinePreset,
+      handlePracticeBack,
+      handleGuideBack,
+      techniqueBackLabel,
+      glossaryBackLabel,
+      glossaryBackRoute,
+      practiceBackLabel,
+      guideBackLabel,
+    },
+    library: {
+      updateGlossaryProgress,
+      cycleItemStudyStatus,
+      createCollection,
+      renameCollection,
+      deleteCollection,
+      assignToCollection,
+      removeFromCollection,
+      assignGlossaryToCollection,
+      removeGlossaryFromCollection,
+      assignExerciseToCollection,
+      removeExerciseFromCollection,
+      reorderCollectionItem,
+      toggleBookmark,
+      toggleExerciseBookmark,
+    },
+    workflow: {
+      pageMotion,
+      prefetchFeedbackPage,
+      goToFeedback,
+      handleOpenGuideFromPrompt,
+      handleStartOnboardingTour,
+      handleSkipOnboarding,
+      togglePinnedBeltGrade,
+      startLearnSession,
+      requestOtpForSync,
+      verifyOtpForSync,
+      signOutFromSync,
+      syncNow,
+      handleRequestDeleteAccount,
+      setFeedbackInitialType,
+      selectedCollectionId,
+      setSelectedCollectionId,
+    },
+  });
 
   return (
     <AppShell
