@@ -16,27 +16,31 @@ import { DanOverview } from '@features/home/components/home/DanOverview';
 import { GuidePage } from '@features/home/components/home/GuidePage';
 import { GuideRoutinePage } from '@features/home/components/home/GuideRoutinePage';
 import { SyncPage } from '@features/home/components/home/SyncPage';
-import { SettingsModal } from '@features/home/components/settings/SettingsModal';
-import { OnboardingTourOverlay } from '@features/onboarding/components/OnboardingTourOverlay';
 import { ONBOARDING_TOUR_SEGMENTS } from '@features/onboarding/constants';
-import { type CollectionOption } from '@features/technique/components/TechniqueHeader';
 import { TechniquePage } from '@features/technique/components/TechniquePage';
 import { TechniquesPage } from '@features/technique/components/TechniquesPage';
-import { Header } from '@shared/components/layout/Header';
-import { MobileTabBar } from '@shared/components/layout/MobileTabBar';
-import { ConfettiBurst } from '@shared/components/ui/ConfettiBurst';
+import { AppShell } from '@shared/components/layout/AppShell';
 import { ExpandableFilterBar } from '@shared/components/ui/ExpandableFilterBar';
 import { MobileFilters } from '@shared/components/ui/MobileFilters';
 import { useMotionPreferences } from '@shared/components/ui/motion';
-import { Toast } from '@shared/components/ui/Toast';
 import {
   buildTechniqueUrlWithVariant,
   buildTechniqueUrl as buildUrl,
-  parseTechniquePath,
 } from '@shared/constants/urls';
 import { enrichTechniqueWithVariants } from '@shared/constants/variantMapping';
+import {
+  buildGuideRoutinePath,
+  gradeToGuideRoute,
+  guideRouteToGrade,
+  guideRouteToRoutine,
+  isGuideLikeRoute,
+  routeToPath,
+  routineToGuideRoute,
+  type HistoryState,
+} from '@shared/navigation/appRoutes';
+import { useAppNavigation } from '@shared/navigation/useAppNavigation';
 import { PencilLine } from 'lucide-react';
-import { AnimatePresence, MotionConfig, motion } from 'motion/react';
+import { motion } from 'motion/react';
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactElement } from 'react';
 import { BookmarksView } from './features/bookmarks/components/BookmarksView';
 import type { ExerciseFilters } from './features/exercises';
@@ -45,18 +49,10 @@ import {
   ExercisesFilterPanel,
   ExercisesPage,
   MobileExercisesFilters,
-  loadAllExercises,
 } from './features/exercises';
 import { HomePage } from './features/home';
 import { FilterPanel } from './features/search/components/FilterPanel';
-import { SearchOverlay } from './features/search/components/SearchOverlay';
-import {
-  MobileTermsFilters,
-  TermDetailPage,
-  TermsFilterPanel,
-  TermsPage,
-  loadAllTerms,
-} from './features/terms';
+import { MobileTermsFilters, TermDetailPage, TermsFilterPanel, TermsPage } from './features/terms';
 import { authService } from './lib/backend/auth';
 import { syncClient } from './lib/backend/sync';
 import {
@@ -80,9 +76,19 @@ import type {
   SyncPayloadData,
   SyncTombstones,
 } from './lib/supabase/types';
-import { ConfirmClearModal } from './shared/components/dialogs/ConfirmClearDialog';
-import { ConfirmModal } from './shared/components/ui/modals/ConfirmModal';
-import { ENTRY_MODE_ORDER, isEntryMode } from './shared/constants/entryModes';
+import {
+  appendCollectionItem,
+  generateId,
+  getGlossaryCollectionOptions,
+  getSystemTheme,
+  removeCollectionItem,
+  removeCollectionItemFromAll,
+  updateExerciseProgressEntry,
+  updateGlossaryProgressEntry,
+  updateProgressEntry,
+} from './shared/app/appModel';
+import { useContentController } from './shared/app/useContentController';
+import { ENTRY_MODE_ORDER } from './shared/constants/entryModes';
 import { getCopy } from './shared/constants/i18n';
 import useLockBodyScroll from './shared/hooks/useLockBodyScroll';
 import {
@@ -114,23 +120,18 @@ import {
   saveSyncMeta,
   saveTheme,
 } from './shared/services/storageService';
-import { getExerciseCategoryLabel } from './shared/styles/exercises';
 import type {
   AppRoute,
   Collection,
   DB,
   Direction,
   EntryMode,
-  Exercise,
   ExerciseProgress,
   Filters,
-  GlossaryBookmarkCollection,
   GlossaryProgress,
-  GlossaryTerm,
   Grade,
   GuideRoutine,
   Locale,
-  PracticeCategory,
   Progress,
   Technique,
   TechniqueVariant,
@@ -138,7 +139,6 @@ import type {
   Theme,
   WeaponKind,
 } from './shared/types';
-import { unique, upsert } from './shared/utils/array';
 import { createCollectionItemId, swapCollectionItemIds } from './shared/utils/collectionItems';
 import { gradeOrder } from './shared/utils/grades';
 import {
@@ -200,388 +200,14 @@ const normalizeTourSegmentIndex = (value: number | null | undefined): number => 
 
 type SelectedCollectionId = 'all' | 'ungrouped' | string;
 
-const generateId = (): string => {
-  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
-    return crypto.randomUUID();
-  }
-  return Math.random().toString(36).slice(2, 11);
-};
-
-const appendCollectionItem = (
-  collections: Collection[],
-  collectionId: string,
-  itemId: string,
-  updatedAt: number,
-): Collection[] => {
-  let changed = false;
-  const nextCollections = collections.map((collection) => {
-    if (collection.id !== collectionId) return collection;
-    if (collection.itemIds.includes(itemId)) return collection;
-    changed = true;
-    return {
-      ...collection,
-      itemIds: [...collection.itemIds, itemId],
-      updatedAt,
-    };
-  });
-
-  return changed ? nextCollections : collections;
-};
-
-const removeCollectionItem = (
-  collections: Collection[],
-  collectionId: string,
-  itemId: string,
-  updatedAt: number,
-): Collection[] => {
-  let changed = false;
-  const nextCollections = collections.map((collection) => {
-    if (collection.id !== collectionId) return collection;
-    if (!collection.itemIds.includes(itemId)) return collection;
-    changed = true;
-    return {
-      ...collection,
-      itemIds: collection.itemIds.filter((id) => id !== itemId),
-      updatedAt,
-    };
-  });
-
-  return changed ? nextCollections : collections;
-};
-
-const removeCollectionItemFromAll = (
-  collections: Collection[],
-  itemId: string,
-  updatedAt: number,
-): Collection[] => {
-  let changed = false;
-  const nextCollections = collections.map((collection) => {
-    if (!collection.itemIds.includes(itemId)) return collection;
-    changed = true;
-    return {
-      ...collection,
-      itemIds: collection.itemIds.filter((id) => id !== itemId),
-      updatedAt,
-    };
-  });
-
-  return changed ? nextCollections : collections;
-};
-
-type HistoryState = {
-  route?: AppRoute;
-  slug?: string;
-  trainerId?: string;
-  entry?: EntryMode;
-  sourceRoute?: AppRoute;
-  sourceSlug?: string;
-};
-
 type AppProps = {
   initialLocale?: Locale;
   initialRoute?: AppRoute;
   initialSlug?: string | null;
 };
 
-const routeToPath = (route: AppRoute): string => {
-  switch (route) {
-    case 'home':
-      return '/';
-    case 'about':
-      return '/about';
-    case 'guide':
-      return '/guide';
-    case 'guideAdvanced':
-      return '/guide/advanced';
-    case 'guideDan':
-      return '/guide/dan';
-    case 'guideKyu5':
-      return '/guide/5-kyu';
-    case 'guideKyu4':
-      return '/guide/4-kyu';
-    case 'guideKyu3':
-      return '/guide/3-kyu';
-    case 'guideKyu2':
-      return '/guide/2-kyu';
-    case 'guideKyu1':
-      return '/guide/1-kyu';
-    case 'guideDan1':
-      return '/guide/1-dan';
-    case 'guideDan2':
-      return '/guide/2-dan';
-    case 'guideDan3':
-      return '/guide/3-dan';
-    case 'guideDan4':
-      return '/guide/4-dan';
-    case 'guideDan5':
-      return '/guide/5-dan';
-    case 'guideRoutineWarmUp':
-      return '/guide/warm-up';
-    case 'guideRoutineCooldown':
-      return '/guide/cooldown';
-    case 'guideRoutineMobility':
-      return '/guide/mobility';
-    case 'guideRoutineStrength':
-      return '/guide/strength';
-    case 'guideRoutineSkill':
-      return '/guide/skill';
-    case 'guideRoutineRecovery':
-      return '/guide/recovery';
-    case 'sync':
-      return '/sync';
-    case 'feedback':
-      return '/feedback';
-    case 'techniques':
-      return '/techniques';
-    case 'exercises':
-      return '/exercises';
-    case 'terms':
-      return '/terms';
-    case 'bookmarks':
-      return '/bookmarks';
-    case 'learn':
-      return '/learn';
-    default:
-      return '/';
-  }
-};
-
 // Inline helper instead of exporting to fix react-refresh
 const buildTechniqueUrl = buildUrl;
-
-type TechniqueParams = {
-  slug: string;
-  trainerId?: string;
-  entry?: EntryMode;
-};
-
-const guideRouteToGrade = (route: AppRoute): Grade | null => {
-  switch (route) {
-    case 'guideKyu5':
-      return 'kyu5';
-    case 'guideKyu4':
-      return 'kyu4';
-    case 'guideKyu3':
-      return 'kyu3';
-    case 'guideKyu2':
-      return 'kyu2';
-    case 'guideKyu1':
-      return 'kyu1';
-    case 'guideDan1':
-      return 'dan1';
-    case 'guideDan2':
-      return 'dan2';
-    case 'guideDan3':
-      return 'dan3';
-    case 'guideDan4':
-      return 'dan4';
-    case 'guideDan5':
-      return 'dan5';
-    default:
-      return null;
-  }
-};
-
-const gradeToGuideRoute = (grade: Grade): AppRoute | null => {
-  switch (grade) {
-    case 'kyu5':
-      return 'guideKyu5';
-    case 'kyu4':
-      return 'guideKyu4';
-    case 'kyu3':
-      return 'guideKyu3';
-    case 'kyu2':
-      return 'guideKyu2';
-    case 'kyu1':
-      return 'guideKyu1';
-    case 'dan1':
-      return 'guideDan1';
-    case 'dan2':
-      return 'guideDan2';
-    case 'dan3':
-      return 'guideDan3';
-    case 'dan4':
-      return 'guideDan4';
-    case 'dan5':
-      return 'guideDan5';
-    default:
-      return null;
-  }
-};
-
-const routineToGuideRoute = (routine: GuideRoutine): AppRoute => {
-  switch (routine) {
-    case 'warm-up':
-      return 'guideRoutineWarmUp';
-    case 'cooldown':
-      return 'guideRoutineCooldown';
-    case 'mobility':
-      return 'guideRoutineMobility';
-    case 'strength':
-      return 'guideRoutineStrength';
-    case 'skill':
-      return 'guideRoutineSkill';
-    case 'recovery':
-      return 'guideRoutineRecovery';
-  }
-};
-
-const buildGuideRoutinePath = (routine: GuideRoutine, routineSlug?: string): string => {
-  const basePath = `/guide/${routine}`;
-  return routineSlug ? `${basePath}/${encodeURIComponent(routineSlug)}` : basePath;
-};
-
-const guideRouteToRoutine = (route: AppRoute): GuideRoutine | null => {
-  switch (route) {
-    case 'guideRoutineWarmUp':
-      return 'warm-up';
-    case 'guideRoutineCooldown':
-      return 'cooldown';
-    case 'guideRoutineMobility':
-      return 'mobility';
-    case 'guideRoutineStrength':
-      return 'strength';
-    case 'guideRoutineSkill':
-      return 'skill';
-    case 'guideRoutineRecovery':
-      return 'recovery';
-    default:
-      return null;
-  }
-};
-
-const getGlossarySlugFromPath = (pathname: string): string | null => {
-  const match = /^\/(?:terms|glossary)\/([^/?#]+)/.exec(pathname);
-  return match ? decodeURIComponent(match[1]) : null;
-};
-
-const getPracticeSlugFromPath = (pathname: string): string | null => {
-  const match = /^\/(?:exercises|practice)\/([^/?#]+)/.exec(pathname);
-  return match ? decodeURIComponent(match[1]) : null;
-};
-
-const isGuideLikeRoute = (value: AppRoute): boolean => value.startsWith('guide');
-
-const parseLocation = (
-  pathname: string,
-  state?: HistoryState,
-  search?: string,
-): { route: AppRoute; slug: string | null; techniqueParams?: TechniqueParams } => {
-  const techniqueParams = parseTechniquePath(pathname, search);
-  if (techniqueParams) {
-    const fallbackRoute = state?.route ?? 'techniques';
-    return { route: fallbackRoute, slug: techniqueParams.slug, techniqueParams };
-  }
-
-  if (pathname.startsWith('/terms/') || pathname.startsWith('/glossary/')) {
-    const slug = getGlossarySlugFromPath(pathname);
-    // Handle backwards compatibility redirects
-    const slugRedirects: Record<string, string> = {
-      'irimi-omote': 'irimi',
-      'tenkan-ura': 'tenkan',
-    };
-    const finalSlug = slug && (slugRedirects[slug] || slug);
-    const fallbackRoute = state?.route ?? 'terms';
-    return { route: fallbackRoute, slug: finalSlug };
-  }
-
-  if (pathname.startsWith('/exercises/') || pathname.startsWith('/practice/')) {
-    const slug = getPracticeSlugFromPath(pathname);
-    return { route: 'exercises', slug };
-  }
-
-  if (pathname === '/bookmarks') {
-    return { route: 'bookmarks', slug: null };
-  }
-
-  if (pathname === '/learn') {
-    return { route: 'learn', slug: null };
-  }
-
-  if (pathname === '/techniques' || pathname === '/library') {
-    return { route: 'techniques', slug: null };
-  }
-
-  if (pathname === '/exercises' || pathname === '/practice') {
-    return { route: 'exercises', slug: null };
-  }
-
-  if (pathname === '/terms' || pathname === '/glossary') {
-    return { route: 'terms', slug: null };
-  }
-
-  if (pathname === '/about') {
-    return { route: 'about', slug: null };
-  }
-
-  if (pathname === '/sync') {
-    return { route: 'sync', slug: null };
-  }
-
-  if (pathname === '/guide') {
-    return { route: 'guide', slug: null };
-  }
-
-  if (pathname === '/guide/advanced') {
-    return { route: 'guideAdvanced', slug: null };
-  }
-
-  if (pathname === '/guide/dan') {
-    return { route: 'guideDan', slug: null };
-  }
-
-  const guideRoutineMatch =
-    /^\/guide\/(warm-up|cooldown|mobility|strength|skill|recovery)(?:\/([^/?#]+))?$/.exec(pathname);
-  if (guideRoutineMatch) {
-    const [, routine, routineSlug] = guideRoutineMatch;
-    return {
-      route: routineToGuideRoute(routine as GuideRoutine),
-      slug: routineSlug ? decodeURIComponent(routineSlug) : null,
-    };
-  }
-
-  const guideGradeMatch = /^\/guide\/(\d+)-(kyu|dan)$/.exec(pathname);
-  if (guideGradeMatch) {
-    const [, number, type] = guideGradeMatch;
-    if (type === 'kyu') {
-      if (number === '5') return { route: 'guideKyu5', slug: null };
-      if (number === '4') return { route: 'guideKyu4', slug: null };
-      if (number === '3') return { route: 'guideKyu3', slug: null };
-      if (number === '2') return { route: 'guideKyu2', slug: null };
-      if (number === '1') return { route: 'guideKyu1', slug: null };
-    } else if (type === 'dan') {
-      if (number === '1') return { route: 'guideDan1', slug: null };
-      if (number === '2') return { route: 'guideDan2', slug: null };
-      if (number === '3') return { route: 'guideDan3', slug: null };
-      if (number === '4') return { route: 'guideDan4', slug: null };
-      if (number === '5') return { route: 'guideDan5', slug: null };
-    }
-  }
-
-  if (pathname === '/feedback') {
-    return { route: 'feedback', slug: null };
-  }
-
-  // Backwards compatibility for old /basics URL
-  if (pathname === '/basics') {
-    return { route: 'guide', slug: null };
-  }
-
-  return { route: 'home', slug: null };
-};
-
-const getInitialLocation = (): {
-  route: AppRoute;
-  slug: string | null;
-  techniqueParams?: TechniqueParams;
-} => {
-  if (typeof window === 'undefined') {
-    return { route: 'home', slug: null };
-  }
-
-  const state = window.history.state as HistoryState | undefined;
-  return parseLocation(window.location.pathname, state, window.location.search);
-};
 
 const isEditableElement = (element: EventTarget | null): boolean => {
   if (!(element instanceof HTMLElement)) {
@@ -591,169 +217,6 @@ const isEditableElement = (element: EventTarget | null): boolean => {
   const tag = element.tagName.toLowerCase();
   return tag === 'input' || tag === 'textarea' || element.isContentEditable || tag === 'select';
 };
-
-const getSystemTheme = (): Theme => {
-  if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
-    return 'light';
-  }
-  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-};
-
-function updateProgressEntry(
-  progress: Progress[],
-  id: string,
-  patch: Partial<Progress>,
-): Progress[] {
-  const existing = progress.find((entry) => entry.techniqueId === id);
-  const timestamp = Date.now();
-  const baseline: Progress = existing ?? {
-    techniqueId: id,
-    bookmarked: false,
-    updatedAt: timestamp,
-  };
-
-  const nextEntry: Progress = {
-    ...baseline,
-    ...patch,
-    techniqueId: id,
-    updatedAt: timestamp,
-  };
-
-  return upsert(progress, (entry) => entry.techniqueId === id, nextEntry);
-}
-
-function updateGlossaryProgressEntry(
-  glossaryProgress: GlossaryProgress[],
-  termId: string,
-  patch: Partial<GlossaryProgress>,
-): GlossaryProgress[] {
-  const existing = glossaryProgress.find((entry) => entry.termId === termId);
-  const timestamp = Date.now();
-  const baseline: GlossaryProgress = existing ?? {
-    termId,
-    bookmarked: false,
-    updatedAt: timestamp,
-  };
-
-  const nextEntry: GlossaryProgress = {
-    ...baseline,
-    ...patch,
-    termId,
-    updatedAt: timestamp,
-  };
-
-  return upsert(glossaryProgress, (entry) => entry.termId === termId, nextEntry);
-}
-
-function updateExerciseProgressEntry(
-  exerciseProgress: ExerciseProgress[],
-  exerciseId: string,
-  patch: Partial<ExerciseProgress>,
-): ExerciseProgress[] {
-  const existing = exerciseProgress.find((entry) => entry.exerciseId === exerciseId);
-  const timestamp = Date.now();
-  const baseline: ExerciseProgress = existing ?? {
-    exerciseId,
-    bookmarked: false,
-    updatedAt: timestamp,
-  };
-
-  const nextEntry: ExerciseProgress = {
-    ...baseline,
-    ...patch,
-    exerciseId,
-    updatedAt: timestamp,
-  };
-
-  return upsert(exerciseProgress, (entry) => entry.exerciseId === exerciseId, nextEntry);
-}
-
-const getGlossaryCollectionOptions = (
-  collections: Collection[],
-  glossaryBookmarkCollections: GlossaryBookmarkCollection[],
-  termId: string,
-): CollectionOption[] => {
-  const termCollectionIds = new Set(
-    glossaryBookmarkCollections
-      .filter((entry) => entry.termId === termId)
-      .map((entry) => entry.collectionId),
-  );
-
-  return collections.map((collection) => ({
-    id: collection.id,
-    name: collection.name,
-    icon: collection.icon ?? null,
-    checked: termCollectionIds.has(collection.id),
-  }));
-};
-
-const getSelectableValues = (
-  techniques: Technique[],
-  selector: (technique: Technique) => string | undefined,
-): string[] =>
-  unique(
-    techniques
-      .map(selector)
-      .filter((value): value is string => Boolean(value && value.trim().length > 0))
-      .sort(),
-  );
-
-const getTrainerValues = (techniques: Technique[]): string[] => {
-  const trainerIds = techniques
-    .flatMap((technique) => technique.versions.map((version) => version.trainerId))
-    .filter((v): v is string => Boolean(v && v.trim().length > 0));
-
-  const hasBaseVersions = techniques.some((technique) =>
-    technique.versions.some((version) => !version.trainerId),
-  );
-
-  const values = unique(trainerIds).sort();
-  if (hasBaseVersions) {
-    // place 'base-forms' at the front so the option is visible
-    return ['base-forms', ...values];
-  }
-  return values;
-};
-
-function applyFilters(techniques: Technique[], filters: Filters): Technique[] {
-  return techniques
-    .filter((technique) => {
-      if (filters.category && technique.category !== filters.category) return false;
-      if (filters.attack && technique.attack !== filters.attack) return false;
-      if (filters.weapon && technique.weapon !== filters.weapon) return false;
-      if (filters.level && technique.level !== filters.level) return false;
-      if (filters.stance) {
-        if (!isEntryMode(filters.stance)) {
-          return false;
-        }
-
-        const requiredEntry: EntryMode = filters.stance;
-        const hasEntryMode = technique.versions.some(
-          (version) =>
-            version.entries?.includes(requiredEntry) ||
-            Boolean(version.stepsByEntry?.[requiredEntry]) ||
-            Boolean(version.mediaByEntry?.[requiredEntry]),
-        );
-        if (!hasEntryMode) return false;
-      }
-      if (filters.trainer) {
-        if (filters.trainer === 'base-forms') {
-          // include techniques which have at least one base version (version without trainerId)
-          if (!technique.versions.some((version) => !version.trainerId)) return false;
-        } else {
-          if (!technique.versions.some((version) => version.trainerId === filters.trainer))
-            return false;
-        }
-      }
-      return true;
-    })
-    .sort((a, b) => {
-      // Sort all techniques alphabetically by name (English), regardless of category
-      const aName = a.name.en || a.name.de || '';
-      const bName = b.name.en || b.name.de || '';
-      return aName.localeCompare(bName, 'en', { sensitivity: 'base' });
-    });
-}
 
 function useKeyboardShortcuts(onSearch: (method?: 'keyboard' | 'mouse') => void): void {
   useEffect(() => {
@@ -809,19 +272,15 @@ export default function App({
     equipment: [],
   });
   const [selectedCollectionId, setSelectedCollectionId] = useState<SelectedCollectionId>('all');
-  const [route, setRoute] = useState<AppRoute>(() =>
-    initialRoute !== undefined ? initialRoute : getInitialLocation().route,
-  );
-  const [activeSlug, setActiveSlug] = useState<string | null>(() =>
-    initialSlug !== undefined ? initialSlug : getInitialLocation().slug,
-  );
+  const { route, setRoute, activeSlug, setActiveSlug, navigateTo } = useAppNavigation({
+    initialRoute,
+    initialSlug,
+  });
   const [searchOpen, setSearchOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [confirmClearOpen, setConfirmClearOpen] = useState(false);
   const [confirmDeleteAccountOpen, setConfirmDeleteAccountOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
-  const [glossaryTerms, setGlossaryTerms] = useState<GlossaryTerm[]>([]);
-  const [practiceExercises, setPracticeExercises] = useState<Exercise[]>([]);
   const [feedbackInitialType, setFeedbackInitialType] = useState<FeedbackType | null>(null);
   const [learnSession, setLearnSession] = useState<LearnSession | null>(null);
   const [pinnedBeltGrade, setPinnedBeltGrade] = useState<Grade | null>(null);
@@ -849,6 +308,31 @@ export default function App({
 
   const copy = getCopy(locale);
   const { pageMotion, prefersReducedMotion } = useMotionPreferences();
+  const {
+    glossaryTerms,
+    practiceExercises,
+    categories,
+    attacks,
+    stances,
+    weapons,
+    trainers,
+    glossaryCategories,
+    practiceCategories,
+    filteredTechniques,
+    currentTechnique,
+    currentProgress,
+    currentGlossaryTerm,
+    currentGlossaryProgress,
+    currentGlossaryStudyStatus,
+    currentExerciseStudyStatus,
+  } = useContentController({
+    db,
+    route,
+    activeSlug,
+    filters,
+    locale,
+    copy,
+  });
   const searchTriggerRef = useRef<HTMLButtonElement | null>(null);
   const settingsTriggerRef = useRef<HTMLButtonElement | null>(null);
   const settingsClearButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -878,53 +362,9 @@ export default function App({
   // animations to avoid the brief re-appearance/flicker on iOS Safari.
   const skipEntranceAnimations = cameFromBackForwardNavigation();
 
-  // Prefetch helpers - no longer needed since pages are statically imported
-  const prefetchTechniquePage = useCallback(() => {
-    // No-op: TechniquePage is now statically imported
-  }, []);
   const prefetchFeedbackPage = useCallback(() => {
-    // No-op: FeedbackPage is now statically imported
+    // Component APIs still accept prefetch callbacks; pages are static imports now.
   }, []);
-  const prefetchGlossary = useCallback(() => {
-    // No-op: TermsPage is now statically imported
-  }, []);
-  const prefetchBookmarks = useCallback(() => {
-    // No-op: BookmarksView is now statically imported
-  }, []);
-
-  const navigateTo = useCallback(
-    (next: AppRoute, options: { replace?: boolean; sourceRoute?: AppRoute } = {}) => {
-      rememberScrollPosition();
-      const path = typeof window !== 'undefined' ? routeToPath(next) : '';
-      const shouldSkip =
-        !options.replace &&
-        route === next &&
-        !activeSlug &&
-        (typeof window === 'undefined' || window.location.pathname === path);
-
-      if (shouldSkip) {
-        return;
-      }
-
-      setRoute(next);
-      setActiveSlug(null);
-
-      if (typeof window !== 'undefined') {
-        const state: HistoryState = { route: next };
-        if (options.sourceRoute) {
-          state.sourceRoute = options.sourceRoute;
-        }
-        if (options.replace) {
-          window.history.replaceState(state, '', path);
-        } else if (window.location.pathname !== path) {
-          window.history.pushState(state, '', path);
-        } else {
-          window.history.replaceState(state, '', path);
-        }
-      }
-    },
-    [activeSlug, route],
-  );
 
   const startLearnSession = useCallback(
     (
@@ -981,7 +421,7 @@ export default function App({
         }
       }
     },
-    [navigateTo],
+    [navigateTo, setActiveSlug, setRoute],
   );
 
   const showToast = useCallback((message: string) => {
@@ -1460,34 +900,6 @@ export default function App({
     searchOpen || settingsOpen || confirmClearOpen || confirmDeleteAccountOpen || tourOpen,
   );
 
-  // Load glossary terms on component mount
-  useEffect(() => {
-    const loadGlossaryTerms = async () => {
-      try {
-        const terms = await loadAllTerms();
-        setGlossaryTerms(terms);
-      } catch (error) {
-        console.error('Failed to load glossary terms:', error);
-      }
-    };
-
-    loadGlossaryTerms();
-  }, []);
-
-  // Load practice exercises on component mount (for bookmarks)
-  useEffect(() => {
-    const loadExercises = async () => {
-      try {
-        const exercises = await loadAllExercises();
-        setPracticeExercises(exercises);
-      } catch (error) {
-        console.error('Failed to load practice exercises:', error);
-      }
-    };
-
-    loadExercises();
-  }, []);
-
   // Ensure exercise progress covers all known exercises
   useEffect(() => {
     if (practiceExercises.length === 0) return;
@@ -1841,52 +1253,7 @@ export default function App({
     }
   }, [db.collections, selectedCollectionId]);
 
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    const syncFromLocation = (event?: PopStateEvent) => {
-      const state =
-        (event?.state as HistoryState | undefined) ??
-        (window.history.state as HistoryState | undefined);
-      const { route: nextRoute, slug } = parseLocation(
-        window.location.pathname,
-        state,
-        window.location.search,
-      );
-      setRoute(nextRoute);
-      setActiveSlug(slug);
-    };
-
-    window.addEventListener('popstate', syncFromLocation);
-    return () => window.removeEventListener('popstate', syncFromLocation);
-  }, []);
-
   useKeyboardShortcuts(openSearch);
-
-  // no-op placeholder: scroll/animation behavior is coordinated via
-  // navigationLifecycle and the skipEntranceAnimations flag above.
-
-  // Idle prefetch both heavy chunks after initial render
-  useEffect(() => {
-    const idle = (cb: () => void) =>
-      (
-        window as Window & {
-          requestIdleCallback?: (cb: () => void, options: { timeout: number }) => void;
-        }
-      ).requestIdleCallback
-        ? (
-            window as Window & {
-              requestIdleCallback?: (cb: () => void, options: { timeout: number }) => void;
-            }
-          ).requestIdleCallback(cb, { timeout: 1500 })
-        : setTimeout(cb, 600);
-    idle(() => {
-      prefetchTechniquePage();
-      prefetchFeedbackPage();
-      prefetchGlossary();
-      prefetchBookmarks();
-    });
-  }, [prefetchTechniquePage, prefetchFeedbackPage, prefetchGlossary, prefetchBookmarks]);
 
   useEffect(() => {
     if (
@@ -1907,134 +1274,13 @@ export default function App({
     return () => media.removeEventListener('change', apply);
   }, [hasManualTheme]);
 
-  const categories = useMemo(
-    () => getSelectableValues(db.techniques, (technique) => technique.category),
-    [db.techniques],
-  );
-  const attacks = useMemo(
-    () => getSelectableValues(db.techniques, (technique) => technique.attack),
-    [db.techniques],
-  );
-  const stances = ENTRY_MODE_ORDER;
-  const weapons = useMemo(
-    () => getSelectableValues(db.techniques, (technique) => technique.weapon),
-    [db.techniques],
-  );
-  const trainers = useMemo(() => getTrainerValues(db.techniques), [db.techniques]);
-
-  // Term categories - all possible categories sorted alphabetically by localized label
-  const glossaryCategories: (
-    | 'movement'
-    | 'stance'
-    | 'attack'
-    | 'etiquette'
-    | 'philosophy'
-    | 'other'
-  )[] = useMemo(() => {
-    const allCategories: (
-      | 'movement'
-      | 'stance'
-      | 'attack'
-      | 'etiquette'
-      | 'philosophy'
-      | 'other'
-    )[] = ['movement', 'stance', 'attack', 'etiquette', 'philosophy', 'other'];
-
-    const copy = getCopy(locale);
-    const getCategoryLabel = (
-      category: 'movement' | 'stance' | 'attack' | 'etiquette' | 'philosophy' | 'other',
-    ): string => {
-      const labels = {
-        movement: copy.categoryMovement,
-        stance: copy.categoryStance,
-        attack: copy.categoryAttack,
-        etiquette: copy.categoryEtiquette,
-        philosophy: copy.categoryPhilosophy,
-        other: copy.categoryOther,
-      };
-      return labels[category];
-    };
-
-    return allCategories.sort((a, b) =>
-      getCategoryLabel(a).localeCompare(getCategoryLabel(b), locale, {
-        sensitivity: 'accent',
-        caseFirst: 'upper',
-      }),
-    );
-  }, [locale]);
-
-  const practiceCategories: PracticeCategory[] = useMemo(() => {
-    const allCategories: PracticeCategory[] = [
-      'mobility',
-      'strength',
-      'core',
-      'balance',
-      'coordination',
-      'power',
-      'recovery',
-    ];
-
-    return allCategories.sort((a, b) =>
-      getExerciseCategoryLabel(a, copy).localeCompare(getExerciseCategoryLabel(b, copy), locale, {
-        sensitivity: 'accent',
-        caseFirst: 'upper',
-      }),
-    );
-  }, [copy, locale]);
-
-  const filteredTechniques = useMemo(
-    () => applyFilters(db.techniques, filters),
-    [db.techniques, filters],
-  );
-
-  const currentTechnique = useMemo(
-    () =>
-      activeSlug
-        ? (db.techniques.find((technique) => technique.slug === activeSlug) ?? null)
-        : null,
-    [db.techniques, activeSlug],
-  );
-
-  const currentProgress = useMemo(
-    () =>
-      currentTechnique
-        ? (db.progress.find((entry) => entry.techniqueId === currentTechnique.id) ?? null)
-        : null,
-    [db.progress, currentTechnique],
-  );
   const isTechniqueDetailOpen = Boolean(currentTechnique);
   const tourTechniqueSlug = db.techniques[0]?.slug ?? null;
-
-  const currentGlossaryTerm = useMemo(
-    () => (activeSlug ? (glossaryTerms.find((term) => term.slug === activeSlug) ?? null) : null),
-    [glossaryTerms, activeSlug],
-  );
-
-  const currentGlossaryProgress = useMemo(() => {
-    if (!activeSlug || !currentGlossaryTerm) return null;
-    return db.glossaryProgress.find((entry) => entry.termId === activeSlug) ?? null;
-  }, [db.glossaryProgress, activeSlug, currentGlossaryTerm]);
-
-  const currentGlossaryStudyStatus = useMemo(
-    () =>
-      currentGlossaryTerm
-        ? getStudyStatusForItem(db.studyStatus, 'term', currentGlossaryTerm.slug)
-        : 'none',
-    [currentGlossaryTerm, db.studyStatus],
-  );
 
   const glossaryCollectionOptions = useMemo(() => {
     if (!activeSlug || !currentGlossaryTerm) return [];
     return getGlossaryCollectionOptions(db.collections, db.glossaryBookmarkCollections, activeSlug);
   }, [db.collections, db.glossaryBookmarkCollections, activeSlug, currentGlossaryTerm]);
-
-  const currentExerciseStudyStatus = useMemo(
-    () =>
-      route === 'exercises' && activeSlug
-        ? getStudyStatusForItem(db.studyStatus, 'exercise', activeSlug)
-        : 'none',
-    [activeSlug, db.studyStatus, route],
-  );
 
   const updateProgress = (id: string, patch: Partial<Progress>): void => {
     markSyncMutationPending();
@@ -2734,7 +1980,15 @@ export default function App({
 
       setActiveSlug(slug);
     },
-    [db.techniques, filters.stance, filters.trainer, filters.weapon, route],
+    [
+      db.techniques,
+      filters.stance,
+      filters.trainer,
+      filters.weapon,
+      route,
+      setActiveSlug,
+      setRoute,
+    ],
   );
 
   const openGlossaryTerm = (slug: string): void => {
@@ -3031,41 +2285,47 @@ export default function App({
     [navigateTo],
   );
 
-  const openGuideRoutinePreset = useCallback((routine: GuideRoutine, routineSlug: string) => {
-    rememberScrollPosition();
-    const nextRoute = routineToGuideRoute(routine);
-    const nextPath = buildGuideRoutinePath(routine, routineSlug);
+  const openGuideRoutinePreset = useCallback(
+    (routine: GuideRoutine, routineSlug: string) => {
+      rememberScrollPosition();
+      const nextRoute = routineToGuideRoute(routine);
+      const nextPath = buildGuideRoutinePath(routine, routineSlug);
 
-    setRoute(nextRoute);
-    setActiveSlug(routineSlug);
+      setRoute(nextRoute);
+      setActiveSlug(routineSlug);
 
-    if (typeof window !== 'undefined') {
-      const state: HistoryState = {
-        route: nextRoute,
-        slug: routineSlug,
-        sourceRoute: 'guide',
-      };
-      if (`${window.location.pathname}${window.location.search}` !== nextPath) {
-        window.history.pushState(state, '', nextPath);
-      } else {
+      if (typeof window !== 'undefined') {
+        const state: HistoryState = {
+          route: nextRoute,
+          slug: routineSlug,
+          sourceRoute: 'guide',
+        };
+        if (`${window.location.pathname}${window.location.search}` !== nextPath) {
+          window.history.pushState(state, '', nextPath);
+        } else {
+          window.history.replaceState(state, '', nextPath);
+        }
+      }
+    },
+    [setActiveSlug, setRoute],
+  );
+
+  const closeGuideRoutinePreset = useCallback(
+    (routine: GuideRoutine) => {
+      rememberScrollPosition();
+      const nextRoute = routineToGuideRoute(routine);
+      const nextPath = buildGuideRoutinePath(routine);
+
+      setRoute(nextRoute);
+      setActiveSlug(null);
+
+      if (typeof window !== 'undefined') {
+        const state: HistoryState = { route: nextRoute, sourceRoute: 'guide' };
         window.history.replaceState(state, '', nextPath);
       }
-    }
-  }, []);
-
-  const closeGuideRoutinePreset = useCallback((routine: GuideRoutine) => {
-    rememberScrollPosition();
-    const nextRoute = routineToGuideRoute(routine);
-    const nextPath = buildGuideRoutinePath(routine);
-
-    setRoute(nextRoute);
-    setActiveSlug(null);
-
-    if (typeof window !== 'undefined') {
-      const state: HistoryState = { route: nextRoute, sourceRoute: 'guide' };
-      window.history.replaceState(state, '', nextPath);
-    }
-  }, []);
+    },
+    [setActiveSlug, setRoute],
+  );
 
   const techniqueHistoryState =
     typeof window !== 'undefined' ? (window.history.state as HistoryState | null) : null;
@@ -3334,7 +2594,6 @@ export default function App({
         onCreateCollection={createCollection}
         onNavigateToTermsWithFilter={(category) => {
           setGlossaryFilters({ category });
-          prefetchGlossary();
           navigateTo('terms');
         }}
       />
@@ -3737,182 +2996,113 @@ export default function App({
         : route;
 
   return (
-    <MotionConfig reducedMotion="user">
-      <div className="min-h-dvh flex flex-col app-bg">
-        <Header
-          copy={copy}
-          route={route}
-          onNavigate={navigateTo}
-          onSearch={openSearch}
-          onSettings={openSettings}
-          onStartTour={handleStartOnboardingTour}
-          searchButtonRef={searchTriggerRef}
-          settingsButtonRef={settingsTriggerRef}
-        />
+    <AppShell
+      copy={copy}
+      locale={locale}
+      route={route}
+      mainContent={mainContent}
+      pageKey={pageKey}
+      pageMotion={pageMotion}
+      skipEntranceAnimations={skipEntranceAnimations}
+      onExitComplete={flushScrollToTop}
+      onNavigate={navigateTo}
+      onSearch={openSearch}
+      onSettings={openSettings}
+      onStartTour={handleStartOnboardingTour}
+      searchButtonRef={searchTriggerRef}
+      settingsButtonRef={settingsTriggerRef}
+      searchOpen={searchOpen}
+      searchOpenedBy={
+        (openSearch as { lastOpenedBy?: 'keyboard' | 'mouse' }).lastOpenedBy ?? 'mouse'
+      }
+      onCloseSearch={closeSearch}
+      techniques={db.techniques}
+      exercises={practiceExercises}
+      progress={db.progress}
+      glossaryProgress={db.glossaryProgress}
+      exerciseProgress={db.exerciseProgress}
+      studyStatus={db.studyStatus}
+      onSearchOpenTechnique={(slug) => {
+        openTechnique(slug);
+        closeSearch();
+      }}
+      onSearchOpenGlossary={(slug) => {
+        openGlossaryTerm(slug);
+        closeSearch();
+      }}
+      onSearchOpenExercise={(slug) => {
+        openPracticeExercise(slug);
+        closeSearch();
+      }}
+      onToggleSearchTechniqueBookmark={(techniqueId) => {
+        const progressEntry = db.progress.find((p) => p.techniqueId === techniqueId) ?? null;
+        const techniqueEntry = db.techniques.find((t) => t.id === techniqueId);
+        if (!techniqueEntry) return;
 
-        <AnimatePresence
-          mode={skipEntranceAnimations ? 'sync' : 'wait'}
-          initial={!skipEntranceAnimations}
-          onExitComplete={flushScrollToTop}
-        >
-          <motion.main
-            key={pageKey}
-            variants={pageMotion.variants}
-            initial={skipEntranceAnimations ? 'animate' : 'initial'}
-            animate="animate"
-            transition={pageMotion.transition}
-            className="flex-1 pt-8 pb-24 md:pb-0"
-            style={{ willChange: 'opacity' }}
-          >
-            {mainContent}
-          </motion.main>
+        const currentKeys = getBookmarkedVariantKeys(progressEntry);
+        if (currentKeys.length > 0) {
+          updateProgress(techniqueId, { bookmarked: false });
+          return;
+        }
 
-          {/* Footer removed as requested */}
-        </AnimatePresence>
-
-        <AnimatePresence>
-          {searchOpen && (
-            <SearchOverlay
-              key="search-overlay"
-              copy={copy}
-              locale={locale}
-              techniques={db.techniques}
-              exercises={practiceExercises}
-              progress={db.progress}
-              glossaryProgress={db.glossaryProgress}
-              exerciseProgress={db.exerciseProgress}
-              studyStatus={db.studyStatus}
-              onClose={closeSearch}
-              onOpen={(slug) => {
-                openTechnique(slug);
-                closeSearch();
-              }}
-              onOpenGlossary={(slug) => {
-                openGlossaryTerm(slug);
-                closeSearch();
-              }}
-              onOpenExercise={(slug) => {
-                openPracticeExercise(slug);
-                closeSearch();
-              }}
-              onToggleTechniqueBookmark={(techniqueId: string) => {
-                const progressEntry =
-                  db.progress.find((p) => p.techniqueId === techniqueId) ?? null;
-                const techniqueEntry = db.techniques.find((t) => t.id === techniqueId);
-                if (!techniqueEntry) return;
-
-                const currentKeys = getBookmarkedVariantKeys(progressEntry);
-                if (currentKeys.length > 0) {
-                  updateProgress(techniqueId, { bookmarked: false });
-                  return;
-                }
-
-                const fallbackVariant =
-                  progressEntry?.bookmarkedVariant ??
-                  getFallbackVariantForTechnique(techniqueEntry);
-                updateProgress(techniqueId, {
-                  bookmarked: true,
-                  bookmarkedVariant: fallbackVariant,
-                  bookmarkedVariantKeys: [toVariantStorageKey(fallbackVariant)],
-                });
-              }}
-              onToggleGlossaryBookmark={(termId: string) =>
-                updateGlossaryProgress(termId, {
-                  bookmarked: !db.glossaryProgress.find((g) => g.termId === termId)?.bookmarked,
-                })
-              }
-              onToggleExerciseBookmark={(exerciseId: string) =>
-                updateExerciseProgress(exerciseId, {
-                  bookmarked: !db.exerciseProgress.find((p) => p.exerciseId === exerciseId)
-                    ?.bookmarked,
-                })
-              }
-              openedBy={
-                (openSearch as { lastOpenedBy?: 'keyboard' | 'mouse' }).lastOpenedBy ?? 'mouse'
-              }
-              trapEnabled={!tourOpen}
-            />
-          )}
-
-          {settingsOpen && (
-            <SettingsModal
-              key="settings-modal"
-              copy={copy}
-              locale={locale}
-              theme={theme}
-              isSystemTheme={!hasManualTheme}
-              db={db}
-              onClose={closeSettings}
-              onRequestClear={handleRequestClear}
-              onChangeLocale={handleLocaleChange}
-              onChangeTheme={handleThemeChange}
-              onManageSync={handleManageSync}
-              onChangeDB={handleDBChange}
-              isOnline={isOnline}
-              isSignedIn={Boolean(authSession)}
-              isAuthBootstrapping={isAuthBootstrapping}
-              syncStatus={syncStatus}
-              hasSyncError={Boolean(syncError && syncError !== 'Unauthorized')}
-              clearButtonRef={settingsClearButtonRef}
-              trapEnabled={!confirmClearOpen && !confirmDeleteAccountOpen && !tourOpen}
-            />
-          )}
-
-          {confirmClearOpen && (
-            <ConfirmClearModal
-              key="confirm-clear"
-              copy={copy}
-              onCancel={handleCancelClear}
-              onConfirm={handleConfirmClear}
-            />
-          )}
-
-          {confirmDeleteAccountOpen && (
-            <ConfirmModal
-              key="confirm-delete-account"
-              strings={{
-                title: copy.confirmDeleteAccountTitle,
-                body: copy.confirmDeleteAccountBody,
-                confirmLabel: copy.confirmDeleteAccountAction,
-                cancelLabel: copy.confirmDeleteAccountCancel,
-              }}
-              onCancel={handleCancelDeleteAccount}
-              onConfirm={() => {
-                void handleConfirmDeleteAccount();
-              }}
-              destructive
-            />
-          )}
-        </AnimatePresence>
-
-        <MobileTabBar copy={copy} route={route} onNavigate={navigateTo} />
-
-        {showTourCompletionConfetti && <ConfettiBurst />}
-
-        {tourOpen && (
-          <OnboardingTourOverlay
-            copy={copy}
-            isOpen={tourOpen}
-            segmentIndex={tourSegmentIndex}
-            route={route}
-            isTechniqueDetailOpen={isTechniqueDetailOpen}
-            searchOpen={searchOpen}
-            completionVisible={tourCompletionVisible}
-            onBack={handleTourBack}
-            onNext={handleTourNext}
-            onSkip={handleSkipOnboarding}
-            onReturnToStep={() => syncTourSegment(tourSegmentIndex)}
-            onGoHome={handleTourGoHome}
-            onOpenSettings={() => {
-              setTourOpen(false);
-              setTourCompletionVisible(false);
-              openSettings();
-            }}
-          />
-        )}
-
-        {toast && <Toast>{toast}</Toast>}
-      </div>
-    </MotionConfig>
+        const fallbackVariant =
+          progressEntry?.bookmarkedVariant ?? getFallbackVariantForTechnique(techniqueEntry);
+        updateProgress(techniqueId, {
+          bookmarked: true,
+          bookmarkedVariant: fallbackVariant,
+          bookmarkedVariantKeys: [toVariantStorageKey(fallbackVariant)],
+        });
+      }}
+      onToggleSearchGlossaryBookmark={(termId) =>
+        updateGlossaryProgress(termId, {
+          bookmarked: !db.glossaryProgress.find((g) => g.termId === termId)?.bookmarked,
+        })
+      }
+      onToggleSearchExerciseBookmark={(exerciseId) =>
+        updateExerciseProgress(exerciseId, {
+          bookmarked: !db.exerciseProgress.find((p) => p.exerciseId === exerciseId)?.bookmarked,
+        })
+      }
+      settingsOpen={settingsOpen}
+      theme={theme}
+      isSystemTheme={!hasManualTheme}
+      db={db}
+      isOnline={isOnline}
+      isSignedIn={Boolean(authSession)}
+      isAuthBootstrapping={isAuthBootstrapping}
+      syncStatus={syncStatus}
+      hasSyncError={Boolean(syncError && syncError !== 'Unauthorized')}
+      onCloseSettings={closeSettings}
+      onRequestClear={handleRequestClear}
+      onChangeLocale={handleLocaleChange}
+      onChangeTheme={handleThemeChange}
+      onManageSync={handleManageSync}
+      onChangeDB={handleDBChange}
+      settingsClearButtonRef={settingsClearButtonRef}
+      confirmClearOpen={confirmClearOpen}
+      onCancelClear={handleCancelClear}
+      onConfirmClear={handleConfirmClear}
+      confirmDeleteAccountOpen={confirmDeleteAccountOpen}
+      onCancelDeleteAccount={handleCancelDeleteAccount}
+      onConfirmDeleteAccount={() => {
+        void handleConfirmDeleteAccount();
+      }}
+      tourOpen={tourOpen}
+      tourSegmentIndex={tourSegmentIndex}
+      isTechniqueDetailOpen={isTechniqueDetailOpen}
+      tourCompletionVisible={tourCompletionVisible}
+      onTourBack={handleTourBack}
+      onTourNext={handleTourNext}
+      onSkipOnboarding={handleSkipOnboarding}
+      onReturnToTourStep={() => syncTourSegment(tourSegmentIndex)}
+      onTourGoHome={handleTourGoHome}
+      onOpenSettingsFromTour={() => {
+        setTourOpen(false);
+        setTourCompletionVisible(false);
+        openSettings();
+      }}
+      showTourCompletionConfetti={showTourCompletionConfetti}
+      toast={toast}
+    />
   );
 }

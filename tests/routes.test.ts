@@ -5,6 +5,15 @@ import {
   parseTechniquePath,
   parseTechniqueVariantParams,
 } from '../src/shared/constants/urls';
+import {
+  buildGuideRoutinePath,
+  gradeToGuideRoute,
+  guideRouteToGrade,
+  guideRouteToRoutine,
+  parseLocation,
+  routeToPath,
+  routineToGuideRoute,
+} from '../src/shared/navigation/appRoutes';
 
 describe('technique route helpers', () => {
   it('builds canonical technique detail URLs under /techniques', () => {
@@ -48,5 +57,51 @@ describe('technique route helpers', () => {
       weapon: 'empty',
       versionId: null,
     });
+  });
+});
+
+describe('app route helpers', () => {
+  it('maps top-level routes to canonical paths', () => {
+    expect(routeToPath('home')).toBe('/');
+    expect(routeToPath('techniques')).toBe('/techniques');
+    expect(routeToPath('terms')).toBe('/terms');
+    expect(routeToPath('exercises')).toBe('/exercises');
+    expect(routeToPath('bookmarks')).toBe('/bookmarks');
+    expect(routeToPath('sync')).toBe('/sync');
+  });
+
+  it('maps guide grade and routine routes both ways', () => {
+    expect(gradeToGuideRoute('kyu5')).toBe('guideKyu5');
+    expect(guideRouteToGrade('guideKyu5')).toBe('kyu5');
+    expect(gradeToGuideRoute('dan5')).toBe('guideDan5');
+    expect(guideRouteToGrade('guideDan5')).toBe('dan5');
+
+    expect(routineToGuideRoute('warm-up')).toBe('guideRoutineWarmUp');
+    expect(guideRouteToRoutine('guideRoutineWarmUp')).toBe('warm-up');
+    expect(buildGuideRoutinePath('warm-up', 'joint-prep')).toBe('/guide/warm-up/joint-prep');
+  });
+
+  it('parses canonical and legacy app locations', () => {
+    expect(parseLocation('/library')).toEqual({ route: 'techniques', slug: null });
+    expect(parseLocation('/glossary/aikido')).toEqual({ route: 'terms', slug: 'aikido' });
+    expect(parseLocation('/practice/dead-bug')).toEqual({
+      route: 'exercises',
+      slug: 'dead-bug',
+    });
+    expect(parseLocation('/basics')).toEqual({ route: 'guide', slug: null });
+  });
+
+  it('preserves source route state when parsing detail paths', () => {
+    expect(parseLocation('/techniques/katate-tori-irimi-nage', { route: 'bookmarks' })).toEqual({
+      route: 'bookmarks',
+      slug: 'katate-tori-irimi-nage',
+      techniqueParams: {
+        slug: 'katate-tori-irimi-nage',
+        trainerId: undefined,
+        entry: undefined,
+      },
+    });
+
+    expect(parseLocation('/terms/irimi-omote')).toEqual({ route: 'terms', slug: 'irimi' });
   });
 });

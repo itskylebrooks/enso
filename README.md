@@ -102,7 +102,7 @@ Terms include:
 
 ## Tech stack
 
-- React + TypeScript + Vite
+- Next.js + React + TypeScript
 - Tailwind CSS
 - Zustand (client state + local persistence via `storageService`)
 - Framer Motion (subtle UI motion)
@@ -114,7 +114,7 @@ Terms include:
 ```bash
 pnpm install
 pnpm dev
-# open http://localhost:5173
+# open http://localhost:3000
 ```
 
 Build + preview:
