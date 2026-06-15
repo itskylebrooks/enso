@@ -62,10 +62,6 @@ import {
   buildSyncPayloadData,
   buildTombstonesForSyncedState,
   computeDBUpdatedAt,
-  getBookmarkCollectionTombstoneKey,
-  getCollectionTombstoneKey,
-  getExerciseBookmarkCollectionTombstoneKey,
-  getGlossaryBookmarkCollectionTombstoneKey,
   pruneSyncTombstones,
   mergeSyncPayload,
   pickSyncedDBState,
@@ -76,19 +72,9 @@ import type {
   SyncPayloadData,
   SyncTombstones,
 } from './lib/supabase/types';
-import {
-  appendCollectionItem,
-  generateId,
-  getGlossaryCollectionOptions,
-  getSystemTheme,
-  removeCollectionItem,
-  removeCollectionItemFromAll,
-  updateExerciseProgressEntry,
-  updateGlossaryProgressEntry,
-  updateProgressEntry,
-} from './shared/app/appModel';
+import { generateId, getGlossaryCollectionOptions, getSystemTheme } from './shared/app/appModel';
 import { useContentController } from './shared/app/useContentController';
-import { ENTRY_MODE_ORDER } from './shared/constants/entryModes';
+import { useUserLibraryController } from './shared/app/useUserLibraryController';
 import { getCopy } from './shared/constants/i18n';
 import useLockBodyScroll from './shared/hooks/useLockBodyScroll';
 import {
@@ -122,43 +108,25 @@ import {
 } from './shared/services/storageService';
 import type {
   AppRoute,
-  Collection,
   DB,
   Direction,
   EntryMode,
-  ExerciseProgress,
   Filters,
-  GlossaryProgress,
   Grade,
   GuideRoutine,
   Locale,
-  Progress,
-  Technique,
   TechniqueVariant,
   TechniqueVariantKey,
   Theme,
   WeaponKind,
 } from './shared/types';
-import { createCollectionItemId, swapCollectionItemIds } from './shared/utils/collectionItems';
 import { gradeOrder } from './shared/utils/grades';
 import {
   cameFromBackForwardNavigation,
   consumeBFCacheRestoreFlag,
   rememberScrollPosition,
 } from './shared/utils/navigationLifecycle';
-import {
-  buildStudyItemKey,
-  buildTechniqueVariantStudyKey,
-  cycleStudyStatus,
-  getStudyStatusForItem,
-  getStudyStatusForTechniqueVariant,
-  isStudyCollectionId,
-} from './shared/utils/studyStatus';
-import {
-  fromVariantStorageKey,
-  getBookmarkedVariantKeys,
-  toVariantStorageKey,
-} from './shared/utils/variantKeys';
+import { isStudyCollectionId } from './shared/utils/studyStatus';
 
 const defaultFilters: Filters = {};
 
@@ -1282,523 +1250,31 @@ export default function App({
     return getGlossaryCollectionOptions(db.collections, db.glossaryBookmarkCollections, activeSlug);
   }, [db.collections, db.glossaryBookmarkCollections, activeSlug, currentGlossaryTerm]);
 
-  const updateProgress = (id: string, patch: Partial<Progress>): void => {
-    markSyncMutationPending();
-    const normalizedPatch: Partial<Progress> =
-      patch.bookmarked === false
-        ? { ...patch, bookmarkedVariant: undefined, bookmarkedVariantKeys: [] }
-        : patch;
-    const deletedAt = Date.now();
-    if (normalizedPatch.bookmarked === false) {
-      addSyncTombstones(
-        Object.fromEntries(
-          db.bookmarkCollections
-            .filter((entry) => entry.techniqueId === id)
-            .map((entry) => [
-              getBookmarkCollectionTombstoneKey(entry.collectionId, entry.techniqueId),
-              deletedAt,
-            ]),
-        ),
-      );
-    }
-
-    setDB((prev) => {
-      const nextProgress = updateProgressEntry(prev.progress, id, normalizedPatch);
-      const shouldRemoveAssignments = normalizedPatch.bookmarked === false;
-      const nextBookmarkCollections = shouldRemoveAssignments
-        ? prev.bookmarkCollections.filter((entry) => entry.techniqueId !== id)
-        : prev.bookmarkCollections;
-      const itemId = createCollectionItemId('technique', id);
-      const now = Date.now();
-      const nextCollections = shouldRemoveAssignments
-        ? removeCollectionItemFromAll(prev.collections, itemId, now)
-        : prev.collections;
-      return {
-        ...prev,
-        progress: nextProgress,
-        collections: nextCollections,
-        bookmarkCollections: nextBookmarkCollections,
-      };
-    });
-  };
-
-  const updateGlossaryProgress = (termId: string, patch: Partial<GlossaryProgress>): void => {
-    markSyncMutationPending();
-    const deletedAt = Date.now();
-    if (patch.bookmarked === false) {
-      addSyncTombstones(
-        Object.fromEntries(
-          db.glossaryBookmarkCollections
-            .filter((entry) => entry.termId === termId)
-            .map((entry) => [
-              getGlossaryBookmarkCollectionTombstoneKey(entry.collectionId, entry.termId),
-              deletedAt,
-            ]),
-        ),
-      );
-    }
-
-    setDB((prev) => {
-      const nextGlossaryProgress = updateGlossaryProgressEntry(
-        prev.glossaryProgress,
-        termId,
-        patch,
-      );
-      const shouldRemoveAssignments = patch.bookmarked === false;
-      const nextGlossaryBookmarkCollections = shouldRemoveAssignments
-        ? prev.glossaryBookmarkCollections.filter((entry) => entry.termId !== termId)
-        : prev.glossaryBookmarkCollections;
-      const itemId = createCollectionItemId('glossary', termId);
-      const now = Date.now();
-      const nextCollections = shouldRemoveAssignments
-        ? removeCollectionItemFromAll(prev.collections, itemId, now)
-        : prev.collections;
-      return {
-        ...prev,
-        glossaryProgress: nextGlossaryProgress,
-        collections: nextCollections,
-        glossaryBookmarkCollections: nextGlossaryBookmarkCollections,
-      };
-    });
-  };
-
-  const updateExerciseProgress = (exerciseId: string, patch: Partial<ExerciseProgress>): void => {
-    markSyncMutationPending();
-    const deletedAt = Date.now();
-    if (patch.bookmarked === false) {
-      addSyncTombstones(
-        Object.fromEntries(
-          db.exerciseBookmarkCollections
-            .filter((entry) => entry.exerciseId === exerciseId)
-            .map((entry) => [
-              getExerciseBookmarkCollectionTombstoneKey(entry.collectionId, entry.exerciseId),
-              deletedAt,
-            ]),
-        ),
-      );
-    }
-
-    setDB((prev) => {
-      const nextExerciseProgress = updateExerciseProgressEntry(
-        prev.exerciseProgress,
-        exerciseId,
-        patch,
-      );
-      const shouldRemoveAssignments = patch.bookmarked === false;
-      const nextExerciseBookmarkCollections = shouldRemoveAssignments
-        ? prev.exerciseBookmarkCollections.filter((entry) => entry.exerciseId !== exerciseId)
-        : prev.exerciseBookmarkCollections;
-      const itemId = createCollectionItemId('exercise', exerciseId);
-      const now = Date.now();
-      const nextCollections = shouldRemoveAssignments
-        ? removeCollectionItemFromAll(prev.collections, itemId, now)
-        : prev.collections;
-      return {
-        ...prev,
-        exerciseProgress: nextExerciseProgress,
-        collections: nextCollections,
-        exerciseBookmarkCollections: nextExerciseBookmarkCollections,
-      };
-    });
-  };
-
-  const cycleItemStudyStatus = (
-    itemType: 'technique' | 'term' | 'exercise',
-    slug: string,
-    variant?: TechniqueVariantKey,
-  ): void => {
-    markSyncMutationPending();
-    const current =
-      itemType === 'technique' && variant
-        ? getStudyStatusForTechniqueVariant(db.studyStatus, slug, variant)
-        : getStudyStatusForItem(db.studyStatus, itemType, slug);
-    const nextStatus = cycleStudyStatus(current);
-    const key =
-      itemType === 'technique' && variant
-        ? buildTechniqueVariantStudyKey(slug, variant)
-        : buildStudyItemKey(itemType, slug);
-
-    setDB((prev) => ({
-      ...prev,
-      studyStatus: {
-        ...prev.studyStatus,
-        [key]: {
-          status: nextStatus,
-          updatedAt: Date.now(),
-        },
-      },
-    }));
-  };
-
-  const sanitizeCollectionName = (name: string): string => name.trim().slice(0, 40);
-
-  const sortCollectionsByName = (collections: Collection[]): Collection[] =>
-    [...collections]
-      .sort((a, b) =>
-        a.name.localeCompare(b.name, locale, {
-          sensitivity: 'accent',
-          caseFirst: 'upper',
-        }),
-      )
-      .map((collection, index) => ({
-        ...collection,
-        sortOrder: index,
-      }));
-
-  const createCollection = (name: string): string | null => {
-    const trimmed = name.trim();
-    if (!trimmed) return null;
-    markSyncMutationPending();
-    const now = Date.now();
-    const id = generateId();
-
-    setDB((prev) => ({
-      ...prev,
-      collections: sortCollectionsByName([
-        ...prev.collections,
-        {
-          id,
-          name: sanitizeCollectionName(trimmed),
-          icon: null,
-          itemIds: [],
-          sortOrder: prev.collections.length,
-          createdAt: now,
-          updatedAt: now,
-        },
-      ]),
-    }));
-
-    return id;
-  };
-
-  const renameCollection = (id: string, name: string): void => {
-    const trimmed = name.trim();
-    if (!trimmed) return;
-    markSyncMutationPending();
-    const now = Date.now();
-
-    setDB((prev) => ({
-      ...prev,
-      collections: sortCollectionsByName(
-        prev.collections.map((collection) =>
-          collection.id === id
-            ? {
-                ...collection,
-                name: sanitizeCollectionName(trimmed),
-                updatedAt: now,
-              }
-            : collection,
-        ),
-      ),
-    }));
-  };
-
-  const deleteCollection = (id: string): void => {
-    markSyncMutationPending();
-    const deletedAt = Date.now();
-    addSyncTombstones({
-      [getCollectionTombstoneKey(id)]: deletedAt,
-      ...Object.fromEntries(
-        db.bookmarkCollections
-          .filter((entry) => entry.collectionId === id)
-          .map((entry) => [
-            getBookmarkCollectionTombstoneKey(entry.collectionId, entry.techniqueId),
-            deletedAt,
-          ]),
-      ),
-      ...Object.fromEntries(
-        db.glossaryBookmarkCollections
-          .filter((entry) => entry.collectionId === id)
-          .map((entry) => [
-            getGlossaryBookmarkCollectionTombstoneKey(entry.collectionId, entry.termId),
-            deletedAt,
-          ]),
-      ),
-      ...Object.fromEntries(
-        db.exerciseBookmarkCollections
-          .filter((entry) => entry.collectionId === id)
-          .map((entry) => [
-            getExerciseBookmarkCollectionTombstoneKey(entry.collectionId, entry.exerciseId),
-            deletedAt,
-          ]),
-      ),
-    });
-
-    setDB((prev) => ({
-      ...prev,
-      collections: sortCollectionsByName(
-        prev.collections.filter((collection) => collection.id !== id),
-      ),
-      bookmarkCollections: prev.bookmarkCollections.filter((entry) => entry.collectionId !== id),
-      glossaryBookmarkCollections: prev.glossaryBookmarkCollections.filter(
-        (entry) => entry.collectionId !== id,
-      ),
-      exerciseBookmarkCollections: prev.exerciseBookmarkCollections.filter(
-        (entry) => entry.collectionId !== id,
-      ),
-    }));
-  };
-
-  const assignToCollection = (techniqueId: string, collectionId: string): void => {
-    markSyncMutationPending();
-    setDB((prev) => {
-      const now = Date.now();
-      const itemId = createCollectionItemId('technique', techniqueId);
-      // Automatically bookmark if not already bookmarked
-      const progressEntry = prev.progress.find((entry) => entry.techniqueId === techniqueId);
-      const isBookmarked = progressEntry?.bookmarked;
-      const technique = prev.techniques.find((entry) => entry.id === techniqueId);
-      const fallbackVariant =
-        progressEntry?.bookmarkedVariant ??
-        (technique ? getFallbackVariantForTechnique(technique) : null);
-      const fallbackKey = fallbackVariant ? toVariantStorageKey(fallbackVariant) : null;
-
-      let nextProgress = prev.progress;
-      if (!isBookmarked) {
-        if (progressEntry) {
-          nextProgress = prev.progress.map((p) =>
-            p.techniqueId === techniqueId
-              ? {
-                  ...p,
-                  bookmarked: true,
-                  bookmarkedVariant: fallbackVariant ?? p.bookmarkedVariant,
-                  bookmarkedVariantKeys:
-                    fallbackKey && getBookmarkedVariantKeys(progressEntry).length === 0
-                      ? [fallbackKey]
-                      : p.bookmarkedVariantKeys,
-                  updatedAt: now,
-                }
-              : p,
-          );
-        } else {
-          nextProgress = [
-            ...prev.progress,
-            {
-              techniqueId,
-              bookmarked: true,
-              bookmarkedVariant: fallbackVariant ?? undefined,
-              bookmarkedVariantKeys: fallbackKey ? [fallbackKey] : [],
-              updatedAt: now,
-            },
-          ];
-        }
-      }
-
-      if (
-        prev.bookmarkCollections.some(
-          (entry) => entry.techniqueId === techniqueId && entry.collectionId === collectionId,
-        )
-      ) {
-        return {
-          ...prev,
-          progress: nextProgress,
-          collections: appendCollectionItem(prev.collections, collectionId, itemId, now),
-        };
-      }
-
-      return {
-        ...prev,
-        progress: nextProgress,
-        collections: appendCollectionItem(prev.collections, collectionId, itemId, now),
-        bookmarkCollections: [
-          ...prev.bookmarkCollections,
-          {
-            id: generateId(),
-            techniqueId,
-            collectionId,
-            createdAt: now,
-          },
-        ],
-      };
-    });
-  };
-
-  const removeFromCollection = (techniqueId: string, collectionId: string): void => {
-    markSyncMutationPending();
-    addSyncTombstones({
-      [getBookmarkCollectionTombstoneKey(collectionId, techniqueId)]: Date.now(),
-    });
-
-    setDB((prev) => {
-      const now = Date.now();
-      const itemId = createCollectionItemId('technique', techniqueId);
-      return {
-        ...prev,
-        collections: removeCollectionItem(prev.collections, collectionId, itemId, now),
-        bookmarkCollections: prev.bookmarkCollections.filter(
-          (entry) => !(entry.techniqueId === techniqueId && entry.collectionId === collectionId),
-        ),
-      };
-    });
-  };
-
-  const assignGlossaryToCollection = (termId: string, collectionId: string): void => {
-    markSyncMutationPending();
-    setDB((prev) => {
-      const now = Date.now();
-      const itemId = createCollectionItemId('glossary', termId);
-      // Automatically bookmark if not already bookmarked
-      const progressEntry = prev.glossaryProgress.find((entry) => entry.termId === termId);
-      const isBookmarked = progressEntry?.bookmarked;
-
-      let nextGlossaryProgress = prev.glossaryProgress;
-      if (!isBookmarked) {
-        if (progressEntry) {
-          nextGlossaryProgress = prev.glossaryProgress.map((p) =>
-            p.termId === termId ? { ...p, bookmarked: true, updatedAt: now } : p,
-          );
-        } else {
-          nextGlossaryProgress = [
-            ...prev.glossaryProgress,
-            { termId, bookmarked: true, updatedAt: now },
-          ];
-        }
-      }
-
-      if (
-        prev.glossaryBookmarkCollections.some(
-          (entry) => entry.termId === termId && entry.collectionId === collectionId,
-        )
-      ) {
-        return {
-          ...prev,
-          glossaryProgress: nextGlossaryProgress,
-          collections: appendCollectionItem(prev.collections, collectionId, itemId, now),
-        };
-      }
-
-      return {
-        ...prev,
-        glossaryProgress: nextGlossaryProgress,
-        collections: appendCollectionItem(prev.collections, collectionId, itemId, now),
-        glossaryBookmarkCollections: [
-          ...prev.glossaryBookmarkCollections,
-          {
-            id: generateId(),
-            termId,
-            collectionId,
-            createdAt: now,
-          },
-        ],
-      };
-    });
-  };
-
-  const removeGlossaryFromCollection = (termId: string, collectionId: string): void => {
-    markSyncMutationPending();
-    addSyncTombstones({
-      [getGlossaryBookmarkCollectionTombstoneKey(collectionId, termId)]: Date.now(),
-    });
-
-    setDB((prev) => {
-      const now = Date.now();
-      const itemId = createCollectionItemId('glossary', termId);
-      return {
-        ...prev,
-        collections: removeCollectionItem(prev.collections, collectionId, itemId, now),
-        glossaryBookmarkCollections: prev.glossaryBookmarkCollections.filter(
-          (entry) => !(entry.termId === termId && entry.collectionId === collectionId),
-        ),
-      };
-    });
-  };
-
-  const assignExerciseToCollection = (exerciseId: string, collectionId: string): void => {
-    markSyncMutationPending();
-    setDB((prev) => {
-      const now = Date.now();
-      const itemId = createCollectionItemId('exercise', exerciseId);
-      const progressEntry = prev.exerciseProgress.find((entry) => entry.exerciseId === exerciseId);
-      const isBookmarked = progressEntry?.bookmarked;
-
-      let nextExerciseProgress = prev.exerciseProgress;
-      if (!isBookmarked) {
-        if (progressEntry) {
-          nextExerciseProgress = prev.exerciseProgress.map((p) =>
-            p.exerciseId === exerciseId ? { ...p, bookmarked: true, updatedAt: now } : p,
-          );
-        } else {
-          nextExerciseProgress = [
-            ...prev.exerciseProgress,
-            { exerciseId, bookmarked: true, updatedAt: now },
-          ];
-        }
-      }
-
-      if (
-        prev.exerciseBookmarkCollections.some(
-          (entry) => entry.exerciseId === exerciseId && entry.collectionId === collectionId,
-        )
-      ) {
-        return {
-          ...prev,
-          exerciseProgress: nextExerciseProgress,
-          collections: appendCollectionItem(prev.collections, collectionId, itemId, now),
-        };
-      }
-
-      return {
-        ...prev,
-        exerciseProgress: nextExerciseProgress,
-        collections: appendCollectionItem(prev.collections, collectionId, itemId, now),
-        exerciseBookmarkCollections: [
-          ...prev.exerciseBookmarkCollections,
-          {
-            id: generateId(),
-            exerciseId,
-            collectionId,
-            createdAt: now,
-          },
-        ],
-      };
-    });
-  };
-
-  const removeExerciseFromCollection = (exerciseId: string, collectionId: string): void => {
-    markSyncMutationPending();
-    addSyncTombstones({
-      [getExerciseBookmarkCollectionTombstoneKey(collectionId, exerciseId)]: Date.now(),
-    });
-
-    setDB((prev) => {
-      const now = Date.now();
-      const itemId = createCollectionItemId('exercise', exerciseId);
-      return {
-        ...prev,
-        collections: removeCollectionItem(prev.collections, collectionId, itemId, now),
-        exerciseBookmarkCollections: prev.exerciseBookmarkCollections.filter(
-          (entry) => !(entry.exerciseId === exerciseId && entry.collectionId === collectionId),
-        ),
-      };
-    });
-  };
-
-  const reorderCollectionItem = (
-    collectionId: string,
-    itemId: string,
-    direction: 'backward' | 'forward',
-  ): void => {
-    markSyncMutationPending();
-    setDB((prev) => {
-      const collection = prev.collections.find((entry) => entry.id === collectionId);
-      if (!collection) return prev;
-
-      const baseItemIds = collection.itemIds.includes(itemId)
-        ? collection.itemIds
-        : [...collection.itemIds, itemId];
-      const index = baseItemIds.indexOf(itemId);
-      const nextItemIds = swapCollectionItemIds(baseItemIds, index, direction);
-      if (nextItemIds === collection.itemIds) return prev;
-
-      const updatedAt = Date.now();
-      return {
-        ...prev,
-        collections: prev.collections.map((entry) =>
-          entry.id === collectionId ? { ...entry, itemIds: nextItemIds, updatedAt } : entry,
-        ),
-      };
-    });
-  };
+  const {
+    updateGlossaryProgress,
+    updateExerciseProgress,
+    cycleItemStudyStatus,
+    createCollection,
+    renameCollection,
+    deleteCollection,
+    assignToCollection,
+    removeFromCollection,
+    assignGlossaryToCollection,
+    removeGlossaryFromCollection,
+    assignExerciseToCollection,
+    removeExerciseFromCollection,
+    reorderCollectionItem,
+    toggleBookmark,
+    toggleExerciseBookmark,
+    handleDBChange,
+    toggleSearchTechniqueBookmark,
+  } = useUserLibraryController({
+    db,
+    setDB,
+    locale,
+    markSyncMutationPending,
+    addSyncTombstones,
+  });
 
   const handleLocaleChange = (next: Locale): void => {
     setLocale(next);
@@ -1819,11 +1295,6 @@ export default function App({
     closeSettings();
     navigateTo('sync');
   }, [closeSettings, navigateTo]);
-
-  const handleDBChange = (next: DB): void => {
-    markSyncMutationPending();
-    setDB(next);
-  };
 
   const openTechnique = useCallback(
     (
@@ -2332,57 +1803,6 @@ export default function App({
   const techniqueBackRoute = techniqueHistoryState?.sourceRoute ?? route;
   const closeTechnique = (): void => {
     navigateTo(techniqueBackRoute, { replace: true });
-  };
-
-  // focus/confident toggles removed — using bookmark only now
-
-  const getFallbackVariantForTechnique = (technique: Technique): TechniqueVariantKey => {
-    const firstVersion = technique.versions[0];
-    const availableDirections = ENTRY_MODE_ORDER.filter(
-      (mode) =>
-        firstVersion?.entries?.includes(mode) ||
-        Boolean(firstVersion?.stepsByEntry?.[mode]) ||
-        Boolean(firstVersion?.mediaByEntry?.[mode]),
-    );
-
-    return {
-      hanmi: firstVersion?.hanmi ?? 'ai-hanmi',
-      direction: (availableDirections[0] ?? 'irimi') as Direction,
-      weapon:
-        technique.weapon && technique.weapon !== 'empty-hand'
-          ? (technique.weapon as WeaponKind)
-          : 'empty',
-      versionId: firstVersion?.id ?? null,
-    };
-  };
-
-  const toggleBookmark = (
-    technique: Technique,
-    entry: Progress | null,
-    bookmarkedVariant: TechniqueVariantKey,
-  ): void => {
-    const currentKeys = getBookmarkedVariantKeys(entry);
-    const activeKey = toVariantStorageKey(bookmarkedVariant);
-    const hasLegacyGlobalBookmark = currentKeys.length === 0 && Boolean(entry?.bookmarked);
-    const hasCurrent = hasLegacyGlobalBookmark || currentKeys.includes(activeKey);
-    const nextKeys = hasCurrent
-      ? currentKeys.filter((key) => key !== activeKey)
-      : [...currentKeys, activeKey];
-    const nextBookmarked = nextKeys.length > 0;
-    const latestKey = nextKeys[nextKeys.length - 1];
-    const latestVariant = latestKey ? fromVariantStorageKey(latestKey) : null;
-
-    updateProgress(technique.id, {
-      bookmarked: nextBookmarked,
-      bookmarkedVariant: nextBookmarked ? (latestVariant ?? bookmarkedVariant) : undefined,
-      bookmarkedVariantKeys: nextKeys,
-    });
-  };
-
-  const toggleExerciseBookmark = (exerciseId: string, nextBookmarked: boolean): void => {
-    updateExerciseProgress(exerciseId, {
-      bookmarked: nextBookmarked,
-    });
   };
 
   const techniqueNotFound =
@@ -3034,25 +2454,7 @@ export default function App({
         openPracticeExercise(slug);
         closeSearch();
       }}
-      onToggleSearchTechniqueBookmark={(techniqueId) => {
-        const progressEntry = db.progress.find((p) => p.techniqueId === techniqueId) ?? null;
-        const techniqueEntry = db.techniques.find((t) => t.id === techniqueId);
-        if (!techniqueEntry) return;
-
-        const currentKeys = getBookmarkedVariantKeys(progressEntry);
-        if (currentKeys.length > 0) {
-          updateProgress(techniqueId, { bookmarked: false });
-          return;
-        }
-
-        const fallbackVariant =
-          progressEntry?.bookmarkedVariant ?? getFallbackVariantForTechnique(techniqueEntry);
-        updateProgress(techniqueId, {
-          bookmarked: true,
-          bookmarkedVariant: fallbackVariant,
-          bookmarkedVariantKeys: [toVariantStorageKey(fallbackVariant)],
-        });
-      }}
+      onToggleSearchTechniqueBookmark={toggleSearchTechniqueBookmark}
       onToggleSearchGlossaryBookmark={(termId) =>
         updateGlossaryProgress(termId, {
           bookmarked: !db.glossaryProgress.find((g) => g.termId === termId)?.bookmarked,

@@ -2,15 +2,12 @@ import { ENTRY_MODE_ORDER, isEntryMode } from '@shared/constants/entryModes';
 import type {
   Collection,
   EntryMode,
-  ExerciseProgress,
   Filters,
   GlossaryBookmarkCollection,
-  GlossaryProgress,
-  Progress,
   Technique,
   Theme,
 } from '@shared/types';
-import { unique, upsert } from '@shared/utils/array';
+import { unique } from '@shared/utils/array';
 
 type CollectionOption = {
   id: string;
@@ -26,141 +23,11 @@ export const generateId = (): string => {
   return Math.random().toString(36).slice(2, 11);
 };
 
-export const appendCollectionItem = (
-  collections: Collection[],
-  collectionId: string,
-  itemId: string,
-  updatedAt: number,
-): Collection[] => {
-  let changed = false;
-  const nextCollections = collections.map((collection) => {
-    if (collection.id !== collectionId) return collection;
-    if (collection.itemIds.includes(itemId)) return collection;
-    changed = true;
-    return {
-      ...collection,
-      itemIds: [...collection.itemIds, itemId],
-      updatedAt,
-    };
-  });
-
-  return changed ? nextCollections : collections;
-};
-
-export const removeCollectionItem = (
-  collections: Collection[],
-  collectionId: string,
-  itemId: string,
-  updatedAt: number,
-): Collection[] => {
-  let changed = false;
-  const nextCollections = collections.map((collection) => {
-    if (collection.id !== collectionId) return collection;
-    if (!collection.itemIds.includes(itemId)) return collection;
-    changed = true;
-    return {
-      ...collection,
-      itemIds: collection.itemIds.filter((id) => id !== itemId),
-      updatedAt,
-    };
-  });
-
-  return changed ? nextCollections : collections;
-};
-
-export const removeCollectionItemFromAll = (
-  collections: Collection[],
-  itemId: string,
-  updatedAt: number,
-): Collection[] => {
-  let changed = false;
-  const nextCollections = collections.map((collection) => {
-    if (!collection.itemIds.includes(itemId)) return collection;
-    changed = true;
-    return {
-      ...collection,
-      itemIds: collection.itemIds.filter((id) => id !== itemId),
-      updatedAt,
-    };
-  });
-
-  return changed ? nextCollections : collections;
-};
-
 export const getSystemTheme = (): Theme => {
   if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
     return 'light';
   }
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-};
-
-export const updateProgressEntry = (
-  progress: Progress[],
-  id: string,
-  patch: Partial<Progress>,
-): Progress[] => {
-  const existing = progress.find((entry) => entry.techniqueId === id);
-  const timestamp = Date.now();
-  const baseline: Progress = existing ?? {
-    techniqueId: id,
-    bookmarked: false,
-    updatedAt: timestamp,
-  };
-
-  const nextEntry: Progress = {
-    ...baseline,
-    ...patch,
-    techniqueId: id,
-    updatedAt: timestamp,
-  };
-
-  return upsert(progress, (entry) => entry.techniqueId === id, nextEntry);
-};
-
-export const updateGlossaryProgressEntry = (
-  glossaryProgress: GlossaryProgress[],
-  termId: string,
-  patch: Partial<GlossaryProgress>,
-): GlossaryProgress[] => {
-  const existing = glossaryProgress.find((entry) => entry.termId === termId);
-  const timestamp = Date.now();
-  const baseline: GlossaryProgress = existing ?? {
-    termId,
-    bookmarked: false,
-    updatedAt: timestamp,
-  };
-
-  const nextEntry: GlossaryProgress = {
-    ...baseline,
-    ...patch,
-    termId,
-    updatedAt: timestamp,
-  };
-
-  return upsert(glossaryProgress, (entry) => entry.termId === termId, nextEntry);
-};
-
-export const updateExerciseProgressEntry = (
-  exerciseProgress: ExerciseProgress[],
-  exerciseId: string,
-  patch: Partial<ExerciseProgress>,
-): ExerciseProgress[] => {
-  const existing = exerciseProgress.find((entry) => entry.exerciseId === exerciseId);
-  const timestamp = Date.now();
-  const baseline: ExerciseProgress = existing ?? {
-    exerciseId,
-    bookmarked: false,
-    updatedAt: timestamp,
-  };
-
-  const nextEntry: ExerciseProgress = {
-    ...baseline,
-    ...patch,
-    exerciseId,
-    updatedAt: timestamp,
-  };
-
-  return upsert(exerciseProgress, (entry) => entry.exerciseId === exerciseId, nextEntry);
 };
 
 export const getGlossaryCollectionOptions = (
