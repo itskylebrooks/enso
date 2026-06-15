@@ -26,13 +26,10 @@ import {
 } from '@shared/navigation/appRoutes';
 import { useAppNavigation } from '@shared/navigation/useAppNavigation';
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactElement } from 'react';
-import type { ExerciseFilters } from './features/exercises';
 import { authService } from './lib/backend/auth';
 import { syncClient } from './lib/backend/sync';
 import {
   applySyncedDBState,
-  buildHomepageState,
-  buildSettingsState,
   buildSyncPayloadData,
   buildTombstonesForSyncedState,
   computeDBUpdatedAt,
@@ -47,52 +44,38 @@ import type {
   SyncTombstones,
 } from './lib/supabase/types';
 import { AppScreenRouter } from './shared/app/AppScreenRouter';
-import { generateId, getGlossaryCollectionOptions, getSystemTheme } from './shared/app/appModel';
+import { generateId, getGlossaryCollectionOptions } from './shared/app/appModel';
+import { stringifyForSyncCompare } from './shared/app/syncSnapshot';
 import { useContentController } from './shared/app/useContentController';
+import { usePreferencesController } from './shared/app/usePreferencesController';
 import { useUserLibraryController } from './shared/app/useUserLibraryController';
 import { getCopy } from './shared/constants/i18n';
 import useLockBodyScroll from './shared/hooks/useLockBodyScroll';
 import {
   clearDB,
   clearFilters,
-  clearThemePreference,
-  hasStoredTheme,
-  loadBeltPromptDismissed,
   loadDB,
   loadDefaultDB,
-  loadFilterPanelPinned,
-  loadFilters,
   loadOnboardingCompleted,
   loadOnboardingDismissed,
   loadOnboardingStep,
-  loadPinnedBeltGrade,
-  loadStoredLocale,
   loadSyncMeta,
-  loadTheme,
-  saveBeltPromptDismissed,
   saveDB,
-  saveFilterPanelPinned,
-  saveFilters,
-  saveLocale,
   saveOnboardingCompleted,
   saveOnboardingDismissed,
   saveOnboardingStep,
-  savePinnedBeltGrade,
   saveSyncMeta,
-  saveTheme,
 } from './shared/services/storageService';
 import type {
   AppRoute,
   DB,
   Direction,
   EntryMode,
-  Filters,
   Grade,
   GuideRoutine,
   Locale,
   TechniqueVariant,
   TechniqueVariantKey,
-  Theme,
   WeaponKind,
 } from './shared/types';
 import {
@@ -102,8 +85,6 @@ import {
 } from './shared/utils/navigationLifecycle';
 import { isStudyCollectionId } from './shared/utils/studyStatus';
 
-const defaultFilters: Filters = {};
-
 type SyncStatus = 'signed-out' | 'idle' | 'syncing' | 'error';
 
 const AUTH_TRIGGERED_SYNC_MIN_INTERVAL_MS = 60_000;
@@ -112,24 +93,6 @@ type LastAppliedSyncSnapshot = {
   db: string;
   settings: string;
   homepage: string;
-};
-
-const stringifyForSyncCompare = (value: unknown): string => {
-  if (value === null || typeof value !== 'object') {
-    return JSON.stringify(value);
-  }
-
-  if (Array.isArray(value)) {
-    return `[${value.map(stringifyForSyncCompare).join(',')}]`;
-  }
-
-  const entries = Object.entries(value as Record<string, unknown>)
-    .filter(([, entryValue]) => entryValue !== undefined)
-    .sort(([left], [right]) => left.localeCompare(right));
-
-  return `{${entries
-    .map(([key, entryValue]) => `${JSON.stringify(key)}:${stringifyForSyncCompare(entryValue)}`)
-    .join(',')}}`;
 };
 
 const normalizeTourSegmentIndex = (value: number | null | undefined): number => {
@@ -191,28 +154,8 @@ export default function App({
   initialRoute,
   initialSlug,
 }: AppProps): ReactElement {
-  const [locale, setLocale] = useState<Locale>(initialLocale);
-  const [isLocaleReady, setIsLocaleReady] = useState(false);
-  const [isHomePrefsReady, setIsHomePrefsReady] = useState(false);
-  const [theme, setTheme] = useState<Theme>(() => loadTheme());
-  const [hasManualTheme, setHasManualTheme] = useState<boolean>(() => hasStoredTheme());
   const [db, setDB] = useState<DB>(() => loadDefaultDB());
   const [isDBReady, setIsDBReady] = useState(false);
-  const [filters, setFilters] = useState<Filters>(() => {
-    try {
-      const persisted = loadFilters<Filters>();
-      return persisted ?? defaultFilters;
-    } catch {
-      return defaultFilters;
-    }
-  });
-  const [glossaryFilters, setGlossaryFilters] = useState<{
-    category?: 'movement' | 'stance' | 'attack' | 'etiquette' | 'philosophy' | 'other';
-  }>({});
-  const [practiceFilters, setPracticeFilters] = useState<ExerciseFilters>({
-    categories: [],
-    equipment: [],
-  });
   const [selectedCollectionId, setSelectedCollectionId] = useState<SelectedCollectionId>('all');
   const { route, setRoute, activeSlug, setActiveSlug, navigateTo } = useAppNavigation({
     initialRoute,
@@ -225,8 +168,6 @@ export default function App({
   const [toast, setToast] = useState<string | null>(null);
   const [feedbackInitialType, setFeedbackInitialType] = useState<FeedbackType | null>(null);
   const [learnSession, setLearnSession] = useState<LearnSession | null>(null);
-  const [pinnedBeltGrade, setPinnedBeltGrade] = useState<Grade | null>(null);
-  const [beltPromptDismissed, setBeltPromptDismissed] = useState<boolean>(false);
   const [onboardingDismissed, setOnboardingDismissed] = useState<boolean>(() =>
     loadOnboardingDismissed(),
   );
@@ -248,6 +189,61 @@ export default function App({
     typeof navigator === 'undefined' ? true : navigator.onLine,
   );
 
+  const searchTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const settingsTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const settingsClearButtonRef = useRef<HTMLButtonElement | null>(null);
+  const toastTimeoutRef = useRef<number | null>(null);
+  const pendingScrollToTopRef = useRef(false);
+  const isInitialMountRef = useRef(true);
+  const dbPersistedRef = useRef(false);
+  const onboardingDismissedPersistedRef = useRef(false);
+  const onboardingCompletedPersistedRef = useRef(false);
+  const syncPauseAutoPushRef = useRef(false);
+  const syncInFlightRef = useRef(false);
+  const syncDirtyRef = useRef(false);
+  const syncDirtyDuringFlightRef = useRef(false);
+  const syncMutationVersionRef = useRef(0);
+  const syncDebounceTimeoutRef = useRef<number | null>(null);
+  const authAccessTokenRef = useRef<string | null>(null);
+  const lastAuthTriggeredSyncAtRef = useRef(0);
+  const runSyncWithTokenRef = useRef<(accessToken: string) => Promise<void>>(async () => {});
+  const lastAppliedSyncSnapshotRef = useRef<Partial<LastAppliedSyncSnapshot>>({});
+  const markSettingsChangedRef = useRef<() => void>(() => {});
+  const markHomepageChangedRef = useRef<() => void>(() => {});
+  const scheduleAutoSyncRef = useRef<() => void>(() => {});
+  const markSettingsChangedForPreferences = useCallback(() => {
+    markSettingsChangedRef.current();
+  }, []);
+  const markHomepageChangedForPreferences = useCallback(() => {
+    markHomepageChangedRef.current();
+  }, []);
+  const scheduleAutoSyncForPreferences = useCallback(() => {
+    scheduleAutoSyncRef.current();
+  }, []);
+  const {
+    settings: { locale, theme, hasManualTheme, filters, glossaryFilters, practiceFilters },
+    homepage: { pinnedBeltGrade, beltPromptDismissed },
+    actions: {
+      setFilters,
+      setGlossaryFilters,
+      setPracticeFilters,
+      setBeltPromptDismissed,
+      handleLocaleChange,
+      handleThemeChange,
+      togglePinnedBeltGrade,
+    },
+    sync: preferencesSync,
+  } = usePreferencesController({
+    initialLocale,
+    onboardingDismissed,
+    onboardingCompleted,
+    markSettingsChanged: markSettingsChangedForPreferences,
+    markHomepageChanged: markHomepageChangedForPreferences,
+    scheduleAutoSync: scheduleAutoSyncForPreferences,
+    setSyncMeta,
+    syncPauseAutoPushRef,
+    lastAppliedSyncSnapshotRef,
+  });
   const copy = getCopy(locale);
   const { pageMotion, prefersReducedMotion } = useMotionPreferences();
   const {
@@ -275,31 +271,6 @@ export default function App({
     locale,
     copy,
   });
-  const searchTriggerRef = useRef<HTMLButtonElement | null>(null);
-  const settingsTriggerRef = useRef<HTMLButtonElement | null>(null);
-  const settingsClearButtonRef = useRef<HTMLButtonElement | null>(null);
-  const toastTimeoutRef = useRef<number | null>(null);
-  const pendingScrollToTopRef = useRef(false);
-  const isInitialMountRef = useRef(true);
-  const dbPersistedRef = useRef(false);
-  const settingsPersistedRef = useRef(false);
-  const localePersistedRef = useRef(false);
-  const filtersPersistedRef = useRef(false);
-  const pinnedBeltPersistedRef = useRef(false);
-  const beltPromptPersistedRef = useRef(false);
-  const onboardingDismissedPersistedRef = useRef(false);
-  const onboardingCompletedPersistedRef = useRef(false);
-  const syncPauseAutoPushRef = useRef(false);
-  const syncInFlightRef = useRef(false);
-  const syncDirtyRef = useRef(false);
-  const syncDirtyDuringFlightRef = useRef(false);
-  const syncMutationVersionRef = useRef(0);
-  const syncDebounceTimeoutRef = useRef<number | null>(null);
-  const authAccessTokenRef = useRef<string | null>(null);
-  const lastAuthTriggeredSyncAtRef = useRef(0);
-  const runSyncWithTokenRef = useRef<(accessToken: string) => Promise<void>>(async () => {});
-  const lastAppliedSyncSnapshotRef = useRef<Partial<LastAppliedSyncSnapshot>>({});
-  const filterPanelPinnedRef = useRef<boolean>(loadFilterPanelPinned());
   // Detect if this render follows a back/forward restore and skip entrance
   // animations to avoid the brief re-appearance/flicker on iOS Safari.
   const skipEntranceAnimations = cameFromBackForwardNavigation();
@@ -437,19 +408,8 @@ export default function App({
 
     return buildSyncPayloadData({
       db: syncedDB,
-      settings: buildSettingsState({
-        themePreference: hasManualTheme ? theme : null,
-        locale,
-        filters,
-        filterPanelPinned: loadFilterPanelPinned(),
-      }),
-      homepage: buildHomepageState({
-        pinnedBeltGrade,
-        beltPromptDismissed,
-        onboardingDismissed,
-        onboardingCompleted,
-        onboardingStep: loadOnboardingStep(),
-      }),
+      settings: preferencesSync.buildSettingsState(),
+      homepage: preferencesSync.buildHomepageState(),
       timestamps: {
         db: dbTimestamp,
         settings: syncMeta.settingsUpdatedAt,
@@ -458,19 +418,12 @@ export default function App({
       tombstones,
     });
   }, [
-    beltPromptDismissed,
     db,
-    filters,
-    hasManualTheme,
-    locale,
-    onboardingCompleted,
-    onboardingDismissed,
-    pinnedBeltGrade,
+    preferencesSync,
     syncMeta.dbUpdatedAt,
     syncMeta.homepageUpdatedAt,
     syncMeta.settingsUpdatedAt,
     syncMeta.tombstones,
-    theme,
   ]);
 
   const getCurrentDBSyncSnapshot = useCallback(
@@ -478,31 +431,9 @@ export default function App({
     [db],
   );
 
-  const getCurrentSettingsSyncSnapshot = useCallback(
-    (): string =>
-      stringifyForSyncCompare(
-        buildSettingsState({
-          themePreference: hasManualTheme ? theme : null,
-          locale,
-          filters,
-          filterPanelPinned: loadFilterPanelPinned(),
-        }),
-      ),
-    [filters, hasManualTheme, locale, theme],
-  );
-
   const getCurrentHomepageSyncSnapshot = useCallback(
-    (): string =>
-      stringifyForSyncCompare(
-        buildHomepageState({
-          pinnedBeltGrade,
-          beltPromptDismissed,
-          onboardingDismissed,
-          onboardingCompleted,
-          onboardingStep: loadOnboardingStep(),
-        }),
-      ),
-    [beltPromptDismissed, onboardingCompleted, onboardingDismissed, pinnedBeltGrade],
+    (): string => preferencesSync.getCurrentHomepageSyncSnapshot(),
+    [preferencesSync],
   );
 
   const applySyncPayloadToLocalState = useCallback(
@@ -516,26 +447,11 @@ export default function App({
 
       setDB((prev) => applySyncedDBState(prev, payload.db));
 
-      const nextThemePreference = payload.settings.themePreference;
-      if (nextThemePreference === null) {
-        setHasManualTheme(false);
-        setTheme(getSystemTheme());
-      } else {
-        setHasManualTheme(true);
-        setTheme(nextThemePreference);
-      }
-
-      setLocale(payload.settings.locale);
-      setFilters(payload.settings.filters ?? defaultFilters);
-      saveFilterPanelPinned(payload.settings.filterPanelPinned);
-      filterPanelPinnedRef.current = payload.settings.filterPanelPinned;
-
-      setPinnedBeltGrade(payload.homepage.pinnedBeltGrade);
-      setBeltPromptDismissed(payload.homepage.beltPromptDismissed);
-      setOnboardingDismissed(payload.homepage.onboardingDismissed);
-      setOnboardingCompleted(payload.homepage.onboardingCompleted);
-      saveOnboardingStep(payload.homepage.onboardingStep);
-      setTourSegmentIndex(normalizeTourSegmentIndex(payload.homepage.onboardingStep));
+      const syncedPreferences = preferencesSync.applySyncedPreferences(payload);
+      setOnboardingDismissed(syncedPreferences.onboardingDismissed);
+      setOnboardingCompleted(syncedPreferences.onboardingCompleted);
+      saveOnboardingStep(syncedPreferences.onboardingStep);
+      setTourSegmentIndex(normalizeTourSegmentIndex(syncedPreferences.onboardingStep));
 
       const now = syncedAt ?? Date.now();
       persistSyncMeta({
@@ -554,7 +470,7 @@ export default function App({
         syncPauseAutoPushRef.current = false;
       }
     },
-    [persistSyncMeta],
+    [persistSyncMeta, preferencesSync],
   );
 
   const runSyncWithToken = useCallback(
@@ -636,6 +552,7 @@ export default function App({
       }, 1200);
     }
   }, []);
+  scheduleAutoSyncRef.current = scheduleAutoSync;
 
   const syncNow = useCallback(async (): Promise<void> => {
     if (!authSession?.accessToken) {
@@ -781,31 +698,6 @@ export default function App({
       cancelled = true;
     };
   }, [runAuthTriggeredSync]);
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    const intervalId = window.setInterval(() => {
-      const pinned = loadFilterPanelPinned();
-      if (pinned !== filterPanelPinnedRef.current) {
-        filterPanelPinnedRef.current = pinned;
-        const now = Date.now();
-        setSyncMeta((prev) => {
-          const nextMeta: SyncMetaState = {
-            ...prev,
-            settingsUpdatedAt: now,
-          };
-          saveSyncMeta(nextMeta);
-          return nextMeta;
-        });
-        scheduleAutoSync();
-      }
-    }, 1500);
-
-    return () => {
-      window.clearInterval(intervalId);
-    };
-  }, [scheduleAutoSync]);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -991,69 +883,8 @@ export default function App({
     });
     scheduleAutoSync();
   }, [markSyncMutationPending, scheduleAutoSync]);
-
-  useEffect(() => {
-    const root = document.documentElement;
-    if (theme === 'dark') {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
-  }, [theme]);
-
-  useEffect(() => {
-    if (hasManualTheme) {
-      saveTheme(theme);
-    } else {
-      clearThemePreference();
-    }
-
-    if (!settingsPersistedRef.current) {
-      settingsPersistedRef.current = true;
-      return;
-    }
-
-    if (syncPauseAutoPushRef.current) {
-      return;
-    }
-
-    if (lastAppliedSyncSnapshotRef.current.settings === getCurrentSettingsSyncSnapshot()) {
-      return;
-    }
-
-    markSettingsChanged();
-  }, [getCurrentSettingsSyncSnapshot, hasManualTheme, markSettingsChanged, theme]);
-
-  useEffect(() => {
-    setLocale(loadStoredLocale() ?? initialLocale);
-    setIsLocaleReady(true);
-  }, [initialLocale]);
-
-  useEffect(() => {
-    setPinnedBeltGrade(loadPinnedBeltGrade());
-    setBeltPromptDismissed(loadBeltPromptDismissed());
-    setIsHomePrefsReady(true);
-  }, []);
-
-  useEffect(() => {
-    if (!isLocaleReady) return;
-    saveLocale(locale);
-
-    if (!localePersistedRef.current) {
-      localePersistedRef.current = true;
-      return;
-    }
-
-    if (syncPauseAutoPushRef.current) {
-      return;
-    }
-
-    if (lastAppliedSyncSnapshotRef.current.settings === getCurrentSettingsSyncSnapshot()) {
-      return;
-    }
-
-    markSettingsChanged();
-  }, [getCurrentSettingsSyncSnapshot, isLocaleReady, locale, markSettingsChanged]);
+  markSettingsChangedRef.current = markSettingsChanged;
+  markHomepageChangedRef.current = markHomepageChanged;
 
   useEffect(() => {
     setDB(loadDB());
@@ -1079,46 +910,6 @@ export default function App({
 
     markDBChanged();
   }, [db, getCurrentDBSyncSnapshot, isDBReady, markDBChanged]);
-
-  useEffect(() => {
-    if (!isHomePrefsReady) return;
-    savePinnedBeltGrade(pinnedBeltGrade);
-
-    if (!pinnedBeltPersistedRef.current) {
-      pinnedBeltPersistedRef.current = true;
-      return;
-    }
-
-    if (syncPauseAutoPushRef.current) {
-      return;
-    }
-
-    if (lastAppliedSyncSnapshotRef.current.homepage === getCurrentHomepageSyncSnapshot()) {
-      return;
-    }
-
-    markHomepageChanged();
-  }, [getCurrentHomepageSyncSnapshot, isHomePrefsReady, markHomepageChanged, pinnedBeltGrade]);
-
-  useEffect(() => {
-    if (!isHomePrefsReady) return;
-    saveBeltPromptDismissed(beltPromptDismissed);
-
-    if (!beltPromptPersistedRef.current) {
-      beltPromptPersistedRef.current = true;
-      return;
-    }
-
-    if (syncPauseAutoPushRef.current) {
-      return;
-    }
-
-    if (lastAppliedSyncSnapshotRef.current.homepage === getCurrentHomepageSyncSnapshot()) {
-      return;
-    }
-
-    markHomepageChanged();
-  }, [beltPromptDismissed, getCurrentHomepageSyncSnapshot, isHomePrefsReady, markHomepageChanged]);
 
   useEffect(() => {
     saveOnboardingDismissed(onboardingDismissed);
@@ -1158,30 +949,6 @@ export default function App({
     markHomepageChanged();
   }, [getCurrentHomepageSyncSnapshot, markHomepageChanged, onboardingCompleted]);
 
-  // Persist filters to local storage so they survive reloads/navigation
-  useEffect(() => {
-    try {
-      saveFilters(filters);
-    } catch {
-      // noop
-    }
-
-    if (!filtersPersistedRef.current) {
-      filtersPersistedRef.current = true;
-      return;
-    }
-
-    if (syncPauseAutoPushRef.current) {
-      return;
-    }
-
-    if (lastAppliedSyncSnapshotRef.current.settings === getCurrentSettingsSyncSnapshot()) {
-      return;
-    }
-
-    markSettingsChanged();
-  }, [filters, getCurrentSettingsSyncSnapshot, markSettingsChanged]);
-
   useEffect(() => {
     if (selectedCollectionId === 'all' || selectedCollectionId === 'ungrouped') {
       return;
@@ -1196,25 +963,6 @@ export default function App({
   }, [db.collections, selectedCollectionId]);
 
   useKeyboardShortcuts(openSearch);
-
-  useEffect(() => {
-    if (
-      hasManualTheme ||
-      typeof window === 'undefined' ||
-      typeof window.matchMedia !== 'function'
-    ) {
-      return;
-    }
-
-    const media = window.matchMedia('(prefers-color-scheme: dark)');
-    const apply = () => {
-      setTheme(media.matches ? 'dark' : 'light');
-    };
-
-    apply();
-    media.addEventListener('change', apply);
-    return () => media.removeEventListener('change', apply);
-  }, [hasManualTheme]);
 
   const isTechniqueDetailOpen = Boolean(currentTechnique);
   const tourTechniqueSlug = db.techniques[0]?.slug ?? null;
@@ -1249,21 +997,6 @@ export default function App({
     markSyncMutationPending,
     addSyncTombstones,
   });
-
-  const handleLocaleChange = (next: Locale): void => {
-    setLocale(next);
-  };
-
-  const handleThemeChange = (next: Theme | 'system'): void => {
-    if (next === 'system') {
-      setHasManualTheme(false);
-      setTheme(getSystemTheme());
-      return;
-    }
-
-    setHasManualTheme(true);
-    setTheme(next);
-  };
 
   const handleManageSync = useCallback((): void => {
     closeSettings();
@@ -1673,14 +1406,10 @@ export default function App({
     return () => window.clearTimeout(timeoutId);
   }, [showTourCompletionConfetti]);
 
-  const togglePinnedBeltGrade = useCallback((grade: Grade) => {
-    setPinnedBeltGrade((current) => (current === grade ? null : grade));
-  }, []);
-
   const handleOpenGuideFromPrompt = useCallback(() => {
     setBeltPromptDismissed(true);
     navigateTo('guide');
-  }, [navigateTo]);
+  }, [navigateTo, setBeltPromptDismissed]);
 
   const navigateToGuideGrade = useCallback(
     (grade: Grade, sourceRoute?: AppRoute) => {
