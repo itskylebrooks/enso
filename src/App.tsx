@@ -26,28 +26,14 @@ import {
 } from '@shared/navigation/appRoutes';
 import { useAppNavigation } from '@shared/navigation/useAppNavigation';
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactElement } from 'react';
-import { authService } from './lib/backend/auth';
-import { syncClient } from './lib/backend/sync';
-import {
-  applySyncedDBState,
-  buildSyncPayloadData,
-  buildTombstonesForSyncedState,
-  computeDBUpdatedAt,
-  pruneSyncTombstones,
-  mergeSyncPayload,
-  pickSyncedDBState,
-} from './lib/backend/syncMerge';
-import type {
-  AuthSession,
-  SyncMetaState,
-  SyncPayloadData,
-  SyncTombstones,
-} from './lib/supabase/types';
 import { AppScreenRouter } from './shared/app/AppScreenRouter';
 import { generateId, getGlossaryCollectionOptions } from './shared/app/appModel';
-import { stringifyForSyncCompare } from './shared/app/syncSnapshot';
 import { useContentController } from './shared/app/useContentController';
-import { usePreferencesController } from './shared/app/usePreferencesController';
+import {
+  usePreferencesController,
+  type PreferencesSyncController,
+} from './shared/app/usePreferencesController';
+import { useSyncController } from './shared/app/useSyncController';
 import { useUserLibraryController } from './shared/app/useUserLibraryController';
 import { getCopy } from './shared/constants/i18n';
 import useLockBodyScroll from './shared/hooks/useLockBodyScroll';
@@ -59,12 +45,10 @@ import {
   loadOnboardingCompleted,
   loadOnboardingDismissed,
   loadOnboardingStep,
-  loadSyncMeta,
   saveDB,
   saveOnboardingCompleted,
   saveOnboardingDismissed,
   saveOnboardingStep,
-  saveSyncMeta,
 } from './shared/services/storageService';
 import type {
   AppRoute,
@@ -84,16 +68,6 @@ import {
   rememberScrollPosition,
 } from './shared/utils/navigationLifecycle';
 import { isStudyCollectionId } from './shared/utils/studyStatus';
-
-type SyncStatus = 'signed-out' | 'idle' | 'syncing' | 'error';
-
-const AUTH_TRIGGERED_SYNC_MIN_INTERVAL_MS = 60_000;
-
-type LastAppliedSyncSnapshot = {
-  db: string;
-  settings: string;
-  homepage: string;
-};
 
 const normalizeTourSegmentIndex = (value: number | null | undefined): number => {
   if (typeof value !== 'number' || !Number.isFinite(value)) return 0;
@@ -180,14 +154,6 @@ export default function App({
   );
   const [tourCompletionVisible, setTourCompletionVisible] = useState(false);
   const [showTourCompletionConfetti, setShowTourCompletionConfetti] = useState(false);
-  const [authSession, setAuthSession] = useState<AuthSession | null>(null);
-  const [isAuthBootstrapping, setIsAuthBootstrapping] = useState(true);
-  const [syncStatus, setSyncStatus] = useState<SyncStatus>('signed-out');
-  const [syncError, setSyncError] = useState<string | null>(null);
-  const [syncMeta, setSyncMeta] = useState<SyncMetaState>(() => loadSyncMeta());
-  const [isOnline, setIsOnline] = useState<boolean>(
-    typeof navigator === 'undefined' ? true : navigator.onLine,
-  );
 
   const searchTriggerRef = useRef<HTMLButtonElement | null>(null);
   const settingsTriggerRef = useRef<HTMLButtonElement | null>(null);
@@ -198,28 +164,35 @@ export default function App({
   const dbPersistedRef = useRef(false);
   const onboardingDismissedPersistedRef = useRef(false);
   const onboardingCompletedPersistedRef = useRef(false);
-  const syncPauseAutoPushRef = useRef(false);
-  const syncInFlightRef = useRef(false);
-  const syncDirtyRef = useRef(false);
-  const syncDirtyDuringFlightRef = useRef(false);
-  const syncMutationVersionRef = useRef(0);
-  const syncDebounceTimeoutRef = useRef<number | null>(null);
-  const authAccessTokenRef = useRef<string | null>(null);
-  const lastAuthTriggeredSyncAtRef = useRef(0);
-  const runSyncWithTokenRef = useRef<(accessToken: string) => Promise<void>>(async () => {});
-  const lastAppliedSyncSnapshotRef = useRef<Partial<LastAppliedSyncSnapshot>>({});
-  const markSettingsChangedRef = useRef<() => void>(() => {});
-  const markHomepageChangedRef = useRef<() => void>(() => {});
-  const scheduleAutoSyncRef = useRef<() => void>(() => {});
-  const markSettingsChangedForPreferences = useCallback(() => {
-    markSettingsChangedRef.current();
-  }, []);
-  const markHomepageChangedForPreferences = useCallback(() => {
-    markHomepageChangedRef.current();
-  }, []);
-  const scheduleAutoSyncForPreferences = useCallback(() => {
-    scheduleAutoSyncRef.current();
-  }, []);
+  const preferencesSyncRef = useRef<PreferencesSyncController | null>(null);
+  const {
+    state: { authSession, isAuthBootstrapping, syncStatus, syncError, syncMeta, isOnline },
+    refs: { syncPauseAutoPushRef, lastAppliedSyncSnapshotRef },
+    actions: {
+      setSyncMeta,
+      markSyncMutationPending,
+      addSyncTombstones,
+      markDBChanged,
+      markSettingsChanged,
+      markHomepageChanged,
+      scheduleAutoSync,
+      syncNow,
+      requestOtpForSync,
+      verifyOtpForSync,
+      signOutFromSync,
+      deleteAccountFromSync,
+      markSyncedDBCleared,
+      getCurrentDBSyncSnapshot,
+      getCurrentHomepageSyncSnapshot,
+    },
+  } = useSyncController({
+    db,
+    setDB,
+    preferencesSyncRef,
+    setOnboardingDismissed,
+    setOnboardingCompleted,
+    setTourSegmentIndex,
+  });
   const {
     settings: { locale, theme, hasManualTheme, filters, glossaryFilters, practiceFilters },
     homepage: { pinnedBeltGrade, beltPromptDismissed },
@@ -237,13 +210,14 @@ export default function App({
     initialLocale,
     onboardingDismissed,
     onboardingCompleted,
-    markSettingsChanged: markSettingsChangedForPreferences,
-    markHomepageChanged: markHomepageChangedForPreferences,
-    scheduleAutoSync: scheduleAutoSyncForPreferences,
+    markSettingsChanged,
+    markHomepageChanged,
+    scheduleAutoSync,
     setSyncMeta,
     syncPauseAutoPushRef,
     lastAppliedSyncSnapshotRef,
   });
+  preferencesSyncRef.current = preferencesSync;
   const copy = getCopy(locale);
   const { pageMotion, prefersReducedMotion } = useMotionPreferences();
   const {
@@ -355,379 +329,14 @@ export default function App({
       if (toastTimeoutRef.current && typeof window !== 'undefined') {
         window.clearTimeout(toastTimeoutRef.current);
       }
-
-      if (syncDebounceTimeoutRef.current && typeof window !== 'undefined') {
-        window.clearTimeout(syncDebounceTimeoutRef.current);
-      }
     },
     [],
   );
-
-  const persistSyncMeta = useCallback((nextMeta: SyncMetaState): void => {
-    setSyncMeta(nextMeta);
-    saveSyncMeta(nextMeta);
-  }, []);
-
-  const markSyncMutationPending = useCallback((): void => {
-    if (syncPauseAutoPushRef.current) return;
-    syncMutationVersionRef.current += 1;
-    syncDirtyRef.current = true;
-    if (syncInFlightRef.current) {
-      syncDirtyDuringFlightRef.current = true;
-    }
-  }, []);
-
-  const addSyncTombstones = useCallback(
-    (tombstones: SyncTombstones): void => {
-      if (Object.keys(tombstones).length === 0) return;
-
-      markSyncMutationPending();
-
-      setSyncMeta((prev) => {
-        const nextTombstones: SyncTombstones = { ...prev.tombstones };
-        Object.entries(tombstones).forEach(([key, deletedAt]) => {
-          nextTombstones[key] = Math.max(nextTombstones[key] ?? 0, deletedAt);
-        });
-        const nextMeta: SyncMetaState = {
-          ...prev,
-          dbUpdatedAt: Math.max(prev.dbUpdatedAt, ...Object.values(tombstones)),
-          tombstones: pruneSyncTombstones(nextTombstones),
-        };
-        saveSyncMeta(nextMeta);
-        return nextMeta;
-      });
-    },
-    [markSyncMutationPending],
-  );
-
-  const buildLocalSyncPayload = useCallback((): SyncPayloadData => {
-    const syncedDB = pickSyncedDBState(db);
-    const tombstones = pruneSyncTombstones(syncMeta.tombstones);
-    const computedDbUpdatedAt = computeDBUpdatedAt(syncedDB, tombstones);
-    const dbTimestamp = Math.max(syncMeta.dbUpdatedAt, computedDbUpdatedAt);
-
-    return buildSyncPayloadData({
-      db: syncedDB,
-      settings: preferencesSync.buildSettingsState(),
-      homepage: preferencesSync.buildHomepageState(),
-      timestamps: {
-        db: dbTimestamp,
-        settings: syncMeta.settingsUpdatedAt,
-        homepage: syncMeta.homepageUpdatedAt,
-      },
-      tombstones,
-    });
-  }, [
-    db,
-    preferencesSync,
-    syncMeta.dbUpdatedAt,
-    syncMeta.homepageUpdatedAt,
-    syncMeta.settingsUpdatedAt,
-    syncMeta.tombstones,
-  ]);
-
-  const getCurrentDBSyncSnapshot = useCallback(
-    (): string => stringifyForSyncCompare(pickSyncedDBState(db)),
-    [db],
-  );
-
-  const getCurrentHomepageSyncSnapshot = useCallback(
-    (): string => preferencesSync.getCurrentHomepageSyncSnapshot(),
-    [preferencesSync],
-  );
-
-  const applySyncPayloadToLocalState = useCallback(
-    (payload: SyncPayloadData, syncedAt?: number): void => {
-      syncPauseAutoPushRef.current = true;
-      lastAppliedSyncSnapshotRef.current = {
-        db: stringifyForSyncCompare(payload.db),
-        settings: stringifyForSyncCompare(payload.settings),
-        homepage: stringifyForSyncCompare(payload.homepage),
-      };
-
-      setDB((prev) => applySyncedDBState(prev, payload.db));
-
-      const syncedPreferences = preferencesSync.applySyncedPreferences(payload);
-      setOnboardingDismissed(syncedPreferences.onboardingDismissed);
-      setOnboardingCompleted(syncedPreferences.onboardingCompleted);
-      saveOnboardingStep(syncedPreferences.onboardingStep);
-      setTourSegmentIndex(normalizeTourSegmentIndex(syncedPreferences.onboardingStep));
-
-      const now = syncedAt ?? Date.now();
-      persistSyncMeta({
-        dbUpdatedAt: payload.timestamps.db,
-        settingsUpdatedAt: payload.timestamps.settings,
-        homepageUpdatedAt: payload.timestamps.homepage,
-        lastSyncedAt: now,
-        tombstones: pruneSyncTombstones(payload.tombstones, now),
-      });
-
-      if (typeof window !== 'undefined') {
-        window.setTimeout(() => {
-          syncPauseAutoPushRef.current = false;
-        }, 0);
-      } else {
-        syncPauseAutoPushRef.current = false;
-      }
-    },
-    [persistSyncMeta, preferencesSync],
-  );
-
-  const runSyncWithToken = useCallback(
-    async (accessToken: string): Promise<void> => {
-      if (syncInFlightRef.current) {
-        syncDirtyRef.current = true;
-        syncDirtyDuringFlightRef.current = true;
-        return;
-      }
-
-      syncInFlightRef.current = true;
-      setSyncStatus('syncing');
-      setSyncError(null);
-
-      try {
-        let shouldSyncAgain = true;
-        while (shouldSyncAgain) {
-          shouldSyncAgain = false;
-          syncDirtyDuringFlightRef.current = false;
-          const startedMutationVersion = syncMutationVersionRef.current;
-          const localPayload = buildLocalSyncPayload();
-          const pullResponse = await syncClient.pull(accessToken);
-
-          const mergedPayload = pullResponse.payload
-            ? mergeSyncPayload(localPayload, pullResponse.payload)
-            : localPayload;
-
-          const pushResponse = await syncClient.push(accessToken, mergedPayload);
-          const changedDuringFlight =
-            syncDirtyDuringFlightRef.current ||
-            syncMutationVersionRef.current !== startedMutationVersion;
-
-          if (changedDuringFlight) {
-            syncDirtyRef.current = true;
-            shouldSyncAgain = true;
-          } else {
-            applySyncPayloadToLocalState(pushResponse.payload, Date.now());
-            syncDirtyRef.current = false;
-          }
-        }
-        setSyncStatus('idle');
-      } catch (error) {
-        const message = error instanceof Error ? error.message : 'Sync failed';
-        if (message === 'Unauthorized') {
-          authAccessTokenRef.current = null;
-          setAuthSession(null);
-          setSyncError(null);
-          setSyncStatus('signed-out');
-        } else {
-          syncDirtyRef.current = true;
-          setSyncError(message);
-          setSyncStatus('error');
-        }
-      } finally {
-        syncInFlightRef.current = false;
-      }
-    },
-    [applySyncPayloadToLocalState, buildLocalSyncPayload],
-  );
-
-  useEffect(() => {
-    runSyncWithTokenRef.current = runSyncWithToken;
-  }, [runSyncWithToken]);
-
-  const scheduleAutoSync = useCallback((): void => {
-    if (!authAccessTokenRef.current || syncPauseAutoPushRef.current) {
-      return;
-    }
-
-    if (syncDebounceTimeoutRef.current && typeof window !== 'undefined') {
-      window.clearTimeout(syncDebounceTimeoutRef.current);
-    }
-
-    if (typeof window !== 'undefined') {
-      syncDebounceTimeoutRef.current = window.setTimeout(() => {
-        if (authAccessTokenRef.current) {
-          void runSyncWithTokenRef.current(authAccessTokenRef.current);
-        }
-      }, 1200);
-    }
-  }, []);
-  scheduleAutoSyncRef.current = scheduleAutoSync;
-
-  const syncNow = useCallback(async (): Promise<void> => {
-    if (!authSession?.accessToken) {
-      setSyncStatus('signed-out');
-      return;
-    }
-
-    await runSyncWithToken(authSession.accessToken);
-  }, [authSession?.accessToken, runSyncWithToken]);
-
-  const runAuthTriggeredSync = useCallback((accessToken: string): void => {
-    const now = Date.now();
-    const shouldSync =
-      syncDirtyRef.current ||
-      now - lastAuthTriggeredSyncAtRef.current >= AUTH_TRIGGERED_SYNC_MIN_INTERVAL_MS;
-
-    if (!shouldSync) return;
-
-    lastAuthTriggeredSyncAtRef.current = now;
-    void runSyncWithTokenRef.current(accessToken);
-  }, []);
-
-  const requestOtpForSync = useCallback(async (email: string): Promise<void> => {
-    try {
-      await authService.requestEmailOtp(email);
-      setSyncStatus('signed-out');
-      setSyncError(null);
-    } catch (error) {
-      setSyncStatus('error');
-      setSyncError(error instanceof Error ? error.message : 'Failed to send sign-in email');
-    }
-  }, []);
-
-  const verifyOtpForSync = useCallback(
-    async (email: string, token: string): Promise<void> => {
-      try {
-        const session = await authService.verifyEmailOtp(email, token);
-        authAccessTokenRef.current = session.accessToken;
-        setAuthSession(session);
-        setSyncStatus('idle');
-        setSyncError(null);
-        await runSyncWithToken(session.accessToken);
-      } catch (error) {
-        setSyncStatus('error');
-        setSyncError(error instanceof Error ? error.message : 'Code verification failed');
-      }
-    },
-    [runSyncWithToken],
-  );
-
-  const signOutFromSync = useCallback(async (): Promise<void> => {
-    await authService.signOut();
-    authAccessTokenRef.current = null;
-    setAuthSession(null);
-    setSyncStatus('signed-out');
-    setSyncError(null);
-  }, []);
-
-  const deleteAccountFromSync = useCallback(async (): Promise<void> => {
-    if (!authSession?.accessToken) {
-      setSyncStatus('signed-out');
-      return;
-    }
-
-    try {
-      await syncClient.deleteAccount(authSession.accessToken);
-      await authService.signOut();
-      authAccessTokenRef.current = null;
-      setAuthSession(null);
-      setSyncStatus('signed-out');
-      setSyncError(null);
-    } catch (error) {
-      setSyncStatus('error');
-      setSyncError(error instanceof Error ? error.message : 'Failed to delete account');
-      throw error;
-    }
-  }, [authSession?.accessToken]);
 
   const handleConfirmDeleteAccount = useCallback(async (): Promise<void> => {
     await deleteAccountFromSync();
     setConfirmDeleteAccountOpen(false);
   }, [deleteAccountFromSync]);
-
-  useEffect(() => {
-    return authService.onAuthStateChange((session) => {
-      const nextAccessToken = session?.accessToken ?? null;
-      const didAccessTokenChange = authAccessTokenRef.current !== nextAccessToken;
-      authAccessTokenRef.current = nextAccessToken;
-
-      setAuthSession(session);
-
-      if (session) {
-        setSyncStatus((current) => (current === 'syncing' ? current : 'idle'));
-        setSyncError(null);
-
-        if (didAccessTokenChange) {
-          runAuthTriggeredSync(session.accessToken);
-        }
-      } else {
-        setSyncStatus('signed-out');
-        setSyncError(null);
-      }
-    });
-  }, [runAuthTriggeredSync]);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    const bootstrapSession = async () => {
-      try {
-        const session = await authService.getSession();
-        if (cancelled) return;
-
-        if (session) {
-          const didAccessTokenChange = authAccessTokenRef.current !== session.accessToken;
-          authAccessTokenRef.current = session.accessToken;
-          setAuthSession(session);
-          setSyncStatus('idle');
-          if (didAccessTokenChange) {
-            runAuthTriggeredSync(session.accessToken);
-          }
-        } else {
-          authAccessTokenRef.current = null;
-          setAuthSession(null);
-          setSyncStatus('signed-out');
-        }
-      } catch (error) {
-        if (cancelled) return;
-        authAccessTokenRef.current = null;
-        setAuthSession(null);
-        setSyncStatus('error');
-        setSyncError(error instanceof Error ? error.message : 'Failed to load session');
-      } finally {
-        if (!cancelled) {
-          setIsAuthBootstrapping(false);
-        }
-      }
-    };
-
-    void bootstrapSession();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [runAuthTriggeredSync]);
-
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-
-    const retryDirtySync = () => {
-      if (authAccessTokenRef.current && syncDirtyRef.current) {
-        void runSyncWithTokenRef.current(authAccessTokenRef.current);
-      }
-    };
-    const handleOnline = () => {
-      setIsOnline(true);
-      retryDirtySync();
-    };
-    const handleOffline = () => setIsOnline(false);
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible') {
-        retryDirtySync();
-      }
-    };
-
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-
-    return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-    };
-  }, []);
 
   // Prevent page scroll while overlays/modals are open
   useLockBodyScroll(
@@ -802,28 +411,12 @@ export default function App({
 
   const handleConfirmClear = useCallback(() => {
     const now = Date.now();
-    const tombstones = buildTombstonesForSyncedState(pickSyncedDBState(db), now);
     const nextDB = clearDB();
-    const nextTombstones = pruneSyncTombstones({
-      ...syncMeta.tombstones,
-      ...tombstones,
-    });
-    const nextMeta: SyncMetaState = {
-      ...syncMeta,
-      dbUpdatedAt: now,
-      tombstones: nextTombstones,
-    };
-    syncMutationVersionRef.current += 1;
-    syncDirtyRef.current = true;
-    if (syncInFlightRef.current) {
-      syncDirtyDuringFlightRef.current = true;
-    }
-    saveSyncMeta(nextMeta);
-    setSyncMeta(nextMeta);
+    markSyncedDBCleared(now);
     setDB(nextDB);
     handleCancelClear();
     showToast(copy.toastDataCleared);
-  }, [copy.toastDataCleared, db, handleCancelClear, setDB, showToast, syncMeta]);
+  }, [copy.toastDataCleared, handleCancelClear, markSyncedDBCleared, setDB, showToast]);
 
   const handleRequestDeleteAccount = useCallback(() => {
     setConfirmDeleteAccountOpen(true);
@@ -841,50 +434,6 @@ export default function App({
       clearFilters();
     }
   }, [db]);
-
-  const markDBChanged = useCallback(() => {
-    const now = Date.now();
-    markSyncMutationPending();
-    setSyncMeta((prev) => {
-      const nextMeta: SyncMetaState = {
-        ...prev,
-        dbUpdatedAt: now,
-      };
-      saveSyncMeta(nextMeta);
-      return nextMeta;
-    });
-    scheduleAutoSync();
-  }, [markSyncMutationPending, scheduleAutoSync]);
-
-  const markSettingsChanged = useCallback(() => {
-    const now = Date.now();
-    markSyncMutationPending();
-    setSyncMeta((prev) => {
-      const nextMeta: SyncMetaState = {
-        ...prev,
-        settingsUpdatedAt: now,
-      };
-      saveSyncMeta(nextMeta);
-      return nextMeta;
-    });
-    scheduleAutoSync();
-  }, [markSyncMutationPending, scheduleAutoSync]);
-
-  const markHomepageChanged = useCallback(() => {
-    const now = Date.now();
-    markSyncMutationPending();
-    setSyncMeta((prev) => {
-      const nextMeta: SyncMetaState = {
-        ...prev,
-        homepageUpdatedAt: now,
-      };
-      saveSyncMeta(nextMeta);
-      return nextMeta;
-    });
-    scheduleAutoSync();
-  }, [markSyncMutationPending, scheduleAutoSync]);
-  markSettingsChangedRef.current = markSettingsChanged;
-  markHomepageChangedRef.current = markHomepageChanged;
 
   useEffect(() => {
     setDB(loadDB());
@@ -909,7 +458,14 @@ export default function App({
     }
 
     markDBChanged();
-  }, [db, getCurrentDBSyncSnapshot, isDBReady, markDBChanged]);
+  }, [
+    db,
+    getCurrentDBSyncSnapshot,
+    isDBReady,
+    lastAppliedSyncSnapshotRef,
+    markDBChanged,
+    syncPauseAutoPushRef,
+  ]);
 
   useEffect(() => {
     saveOnboardingDismissed(onboardingDismissed);
@@ -928,7 +484,13 @@ export default function App({
     }
 
     markHomepageChanged();
-  }, [getCurrentHomepageSyncSnapshot, markHomepageChanged, onboardingDismissed]);
+  }, [
+    getCurrentHomepageSyncSnapshot,
+    lastAppliedSyncSnapshotRef,
+    markHomepageChanged,
+    onboardingDismissed,
+    syncPauseAutoPushRef,
+  ]);
 
   useEffect(() => {
     saveOnboardingCompleted(onboardingCompleted);
@@ -947,7 +509,13 @@ export default function App({
     }
 
     markHomepageChanged();
-  }, [getCurrentHomepageSyncSnapshot, markHomepageChanged, onboardingCompleted]);
+  }, [
+    getCurrentHomepageSyncSnapshot,
+    lastAppliedSyncSnapshotRef,
+    markHomepageChanged,
+    onboardingCompleted,
+    syncPauseAutoPushRef,
+  ]);
 
   useEffect(() => {
     if (selectedCollectionId === 'all' || selectedCollectionId === 'ungrouped') {
@@ -1307,7 +875,7 @@ export default function App({
     if (!syncPauseAutoPushRef.current) {
       markHomepageChanged();
     }
-  }, [markHomepageChanged]);
+  }, [markHomepageChanged, syncPauseAutoPushRef]);
 
   const handleStartOnboardingTour = useCallback((): void => {
     const nextSegment = 0;
@@ -1321,7 +889,7 @@ export default function App({
     if (!syncPauseAutoPushRef.current) {
       markHomepageChanged();
     }
-  }, [markHomepageChanged]);
+  }, [markHomepageChanged, syncPauseAutoPushRef]);
 
   const isTourSegmentAligned = useMemo(() => {
     const segment = ONBOARDING_TOUR_SEGMENTS[normalizeTourSegmentIndex(tourSegmentIndex)];
@@ -1376,7 +944,13 @@ export default function App({
     }
 
     setTourSegmentIndex((current) => normalizeTourSegmentIndex(current + 1));
-  }, [isTourSegmentAligned, markHomepageChanged, syncTourSegment, tourSegmentIndex]);
+  }, [
+    isTourSegmentAligned,
+    markHomepageChanged,
+    syncPauseAutoPushRef,
+    syncTourSegment,
+    tourSegmentIndex,
+  ]);
 
   const handleTourGoHome = useCallback(() => {
     setTourOpen(false);
@@ -1396,7 +970,14 @@ export default function App({
       markHomepageChanged();
     }
     syncTourSegment(normalized);
-  }, [markHomepageChanged, tourCompletionVisible, tourOpen, tourSegmentIndex, syncTourSegment]);
+  }, [
+    markHomepageChanged,
+    syncPauseAutoPushRef,
+    tourCompletionVisible,
+    tourOpen,
+    tourSegmentIndex,
+    syncTourSegment,
+  ]);
 
   useEffect(() => {
     if (!showTourCompletionConfetti) return;

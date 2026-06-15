@@ -36,6 +36,22 @@ type LastAppliedPreferenceSnapshot = {
   homepage?: string;
 };
 
+export type PreferencesSyncController = {
+  buildSettingsState: () => SyncPayloadData['settings'];
+  buildHomepageState: (
+    overrides?: Partial<
+      Pick<HomepageSnapshotInput, 'onboardingDismissed' | 'onboardingCompleted' | 'onboardingStep'>
+    >,
+  ) => SyncPayloadData['homepage'];
+  getCurrentSettingsSyncSnapshot: () => string;
+  getCurrentHomepageSyncSnapshot: () => string;
+  applySyncedPreferences: (payload: SyncPayloadData) => {
+    onboardingDismissed: boolean;
+    onboardingCompleted: boolean;
+    onboardingStep: number | null;
+  };
+};
+
 type UsePreferencesControllerParams = {
   initialLocale: Locale;
   onboardingDismissed: boolean;
