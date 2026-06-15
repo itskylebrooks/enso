@@ -7,7 +7,6 @@ import {
   type LearnSession,
   type LearnSetupOptions,
 } from '@features/learn';
-import { ONBOARDING_TOUR_SEGMENTS } from '@features/onboarding/constants';
 import { AppShell } from '@shared/components/layout/AppShell';
 import { useMotionPreferences } from '@shared/components/ui/motion';
 import {
@@ -30,6 +29,10 @@ import { AppScreenRouter } from './shared/app/AppScreenRouter';
 import { generateId, getGlossaryCollectionOptions } from './shared/app/appModel';
 import { useContentController } from './shared/app/useContentController';
 import {
+  useOnboardingController,
+  type OnboardingSyncController,
+} from './shared/app/useOnboardingController';
+import {
   usePreferencesController,
   type PreferencesSyncController,
 } from './shared/app/usePreferencesController';
@@ -42,13 +45,7 @@ import {
   clearFilters,
   loadDB,
   loadDefaultDB,
-  loadOnboardingCompleted,
-  loadOnboardingDismissed,
-  loadOnboardingStep,
   saveDB,
-  saveOnboardingCompleted,
-  saveOnboardingDismissed,
-  saveOnboardingStep,
 } from './shared/services/storageService';
 import type {
   AppRoute,
@@ -69,14 +66,6 @@ import {
 } from './shared/utils/navigationLifecycle';
 import { isStudyCollectionId } from './shared/utils/studyStatus';
 
-const normalizeTourSegmentIndex = (value: number | null | undefined): number => {
-  if (typeof value !== 'number' || !Number.isFinite(value)) return 0;
-  const maxIndex = ONBOARDING_TOUR_SEGMENTS.length - 1;
-  if (value < 0) return 0;
-  if (value > maxIndex) return maxIndex;
-  return Math.trunc(value);
-};
-
 type SelectedCollectionId = 'all' | 'ungrouped' | string;
 
 type AppProps = {
@@ -84,6 +73,15 @@ type AppProps = {
   initialRoute?: AppRoute;
   initialSlug?: string | null;
 };
+
+type OpenTechnique = (
+  slug: string,
+  trainerId?: string,
+  entry?: EntryMode,
+  skipExistenceCheck?: boolean,
+  options?: { originRoute?: AppRoute },
+  bookmarkedVariant?: TechniqueVariantKey,
+) => void;
 
 // Inline helper instead of exporting to fix react-refresh
 const buildTechniqueUrl = buildUrl;
@@ -142,18 +140,6 @@ export default function App({
   const [toast, setToast] = useState<string | null>(null);
   const [feedbackInitialType, setFeedbackInitialType] = useState<FeedbackType | null>(null);
   const [learnSession, setLearnSession] = useState<LearnSession | null>(null);
-  const [onboardingDismissed, setOnboardingDismissed] = useState<boolean>(() =>
-    loadOnboardingDismissed(),
-  );
-  const [onboardingCompleted, setOnboardingCompleted] = useState<boolean>(() =>
-    loadOnboardingCompleted(),
-  );
-  const [tourOpen, setTourOpen] = useState(false);
-  const [tourSegmentIndex, setTourSegmentIndex] = useState<number>(() =>
-    normalizeTourSegmentIndex(loadOnboardingStep()),
-  );
-  const [tourCompletionVisible, setTourCompletionVisible] = useState(false);
-  const [showTourCompletionConfetti, setShowTourCompletionConfetti] = useState(false);
 
   const searchTriggerRef = useRef<HTMLButtonElement | null>(null);
   const settingsTriggerRef = useRef<HTMLButtonElement | null>(null);
@@ -162,9 +148,13 @@ export default function App({
   const pendingScrollToTopRef = useRef(false);
   const isInitialMountRef = useRef(true);
   const dbPersistedRef = useRef(false);
-  const onboardingDismissedPersistedRef = useRef(false);
-  const onboardingCompletedPersistedRef = useRef(false);
   const preferencesSyncRef = useRef<PreferencesSyncController | null>(null);
+  const onboardingSyncRef = useRef<OnboardingSyncController | null>(null);
+  const openTechniqueRef = useRef<OpenTechnique>(() => {});
+  const openTechniqueForOnboarding = useCallback<OpenTechnique>((...args) => {
+    openTechniqueRef.current(...args);
+  }, []);
+  const { prefersReducedMotion, pageMotion } = useMotionPreferences();
   const {
     state: { authSession, isAuthBootstrapping, syncStatus, syncError, syncMeta, isOnline },
     refs: { syncPauseAutoPushRef, lastAppliedSyncSnapshotRef },
@@ -189,10 +179,50 @@ export default function App({
     db,
     setDB,
     preferencesSyncRef,
-    setOnboardingDismissed,
-    setOnboardingCompleted,
-    setTourSegmentIndex,
+    onboardingSyncRef,
   });
+  const tourTechniqueSlug = db.techniques[0]?.slug ?? null;
+  const isTechniqueDetailOpenForOnboarding = Boolean(
+    activeSlug && route !== 'terms' && route !== 'exercises' && !guideRouteToRoutine(route),
+  );
+  const {
+    state: {
+      onboardingDismissed,
+      onboardingCompleted,
+      onboardingStep,
+      tourOpen,
+      tourSegmentIndex,
+      tourCompletionVisible,
+      showTourCompletionConfetti,
+      activeTourSegment,
+      showHomeOnboardingCard,
+    },
+    actions: {
+      handleStartOnboardingTour,
+      handleSkipOnboarding,
+      handleTourBack,
+      handleTourNext,
+      handleTourGoHome,
+      syncTourSegment,
+      closeTourForSettings,
+    },
+    sync: onboardingSync,
+  } = useOnboardingController({
+    route,
+    activeSlug,
+    searchOpen,
+    setSearchOpen,
+    navigateTo,
+    openTechnique: openTechniqueForOnboarding,
+    tourTechniqueSlug,
+    isTechniqueDetailOpen: isTechniqueDetailOpenForOnboarding,
+    markHomepageChanged,
+    syncPauseAutoPushRef,
+    lastAppliedSyncSnapshotRef,
+    getCurrentHomepageSyncSnapshot,
+    prefersReducedMotion,
+  });
+  onboardingSyncRef.current = onboardingSync;
   const {
     settings: { locale, theme, hasManualTheme, filters, glossaryFilters, practiceFilters },
     homepage: { pinnedBeltGrade, beltPromptDismissed },
@@ -210,6 +240,7 @@ export default function App({
     initialLocale,
     onboardingDismissed,
     onboardingCompleted,
+    onboardingStep,
     markSettingsChanged,
     markHomepageChanged,
     scheduleAutoSync,
@@ -219,7 +250,6 @@ export default function App({
   });
   preferencesSyncRef.current = preferencesSync;
   const copy = getCopy(locale);
-  const { pageMotion, prefersReducedMotion } = useMotionPreferences();
   const {
     glossaryTerms,
     practiceExercises,
@@ -468,56 +498,6 @@ export default function App({
   ]);
 
   useEffect(() => {
-    saveOnboardingDismissed(onboardingDismissed);
-
-    if (!onboardingDismissedPersistedRef.current) {
-      onboardingDismissedPersistedRef.current = true;
-      return;
-    }
-
-    if (syncPauseAutoPushRef.current) {
-      return;
-    }
-
-    if (lastAppliedSyncSnapshotRef.current.homepage === getCurrentHomepageSyncSnapshot()) {
-      return;
-    }
-
-    markHomepageChanged();
-  }, [
-    getCurrentHomepageSyncSnapshot,
-    lastAppliedSyncSnapshotRef,
-    markHomepageChanged,
-    onboardingDismissed,
-    syncPauseAutoPushRef,
-  ]);
-
-  useEffect(() => {
-    saveOnboardingCompleted(onboardingCompleted);
-
-    if (!onboardingCompletedPersistedRef.current) {
-      onboardingCompletedPersistedRef.current = true;
-      return;
-    }
-
-    if (syncPauseAutoPushRef.current) {
-      return;
-    }
-
-    if (lastAppliedSyncSnapshotRef.current.homepage === getCurrentHomepageSyncSnapshot()) {
-      return;
-    }
-
-    markHomepageChanged();
-  }, [
-    getCurrentHomepageSyncSnapshot,
-    lastAppliedSyncSnapshotRef,
-    markHomepageChanged,
-    onboardingCompleted,
-    syncPauseAutoPushRef,
-  ]);
-
-  useEffect(() => {
     if (selectedCollectionId === 'all' || selectedCollectionId === 'ungrouped') {
       return;
     }
@@ -533,7 +513,6 @@ export default function App({
   useKeyboardShortcuts(openSearch);
 
   const isTechniqueDetailOpen = Boolean(currentTechnique);
-  const tourTechniqueSlug = db.techniques[0]?.slug ?? null;
 
   const glossaryCollectionOptions = useMemo(() => {
     if (!activeSlug || !currentGlossaryTerm) return [];
@@ -736,6 +715,7 @@ export default function App({
       setRoute,
     ],
   );
+  openTechniqueRef.current = openTechnique;
 
   const openGlossaryTerm = (slug: string): void => {
     rememberScrollPosition();
@@ -794,198 +774,6 @@ export default function App({
     }
     setActiveSlug(slug);
   };
-
-  const syncTourSegment = useCallback(
-    (segmentIndex: number): void => {
-      const segment = ONBOARDING_TOUR_SEGMENTS[normalizeTourSegmentIndex(segmentIndex)];
-      if (!segment) return;
-
-      if (segment.id !== 'search-input' && searchOpen) {
-        setSearchOpen(false);
-      }
-
-      switch (segment.id) {
-        case 'guide-tab': {
-          if (route !== 'guide' || activeSlug) {
-            navigateTo('guide');
-          }
-          return;
-        }
-        case 'techniques-tab':
-        case 'techniques-filters': {
-          if (route !== 'techniques' || activeSlug) {
-            navigateTo('techniques');
-          }
-          return;
-        }
-        case 'terms-tab': {
-          if (route !== 'terms' || activeSlug) {
-            navigateTo('terms');
-          }
-          return;
-        }
-        case 'exercises-tab': {
-          if (route !== 'exercises' || activeSlug) {
-            navigateTo('exercises');
-          }
-          return;
-        }
-        case 'detail-study-status':
-        case 'detail-bookmarks-collections': {
-          if (!tourTechniqueSlug) return;
-          if (!currentTechnique || currentTechnique.slug !== tourTechniqueSlug) {
-            openTechnique(tourTechniqueSlug, undefined, undefined, false, {
-              originRoute: 'techniques',
-            });
-          }
-          return;
-        }
-        case 'bookmarks-collections': {
-          if (route !== 'bookmarks' || activeSlug) {
-            navigateTo('bookmarks');
-          }
-          return;
-        }
-        case 'search-input': {
-          if (route !== 'bookmarks' || activeSlug) {
-            navigateTo('bookmarks');
-            if (!searchOpen) {
-              window.setTimeout(() => {
-                setSearchOpen(true);
-              }, 0);
-            }
-            return;
-          }
-          if (!searchOpen) {
-            setSearchOpen(true);
-          }
-          return;
-        }
-      }
-    },
-    [activeSlug, currentTechnique, navigateTo, openTechnique, route, searchOpen, tourTechniqueSlug],
-  );
-
-  const handleSkipOnboarding = useCallback((): void => {
-    setTourOpen(false);
-    setTourCompletionVisible(false);
-    setSearchOpen(false);
-    setOnboardingDismissed(true);
-    saveOnboardingStep(null);
-    if (!syncPauseAutoPushRef.current) {
-      markHomepageChanged();
-    }
-  }, [markHomepageChanged, syncPauseAutoPushRef]);
-
-  const handleStartOnboardingTour = useCallback((): void => {
-    const nextSegment = 0;
-    setTourSegmentIndex(nextSegment);
-    setTourCompletionVisible(false);
-    setSearchOpen(false);
-    setTourOpen(true);
-    setOnboardingDismissed(false);
-    setOnboardingCompleted(false);
-    saveOnboardingStep(nextSegment);
-    if (!syncPauseAutoPushRef.current) {
-      markHomepageChanged();
-    }
-  }, [markHomepageChanged, syncPauseAutoPushRef]);
-
-  const isTourSegmentAligned = useMemo(() => {
-    const segment = ONBOARDING_TOUR_SEGMENTS[normalizeTourSegmentIndex(tourSegmentIndex)];
-    if (!segment) return false;
-
-    switch (segment.id) {
-      case 'guide-tab':
-        return route === 'guide';
-      case 'techniques-tab':
-      case 'techniques-filters':
-        return route === 'techniques' && !isTechniqueDetailOpen;
-      case 'terms-tab':
-        return route === 'terms';
-      case 'exercises-tab':
-        return route === 'exercises';
-      case 'detail-study-status':
-      case 'detail-bookmarks-collections':
-        return isTechniqueDetailOpen;
-      case 'bookmarks-collections':
-        return route === 'bookmarks' && !searchOpen;
-      case 'search-input':
-        return route === 'bookmarks' && searchOpen;
-      default:
-        return false;
-    }
-  }, [isTechniqueDetailOpen, route, searchOpen, tourSegmentIndex]);
-
-  const handleTourBack = useCallback(() => {
-    if (tourCompletionVisible) {
-      setTourCompletionVisible(false);
-      return;
-    }
-    setTourSegmentIndex((current) => normalizeTourSegmentIndex(current - 1));
-  }, [tourCompletionVisible]);
-
-  const handleTourNext = useCallback(() => {
-    if (!isTourSegmentAligned) {
-      syncTourSegment(tourSegmentIndex);
-      return;
-    }
-
-    const lastIndex = ONBOARDING_TOUR_SEGMENTS.length - 1;
-    if (tourSegmentIndex >= lastIndex) {
-      setTourCompletionVisible(true);
-      setOnboardingCompleted(true);
-      setOnboardingDismissed(false);
-      saveOnboardingStep(null);
-      if (!syncPauseAutoPushRef.current) {
-        markHomepageChanged();
-      }
-      return;
-    }
-
-    setTourSegmentIndex((current) => normalizeTourSegmentIndex(current + 1));
-  }, [
-    isTourSegmentAligned,
-    markHomepageChanged,
-    syncPauseAutoPushRef,
-    syncTourSegment,
-    tourSegmentIndex,
-  ]);
-
-  const handleTourGoHome = useCallback(() => {
-    setTourOpen(false);
-    setTourCompletionVisible(false);
-    setSearchOpen(false);
-    navigateTo('home');
-    if (!prefersReducedMotion) {
-      setShowTourCompletionConfetti(true);
-    }
-  }, [navigateTo, prefersReducedMotion]);
-
-  useEffect(() => {
-    if (!tourOpen || tourCompletionVisible) return;
-    const normalized = normalizeTourSegmentIndex(tourSegmentIndex);
-    saveOnboardingStep(normalized);
-    if (!syncPauseAutoPushRef.current) {
-      markHomepageChanged();
-    }
-    syncTourSegment(normalized);
-  }, [
-    markHomepageChanged,
-    syncPauseAutoPushRef,
-    tourCompletionVisible,
-    tourOpen,
-    tourSegmentIndex,
-    syncTourSegment,
-  ]);
-
-  useEffect(() => {
-    if (!showTourCompletionConfetti) return;
-    const timeoutId = window.setTimeout(() => {
-      setShowTourCompletionConfetti(false);
-    }, 2200);
-    return () => window.clearTimeout(timeoutId);
-  }, [showTourCompletionConfetti]);
 
   const handleOpenGuideFromPrompt = useCallback(() => {
     setBeltPromptDismissed(true);
@@ -1095,11 +883,6 @@ export default function App({
     route !== 'terms' &&
     route !== 'exercises' &&
     !guideRouteToRoutine(route);
-  const activeTourSegment = tourOpen
-    ? (ONBOARDING_TOUR_SEGMENTS[normalizeTourSegmentIndex(tourSegmentIndex)] ?? null)
-    : null;
-  const showHomeOnboardingCard = !tourOpen && !onboardingDismissed && !onboardingCompleted;
-
   const flushScrollToTop = useCallback(() => {
     if (typeof window === 'undefined') return;
     if (!pendingScrollToTopRef.current) return;
@@ -1414,8 +1197,7 @@ export default function App({
       onReturnToTourStep={() => syncTourSegment(tourSegmentIndex)}
       onTourGoHome={handleTourGoHome}
       onOpenSettingsFromTour={() => {
-        setTourOpen(false);
-        setTourCompletionVisible(false);
+        closeTourForSettings();
         openSettings();
       }}
       showTourCompletionConfetti={showTourCompletionConfetti}

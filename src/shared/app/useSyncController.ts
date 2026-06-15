@@ -1,4 +1,3 @@
-import { ONBOARDING_TOUR_SEGMENTS } from '@features/onboarding/constants';
 import type { Dispatch, MutableRefObject, SetStateAction } from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { authService } from '../../lib/backend/auth';
@@ -10,8 +9,9 @@ import type {
   SyncPayloadData,
   SyncTombstones,
 } from '../../lib/supabase/types';
-import { loadSyncMeta, saveOnboardingStep, saveSyncMeta } from '../services/storageService';
+import { loadSyncMeta, saveSyncMeta } from '../services/storageService';
 import type { DB } from '../types';
+import type { OnboardingSyncController } from './useOnboardingController';
 import { stringifyForSyncCompare } from './syncSnapshot';
 import {
   buildClearedSyncMeta,
@@ -32,20 +32,10 @@ type UseSyncControllerParams = {
   db: DB;
   setDB: Dispatch<SetStateAction<DB>>;
   preferencesSyncRef: MutableRefObject<PreferencesSyncController | null>;
-  setOnboardingDismissed: Dispatch<SetStateAction<boolean>>;
-  setOnboardingCompleted: Dispatch<SetStateAction<boolean>>;
-  setTourSegmentIndex: Dispatch<SetStateAction<number>>;
+  onboardingSyncRef: MutableRefObject<OnboardingSyncController | null>;
 };
 
 const AUTH_TRIGGERED_SYNC_MIN_INTERVAL_MS = 60_000;
-
-const normalizeTourSegmentIndex = (value: number | null | undefined): number => {
-  if (typeof value !== 'number' || !Number.isFinite(value)) return 0;
-  const maxIndex = ONBOARDING_TOUR_SEGMENTS.length - 1;
-  if (value < 0) return 0;
-  if (value > maxIndex) return maxIndex;
-  return Math.trunc(value);
-};
 
 const getRequiredPreferencesSync = (
   preferencesSyncRef: MutableRefObject<PreferencesSyncController | null>,
@@ -60,9 +50,7 @@ export const useSyncController = ({
   db,
   setDB,
   preferencesSyncRef,
-  setOnboardingDismissed,
-  setOnboardingCompleted,
-  setTourSegmentIndex,
+  onboardingSyncRef,
 }: UseSyncControllerParams) => {
   const [authSession, setAuthSession] = useState<AuthSession | null>(null);
   const [isAuthBootstrapping, setIsAuthBootstrapping] = useState(true);
@@ -160,10 +148,7 @@ export const useSyncController = ({
       const syncedPreferences = getRequiredPreferencesSync(
         preferencesSyncRef,
       ).applySyncedPreferences(payload);
-      setOnboardingDismissed(syncedPreferences.onboardingDismissed);
-      setOnboardingCompleted(syncedPreferences.onboardingCompleted);
-      saveOnboardingStep(syncedPreferences.onboardingStep);
-      setTourSegmentIndex(normalizeTourSegmentIndex(syncedPreferences.onboardingStep));
+      onboardingSyncRef.current?.applySyncedOnboarding(syncedPreferences);
 
       const now = syncedAt ?? Date.now();
       persistSyncMeta({
@@ -184,11 +169,9 @@ export const useSyncController = ({
     },
     [
       persistSyncMeta,
+      onboardingSyncRef,
       preferencesSyncRef,
       setDB,
-      setOnboardingCompleted,
-      setOnboardingDismissed,
-      setTourSegmentIndex,
     ],
   );
 

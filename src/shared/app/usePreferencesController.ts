@@ -6,7 +6,6 @@ import {
   loadBeltPromptDismissed,
   loadFilterPanelPinned,
   loadFilters,
-  loadOnboardingStep,
   loadPinnedBeltGrade,
   loadStoredLocale,
   loadTheme,
@@ -56,6 +55,7 @@ type UsePreferencesControllerParams = {
   initialLocale: Locale;
   onboardingDismissed: boolean;
   onboardingCompleted: boolean;
+  onboardingStep: number | null;
   markSettingsChanged: () => void;
   markHomepageChanged: () => void;
   scheduleAutoSync: () => void;
@@ -68,6 +68,7 @@ export const usePreferencesController = ({
   initialLocale,
   onboardingDismissed,
   onboardingCompleted,
+  onboardingStep,
   markSettingsChanged,
   markHomepageChanged,
   scheduleAutoSync,
@@ -129,9 +130,15 @@ export const usePreferencesController = ({
         beltPromptDismissed,
         onboardingDismissed: overrides?.onboardingDismissed ?? onboardingDismissed,
         onboardingCompleted: overrides?.onboardingCompleted ?? onboardingCompleted,
-        onboardingStep: overrides?.onboardingStep ?? loadOnboardingStep(),
+        onboardingStep: overrides?.onboardingStep ?? onboardingStep,
       }),
-    [beltPromptDismissed, onboardingCompleted, onboardingDismissed, pinnedBeltGrade],
+    [
+      beltPromptDismissed,
+      onboardingCompleted,
+      onboardingDismissed,
+      onboardingStep,
+      pinnedBeltGrade,
+    ],
   );
 
   const getCurrentSettingsSyncSnapshot = useCallback(
