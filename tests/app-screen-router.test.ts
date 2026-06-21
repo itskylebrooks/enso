@@ -17,7 +17,7 @@ describe('AppScreenRouter page keys', () => {
   it('preserves existing route transition page keys', () => {
     expect(
       getAppPageKey({
-        route: 'techniques',
+        route: 'libraryTechniques',
         activeSlug: 'katate-tori-irimi-nage',
         currentTechnique: technique,
       }),
@@ -25,23 +25,23 @@ describe('AppScreenRouter page keys', () => {
 
     expect(
       getAppPageKey({
-        route: 'exercises',
+        route: 'libraryExercises',
         activeSlug: 'dead-bug',
       }),
-    ).toBe('exercises-dead-bug');
+    ).toBe('library-exercises-dead-bug');
 
     expect(
       getAppPageKey({
-        route: 'terms',
+        route: 'libraryTerms',
         activeSlug: 'aikido',
       }),
     ).toBe('terms-aikido');
 
     expect(
       getAppPageKey({
-        route: 'bookmarks',
+        route: 'study',
         activeSlug: null,
       }),
-    ).toBe('bookmarks');
+    ).toBe('study');
   });
 });

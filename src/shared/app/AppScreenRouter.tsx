@@ -18,9 +18,16 @@ import { TechniquesPage } from '@features/technique/components/TechniquesPage';
 import { ExpandableFilterBar } from '@shared/components/ui/ExpandableFilterBar';
 import { MobileFilters } from '@shared/components/ui/MobileFilters';
 import type { Copy } from '@shared/constants/i18n';
-import { guideRouteToGrade, guideRouteToRoutine } from '@shared/navigation/appRoutes';
+import { guideRouteToGrade, routeToRoutine } from '@shared/navigation/appRoutes';
 import { gradeOrder } from '@shared/utils/grades';
-import { PencilLine } from 'lucide-react';
+import {
+  BookOpenText,
+  Dumbbell,
+  Footprints,
+  ListChecks,
+  PencilLine,
+  type LucideIcon,
+} from 'lucide-react';
 import { motion, type Transition } from 'motion/react';
 import type { Dispatch, ReactElement, SetStateAction } from 'react';
 import { BookmarksView } from '../../features/bookmarks/components/BookmarksView';
@@ -231,10 +238,18 @@ export const getAppPageKey = (params: {
   currentTechnique?: Technique | null;
 }): string => {
   if (params.currentTechnique) return `technique-${params.currentTechnique.id}`;
-  if (params.route === 'exercises' && params.activeSlug) return `exercises-${params.activeSlug}`;
+  if (params.route === 'libraryExercises' && params.activeSlug) {
+    return `library-exercises-${params.activeSlug}`;
+  }
   if (params.activeSlug) return `terms-${params.activeSlug}`;
   return params.route;
 };
+
+const LibraryPageTitle = ({ title }: { title: string }): ReactElement => (
+  <header className="mb-4 text-center">
+    <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
+  </header>
+);
 
 const TechniqueListScreen = ({
   data,
@@ -246,6 +261,7 @@ const TechniqueListScreen = ({
   activeTourSegment: ActiveTourSegment;
 }): ReactElement => (
   <>
+    <LibraryPageTitle title={data.copy.techniques} />
     <div className="lg:hidden">
       <MobileFilters
         copy={data.copy}
@@ -318,6 +334,7 @@ const ExerciseListScreen = ({
   workflow,
 }: Pick<AppScreenRouterProps, 'data' | 'filters' | 'navigation' | 'workflow'>): ReactElement => (
   <>
+    <LibraryPageTitle title={data.copy.exercises} />
     <div className="lg:hidden">
       <MobileExercisesFilters
         copy={data.copy}
@@ -379,7 +396,7 @@ const TermsScreen = ({
         copy={data.copy}
         locale={data.locale}
         backLabel={navigation.glossaryBackLabel}
-        onBack={() => navigation.navigateTo('terms', { replace: true })}
+        onBack={() => navigation.navigateTo('libraryTerms', { replace: true })}
         isBookmarked={Boolean(data.currentGlossaryProgress?.bookmarked)}
         onToggleBookmark={() =>
           library.updateGlossaryProgress(state.activeSlug!, {
@@ -399,11 +416,12 @@ const TermsScreen = ({
         onCreateCollection={library.createCollection}
         onNavigateToTermsWithFilter={(category) => {
           filters.setGlossaryFilters({ category });
-          navigation.navigateTo('terms');
+          navigation.navigateTo('libraryTerms');
         }}
       />
     ) : (
       <>
+        <LibraryPageTitle title={data.copy.glossary} />
         <div className="lg:hidden">
           <MobileTermsFilters
             copy={data.copy}
@@ -434,6 +452,154 @@ const TermsScreen = ({
       </>
     )}
   </>
+);
+
+const LandingLink = ({
+  title,
+  description,
+  meta,
+  icon: Icon,
+  featured = false,
+  onClick,
+}: {
+  title: string;
+  description: string;
+  meta?: string;
+  icon?: LucideIcon;
+  featured?: boolean;
+  onClick: () => void;
+}): ReactElement => (
+  <button
+    type="button"
+    onClick={onClick}
+    className={`surface border surface-border rounded-2xl p-4 flex flex-col gap-3 text-left card-hover-shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] ${
+      featured ? 'min-h-40' : ''
+    }`}
+    title={title}
+  >
+    <span className="flex items-start justify-between gap-4">
+      <span className="block text-base font-semibold leading-tight">{title}</span>
+      {Icon ? (
+        <span className="shrink-0 text-muted">
+          <Icon aria-hidden="true" className="h-5 w-5" strokeWidth={1.8} />
+        </span>
+      ) : null}
+    </span>
+    <span className="block text-sm leading-relaxed text-muted line-clamp-3 flex-1">
+      {description}
+    </span>
+    {meta ? (
+      <span className="block text-xs font-medium uppercase tracking-wide text-muted">{meta}</span>
+    ) : null}
+  </button>
+);
+
+const LandingInfo = ({
+  title,
+  description,
+}: {
+  title: string;
+  description: string;
+}): ReactElement => (
+  <div
+    className="surface border surface-border rounded-2xl p-4 flex flex-col gap-3 text-left card-hover-shadow"
+    title={title}
+  >
+    <span className="block text-base font-semibold leading-tight">{title}</span>
+    <span className="block text-sm leading-relaxed text-muted line-clamp-3 flex-1">
+      {description}
+    </span>
+  </div>
+);
+
+const formatCategoryCount = (count: number, label: string, locale: Locale): string => {
+  const formatter = new Intl.NumberFormat(locale === 'de' ? 'de-DE' : 'en-US');
+  const countLabel = locale === 'en' ? label.toLocaleLowerCase('en') : label;
+  return `${formatter.format(count)} ${countLabel}`;
+};
+
+const LibraryLandingScreen = ({
+  data,
+  navigation,
+}: Pick<AppScreenRouterProps, 'data' | 'navigation'>): ReactElement => {
+  const routineLabel = data.copy.guidePage.headings.routines;
+
+  return (
+    <section className="space-y-5">
+      <div className="grid gap-3 md:grid-cols-2">
+        <LandingLink
+          title={data.copy.techniques}
+          description="Browse forms, variations, grades, attacks, stances, and weapons."
+          meta={formatCategoryCount(data.db.techniques.length, data.copy.techniques, data.locale)}
+          icon={Footprints}
+          featured
+          onClick={() => navigation.navigateTo('libraryTechniques')}
+        />
+        <LandingLink
+          title={data.copy.glossary}
+          description="Study Japanese terminology, concepts, etiquette, and principles."
+          meta={formatCategoryCount(data.glossaryTerms.length, data.copy.glossary, data.locale)}
+          icon={BookOpenText}
+          featured
+          onClick={() => navigation.navigateTo('libraryTerms')}
+        />
+        <LandingLink
+          title={data.copy.exercises}
+          description="Review preparation, mobility, strength, balance, and recovery exercises."
+          meta={formatCategoryCount(data.practiceExercises.length, data.copy.exercises, data.locale)}
+          icon={Dumbbell}
+          featured
+          onClick={() => navigation.navigateTo('libraryExercises')}
+        />
+        <LandingLink
+          title={routineLabel}
+          description="Use curated exercise sequences for warm-up, cooldown, mobility, strength, skill, and recovery."
+          meta={formatCategoryCount(data.copy.guidePage.routines.length, routineLabel, data.locale)}
+          icon={ListChecks}
+          featured
+          onClick={() => navigation.navigateTo('libraryRoutines')}
+        />
+      </div>
+    </section>
+  );
+};
+
+const LibraryRoutinesScreen = ({
+  data,
+  navigation,
+}: Pick<AppScreenRouterProps, 'data' | 'navigation'>): ReactElement => (
+  <section className="space-y-5">
+    <LibraryPageTitle title={data.copy.guidePage.headings.routines} />
+    <div className="grid gap-3 md:grid-cols-2">
+      {data.copy.guidePage.routines.map((routine) => (
+        <LandingLink
+          key={routine.id}
+          title={routine.title}
+          description={routine.description}
+          onClick={() => navigation.navigateToGuideRoutine(routine.id)}
+        />
+      ))}
+    </div>
+  </section>
+);
+
+const TeachLandingScreen = (): ReactElement => (
+  <section className="space-y-5">
+    <div className="grid gap-3 md:grid-cols-3">
+      <LandingInfo
+        title="Class planner"
+        description="Prepare training sessions from techniques, routines, and exercises."
+      />
+      <LandingInfo
+        title="Children games"
+        description="Organize playful drills for attention, movement, safety, and cooperation."
+      />
+      <LandingInfo
+        title="Lesson templates"
+        description="Save reusable class structures for different groups and training goals."
+      />
+    </div>
+  </section>
 );
 
 export const AppScreenRouter = ({
@@ -524,11 +690,11 @@ export const AppScreenRouter = ({
         onCreateCollection={library.createCollection}
         onNavigateToTermsWithFilter={(category) => {
           filters.setGlossaryFilters({ category });
-          navigation.navigateTo('terms');
+          navigation.navigateTo('libraryTerms');
         }}
       />
     );
-  } else if (route === 'exercises' && activeSlug) {
+  } else if (route === 'libraryExercises' && activeSlug) {
     mainContent = (
       <ExerciseDetailPage
         slug={activeSlug}
@@ -546,7 +712,7 @@ export const AppScreenRouter = ({
         backLabel={navigation.practiceBackLabel}
         onNavigateToExercisesWithFilter={(nextFilters) => {
           filters.setPracticeFilters(nextFilters);
-          navigation.navigateTo('exercises', { replace: true });
+          navigation.navigateTo('libraryExercises', { replace: true });
         }}
         onBack={navigation.handlePracticeBack}
       />
@@ -557,7 +723,7 @@ export const AppScreenRouter = ({
         <p className="text-lg font-semibold">Technique not found.</p>
         <button
           type="button"
-          onClick={() => navigation.navigateTo('techniques', { replace: true })}
+          onClick={() => navigation.navigateTo('libraryTechniques', { replace: true })}
           className="text-sm underline"
         >
           {copy.backToLibrary}
@@ -614,15 +780,15 @@ export const AppScreenRouter = ({
     );
   } else if (route === 'guideDan') {
     mainContent = <DanOverview locale={locale} onBack={() => navigation.navigateTo('guide')} />;
-  } else if (guideRouteToRoutine(route)) {
-    const routine = guideRouteToRoutine(route) as GuideRoutine;
+  } else if (routeToRoutine(route)) {
+    const routine = routeToRoutine(route) as GuideRoutine;
     mainContent = (
       <GuideRoutinePage
         copy={copy}
         locale={locale}
         routine={routine}
         activeRoutineSlug={activeSlug}
-        onBack={() => navigation.navigateTo('guide')}
+        onBack={() => navigation.navigateTo('libraryRoutines')}
         onBackToOverview={() => navigation.closeGuideRoutinePreset(routine)}
         onOpenRoutine={(routineSlug) => navigation.openGuideRoutinePreset(routine, routineSlug)}
         onOpenExercise={navigation.openPracticeExercise}
@@ -653,7 +819,6 @@ export const AppScreenRouter = ({
       <GuidePage
         locale={locale}
         onNavigateToGuideGrade={navigation.navigateToGuideGrade}
-        onNavigateToRoutine={navigation.navigateToGuideRoutine}
         onOpenTechnique={navigation.openTechnique}
         onNavigateToAdvanced={() => navigation.navigateTo('guideAdvanced')}
         onNavigateToDan={() => navigation.navigateTo('guideDan')}
@@ -671,28 +836,32 @@ export const AppScreenRouter = ({
           copy={copy}
           locale={locale}
           techniques={db.techniques}
-          onBack={() => navigation.navigateTo('techniques')}
+          onBack={() => navigation.navigateTo('libraryTechniques')}
           initialType={data.feedbackInitialType}
           onConsumeInitialType={() => workflow.setFeedbackInitialType(null)}
         />
       </motion.div>
     );
-  } else if (route === 'learn') {
+  } else if (route === 'studyLearn') {
     mainContent = (
       <LearnSessionPage
         copy={copy}
         session={data.learnSession}
         onBack={() =>
-          navigation.navigateTo(data.learnSession?.sourceRoute ?? 'bookmarks', { replace: true })
+          navigation.navigateTo(data.learnSession?.sourceRoute ?? 'study', { replace: true })
         }
-        onOpenBookmarks={() => navigation.navigateTo('bookmarks', { replace: true })}
+        onOpenBookmarks={() => navigation.navigateTo('study', { replace: true })}
         onOpenGuide={() => navigation.navigateTo('guide', { replace: true })}
       />
     );
   } else {
     mainContent = (
       <div className="container max-w-4xl mx-auto px-4 md:px-6 pt-0 pb-4 space-y-4 lg:space-y-0">
-        {route === 'techniques' && (
+        {route === 'library' && (
+          <LibraryLandingScreen data={data} navigation={navigation} />
+        )}
+
+        {route === 'libraryTechniques' && (
           <TechniqueListScreen
             data={data}
             filters={filters}
@@ -702,7 +871,7 @@ export const AppScreenRouter = ({
           />
         )}
 
-        {route === 'exercises' && (
+        {route === 'libraryExercises' && (
           <ExerciseListScreen
             data={data}
             filters={filters}
@@ -711,7 +880,11 @@ export const AppScreenRouter = ({
           />
         )}
 
-        {route === 'bookmarks' && (
+        {route === 'libraryRoutines' && (
+          <LibraryRoutinesScreen data={data} navigation={navigation} />
+        )}
+
+        {route === 'study' && (
           <BookmarksView
             copy={copy}
             locale={locale}
@@ -744,20 +917,20 @@ export const AppScreenRouter = ({
                 undefined,
                 undefined,
                 undefined,
-                { originRoute: 'bookmarks' },
+                { originRoute: 'study' },
                 bookmarkedVariant,
               )
             }
             onOpenGlossaryTerm={(slug) => navigation.openGlossaryTerm(slug)}
             onOpenExercise={navigation.openPracticeExercise}
             onStartLearn={(cards, options) =>
-              workflow.startLearnSession(cards, options, 'bookmarks', copy.backToBookmarks)
+              workflow.startLearnSession(cards, options, 'study', copy.backToBookmarks)
             }
             forceCollectionsSidebarOpen={activeTourSegment?.id === 'bookmarks-collections'}
           />
         )}
 
-        {route === 'terms' && (
+        {route === 'libraryTerms' && (
           <TermsScreen
             state={state}
             data={data}
@@ -766,6 +939,8 @@ export const AppScreenRouter = ({
             library={library}
           />
         )}
+
+        {route === 'teach' && <TeachLandingScreen />}
       </div>
     );
   }

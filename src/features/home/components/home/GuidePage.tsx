@@ -1,7 +1,7 @@
 import { defaultEase, useMotionPreferences } from '@shared/components/ui/motion';
 import { getCopy } from '@shared/constants/i18n';
 import { getGradeStyle, gradeLabel } from '@shared/styles/belts';
-import type { EntryMode, Grade, GuideRoutine, Locale } from '@shared/types';
+import type { EntryMode, Grade, Locale } from '@shared/types';
 import { gradeOrder } from '@shared/utils/grades';
 import { getInitialThemeState } from '@shared/utils/theme';
 import { motion } from 'motion/react';
@@ -12,7 +12,6 @@ import { ExamMatrix } from '../guide/ExamMatrix';
 type GuidePageProps = {
   locale: Locale;
   onNavigateToGuideGrade: (grade: Grade) => void;
-  onNavigateToRoutine: (routine: GuideRoutine) => void;
   onOpenTechnique: (
     slug: string,
     trainerId?: string,
@@ -31,7 +30,6 @@ const sectionVariants = {
 export const GuidePage = ({
   locale,
   onNavigateToGuideGrade,
-  onNavigateToRoutine,
   onOpenTechnique,
   onNavigateToAdvanced,
   onNavigateToDan,
@@ -127,34 +125,6 @@ export const GuidePage = ({
                   </li>
                 );
               })}
-          </ul>
-        </motion.article>
-
-        {/* Routines */}
-        <motion.article className="space-y-4" {...animationProps}>
-          <header className="space-y-2">
-            <h2 className="text-xl font-semibold leading-tight">{guideCopy.headings.routines}</h2>
-          </header>
-          <ul className="grid items-stretch gap-3 sm:grid-cols-2">
-            {guideCopy.routines.map((routine) => (
-              <li key={routine.id} className="h-full">
-                <button
-                  type="button"
-                  onClick={() => onNavigateToRoutine(routine.id as GuideRoutine)}
-                  className="h-full w-full rounded-xl border surface-border bg-[var(--color-surface)]/70 px-4 py-3 flex items-start justify-between gap-3 text-left cursor-pointer hover:bg-[var(--color-surface-hover)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
-                >
-                  <span className="space-y-1">
-                    <span className="block text-sm font-medium">{routine.title}</span>
-                    <span className="block text-xs text-subtle leading-relaxed">
-                      {routine.description}
-                    </span>
-                  </span>
-                  <span aria-hidden className="text-sm text-subtle shrink-0">
-                    →
-                  </span>
-                </button>
-              </li>
-            ))}
           </ul>
         </motion.article>
 
