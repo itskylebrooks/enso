@@ -5,17 +5,23 @@ describe('UI i18n navigation labels', () => {
   it('uses required EN navigation labels', () => {
     const copy = getCopy('en');
     expect(copy.guideLink).toBe('Guide');
-    expect(copy.library).toBe('Techniques');
+    expect(copy.library).toBe('Library');
+    expect(copy.techniques).toBe('Techniques');
     expect(copy.glossary).toBe('Terms');
-    expect(copy.practice).toBe('Exercises');
+    expect(copy.exercises).toBe('Exercises');
+    expect(copy.study).toBe('Study');
+    expect(copy.teach).toBe('Teach');
   });
 
   it('uses required DE navigation labels', () => {
     const copy = getCopy('de');
     expect(copy.guideLink).toBe('Guide');
-    expect(copy.library).toBe('Techniken');
+    expect(copy.library).toBe('Bibliothek');
+    expect(copy.techniques).toBe('Techniken');
     expect(copy.glossary).toBe('Begriffe');
-    expect(copy.practice).toBe('Übungen');
+    expect(copy.exercises).toBe('Übungen');
+    expect(copy.study).toBe('Lernen');
+    expect(copy.teach).toBe('Unterrichten');
   });
 
   it('defines onboarding copy for EN and DE', () => {

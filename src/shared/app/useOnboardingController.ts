@@ -106,20 +106,20 @@ export const useOnboardingController = ({
         }
         case 'techniques-tab':
         case 'techniques-filters': {
-          if (route !== 'techniques' || activeSlug) {
-            navigateTo('techniques');
+          if (route !== 'libraryTechniques' || activeSlug) {
+            navigateTo('libraryTechniques');
           }
           return;
         }
         case 'terms-tab': {
-          if (route !== 'terms' || activeSlug) {
-            navigateTo('terms');
+          if (route !== 'study' || activeSlug) {
+            navigateTo('study');
           }
           return;
         }
         case 'exercises-tab': {
-          if (route !== 'exercises' || activeSlug) {
-            navigateTo('exercises');
+          if (route !== 'teach' || activeSlug) {
+            navigateTo('teach');
           }
           return;
         }
@@ -128,20 +128,20 @@ export const useOnboardingController = ({
           if (!tourTechniqueSlug) return;
           if (activeSlug !== tourTechniqueSlug) {
             openTechnique(tourTechniqueSlug, undefined, undefined, false, {
-              originRoute: 'techniques',
+              originRoute: 'libraryTechniques',
             });
           }
           return;
         }
         case 'bookmarks-collections': {
-          if (route !== 'bookmarks' || activeSlug) {
-            navigateTo('bookmarks');
+          if (route !== 'study' || activeSlug) {
+            navigateTo('study');
           }
           return;
         }
         case 'search-input': {
-          if (route !== 'bookmarks' || activeSlug) {
-            navigateTo('bookmarks');
+          if (route !== 'study' || activeSlug) {
+            navigateTo('study');
             if (!searchOpen && typeof window !== 'undefined') {
               window.setTimeout(() => {
                 setSearchOpen(true);

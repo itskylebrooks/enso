@@ -165,7 +165,7 @@ export const ExerciseDetailPage = ({
     >
       <header className="z-10 border-b surface-border pb-4 bg-transparent space-y-4">
         <a
-          href="/exercises"
+          href="/library/exercises"
           aria-label={backLabel ?? copy.backToPractice}
           onClick={(event) => {
             event.preventDefault();

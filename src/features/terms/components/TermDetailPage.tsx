@@ -140,7 +140,7 @@ export const TermDetailPage = ({
     >
       <header className="z-10 border-b surface-border pb-4 bg-transparent space-y-4">
         <a
-          href="/terms"
+          href="/library/terms"
           aria-label={backLabel ?? copy.backToGlossary}
           onClick={(event) => {
             event.preventDefault();

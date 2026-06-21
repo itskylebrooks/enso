@@ -56,7 +56,7 @@ describe('onboarding model', () => {
     expect(
       isTourSegmentAligned({
         segmentIndex: 1,
-        route: 'techniques',
+        route: 'libraryTechniques',
         activeSlug: null,
         searchOpen: false,
         isTechniqueDetailOpen: false,
@@ -65,7 +65,7 @@ describe('onboarding model', () => {
     expect(
       isTourSegmentAligned({
         segmentIndex: 1,
-        route: 'techniques',
+        route: 'libraryTechniques',
         activeSlug: 'ikkyo',
         searchOpen: false,
         isTechniqueDetailOpen: true,
@@ -74,7 +74,7 @@ describe('onboarding model', () => {
     expect(
       isTourSegmentAligned({
         segmentIndex: 5,
-        route: 'techniques',
+        route: 'libraryTechniques',
         activeSlug: 'ikkyo',
         searchOpen: false,
         isTechniqueDetailOpen: true,
@@ -83,7 +83,7 @@ describe('onboarding model', () => {
     expect(
       isTourSegmentAligned({
         segmentIndex: 7,
-        route: 'bookmarks',
+        route: 'study',
         activeSlug: null,
         searchOpen: false,
         isTechniqueDetailOpen: false,
@@ -92,7 +92,7 @@ describe('onboarding model', () => {
     expect(
       isTourSegmentAligned({
         segmentIndex: 8,
-        route: 'bookmarks',
+        route: 'study',
         activeSlug: null,
         searchOpen: true,
         isTechniqueDetailOpen: false,

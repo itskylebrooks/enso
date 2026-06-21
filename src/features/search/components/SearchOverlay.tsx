@@ -146,13 +146,13 @@ export const SearchOverlay = ({
     if (!activeFilter) return null;
 
     if (activeFilter.kind === 'type') {
-      if (activeFilter.value === 'technique') return copy.library;
-      if (activeFilter.value === 'exercise') return copy.practice;
+      if (activeFilter.value === 'technique') return copy.techniques;
+      if (activeFilter.value === 'exercise') return copy.exercises;
       return copy.glossary;
     }
 
     return gradeLabel(activeFilter.grade, locale);
-  }, [activeFilter, copy.glossary, copy.library, copy.practice, locale]);
+  }, [activeFilter, copy.exercises, copy.glossary, copy.techniques, locale]);
 
   const results = useMemo((): SearchResult[] => {
     const matchesFilter = (result: SearchResult): boolean =>
@@ -725,7 +725,7 @@ export const SearchOverlay = ({
                               className="text-[0.65rem] font-medium px-2 py-0.5 rounded-full"
                               style={{ backgroundColor: '#7C3AED', color: '#FFFFFF' }}
                             >
-                              {copy.practice}
+                              {copy.exercises}
                             </span>
                             <button
                               type="button"

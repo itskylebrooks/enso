@@ -1,12 +1,11 @@
 import { useMotionPreferences } from '@shared/components/ui/motion';
 import type { Copy } from '@shared/constants/i18n';
 import { useSmartSticky } from '@shared/hooks/useSmartSticky';
+import { getSectionForRoute, type AppSection } from '@shared/navigation/appRoutes';
 import type { AppRoute } from '@shared/types';
-import { BookOpenText, Compass, Dumbbell, LibraryBig, type LucideIcon } from 'lucide-react';
+import { Bookmark, Compass, LibraryBig, School, type LucideIcon } from 'lucide-react';
 import { LayoutGroup, motion, type Transition } from 'motion/react';
 import type { ReactElement } from 'react';
-
-type MobileTab = 'guide' | 'techniques' | 'exercises' | 'terms';
 
 type MobileTabBarProps = {
   copy: Copy;
@@ -21,52 +20,42 @@ export const MobileTabBar = ({ copy, route, onNavigate }: MobileTabBarProps): Re
   const dims = isCompact
     ? { width: 52, gap: 4, paddingX: 4, paddingY: 6, height: 44 }
     : { width: 72, gap: 6, paddingX: 6, paddingY: 8, height: 56 };
-  const isGuideActive =
-    route === 'guide' ||
-    route === 'guideAdvanced' ||
-    route === 'guideDan' ||
-    route === 'guideKyu5' ||
-    route === 'guideKyu4' ||
-    route === 'guideKyu3' ||
-    route === 'guideKyu2' ||
-    route === 'guideKyu1' ||
-    route === 'guideDan1' ||
-    route === 'guideRoutineWarmUp' ||
-    route === 'guideRoutineCooldown' ||
-    route === 'guideRoutineMobility' ||
-    route === 'guideRoutineStrength' ||
-    route === 'guideRoutineSkill' ||
-    route === 'guideRoutineRecovery';
-  const activeTab: MobileTab | null = isGuideActive
-    ? 'guide'
-    : route === 'techniques'
-      ? 'techniques'
-      : route === 'exercises'
-        ? 'exercises'
-        : route === 'terms'
-          ? 'terms'
-          : null;
+  const activeSection = getSectionForRoute(route);
 
-  const tabs: Array<{ id: MobileTab; label: string; icon: LucideIcon }> = [
+  const tabs: Array<{
+    id: AppSection;
+    route: AppRoute;
+    label: string;
+    icon: LucideIcon;
+    tourTarget: string;
+  }> = [
     {
       id: 'guide',
+      route: 'guide',
       label: copy.guideLink,
       icon: Compass,
+      tourTarget: 'nav-guide',
     },
     {
-      id: 'techniques',
+      id: 'library',
+      route: 'library',
       label: copy.library,
       icon: LibraryBig,
+      tourTarget: 'nav-library',
     },
     {
-      id: 'exercises',
-      label: copy.practice,
-      icon: Dumbbell,
+      id: 'study',
+      route: 'study',
+      label: copy.study,
+      icon: Bookmark,
+      tourTarget: 'nav-study',
     },
     {
-      id: 'terms',
-      label: copy.glossary,
-      icon: BookOpenText,
+      id: 'teach',
+      route: 'teach',
+      label: copy.teach,
+      icon: School,
+      tourTarget: 'nav-teach',
     },
   ];
 
@@ -103,25 +92,17 @@ export const MobileTabBar = ({ copy, route, onNavigate }: MobileTabBarProps): Re
             transition={springExpand}
           >
             {tabs.map((tab) => {
-              const isActive = activeTab === tab.id;
+              const isActive = activeSection === tab.id;
               const Icon = tab.icon;
 
               return (
                 <button
                   key={tab.id}
                   type="button"
-                  data-tour-target={
-                    tab.id === 'guide'
-                      ? 'nav-guide'
-                      : tab.id === 'techniques'
-                        ? 'nav-techniques'
-                        : tab.id === 'exercises'
-                          ? 'nav-exercises'
-                          : 'nav-terms'
-                  }
+                  data-tour-target={tab.tourTarget}
                   onClick={() => {
                     if (isActive) return;
-                    onNavigate(tab.id);
+                    onNavigate(tab.route);
                   }}
                   aria-label={tab.label}
                   aria-current={isActive ? 'page' : undefined}

@@ -1,18 +1,19 @@
 import { Logo } from '@shared/components';
 import { defaultEase, useMotionPreferences } from '@shared/components/ui/motion';
 import type { Copy } from '@shared/constants/i18n';
+import { getSectionForRoute, type AppSection } from '@shared/navigation/appRoutes';
 import type { AppRoute } from '@shared/types';
 import {
   Bookmark,
-  BookOpenText,
   ChevronDown,
   Compass,
-  Dumbbell,
   Info,
   LibraryBig,
   MessageSquare,
+  School,
   Search,
   Settings,
+  type LucideIcon,
 } from 'lucide-react';
 import { AnimatePresence, motion, type Transition, type Variants } from 'motion/react';
 import {
@@ -72,6 +73,25 @@ const createMobileMenuVariants = (
       },
 });
 
+const primaryNav: Array<{
+  section: AppSection;
+  route: AppRoute;
+  tourTarget: string;
+  labelKey: 'guideLink' | 'library' | 'study' | 'teach';
+  icon: LucideIcon;
+}> = [
+  { section: 'guide', route: 'guide', tourTarget: 'nav-guide', labelKey: 'guideLink', icon: Compass },
+  {
+    section: 'library',
+    route: 'library',
+    tourTarget: 'nav-library',
+    labelKey: 'library',
+    icon: LibraryBig,
+  },
+  { section: 'study', route: 'study', tourTarget: 'nav-study', labelKey: 'study', icon: Bookmark },
+  { section: 'teach', route: 'teach', tourTarget: 'nav-teach', labelKey: 'teach', icon: School },
+];
+
 export const Header = ({
   copy,
   route,
@@ -89,22 +109,7 @@ export const Header = ({
     () => createMobileMenuVariants(prefersReducedMotion, overlayMotion.panelTransition),
     [prefersReducedMotion, overlayMotion.panelTransition],
   );
-  const isGuideActive =
-    route === 'guide' ||
-    route === 'guideAdvanced' ||
-    route === 'guideDan' ||
-    route === 'guideKyu5' ||
-    route === 'guideKyu4' ||
-    route === 'guideKyu3' ||
-    route === 'guideKyu2' ||
-    route === 'guideKyu1' ||
-    route === 'guideDan1' ||
-    route === 'guideRoutineWarmUp' ||
-    route === 'guideRoutineCooldown' ||
-    route === 'guideRoutineMobility' ||
-    route === 'guideRoutineStrength' ||
-    route === 'guideRoutineSkill' ||
-    route === 'guideRoutineRecovery';
+  const activeSection = getSectionForRoute(route);
   const moreMenuRef = useRef<HTMLDivElement>(null);
   const moreButtonRef = useRef<HTMLButtonElement>(null);
   const moreMobileMenuRef = useRef<HTMLDivElement>(null);
@@ -198,68 +203,31 @@ export const Header = ({
           <Logo className="shrink-0" />
           <div className="font-semibold tracking-tight">{copy.app}</div>
         </a>
-        {/* Centered nav (desktop): Guide / Techniques / Exercises / Terms */}
         <div className="absolute left-1/2 transform -translate-x-1/2 hidden md:flex items-center gap-2 inset-y-0">
-          <button
-            type="button"
-            onClick={() => onNavigate('guide')}
-            data-tour-target="nav-guide"
-            className={classNames(
-              'px-3 py-2 rounded-lg border inline-flex items-center gap-2 justify-center focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text)] !transition-colors !duration-150 !ease-in-out',
-              isGuideActive ? 'btn-contrast' : 'btn-tonal surface-hover',
-            )}
-            aria-pressed={isGuideActive}
-            aria-current={isGuideActive ? 'page' : undefined}
-            aria-label={copy.guideLink}
-          >
-            <Compass className="w-4 h-4 shrink-0" />
-            <span className="text-sm">{copy.guideLink}</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => onNavigate('techniques')}
-            data-tour-target="nav-techniques"
-            className={classNames(
-              'px-3 py-2 rounded-lg border inline-flex items-center gap-2 justify-center focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text)] !transition-colors !duration-150 !ease-in-out',
-              route === 'techniques' ? 'btn-contrast' : 'btn-tonal surface-hover',
-            )}
-            aria-pressed={route === 'techniques'}
-            aria-current={route === 'techniques' ? 'page' : undefined}
-            aria-label={copy.library}
-          >
-            <LibraryBig className="w-4 h-4 shrink-0" />
-            <span className="text-sm">{copy.library}</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => onNavigate('exercises')}
-            data-tour-target="nav-exercises"
-            className={classNames(
-              'px-3 py-2 rounded-lg border inline-flex items-center gap-2 justify-center focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text)] !transition-colors !duration-150 !ease-in-out',
-              route === 'exercises' ? 'btn-contrast' : 'btn-tonal surface-hover',
-            )}
-            aria-pressed={route === 'exercises'}
-            aria-current={route === 'exercises' ? 'page' : undefined}
-            aria-label={copy.practice}
-          >
-            <Dumbbell className="w-4 h-4 shrink-0" />
-            <span className="text-sm">{copy.practice}</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => onNavigate('terms')}
-            data-tour-target="nav-terms"
-            className={classNames(
-              'px-3 py-2 rounded-lg border inline-flex items-center gap-2 justify-center focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text)] !transition-colors !duration-150 !ease-in-out',
-              route === 'terms' ? 'btn-contrast' : 'btn-tonal surface-hover',
-            )}
-            aria-pressed={route === 'terms'}
-            aria-current={route === 'terms' ? 'page' : undefined}
-            aria-label={copy.glossary}
-          >
-            <BookOpenText className="w-4 h-4 shrink-0" />
-            <span className="text-sm">{copy.glossary}</span>
-          </button>
+          {primaryNav.map((item) => {
+            const Icon = item.icon;
+            const isActive = activeSection === item.section;
+            const label = copy[item.labelKey];
+
+            return (
+              <button
+                key={item.section}
+                type="button"
+                onClick={() => onNavigate(item.route)}
+                data-tour-target={item.tourTarget}
+                className={classNames(
+                  'px-3 py-2 rounded-lg border inline-flex items-center gap-2 justify-center focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text)] !transition-colors !duration-150 !ease-in-out',
+                  isActive ? 'btn-contrast' : 'btn-tonal surface-hover',
+                )}
+                aria-pressed={isActive}
+                aria-current={isActive ? 'page' : undefined}
+                aria-label={label}
+              >
+                <Icon className="w-4 h-4 shrink-0" />
+                <span className="text-sm">{label}</span>
+              </button>
+            );
+          })}
         </div>
         <nav className="flex items-center gap-2">
           <div className="hidden md:flex items-center gap-2">
@@ -274,19 +242,6 @@ export const Header = ({
                 <Search className="w-4 h-4" />
               </button>
             </div>
-            <button
-              type="button"
-              onClick={() => onNavigate('bookmarks')}
-              className={classNames(
-                'px-3 py-2 rounded-lg border inline-flex items-center justify-center focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text)] !transition-colors !duration-150 !ease-in-out',
-                route === 'bookmarks' ? 'btn-contrast' : 'btn-tonal surface-hover',
-              )}
-              aria-pressed={route === 'bookmarks'}
-              aria-current={route === 'bookmarks' ? 'page' : undefined}
-              aria-label={copy.progress}
-            >
-              <Bookmark className="w-4 h-4" />
-            </button>
             {/* Desktop More dropdown */}
             <div className="relative">
               <button
@@ -397,19 +352,6 @@ export const Header = ({
               >
                 <Search className="w-5 h-5" />
               </IconButton>
-              <button
-                type="button"
-                onClick={() => onNavigate('bookmarks')}
-                className={classNames(
-                  'px-3 py-2 rounded-lg border inline-flex items-center justify-center focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-text)] !transition-colors !duration-150 !ease-in-out',
-                  route === 'bookmarks' ? 'btn-contrast' : 'btn-tonal surface-hover',
-                )}
-                aria-pressed={route === 'bookmarks'}
-                aria-current={route === 'bookmarks' ? 'page' : undefined}
-                aria-label={copy.progress}
-              >
-                <Bookmark className="w-5 h-5" />
-              </button>
               <button
                 ref={moreMobileButtonRef}
                 type="button"

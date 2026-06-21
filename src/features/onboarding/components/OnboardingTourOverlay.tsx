@@ -95,18 +95,18 @@ const getSegmentAligned = (
       return route === 'guide';
     case 'techniques-tab':
     case 'techniques-filters':
-      return route === 'techniques' && !isTechniqueDetailOpen;
+      return route === 'libraryTechniques' && !isTechniqueDetailOpen;
     case 'terms-tab':
-      return route === 'terms';
+      return route === 'study';
     case 'exercises-tab':
-      return route === 'exercises';
+      return route === 'teach';
     case 'detail-study-status':
     case 'detail-bookmarks-collections':
       return isTechniqueDetailOpen;
     case 'bookmarks-collections':
-      return route === 'bookmarks' && !searchOpen;
+      return route === 'study' && !searchOpen;
     case 'search-input':
-      return route === 'bookmarks' && searchOpen;
+      return route === 'study' && searchOpen;
     default:
       return false;
   }

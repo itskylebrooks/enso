@@ -150,7 +150,7 @@ export const useContentController = ({
 
   const currentExerciseStudyStatus = useMemo(
     () =>
-      route === 'exercises' && activeSlug
+      route === 'libraryExercises' && activeSlug
         ? getStudyStatusForItem(db.studyStatus, 'exercise', activeSlug)
         : 'none',
     [activeSlug, db.studyStatus, route],

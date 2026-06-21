@@ -33,8 +33,8 @@ export const ONBOARDING_TOUR_SEGMENTS: OnboardingTourSegment[] = [
     id: 'techniques-tab',
     stepNumber: 2,
     targetSelectors: [
-      '.mobile-tab-bar [data-tour-target="nav-techniques"]',
-      '[data-tour-target="nav-techniques"]',
+      '.mobile-tab-bar [data-tour-target="nav-library"]',
+      '[data-tour-target="nav-library"]',
     ],
   },
   {
@@ -50,16 +50,16 @@ export const ONBOARDING_TOUR_SEGMENTS: OnboardingTourSegment[] = [
     id: 'terms-tab',
     stepNumber: 4,
     targetSelectors: [
-      '.mobile-tab-bar [data-tour-target="nav-terms"]',
-      '[data-tour-target="nav-terms"]',
+      '.mobile-tab-bar [data-tour-target="nav-study"]',
+      '[data-tour-target="nav-study"]',
     ],
   },
   {
     id: 'exercises-tab',
     stepNumber: 5,
     targetSelectors: [
-      '.mobile-tab-bar [data-tour-target="nav-exercises"]',
-      '[data-tour-target="nav-exercises"]',
+      '.mobile-tab-bar [data-tour-target="nav-teach"]',
+      '[data-tour-target="nav-teach"]',
     ],
   },
   {
@@ -88,4 +88,3 @@ export const ONBOARDING_TOUR_SEGMENTS: OnboardingTourSegment[] = [
     targetSelectors: ['[data-tour-target="search-input"]'],
   },
 ];
-

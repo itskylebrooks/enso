@@ -15,12 +15,12 @@ import {
 } from '@shared/constants/urls';
 import { enrichTechniqueWithVariants } from '@shared/constants/variantMapping';
 import {
-  buildGuideRoutinePath,
+  buildLibraryRoutinePath,
   gradeToGuideRoute,
-  guideRouteToRoutine,
   isGuideLikeRoute,
   routeToPath,
-  routineToGuideRoute,
+  routeToRoutine,
+  routineToLibraryRoute,
   type HistoryState,
 } from '@shared/navigation/appRoutes';
 import { useAppNavigation } from '@shared/navigation/useAppNavigation';
@@ -183,7 +183,7 @@ export default function App({
   });
   const tourTechniqueSlug = db.techniques[0]?.slug ?? null;
   const isTechniqueDetailOpenForOnboarding = Boolean(
-    activeSlug && route !== 'terms' && route !== 'exercises' && !guideRouteToRoutine(route),
+    activeSlug && route !== 'libraryTerms' && route !== 'libraryExercises' && !routeToRoutine(route),
   );
   const {
     state: {
@@ -298,7 +298,7 @@ export default function App({
         sourceRoute,
         sourceLabel,
       });
-      navigateTo('learn');
+      navigateTo('studyLearn');
     },
     [navigateTo],
   );
@@ -565,7 +565,7 @@ export default function App({
       }
 
       const sourceRoute = options?.originRoute ?? route;
-      const tabRoute = sourceRoute === 'bookmarks' ? 'techniques' : sourceRoute;
+      const tabRoute = sourceRoute === 'study' ? 'libraryTechniques' : sourceRoute;
       if (tabRoute !== route) {
         setRoute(tabRoute);
       }
@@ -725,11 +725,11 @@ export default function App({
       'tenkan-ura': 'tenkan',
     };
     const finalSlug = slugRedirects[slug] || slug;
-    const nextRoute = route === 'home' || route === 'bookmarks' ? 'terms' : route;
+    const nextRoute = route === 'home' || route === 'study' ? 'libraryTerms' : route;
 
     if (typeof window !== 'undefined') {
       const encodedSlug = encodeURIComponent(finalSlug);
-      const glossaryPath = `/terms/${encodedSlug}`;
+      const glossaryPath = `/library/terms/${encodedSlug}`;
       // Push the current route into history state so the detail page knows where it was opened from
       const state: HistoryState = { route: nextRoute, slug: finalSlug, sourceRoute: route };
 
@@ -742,19 +742,19 @@ export default function App({
 
     // Mirror technique behavior: set active slug but keep `route` unchanged unless coming from home,
     // where we want the glossary tab highlighted.
-    if (route === 'home' || route === 'bookmarks') {
-      setRoute('terms');
+    if (route === 'home' || route === 'study') {
+      setRoute('libraryTerms');
     }
     setActiveSlug(finalSlug);
   };
 
   const openPracticeExercise = (slug: string): void => {
     rememberScrollPosition();
-    const nextRoute: AppRoute = 'exercises';
+    const nextRoute: AppRoute = 'libraryExercises';
 
     if (typeof window !== 'undefined') {
       const encodedSlug = encodeURIComponent(slug);
-      const practicePath = `/exercises/${encodedSlug}`;
+      const practicePath = `/library/exercises/${encodedSlug}`;
       const state: HistoryState = {
         route: nextRoute,
         slug,
@@ -769,8 +769,8 @@ export default function App({
       }
     }
 
-    if (route !== 'exercises') {
-      setRoute('exercises');
+    if (route !== 'libraryExercises') {
+      setRoute('libraryExercises');
     }
     setActiveSlug(slug);
   };
@@ -823,7 +823,7 @@ export default function App({
 
   const navigateToGuideRoutine = useCallback(
     (routine: GuideRoutine, sourceRoute?: AppRoute) => {
-      navigateTo(routineToGuideRoute(routine), { sourceRoute });
+      navigateTo(routineToLibraryRoute(routine), { sourceRoute });
     },
     [navigateTo],
   );
@@ -831,8 +831,8 @@ export default function App({
   const openGuideRoutinePreset = useCallback(
     (routine: GuideRoutine, routineSlug: string) => {
       rememberScrollPosition();
-      const nextRoute = routineToGuideRoute(routine);
-      const nextPath = buildGuideRoutinePath(routine, routineSlug);
+      const nextRoute = routineToLibraryRoute(routine);
+      const nextPath = buildLibraryRoutinePath(routine, routineSlug);
 
       setRoute(nextRoute);
       setActiveSlug(routineSlug);
@@ -841,7 +841,7 @@ export default function App({
         const state: HistoryState = {
           route: nextRoute,
           slug: routineSlug,
-          sourceRoute: 'guide',
+          sourceRoute: 'library',
         };
         if (`${window.location.pathname}${window.location.search}` !== nextPath) {
           window.history.pushState(state, '', nextPath);
@@ -856,14 +856,14 @@ export default function App({
   const closeGuideRoutinePreset = useCallback(
     (routine: GuideRoutine) => {
       rememberScrollPosition();
-      const nextRoute = routineToGuideRoute(routine);
-      const nextPath = buildGuideRoutinePath(routine);
+      const nextRoute = routineToLibraryRoute(routine);
+      const nextPath = buildLibraryRoutinePath(routine);
 
       setRoute(nextRoute);
       setActiveSlug(null);
 
       if (typeof window !== 'undefined') {
-        const state: HistoryState = { route: nextRoute, sourceRoute: 'guide' };
+        const state: HistoryState = { route: nextRoute, sourceRoute: 'library' };
         window.history.replaceState(state, '', nextPath);
       }
     },
@@ -880,9 +880,9 @@ export default function App({
   const techniqueNotFound =
     Boolean(activeSlug) &&
     !currentTechnique &&
-    route !== 'terms' &&
-    route !== 'exercises' &&
-    !guideRouteToRoutine(route);
+    route !== 'libraryTerms' &&
+    route !== 'libraryExercises' &&
+    !routeToRoutine(route);
   const flushScrollToTop = useCallback(() => {
     if (typeof window === 'undefined') return;
     if (!pendingScrollToTopRef.current) return;
@@ -925,7 +925,7 @@ export default function App({
   ]);
 
   const techniqueBackLabel =
-    techniqueBackRoute === 'bookmarks'
+    techniqueBackRoute === 'study'
       ? copy.backToBookmarks
       : techniqueBackRoute === 'home'
         ? copy.backToHome
@@ -933,7 +933,7 @@ export default function App({
           ? copy.backToAbout
           : isGuideLikeRoute(techniqueBackRoute)
             ? copy.backToGuide
-            : techniqueBackRoute === 'terms'
+            : techniqueBackRoute === 'libraryTerms'
               ? copy.backToGlossary
               : techniqueBackRoute === 'feedback'
                 ? copy.backToFeedback
@@ -943,7 +943,7 @@ export default function App({
     typeof window !== 'undefined' ? (window.history.state as HistoryState | null) : null;
   const glossaryBackRoute = glossaryHistoryState?.sourceRoute ?? route;
   const glossaryBackLabel =
-    glossaryBackRoute === 'bookmarks'
+    glossaryBackRoute === 'study'
       ? copy.backToBookmarks
       : glossaryBackRoute === 'home'
         ? copy.backToHome
@@ -960,7 +960,7 @@ export default function App({
   const practiceBackRoute = practiceHistoryState?.sourceRoute ?? route;
   const practiceBackSourceSlug = practiceHistoryState?.sourceSlug ?? null;
   const practiceBackLabel =
-    practiceBackRoute === 'bookmarks'
+    practiceBackRoute === 'study'
       ? copy.backToBookmarks
       : practiceBackRoute === 'home'
         ? copy.backToHome
@@ -970,16 +970,16 @@ export default function App({
             ? copy.backToGuide
             : practiceBackRoute === 'feedback'
               ? copy.backToFeedback
-              : copy.backToPractice;
+              : copy.backToLibrary;
   const handlePracticeBack = () => {
-    const guideRoutine = guideRouteToRoutine(practiceBackRoute);
+    const guideRoutine = routeToRoutine(practiceBackRoute);
     if (guideRoutine && practiceBackSourceSlug) {
-      const path = buildGuideRoutinePath(guideRoutine, practiceBackSourceSlug);
+      const path = buildLibraryRoutinePath(guideRoutine, practiceBackSourceSlug);
       setRoute(practiceBackRoute);
       setActiveSlug(practiceBackSourceSlug);
       if (typeof window !== 'undefined') {
         window.history.replaceState(
-          { route: practiceBackRoute, slug: practiceBackSourceSlug, sourceRoute: 'guide' },
+          { route: practiceBackRoute, slug: practiceBackSourceSlug, sourceRoute: 'library' },
           '',
           path,
         );
@@ -999,7 +999,7 @@ export default function App({
   const handleGuideBack = (): void => {
     if (guideHistoryState?.sourceSlug) {
       openTechnique(guideHistoryState.sourceSlug, undefined, undefined, true, {
-        originRoute: guideHistoryState.sourceRoute ?? 'techniques',
+        originRoute: guideHistoryState.sourceRoute ?? 'libraryTechniques',
       });
       return;
     }
