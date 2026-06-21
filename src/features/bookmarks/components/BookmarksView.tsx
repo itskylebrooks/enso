@@ -1,5 +1,5 @@
 import { ExerciseCard } from '@features/exercises/components/ExerciseCard';
-import { getLearnableBookmarkCards, LearnSetupMenu } from '@features/learn';
+import { getLearnableBookmarkCards } from '@features/learn';
 import { TechniqueCard } from '@features/technique/components/TechniqueCard';
 import { ExpandableFilterBar } from '@shared/components/ui/ExpandableFilterBar';
 import { MobileCollections } from '@shared/components/ui/MobileCollections';
@@ -22,8 +22,8 @@ import {
   getBookmarkedVariantKeys,
   toVariantStorageKey,
 } from '@shared/utils/variantKeys';
-import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp, Brain } from 'lucide-react';
-import { AnimatePresence, motion } from 'motion/react';
+import { ArrowDown, ArrowLeft, ArrowRight, ArrowUp } from 'lucide-react';
+import { AnimatePresence } from 'motion/react';
 import {
   useCallback,
   useEffect,
@@ -54,6 +54,7 @@ import type {
 import type { LearnCard, LearnSetupOptions } from '@features/learn';
 import { AddToCollectionMenu } from './AddToCollectionMenu';
 import { CollectionsSidebar } from './CollectionsSidebar';
+import { StudyLearnExtension } from './StudyLearnExtension';
 import { TermBookmarkCard } from './TermBookmarkCard';
 
 type SelectedCollectionId = 'all' | 'ungrouped' | string;
@@ -135,68 +136,6 @@ type ReorderControlsProps = {
   disableForward: boolean;
   onMoveBackward: () => void;
   onMoveForward: () => void;
-};
-
-type DesktopLearnSidePanelProps = {
-  copy: Copy;
-  cardCount: number;
-  onStart: (options: LearnSetupOptions) => void;
-};
-
-const DesktopLearnSidePanel = ({
-  copy,
-  cardCount,
-  onStart,
-}: DesktopLearnSidePanelProps): ReactElement => {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const { prefersReducedMotion } = useMotionPreferences();
-
-  return (
-    <motion.div
-      className="relative z-20"
-      onMouseEnter={() => setIsExpanded(true)}
-      onMouseLeave={() => setIsExpanded(false)}
-      initial={false}
-      animate={{ opacity: 1 }}
-      transition={{ duration: prefersReducedMotion ? 0 : 0.2, ease: [0.4, 0, 0.2, 1] }}
-    >
-      <div
-        className={`transition-all duration-300 ${
-          isExpanded ? 'opacity-0 pointer-events-none' : 'opacity-100'
-        }`}
-      >
-        <div className="surface border surface-border rounded-xl px-2.5 py-4 flex flex-col items-center gap-3 shadow-sm cursor-pointer hover:bg-[var(--color-surface-hover)] transition-colors">
-          <Brain className="w-4 h-4 text-subtle" aria-hidden />
-          <div className="writing-mode-vertical text-xs font-medium tracking-wider uppercase text-subtle">
-            {copy.learn}
-          </div>
-        </div>
-      </div>
-
-      <AnimatePresence>
-        {isExpanded && (
-          <motion.div
-            className="absolute left-0 top-0 z-30 w-64 surface border surface-border rounded-2xl p-3 panel-shadow max-h-[calc(100vh-10rem)] overflow-y-auto no-select"
-            initial={{ opacity: 0, scale: 0.95, x: -10 }}
-            animate={{ opacity: 1, scale: 1, x: 0 }}
-            exit={{ opacity: 0, scale: 0.95, x: -10 }}
-            transition={{
-              duration: prefersReducedMotion ? 0 : 0.2,
-              ease: [0.4, 0, 0.2, 1],
-            }}
-          >
-            <div className="mb-3 flex items-center justify-between gap-2">
-              <h2 className="text-sm font-semibold tracking-wide uppercase text-subtle">
-                {copy.learn}
-              </h2>
-              <span className="text-xs text-subtle">{cardCount}</span>
-            </div>
-            <LearnSetupMenu copy={copy} cardCount={cardCount} variant="panel" onStart={onStart} />
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.div>
-  );
 };
 
 const ReorderControls = ({
@@ -1053,15 +992,6 @@ export const BookmarksView = ({
     }
   };
 
-  const mobileLearnMenu = (
-    <LearnSetupMenu
-      copy={copy}
-      cardCount={learnCards.length}
-      variant="inline"
-      onStart={(options) => onStartLearn(learnCards, options)}
-    />
-  );
-
   const handleCreate = (name: string) => {
     const newId = onCreateCollection(name);
     closeDialog();
@@ -1115,7 +1045,12 @@ export const BookmarksView = ({
             forceOpen={forceCollectionsSidebarOpen}
           />
           <div className="rounded-2xl border surface-border bg-[var(--color-surface)] p-4 no-select">
-            {mobileLearnMenu}
+            <StudyLearnExtension
+              copy={copy}
+              cardCount={learnCards.length}
+              variant="mobile"
+              onStart={(options) => onStartLearn(learnCards, options)}
+            />
           </div>
         </div>
         <div className="relative">
@@ -1124,9 +1059,10 @@ export const BookmarksView = ({
             tourTargetId="bookmarks-collections-sidebar"
             forceOpen={forceCollectionsSidebarOpen}
             sideRailAfter={
-              <DesktopLearnSidePanel
+              <StudyLearnExtension
                 copy={copy}
                 cardCount={learnCards.length}
+                variant="desktop"
                 onStart={(options) => onStartLearn(learnCards, options)}
               />
             }
