@@ -30,6 +30,7 @@ const SyncPayloadSchema = z
       locale: z.union([z.literal('en'), z.literal('de')]),
       filters: z.record(z.unknown()),
       filterPanelPinned: z.boolean(),
+      showTeachInPrimaryNav: z.boolean().default(false),
     }),
     homepage: z.object({
       pinnedBeltGrade: z

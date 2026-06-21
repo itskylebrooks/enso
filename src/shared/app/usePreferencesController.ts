@@ -7,6 +7,7 @@ import {
   loadFilterPanelPinned,
   loadFilters,
   loadPinnedBeltGrade,
+  loadShowTeachInPrimaryNav,
   loadStoredLocale,
   loadTheme,
   saveBeltPromptDismissed,
@@ -14,6 +15,7 @@ import {
   saveFilters,
   saveLocale,
   savePinnedBeltGrade,
+  saveShowTeachInPrimaryNav,
   saveSyncMeta,
   saveTheme,
 } from '@shared/services/storageService';
@@ -94,12 +96,16 @@ export const usePreferencesController = ({
     categories: [],
     equipment: [],
   });
+  const [showTeachInPrimaryNav, setShowTeachInPrimaryNav] = useState<boolean>(() =>
+    loadShowTeachInPrimaryNav(),
+  );
   const [pinnedBeltGrade, setPinnedBeltGrade] = useState<Grade | null>(null);
   const [beltPromptDismissed, setBeltPromptDismissed] = useState<boolean>(false);
 
   const settingsPersistedRef = useRef(false);
   const localePersistedRef = useRef(false);
   const filtersPersistedRef = useRef(false);
+  const showTeachInPrimaryNavPersistedRef = useRef(false);
   const pinnedBeltPersistedRef = useRef(false);
   const beltPromptPersistedRef = useRef(false);
   const filterPanelPinnedRef = useRef<boolean>(loadFilterPanelPinned());
@@ -112,8 +118,9 @@ export const usePreferencesController = ({
         locale,
         filters,
         filterPanelPinned: loadFilterPanelPinned(),
+        showTeachInPrimaryNav,
       }),
-    [filters, hasManualTheme, locale, theme],
+    [filters, hasManualTheme, locale, showTeachInPrimaryNav, theme],
   );
 
   const buildHomepageStateForSync = useCallback(
@@ -283,6 +290,31 @@ export const usePreferencesController = ({
   ]);
 
   useEffect(() => {
+    saveShowTeachInPrimaryNav(showTeachInPrimaryNav);
+
+    if (!showTeachInPrimaryNavPersistedRef.current) {
+      showTeachInPrimaryNavPersistedRef.current = true;
+      return;
+    }
+
+    if (syncPauseAutoPushRef.current) {
+      return;
+    }
+
+    if (lastAppliedSyncSnapshotRef.current.settings === getCurrentSettingsSyncSnapshot()) {
+      return;
+    }
+
+    markSettingsChanged();
+  }, [
+    getCurrentSettingsSyncSnapshot,
+    lastAppliedSyncSnapshotRef,
+    markSettingsChanged,
+    showTeachInPrimaryNav,
+    syncPauseAutoPushRef,
+  ]);
+
+  useEffect(() => {
     try {
       saveFilters(filters);
     } catch {
@@ -388,6 +420,7 @@ export const usePreferencesController = ({
     setFilters(payload.settings.filters ?? defaultFilters);
     saveFilterPanelPinned(payload.settings.filterPanelPinned);
     filterPanelPinnedRef.current = payload.settings.filterPanelPinned;
+    setShowTeachInPrimaryNav(payload.settings.showTeachInPrimaryNav ?? false);
 
     setPinnedBeltGrade(payload.homepage.pinnedBeltGrade);
     setBeltPromptDismissed(payload.homepage.beltPromptDismissed);
@@ -407,6 +440,7 @@ export const usePreferencesController = ({
       filters,
       glossaryFilters,
       practiceFilters,
+      showTeachInPrimaryNav,
     },
     homepage: {
       pinnedBeltGrade,
@@ -416,6 +450,7 @@ export const usePreferencesController = ({
       setFilters,
       setGlossaryFilters,
       setPracticeFilters,
+      setShowTeachInPrimaryNav,
       setBeltPromptDismissed,
       handleLocaleChange,
       handleThemeChange,

@@ -13,12 +13,14 @@ describe('preferences model', () => {
         locale: 'en',
         filters: { category: 'throws' },
         filterPanelPinned: true,
+        showTeachInPrimaryNav: true,
       }),
     ).toEqual({
       themePreference: null,
       locale: 'en',
       filters: { category: 'throws' },
       filterPanelPinned: true,
+      showTeachInPrimaryNav: true,
     });
   });
 

@@ -32,6 +32,7 @@ const settings: SyncPayloadData['settings'] = {
   locale: 'en',
   filters: {},
   filterPanelPinned: false,
+  showTeachInPrimaryNav: false,
 };
 
 const homepage: SyncPayloadData['homepage'] = {

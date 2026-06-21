@@ -38,6 +38,8 @@ type SettingsModalProps = {
   onRequestClear: () => void;
   onChangeLocale: (locale: Locale) => void;
   onChangeTheme: (theme: Theme | 'system') => void;
+  showTeachInPrimaryNav: boolean;
+  onChangeShowTeachInPrimaryNav: (value: boolean) => void;
   onManageSync: () => void;
   onChangeDB: (db: DB) => void;
   clearButtonRef?: RefObject<HTMLButtonElement | null>;
@@ -59,6 +61,8 @@ export const SettingsModal = ({
   onRequestClear,
   onChangeLocale,
   onChangeTheme,
+  showTeachInPrimaryNav,
+  onChangeShowTeachInPrimaryNav,
   onManageSync,
   onChangeDB,
   clearButtonRef,
@@ -304,6 +308,30 @@ export const SettingsModal = ({
                   DE
                 </button>
               </div>
+            </div>
+          </div>
+          <div className="border-t surface-border" />
+
+          {/* Trainer tools */}
+          <div>
+            <div className="grid grid-cols-3 gap-2 items-center">
+              <div className="col-span-2">
+                <SectionTitle muted={false} variant="settings">
+                  {copy.showTeachInPrimaryNav}
+                </SectionTitle>
+              </div>
+              <button
+                type="button"
+                onClick={() => onChangeShowTeachInPrimaryNav(!showTeachInPrimaryNav)}
+                className={classNames(
+                  'col-span-1 w-full px-3 py-2 text-sm rounded-lg border inline-flex items-center justify-center transition-soft motion-ease focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
+                  showTeachInPrimaryNav ? 'btn-contrast' : 'btn-tonal surface-hover',
+                )}
+                aria-pressed={showTeachInPrimaryNav}
+                aria-label={copy.showTeachInPrimaryNav}
+              >
+                {showTeachInPrimaryNav ? copy.on : copy.off}
+              </button>
             </div>
           </div>
           <div className="border-t surface-border" />

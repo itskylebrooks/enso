@@ -18,12 +18,14 @@ export const buildPreferenceSettingsState = (params: {
   locale: Locale;
   filters: Filters;
   filterPanelPinned: boolean;
+  showTeachInPrimaryNav: boolean;
 }): SyncSettingsState =>
   buildSettingsState({
     themePreference: params.hasManualTheme ? params.theme : null,
     locale: params.locale,
     filters: params.filters,
     filterPanelPinned: params.filterPanelPinned,
+    showTeachInPrimaryNav: params.showTeachInPrimaryNav,
   });
 
 export const buildPreferenceHomepageState = (params: HomepageSnapshotInput): SyncHomepageState =>

@@ -12,6 +12,7 @@ import {
   ONBOARDING_COMPLETED_KEY,
   ONBOARDING_DISMISSED_KEY,
   ONBOARDING_STEP_KEY,
+  SHOW_TEACH_IN_PRIMARY_NAV_KEY,
   STORAGE_KEY,
   SYNC_META_KEY,
   THEME_KEY,
@@ -546,6 +547,14 @@ export const saveTheme = (theme: Theme): void => {
 
 export const clearThemePreference = (): void => {
   removeLocalStorage(THEME_KEY);
+};
+
+export const loadShowTeachInPrimaryNav = (): boolean => {
+  return readLocalStorage(SHOW_TEACH_IN_PRIMARY_NAV_KEY) === 'true';
+};
+
+export const saveShowTeachInPrimaryNav = (value: boolean): void => {
+  writeLocalStorage(SHOW_TEACH_IN_PRIMARY_NAV_KEY, String(value));
 };
 
 const detectBrowserLanguage = (fallback: Locale = fallbackLocale): Locale => {

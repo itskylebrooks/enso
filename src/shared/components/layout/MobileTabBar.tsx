@@ -10,10 +10,16 @@ import type { ReactElement } from 'react';
 type MobileTabBarProps = {
   copy: Copy;
   route: AppRoute;
+  showTeachInPrimaryNav: boolean;
   onNavigate: (route: AppRoute, options?: { replace?: boolean }) => void;
 };
 
-export const MobileTabBar = ({ copy, route, onNavigate }: MobileTabBarProps): ReactElement => {
+export const MobileTabBar = ({
+  copy,
+  route,
+  showTeachInPrimaryNav,
+  onNavigate,
+}: MobileTabBarProps): ReactElement => {
   const { prefersReducedMotion } = useMotionPreferences();
   const { isVisible, isMobile } = useSmartSticky(route);
   const isCompact = isMobile && !isVisible;
@@ -50,13 +56,17 @@ export const MobileTabBar = ({ copy, route, onNavigate }: MobileTabBarProps): Re
       icon: Bookmark,
       tourTarget: 'nav-study',
     },
-    {
-      id: 'teach',
-      route: 'teach',
-      label: copy.teach,
-      icon: School,
-      tourTarget: 'nav-teach',
-    },
+    ...(showTeachInPrimaryNav
+      ? [
+          {
+            id: 'teach' as const,
+            route: 'teach' as const,
+            label: copy.teach,
+            icon: School,
+            tourTarget: 'nav-teach',
+          },
+        ]
+      : []),
   ];
 
   const springExpand: Transition = prefersReducedMotion

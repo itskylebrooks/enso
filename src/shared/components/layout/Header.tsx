@@ -35,6 +35,7 @@ type HeaderProps = {
   onSearch: (method?: 'keyboard' | 'mouse') => void;
   onSettings: () => void;
   onStartTour: () => void;
+  showTeachInPrimaryNav: boolean;
   searchButtonRef: RefObject<HTMLButtonElement | null>;
   settingsButtonRef: RefObject<HTMLButtonElement | null>;
 };
@@ -99,6 +100,7 @@ export const Header = ({
   onSearch,
   onSettings,
   onStartTour,
+  showTeachInPrimaryNav,
   searchButtonRef,
   settingsButtonRef,
 }: HeaderProps): ReactElement => {
@@ -110,6 +112,12 @@ export const Header = ({
     [prefersReducedMotion, overlayMotion.panelTransition],
   );
   const activeSection = getSectionForRoute(route);
+  const visiblePrimaryNav = showTeachInPrimaryNav
+    ? primaryNav
+    : primaryNav.filter((item) => item.section !== 'teach');
+  const shouldShowTeachInMoreMenu = !showTeachInPrimaryNav;
+  const moreButtonTourTarget =
+    !showTeachInPrimaryNav && activeSection === 'teach' ? 'nav-teach' : undefined;
   const moreMenuRef = useRef<HTMLDivElement>(null);
   const moreButtonRef = useRef<HTMLButtonElement>(null);
   const moreMobileMenuRef = useRef<HTMLDivElement>(null);
@@ -204,7 +212,7 @@ export const Header = ({
           <div className="font-semibold tracking-tight">{copy.app}</div>
         </a>
         <div className="absolute left-1/2 transform -translate-x-1/2 hidden md:flex items-center gap-2 inset-y-0">
-          {primaryNav.map((item) => {
+          {visiblePrimaryNav.map((item) => {
             const Icon = item.icon;
             const isActive = activeSection === item.section;
             const label = copy[item.labelKey];
@@ -252,6 +260,7 @@ export const Header = ({
                 aria-haspopup="menu"
                 aria-expanded={moreDesktopOpen}
                 aria-label={copy.more}
+                data-tour-target={moreButtonTourTarget}
               >
                 <ChevronDown className="w-4 h-4" />
               </button>
@@ -285,6 +294,24 @@ export const Header = ({
                           </span>
                         </button>
                       </li>
+                      {shouldShowTeachInMoreMenu && (
+                        <li>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setMoreDesktopOpen(false);
+                              onNavigate('teach');
+                            }}
+                            className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
+                            role="menuitem"
+                          >
+                            <span className="flex items-center gap-2">
+                              <School className="w-4 h-4" />
+                              {copy.teach}
+                            </span>
+                          </button>
+                        </li>
+                      )}
                       <li>
                         <button
                           type="button"
@@ -360,6 +387,7 @@ export const Header = ({
                 aria-haspopup="menu"
                 aria-expanded={moreMobileOpen}
                 aria-label={copy.more}
+                data-tour-target={moreButtonTourTarget}
               >
                 <ChevronDown className="w-5 h-5" />
               </button>
@@ -377,6 +405,24 @@ export const Header = ({
                   role="menu"
                 >
                   <ul className="p-2">
+                    {shouldShowTeachInMoreMenu && (
+                      <li>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setMoreMobileOpen(false);
+                            onNavigate('teach');
+                          }}
+                          className="w-full text-left px-3 py-2 rounded-md hover:bg-[var(--color-surface-hover)]"
+                          role="menuitem"
+                        >
+                          <span className="flex items-center gap-2">
+                            <School className="w-4 h-4" />
+                            {copy.teach}
+                          </span>
+                        </button>
+                      </li>
+                    )}
                     <li>
                       <button
                         type="button"

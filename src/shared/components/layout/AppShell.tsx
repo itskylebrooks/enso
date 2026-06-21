@@ -72,10 +72,12 @@ type AppShellProps = {
   isAuthBootstrapping: boolean;
   syncStatus: 'signed-out' | 'idle' | 'syncing' | 'error';
   hasSyncError: boolean;
+  showTeachInPrimaryNav: boolean;
   onCloseSettings: () => void;
   onRequestClear: () => void;
   onChangeLocale: (locale: Locale) => void;
   onChangeTheme: (theme: 'light' | 'dark' | 'system') => void;
+  onChangeShowTeachInPrimaryNav: (value: boolean) => void;
   onManageSync: () => void;
   onChangeDB: (db: DB) => void;
   settingsClearButtonRef: RefObject<HTMLButtonElement | null>;
@@ -138,10 +140,12 @@ export const AppShell = ({
   isAuthBootstrapping,
   syncStatus,
   hasSyncError,
+  showTeachInPrimaryNav,
   onCloseSettings,
   onRequestClear,
   onChangeLocale,
   onChangeTheme,
+  onChangeShowTeachInPrimaryNav,
   onManageSync,
   onChangeDB,
   settingsClearButtonRef,
@@ -173,6 +177,7 @@ export const AppShell = ({
         onSearch={onSearch}
         onSettings={onSettings}
         onStartTour={onStartTour}
+        showTeachInPrimaryNav={showTeachInPrimaryNav}
         searchButtonRef={searchButtonRef}
         settingsButtonRef={settingsButtonRef}
       />
@@ -231,6 +236,8 @@ export const AppShell = ({
             onRequestClear={onRequestClear}
             onChangeLocale={onChangeLocale}
             onChangeTheme={onChangeTheme}
+            showTeachInPrimaryNav={showTeachInPrimaryNav}
+            onChangeShowTeachInPrimaryNav={onChangeShowTeachInPrimaryNav}
             onManageSync={onManageSync}
             onChangeDB={onChangeDB}
             isOnline={isOnline}
@@ -268,7 +275,12 @@ export const AppShell = ({
         )}
       </AnimatePresence>
 
-      <MobileTabBar copy={copy} route={route} onNavigate={onNavigate} />
+      <MobileTabBar
+        copy={copy}
+        route={route}
+        showTeachInPrimaryNav={showTeachInPrimaryNav}
+        onNavigate={onNavigate}
+      />
 
       {showTourCompletionConfetti && <ConfettiBurst />}
 

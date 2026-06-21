@@ -44,6 +44,7 @@ export type SyncSettingsState = {
   locale: Locale;
   filters: Filters;
   filterPanelPinned: boolean;
+  showTeachInPrimaryNav: boolean;
 };
 
 export type SyncHomepageState = {

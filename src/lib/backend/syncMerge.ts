@@ -134,11 +134,13 @@ export const buildSettingsState = (params: {
   locale: Locale;
   filters: Filters;
   filterPanelPinned: boolean;
+  showTeachInPrimaryNav?: boolean;
 }): SyncSettingsState => ({
   themePreference: params.themePreference,
   locale: params.locale,
   filters: params.filters,
   filterPanelPinned: params.filterPanelPinned,
+  showTeachInPrimaryNav: params.showTeachInPrimaryNav ?? false,
 });
 
 export const buildHomepageState = (params: {

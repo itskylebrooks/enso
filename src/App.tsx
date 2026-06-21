@@ -224,12 +224,21 @@ export default function App({
   });
   onboardingSyncRef.current = onboardingSync;
   const {
-    settings: { locale, theme, hasManualTheme, filters, glossaryFilters, practiceFilters },
+    settings: {
+      locale,
+      theme,
+      hasManualTheme,
+      filters,
+      glossaryFilters,
+      practiceFilters,
+      showTeachInPrimaryNav,
+    },
     homepage: { pinnedBeltGrade, beltPromptDismissed },
     actions: {
       setFilters,
       setGlossaryFilters,
       setPracticeFilters,
+      setShowTeachInPrimaryNav,
       setBeltPromptDismissed,
       handleLocaleChange,
       handleThemeChange,
@@ -1177,6 +1186,8 @@ export default function App({
       onRequestClear={handleRequestClear}
       onChangeLocale={handleLocaleChange}
       onChangeTheme={handleThemeChange}
+      showTeachInPrimaryNav={showTeachInPrimaryNav}
+      onChangeShowTeachInPrimaryNav={setShowTeachInPrimaryNav}
       onManageSync={handleManageSync}
       onChangeDB={handleDBChange}
       settingsClearButtonRef={settingsClearButtonRef}
