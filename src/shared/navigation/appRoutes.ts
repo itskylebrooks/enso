@@ -1,6 +1,8 @@
 import { parseTechniquePath } from '@shared/constants/urls';
 import type { AppRoute, EntryMode, Grade, GuideRoutine } from '@shared/types';
 
+export type AppSection = 'guide' | 'library' | 'study' | 'teach';
+
 export type HistoryState = {
   route?: AppRoute;
   slug?: string;
@@ -54,32 +56,38 @@ export const routeToPath = (route: AppRoute): string => {
       return '/guide/4-dan';
     case 'guideDan5':
       return '/guide/5-dan';
-    case 'guideRoutineWarmUp':
-      return '/guide/warm-up';
-    case 'guideRoutineCooldown':
-      return '/guide/cooldown';
-    case 'guideRoutineMobility':
-      return '/guide/mobility';
-    case 'guideRoutineStrength':
-      return '/guide/strength';
-    case 'guideRoutineSkill':
-      return '/guide/skill';
-    case 'guideRoutineRecovery':
-      return '/guide/recovery';
     case 'sync':
       return '/sync';
     case 'feedback':
       return '/feedback';
-    case 'techniques':
-      return '/techniques';
-    case 'exercises':
-      return '/exercises';
-    case 'terms':
-      return '/terms';
-    case 'bookmarks':
-      return '/bookmarks';
-    case 'learn':
-      return '/learn';
+    case 'library':
+      return '/library';
+    case 'libraryTechniques':
+      return '/library/techniques';
+    case 'libraryTerms':
+      return '/library/terms';
+    case 'libraryExercises':
+      return '/library/exercises';
+    case 'libraryRoutines':
+      return '/library/routines';
+    case 'libraryRoutineWarmUp':
+      return '/library/routines/warm-up';
+    case 'libraryRoutineCooldown':
+      return '/library/routines/cooldown';
+    case 'libraryRoutineMobility':
+      return '/library/routines/mobility';
+    case 'libraryRoutineStrength':
+      return '/library/routines/strength';
+    case 'libraryRoutineSkill':
+      return '/library/routines/skill';
+    case 'libraryRoutineRecovery':
+      return '/library/routines/recovery';
+    case 'study':
+      return '/study';
+    case 'studyLearn':
+      return '/study/learn';
+    case 'teach':
+      return '/teach';
     default:
       return '/';
   }
@@ -139,41 +147,41 @@ export const gradeToGuideRoute = (grade: Grade): AppRoute | null => {
   }
 };
 
-export const routineToGuideRoute = (routine: GuideRoutine): AppRoute => {
+export const routineToLibraryRoute = (routine: GuideRoutine): AppRoute => {
   switch (routine) {
     case 'warm-up':
-      return 'guideRoutineWarmUp';
+      return 'libraryRoutineWarmUp';
     case 'cooldown':
-      return 'guideRoutineCooldown';
+      return 'libraryRoutineCooldown';
     case 'mobility':
-      return 'guideRoutineMobility';
+      return 'libraryRoutineMobility';
     case 'strength':
-      return 'guideRoutineStrength';
+      return 'libraryRoutineStrength';
     case 'skill':
-      return 'guideRoutineSkill';
+      return 'libraryRoutineSkill';
     case 'recovery':
-      return 'guideRoutineRecovery';
+      return 'libraryRoutineRecovery';
   }
 };
 
-export const buildGuideRoutinePath = (routine: GuideRoutine, routineSlug?: string): string => {
-  const basePath = `/guide/${routine}`;
+export const buildLibraryRoutinePath = (routine: GuideRoutine, routineSlug?: string): string => {
+  const basePath = `/library/routines/${routine}`;
   return routineSlug ? `${basePath}/${encodeURIComponent(routineSlug)}` : basePath;
 };
 
-export const guideRouteToRoutine = (route: AppRoute): GuideRoutine | null => {
+export const routeToRoutine = (route: AppRoute): GuideRoutine | null => {
   switch (route) {
-    case 'guideRoutineWarmUp':
+    case 'libraryRoutineWarmUp':
       return 'warm-up';
-    case 'guideRoutineCooldown':
+    case 'libraryRoutineCooldown':
       return 'cooldown';
-    case 'guideRoutineMobility':
+    case 'libraryRoutineMobility':
       return 'mobility';
-    case 'guideRoutineStrength':
+    case 'libraryRoutineStrength':
       return 'strength';
-    case 'guideRoutineSkill':
+    case 'libraryRoutineSkill':
       return 'skill';
-    case 'guideRoutineRecovery':
+    case 'libraryRoutineRecovery':
       return 'recovery';
     default:
       return null;
@@ -182,13 +190,21 @@ export const guideRouteToRoutine = (route: AppRoute): GuideRoutine | null => {
 
 export const isGuideLikeRoute = (value: AppRoute): boolean => value.startsWith('guide');
 
+export const getSectionForRoute = (route: AppRoute): AppSection | null => {
+  if (isGuideLikeRoute(route)) return 'guide';
+  if (route === 'library' || route.startsWith('library')) return 'library';
+  if (route === 'study' || route === 'studyLearn') return 'study';
+  if (route === 'teach') return 'teach';
+  return null;
+};
+
 const getGlossarySlugFromPath = (pathname: string): string | null => {
-  const match = /^\/(?:terms|glossary)\/([^/?#]+)/.exec(pathname);
+  const match = /^\/library\/terms\/([^/?#]+)/.exec(pathname);
   return match ? decodeURIComponent(match[1]) : null;
 };
 
-const getPracticeSlugFromPath = (pathname: string): string | null => {
-  const match = /^\/(?:exercises|practice)\/([^/?#]+)/.exec(pathname);
+const getExerciseSlugFromPath = (pathname: string): string | null => {
+  const match = /^\/library\/exercises\/([^/?#]+)/.exec(pathname);
   return match ? decodeURIComponent(match[1]) : null;
 };
 
@@ -199,47 +215,48 @@ export const parseLocation = (
 ): ParsedAppLocation => {
   const techniqueParams = parseTechniquePath(pathname, search);
   if (techniqueParams) {
-    const fallbackRoute = state?.route ?? 'techniques';
+    const fallbackRoute = state?.route ?? 'libraryTechniques';
     return { route: fallbackRoute, slug: techniqueParams.slug, techniqueParams };
   }
 
-  if (pathname.startsWith('/terms/') || pathname.startsWith('/glossary/')) {
+  if (pathname.startsWith('/library/terms/')) {
     const slug = getGlossarySlugFromPath(pathname);
     const slugRedirects: Record<string, string> = {
       'irimi-omote': 'irimi',
       'tenkan-ura': 'tenkan',
     };
     const finalSlug = slug && (slugRedirects[slug] || slug);
-    const fallbackRoute = state?.route ?? 'terms';
+    const fallbackRoute = state?.route ?? 'libraryTerms';
     return { route: fallbackRoute, slug: finalSlug };
   }
 
-  if (pathname.startsWith('/exercises/') || pathname.startsWith('/practice/')) {
-    const slug = getPracticeSlugFromPath(pathname);
-    return { route: 'exercises', slug };
+  if (pathname.startsWith('/library/exercises/')) {
+    const slug = getExerciseSlugFromPath(pathname);
+    return { route: 'libraryExercises', slug };
   }
 
-  if (pathname === '/bookmarks') return { route: 'bookmarks', slug: null };
-  if (pathname === '/learn') return { route: 'learn', slug: null };
-  if (pathname === '/techniques' || pathname === '/library') {
-    return { route: 'techniques', slug: null };
-  }
-  if (pathname === '/exercises' || pathname === '/practice') {
-    return { route: 'exercises', slug: null };
-  }
-  if (pathname === '/terms' || pathname === '/glossary') return { route: 'terms', slug: null };
+  if (pathname === '/library') return { route: 'library', slug: null };
+  if (pathname === '/library/techniques') return { route: 'libraryTechniques', slug: null };
+  if (pathname === '/library/terms') return { route: 'libraryTerms', slug: null };
+  if (pathname === '/library/exercises') return { route: 'libraryExercises', slug: null };
+  if (pathname === '/library/routines') return { route: 'libraryRoutines', slug: null };
+  if (pathname === '/study') return { route: 'study', slug: null };
+  if (pathname === '/study/learn') return { route: 'studyLearn', slug: null };
+  if (pathname === '/teach') return { route: 'teach', slug: null };
   if (pathname === '/about') return { route: 'about', slug: null };
   if (pathname === '/sync') return { route: 'sync', slug: null };
   if (pathname === '/guide') return { route: 'guide', slug: null };
   if (pathname === '/guide/advanced') return { route: 'guideAdvanced', slug: null };
   if (pathname === '/guide/dan') return { route: 'guideDan', slug: null };
 
-  const guideRoutineMatch =
-    /^\/guide\/(warm-up|cooldown|mobility|strength|skill|recovery)(?:\/([^/?#]+))?$/.exec(pathname);
-  if (guideRoutineMatch) {
-    const [, routine, routineSlug] = guideRoutineMatch;
+  const libraryRoutineMatch =
+    /^\/library\/routines\/(warm-up|cooldown|mobility|strength|skill|recovery)(?:\/([^/?#]+))?$/.exec(
+      pathname,
+    );
+  if (libraryRoutineMatch) {
+    const [, routine, routineSlug] = libraryRoutineMatch;
     return {
-      route: routineToGuideRoute(routine as GuideRoutine),
+      route: routineToLibraryRoute(routine as GuideRoutine),
       slug: routineSlug ? decodeURIComponent(routineSlug) : null,
     };
   }
@@ -263,7 +280,6 @@ export const parseLocation = (
   }
 
   if (pathname === '/feedback') return { route: 'feedback', slug: null };
-  if (pathname === '/basics') return { route: 'guide', slug: null };
 
   return { route: 'home', slug: null };
 };

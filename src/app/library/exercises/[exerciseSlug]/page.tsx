@@ -1,6 +1,6 @@
-import App from '../../../App';
-import { loadAllExercises } from '../../../lib/content/loaders/exercises';
-import { detectRequestLocale } from '../../_lib/locale';
+import App from '../../../../App';
+import { loadAllExercises } from '../../../../lib/content/loaders/exercises';
+import { detectRequestLocale } from '../../../_lib/locale';
 
 export async function generateStaticParams() {
   const exercises = await loadAllExercises();
@@ -16,5 +16,7 @@ type PageProps = {
 export default async function ExerciseDetailPage({ params }: PageProps) {
   const { exerciseSlug } = await params;
   const initialLocale = await detectRequestLocale();
-  return <App initialLocale={initialLocale} initialRoute="exercises" initialSlug={exerciseSlug} />;
+  return (
+    <App initialLocale={initialLocale} initialRoute="libraryExercises" initialSlug={exerciseSlug} />
+  );
 }

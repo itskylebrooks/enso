@@ -59,8 +59,8 @@ const titleForLocale = (localized: { en: string; de: string }, locale: Locale): 
 
 export const techniqueContent: ContentDescriptor<'technique'> = {
   kind: 'technique',
-  route: 'techniques',
-  routeBase: '/techniques',
+  route: 'libraryTechniques',
+  routeBase: '/library/techniques',
   itemIdPrefix: 'technique',
   getId: (item) => item.id,
   getSlug: (item) => item.slug,
@@ -72,13 +72,13 @@ export const techniqueContent: ContentDescriptor<'technique'> = {
   buildCollectionItemId: (item) => createCollectionItemId('technique', item.id),
   getStudyStatus: (db, item) => getAggregateTechniqueStudyStatus(db.studyStatus, item.slug),
   buildDetailPath: (item) => buildTechniqueUrl(item.slug),
-  buildListPath: () => '/techniques',
+  buildListPath: () => '/library/techniques',
 };
 
 export const termContent: ContentDescriptor<'term'> = {
   kind: 'term',
-  route: 'terms',
-  routeBase: '/terms',
+  route: 'libraryTerms',
+  routeBase: '/library/terms',
   itemIdPrefix: 'glossary',
   getId: (item) => item.slug,
   getSlug: (item) => item.slug,
@@ -89,14 +89,14 @@ export const termContent: ContentDescriptor<'term'> = {
   isBookmarked: (progress) => Boolean(progress?.bookmarked),
   buildCollectionItemId: (item) => createCollectionItemId('glossary', item.slug),
   getStudyStatus: (db, item) => getStudyStatusForItem(db.studyStatus, 'term', item.slug),
-  buildDetailPath: (item) => `/terms/${encodeURIComponent(item.slug)}`,
-  buildListPath: () => '/terms',
+  buildDetailPath: (item) => `/library/terms/${encodeURIComponent(item.slug)}`,
+  buildListPath: () => '/library/terms',
 };
 
 export const exerciseContent: ContentDescriptor<'exercise'> = {
   kind: 'exercise',
-  route: 'exercises',
-  routeBase: '/exercises',
+  route: 'libraryExercises',
+  routeBase: '/library/exercises',
   itemIdPrefix: 'exercise',
   getId: (item) => item.slug,
   getSlug: (item) => item.slug,
@@ -107,8 +107,8 @@ export const exerciseContent: ContentDescriptor<'exercise'> = {
   isBookmarked: (progress) => Boolean(progress?.bookmarked),
   buildCollectionItemId: (item) => createCollectionItemId('exercise', item.slug),
   getStudyStatus: (db, item) => getStudyStatusForItem(db.studyStatus, 'exercise', item.slug),
-  buildDetailPath: (item) => `/exercises/${encodeURIComponent(item.slug)}`,
-  buildListPath: () => '/exercises',
+  buildDetailPath: (item) => `/library/exercises/${encodeURIComponent(item.slug)}`,
+  buildListPath: () => '/library/exercises',
 };
 
 export const contentRegistry = {

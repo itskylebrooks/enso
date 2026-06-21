@@ -1,6 +1,6 @@
-import App from '../../../App';
-import { loadAllTerms } from '../../../lib/content/loaders/terms';
-import { detectRequestLocale } from '../../_lib/locale';
+import App from '../../../../App';
+import { loadAllTerms } from '../../../../lib/content/loaders/terms';
+import { detectRequestLocale } from '../../../_lib/locale';
 
 export async function generateStaticParams() {
   const terms = await loadAllTerms();
@@ -16,5 +16,5 @@ type PageProps = {
 export default async function TermDetailPage({ params }: PageProps) {
   const { termSlug } = await params;
   const initialLocale = await detectRequestLocale();
-  return <App initialLocale={initialLocale} initialRoute="terms" initialSlug={termSlug} />;
+  return <App initialLocale={initialLocale} initialRoute="libraryTerms" initialSlug={termSlug} />;
 }

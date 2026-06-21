@@ -182,10 +182,20 @@ export type DB = {
 
 export type AppRoute =
   | 'home'
-  | 'techniques'
-  | 'exercises'
-  | 'bookmarks'
-  | 'learn'
+  | 'library'
+  | 'libraryTechniques'
+  | 'libraryTerms'
+  | 'libraryExercises'
+  | 'libraryRoutines'
+  | 'libraryRoutineWarmUp'
+  | 'libraryRoutineCooldown'
+  | 'libraryRoutineMobility'
+  | 'libraryRoutineStrength'
+  | 'libraryRoutineSkill'
+  | 'libraryRoutineRecovery'
+  | 'study'
+  | 'studyLearn'
+  | 'teach'
   | 'sync'
   | 'about'
   | 'guide'
@@ -201,13 +211,6 @@ export type AppRoute =
   | 'guideDan3'
   | 'guideDan4'
   | 'guideDan5'
-  | 'guideRoutineWarmUp'
-  | 'guideRoutineCooldown'
-  | 'guideRoutineMobility'
-  | 'guideRoutineStrength'
-  | 'guideRoutineSkill'
-  | 'guideRoutineRecovery'
-  | 'terms'
   | 'feedback';
 
 export type GuideRoutine = 'warm-up' | 'cooldown' | 'mobility' | 'strength' | 'skill' | 'recovery';

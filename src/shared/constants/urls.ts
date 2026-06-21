@@ -29,14 +29,15 @@ export const buildTechniqueUrl = (slug: string, trainerId?: string, entry?: Entr
   }
 
   const queryString = query.toString();
-  return queryString ? `/techniques/${encodedSlug}?${queryString}` : `/techniques/${encodedSlug}`;
+  const basePath = `/library/techniques/${encodedSlug}`;
+  return queryString ? `${basePath}?${queryString}` : basePath;
 };
 
 export const parseTechniquePath = (
   pathname: string,
   search = '',
 ): { slug: string; trainerId?: string; entry?: EntryMode } | null => {
-  const match = /^\/(?:techniques|library|technique)\/([^/?#]+)(?:\/([^/?#]+))?(?:\/([^/?#]+))?/.exec(
+  const match = /^\/library\/techniques\/([^/?#]+)(?:\/([^/?#]+))?(?:\/([^/?#]+))?/.exec(
     pathname,
   );
 
@@ -80,7 +81,7 @@ export const buildTechniqueUrlWithVariant = (
   query.set('d', params.direction);
   query.set('w', params.weapon);
 
-  return `/techniques/${encodedSlug}?${query.toString()}`;
+  return `/library/techniques/${encodedSlug}?${query.toString()}`;
 };
 
 export const parseTechniqueVariantParams = (
@@ -88,7 +89,7 @@ export const parseTechniqueVariantParams = (
   search = '',
 ): TechniqueVariantParams | undefined => {
   const legacyPathMatch =
-    /^\/(?:techniques|library|technique)\/[^/?#]+\/([^/?#]+)\/([^/?#]+)\/([^/?#]+)(?:\/([^/?#]+))?/.exec(
+    /^\/library\/techniques\/[^/?#]+\/([^/?#]+)\/([^/?#]+)\/([^/?#]+)(?:\/([^/?#]+))?/.exec(
       pathname,
     );
 

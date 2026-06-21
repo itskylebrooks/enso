@@ -48,10 +48,10 @@ const db: DB = {
 describe('content registry', () => {
   it('describes detail paths and collection ids for current content kinds', () => {
     expect(contentRegistry.technique.buildDetailPath(technique)).toBe(
-      '/techniques/katate-tori-irimi-nage',
+      '/library/techniques/katate-tori-irimi-nage',
     );
-    expect(contentRegistry.term.buildDetailPath(term)).toBe('/terms/ma-ai');
-    expect(contentRegistry.exercise.buildDetailPath(exercise)).toBe('/exercises/dead-bug');
+    expect(contentRegistry.term.buildDetailPath(term)).toBe('/library/terms/ma-ai');
+    expect(contentRegistry.exercise.buildDetailPath(exercise)).toBe('/library/exercises/dead-bug');
 
     expect(contentRegistry.technique.buildCollectionItemId(technique)).toBe(
       'technique:technique-1',
