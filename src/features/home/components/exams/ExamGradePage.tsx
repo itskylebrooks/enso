@@ -8,7 +8,7 @@ import { getCategoryLabel, getCategoryStyle } from '@shared/styles/terms';
 import { getGradeStyle } from '@shared/styles/belts';
 import type { LearnCard, LearnSetupOptions } from '@features/learn';
 
-type GuideGradePageProps = {
+type ExamGradePageProps = {
   copy: Copy;
   locale: Locale;
   grade: Grade;
@@ -23,7 +23,7 @@ type GuideGradePageProps = {
   onStartLearn: (cards: LearnCard[], options: LearnSetupOptions) => void;
 };
 
-export const GuideGradePage = ({
+export const ExamGradePage = ({
   copy,
   locale,
   grade,
@@ -36,7 +36,7 @@ export const GuideGradePage = ({
   onOpenTechnique,
   onOpenTerm,
   onStartLearn,
-}: GuideGradePageProps): ReactElement => {
+}: ExamGradePageProps): ReactElement => {
   const isPinned = pinnedBeltGrade === grade;
   const pinLabel = isPinned ? copy.homeUnpinFromHome : copy.homePinToHome;
   const requirement = beltRequirements[grade];
@@ -69,7 +69,7 @@ export const GuideGradePage = ({
         buildTechniqueLearnCard({
           technique,
           locale,
-          id: `guide:${grade}:technique:${technique.id}`,
+          id: `exams:${grade}:technique:${technique.id}`,
         }),
       ),
     [grade, locale, requiredTechniques],
@@ -78,7 +78,7 @@ export const GuideGradePage = ({
   const termLearnCards = useMemo(
     () =>
       requiredTerms.map((term) =>
-        buildTermLearnCard({ term, locale, copy, id: `guide:${grade}:term:${term.id}` }),
+        buildTermLearnCard({ term, locale, copy, id: `exams:${grade}:term:${term.id}` }),
       ),
     [copy, grade, locale, requiredTerms],
   );
@@ -115,7 +115,7 @@ export const GuideGradePage = ({
           className="text-sm text-subtle hover:text-[var(--color-text)] transition flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] rounded"
         >
           <span aria-hidden>←</span>
-          <span>{backLabel ?? copy.backToGuide}</span>
+          <span>{backLabel ?? copy.backToExams}</span>
         </button>
         <button
           type="button"
