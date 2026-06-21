@@ -4,11 +4,13 @@ import { classNames } from '@shared/utils/classNames';
 import { Brain, Play } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useEffect, useRef, useState, type ReactElement } from 'react';
-import type { LearnFrontMode, LearnOrder, LearnSetupOptions } from '../types';
+import type { LearnFrontMode, LearnOrder, LearnSetupOptions, LearnStudyMode } from '../types';
 
 type LearnSetupMenuProps = {
   copy: Copy;
   cardCount: number;
+  japaneseCardCount?: number;
+  enableJapaneseMode?: boolean;
   disabled?: boolean;
   variant: 'popover' | 'inline' | 'panel';
   onStart: (options: LearnSetupOptions) => void;
@@ -22,7 +24,7 @@ type ChoiceOption<T extends string> = {
 type ChoiceRowProps<T extends string> = {
   ariaLabel: string;
   value: T;
-  options: [ChoiceOption<T>, ChoiceOption<T>];
+  options: ChoiceOption<T>[];
   onChange: (value: T) => void;
 };
 
@@ -32,7 +34,11 @@ const ChoiceRow = <T extends string>({
   options,
   onChange,
 }: ChoiceRowProps<T>): ReactElement => (
-  <div className="grid grid-cols-2 gap-2" role="group" aria-label={ariaLabel}>
+  <div
+    className={classNames('grid gap-2', options.length === 3 ? 'grid-cols-3' : 'grid-cols-2')}
+    role="group"
+    aria-label={ariaLabel}
+  >
     {options.map((option) => {
       const active = option.value === value;
       return (
@@ -56,18 +62,22 @@ const ChoiceRow = <T extends string>({
 export const LearnSetupMenu = ({
   copy,
   cardCount,
+  japaneseCardCount = 0,
+  enableJapaneseMode = false,
   disabled = false,
   variant,
   onStart,
 }: LearnSetupMenuProps): ReactElement => {
   const [open, setOpen] = useState(false);
+  const [studyMode, setStudyMode] = useState<LearnStudyMode>('standard');
   const [frontMode, setFrontMode] = useState<LearnFrontMode>('title');
   const [order, setOrder] = useState<LearnOrder>('current');
   const [showTags, setShowTags] = useState(true);
   const rootRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const { prefersReducedMotion, collapseMotion } = useMotionPreferences();
-  const isDisabled = disabled || cardCount === 0;
+  const effectiveCardCount = studyMode === 'japaneseWriting' ? japaneseCardCount : cardCount;
+  const isDisabled = disabled || effectiveCardCount === 0;
 
   useEffect(() => {
     if (variant !== 'popover' || !open) return;
@@ -98,7 +108,7 @@ export const LearnSetupMenu = ({
 
   const handleStart = () => {
     if (isDisabled) return;
-    onStart({ frontMode, order, showTags });
+    onStart({ studyMode, frontMode, order, showTags });
     if (variant === 'popover') {
       setOpen(false);
     }
@@ -106,19 +116,47 @@ export const LearnSetupMenu = ({
 
   const panelContent = (
     <>
+      {enableJapaneseMode && (
+        <div className="space-y-2">
+          <p className="text-[10px] font-semibold uppercase tracking-wide text-subtle">
+            {copy.learnCardSetLabel}
+          </p>
+          <ChoiceRow<LearnStudyMode>
+            ariaLabel={copy.learnCardSetLabel}
+            value={studyMode}
+            onChange={setStudyMode}
+            options={[
+              { value: 'standard', label: copy.learnCardSetStandard },
+              { value: 'japanesePronunciation', label: copy.learnCardSetPronunciation },
+              { value: 'japaneseWriting', label: copy.learnCardSetJapaneseWriting },
+            ]}
+          />
+        </div>
+      )}
+
       <div className="space-y-2">
         <p className="text-[10px] font-semibold uppercase tracking-wide text-subtle">
           {copy.learnModeLabel}
         </p>
-        <ChoiceRow<LearnFrontMode>
-          ariaLabel={copy.learnModeLabel}
-          value={frontMode}
-          onChange={setFrontMode}
-          options={[
-            { value: 'title', label: copy.learnModeTitleFirst },
-            { value: 'definition', label: copy.learnModeDefinitionFirst },
-          ]}
-        />
+        {studyMode === 'japanesePronunciation' ? (
+          <div className="rounded-lg border surface-border px-3 py-2 text-center text-sm">
+            {copy.learnModePronunciationFirst}
+          </div>
+        ) : studyMode === 'japaneseWriting' ? (
+          <div className="rounded-lg border surface-border px-3 py-2 text-center text-sm">
+            {copy.learnModeJapaneseWritingFirst}
+          </div>
+        ) : (
+          <ChoiceRow<LearnFrontMode>
+            ariaLabel={copy.learnModeLabel}
+            value={frontMode}
+            onChange={setFrontMode}
+            options={[
+              { value: 'title', label: copy.learnModeTitleFirst },
+              { value: 'definition', label: copy.learnModeDefinitionFirst },
+            ]}
+          />
+        )}
       </div>
 
       <div className="space-y-2">

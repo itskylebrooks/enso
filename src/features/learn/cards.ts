@@ -27,6 +27,8 @@ export const buildTechniqueLearnCard = ({
   cardType: 'technique',
   title: technique.name[locale] || technique.name.en,
   definition: technique.summary[locale] || technique.summary.en,
+  pronunciationText: technique.name.en,
+  japaneseText: technique.jp,
   tagLabel: gradeLabel(technique.level, locale),
   tagStyle: getGradeStyle(technique.level),
 });
@@ -41,6 +43,8 @@ export const buildTermLearnCard = ({
   cardType: 'term',
   title: term.romaji,
   definition: term.def[locale] || term.def.en,
+  pronunciationText: term.romaji,
+  japaneseText: term.jp,
   tagLabel: getCategoryLabel(term.category, copy),
   tagStyle: getCategoryStyle(term.category),
 });

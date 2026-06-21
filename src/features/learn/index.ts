@@ -2,7 +2,10 @@ export { buildTechniqueLearnCard, buildTermLearnCard, getLearnableBookmarkCards 
 export {
   answerCurrentLearnCard,
   createLearnQueueState,
+  getJapaneseLearnCards,
+  getJapaneseWritingLearnCards,
   orderLearnCards,
+  prepareLearnSessionCards,
   shuffleLearnCards,
 } from './session';
 export { LearnSetupMenu } from './components/LearnSetupMenu';
@@ -15,5 +18,6 @@ export type {
   LearnQueueState,
   LearnSession,
   LearnSetupOptions,
+  LearnStudyMode,
   LearnTagStyle,
 } from './types';

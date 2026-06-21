@@ -7,7 +7,9 @@ import {
 import {
   answerCurrentLearnCard,
   createLearnQueueState,
+  getJapaneseWritingLearnCards,
   orderLearnCards,
+  prepareLearnSessionCards,
 } from '../src/features/learn/session';
 import { getCopy } from '../src/shared/constants/i18n';
 import type { GlossaryTerm, Technique } from '../src/shared/types';
@@ -28,6 +30,7 @@ const term: GlossaryTerm = {
   id: 'term-1',
   slug: 'ma-ai',
   romaji: 'Ma-ai',
+  jp: '間合い',
   category: 'philosophy',
   def: { en: 'Harmonious distance.', de: 'Harmonische Distanz.' },
 };
@@ -41,6 +44,8 @@ describe('learn cards', () => {
       cardType: 'technique',
       title: 'Ikkyo',
       definition: 'First control.',
+      pronunciationText: 'Ikkyo',
+      japaneseText: '一教',
       tagLabel: '5th Kyū',
     });
     expect(card.tagStyle?.backgroundColor).toBeTruthy();
@@ -54,6 +59,8 @@ describe('learn cards', () => {
       cardType: 'term',
       title: 'Ma-ai',
       definition: 'Harmonische Distanz.',
+      pronunciationText: 'Ma-ai',
+      japaneseText: '間合い',
       tagLabel: 'Philosophie',
     });
     expect(card.tagStyle?.backgroundColor).toBe('var(--glossary-philosophy-bg)');
@@ -92,6 +99,51 @@ describe('learn cards', () => {
     expect(ordered).toHaveLength(cards.length);
     expect(ordered.map((card) => card.id).sort()).toEqual(['a', 'b', 'c']);
     expect(ordered.map((card) => card.id)).not.toEqual(cards.map((card) => card.id));
+  });
+
+  it('prepares Japanese pronunciation sessions from the same visible cards', () => {
+    const cards = [
+      buildTechniqueLearnCard({ technique, locale: 'en', id: 'a' }),
+      buildTermLearnCard({
+        term: { ...term, id: 'term-2', jp: undefined },
+        locale: 'en',
+        copy: getCopy('en'),
+        id: 'b',
+      }),
+      buildTermLearnCard({ term, locale: 'en', copy: getCopy('en'), id: 'c' }),
+    ];
+
+    expect(
+      prepareLearnSessionCards(cards, {
+        studyMode: 'japanesePronunciation',
+        frontMode: 'title',
+        order: 'current',
+        showTags: true,
+      }).map((card) => card.id),
+    ).toEqual(['a', 'b', 'c']);
+  });
+
+  it('prepares Japanese writing sessions from the same cards with Japanese text only', () => {
+    const cards = [
+      buildTechniqueLearnCard({ technique, locale: 'en', id: 'a' }),
+      buildTermLearnCard({
+        term: { ...term, id: 'term-2', jp: undefined },
+        locale: 'en',
+        copy: getCopy('en'),
+        id: 'b',
+      }),
+      buildTermLearnCard({ term, locale: 'en', copy: getCopy('en'), id: 'c' }),
+    ];
+
+    expect(getJapaneseWritingLearnCards(cards).map((card) => card.id)).toEqual(['a', 'c']);
+    expect(
+      prepareLearnSessionCards(cards, {
+        studyMode: 'japaneseWriting',
+        frontMode: 'title',
+        order: 'current',
+        showTags: true,
+      }).map((card) => card.id),
+    ).toEqual(['a', 'c']);
   });
 });
 

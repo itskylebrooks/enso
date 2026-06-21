@@ -8,6 +8,7 @@ import type { LearnSetupOptions } from '@features/learn';
 type StudyLearnExtensionProps = {
   copy: Copy;
   cardCount: number;
+  japaneseCardCount: number;
   variant: 'desktop' | 'mobile';
   onStart: (options: LearnSetupOptions) => void;
 };
@@ -15,6 +16,7 @@ type StudyLearnExtensionProps = {
 export const StudyLearnExtension = ({
   copy,
   cardCount,
+  japaneseCardCount,
   variant,
   onStart,
 }: StudyLearnExtensionProps): ReactElement => {
@@ -26,6 +28,8 @@ export const StudyLearnExtension = ({
       <LearnSetupMenu
         copy={copy}
         cardCount={cardCount}
+        japaneseCardCount={japaneseCardCount}
+        enableJapaneseMode
         variant="inline"
         onStart={onStart}
       />
@@ -39,7 +43,14 @@ export const StudyLearnExtension = ({
       count={cardCount}
       size={isContextSidebarPinned ? 'compact' : 'normal'}
     >
-      <LearnSetupMenu copy={copy} cardCount={cardCount} variant="panel" onStart={onStart} />
+      <LearnSetupMenu
+        copy={copy}
+        cardCount={cardCount}
+        japaneseCardCount={japaneseCardCount}
+        enableJapaneseMode
+        variant="panel"
+        onStart={onStart}
+      />
     </ContextExtensionTool>
   );
 };

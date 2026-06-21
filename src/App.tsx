@@ -2,7 +2,7 @@
 
 import type { FeedbackType } from '@features/home/components/feedback/FeedbackPage';
 import {
-  orderLearnCards,
+  prepareLearnSessionCards,
   type LearnCard,
   type LearnSession,
   type LearnSetupOptions,
@@ -290,10 +290,11 @@ export default function App({
       sourceRoute: AppRoute,
       sourceLabel: string,
     ) => {
-      if (cards.length === 0) return;
+      const sessionCards = prepareLearnSessionCards(cards, options);
+      if (sessionCards.length === 0) return;
       setLearnSession({
         id: generateId(),
-        cards: orderLearnCards(cards, options.order),
+        cards: sessionCards,
         options,
         sourceRoute,
         sourceLabel,

@@ -1,4 +1,4 @@
-import type { LearnCard, LearnOrder, LearnQueueState } from './types';
+import type { LearnCard, LearnOrder, LearnQueueState, LearnSetupOptions } from './types';
 
 export const shuffleLearnCards = (
   cards: LearnCard[],
@@ -17,6 +17,22 @@ export const orderLearnCards = (
   order: LearnOrder,
   random: () => number = Math.random,
 ): LearnCard[] => (order === 'random' ? shuffleLearnCards(cards, random) : [...cards]);
+
+export const getJapaneseWritingLearnCards = (cards: LearnCard[]): LearnCard[] =>
+  cards.filter((card) => Boolean(card.japaneseText));
+
+export const getJapaneseLearnCards = getJapaneseWritingLearnCards;
+
+export const prepareLearnSessionCards = (
+  cards: LearnCard[],
+  options: LearnSetupOptions,
+  random: () => number = Math.random,
+): LearnCard[] =>
+  orderLearnCards(
+    options.studyMode === 'japaneseWriting' ? getJapaneseWritingLearnCards(cards) : cards,
+    options.order,
+    random,
+  );
 
 export const createLearnQueueState = (cards: LearnCard[]): LearnQueueState => ({
   queue: [...cards],

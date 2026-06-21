@@ -796,6 +796,10 @@ export const BookmarksView = ({
     () => getLearnableBookmarkCards(sortedVisibleItems, locale, copy),
     [copy, locale, sortedVisibleItems],
   );
+  const japaneseLearnCardCount = useMemo(
+    () => learnCards.filter((card) => Boolean(card.japaneseText)).length,
+    [learnCards],
+  );
 
   const {
     visibleItems: visibleBookmarks,
@@ -1048,6 +1052,7 @@ export const BookmarksView = ({
             <StudyLearnExtension
               copy={copy}
               cardCount={learnCards.length}
+              japaneseCardCount={japaneseLearnCardCount}
               variant="mobile"
               onStart={(options) => onStartLearn(learnCards, options)}
             />
@@ -1061,6 +1066,7 @@ export const BookmarksView = ({
             <StudyLearnExtension
               copy={copy}
               cardCount={learnCards.length}
+              japaneseCardCount={japaneseLearnCardCount}
               variant="desktop"
               onStart={(options) => onStartLearn(learnCards, options)}
             />

@@ -3,6 +3,7 @@ import type { AppRoute } from '@shared/types';
 export type LearnCardType = 'technique' | 'term';
 export type LearnFrontMode = 'title' | 'definition';
 export type LearnOrder = 'current' | 'random';
+export type LearnStudyMode = 'standard' | 'japanesePronunciation' | 'japaneseWriting';
 
 export type LearnTagStyle = {
   backgroundColor: string;
@@ -15,11 +16,14 @@ export type LearnCard = {
   cardType: LearnCardType;
   title: string;
   definition: string;
+  pronunciationText: string;
+  japaneseText?: string;
   tagLabel?: string;
   tagStyle?: LearnTagStyle;
 };
 
 export type LearnSetupOptions = {
+  studyMode: LearnStudyMode;
   frontMode: LearnFrontMode;
   order: LearnOrder;
   showTags: boolean;

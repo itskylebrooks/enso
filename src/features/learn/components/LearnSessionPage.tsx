@@ -110,9 +110,21 @@ export const LearnSessionPage = ({
   }
 
   const frontText =
-    session.options.frontMode === 'title' ? currentCard.title : currentCard.definition;
+    session.options.studyMode === 'japanesePronunciation'
+      ? currentCard.pronunciationText
+      : session.options.studyMode === 'japaneseWriting'
+      ? currentCard.japaneseText || currentCard.title
+      : session.options.frontMode === 'title'
+        ? currentCard.title
+        : currentCard.definition;
   const backText =
-    session.options.frontMode === 'title' ? currentCard.definition : currentCard.title;
+    session.options.studyMode === 'japanesePronunciation'
+      ? [currentCard.japaneseText, currentCard.definition].filter(Boolean).join(' - ')
+      : session.options.studyMode === 'japaneseWriting'
+        ? [currentCard.pronunciationText, currentCard.definition].filter(Boolean).join(' - ')
+      : session.options.frontMode === 'title'
+        ? currentCard.definition
+        : currentCard.title;
 
   return (
     <section className="mx-auto max-w-2xl px-4 sm:px-6 pt-0 pb-10 space-y-5">
