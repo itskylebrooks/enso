@@ -1,11 +1,5 @@
 import type { Grade, Localized } from '@shared/types';
-
-export type BeltRequirement = {
-  termSlugs: string[];
-  basics: Localized<string[]>;
-  examDescription: Localized<string>;
-  examFocus: Localized<string[]>;
-};
+import type { BeltRequirement } from '../types';
 
 export const beltRequirements: Record<Grade, BeltRequirement> = {
   kyu5: {

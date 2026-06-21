@@ -2,8 +2,11 @@ import type { ReactElement } from 'react';
 import { Fragment } from 'react';
 import type { Locale } from '@shared/types';
 import type { SayaNoUchiCell } from '@shared/types/exam';
-import { SAYA_NO_UCHI_COLUMNS, SAYA_NO_UCHI_ROWS } from '@shared/data/sayaNoUchiData';
+import { getDefaultCurriculum } from '@shared/curricula';
 import { CircleCheck } from 'lucide-react';
+
+const { advancedPrograms } = getDefaultCurriculum();
+const sayaNoUchiProgram = advancedPrograms.sayaNoUchi;
 
 type SayaNoUchiMatrixProps = {
   locale: Locale;
@@ -25,9 +28,11 @@ const SayaNoUchiCellComponent = ({ cell }: { cell: SayaNoUchiCell }): ReactEleme
 
 export const SayaNoUchiMatrix = ({ locale, onCellClick }: SayaNoUchiMatrixProps): ReactElement => {
   // Group columns by section
-  const tachiWazaCols = SAYA_NO_UCHI_COLUMNS.filter((col) => col.section === 'tachi_waza');
-  const hanmiHantachiCols = SAYA_NO_UCHI_COLUMNS.filter((col) => col.section === 'hanmi_hantachi');
-  const bukiWazaCols = SAYA_NO_UCHI_COLUMNS.filter((col) => col.section === 'buki_waza');
+  const tachiWazaCols = sayaNoUchiProgram.columns.filter((col) => col.section === 'tachi_waza');
+  const hanmiHantachiCols = sayaNoUchiProgram.columns.filter(
+    (col) => col.section === 'hanmi_hantachi',
+  );
+  const bukiWazaCols = sayaNoUchiProgram.columns.filter((col) => col.section === 'buki_waza');
 
   return (
     <div className="space-y-4">
@@ -70,7 +75,7 @@ export const SayaNoUchiMatrix = ({ locale, onCellClick }: SayaNoUchiMatrixProps)
               >
                 {locale === 'en' ? 'Technique' : 'Technik'}
               </th>
-              {SAYA_NO_UCHI_COLUMNS.map((col, idx) => {
+              {sayaNoUchiProgram.columns.map((col, idx) => {
                 const isLastInSection =
                   (col.section === 'tachi_waza' && idx === tachiWazaCols.length - 1) ||
                   (col.section === 'hanmi_hantachi' &&
@@ -94,7 +99,7 @@ export const SayaNoUchiMatrix = ({ locale, onCellClick }: SayaNoUchiMatrixProps)
             </tr>
           </thead>
           <tbody>
-            {SAYA_NO_UCHI_ROWS.map((row) => {
+            {sayaNoUchiProgram.rows.map((row) => {
               return (
                 <Fragment key={row.id}>
                   <tr className="border-b surface-border">
@@ -108,7 +113,7 @@ export const SayaNoUchiMatrix = ({ locale, onCellClick }: SayaNoUchiMatrixProps)
                     </th>
 
                     {/* Data cells */}
-                    {SAYA_NO_UCHI_COLUMNS.map((col, colIndex) => {
+                    {sayaNoUchiProgram.columns.map((col, colIndex) => {
                       const cell = row.cells[col.key];
                       const isEmpty = cell.kind === 'empty';
                       const isLastInSection =

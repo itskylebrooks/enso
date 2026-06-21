@@ -1,4 +1,4 @@
-import type { SayaNoUchiColumn, SayaNoUchiRow } from '../types/exam';
+import type { SayaNoUchiColumn, SayaNoUchiRow } from '../../types/exam';
 
 // Column definitions for Saya no Uchi program
 export const SAYA_NO_UCHI_COLUMNS: SayaNoUchiColumn[] = [

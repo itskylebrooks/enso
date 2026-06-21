@@ -1,4 +1,4 @@
-import type { TantoColumn, TantoRow } from '../types/exam';
+import type { TantoColumn, TantoRow } from '../../types/exam';
 
 export const TANTO_COLUMNS: TantoColumn[] = [
   {

@@ -2,8 +2,11 @@ import type { ReactElement } from 'react';
 import { Fragment } from 'react';
 import type { Locale } from '@shared/types';
 import type { TantoCell } from '@shared/types/exam';
-import { TANTO_COLUMNS, TANTO_ROWS } from '@shared/data/tantoTechniquesData';
+import { getDefaultCurriculum } from '@shared/curricula';
 import { CircleCheck } from 'lucide-react';
+
+const { advancedPrograms } = getDefaultCurriculum();
+const tantoProgram = advancedPrograms.tanto;
 
 type TantoMatrixProps = {
   locale: Locale;
@@ -38,7 +41,7 @@ export const TantoMatrix = ({ locale, onCellClick }: TantoMatrixProps): ReactEle
               >
                 {locale === 'en' ? 'Technique' : 'Technik'}
               </th>
-              {TANTO_COLUMNS.map((col) => {
+              {tantoProgram.columns.map((col) => {
                 const isTall = col.key === 'sode_tori_tanto_yoko_tsuki_soto';
                 return (
                   <th
@@ -55,7 +58,7 @@ export const TantoMatrix = ({ locale, onCellClick }: TantoMatrixProps): ReactEle
             </tr>
           </thead>
           <tbody>
-            {TANTO_ROWS.map((row) => {
+            {tantoProgram.rows.map((row) => {
               return (
                 <Fragment key={row.id}>
                   <tr className="border-b surface-border">
@@ -69,7 +72,7 @@ export const TantoMatrix = ({ locale, onCellClick }: TantoMatrixProps): ReactEle
                     </th>
 
                     {/* Data cells */}
-                    {TANTO_COLUMNS.map((col) => {
+                    {tantoProgram.columns.map((col) => {
                       const cell = row.cells[col.key];
                       const isEmpty = cell.kind === 'empty';
 

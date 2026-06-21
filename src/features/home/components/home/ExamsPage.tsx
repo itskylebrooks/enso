@@ -1,13 +1,15 @@
 import { defaultEase, useMotionPreferences } from '@shared/components/ui/motion';
 import { getCopy } from '@shared/constants/i18n';
+import { getDefaultCurriculum } from '@shared/curricula';
 import { getGradeStyle, gradeLabel } from '@shared/styles/belts';
 import type { EntryMode, Grade, Locale } from '@shared/types';
-import { gradeOrder } from '@shared/utils/grades';
 import { getInitialThemeState } from '@shared/utils/theme';
 import { motion } from 'motion/react';
 import type { ReactElement } from 'react';
 import { useEffect, useState } from 'react';
 import { ExamMatrix } from '../exams/ExamMatrix';
+
+const { gradeOrder } = getDefaultCurriculum();
 
 type ExamsPageProps = {
   locale: Locale;

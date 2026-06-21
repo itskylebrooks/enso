@@ -1,12 +1,15 @@
 import { useMemo, type ReactElement } from 'react';
 import { buildTechniqueLearnCard, buildTermLearnCard, LearnSetupMenu } from '@features/learn';
 import type { Copy } from '@shared/constants/i18n';
+import { getDefaultCurriculum } from '@shared/curricula';
+import { pickLocalized } from '@shared/curricula/dab/beltRequirements';
 import type { GlossaryTerm, Grade, Locale, Technique } from '@shared/types';
 import { gradeLabel } from '@shared/utils/grades';
-import { beltRequirements, pickLocalized } from './beltRequirements';
 import { getCategoryLabel, getCategoryStyle } from '@shared/styles/terms';
 import { getGradeStyle } from '@shared/styles/belts';
 import type { LearnCard, LearnSetupOptions } from '@features/learn';
+
+const { beltRequirements } = getDefaultCurriculum();
 
 type ExamGradePageProps = {
   copy: Copy;

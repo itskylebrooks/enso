@@ -2,8 +2,11 @@ import type { ReactElement } from 'react';
 import { Fragment } from 'react';
 import type { Locale } from '@shared/types';
 import type { JoCell } from '@shared/types/exam';
-import { JO_COLUMNS, JO_ROWS } from '@shared/data/joTechniquesData';
+import { getDefaultCurriculum } from '@shared/curricula';
 import { CircleCheck } from 'lucide-react';
+
+const { advancedPrograms } = getDefaultCurriculum();
+const joProgram = advancedPrograms.jo;
 
 type JoMatrixProps = {
   locale: Locale;
@@ -32,8 +35,8 @@ const JoCellComponent = ({ cell }: { cell: JoCell }): ReactElement | null => {
 
 export const JoMatrix = ({ locale, onCellClick, copy }: JoMatrixProps): ReactElement => {
   // Group columns by section
-  const joNageWazaCols = JO_COLUMNS.filter((col) => col.section === 'jo_nage_waza');
-  const joToriCols = JO_COLUMNS.filter((col) => col.section === 'jo_tori');
+  const joNageWazaCols = joProgram.columns.filter((col) => col.section === 'jo_nage_waza');
+  const joToriCols = joProgram.columns.filter((col) => col.section === 'jo_tori');
 
   return (
     <div className="space-y-4">
@@ -70,7 +73,7 @@ export const JoMatrix = ({ locale, onCellClick, copy }: JoMatrixProps): ReactEle
               >
                 {locale === 'en' ? 'Technique' : 'Technik'}
               </th>
-              {JO_COLUMNS.map((col, idx) => {
+              {joProgram.columns.map((col, idx) => {
                 const isLastInSection =
                   col.section === 'jo_nage_waza' && idx === joNageWazaCols.length - 1;
                 const isBoldSeparator = isLastInSection;
@@ -92,7 +95,7 @@ export const JoMatrix = ({ locale, onCellClick, copy }: JoMatrixProps): ReactEle
             </tr>
           </thead>
           <tbody>
-            {JO_ROWS.map((row) => {
+            {joProgram.rows.map((row) => {
               return (
                 <Fragment key={row.id}>
                   <tr className="border-b surface-border">
@@ -106,7 +109,7 @@ export const JoMatrix = ({ locale, onCellClick, copy }: JoMatrixProps): ReactEle
                     </th>
 
                     {/* Data cells */}
-                    {JO_COLUMNS.map((col, colIndex) => {
+                    {joProgram.columns.map((col, colIndex) => {
                       const cell = row.cells[col.key];
                       const isEmpty = cell.kind === 'empty';
                       const isLastInSection =

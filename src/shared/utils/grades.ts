@@ -1,17 +1,7 @@
 import type { Grade } from '../types';
+import { DAB_GRADE_ORDER } from '../curricula/dab';
 
-export const gradeOrder: Grade[] = [
-  'kyu5',
-  'kyu4',
-  'kyu3',
-  'kyu2',
-  'kyu1',
-  'dan1',
-  'dan2',
-  'dan3',
-  'dan4',
-  'dan5',
-];
+export const gradeOrder: Grade[] = DAB_GRADE_ORDER;
 
 export {
   gradeLabel,

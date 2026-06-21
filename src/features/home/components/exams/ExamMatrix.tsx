@@ -2,12 +2,14 @@ import type { ReactElement } from 'react';
 import { useState, Fragment } from 'react';
 import type { Locale } from '@shared/types';
 import type { GradeCell } from '@shared/types/exam';
-import { ATTACK_COLUMNS, MATRIX_ROWS, KATAME_ROWS } from '@shared/data/examMatrixData';
+import { getDefaultCurriculum } from '@shared/curricula';
 import { getGradeStyle } from '@shared/styles/belts';
 import type { Copy } from '@shared/constants/i18n';
 import { MoveHorizontal } from 'lucide-react';
 import { motion } from 'motion/react';
 import { defaultEase } from '@shared/components/ui/motion';
+
+const { examMatrix } = getDefaultCurriculum();
 
 type ExamMatrixProps = {
   locale: Locale;
@@ -105,8 +107,8 @@ export const ExamMatrix = ({
     setIsFullWidth((prev) => !prev);
   };
 
-  const allRows = [...MATRIX_ROWS, ...KATAME_ROWS];
-  const insertKatameSeparator = MATRIX_ROWS.length;
+  const allRows = [...examMatrix.nageRows, ...examMatrix.katameRows];
+  const insertKatameSeparator = examMatrix.nageRows.length;
 
   const toggleBeltFilter = (belt: BeltFilterKey): void => {
     setActiveBelts((current) =>
@@ -133,14 +135,14 @@ export const ExamMatrix = ({
         break;
       case 'ArrowRight':
         e.preventDefault();
-        newCol = Math.min(ATTACK_COLUMNS.length - 1, colIndex + 1);
+        newCol = Math.min(examMatrix.attackColumns.length - 1, colIndex + 1);
         break;
       case 'Enter':
       case ' ':
         e.preventDefault();
         if (colIndex !== -1) {
           // Cell clicked (skip row header)
-          const attackKey = ATTACK_COLUMNS[colIndex].key;
+          const attackKey = examMatrix.attackColumns[colIndex].key;
           const cell = allRows[rowIndex].cells[attackKey];
           if (cell && cell.kind !== 'empty') {
             onCellClick(allRows[rowIndex].id, attackKey);
@@ -273,7 +275,7 @@ export const ExamMatrix = ({
                         </div>
                       </div>
                     </th>
-                    {ATTACK_COLUMNS.map((col) => {
+                    {examMatrix.attackColumns.map((col) => {
                       const isBoldSeparator =
                         col.key === 'yoko_kubi_shime' || col.key === 'ushiro_kubi_shime';
                       return (
@@ -307,7 +309,7 @@ export const ExamMatrix = ({
                   {allRows.map((row, rowIndex) => {
                     const isFirstNageRow = rowIndex === 0;
                     const isFirstKatameRow = rowIndex === insertKatameSeparator;
-                    const isLastNageRow = rowIndex === MATRIX_ROWS.length - 1;
+                    const isLastNageRow = rowIndex === examMatrix.nageRows.length - 1;
 
                     return (
                       <Fragment key={row.id}>
@@ -325,7 +327,7 @@ export const ExamMatrix = ({
                           </th>
 
                           {/* Data cells */}
-                          {ATTACK_COLUMNS.map((col, colIndex) => {
+                          {examMatrix.attackColumns.map((col, colIndex) => {
                             const cell = row.cells[col.key] || { kind: 'empty' as const };
                             const isEmpty = cell.kind === 'empty';
                             const isFocused =
@@ -362,7 +364,7 @@ export const ExamMatrix = ({
                           {/* Section label cell (with rowspan for first row of each section) */}
                           {isFirstNageRow && (
                             <td
-                              rowSpan={MATRIX_ROWS.length}
+                              rowSpan={examMatrix.nageRows.length}
                               className="border-l surface-border text-center font-semibold text-xs uppercase tracking-wide text-subtle relative"
                               style={{ minWidth: '50px' }}
                             >
@@ -373,7 +375,7 @@ export const ExamMatrix = ({
                           )}
                           {isFirstKatameRow && (
                             <td
-                              rowSpan={KATAME_ROWS.length}
+                              rowSpan={examMatrix.katameRows.length}
                               className="border-l surface-border text-center font-semibold text-xs uppercase tracking-wide text-subtle relative"
                               style={{ minWidth: '50px' }}
                             >

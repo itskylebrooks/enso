@@ -1,4 +1,4 @@
-import type { JoColumn, JoRow } from '../types/exam';
+import type { JoColumn, JoRow } from '../../types/exam';
 
 // Column definitions for Jō Techniques program
 export const JO_COLUMNS: JoColumn[] = [

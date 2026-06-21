@@ -1,4 +1,4 @@
-import type { AttackColumn, MatrixRow } from '../types/exam';
+import type { AttackColumn, MatrixRow } from '../../types/exam';
 
 // Attack columns in exact left-to-right order
 export const ATTACK_COLUMNS: AttackColumn[] = [
