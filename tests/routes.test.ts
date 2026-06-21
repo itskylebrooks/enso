@@ -7,8 +7,8 @@ import {
 } from '../src/shared/constants/urls';
 import {
   buildLibraryRoutinePath,
-  gradeToGuideRoute,
-  guideRouteToGrade,
+  gradeToExamsRoute,
+  examsRouteToGrade,
   routeToRoutine,
   parseLocation,
   routeToPath,
@@ -60,17 +60,22 @@ describe('app route helpers', () => {
     expect(routeToPath('libraryTerms')).toBe('/library/terms');
     expect(routeToPath('libraryExercises')).toBe('/library/exercises');
     expect(routeToPath('libraryRoutines')).toBe('/library/routines');
+    expect(routeToPath('libraryForms')).toBe('/library/forms');
+    expect(routeToPath('libraryCulture')).toBe('/library/culture');
+    expect(routeToPath('exams')).toBe('/exams');
+    expect(routeToPath('examsAdvanced')).toBe('/exams/advanced');
+    expect(routeToPath('examsDan')).toBe('/exams/dan');
     expect(routeToPath('study')).toBe('/study');
     expect(routeToPath('studyLearn')).toBe('/study/learn');
     expect(routeToPath('teach')).toBe('/teach');
     expect(routeToPath('sync')).toBe('/sync');
   });
 
-  it('maps guide grade and library routine routes both ways', () => {
-    expect(gradeToGuideRoute('kyu5')).toBe('guideKyu5');
-    expect(guideRouteToGrade('guideKyu5')).toBe('kyu5');
-    expect(gradeToGuideRoute('dan5')).toBe('guideDan5');
-    expect(guideRouteToGrade('guideDan5')).toBe('dan5');
+  it('maps exams grade and library routine routes both ways', () => {
+    expect(gradeToExamsRoute('kyu5')).toBe('examsKyu5');
+    expect(examsRouteToGrade('examsKyu5')).toBe('kyu5');
+    expect(gradeToExamsRoute('dan5')).toBe('examsDan5');
+    expect(examsRouteToGrade('examsDan5')).toBe('dan5');
 
     expect(routineToLibraryRoute('warm-up')).toBe('libraryRoutineWarmUp');
     expect(routeToRoutine('libraryRoutineWarmUp')).toBe('warm-up');
@@ -91,10 +96,22 @@ describe('app route helpers', () => {
       slug: 'dead-bug',
     });
     expect(parseLocation('/library/routines')).toEqual({ route: 'libraryRoutines', slug: null });
+    expect(parseLocation('/library/forms')).toEqual({
+      route: 'libraryForms',
+      slug: null,
+    });
+    expect(parseLocation('/library/culture')).toEqual({
+      route: 'libraryCulture',
+      slug: null,
+    });
     expect(parseLocation('/library/routines/warm-up')).toEqual({
       route: 'libraryRoutineWarmUp',
       slug: null,
     });
+    expect(parseLocation('/exams')).toEqual({ route: 'exams', slug: null });
+    expect(parseLocation('/exams/advanced')).toEqual({ route: 'examsAdvanced', slug: null });
+    expect(parseLocation('/exams/dan')).toEqual({ route: 'examsDan', slug: null });
+    expect(parseLocation('/exams/5-kyu')).toEqual({ route: 'examsKyu5', slug: null });
     expect(parseLocation('/study')).toEqual({ route: 'study', slug: null });
     expect(parseLocation('/study/learn')).toEqual({ route: 'studyLearn', slug: null });
     expect(parseLocation('/teach')).toEqual({ route: 'teach', slug: null });
@@ -115,5 +132,9 @@ describe('app route helpers', () => {
       route: 'libraryTerms',
       slug: 'irimi',
     });
+  });
+
+  it('does not intentionally support removed Basics route', () => {
+    expect(parseLocation('/library/basics')).toEqual({ route: 'home', slug: null });
   });
 });

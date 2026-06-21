@@ -87,11 +87,11 @@ const categoryTagOrder: CategoryTag[] = [
 const isCategoryTag = (value: unknown): value is CategoryTag =>
   typeof value === 'string' && (categoryTagOrder as string[]).includes(value);
 
-type AppArea = 'library' | 'technique' | 'glossary' | 'guide' | 'settings' | 'other';
+type AppArea = 'library' | 'technique' | 'glossary' | 'exams' | 'settings' | 'other';
 
 const isAppArea = (value: unknown): value is AppArea =>
   typeof value === 'string' &&
-  ['library', 'technique', 'glossary', 'guide', 'settings', 'other'].includes(value);
+  ['library', 'technique', 'glossary', 'exams', 'settings', 'other'].includes(value);
 
 type ImproveTechniqueForm = {
   techniqueId: string | null;
@@ -493,7 +493,7 @@ type FeedbackApiPayload = {
   name: string;
   email?: string;
   category: 'suggestion' | 'bug' | 'edit' | 'new-version' | 'new-variation' | 'new-technique';
-  entityType: 'technique' | 'glossary' | 'exam' | 'guide' | 'other';
+  entityType: 'technique' | 'glossary' | 'exam' | 'exams' | 'other';
   entityId?: string;
   locale?: Locale;
   summary: string;
@@ -813,7 +813,7 @@ const buildFeedbackPayload = (
     return {
       name: escapeInline(defaultName),
       category: 'suggestion',
-      entityType: 'guide',
+      entityType: 'exams',
       summary,
       detailsMd,
       diffJson: feedback,

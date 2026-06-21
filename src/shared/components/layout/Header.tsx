@@ -77,10 +77,10 @@ const primaryNav: Array<{
   section: AppSection;
   route: AppRoute;
   tourTarget: string;
-  labelKey: 'guideLink' | 'library' | 'study' | 'teach';
+  labelKey: 'examsLink' | 'library' | 'study' | 'teach';
   icon: LucideIcon;
 }> = [
-  { section: 'guide', route: 'guide', tourTarget: 'nav-guide', labelKey: 'guideLink', icon: Compass },
+  { section: 'exams', route: 'exams', tourTarget: 'nav-exams', labelKey: 'examsLink', icon: Compass },
   {
     section: 'library',
     route: 'library',

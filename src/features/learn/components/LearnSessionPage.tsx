@@ -9,7 +9,7 @@ type LearnSessionPageProps = {
   session: LearnSession | null;
   onBack: () => void;
   onOpenBookmarks: () => void;
-  onOpenGuide: () => void;
+  onOpenExams: () => void;
 };
 
 export const LearnSessionPage = ({
@@ -17,7 +17,7 @@ export const LearnSessionPage = ({
   session,
   onBack,
   onOpenBookmarks,
-  onOpenGuide,
+  onOpenExams,
 }: LearnSessionPageProps): ReactElement => {
   const [queueState, setQueueState] = useState<LearnQueueState>(() =>
     createLearnQueueState(session?.cards ?? []),
@@ -45,10 +45,10 @@ export const LearnSessionPage = ({
             </button>
             <button
               type="button"
-              onClick={onOpenGuide}
+              onClick={onOpenExams}
               className="inline-flex items-center justify-center rounded-lg border btn-tonal surface-hover px-4 py-2 text-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
             >
-              {copy.backToGuide}
+              {copy.backToExams}
             </button>
           </div>
         </div>

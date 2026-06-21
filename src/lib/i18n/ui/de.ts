@@ -13,10 +13,99 @@ export const de = {
   trainer: 'Lehrer',
   library: 'Bibliothek',
   techniques: 'Techniken',
+  forms: 'Formen',
+  culture: 'Kultur',
+  libraryLanding: {
+    techniques: 'Formen, Varianten, Grade, Angriffe, Stellungen und Waffen durchsuchen.',
+    terms: 'Japanische Begriffe, Konzepte, Etikette und Prinzipien lernen.',
+    exercises: 'Vorbereitung, Mobilität, Kraft, Balance und Regeneration ansehen.',
+    routines:
+      'Kuratierte Übungsfolgen für Warm-up, Cooldown, Mobility, Kraft, Technik und Regeneration nutzen.',
+    forms: 'Kata, Waffenprogramme und strukturierte Technikfolgen ansehen.',
+    culture: 'Dōjō-Etikette, Aikidō-Prinzipien, weiterführende Links und Videoquellen ansehen.',
+    cultureScope: '4 Abschnitte',
+  },
   practice: 'Praxis',
   exercises: 'Übungen',
   study: 'Lernen',
-  teach: 'Unterrichten',
+  teach: 'Trainer',
+  teachLanding: {
+    classPlanner: {
+      title: 'Trainingsplaner',
+      description: 'Trainingseinheiten aus Techniken, Routinen und Übungen vorbereiten.',
+      meta: 'Kommt bald',
+    },
+    childrenGames: {
+      title: 'Kinderspiele',
+      description: 'Spielerische Übungen für Aufmerksamkeit, Bewegung, Sicherheit und Kooperation organisieren.',
+      meta: 'Kommt bald',
+    },
+    lessonTemplates: {
+      title: 'Stundenvorlagen',
+      description: 'Wiederverwendbare Unterrichtsstrukturen für Gruppen und Trainingsziele speichern.',
+      meta: 'Kommt bald',
+    },
+    safetyNotes: {
+      title: 'Sicherheitshinweise',
+      description:
+        'Warm-up, Fallintensität, Platz, Waffen und Grenzen der Partner vor dem Training prüfen.',
+      meta: 'Kommt bald',
+    },
+    ukemiProgression: {
+      title: 'Ukemi-Aufbau',
+      description:
+        'Falltraining von niedrigen, einfachen Übungen zu sicherem dynamischem Empfangen strukturieren.',
+      meta: 'Kommt bald',
+    },
+    attendance: {
+      title: 'Anwesenheit',
+      description:
+        'Teilnehmende erfassen und eine einfache Trainingsnotiz führen, ohne daraus Verwaltung zu machen.',
+      meta: 'Kommt bald',
+    },
+  },
+  formsPage: {
+    items: [
+      {
+        id: 'saya-no-uchi',
+        title: 'Saya no Uchi',
+        description:
+          'Fortgeschrittenes Programm, das Angriffe, Techniken und Waffenübergänge verbindet.',
+        meta: 'Fortgeschrittenes Programm',
+      },
+      {
+        id: 'jo-program',
+        title: 'Jō-Programm',
+        description:
+          'Strukturierte Jō-Techniktabelle mit Angriffslinien und Waffen-Hand-Beziehungen.',
+        meta: 'Waffenformen',
+      },
+      {
+        id: 'tanto-program',
+        title: 'Tantō-Programm',
+        description: 'Messerabwehr-Formen nach Angriffslinie und technischer Antwort geordnet.',
+        meta: 'Waffenformen',
+      },
+      {
+        id: 'aiki-no-kata',
+        title: 'Aiki-no-kata',
+        description: 'Formale waffenlose Kata-Anforderungen aus dem höheren Dan-Curriculum.',
+        meta: 'Dan-Formen',
+      },
+      {
+        id: '13-no-jo',
+        title: '13 no Jō',
+        description: 'Kompakte Solo-Jō-Kata mit klaren Linien und Standwechseln.',
+        meta: 'Begriffseintrag',
+      },
+      {
+        id: '31-no-jo',
+        title: '31 no Jō',
+        description: 'Längere Solo-Jō-Kata mit Fokus auf Rhythmus, Winkel und Übergänge.',
+        meta: 'Begriffseintrag',
+      },
+    ],
+  },
   progress: 'Lernen',
   bookmarks: 'Lernen',
   collectionsTitle: 'Sammlungen',
@@ -58,7 +147,7 @@ export const de = {
   learnStart: 'Starten',
   learnEmpty: 'Keine Techniken oder Begriffe für diese Sitzung verfügbar.',
   learnNoSessionTitle: 'Keine aktive Lernsitzung',
-  learnNoSessionBody: 'Starte Lernen aus Lernen oder einem Gürtelabschnitt.',
+  learnNoSessionBody: 'Starte Lernen aus Lernen oder einem Prüfungsabschnitt.',
   learnPromptLabel: 'Frage',
   learnAnswerLabel: 'Deine Antwort',
   learnHiddenLabel: 'Verborgene Seite',
@@ -71,7 +160,7 @@ export const de = {
   learnCompleteTitle: 'Alle Karten gewusst',
   learnCompleteStats: '{remembered} gewusst · {missed} Fehlversuche',
   learnRestart: 'Neu starten',
-  guide: 'Leitfaden',
+  exams: 'Prüfungen',
   glossary: 'Begriffe',
   glossaryTitle: 'Begriffe',
   glossaryDescription: 'Wichtige Aikidō-Begriffe mit kurzen Übersetzungen.',
@@ -99,7 +188,7 @@ export const de = {
   backToBookmarks: 'Zurück zum Lernen',
   backToHome: 'Zurück zur Startseite',
   backToAbout: 'Zurück zu Über Enso',
-  backToGuide: 'Zurück zum Leitfaden',
+  backToExams: 'Zurück zu Prüfungen',
   backToTechnique: 'Zurück zur Technik',
   backToGlossary: 'Zurück zu Begriffen',
   backToFeedback: 'Zurück zum Feedback',
@@ -254,10 +343,10 @@ export const de = {
       goHome: 'Zur Startseite',
       settings: 'Einstellungen',
       segments: {
-        'guide-tab': {
-          title: 'Guide',
+        'exams-tab': {
+          title: 'Prüfungen',
           description:
-            'Der Guide ist deine Karte. Hier findest du Gürtelprogramme, Prüfungstabellen und Übersichten, damit du immer weißt, was als Nächstes dran ist.',
+            'Prüfungen ist deine Übersicht für Gürtelprogramme, Prüfungstabellen und strukturierte Anforderungen.',
         },
         'techniques-tab': {
           title: 'Techniken',
@@ -341,10 +430,10 @@ export const de = {
   footerImprint: 'Impressum',
   footerPrivacy: 'Datenschutzerklärung',
   footerLicense: 'Lizenz',
-  guideLink: 'Guide',
+  examsLink: 'Prüfungen',
   more: 'Mehr',
   privacy: 'Datenschutz',
-  viewGuideCta: 'Leitfaden ansehen',
+  viewExamsCta: 'Prüfungen ansehen',
   // Homepage strings
   homeIdentityTagline: 'Deine persönlichen Aikidō-Techniken und dein Studienbegleiter.',
   homeRecentlyViewedTitle: 'Zuletzt angesehen',
@@ -640,7 +729,7 @@ export const de = {
       library: 'Techniken',
       technique: 'Technik',
       glossary: 'Begriffe',
-      guide: 'Guide',
+      exams: 'Prüfungen',
       settings: 'Einstellungen',
       other: 'Sonstiges',
     },
@@ -726,8 +815,8 @@ export const de = {
   categoryEtiquette: 'Etikette',
   categoryPhilosophy: 'Philosophie',
   categoryOther: 'Andere',
-  // Guide page
-  guidePage: {
+  // Exams page
+  examsPage: {
     headings: {
       philosophy: 'Aikidō‑Prinzipien',
       belts: 'Gürtelgrade & Farben',

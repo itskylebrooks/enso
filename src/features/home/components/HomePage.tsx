@@ -37,7 +37,7 @@ type HomePageProps = {
   pinnedBeltGrade: Grade | null;
   onOpenPinnedBeltGrade: (grade: Grade) => void;
   beltPromptDismissed: boolean;
-  onOpenGuideFromPrompt: () => void;
+  onOpenExamsFromPrompt: () => void;
   showOnboardingCard: boolean;
   onStartOnboardingTour: () => void;
   onSkipOnboarding: () => void;
@@ -56,7 +56,7 @@ export const HomePage = ({
   pinnedBeltGrade,
   onOpenPinnedBeltGrade,
   beltPromptDismissed,
-  onOpenGuideFromPrompt,
+  onOpenExamsFromPrompt,
   showOnboardingCard,
   onStartOnboardingTour,
   onSkipOnboarding,
@@ -146,7 +146,7 @@ export const HomePage = ({
             return (
               <button
                 type="button"
-                onClick={onOpenGuideFromPrompt}
+                onClick={onOpenExamsFromPrompt}
                 className="w-full rounded-2xl border surface-border surface card-hover-shadow p-6 md:p-8 text-center transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] relative overflow-hidden"
               >
                 <span

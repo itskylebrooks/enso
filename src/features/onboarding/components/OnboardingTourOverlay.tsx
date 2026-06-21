@@ -91,8 +91,8 @@ const getSegmentAligned = (
   searchOpen: boolean,
 ): boolean => {
   switch (segment.id) {
-    case 'guide-tab':
-      return route === 'guide';
+    case 'exams-tab':
+      return route === 'exams';
     case 'techniques-tab':
     case 'techniques-filters':
       return route === 'libraryTechniques' && !isTechniqueDetailOpen;
@@ -134,10 +134,10 @@ export const OnboardingTourOverlay = ({
   const wasOpenRef = useRef(false);
   const [targetElement, setTargetElement] = useState<HTMLElement | null>(null);
   const [targetRect, setTargetRect] = useState<DOMRect | null>(null);
-  const [geometrySegmentId, setGeometrySegmentId] = useState<TourSegmentId>('guide-tab');
+  const [geometrySegmentId, setGeometrySegmentId] = useState<TourSegmentId>('exams-tab');
   const [isEntering, setIsEntering] = useState(false);
   const segmentEntryRef = useRef<{ id: TourSegmentId; enteredAt: number }>({
-    id: 'guide-tab',
+    id: 'exams-tab',
     enteredAt: Date.now(),
   });
   const [panelLayout, setPanelLayout] = useState<PanelLayout>({
@@ -600,7 +600,7 @@ export const OnboardingTourOverlay = ({
   const stepLabel = `${tourCopy.step} ${segment.stepNumber} ${tourCopy.of} ${ONBOARDING_TOUR_STEP_COUNT}`;
   const nextLabel = isLastSegment ? tourCopy.finish : tourCopy.next;
   const progressWidth = `${Math.round((segment.stepNumber / ONBOARDING_TOUR_STEP_COUNT) * 100)}%`;
-  const isGuideStepEntering = isEntering && segment.id === 'guide-tab';
+  const isExamsStepEntering = isEntering && segment.id === 'exams-tab';
   const panelPosition = {
     top: panelLayout.style.top ?? '16px',
     left: panelLayout.style.left ?? '16px',
@@ -611,7 +611,7 @@ export const OnboardingTourOverlay = ({
   };
   const spotlightTransition = prefersReducedMotion
     ? ({ duration: 0.01 } as const)
-    : isGuideStepEntering
+    : isExamsStepEntering
       ? ({
           top: { duration: 0 },
           left: { duration: 0 },
@@ -630,7 +630,7 @@ export const OnboardingTourOverlay = ({
       : ({ duration: 0.2, ease: [0.22, 1, 0.36, 1] } as const);
   const panelTransition = prefersReducedMotion
     ? ({ duration: 0.01 } as const)
-    : isGuideStepEntering
+    : isExamsStepEntering
       ? ({
           top: { duration: 0 },
           left: { duration: 0 },
@@ -697,7 +697,7 @@ export const OnboardingTourOverlay = ({
       )}
       {!completionVisible && spotlightRect && !prefersReducedMotion && (
         <motion.div
-          initial={isGuideStepEntering ? { opacity: 0 } : false}
+          initial={isExamsStepEntering ? { opacity: 0 } : false}
           className="pointer-events-none absolute rounded-2xl border border-white/35"
           style={{
             top: spotlightRect.top - 5,
@@ -706,12 +706,12 @@ export const OnboardingTourOverlay = ({
             height: spotlightRect.height + 10,
           }}
           animate={
-            isGuideStepEntering
+            isExamsStepEntering
               ? { opacity: [0, 0.18, 0.38, 0.18], scale: [1, 1, 1.03, 1] }
               : { opacity: [0.18, 0.38, 0.18], scale: [1, 1.03, 1] }
           }
           transition={{
-            duration: isGuideStepEntering ? 2.0 : 1.8,
+            duration: isExamsStepEntering ? 2.0 : 1.8,
             repeat: Infinity,
             ease: 'easeInOut',
           }}

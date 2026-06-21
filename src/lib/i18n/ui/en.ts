@@ -14,10 +14,94 @@ export const en = {
   trainerBaseForms: 'Base forms',
   library: 'Library',
   techniques: 'Techniques',
+  forms: 'Forms',
+  culture: 'Culture',
+  libraryLanding: {
+    techniques: 'Browse forms, variations, grades, attacks, stances, and weapons.',
+    terms: 'Study Japanese terminology, concepts, etiquette, and principles.',
+    exercises: 'Review preparation, mobility, strength, balance, and recovery exercises.',
+    routines:
+      'Use curated exercise sequences for warm-up, cooldown, mobility, strength, skill, and recovery.',
+    forms: 'Review kata, weapons programs, and structured technical sequences.',
+    culture: 'Explore dojo etiquette, aikido principles, further study links, and video references.',
+    cultureScope: '4 sections',
+  },
   practice: 'Practice',
   exercises: 'Exercises',
   study: 'Study',
   teach: 'Teach',
+  teachLanding: {
+    classPlanner: {
+      title: 'Class planner',
+      description: 'Prepare training sessions from techniques, routines, and exercises.',
+      meta: 'Coming soon',
+    },
+    childrenGames: {
+      title: 'Children games',
+      description: 'Organize playful drills for attention, movement, safety, and cooperation.',
+      meta: 'Coming soon',
+    },
+    lessonTemplates: {
+      title: 'Lesson templates',
+      description: 'Save reusable class structures for different groups and training goals.',
+      meta: 'Coming soon',
+    },
+    safetyNotes: {
+      title: 'Safety notes',
+      description: 'Check warm-up, falling intensity, space, weapons, and partner limits before class.',
+      meta: 'Coming soon',
+    },
+    ukemiProgression: {
+      title: 'Ukemi progression',
+      description: 'Structure falling practice from low, simple drills toward safer dynamic receiving.',
+      meta: 'Coming soon',
+    },
+    attendance: {
+      title: 'Attendance',
+      description: 'Track who is present and keep a simple class record without turning it into admin work.',
+      meta: 'Coming soon',
+    },
+  },
+  formsPage: {
+    items: [
+      {
+        id: 'saya-no-uchi',
+        title: 'Saya no Uchi',
+        description: 'Advanced program connecting attacks, techniques, and weapon-transition work.',
+        meta: 'Advanced program',
+      },
+      {
+        id: 'jo-program',
+        title: 'Jō program',
+        description: 'Structured jō technique table with attack lines and weapon-hand relationships.',
+        meta: 'Weapons forms',
+      },
+      {
+        id: 'tanto-program',
+        title: 'Tantō program',
+        description: 'Knife-defense forms organized by attack line and technical response.',
+        meta: 'Weapons forms',
+      },
+      {
+        id: 'aiki-no-kata',
+        title: 'Aiki-no-kata',
+        description: 'Formal empty-hand kata requirements from the higher dan curriculum.',
+        meta: 'Dan forms',
+      },
+      {
+        id: '13-no-jo',
+        title: '13 no Jō',
+        description: 'A compact solo jō kata focused on clear lines and stance changes.',
+        meta: 'Term entry',
+      },
+      {
+        id: '31-no-jo',
+        title: '31 no Jō',
+        description: 'A longer solo jō kata focused on rhythm, angles, and transitions.',
+        meta: 'Term entry',
+      },
+    ],
+  },
   progress: 'Study',
   bookmarks: 'Study',
   collectionsTitle: 'Collections',
@@ -57,7 +141,7 @@ export const en = {
   learnStart: 'Start',
   learnEmpty: 'No techniques or terms available for this session.',
   learnNoSessionTitle: 'No active learning session',
-  learnNoSessionBody: 'Start Learn from Study or a belt guide section.',
+  learnNoSessionBody: 'Start Learn from Study or an exams section.',
   learnPromptLabel: 'Prompt',
   learnAnswerLabel: 'Your answer',
   learnHiddenLabel: 'Hidden side',
@@ -70,7 +154,7 @@ export const en = {
   learnCompleteTitle: 'All cards remembered',
   learnCompleteStats: '{remembered} remembered · {missed} misses',
   learnRestart: 'Restart',
-  guide: 'Guide',
+  exams: 'Exams',
   glossary: 'Terms',
   glossaryTitle: 'Terms',
   glossaryDescription: 'Key aikidō terms with brief translations.',
@@ -98,7 +182,7 @@ export const en = {
   backToBookmarks: 'Back to Study',
   backToHome: 'Back to Home',
   backToAbout: 'Back to About',
-  backToGuide: 'Back to Guide',
+  backToExams: 'Back to Exams',
   backToTechnique: 'Back to Technique',
   backToGlossary: 'Back to Terms',
   backToFeedback: 'Back to Feedback',
@@ -205,7 +289,7 @@ export const en = {
   installPwaSafariInstructions:
     'To install Enso on Safari:\n\n1. Click the Share button in the toolbar\n2. Scroll down and click "Add to Dock"\n\nAlternatively, use File → Add to Dock from the menu bar.',
   pageLabels: 'Page labels',
-  pageLabelsDescription: 'Show labels next to icons in Techniques, Guide, and Terms headers.',
+  pageLabelsDescription: 'Show labels next to icons in Techniques, Exams, and Terms headers.',
   searchBtn: 'Search',
   bookmark: 'Bookmark',
   studyMarkPractice: 'Mark as practice',
@@ -248,10 +332,10 @@ export const en = {
       goHome: 'Go to Home',
       settings: 'Settings',
       segments: {
-        'guide-tab': {
-          title: 'Guide',
+        'exams-tab': {
+          title: 'Exams',
           description:
-            'The Guide is your map. Use it to navigate belt programs, exam tables, and structured overviews so you always know what to practice next.',
+            'Exams is your curriculum map. Use it to navigate belt programs, exam tables, and structured overviews so you always know what to practice next.',
         },
         'techniques-tab': {
           title: 'Techniques',
@@ -335,10 +419,10 @@ export const en = {
   footerImprint: 'Imprint',
   footerPrivacy: 'Privacy Policy',
   footerLicense: 'License',
-  guideLink: 'Guide',
+  examsLink: 'Exams',
   more: 'More',
   privacy: 'Privacy',
-  viewGuideCta: 'Study Guide',
+  viewExamsCta: 'Open Exams',
   // Homepage strings
   homeIdentityTagline: 'Your personal Aikidō techniques and study companion.',
   homeRecentlyViewedTitle: 'Recently viewed',
@@ -349,7 +433,7 @@ export const en = {
   homePinnedBeltCta: 'Open your belt program!',
   homeQuoteCopiedTitle: 'Copied!',
   homePinBeltPromptTitle: 'Pin your belt program',
-  homePinBeltPromptBody: 'Open the Guide to pin your current belt level to Home.',
+  homePinBeltPromptBody: 'Open Exams to pin your current belt level to Home.',
   homeSpotlightTitle: 'Spotlight',
   homeSpotlightSubtitle: 'Quote of the day',
   homeQuoteOfMomentTitle: 'Quote of the Moment',
@@ -628,7 +712,7 @@ export const en = {
       library: 'Techniques',
       technique: 'Technique',
       glossary: 'Terms',
-      guide: 'Guide',
+      exams: 'Exams',
       settings: 'Settings',
       other: 'Other',
     },
@@ -712,8 +796,8 @@ export const en = {
   categoryEtiquette: 'Etiquette',
   categoryPhilosophy: 'Philosophy',
   categoryOther: 'Other',
-  // Guide page
-  guidePage: {
+  // Exams page
+  examsPage: {
     headings: {
       philosophy: 'Aikidō principles',
       belts: 'Belt grades & colors',
@@ -879,7 +963,7 @@ export const en = {
   danOverviewWhatP1:
     'A concise summary of requirements for 2nd–5th Dan under the Deutscher Aikido-Bund (DAB).',
   danOverviewWhatP2:
-    'For Kyū → 1st Dan tables, see Guide. For weapons programs (Saya no Uchi, Jō, Tantō), see Advanced Programs.',
+    'For Kyū → 1st Dan tables, see Exams. For weapons programs (Saya no Uchi, Jō, Tantō), see Advanced Programs.',
 
   danOverviewGeneralTitle: 'General eligibility (applies to all exams)',
   danOverviewGeneralLi1:

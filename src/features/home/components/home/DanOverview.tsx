@@ -32,7 +32,7 @@ export const DanOverview = ({ locale, onBack }: Props): ReactElement => {
             className="text-sm text-subtle hover:text-[var(--color-text)] transition flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] rounded"
           >
             <span aria-hidden>←</span>
-            <span>{copy.backToGuide}</span>
+            <span>{copy.backToExams}</span>
           </button>
           <motion.header className="space-y-2" {...animationProps}>
             <h1 className="text-2xl font-semibold leading-tight">{copy.danOverviewTitle}</h1>

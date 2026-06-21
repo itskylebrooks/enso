@@ -1,5 +1,5 @@
 export type TourSegmentId =
-  | 'guide-tab'
+  | 'exams-tab'
   | 'techniques-tab'
   | 'techniques-filters'
   | 'terms-tab'
@@ -22,11 +22,11 @@ export const ONBOARDING_TOUR_STEP_COUNT = 8;
 
 export const ONBOARDING_TOUR_SEGMENTS: OnboardingTourSegment[] = [
   {
-    id: 'guide-tab',
+    id: 'exams-tab',
     stepNumber: 1,
     targetSelectors: [
-      '.mobile-tab-bar [data-tour-target="nav-guide"]',
-      '[data-tour-target="nav-guide"]',
+      '.mobile-tab-bar [data-tour-target="nav-exams"]',
+      '[data-tour-target="nav-exams"]',
     ],
   },
   {

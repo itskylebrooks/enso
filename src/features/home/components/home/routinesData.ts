@@ -1,4 +1,4 @@
-import type { GuideRoutine, Localized, Locale } from '@shared/types';
+import type { LibraryRoutine, Localized, Locale } from '@shared/types';
 
 export type RoutineExercisePlan = {
   slug: string;
@@ -18,7 +18,7 @@ export type RoutineCollection = {
   presets: RoutinePreset[];
 };
 
-export const routineCollections: Record<GuideRoutine, RoutineCollection> = {
+export const routineCollections: Record<LibraryRoutine, RoutineCollection> = {
   'warm-up': {
     presets: [
       {

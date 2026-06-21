@@ -98,9 +98,9 @@ export const useOnboardingController = ({
       }
 
       switch (segment.id) {
-        case 'guide-tab': {
-          if (route !== 'guide' || activeSlug) {
-            navigateTo('guide');
+        case 'exams-tab': {
+          if (route !== 'exams' || activeSlug) {
+            navigateTo('exams');
           }
           return;
         }

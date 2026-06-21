@@ -1,11 +1,11 @@
 import type { FeedbackType } from '@features/home/components/feedback/FeedbackPage';
 import { FeedbackPage } from '@features/home/components/feedback/FeedbackPage';
-import { GuideGradePage } from '@features/home/components/guide/GuideGradePage';
+import { ExamGradePage } from '@features/home/components/exams/ExamGradePage';
 import { AboutPage } from '@features/home/components/home/AboutPage';
 import { AdvancedPrograms } from '@features/home/components/home/AdvancedPrograms';
 import { DanOverview } from '@features/home/components/home/DanOverview';
-import { GuidePage } from '@features/home/components/home/GuidePage';
-import { GuideRoutinePage } from '@features/home/components/home/GuideRoutinePage';
+import { ExamsPage } from '@features/home/components/home/ExamsPage';
+import { LibraryRoutinePage } from '@features/home/components/home/LibraryRoutinePage';
 import { SyncPage } from '@features/home/components/home/SyncPage';
 import {
   LearnSessionPage,
@@ -18,14 +18,23 @@ import { TechniquesPage } from '@features/technique/components/TechniquesPage';
 import { ExpandableFilterBar } from '@shared/components/ui/ExpandableFilterBar';
 import { MobileFilters } from '@shared/components/ui/MobileFilters';
 import type { Copy } from '@shared/constants/i18n';
-import { guideRouteToGrade, routeToRoutine } from '@shared/navigation/appRoutes';
+import { examsRouteToGrade, routeToRoutine } from '@shared/navigation/appRoutes';
 import { gradeOrder } from '@shared/utils/grades';
 import {
   BookOpenText,
+  CalendarDays,
   Dumbbell,
+  ExternalLink,
   Footprints,
+  Gamepad2,
+  Landmark,
+  LayoutTemplate,
   ListChecks,
   PencilLine,
+  RotateCcw,
+  ScrollText,
+  ShieldCheck,
+  UserCheck,
   type LucideIcon,
 } from 'lucide-react';
 import { motion, type Transition } from 'motion/react';
@@ -56,7 +65,7 @@ import type {
   GlossaryProgress,
   GlossaryTerm,
   Grade,
-  GuideRoutine,
+  LibraryRoutine,
   Locale,
   PracticeCategory,
   Progress,
@@ -151,18 +160,18 @@ type AppScreenNavigation = {
   closeTechnique: () => void;
   openGlossaryTerm: (slug: string) => void;
   openPracticeExercise: (slug: string) => void;
-  openGuideGrade: (grade: Grade, source?: { route: AppRoute; slug: string }) => void;
-  navigateToGuideGrade: (grade: Grade, sourceRoute?: AppRoute) => void;
-  navigateToGuideRoutine: (routine: GuideRoutine, sourceRoute?: AppRoute) => void;
-  openGuideRoutinePreset: (routine: GuideRoutine, routineSlug: string) => void;
-  closeGuideRoutinePreset: (routine: GuideRoutine) => void;
+  openExamsGrade: (grade: Grade, source?: { route: AppRoute; slug: string }) => void;
+  navigateToExamsGrade: (grade: Grade, sourceRoute?: AppRoute) => void;
+  navigateToLibraryRoutine: (routine: LibraryRoutine, sourceRoute?: AppRoute) => void;
+  openLibraryRoutinePreset: (routine: LibraryRoutine, routineSlug: string) => void;
+  closeLibraryRoutinePreset: (routine: LibraryRoutine) => void;
   handlePracticeBack: () => void;
-  handleGuideBack: () => void;
+  handleExamsBack: () => void;
   techniqueBackLabel: string;
   glossaryBackLabel: string;
   glossaryBackRoute: AppRoute;
   practiceBackLabel: string;
-  guideBackLabel: string;
+  examsBackLabel: string;
 };
 
 type AppScreenLibrary = {
@@ -198,7 +207,7 @@ type AppScreenWorkflow = {
   pageMotion: PageMotion;
   prefetchFeedbackPage: () => void;
   goToFeedback: (type?: FeedbackType) => void;
-  handleOpenGuideFromPrompt: () => void;
+  handleOpenExamsFromPrompt: () => void;
   handleStartOnboardingTour: () => void;
   handleSkipOnboarding: () => void;
   togglePinnedBeltGrade: (grade: Grade) => void;
@@ -497,18 +506,36 @@ const LandingLink = ({
 const LandingInfo = ({
   title,
   description,
+  meta,
+  icon: Icon,
+  featured = false,
 }: {
   title: string;
   description: string;
+  meta?: string;
+  icon?: LucideIcon;
+  featured?: boolean;
 }): ReactElement => (
   <div
-    className="surface border surface-border rounded-2xl p-4 flex flex-col gap-3 text-left card-hover-shadow"
+    className={`surface border surface-border rounded-2xl p-4 flex flex-col gap-3 text-left card-hover-shadow ${
+      featured ? 'min-h-40' : ''
+    }`}
     title={title}
   >
-    <span className="block text-base font-semibold leading-tight">{title}</span>
+    <span className="flex items-start justify-between gap-4">
+      <span className="block text-base font-semibold leading-tight">{title}</span>
+      {Icon ? (
+        <span className="shrink-0 text-muted">
+          <Icon aria-hidden="true" className="h-5 w-5" strokeWidth={1.8} />
+        </span>
+      ) : null}
+    </span>
     <span className="block text-sm leading-relaxed text-muted line-clamp-3 flex-1">
       {description}
     </span>
+    {meta ? (
+      <span className="block text-xs font-medium uppercase tracking-wide text-muted">{meta}</span>
+    ) : null}
   </div>
 );
 
@@ -522,14 +549,14 @@ const LibraryLandingScreen = ({
   data,
   navigation,
 }: Pick<AppScreenRouterProps, 'data' | 'navigation'>): ReactElement => {
-  const routineLabel = data.copy.guidePage.headings.routines;
+  const routineLabel = data.copy.examsPage.headings.routines;
 
   return (
     <section className="space-y-5">
       <div className="grid gap-3 md:grid-cols-2">
         <LandingLink
           title={data.copy.techniques}
-          description="Browse forms, variations, grades, attacks, stances, and weapons."
+          description={data.copy.libraryLanding.techniques}
           meta={formatCategoryCount(data.db.techniques.length, data.copy.techniques, data.locale)}
           icon={Footprints}
           featured
@@ -537,7 +564,7 @@ const LibraryLandingScreen = ({
         />
         <LandingLink
           title={data.copy.glossary}
-          description="Study Japanese terminology, concepts, etiquette, and principles."
+          description={data.copy.libraryLanding.terms}
           meta={formatCategoryCount(data.glossaryTerms.length, data.copy.glossary, data.locale)}
           icon={BookOpenText}
           featured
@@ -545,7 +572,7 @@ const LibraryLandingScreen = ({
         />
         <LandingLink
           title={data.copy.exercises}
-          description="Review preparation, mobility, strength, balance, and recovery exercises."
+          description={data.copy.libraryLanding.exercises}
           meta={formatCategoryCount(data.practiceExercises.length, data.copy.exercises, data.locale)}
           icon={Dumbbell}
           featured
@@ -553,13 +580,219 @@ const LibraryLandingScreen = ({
         />
         <LandingLink
           title={routineLabel}
-          description="Use curated exercise sequences for warm-up, cooldown, mobility, strength, skill, and recovery."
-          meta={formatCategoryCount(data.copy.guidePage.routines.length, routineLabel, data.locale)}
+          description={data.copy.libraryLanding.routines}
+          meta={formatCategoryCount(data.copy.examsPage.routines.length, routineLabel, data.locale)}
           icon={ListChecks}
           featured
           onClick={() => navigation.navigateTo('libraryRoutines')}
         />
+        <LandingLink
+          title={data.copy.forms}
+          description={data.copy.libraryLanding.forms}
+          meta={formatCategoryCount(data.copy.formsPage.items.length, data.copy.forms, data.locale)}
+          icon={ScrollText}
+          featured
+          onClick={() => navigation.navigateTo('libraryForms')}
+        />
+        <LandingLink
+          title={data.copy.culture}
+          description={data.copy.libraryLanding.culture}
+          meta={data.copy.libraryLanding.cultureScope}
+          icon={Landmark}
+          featured
+          onClick={() => navigation.navigateTo('libraryCulture')}
+        />
       </div>
+    </section>
+  );
+};
+
+const LibraryTermGroup = ({
+  title,
+  terms,
+  locale,
+  onOpenTerm,
+}: {
+  title: string;
+  terms: GlossaryTerm[];
+  locale: Locale;
+  onOpenTerm: (slug: string) => void;
+}): ReactElement => (
+  <section className="space-y-3">
+    <header>
+      <h2 className="text-xl font-semibold leading-tight">{title}</h2>
+    </header>
+    <div className="grid gap-3 sm:grid-cols-2">
+      {terms.map((term) => (
+        <button
+          key={term.slug}
+          type="button"
+          onClick={() => onOpenTerm(term.slug)}
+          className="surface border surface-border rounded-2xl p-4 flex flex-col gap-2 text-left card-hover-shadow focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+          title={term.romaji}
+        >
+          <span className="flex items-start justify-between gap-3">
+            <span className="block text-base font-semibold leading-tight">{term.romaji}</span>
+            {term.jp ? <span className="shrink-0 text-xs text-subtle">{term.jp}</span> : null}
+          </span>
+          <span className="block text-sm leading-relaxed text-muted line-clamp-3">
+            {term.def[locale] || term.def.en}
+          </span>
+        </button>
+      ))}
+    </div>
+  </section>
+);
+
+const LibraryFormsScreen = ({
+  data,
+  navigation,
+}: Pick<AppScreenRouterProps, 'data' | 'navigation'>): ReactElement => {
+  const openFormOverview = (id: string): void => {
+    switch (id) {
+      case 'saya-no-uchi':
+      case 'jo-program':
+      case 'tanto-program':
+        navigation.navigateTo('examsAdvanced');
+        return;
+      case 'aiki-no-kata':
+        navigation.navigateTo('examsDan');
+        return;
+      case '13-no-jo':
+      case '31-no-jo':
+        navigation.openGlossaryTerm(id);
+        return;
+      default:
+        navigation.navigateTo('libraryForms');
+    }
+  };
+
+  return (
+    <section className="space-y-5">
+      <LibraryPageTitle title={data.copy.forms} />
+      <div className="grid gap-3 md:grid-cols-2">
+        {data.copy.formsPage.items.map((item) => (
+          <LandingLink
+            key={item.id}
+            title={item.title}
+            description={item.description}
+            meta={item.meta}
+            onClick={() => openFormOverview(item.id)}
+          />
+        ))}
+      </div>
+    </section>
+  );
+};
+
+const CultureTextSection = ({
+  title,
+  lead,
+  points,
+}: {
+  title: string;
+  lead: string;
+  points: readonly string[];
+}): ReactElement => (
+  <section className="space-y-3">
+    <header className="space-y-2">
+      <h2 className="text-xl font-semibold leading-tight">{title}</h2>
+      <p className="text-sm text-subtle leading-relaxed">{lead}</p>
+    </header>
+    <ul className="space-y-3 text-sm leading-relaxed">
+      {points.map((point) => (
+        <li key={point} className="flex gap-2">
+          <span aria-hidden className="shrink-0">
+            •
+          </span>
+          <span className="flex-1">{point}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
+);
+
+const CultureLinkSection = ({
+  title,
+  lead,
+  links,
+}: {
+  title: string;
+  lead: string;
+  links: ReadonlyArray<{ id: string; label: string; href: string }>;
+}): ReactElement => (
+  <section className="space-y-3">
+    <header className="space-y-2">
+      <h2 className="text-xl font-semibold leading-tight">{title}</h2>
+      <p className="text-sm text-subtle leading-relaxed">{lead}</p>
+    </header>
+    <div className="flex flex-wrap gap-3">
+      {links.map((link) => (
+        <a
+          key={link.id}
+          href={link.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 rounded-full px-4 py-2 bg-[var(--color-surface)]/20 border surface-border text-sm hover:bg-[var(--color-surface-hover)] transition-colors"
+          aria-label={link.label}
+        >
+          <span>{link.label}</span>
+          <ExternalLink aria-hidden="true" className="h-3.5 w-3.5" strokeWidth={1.8} />
+        </a>
+      ))}
+    </div>
+  </section>
+);
+
+const LibraryCultureScreen = ({
+  data,
+  navigation,
+}: Pick<AppScreenRouterProps, 'data' | 'navigation'>): ReactElement => {
+  const cultureCopy = data.copy.examsPage;
+  const sortTerms = (terms: GlossaryTerm[]): GlossaryTerm[] =>
+    [...terms].sort((a, b) => a.romaji.localeCompare(b.romaji, data.locale));
+  const etiquetteTerms = sortTerms(
+    data.glossaryTerms.filter((term) => term.category === 'etiquette'),
+  );
+  const philosophyTerms = sortTerms(
+    data.glossaryTerms.filter((term) => term.category === 'philosophy'),
+  );
+
+  return (
+    <section className="space-y-10">
+      <LibraryPageTitle title={data.copy.culture} />
+      <CultureTextSection
+        title={cultureCopy.headings.philosophy}
+        lead={cultureCopy.philosophyLead}
+        points={cultureCopy.philosophyPoints}
+      />
+      <CultureTextSection
+        title={cultureCopy.headings.etiquette}
+        lead={cultureCopy.etiquetteLead}
+        points={cultureCopy.etiquettePoints}
+      />
+      <CultureLinkSection
+        title={cultureCopy.headings.furtherStudy}
+        lead={cultureCopy.furtherStudyLead}
+        links={cultureCopy.furtherStudyLinks}
+      />
+      <CultureLinkSection
+        title={cultureCopy.headings.youtubeInspiration}
+        lead={cultureCopy.youtubeInspirationLead}
+        links={cultureCopy.youtubeLinks}
+      />
+      <LibraryTermGroup
+        title={data.copy.categoryEtiquette}
+        terms={etiquetteTerms}
+        locale={data.locale}
+        onOpenTerm={navigation.openGlossaryTerm}
+      />
+      <LibraryTermGroup
+        title={data.copy.categoryPhilosophy}
+        terms={philosophyTerms}
+        locale={data.locale}
+        onOpenTerm={navigation.openGlossaryTerm}
+      />
     </section>
   );
 };
@@ -569,34 +802,64 @@ const LibraryRoutinesScreen = ({
   navigation,
 }: Pick<AppScreenRouterProps, 'data' | 'navigation'>): ReactElement => (
   <section className="space-y-5">
-    <LibraryPageTitle title={data.copy.guidePage.headings.routines} />
+    <LibraryPageTitle title={data.copy.examsPage.headings.routines} />
     <div className="grid gap-3 md:grid-cols-2">
-      {data.copy.guidePage.routines.map((routine) => (
+      {data.copy.examsPage.routines.map((routine) => (
         <LandingLink
           key={routine.id}
           title={routine.title}
           description={routine.description}
-          onClick={() => navigation.navigateToGuideRoutine(routine.id)}
+          onClick={() => navigation.navigateToLibraryRoutine(routine.id)}
         />
       ))}
     </div>
   </section>
 );
 
-const TeachLandingScreen = (): ReactElement => (
+const TeachLandingScreen = ({ data }: Pick<AppScreenRouterProps, 'data'>): ReactElement => (
   <section className="space-y-5">
-    <div className="grid gap-3 md:grid-cols-3">
+    <div className="grid gap-3 md:grid-cols-2">
       <LandingInfo
-        title="Class planner"
-        description="Prepare training sessions from techniques, routines, and exercises."
+        title={data.copy.teachLanding.classPlanner.title}
+        description={data.copy.teachLanding.classPlanner.description}
+        meta={data.copy.teachLanding.classPlanner.meta}
+        icon={CalendarDays}
+        featured
       />
       <LandingInfo
-        title="Children games"
-        description="Organize playful drills for attention, movement, safety, and cooperation."
+        title={data.copy.teachLanding.childrenGames.title}
+        description={data.copy.teachLanding.childrenGames.description}
+        meta={data.copy.teachLanding.childrenGames.meta}
+        icon={Gamepad2}
+        featured
       />
       <LandingInfo
-        title="Lesson templates"
-        description="Save reusable class structures for different groups and training goals."
+        title={data.copy.teachLanding.lessonTemplates.title}
+        description={data.copy.teachLanding.lessonTemplates.description}
+        meta={data.copy.teachLanding.lessonTemplates.meta}
+        icon={LayoutTemplate}
+        featured
+      />
+      <LandingInfo
+        title={data.copy.teachLanding.safetyNotes.title}
+        description={data.copy.teachLanding.safetyNotes.description}
+        meta={data.copy.teachLanding.safetyNotes.meta}
+        icon={ShieldCheck}
+        featured
+      />
+      <LandingInfo
+        title={data.copy.teachLanding.ukemiProgression.title}
+        description={data.copy.teachLanding.ukemiProgression.description}
+        meta={data.copy.teachLanding.ukemiProgression.meta}
+        icon={RotateCcw}
+        featured
+      />
+      <LandingInfo
+        title={data.copy.teachLanding.attendance.title}
+        description={data.copy.teachLanding.attendance.description}
+        meta={data.copy.teachLanding.attendance.meta}
+        icon={UserCheck}
+        featured
       />
     </div>
   </section>
@@ -653,8 +916,8 @@ export const AppScreenRouter = ({
             library.removeFromCollection(currentTechnique.id, collectionId)
           }
           onOpenGlossary={navigation.openGlossaryTerm}
-          onOpenGuideGrade={(grade) => {
-            navigation.openGuideGrade(grade, { route, slug: currentTechnique.slug });
+          onOpenExamsGrade={(grade) => {
+            navigation.openExamsGrade(grade, { route, slug: currentTechnique.slug });
           }}
           onFeedbackClick={() => workflow.goToFeedback()}
           onCreateCollection={library.createCollection}
@@ -743,9 +1006,9 @@ export const AppScreenRouter = ({
         onOpenGlossaryTerm={navigation.openGlossaryTerm}
         onOpenExercise={navigation.openPracticeExercise}
         pinnedBeltGrade={data.pinnedBeltGrade}
-        onOpenPinnedBeltGrade={(grade) => navigation.navigateToGuideGrade(grade, 'home')}
+        onOpenPinnedBeltGrade={(grade) => navigation.navigateToExamsGrade(grade, 'home')}
         beltPromptDismissed={data.beltPromptDismissed}
-        onOpenGuideFromPrompt={workflow.handleOpenGuideFromPrompt}
+        onOpenExamsFromPrompt={workflow.handleOpenExamsFromPrompt}
         showOnboardingCard={showHomeOnboardingCard}
         onStartOnboardingTour={workflow.handleStartOnboardingTour}
         onSkipOnboarding={workflow.handleSkipOnboarding}
@@ -770,58 +1033,58 @@ export const AppScreenRouter = ({
         onRequestDeleteAccount={workflow.handleRequestDeleteAccount}
       />
     );
-  } else if (route === 'guideAdvanced') {
+  } else if (route === 'examsAdvanced') {
     mainContent = (
       <AdvancedPrograms
         locale={locale}
         onOpenTechnique={navigation.openTechnique}
-        onBack={() => navigation.navigateTo('guide')}
+        onBack={() => navigation.navigateTo('exams')}
       />
     );
-  } else if (route === 'guideDan') {
-    mainContent = <DanOverview locale={locale} onBack={() => navigation.navigateTo('guide')} />;
+  } else if (route === 'examsDan') {
+    mainContent = <DanOverview locale={locale} onBack={() => navigation.navigateTo('exams')} />;
   } else if (routeToRoutine(route)) {
-    const routine = routeToRoutine(route) as GuideRoutine;
+    const routine = routeToRoutine(route) as LibraryRoutine;
     mainContent = (
-      <GuideRoutinePage
+      <LibraryRoutinePage
         copy={copy}
         locale={locale}
         routine={routine}
         activeRoutineSlug={activeSlug}
         onBack={() => navigation.navigateTo('libraryRoutines')}
-        onBackToOverview={() => navigation.closeGuideRoutinePreset(routine)}
-        onOpenRoutine={(routineSlug) => navigation.openGuideRoutinePreset(routine, routineSlug)}
+        onBackToOverview={() => navigation.closeLibraryRoutinePreset(routine)}
+        onOpenRoutine={(routineSlug) => navigation.openLibraryRoutinePreset(routine, routineSlug)}
         onOpenExercise={navigation.openPracticeExercise}
       />
     );
-  } else if (guideRouteToGrade(route)) {
-    const grade = guideRouteToGrade(route) as Grade;
+  } else if (examsRouteToGrade(route)) {
+    const grade = examsRouteToGrade(route) as Grade;
     mainContent = (
-      <GuideGradePage
+      <ExamGradePage
         copy={copy}
         locale={locale}
         grade={grade}
         techniques={db.techniques}
         glossaryTerms={data.glossaryTerms}
-        backLabel={navigation.guideBackLabel}
-        onBack={navigation.handleGuideBack}
+        backLabel={navigation.examsBackLabel}
+        onBack={navigation.handleExamsBack}
         pinnedBeltGrade={data.pinnedBeltGrade}
         onTogglePin={workflow.togglePinnedBeltGrade}
         onOpenTechnique={(slug) => navigation.openTechnique(slug, undefined, undefined, false)}
         onOpenTerm={navigation.openGlossaryTerm}
         onStartLearn={(cards, options) =>
-          workflow.startLearnSession(cards, options, route, copy.backToGuide)
+          workflow.startLearnSession(cards, options, route, copy.backToExams)
         }
       />
     );
-  } else if (route === 'guide') {
+  } else if (route === 'exams') {
     mainContent = (
-      <GuidePage
+      <ExamsPage
         locale={locale}
-        onNavigateToGuideGrade={navigation.navigateToGuideGrade}
+        onNavigateToExamsGrade={navigation.navigateToExamsGrade}
         onOpenTechnique={navigation.openTechnique}
-        onNavigateToAdvanced={() => navigation.navigateTo('guideAdvanced')}
-        onNavigateToDan={() => navigation.navigateTo('guideDan')}
+        onNavigateToAdvanced={() => navigation.navigateTo('examsAdvanced')}
+        onNavigateToDan={() => navigation.navigateTo('examsDan')}
       />
     );
   } else if (route === 'feedback') {
@@ -851,7 +1114,7 @@ export const AppScreenRouter = ({
           navigation.navigateTo(data.learnSession?.sourceRoute ?? 'study', { replace: true })
         }
         onOpenBookmarks={() => navigation.navigateTo('study', { replace: true })}
-        onOpenGuide={() => navigation.navigateTo('guide', { replace: true })}
+        onOpenExams={() => navigation.navigateTo('exams', { replace: true })}
       />
     );
   } else {
@@ -882,6 +1145,12 @@ export const AppScreenRouter = ({
 
         {route === 'libraryRoutines' && (
           <LibraryRoutinesScreen data={data} navigation={navigation} />
+        )}
+
+        {route === 'libraryForms' && <LibraryFormsScreen data={data} navigation={navigation} />}
+
+        {route === 'libraryCulture' && (
+          <LibraryCultureScreen data={data} navigation={navigation} />
         )}
 
         {route === 'study' && (
@@ -940,7 +1209,7 @@ export const AppScreenRouter = ({
           />
         )}
 
-        {route === 'teach' && <TeachLandingScreen />}
+        {route === 'teach' && <TeachLandingScreen data={data} />}
       </div>
     );
   }

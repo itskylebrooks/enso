@@ -45,8 +45,8 @@ export const isTourSegmentAligned = ({
   if (!segment) return false;
 
   switch (segment.id) {
-    case 'guide-tab':
-      return route === 'guide';
+    case 'exams-tab':
+      return route === 'exams';
     case 'techniques-tab':
     case 'techniques-filters':
       return route === 'libraryTechniques' && !activeSlug;

@@ -24,7 +24,7 @@ const FeedbackSchema = z
       'new-variation',
       'new-technique',
     ]),
-    entityType: z.enum(['technique', 'glossary', 'exam', 'guide', 'other']),
+    entityType: z.enum(['technique', 'glossary', 'exam', 'exams', 'other']),
     entityId: z.string().trim().max(256).optional(),
     locale: z.enum(['en', 'de']).optional(),
     summary: z.string().trim().min(1).max(120),

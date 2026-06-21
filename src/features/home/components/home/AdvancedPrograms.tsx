@@ -5,9 +5,9 @@ import { getInitialThemeState } from '@shared/utils/theme';
 import { motion } from 'motion/react';
 import type { ReactElement } from 'react';
 import { useState } from 'react';
-import { JoMatrix } from '../guide/JoMatrix';
-import { SayaNoUchiMatrix } from '../guide/SayaNoUchiMatrix';
-import { TantoMatrix } from '../guide/TantoMatrix';
+import { JoMatrix } from '../exams/JoMatrix';
+import { SayaNoUchiMatrix } from '../exams/SayaNoUchiMatrix';
+import { TantoMatrix } from '../exams/TantoMatrix';
 
 type Props = {
   locale: Locale;
@@ -44,7 +44,7 @@ export const AdvancedPrograms = ({ locale, onOpenTechnique, onBack }: Props): Re
             className="text-sm text-subtle hover:text-[var(--color-text)] transition flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] rounded"
           >
             <span aria-hidden>←</span>
-            <span>{i18nCopy.backToGuide}</span>
+            <span>{i18nCopy.backToExams}</span>
           </button>
           <motion.header className="space-y-2" {...animationProps}>
             <h1 className="text-2xl font-semibold leading-tight">

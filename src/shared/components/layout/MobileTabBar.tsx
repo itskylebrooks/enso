@@ -30,11 +30,11 @@ export const MobileTabBar = ({ copy, route, onNavigate }: MobileTabBarProps): Re
     tourTarget: string;
   }> = [
     {
-      id: 'guide',
-      route: 'guide',
-      label: copy.guideLink,
+      id: 'exams',
+      route: 'exams',
+      label: copy.examsLink,
       icon: Compass,
-      tourTarget: 'nav-guide',
+      tourTarget: 'nav-exams',
     },
     {
       id: 'library',

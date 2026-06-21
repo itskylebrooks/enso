@@ -16,8 +16,8 @@ import {
 import { enrichTechniqueWithVariants } from '@shared/constants/variantMapping';
 import {
   buildLibraryRoutinePath,
-  gradeToGuideRoute,
-  isGuideLikeRoute,
+  gradeToExamsRoute,
+  isExamsLikeRoute,
   routeToPath,
   routeToRoutine,
   routineToLibraryRoute,
@@ -53,7 +53,7 @@ import type {
   Direction,
   EntryMode,
   Grade,
-  GuideRoutine,
+  LibraryRoutine,
   Locale,
   TechniqueVariant,
   TechniqueVariantKey,
@@ -311,11 +311,11 @@ export default function App({
     [navigateTo],
   );
 
-  const openGuideGrade = useCallback(
+  const openExamsGrade = useCallback(
     (grade: Grade, source?: { route: AppRoute; slug: string }) => {
-      const nextRoute = gradeToGuideRoute(grade);
+      const nextRoute = gradeToExamsRoute(grade);
       if (!nextRoute) {
-        navigateTo('guide');
+        navigateTo('exams');
         return;
       }
 
@@ -775,61 +775,61 @@ export default function App({
     setActiveSlug(slug);
   };
 
-  const handleOpenGuideFromPrompt = useCallback(() => {
+  const handleOpenExamsFromPrompt = useCallback(() => {
     setBeltPromptDismissed(true);
-    navigateTo('guide');
+    navigateTo('exams');
   }, [navigateTo, setBeltPromptDismissed]);
 
-  const navigateToGuideGrade = useCallback(
+  const navigateToExamsGrade = useCallback(
     (grade: Grade, sourceRoute?: AppRoute) => {
       switch (grade) {
         case 'kyu5':
-          navigateTo('guideKyu5', { sourceRoute });
+          navigateTo('examsKyu5', { sourceRoute });
           break;
         case 'kyu4':
-          navigateTo('guideKyu4', { sourceRoute });
+          navigateTo('examsKyu4', { sourceRoute });
           break;
         case 'kyu3':
-          navigateTo('guideKyu3', { sourceRoute });
+          navigateTo('examsKyu3', { sourceRoute });
           break;
         case 'kyu2':
-          navigateTo('guideKyu2', { sourceRoute });
+          navigateTo('examsKyu2', { sourceRoute });
           break;
         case 'kyu1':
-          navigateTo('guideKyu1', { sourceRoute });
+          navigateTo('examsKyu1', { sourceRoute });
           break;
         case 'dan1':
-          navigateTo('guideDan1', { sourceRoute });
+          navigateTo('examsDan1', { sourceRoute });
           break;
         case 'dan2':
-          navigateTo('guideDan2', { sourceRoute });
+          navigateTo('examsDan2', { sourceRoute });
           break;
         case 'dan3':
-          navigateTo('guideDan3', { sourceRoute });
+          navigateTo('examsDan3', { sourceRoute });
           break;
         case 'dan4':
-          navigateTo('guideDan4', { sourceRoute });
+          navigateTo('examsDan4', { sourceRoute });
           break;
         case 'dan5':
-          navigateTo('guideDan5', { sourceRoute });
+          navigateTo('examsDan5', { sourceRoute });
           break;
         default:
-          navigateTo('guide', { sourceRoute });
+          navigateTo('exams', { sourceRoute });
           break;
       }
     },
     [navigateTo],
   );
 
-  const navigateToGuideRoutine = useCallback(
-    (routine: GuideRoutine, sourceRoute?: AppRoute) => {
+  const navigateToLibraryRoutine = useCallback(
+    (routine: LibraryRoutine, sourceRoute?: AppRoute) => {
       navigateTo(routineToLibraryRoute(routine), { sourceRoute });
     },
     [navigateTo],
   );
 
-  const openGuideRoutinePreset = useCallback(
-    (routine: GuideRoutine, routineSlug: string) => {
+  const openLibraryRoutinePreset = useCallback(
+    (routine: LibraryRoutine, routineSlug: string) => {
       rememberScrollPosition();
       const nextRoute = routineToLibraryRoute(routine);
       const nextPath = buildLibraryRoutinePath(routine, routineSlug);
@@ -853,8 +853,8 @@ export default function App({
     [setActiveSlug, setRoute],
   );
 
-  const closeGuideRoutinePreset = useCallback(
-    (routine: GuideRoutine) => {
+  const closeLibraryRoutinePreset = useCallback(
+    (routine: LibraryRoutine) => {
       rememberScrollPosition();
       const nextRoute = routineToLibraryRoute(routine);
       const nextPath = buildLibraryRoutinePath(routine);
@@ -931,8 +931,8 @@ export default function App({
         ? copy.backToHome
         : techniqueBackRoute === 'about'
           ? copy.backToAbout
-          : isGuideLikeRoute(techniqueBackRoute)
-            ? copy.backToGuide
+          : isExamsLikeRoute(techniqueBackRoute)
+            ? copy.backToExams
             : techniqueBackRoute === 'libraryTerms'
               ? copy.backToGlossary
               : techniqueBackRoute === 'feedback'
@@ -949,8 +949,8 @@ export default function App({
         ? copy.backToHome
         : glossaryBackRoute === 'about'
           ? copy.backToAbout
-          : isGuideLikeRoute(glossaryBackRoute)
-            ? copy.backToGuide
+          : isExamsLikeRoute(glossaryBackRoute)
+            ? copy.backToExams
             : glossaryBackRoute === 'feedback'
               ? copy.backToFeedback
               : copy.backToGlossary;
@@ -966,15 +966,15 @@ export default function App({
         ? copy.backToHome
         : practiceBackRoute === 'about'
           ? copy.backToAbout
-          : isGuideLikeRoute(practiceBackRoute)
-            ? copy.backToGuide
+          : isExamsLikeRoute(practiceBackRoute)
+            ? copy.backToExams
             : practiceBackRoute === 'feedback'
               ? copy.backToFeedback
               : copy.backToLibrary;
   const handlePracticeBack = () => {
-    const guideRoutine = routeToRoutine(practiceBackRoute);
-    if (guideRoutine && practiceBackSourceSlug) {
-      const path = buildLibraryRoutinePath(guideRoutine, practiceBackSourceSlug);
+    const libraryRoutine = routeToRoutine(practiceBackRoute);
+    if (libraryRoutine && practiceBackSourceSlug) {
+      const path = buildLibraryRoutinePath(libraryRoutine, practiceBackSourceSlug);
       setRoute(practiceBackRoute);
       setActiveSlug(practiceBackSourceSlug);
       if (typeof window !== 'undefined') {
@@ -989,25 +989,25 @@ export default function App({
     navigateTo(practiceBackRoute, { replace: true });
   };
 
-  const guideHistoryState =
+  const examsHistoryState =
     typeof window !== 'undefined' ? (window.history.state as HistoryState | null) : null;
-  const guideBackLabel = guideHistoryState?.sourceSlug
+  const examsBackLabel = examsHistoryState?.sourceSlug
     ? copy.backToTechnique
-    : guideHistoryState?.sourceRoute === 'home'
+    : examsHistoryState?.sourceRoute === 'home'
       ? copy.backToHome
-      : copy.backToGuide;
-  const handleGuideBack = (): void => {
-    if (guideHistoryState?.sourceSlug) {
-      openTechnique(guideHistoryState.sourceSlug, undefined, undefined, true, {
-        originRoute: guideHistoryState.sourceRoute ?? 'libraryTechniques',
+      : copy.backToExams;
+  const handleExamsBack = (): void => {
+    if (examsHistoryState?.sourceSlug) {
+      openTechnique(examsHistoryState.sourceSlug, undefined, undefined, true, {
+        originRoute: examsHistoryState.sourceRoute ?? 'libraryTechniques',
       });
       return;
     }
-    if (guideHistoryState?.sourceRoute === 'home') {
+    if (examsHistoryState?.sourceRoute === 'home') {
       navigateTo('home');
       return;
     }
-    navigateTo('guide');
+    navigateTo('exams');
   };
 
   const { mainContent, pageKey } = AppScreenRouter({
@@ -1064,18 +1064,18 @@ export default function App({
       closeTechnique,
       openGlossaryTerm,
       openPracticeExercise,
-      openGuideGrade,
-      navigateToGuideGrade,
-      navigateToGuideRoutine,
-      openGuideRoutinePreset,
-      closeGuideRoutinePreset,
+      openExamsGrade,
+      navigateToExamsGrade,
+      navigateToLibraryRoutine,
+      openLibraryRoutinePreset,
+      closeLibraryRoutinePreset,
       handlePracticeBack,
-      handleGuideBack,
+      handleExamsBack,
       techniqueBackLabel,
       glossaryBackLabel,
       glossaryBackRoute,
       practiceBackLabel,
-      guideBackLabel,
+      examsBackLabel,
     },
     library: {
       updateGlossaryProgress,
@@ -1097,7 +1097,7 @@ export default function App({
       pageMotion,
       prefetchFeedbackPage,
       goToFeedback,
-      handleOpenGuideFromPrompt,
+      handleOpenExamsFromPrompt,
       handleStartOnboardingTour,
       handleSkipOnboarding,
       togglePinnedBeltGrade,

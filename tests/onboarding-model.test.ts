@@ -17,7 +17,7 @@ describe('onboarding model', () => {
 
   it('derives the active segment and homepage card visibility', () => {
     expect(getActiveTourSegment(false, 0)).toBeNull();
-    expect(getActiveTourSegment(true, 0)?.id).toBe('guide-tab');
+    expect(getActiveTourSegment(true, 0)?.id).toBe('exams-tab');
     expect(getActiveTourSegment(true, 99)?.id).toBe('search-input');
 
     expect(
@@ -47,7 +47,7 @@ describe('onboarding model', () => {
     expect(
       isTourSegmentAligned({
         segmentIndex: 0,
-        route: 'guide',
+        route: 'exams',
         activeSlug: null,
         searchOpen: false,
         isTechniqueDetailOpen: false,

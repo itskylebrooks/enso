@@ -1,7 +1,7 @@
 import { parseTechniquePath } from '@shared/constants/urls';
-import type { AppRoute, EntryMode, Grade, GuideRoutine } from '@shared/types';
+import type { AppRoute, EntryMode, Grade, LibraryRoutine } from '@shared/types';
 
-export type AppSection = 'guide' | 'library' | 'study' | 'teach';
+export type AppSection = 'exams' | 'library' | 'study' | 'teach';
 
 export type HistoryState = {
   route?: AppRoute;
@@ -30,32 +30,32 @@ export const routeToPath = (route: AppRoute): string => {
       return '/';
     case 'about':
       return '/about';
-    case 'guide':
-      return '/guide';
-    case 'guideAdvanced':
-      return '/guide/advanced';
-    case 'guideDan':
-      return '/guide/dan';
-    case 'guideKyu5':
-      return '/guide/5-kyu';
-    case 'guideKyu4':
-      return '/guide/4-kyu';
-    case 'guideKyu3':
-      return '/guide/3-kyu';
-    case 'guideKyu2':
-      return '/guide/2-kyu';
-    case 'guideKyu1':
-      return '/guide/1-kyu';
-    case 'guideDan1':
-      return '/guide/1-dan';
-    case 'guideDan2':
-      return '/guide/2-dan';
-    case 'guideDan3':
-      return '/guide/3-dan';
-    case 'guideDan4':
-      return '/guide/4-dan';
-    case 'guideDan5':
-      return '/guide/5-dan';
+    case 'exams':
+      return '/exams';
+    case 'examsAdvanced':
+      return '/exams/advanced';
+    case 'examsDan':
+      return '/exams/dan';
+    case 'examsKyu5':
+      return '/exams/5-kyu';
+    case 'examsKyu4':
+      return '/exams/4-kyu';
+    case 'examsKyu3':
+      return '/exams/3-kyu';
+    case 'examsKyu2':
+      return '/exams/2-kyu';
+    case 'examsKyu1':
+      return '/exams/1-kyu';
+    case 'examsDan1':
+      return '/exams/1-dan';
+    case 'examsDan2':
+      return '/exams/2-dan';
+    case 'examsDan3':
+      return '/exams/3-dan';
+    case 'examsDan4':
+      return '/exams/4-dan';
+    case 'examsDan5':
+      return '/exams/5-dan';
     case 'sync':
       return '/sync';
     case 'feedback':
@@ -70,6 +70,10 @@ export const routeToPath = (route: AppRoute): string => {
       return '/library/exercises';
     case 'libraryRoutines':
       return '/library/routines';
+    case 'libraryForms':
+      return '/library/forms';
+    case 'libraryCulture':
+      return '/library/culture';
     case 'libraryRoutineWarmUp':
       return '/library/routines/warm-up';
     case 'libraryRoutineCooldown':
@@ -93,61 +97,61 @@ export const routeToPath = (route: AppRoute): string => {
   }
 };
 
-export const guideRouteToGrade = (route: AppRoute): Grade | null => {
+export const examsRouteToGrade = (route: AppRoute): Grade | null => {
   switch (route) {
-    case 'guideKyu5':
+    case 'examsKyu5':
       return 'kyu5';
-    case 'guideKyu4':
+    case 'examsKyu4':
       return 'kyu4';
-    case 'guideKyu3':
+    case 'examsKyu3':
       return 'kyu3';
-    case 'guideKyu2':
+    case 'examsKyu2':
       return 'kyu2';
-    case 'guideKyu1':
+    case 'examsKyu1':
       return 'kyu1';
-    case 'guideDan1':
+    case 'examsDan1':
       return 'dan1';
-    case 'guideDan2':
+    case 'examsDan2':
       return 'dan2';
-    case 'guideDan3':
+    case 'examsDan3':
       return 'dan3';
-    case 'guideDan4':
+    case 'examsDan4':
       return 'dan4';
-    case 'guideDan5':
+    case 'examsDan5':
       return 'dan5';
     default:
       return null;
   }
 };
 
-export const gradeToGuideRoute = (grade: Grade): AppRoute | null => {
+export const gradeToExamsRoute = (grade: Grade): AppRoute | null => {
   switch (grade) {
     case 'kyu5':
-      return 'guideKyu5';
+      return 'examsKyu5';
     case 'kyu4':
-      return 'guideKyu4';
+      return 'examsKyu4';
     case 'kyu3':
-      return 'guideKyu3';
+      return 'examsKyu3';
     case 'kyu2':
-      return 'guideKyu2';
+      return 'examsKyu2';
     case 'kyu1':
-      return 'guideKyu1';
+      return 'examsKyu1';
     case 'dan1':
-      return 'guideDan1';
+      return 'examsDan1';
     case 'dan2':
-      return 'guideDan2';
+      return 'examsDan2';
     case 'dan3':
-      return 'guideDan3';
+      return 'examsDan3';
     case 'dan4':
-      return 'guideDan4';
+      return 'examsDan4';
     case 'dan5':
-      return 'guideDan5';
+      return 'examsDan5';
     default:
       return null;
   }
 };
 
-export const routineToLibraryRoute = (routine: GuideRoutine): AppRoute => {
+export const routineToLibraryRoute = (routine: LibraryRoutine): AppRoute => {
   switch (routine) {
     case 'warm-up':
       return 'libraryRoutineWarmUp';
@@ -164,12 +168,12 @@ export const routineToLibraryRoute = (routine: GuideRoutine): AppRoute => {
   }
 };
 
-export const buildLibraryRoutinePath = (routine: GuideRoutine, routineSlug?: string): string => {
+export const buildLibraryRoutinePath = (routine: LibraryRoutine, routineSlug?: string): string => {
   const basePath = `/library/routines/${routine}`;
   return routineSlug ? `${basePath}/${encodeURIComponent(routineSlug)}` : basePath;
 };
 
-export const routeToRoutine = (route: AppRoute): GuideRoutine | null => {
+export const routeToRoutine = (route: AppRoute): LibraryRoutine | null => {
   switch (route) {
     case 'libraryRoutineWarmUp':
       return 'warm-up';
@@ -188,10 +192,10 @@ export const routeToRoutine = (route: AppRoute): GuideRoutine | null => {
   }
 };
 
-export const isGuideLikeRoute = (value: AppRoute): boolean => value.startsWith('guide');
+export const isExamsLikeRoute = (value: AppRoute): boolean => value.startsWith('exams');
 
 export const getSectionForRoute = (route: AppRoute): AppSection | null => {
-  if (isGuideLikeRoute(route)) return 'guide';
+  if (isExamsLikeRoute(route)) return 'exams';
   if (route === 'library' || route.startsWith('library')) return 'library';
   if (route === 'study' || route === 'studyLearn') return 'study';
   if (route === 'teach') return 'teach';
@@ -240,14 +244,16 @@ export const parseLocation = (
   if (pathname === '/library/terms') return { route: 'libraryTerms', slug: null };
   if (pathname === '/library/exercises') return { route: 'libraryExercises', slug: null };
   if (pathname === '/library/routines') return { route: 'libraryRoutines', slug: null };
+  if (pathname === '/library/forms') return { route: 'libraryForms', slug: null };
+  if (pathname === '/library/culture') return { route: 'libraryCulture', slug: null };
   if (pathname === '/study') return { route: 'study', slug: null };
   if (pathname === '/study/learn') return { route: 'studyLearn', slug: null };
   if (pathname === '/teach') return { route: 'teach', slug: null };
   if (pathname === '/about') return { route: 'about', slug: null };
   if (pathname === '/sync') return { route: 'sync', slug: null };
-  if (pathname === '/guide') return { route: 'guide', slug: null };
-  if (pathname === '/guide/advanced') return { route: 'guideAdvanced', slug: null };
-  if (pathname === '/guide/dan') return { route: 'guideDan', slug: null };
+  if (pathname === '/exams') return { route: 'exams', slug: null };
+  if (pathname === '/exams/advanced') return { route: 'examsAdvanced', slug: null };
+  if (pathname === '/exams/dan') return { route: 'examsDan', slug: null };
 
   const libraryRoutineMatch =
     /^\/library\/routines\/(warm-up|cooldown|mobility|strength|skill|recovery)(?:\/([^/?#]+))?$/.exec(
@@ -256,26 +262,26 @@ export const parseLocation = (
   if (libraryRoutineMatch) {
     const [, routine, routineSlug] = libraryRoutineMatch;
     return {
-      route: routineToLibraryRoute(routine as GuideRoutine),
+      route: routineToLibraryRoute(routine as LibraryRoutine),
       slug: routineSlug ? decodeURIComponent(routineSlug) : null,
     };
   }
 
-  const guideGradeMatch = /^\/guide\/(\d+)-(kyu|dan)$/.exec(pathname);
-  if (guideGradeMatch) {
-    const [, number, type] = guideGradeMatch;
+  const examsGradeMatch = /^\/exams\/(\d+)-(kyu|dan)$/.exec(pathname);
+  if (examsGradeMatch) {
+    const [, number, type] = examsGradeMatch;
     if (type === 'kyu') {
-      if (number === '5') return { route: 'guideKyu5', slug: null };
-      if (number === '4') return { route: 'guideKyu4', slug: null };
-      if (number === '3') return { route: 'guideKyu3', slug: null };
-      if (number === '2') return { route: 'guideKyu2', slug: null };
-      if (number === '1') return { route: 'guideKyu1', slug: null };
+      if (number === '5') return { route: 'examsKyu5', slug: null };
+      if (number === '4') return { route: 'examsKyu4', slug: null };
+      if (number === '3') return { route: 'examsKyu3', slug: null };
+      if (number === '2') return { route: 'examsKyu2', slug: null };
+      if (number === '1') return { route: 'examsKyu1', slug: null };
     } else if (type === 'dan') {
-      if (number === '1') return { route: 'guideDan1', slug: null };
-      if (number === '2') return { route: 'guideDan2', slug: null };
-      if (number === '3') return { route: 'guideDan3', slug: null };
-      if (number === '4') return { route: 'guideDan4', slug: null };
-      if (number === '5') return { route: 'guideDan5', slug: null };
+      if (number === '1') return { route: 'examsDan1', slug: null };
+      if (number === '2') return { route: 'examsDan2', slug: null };
+      if (number === '3') return { route: 'examsDan3', slug: null };
+      if (number === '4') return { route: 'examsDan4', slug: null };
+      if (number === '5') return { route: 'examsDan5', slug: null };
     }
   }
 

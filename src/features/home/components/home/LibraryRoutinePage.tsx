@@ -1,15 +1,15 @@
 import { useEffect, useMemo, useState, type ReactElement } from 'react';
 import type { Copy } from '@shared/constants/i18n';
-import type { Exercise, GuideRoutine, Locale } from '@shared/types';
+import type { Exercise, LibraryRoutine, Locale } from '@shared/types';
 import { loadAllExercises } from '@features/exercises';
 import { getExerciseCategoryLabel, getExerciseCategoryStyle } from '@shared/styles/exercises';
 import { StepsList } from '@features/technique/components/StepsList';
 import { getLocalized, routineCollections } from './routinesData';
 
-type GuideRoutinePageProps = {
+type LibraryRoutinePageProps = {
   copy: Copy;
   locale: Locale;
-  routine: GuideRoutine;
+  routine: LibraryRoutine;
   activeRoutineSlug: string | null;
   onBack: () => void;
   onBackToOverview: () => void;
@@ -17,7 +17,7 @@ type GuideRoutinePageProps = {
   onOpenExercise: (exerciseSlug: string) => void;
 };
 
-export const GuideRoutinePage = ({
+export const LibraryRoutinePage = ({
   copy,
   locale,
   routine,
@@ -26,7 +26,7 @@ export const GuideRoutinePage = ({
   onBackToOverview,
   onOpenRoutine,
   onOpenExercise,
-}: GuideRoutinePageProps): ReactElement => {
+}: LibraryRoutinePageProps): ReactElement => {
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -49,7 +49,7 @@ export const GuideRoutinePage = ({
     loadExercises();
   }, []);
 
-  const routineEntry = copy.guidePage.routines.find((entry) => entry.id === routine);
+  const routineEntry = copy.examsPage.routines.find((entry) => entry.id === routine);
   const routineTitle = routineEntry?.title ?? '';
   const routineDescription = routineEntry?.description ?? '';
   const collection = routineCollections[routine];
@@ -78,7 +78,7 @@ export const GuideRoutinePage = ({
           className="text-sm text-subtle hover:text-[var(--color-text)] transition flex items-center gap-2"
         >
           <span aria-hidden>←</span>
-          <span>{copy.backToGuide}</span>
+          <span>{copy.backToExams}</span>
         </button>
         <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
       </section>
@@ -94,9 +94,9 @@ export const GuideRoutinePage = ({
           className="text-sm text-subtle hover:text-[var(--color-text)] transition flex items-center gap-2"
         >
           <span aria-hidden>←</span>
-          <span>{copy.guidePage.routineBackToList}</span>
+          <span>{copy.examsPage.routineBackToList}</span>
         </button>
-        <p className="text-sm text-muted">{copy.guidePage.routineNotFound}</p>
+        <p className="text-sm text-muted">{copy.examsPage.routineNotFound}</p>
       </section>
     );
   }
@@ -111,11 +111,11 @@ export const GuideRoutinePage = ({
             className="text-sm text-subtle hover:text-[var(--color-text)] transition flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] rounded"
           >
             <span aria-hidden>←</span>
-            <span>{copy.backToGuide}</span>
+            <span>{copy.backToExams}</span>
           </button>
           <h1 className="text-2xl font-semibold leading-tight">{routineTitle}</h1>
           <p className="text-sm text-subtle">{routineDescription}</p>
-          <p className="text-sm text-subtle">{copy.guidePage.routineOverviewLead}</p>
+          <p className="text-sm text-subtle">{copy.examsPage.routineOverviewLead}</p>
         </header>
 
         <ul className="grid grid-cols-1 gap-4 lg:grid-cols-2">
@@ -135,10 +135,10 @@ export const GuideRoutinePage = ({
                   </div>
                   <div className="mt-auto border-t surface-border pt-3 flex items-center justify-between gap-3 text-xs text-subtle">
                     <span>
-                      {copy.guidePage.routineDurationLabel}: {preset.estimatedMinutes} min
+                      {copy.examsPage.routineDurationLabel}: {preset.estimatedMinutes} min
                     </span>
                     <span>
-                      {copy.guidePage.routineExerciseCountLabel}: {preset.exercises.length}
+                      {copy.examsPage.routineExerciseCountLabel}: {preset.exercises.length}
                     </span>
                   </div>
                 </button>
@@ -162,16 +162,16 @@ export const GuideRoutinePage = ({
           className="text-sm text-subtle hover:text-[var(--color-text)] transition flex items-center gap-2 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] rounded"
         >
           <span aria-hidden>←</span>
-          <span>{copy.guidePage.routineBackToList}</span>
+          <span>{copy.examsPage.routineBackToList}</span>
         </button>
         <h1 className="text-2xl font-semibold leading-tight">{presetTitle}</h1>
         <p className="text-sm text-subtle">{presetDescription}</p>
         <div className="flex flex-wrap gap-3 text-xs text-subtle">
           <span>
-            {copy.guidePage.routineDurationLabel}: {selectedPreset.estimatedMinutes} min
+            {copy.examsPage.routineDurationLabel}: {selectedPreset.estimatedMinutes} min
           </span>
           <span>
-            {copy.guidePage.routineExerciseCountLabel}: {selectedPreset.exercises.length}
+            {copy.examsPage.routineExerciseCountLabel}: {selectedPreset.exercises.length}
           </span>
         </div>
       </header>
@@ -182,7 +182,7 @@ export const GuideRoutinePage = ({
           const exerciseName = exercise ? exercise.name[locale] || exercise.name.en : planItem.slug;
           const exerciseSummary = exercise
             ? exercise.summary[locale] || exercise.summary.en
-            : copy.guidePage.routineMissingExercise;
+            : copy.examsPage.routineMissingExercise;
           const howTo = exercise?.howTo?.[locale] || exercise?.howTo?.en;
           const categoryLabel = exercise
             ? getExerciseCategoryLabel(exercise.category, copy)
@@ -211,13 +211,13 @@ export const GuideRoutinePage = ({
               </div>
 
               <div className="text-xs text-subtle">
-                {copy.guidePage.routineDurationLabel}: {getLocalized(planItem.duration, locale)}
+                {copy.examsPage.routineDurationLabel}: {getLocalized(planItem.duration, locale)}
               </div>
 
               {howTo && howTo.length > 0 && (
                 <section className="space-y-2">
                   <h3 className="text-xs uppercase tracking-[0.2em] text-subtle">
-                    {copy.guidePage.routineExerciseListHeading}
+                    {copy.examsPage.routineExerciseListHeading}
                   </h3>
                   <StepsList steps={howTo} ariaLabel={`${exerciseName} routine steps`} />
                 </section>
@@ -230,7 +230,7 @@ export const GuideRoutinePage = ({
                     onClick={() => onOpenExercise(exercise.slug)}
                     className="inline-flex items-center justify-center rounded-lg border surface-border bg-[var(--color-surface)] px-3 py-2 text-sm hover-border-adaptive transition"
                   >
-                    {copy.guidePage.routineOpenExerciseCta}
+                    {copy.examsPage.routineOpenExerciseCta}
                   </button>
                 </div>
               )}
