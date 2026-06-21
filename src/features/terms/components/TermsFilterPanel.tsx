@@ -2,8 +2,8 @@ import type { ReactElement } from 'react';
 import type { Copy } from '../../../shared/constants/i18n';
 import type { GlossaryTerm } from '../../../shared/types';
 import { classNames } from '@shared/utils/classNames';
-import { usePinButton } from '@shared/components/ui';
-import { Undo2, Pin, PinOff } from 'lucide-react';
+import { usePinnedSidebarSection } from '@shared/components/ui';
+import { Undo2 } from 'lucide-react';
 
 type GlossaryFilters = {
   category?: GlossaryTerm['category'];
@@ -46,42 +46,32 @@ export const TermsFilterPanel = ({
   };
 
   const hasActiveFilters = filters.category;
-  const pinButtonContext = usePinButton();
+  const isPinnedSection = usePinnedSidebarSection();
+  const showHeader = !isPinnedSection || hasActiveFilters;
 
   return (
     <div className="space-y-6 no-select">
-      <div className="flex items-center justify-between gap-2">
-        <h2 className="text-sm font-semibold tracking-wide uppercase text-subtle">
-          {copy.filters}
-        </h2>
-        <div className="flex items-center gap-2">
-          {hasActiveFilters && (
-            <button
-              type="button"
-              onClick={handleReset}
-              aria-label={copy.resetFilters}
-              className="p-1.5 rounded-lg hover:bg-[var(--color-surface-hover)] text-subtle hover:text-[var(--color-text)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
-            >
-              <Undo2 className="h-4 w-4" aria-hidden />
-            </button>
+      {showHeader && (
+        <div className="flex items-center justify-between gap-2">
+          {!isPinnedSection && (
+            <h2 className="text-sm font-semibold tracking-wide uppercase text-subtle">
+              {copy.filters}
+            </h2>
           )}
-          {pinButtonContext && (
-            <button
-              type="button"
-              onClick={pinButtonContext.togglePin}
-              className="p-1.5 rounded-lg hover:bg-[var(--color-surface-hover)] text-subtle hover:text-[var(--color-text)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
-              aria-label={pinButtonContext.isPinned ? 'Unpin panel' : 'Pin panel'}
-              title={pinButtonContext.isPinned ? 'Unpin panel' : 'Pin panel'}
-            >
-              {pinButtonContext.isPinned ? (
-                <PinOff className="w-4 h-4" aria-hidden />
-              ) : (
-                <Pin className="w-4 h-4" aria-hidden />
-              )}
-            </button>
-          )}
+          <div className="flex items-center gap-2">
+            {hasActiveFilters && (
+              <button
+                type="button"
+                onClick={handleReset}
+                aria-label={copy.resetFilters}
+                className="p-1.5 rounded-lg hover:bg-[var(--color-surface-hover)] text-subtle hover:text-[var(--color-text)] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]"
+              >
+                <Undo2 className="h-4 w-4" aria-hidden />
+              </button>
+            )}
+          </div>
         </div>
-      </div>
+      )}
 
       <div className="space-y-2">
         {categories.map((category) => {

@@ -15,7 +15,7 @@ import {
 } from '@features/learn';
 import { TechniquePage } from '@features/technique/components/TechniquePage';
 import { TechniquesPage } from '@features/technique/components/TechniquesPage';
-import { ExpandableFilterBar } from '@shared/components/ui/ExpandableFilterBar';
+import { ContextSidebarLayout } from '@shared/components/ui';
 import { MobileFilters } from '@shared/components/ui/MobileFilters';
 import type { Copy } from '@shared/constants/i18n';
 import { examsRouteToGrade, routeToRoutine } from '@shared/navigation/appRoutes';
@@ -289,40 +289,40 @@ const TechniqueListScreen = ({
       />
     </div>
     {/* Mobile CTA removed here — now rendered inside the MobileFilters panel */}
-    <div className="relative">
-      <ExpandableFilterBar
-        label={data.copy.filters}
-        tourTargetId="techniques-filters-trigger"
-        forceOpen={activeTourSegment?.id === 'techniques-filters'}
-      >
-        <FilterPanel
-          copy={data.copy}
-          locale={data.locale}
-          filters={filters.filters}
-          categories={data.categories}
-          attacks={data.attacks}
-          stances={data.stances}
-          weapons={data.weapons}
-          levels={gradeOrder}
-          trainers={data.trainers}
-          onChange={filters.setFilters}
-        />
-        {/* Desktop CTA under filter panel */}
-        <div className="mt-3">
-          <button
-            type="button"
-            onClick={() => workflow.goToFeedback('newTechnique')}
-            onMouseEnter={workflow.prefetchFeedbackPage}
-            onFocus={workflow.prefetchFeedbackPage}
-            className="w-full inline-flex items-center justify-center gap-2 rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2 text-sm transition-soft hover-border-adaptive"
-          >
-            <PencilLine width={20} height={20} aria-hidden />
-            {data.copy.feedbackAddTechniqueCta}
-          </button>
-        </div>
-      </ExpandableFilterBar>
+    <ContextSidebarLayout
+      label={data.copy.filters}
+      tourTargetId="techniques-filters-trigger"
+      forceOpen={activeTourSegment?.id === 'techniques-filters'}
+      sidebar={
+        <>
+          <FilterPanel
+            copy={data.copy}
+            locale={data.locale}
+            filters={filters.filters}
+            categories={data.categories}
+            attacks={data.attacks}
+            stances={data.stances}
+            weapons={data.weapons}
+            levels={gradeOrder}
+            trainers={data.trainers}
+            onChange={filters.setFilters}
+          />
+          <div className="mt-3">
+            <button
+              type="button"
+              onClick={() => workflow.goToFeedback('newTechnique')}
+              onMouseEnter={workflow.prefetchFeedbackPage}
+              onFocus={workflow.prefetchFeedbackPage}
+              className="w-full inline-flex items-center justify-center gap-2 rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2 text-sm transition-soft hover-border-adaptive"
+            >
+              <PencilLine width={20} height={20} aria-hidden />
+              {data.copy.feedbackAddTechniqueCta}
+            </button>
+          </div>
+        </>
+      }
+    >
       <section>
-        {/* Button moved to under filters (desktop) and above grid (mobile) */}
         <TechniquesPage
           copy={data.copy}
           locale={data.locale}
@@ -332,7 +332,7 @@ const TechniqueListScreen = ({
           onOpen={navigation.openTechnique}
         />
       </section>
-    </div>
+    </ContextSidebarLayout>
   </>
 );
 
@@ -354,27 +354,31 @@ const ExerciseListScreen = ({
         onContributePrefetch={workflow.prefetchFeedbackPage}
       />
     </div>
-    <div className="relative">
-      <ExpandableFilterBar label={data.copy.filters}>
-        <ExercisesFilterPanel
-          copy={data.copy}
-          filters={filters.practiceFilters}
-          categories={data.practiceCategories}
-          onChange={filters.setPracticeFilters}
-        />
-        <div className="mt-3">
-          <button
-            type="button"
-            onClick={() => workflow.goToFeedback()}
-            onMouseEnter={workflow.prefetchFeedbackPage}
-            onFocus={workflow.prefetchFeedbackPage}
-            className="w-full inline-flex items-center justify-center gap-2 rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2 text-sm transition-soft hover-border-adaptive"
-          >
-            <PencilLine width={20} height={20} aria-hidden />
-            {data.copy.feedbackAddExerciseCta}
-          </button>
-        </div>
-      </ExpandableFilterBar>
+    <ContextSidebarLayout
+      label={data.copy.filters}
+      sidebar={
+        <>
+          <ExercisesFilterPanel
+            copy={data.copy}
+            filters={filters.practiceFilters}
+            categories={data.practiceCategories}
+            onChange={filters.setPracticeFilters}
+          />
+          <div className="mt-3">
+            <button
+              type="button"
+              onClick={() => workflow.goToFeedback()}
+              onMouseEnter={workflow.prefetchFeedbackPage}
+              onFocus={workflow.prefetchFeedbackPage}
+              className="w-full inline-flex items-center justify-center gap-2 rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2 text-sm transition-soft hover-border-adaptive"
+            >
+              <PencilLine width={20} height={20} aria-hidden />
+              {data.copy.feedbackAddExerciseCta}
+            </button>
+          </div>
+        </>
+      }
+    >
       <section>
         <ExercisesPage
           copy={data.copy}
@@ -384,7 +388,7 @@ const ExerciseListScreen = ({
           onOpenExercise={navigation.openPracticeExercise}
         />
       </section>
-    </div>
+    </ContextSidebarLayout>
   </>
 );
 
@@ -439,15 +443,17 @@ const TermsScreen = ({
             onChange={filters.setGlossaryFilters}
           />
         </div>
-        <div className="relative">
-          <ExpandableFilterBar label={data.copy.filters}>
+        <ContextSidebarLayout
+          label={data.copy.filters}
+          sidebar={
             <TermsFilterPanel
               copy={data.copy}
               filters={filters.glossaryFilters}
               categories={data.glossaryCategories}
               onChange={filters.setGlossaryFilters}
             />
-          </ExpandableFilterBar>
+          }
+        >
           <section>
             <TermsPage
               locale={data.locale}
@@ -457,7 +463,7 @@ const TermsScreen = ({
               onOpenTerm={navigation.openGlossaryTerm}
             />
           </section>
-        </div>
+        </ContextSidebarLayout>
       </>
     )}
   </>

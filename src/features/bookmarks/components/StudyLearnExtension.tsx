@@ -1,5 +1,5 @@
 import { LearnSetupMenu } from '@features/learn';
-import { ContextExtensionTool } from '@shared/components/ui';
+import { ContextExtensionTool, usePinButton } from '@shared/components/ui';
 import { Brain } from 'lucide-react';
 import type { ReactElement } from 'react';
 import type { Copy } from '../../../shared/constants/i18n';
@@ -18,6 +18,9 @@ export const StudyLearnExtension = ({
   variant,
   onStart,
 }: StudyLearnExtensionProps): ReactElement => {
+  const pinButtonContext = usePinButton();
+  const isContextSidebarPinned = Boolean(pinButtonContext?.isPinned);
+
   if (variant === 'mobile') {
     return (
       <LearnSetupMenu
@@ -30,7 +33,12 @@ export const StudyLearnExtension = ({
   }
 
   return (
-    <ContextExtensionTool label={copy.learn} icon={Brain} count={cardCount}>
+    <ContextExtensionTool
+      label={copy.learn}
+      icon={Brain}
+      count={cardCount}
+      size={isContextSidebarPinned ? 'compact' : 'normal'}
+    >
       <LearnSetupMenu copy={copy} cardCount={cardCount} variant="panel" onStart={onStart} />
     </ContextExtensionTool>
   );

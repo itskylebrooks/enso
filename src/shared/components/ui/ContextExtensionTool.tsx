@@ -1,5 +1,5 @@
 import { useMotionPreferences } from '@shared/components/ui/motion';
-import type { LucideIcon } from 'lucide-react';
+import { ChevronDown, type LucideIcon } from 'lucide-react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useState, type ReactElement, type ReactNode } from 'react';
 
@@ -8,6 +8,7 @@ type ContextExtensionToolProps = {
   icon: LucideIcon;
   count?: number;
   disabled?: boolean;
+  size?: 'normal' | 'compact';
   children: ReactNode;
 };
 
@@ -16,15 +17,59 @@ export const ContextExtensionTool = ({
   icon: Icon,
   count,
   disabled = false,
+  size = 'normal',
   children,
 }: ContextExtensionToolProps): ReactElement => {
   const [isExpanded, setIsExpanded] = useState(false);
   const { prefersReducedMotion } = useMotionPreferences();
   const effectiveExpanded = !disabled && isExpanded;
 
+  if (size === 'compact') {
+    return (
+      <div className="w-full overflow-hidden rounded-xl border surface surface-border shadow-sm">
+        <button
+          type="button"
+          onClick={() => {
+            if (!disabled) setIsExpanded((value) => !value);
+          }}
+          disabled={disabled}
+          aria-expanded={effectiveExpanded}
+          className="px-3 py-2 flex w-full items-center gap-2 cursor-pointer hover:bg-[var(--color-surface-hover)] transition-colors disabled:cursor-not-allowed disabled:opacity-60 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--color-text)]"
+        >
+          <Icon className="w-4 h-4 text-subtle" aria-hidden />
+          <span className="text-xs font-medium tracking-wider uppercase text-subtle">{label}</span>
+          {count != null && <span className="ml-auto text-xs text-subtle">{count}</span>}
+          <motion.span
+            aria-hidden
+            className={count == null ? 'ml-auto text-subtle' : 'text-subtle'}
+            animate={{ rotate: effectiveExpanded ? 180 : 0 }}
+            transition={{ duration: prefersReducedMotion ? 0 : 0.18, ease: [0.4, 0, 0.2, 1] }}
+          >
+            <ChevronDown className="w-4 h-4" />
+          </motion.span>
+        </button>
+
+        <AnimatePresence initial={false}>
+          {effectiveExpanded && (
+            <motion.div
+              key="context-extension-panel"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: prefersReducedMotion ? 0.05 : 0.2, ease: [0.4, 0, 0.2, 1] }}
+              className="overflow-hidden"
+            >
+              <div className="border-t surface-border p-3">{children}</div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    );
+  }
+
   return (
     <motion.div
-      className="relative z-20"
+      className="relative z-20 w-fit"
       onMouseEnter={() => {
         if (!disabled) setIsExpanded(true);
       }}

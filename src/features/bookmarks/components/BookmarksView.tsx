@@ -1,7 +1,7 @@
 import { ExerciseCard } from '@features/exercises/components/ExerciseCard';
 import { getLearnableBookmarkCards } from '@features/learn';
 import { TechniqueCard } from '@features/technique/components/TechniqueCard';
-import { ExpandableFilterBar } from '@shared/components/ui/ExpandableFilterBar';
+import { ContextSidebarLayout } from '@shared/components/ui';
 import { MobileCollections } from '@shared/components/ui/MobileCollections';
 import { ConfirmModal } from '@shared/components/ui/modals/ConfirmModal';
 import { NameModal } from '@shared/components/ui/modals/NameModal';
@@ -1053,20 +1053,19 @@ export const BookmarksView = ({
             />
           </div>
         </div>
-        <div className="relative">
-          <ExpandableFilterBar
-            label={copy.collectionsTitle}
-            tourTargetId="bookmarks-collections-sidebar"
-            forceOpen={forceCollectionsSidebarOpen}
-            sideRailAfter={
-              <StudyLearnExtension
-                copy={copy}
-                cardCount={learnCards.length}
-                variant="desktop"
-                onStart={(options) => onStartLearn(learnCards, options)}
-              />
-            }
-          >
+        <ContextSidebarLayout
+          label={copy.collectionsTitle}
+          tourTargetId="bookmarks-collections-sidebar"
+          forceOpen={forceCollectionsSidebarOpen}
+          sideRailAfter={
+            <StudyLearnExtension
+              copy={copy}
+              cardCount={learnCards.length}
+              variant="desktop"
+              onStart={(options) => onStartLearn(learnCards, options)}
+            />
+          }
+          sidebar={
             <CollectionsSidebar
               copy={copy}
               collections={orderedCollections.map((collection) => ({
@@ -1087,8 +1086,8 @@ export const BookmarksView = ({
               isEditDisabled={!isUserCollectionSelected}
               onToggleEdit={handleToggleEdit}
             />
-          </ExpandableFilterBar>
-
+          }
+        >
           <section>
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {renderedBookmarks.map((item, index) => {
@@ -1281,7 +1280,7 @@ export const BookmarksView = ({
               )}
             </div>
           </section>
-        </div>
+        </ContextSidebarLayout>
       </div>
 
       <AnimatePresence>
