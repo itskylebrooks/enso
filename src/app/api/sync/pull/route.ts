@@ -1,16 +1,16 @@
 import { NextResponse } from 'next/server';
 import crypto from 'node:crypto';
+import { SyncPayloadSchema } from '../../../../lib/backend/syncSchema';
 import {
   createSupabaseServerClient,
   createSupabaseServiceRoleClient,
 } from '../../../../lib/supabase/server';
-import type { SyncPayloadData } from '../../../../lib/supabase/types';
 
 export const runtime = 'nodejs';
 
 type SyncStateRow = {
   user_id: string;
-  payload: SyncPayloadData;
+  payload: unknown;
   revision: number;
   updated_at: string;
 };
@@ -76,9 +76,16 @@ export async function POST(request: Request) {
   }
 
   const row = (data as SyncStateRow | null) ?? null;
+  const payloadValidation = row ? SyncPayloadSchema.safeParse(row.payload) : null;
+  if (payloadValidation && !payloadValidation.success) {
+    return NextResponse.json(
+      { message: 'Stored sync state is invalid', requestId },
+      { status: 500 },
+    );
+  }
 
   return NextResponse.json({
-    payload: row?.payload ?? null,
+    payload: payloadValidation?.success ? payloadValidation.data : null,
     revision: row?.revision ?? null,
     updatedAt: row?.updated_at ?? null,
   });

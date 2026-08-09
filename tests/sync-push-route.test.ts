@@ -107,7 +107,7 @@ const createServiceClient = (steps: QueryStep[]) => {
   };
 };
 
-const callPushRoute = async (payload: SyncPayloadData) => {
+const callPushRoute = async (payload: unknown) => {
   const { POST } = await import('../src/app/api/sync/push/route');
   return POST(
     new Request('https://enso.test/api/sync/push', {
@@ -122,6 +122,20 @@ const callPushRoute = async (payload: SyncPayloadData) => {
 };
 
 describe('/api/sync/push', () => {
+  it('rejects malformed records before accessing stored sync state', async () => {
+    const payload = buildPayload() as unknown as {
+      db: { progress: Array<Record<string, unknown>> };
+    };
+    payload.db.progress[0] = {
+      techniqueId: 't1',
+      bookmarked: 'yes',
+      updatedAt: 1,
+    };
+
+    const response = await callPushRoute(payload);
+    expect(response.status).toBe(400);
+  });
+
   it('retries a stale revision and merges against the newer row', async () => {
     const incomingPayload = buildPayload({
       progress: [{ techniqueId: 't1', bookmarked: true, updatedAt: 20 }],

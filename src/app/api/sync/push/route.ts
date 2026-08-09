@@ -1,7 +1,11 @@
 import { NextResponse } from 'next/server';
 import crypto from 'node:crypto';
-import { z } from 'zod';
 import { mergeSyncPayload } from '../../../../lib/backend/syncMerge';
+import {
+  parseSyncPayload,
+  PushRequestSchema,
+  SyncPayloadSchema,
+} from '../../../../lib/backend/syncSchema';
 import {
   createSupabaseServerClient,
   createSupabaseServiceRoleClient,
@@ -12,65 +16,9 @@ export const runtime = 'nodejs';
 
 const MAX_BODY_BYTES = 1_000_000;
 
-const SyncPayloadSchema = z
-  .object({
-    version: z.literal(2),
-    db: z.object({
-      progress: z.array(z.unknown()),
-      glossaryProgress: z.array(z.unknown()),
-      exerciseProgress: z.array(z.unknown()),
-      studyStatus: z.record(z.unknown()),
-      collections: z.array(z.unknown()),
-      bookmarkCollections: z.array(z.unknown()),
-      glossaryBookmarkCollections: z.array(z.unknown()),
-      exerciseBookmarkCollections: z.array(z.unknown()),
-    }),
-    settings: z.object({
-      themePreference: z.union([z.literal('light'), z.literal('dark'), z.null()]),
-      locale: z.union([z.literal('en'), z.literal('de')]),
-      filters: z.record(z.unknown()),
-      filterPanelPinned: z.boolean(),
-      showTeachInPrimaryNav: z.boolean().default(false),
-    }),
-    homepage: z.object({
-      pinnedBeltGrade: z
-        .union([
-          z.literal('kyu5'),
-          z.literal('kyu4'),
-          z.literal('kyu3'),
-          z.literal('kyu2'),
-          z.literal('kyu1'),
-          z.literal('dan1'),
-          z.literal('dan2'),
-          z.literal('dan3'),
-          z.literal('dan4'),
-          z.literal('dan5'),
-          z.null(),
-        ])
-        .nullable(),
-      beltPromptDismissed: z.boolean(),
-      onboardingDismissed: z.boolean(),
-      onboardingCompleted: z.boolean(),
-      onboardingStep: z.number().int().nonnegative().nullable(),
-    }),
-    timestamps: z.object({
-      db: z.number().nonnegative(),
-      settings: z.number().nonnegative(),
-      homepage: z.number().nonnegative(),
-    }),
-    tombstones: z.record(z.number().positive()),
-  })
-  .strict();
-
-const PushRequestSchema = z
-  .object({
-    payload: SyncPayloadSchema,
-  })
-  .strict();
-
 type SyncStateRow = {
   user_id: string;
-  payload: SyncPayloadData;
+  payload: unknown;
   revision: number;
   updated_at: string;
 };
@@ -149,7 +97,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const incomingPayload = validation.data.payload as SyncPayloadData;
+  const incomingPayload: SyncPayloadData = parseSyncPayload(validation.data.payload);
 
   let lastWriteError: SupabaseWriteError | null = null;
 
@@ -171,8 +119,15 @@ export async function POST(request: Request) {
     }
 
     const existingRow = (existing as SyncStateRow | null) ?? null;
-    const mergedPayload = existingRow?.payload
-      ? mergeSyncPayload(incomingPayload, existingRow.payload)
+    const storedValidation = existingRow ? SyncPayloadSchema.safeParse(existingRow.payload) : null;
+    if (storedValidation && !storedValidation.success) {
+      return NextResponse.json(
+        { message: 'Stored sync state is invalid', requestId },
+        { status: 500 },
+      );
+    }
+    const mergedPayload = storedValidation?.success
+      ? mergeSyncPayload(incomingPayload, parseSyncPayload(storedValidation.data))
       : incomingPayload;
     const nextRevision = (existingRow?.revision ?? 0) + 1;
     const updatedAt = new Date().toISOString();
