@@ -1,55 +1,88 @@
-export type FeedbackCategory =
-  | 'improve-technique'
-  | 'new-variation'
-  | 'new-technique'
-  | 'app-feedback'
-  | 'bug-report';
+import type { Locale, TechniqueVariantKey } from './index';
 
-export type Locale = 'en' | 'de';
+export const feedbackFlows = ['content', 'idea', 'bug'] as const;
+export type FeedbackType = (typeof feedbackFlows)[number];
 
-export interface FeedbackPayloadV1 {
-  // contributor
-  name: string; // default: "Anonymous"
-  email?: string;
+export const feedbackContentTypes = [
+  'technique',
+  'exercise',
+  'routine',
+  'form',
+  'glossary',
+  'exam',
+  'other',
+] as const;
+export type FeedbackContentType = (typeof feedbackContentTypes)[number];
 
-  // routing
-  category: FeedbackCategory;
-  entityType: 'technique';
+export type FeedbackContentMode = 'edit' | 'new';
+
+export type FeedbackInitialContext = {
+  flow: FeedbackType;
+  contentType?: FeedbackContentType;
+  mode?: FeedbackContentMode;
   entityId?: string;
+  variantKey?: TechniqueVariantKey;
+};
+
+export type FeedbackMedia = {
+  type: 'youtube' | 'image' | 'link';
+  url: string;
+  title?: string;
+};
+
+export type FeedbackBase = {
+  version: 2;
+  name: string;
   locale: Locale;
-
-  // human summary + compiled MD preview
   summary: string;
-  detailsMd: string;
-
-  // canonical diff block
-  diffJson: {
-    name: { en: string; de: string };
-    summary: { en: string; de: string };
-    levelHint: { en: string; de: string };
-    steps: { en: string[]; de: string[] };
-    uke: {
-      role: { en: string; de: string };
-      notes: { en: string[]; de: string[] };
-    };
-    keyPoints: { en: string[]; de: string[] };
-    commonMistakes: { en: string[]; de: string[] };
-    jpName: string;
-    taxonomy: {
-      attack: string;
-      category: string;
-      weapon: string;
-      entries: string[];
-      hanmi: string;
-    };
-    media?: string[];
-    sources: string;
-    creditName: string;
-    trainerCredit: string;
-    markAsBase: boolean;
-    consent: boolean;
-  };
-
-  media?: string[];
+  clientVersion?: string;
   honeypot: string;
-}
+};
+
+export type ContentFeedbackSubmission = FeedbackBase & {
+  kind: 'content';
+  target: {
+    entityType: FeedbackContentType;
+    mode: FeedbackContentMode;
+    entityId?: string;
+    variantKey?: TechniqueVariantKey;
+  };
+  details: string;
+  structured?: {
+    contentName?: string;
+    attack?: string;
+    category?: string;
+    level?: string;
+    routineCategory?: string;
+    estimatedMinutes?: number;
+    routineExercises?: string[];
+    steps?: string[];
+    uke?: string;
+    keyPoints?: string[];
+    commonMistakes?: string[];
+    context?: string;
+    attribution?: string;
+    media?: FeedbackMedia[];
+  };
+  consent: true;
+};
+
+export type AppIdeaSubmission = FeedbackBase & {
+  kind: 'idea';
+  area?: string;
+  details: string;
+  media?: FeedbackMedia[];
+};
+
+export type BugFeedbackSubmission = FeedbackBase & {
+  kind: 'bug';
+  location?: string;
+  details: string;
+  reproduction?: string;
+  media?: FeedbackMedia[];
+};
+
+export type FeedbackSubmissionV2 =
+  | ContentFeedbackSubmission
+  | AppIdeaSubmission
+  | BugFeedbackSubmission;

@@ -1,6 +1,6 @@
 'use client';
 
-import type { FeedbackType } from '@features/home/components/feedback/FeedbackPage';
+import type { FeedbackInitialContext } from '@features/home/components/feedback/FeedbackPage';
 import {
   prepareLearnSessionCards,
   type LearnCard,
@@ -138,7 +138,8 @@ export default function App({
   const [confirmClearOpen, setConfirmClearOpen] = useState(false);
   const [confirmDeleteAccountOpen, setConfirmDeleteAccountOpen] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
-  const [feedbackInitialType, setFeedbackInitialType] = useState<FeedbackType | null>(null);
+  const [feedbackInitialContext, setFeedbackInitialContext] =
+    useState<FeedbackInitialContext | null>(null);
   const [learnSession, setLearnSession] = useState<LearnSession | null>(null);
 
   const searchTriggerRef = useRef<HTMLButtonElement | null>(null);
@@ -323,8 +324,8 @@ export default function App({
   );
 
   const goToFeedback = useCallback(
-    (type?: FeedbackType) => {
-      setFeedbackInitialType(type ?? null);
+    (context?: FeedbackInitialContext) => {
+      setFeedbackInitialContext(context ?? null);
       navigateTo('feedback');
     },
     [navigateTo],
@@ -1103,7 +1104,7 @@ export default function App({
       syncError,
       syncMeta,
       learnSession,
-      feedbackInitialType,
+      feedbackInitialContext,
       pinnedBeltGrade,
       beltPromptDismissed,
     },
@@ -1168,7 +1169,7 @@ export default function App({
       signOutFromSync,
       syncNow,
       handleRequestDeleteAccount,
-      setFeedbackInitialType,
+      setFeedbackInitialContext,
       selectedCollectionId,
       setSelectedCollectionId,
     },

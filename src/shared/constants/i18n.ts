@@ -10,6 +10,5 @@ export const messages = {
 type Messages = typeof messages;
 
 export type Copy = Messages[Locale];
-export type FeedbackPageCopy = Copy['feedbackPage'];
 
 export const getCopy = (locale: Locale): Copy => messages[locale];

@@ -1,5 +1,4 @@
-import type { FeedbackType } from '@features/home/components/feedback/FeedbackPage';
-import { FeedbackPage } from '@features/home/components/feedback/FeedbackPage';
+import { FeedbackPage, type FeedbackInitialContext } from '@features/home/components/feedback/FeedbackPage';
 import { ExamGradePage } from '@features/home/components/exams/ExamGradePage';
 import { AboutPage } from '@features/home/components/home/AboutPage';
 import { AdvancedPrograms } from '@features/home/components/home/AdvancedPrograms';
@@ -151,7 +150,7 @@ type AppScreenData = {
   syncError: string | null;
   syncMeta: SyncMetaState;
   learnSession: LearnSession | null;
-  feedbackInitialType: FeedbackType | null;
+  feedbackInitialContext: FeedbackInitialContext | null;
   pinnedBeltGrade: Grade | null;
   beltPromptDismissed: boolean;
 };
@@ -221,7 +220,7 @@ type AppScreenLibrary = {
 type AppScreenWorkflow = {
   pageMotion: PageMotion;
   prefetchFeedbackPage: () => void;
-  goToFeedback: (type?: FeedbackType) => void;
+  goToFeedback: (context?: FeedbackInitialContext) => void;
   handleOpenExamsFromPrompt: () => void;
   handleStartOnboardingTour: () => void;
   handleSkipOnboarding: () => void;
@@ -237,7 +236,7 @@ type AppScreenWorkflow = {
   signOutFromSync: () => Promise<void>;
   syncNow: () => Promise<void>;
   handleRequestDeleteAccount: () => void;
-  setFeedbackInitialType: Dispatch<SetStateAction<FeedbackType | null>>;
+  setFeedbackInitialContext: Dispatch<SetStateAction<FeedbackInitialContext | null>>;
   selectedCollectionId: string;
   setSelectedCollectionId: Dispatch<SetStateAction<string>>;
 };
@@ -301,7 +300,9 @@ const TechniqueListScreen = ({
         levels={gradeOrder}
         trainers={data.trainers}
         onChange={filters.setFilters}
-        onContribute={() => workflow.goToFeedback('newTechnique')}
+        onContribute={() =>
+          workflow.goToFeedback({ flow: 'content', contentType: 'technique', mode: 'new' })
+        }
         onContributePrefetch={workflow.prefetchFeedbackPage}
         forceOpen={activeTourSegment?.id === 'techniques-filters'}
       />
@@ -328,7 +329,9 @@ const TechniqueListScreen = ({
           <div className="mt-3">
             <button
               type="button"
-              onClick={() => workflow.goToFeedback('newTechnique')}
+              onClick={() =>
+                workflow.goToFeedback({ flow: 'content', contentType: 'technique', mode: 'new' })
+              }
               onMouseEnter={workflow.prefetchFeedbackPage}
               onFocus={workflow.prefetchFeedbackPage}
               className="w-full inline-flex items-center justify-center gap-2 rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2 text-sm transition-soft hover-border-adaptive"
@@ -368,7 +371,9 @@ const ExerciseListScreen = ({
         filters={filters.practiceFilters}
         categories={data.practiceCategories}
         onChange={filters.setPracticeFilters}
-        onContribute={() => workflow.goToFeedback()}
+        onContribute={() =>
+          workflow.goToFeedback({ flow: 'content', contentType: 'exercise', mode: 'new' })
+        }
         onContributePrefetch={workflow.prefetchFeedbackPage}
       />
     </div>
@@ -385,7 +390,9 @@ const ExerciseListScreen = ({
           <div className="mt-3">
             <button
               type="button"
-              onClick={() => workflow.goToFeedback()}
+              onClick={() =>
+                workflow.goToFeedback({ flow: 'content', contentType: 'exercise', mode: 'new' })
+              }
               onMouseEnter={workflow.prefetchFeedbackPage}
               onFocus={workflow.prefetchFeedbackPage}
               className="w-full inline-flex items-center justify-center gap-2 rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2 text-sm transition-soft hover-border-adaptive"
@@ -675,7 +682,8 @@ const LibraryTermGroup = ({
 const LibraryFormsScreen = ({
   data,
   navigation,
-}: Pick<AppScreenRouterProps, 'data' | 'navigation'>): ReactElement => {
+  workflow,
+}: Pick<AppScreenRouterProps, 'data' | 'navigation' | 'workflow'>): ReactElement => {
   const openFormOverview = (id: string): void => {
     switch (id) {
       case 'saya-no-uchi':
@@ -709,6 +717,15 @@ const LibraryFormsScreen = ({
           />
         ))}
       </div>
+      <button
+        type="button"
+        onClick={() =>
+          workflow.goToFeedback({ flow: 'content', contentType: 'form', mode: 'edit' })
+        }
+        className="inline-flex items-center justify-center rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm hover-border-adaptive transition"
+      >
+        {data.copy.feedbackAddFormCta}
+      </button>
     </section>
   );
 };
@@ -1030,7 +1047,15 @@ export const AppScreenRouter = ({
           onOpenExamsGrade={(grade) => {
             navigation.openExamsGrade(grade, { route, slug: currentTechnique.slug });
           }}
-          onFeedbackClick={() => workflow.goToFeedback()}
+          onFeedbackClick={(variantKey) =>
+            workflow.goToFeedback({
+              flow: 'content',
+              contentType: 'technique',
+              mode: 'edit',
+              entityId: currentTechnique.slug,
+              variantKey,
+            })
+          }
           onCreateCollection={library.createCollection}
         />
       </motion.div>
@@ -1166,6 +1191,14 @@ export const AppScreenRouter = ({
         onBackToOverview={() => navigation.closeLibraryRoutinePreset(routine)}
         onOpenRoutine={(routineSlug) => navigation.openLibraryRoutinePreset(routine, routineSlug)}
         onOpenExercise={navigation.openPracticeExercise}
+        onFeedbackClick={(presetId) =>
+          workflow.goToFeedback({
+            flow: 'content',
+            contentType: 'routine',
+            mode: presetId ? 'edit' : 'new',
+            entityId: presetId ? `${routine}/${presetId}` : routine,
+          })
+        }
       />
     );
   } else if (examsRouteToGrade(route)) {
@@ -1210,9 +1243,11 @@ export const AppScreenRouter = ({
           copy={copy}
           locale={locale}
           techniques={db.techniques}
+          exercises={data.practiceExercises}
+          glossaryTerms={data.glossaryTerms}
           onBack={() => navigation.navigateTo('libraryTechniques')}
-          initialType={data.feedbackInitialType}
-          onConsumeInitialType={() => workflow.setFeedbackInitialType(null)}
+          initialContext={data.feedbackInitialContext}
+          onConsumeInitialContext={() => workflow.setFeedbackInitialContext(null)}
         />
       </motion.div>
     );
@@ -1256,7 +1291,9 @@ export const AppScreenRouter = ({
           <LibraryRoutinesScreen data={data} navigation={navigation} />
         )}
 
-        {route === 'libraryForms' && <LibraryFormsScreen data={data} navigation={navigation} />}
+        {route === 'libraryForms' && (
+          <LibraryFormsScreen data={data} navigation={navigation} workflow={workflow} />
+        )}
 
         {route === 'libraryCulture' && <LibraryCultureScreen data={data} navigation={navigation} />}
 

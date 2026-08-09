@@ -1,41 +1,13 @@
 import crypto from 'node:crypto';
 import { NextResponse } from 'next/server';
-import { z } from 'zod';
+import {
+  FeedbackSubmissionSchema,
+  type ParsedFeedbackSubmission,
+} from '@shared/schemas/feedback';
 
 export const runtime = 'nodejs';
 
 const MAX_BODY_BYTES = 1_000_000;
-
-const MediaSchema = z.object({
-  type: z.enum(['youtube', 'image', 'link']),
-  url: z.string().trim().url().max(2000),
-  title: z.string().trim().max(200).optional(),
-});
-
-const FeedbackSchema = z
-  .object({
-    name: z.string().trim().min(1).max(80),
-    email: z.string().trim().email().max(320).optional(),
-    category: z.enum([
-      'suggestion',
-      'bug',
-      'edit',
-      'new-version',
-      'new-variation',
-      'new-technique',
-    ]),
-    entityType: z.enum(['technique', 'glossary', 'exam', 'exams', 'other']),
-    entityId: z.string().trim().max(256).optional(),
-    locale: z.enum(['en', 'de']).optional(),
-    summary: z.string().trim().min(1).max(120),
-    detailsMd: z.string().min(1).max(10_000),
-    diffJson: z.unknown().optional(),
-    media: z.array(MediaSchema).optional(),
-    clientVersion: z.string().trim().max(64).optional(),
-    userAgent: z.string().trim().max(512).optional(),
-    honeypot: z.string().optional(),
-  })
-  .strict();
 
 const escapeInline = (value: string): string => {
   const normalized = value
@@ -123,7 +95,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const result = FeedbackSchema.safeParse(parsed);
+  const result = FeedbackSubmissionSchema.safeParse(parsed);
   if (!result.success) {
     return NextResponse.json(
       {
@@ -179,23 +151,86 @@ export async function POST(request: Request) {
     );
   }
 
-  const makeIssueBody = (p: typeof payload): string => {
+  const makeIssueBody = (p: ParsedFeedbackSubmission): string => {
     const lines: string[] = [];
-    lines.push(`**Category:** ${p.category}`);
-    lines.push(`**Entity:** ${p.entityType}${p.entityId ? ` (${p.entityId})` : ''}`);
-    lines.push(`**Locale:** ${p.locale ?? 'n/a'}`);
+    lines.push(`**Kind:** ${p.kind}`);
+    if (p.kind === 'content') {
+      lines.push(`**Content:** ${p.target.mode} ${p.target.entityType}`);
+      if (p.target.entityId) lines.push(`**Entity:** ${escapeInline(p.target.entityId)}`);
+      if (p.target.variantKey) {
+        const variant = p.target.variantKey;
+        lines.push(
+          `**Variant:** ${variant.hanmi} · ${variant.direction} · ${variant.weapon} · ${
+            variant.versionId || 'base'
+          }`,
+        );
+      }
+    } else if (p.kind === 'idea' && p.area) {
+      lines.push(`**Area:** ${escapeInline(p.area)}`);
+    } else if (p.kind === 'bug' && p.location) {
+      lines.push(`**Location:** ${escapeInline(p.location)}`);
+    }
+    lines.push(`**Locale:** ${p.locale}`);
     lines.push(`**From:** ${escapeInline(p.name)}`);
-    if (p.email) lines.push(`**Email:** ${escapeInline(p.email)}`);
     lines.push('');
     lines.push('---');
     lines.push('');
-    lines.push(p.detailsMd || '');
-    if (Array.isArray(p.media) && p.media.length > 0) {
+    lines.push(p.details);
+
+    if (p.kind === 'bug' && p.reproduction) {
+      lines.push('');
+      lines.push('### Steps to reproduce');
+      lines.push(p.reproduction);
+    }
+
+    if (p.kind === 'content' && p.structured) {
+      const structured = p.structured;
+      if (structured.contentName) {
+        lines.push('');
+        lines.push(`**Proposed name:** ${escapeInline(structured.contentName)}`);
+      }
+      const taxonomy = [
+        structured.attack ? `Attack: ${structured.attack}` : '',
+        structured.category ? `Category: ${structured.category}` : '',
+        structured.level ? `Level: ${structured.level}` : '',
+        structured.routineCategory ? `Routine category: ${structured.routineCategory}` : '',
+        structured.estimatedMinutes
+          ? `Estimated duration: ${structured.estimatedMinutes} minutes`
+          : '',
+      ].filter(Boolean);
+      if (taxonomy.length > 0) {
+        lines.push('');
+        lines.push('### Classification');
+        taxonomy.forEach((item) => lines.push(`- ${item}`));
+      }
+      const addList = (heading: string, values?: string[]) => {
+        if (!values?.length) return;
+        lines.push('');
+        lines.push(`### ${heading}`);
+        values.forEach((value, index) => lines.push(`${index + 1}. ${value}`));
+      };
+      addList('Steps', structured.steps);
+      addList('Exercise plan', structured.routineExercises);
+      addList('Key points', structured.keyPoints);
+      addList('Common mistakes', structured.commonMistakes);
+      if (structured.uke) {
+        lines.push('', '### Uke guidance', structured.uke);
+      }
+      if (structured.context) {
+        lines.push('', '### Context', structured.context);
+      }
+      if (structured.attribution) {
+        lines.push('', '### Attribution', structured.attribution);
+      }
+    }
+
+    const media = p.kind === 'content' ? p.structured?.media : p.media;
+    if (media && media.length > 0) {
       lines.push('');
       lines.push('**Media:**');
-      for (const media of p.media) {
+      for (const item of media) {
         lines.push(
-          `- ${media.type}: ${media.url}${media.title ? ` (${escapeInline(media.title)})` : ''}`,
+          `- ${item.type}: ${item.url}${item.title ? ` (${escapeInline(item.title)})` : ''}`,
         );
       }
     }
@@ -205,7 +240,7 @@ export async function POST(request: Request) {
     return lines.join('\n');
   };
 
-  const issueTitle = `[feedback] ${String(payload.summary).slice(0, 120)}`;
+  const issueTitle = `[feedback:${payload.kind}] ${String(payload.summary).slice(0, 120)}`;
   const issueBody = makeIssueBody(payload);
 
   try {

@@ -1,1459 +1,274 @@
-import { Chip } from '@shared/components/ui/Chip';
-import { defaultEase, useMotionPreferences } from '@shared/components/ui/motion';
 import { Select, type SelectOption } from '@shared/components/ui/Select';
-import type { Copy, FeedbackPageCopy } from '@shared/constants/i18n';
 import { getLevelLabel, getOrderedTaxonomyValues, getTaxonomyLabel } from '@shared/i18n/taxonomy';
-import {
-  buildFeedbackPayloadV1,
-  type NewTechniqueFormState,
-} from '@shared/lib/buildFeedbackPayload';
-import type { Grade, Hanmi, Locale, Technique } from '@shared/types';
-import type { FeedbackPayloadV1 } from '@shared/types/feedback';
+import type { Copy } from '@shared/constants/i18n';
+import type {
+  Exercise,
+  GlossaryTerm,
+  Grade,
+  LibraryRoutine,
+  Locale,
+  Technique,
+} from '@shared/types';
+import type {
+  FeedbackContentMode,
+  FeedbackContentType,
+  FeedbackInitialContext,
+  FeedbackType,
+} from '@shared/types/feedback';
 import { classNames } from '@shared/utils/classNames';
 import { gradeOrder } from '@shared/utils/grades';
-import { stripDiacritics, toSearchable } from '@shared/utils/text';
-import { BadgePlus, Bug, HeartPulse, Lightbulb, Link, PencilLine, Rocket } from 'lucide-react';
-import { AnimatePresence, motion } from 'motion/react';
-import { useCallback, useEffect, useMemo, useState, type ReactElement } from 'react';
-
-export type FeedbackType =
-  | 'improveTechnique'
-  | 'addVariation'
-  | 'newTechnique'
-  | 'appFeedback'
-  | 'bugReport';
-
-const feedbackTypeOrder: FeedbackType[] = [
-  'improveTechnique',
-  'addVariation',
-  'newTechnique',
-  'appFeedback',
-  'bugReport',
-];
-
-export type ImproveSection =
-  | 'steps'
-  | 'uke'
-  | 'commonMistakes'
-  | 'context'
-  | 'notes'
-  | 'translation'
-  | 'other';
-
-type ImproveTextSection = Exclude<ImproveSection, 'steps'>;
-
-type StepItem = {
-  id: string;
-  text: string;
-};
-
-type MediaKind = 'youtube' | 'gumlet' | 'gumlet-dab' | 'image' | 'link';
-
-type MediaEntry = {
-  id: string;
-  url: string;
-  type: MediaKind;
-  embedUrl?: string;
-  title?: string;
-};
-
-type CategoryTag =
-  | 'throw'
-  | 'pin'
-  | 'defense'
-  | 'jo'
-  | 'tanto'
-  | 'sword'
-  | 'advanced'
-  | 'rantori'
-  | 'weapons'
-  | 'kids'
-  | 'flow';
-
-const categoryTagOrder: CategoryTag[] = [
-  'throw',
-  'pin',
-  'defense',
-  'jo',
-  'tanto',
-  'sword',
-  'advanced',
-  'rantori',
-  'weapons',
-  'kids',
-  'flow',
-];
-
-const isCategoryTag = (value: unknown): value is CategoryTag =>
-  typeof value === 'string' && (categoryTagOrder as string[]).includes(value);
-
-type AppArea = 'library' | 'technique' | 'glossary' | 'exams' | 'settings' | 'other';
-
-const isAppArea = (value: unknown): value is AppArea =>
-  typeof value === 'string' &&
-  ['library', 'technique', 'glossary', 'exams', 'settings', 'other'].includes(value);
-
-type ImproveTechniqueForm = {
-  techniqueId: string | null;
-  sections: ImproveSection[];
-  steps: StepItem[];
-  textBySection: Partial<Record<ImproveTextSection, string>>;
-  media: MediaEntry[];
-  source: string;
-  credit: string;
-  consent: boolean;
-};
-
-type VariationForm = {
-  relatedTechniqueId: string | null;
-  direction: 'irimi' | 'tenkan' | 'omote' | 'ura' | '';
-  stance: Hanmi | null;
-  trainer: string;
-  summary: string;
-  categoryTags: CategoryTag[];
-  level: Grade | null;
-  steps: StepItem[];
-  ukeInstructions: string;
-  media: MediaEntry[];
-  keyPoints: string[];
-  commonMistakes: string[];
-  context: string;
-  creditName: string;
-  trainerCredit: string;
-  markAsBase: boolean;
-  consent: boolean;
-};
-
-type VariationDirection = Exclude<VariationForm['direction'], ''>;
-
-const variationDirectionLabels: Record<VariationDirection, string> = {
-  irimi: 'Irimi',
-  tenkan: 'Tenkan',
-  omote: 'Omote',
-  ura: 'Ura',
-};
-
-const hanmiLabelMap: Record<Hanmi, string> = {
-  'ai-hanmi': 'Ai-hanmi',
-  'gyaku-hanmi': 'Gyaku-hanmi',
-};
-
-type AppFeedbackForm = {
-  area: AppArea | null;
-  title?: string;
-  feedback: string;
-  screenshotUrl: string;
-};
-
-type BugReportForm = {
-  title?: string;
-  location: string;
-  details: string;
-  reproduction: string;
-};
-
-type Entry = 'irimi' | 'tenkan' | 'omote' | 'ura';
-
-type NewTechniqueForm = {
-  name: string;
-  jpName: string;
-  attack: string | null;
-  category: string | null;
-  weapon: string | null;
-  entries: Entry | '';
-  hanmi: Hanmi | null;
-  summary: string;
-  levelHint: string;
-  steps: StepItem[];
-  ukeRole: string;
-  ukeNotes: string[];
-  keyPoints: string[];
-  commonMistakes: string[];
-  media: MediaEntry[];
-  sources: string;
-  creditName: string;
-  trainerCredit: string;
-  markAsBase: boolean;
-  consent: boolean;
-};
-
-type FeedbackDraft = {
-  selectedType: FeedbackType | null;
-  improveTechnique: ImproveTechniqueForm;
-  addVariation: VariationForm;
-  appFeedback: AppFeedbackForm;
-  bugReport: BugReportForm;
-  newTechnique: NewTechniqueForm;
-};
-
-const STORAGE_KEY = 'enso.feedbackDraft';
-
-const createId = (): string => {
-  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
-    return crypto.randomUUID();
-  }
-  return Math.random().toString(36).slice(2, 11);
-};
-
-const createStepList = (): StepItem[] => [{ id: createId(), text: '' }];
-
-const SUMMARY_MAX = 230;
-
-const ensureString = (value: unknown, fallback = ''): string => {
-  if (typeof value === 'string') return value;
-  if (value && typeof value === 'object') {
-    const localized = value as { en?: unknown; de?: unknown };
-    if (typeof localized.en === 'string' && localized.en.trim()) return localized.en;
-    if (typeof localized.de === 'string') return localized.de;
-  }
-  return fallback;
-};
-
-const ensureStringList = (value: unknown, minItems = 1): string[] => {
-  const coerce = (list: unknown[]): string[] => {
-    const cleaned = list
-      .map((item) => (typeof item === 'string' ? item : ''))
-      .filter((item) => item !== undefined);
-    while (cleaned.length < minItems) cleaned.push('');
-    return cleaned.length > 0 ? cleaned : new Array(minItems).fill('');
-  };
-
-  if (Array.isArray(value) && value.length > 0) {
-    return coerce(value);
-  }
-
-  if (value && typeof value === 'object') {
-    const localized = value as { en?: unknown; de?: unknown };
-    if (Array.isArray(localized.en) && localized.en.length > 0) {
-      return coerce(localized.en);
-    }
-    if (Array.isArray(localized.de) && localized.de.length > 0) {
-      return coerce(localized.de);
-    }
-  }
-
-  return new Array(minItems).fill('');
-};
-
-const ensureStepList = (value: unknown): StepItem[] => {
-  const normalize = (list: unknown[]): StepItem[] =>
-    list.map((item) => {
-      const it = item as Record<string, unknown>;
-      return {
-        id: typeof it?.id === 'string' ? (it.id as string) : createId(),
-        text: typeof it?.text === 'string' ? (it.text as string) : '',
-      };
-    });
-
-  if (Array.isArray(value) && value.length > 0) {
-    return normalize(value);
-  }
-
-  if (value && typeof value === 'object') {
-    const localized = value as { en?: unknown[]; de?: unknown[] };
-    if (Array.isArray(localized.en) && localized.en.length > 0) {
-      return normalize(localized.en);
-    }
-    if (Array.isArray(localized.de) && localized.de.length > 0) {
-      return normalize(localized.de);
-    }
-  }
-
-  return createStepList();
-};
-
-const sanitizeEntries = (entries?: unknown): Entry | '' => {
-  const allowedValues = ['irimi', 'tenkan', 'omote', 'ura'];
-  if (Array.isArray(entries) && entries.length > 0) {
-    for (const entry of entries) {
-      if (typeof entry === 'string' && allowedValues.includes(entry)) return entry as Entry;
-    }
-    return '';
-  }
-  if (typeof entries === 'string' && allowedValues.includes(entries)) return entries as Entry;
-  if (entries && typeof entries === 'object') {
-    const localized = entries as { en?: unknown; de?: unknown };
-    if (Array.isArray(localized.en) && localized.en.length > 0) {
-      for (const e of localized.en)
-        if (typeof e === 'string' && allowedValues.includes(e)) return e as Entry;
-    }
-    if (Array.isArray(localized.de) && localized.de.length > 0) {
-      for (const e of localized.de)
-        if (typeof e === 'string' && allowedValues.includes(e)) return e as Entry;
-    }
-  }
-  return '';
-};
-
-const sanitizeHanmi = (value: unknown): Hanmi | null =>
-  value === 'ai-hanmi' || value === 'gyaku-hanmi' ? value : null;
-
-const isVariationDirection = (value: unknown): value is VariationForm['direction'] =>
-  value === 'irimi' || value === 'tenkan' || value === 'omote' || value === 'ura';
-
-const slugify = (value: string): string =>
-  stripDiacritics(value)
-    .toLowerCase()
-    .replace(/[^a-z0-9\s-]/g, '')
-    .trim()
-    .replace(/\s+/g, '-')
-    .replace(/-+/g, '-');
-
-const buildNewTechniqueSlug = (name: string): string => {
-  // Slug should be derived only from the technique name. Exclude primary attack
-  // and entry focus from the URL slug to keep slugs stable and concise.
-  const nameSegment = name.trim() ? slugify(name) : '';
-  return nameSegment;
-};
-
-const isUnusualAttackWeapon = (attack: string | null, weapon: string | null): boolean => {
-  if (!attack || !weapon || weapon === 'empty-hand') return false;
-  if (weapon === 'tanto') {
-    return attack.endsWith('-tori');
-  }
-  if (weapon === 'jo' || weapon === 'bokken') {
-    return attack.includes('tori');
-  }
-  return false;
-};
-
-const computeDuplicateMatches = (form: NewTechniqueForm, techniques: Technique[]): Technique[] => {
-  const slugPreview = buildNewTechniqueSlug(form.name);
-  const normalizedSlug = slugPreview ? toSearchable(slugPreview) : '';
-  const normalizedName = toSearchable(form.name);
-  const attack = form.attack;
-  const weapon = form.weapon ?? 'empty-hand';
-
-  if (!normalizedName && !normalizedSlug) return [];
-
-  return techniques
-    .filter((tech) => {
-      const techNameEn = toSearchable(tech.name.en || '');
-      const techNameDe = toSearchable(tech.name.de || '');
-      const techSlug = toSearchable(tech.slug || '');
-      const techAttack = tech.attack;
-      const techWeapon = tech.weapon ?? 'empty-hand';
-
-      const slugMatch = normalizedSlug && techSlug === normalizedSlug;
-      const nameMatch =
-        normalizedName && (techNameEn === normalizedName || techNameDe === normalizedName);
-      const taxonomyMatch = (!attack || techAttack === attack) && techWeapon === weapon;
-
-      return slugMatch || (nameMatch && taxonomyMatch);
-    })
-    .slice(0, 5);
-};
-
-const escapeInline = (value: string): string => {
-  const normalized = value
-    .replace(/\r/g, '')
-    .split('\n')
-    .map((line) => line.trim())
-    .join(' ');
-  return ['*', '[', ']', '`'].reduce((acc, ch) => acc.split(ch).join(`\\${ch}`), normalized);
-};
-
-const summarizeMedia = (media?: MediaEntry[]) =>
-  (media ?? [])
-    .map((item) => ({
-      type: item.type === 'gumlet' || item.type === 'gumlet-dab' ? 'link' : item.type,
-      url: item.url,
-      title: item.title,
-    }))
-    .filter((item) => item.url);
-
-const getClientVersion = (): string | undefined => {
-  return process.env.NEXT_PUBLIC_APP_VERSION ?? undefined;
-};
-
-type FeedbackMediaItem = { type: 'youtube' | 'image' | 'link'; url: string; title?: string };
-
-type NewTechniqueSubmitPayload = Omit<FeedbackPayloadV1, 'media'> & {
-  media?: FeedbackMediaItem[];
-};
-
-const mapNewTechniqueDraftToFormState = (
-  form: NewTechniqueForm,
-  locale: Locale,
-): NewTechniqueFormState => ({
-  contributorName: form.creditName || null,
-  contributorEmail: null,
-  name: {
-    en: locale === 'en' ? form.name : '',
-    de: locale === 'de' ? form.name : '',
-  },
-  summary: {
-    en: locale === 'en' ? form.summary : '',
-    de: locale === 'de' ? form.summary : '',
-  },
-  levelHint: {
-    en: locale === 'en' ? form.levelHint : '',
-    de: locale === 'de' ? form.levelHint : '',
-  },
-  steps: {
-    en: locale === 'en' ? form.steps.map((step) => step.text || '') : [],
-    de: locale === 'de' ? form.steps.map((step) => step.text || '') : [],
-  },
-  uke: {
-    role: {
-      en: locale === 'en' ? form.ukeRole : '',
-      de: locale === 'de' ? form.ukeRole : '',
-    },
-    notes: {
-      en: locale === 'en' ? form.ukeNotes : [],
-      de: locale === 'de' ? form.ukeNotes : [],
-    },
-  },
-  keyPoints: {
-    en: locale === 'en' ? form.keyPoints : [],
-    de: locale === 'de' ? form.keyPoints : [],
-  },
-  commonMistakes: {
-    en: locale === 'en' ? form.commonMistakes : [],
-    de: locale === 'de' ? form.commonMistakes : [],
-  },
-  jpName: form.jpName || null,
-  taxonomy: {
-    attack: form.attack || null,
-    category: form.category || null,
-    weapon: form.weapon || null,
-    entries: form.entries ? [form.entries] : [],
-    hanmi: form.hanmi || null,
-  },
-  mediaUrls: form.media.map((item) => item.url),
-  sources: form.sources || null,
-  creditName: form.creditName || null,
-  trainerCredit: form.trainerCredit || null,
-  markAsBase: form.markAsBase,
-  consent: form.consent,
-  honeypot: '',
-  detailsPreviewMd: undefined,
-});
-
-const normalizeUrlForSubmission = (rawUrl: string): string | null => {
-  const value = (rawUrl || '').trim();
-  if (!value || value === 'EMPTY') return null;
-  if (/^https?:\/\//i.test(value)) return value;
-  return `https://${value}`;
-};
-
-const normalizeMediaForSubmission = (media: MediaEntry[]): FeedbackMediaItem[] => {
-  const normalized: FeedbackMediaItem[] = [];
-
-  media.forEach((entry) => {
-    const url = normalizeUrlForSubmission(entry.url);
-    if (!url) return;
-
-    const type: FeedbackMediaItem['type'] =
-      entry.type === 'youtube' ? 'youtube' : entry.type === 'image' ? 'image' : 'link';
-    const title = entry.title?.trim();
-
-    if (title) {
-      normalized.push({ type, url, title });
-    } else {
-      normalized.push({ type, url });
-    }
-  });
-
-  return normalized;
-};
-
-const buildNewTechniqueSubmission = (
-  form: NewTechniqueForm,
-  options: { locale: Locale; entityId?: string },
-): { payload: NewTechniqueSubmitPayload; allTextEmpty: boolean; stepsEmpty: boolean } => {
-  const { locale, entityId } = options;
-  const formState = mapNewTechniqueDraftToFormState(form, locale);
-  const v1 = buildFeedbackPayloadV1(formState, { locale: locale === 'de' ? 'de' : 'en', entityId });
-  const diffLocale = locale;
-  const diffSteps = v1.diffJson.steps[diffLocale];
-  const allTextEmpty =
-    v1.diffJson.name[diffLocale] === 'EMPTY' && v1.diffJson.summary[diffLocale] === 'EMPTY';
-  const stepsEmpty = Array.isArray(diffSteps) && diffSteps.length === 1 && diffSteps[0] === 'EMPTY';
-  const media = normalizeMediaForSubmission(form.media);
-  const fallbackDetails =
-    form.summary ||
-    form.steps
-      .map((step) => step.text || '')
-      .filter(Boolean)
-      .join('\n') ||
-    'New technique proposal';
-  const detailsMd = v1.detailsMd && v1.detailsMd.trim().length > 0 ? v1.detailsMd : fallbackDetails;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { media: _media, ...rest } = v1;
-  const payload: NewTechniqueSubmitPayload = {
-    ...rest,
-    detailsMd,
-    media: media.length > 0 ? media : undefined,
-  };
-  return { payload, allTextEmpty, stepsEmpty };
-};
-
-type FeedbackApiPayload = {
-  name: string;
-  email?: string;
-  category: 'suggestion' | 'bug' | 'edit' | 'new-version' | 'new-variation' | 'new-technique';
-  entityType: 'technique' | 'glossary' | 'exam' | 'exams' | 'other';
-  entityId?: string;
-  locale?: Locale;
-  summary: string;
-  detailsMd: string;
-  diffJson?: unknown;
-  media?: Array<{ type: 'youtube' | 'image' | 'link'; url: string; title?: string }>;
-  clientVersion?: string;
-  userAgent?: string;
-  honeypot: string;
-};
-
-const buildFeedbackPayload = (
-  selectedType: FeedbackType | null,
-  draft: FeedbackDraft,
-  options: {
-    slugPreview: string;
-    duplicateMatches: Technique[];
-    locale: Locale;
-    findTechniqueName: (slug: string | null) => string;
-  },
-): FeedbackApiPayload | null => {
-  const { slugPreview, duplicateMatches, locale, findTechniqueName } = options;
-  const clientVersion = getClientVersion();
-  // userAgent collection removed intentionally
-  const defaultName =
-    [draft.newTechnique.creditName, draft.addVariation.creditName, draft.improveTechnique.credit]
-      .map((value) => (typeof value === 'string' ? value.trim() : ''))
-      .find((value) => value.length > 0) ?? 'Anonymous';
-
-  // Helpers to build flattened, bilingual fields with EMPTY fallbacks
-  const toBilingual = (value: string): { en: string; de: string } => {
-    const v = (value || '').trim();
-    return locale === 'de'
-      ? { en: v ? 'EMPTY' : 'EMPTY', de: v || 'EMPTY' }
-      : { en: v || 'EMPTY', de: v ? 'EMPTY' : 'EMPTY' };
-  };
-
-  const toBilingualArray = (values: string[]): { en: string[]; de: string[] } => {
-    const texts =
-      Array.isArray(values) && values.length > 0 ? values.map((s) => (s || '').trim()) : [];
-    const ensure = (arr: string[]): string[] =>
-      (arr.length > 0 ? arr : ['EMPTY']).map((s) => (s ? s : 'EMPTY'));
-    if (locale === 'de') {
-      return { en: ensure([]), de: ensure(texts) };
-    }
-    return { en: ensure(texts), de: ensure([]) };
-  };
-
-  const toBilingualSteps = (steps: StepItem[]): { en: string[]; de: string[] } => {
-    const texts =
-      Array.isArray(steps) && steps.length > 0 ? steps.map((s) => (s?.text || '').trim()) : [];
-    return toBilingualArray(texts);
-  };
-
-  const fillMissing = (value: unknown): unknown => {
-    if (value === null || value === undefined) return 'EMPTY';
-    if (typeof value === 'string') return value.trim().length === 0 ? 'EMPTY' : value;
-    if (Array.isArray(value))
-      return value.length === 0 ? ['EMPTY'] : value.map((item) => fillMissing(item));
-    if (typeof value === 'object') {
-      const result: Record<string, unknown> = {};
-      for (const [k, v] of Object.entries(value as Record<string, unknown>)) {
-        result[k] = fillMissing(v);
-      }
-      return result;
-    }
-    return value;
-  };
-
-  if (selectedType === 'newTechnique') {
-    const form = draft.newTechnique;
-    const summary = form.summary.trim() || 'New technique proposal';
-
-    const listMd = (items: string[]) =>
-      items.length ? items.map((item) => `- ${item || '-'}`).join('\n') : '-';
-    const stepsMd =
-      form.steps.map((step, index) => `  ${index + 1}. ${step.text || '-'}`).join('\n') || '  -';
-
-    const detailsParts: string[] = [];
-    detailsParts.push(`### Summary\n${form.summary || '-'}`);
-    detailsParts.push(
-      `\n### Taxonomy\n- Attack: ${form.attack ?? '—'}\n- Category: ${
-        form.category ?? '—'
-      }\n- Weapon: ${form.weapon ?? '—'}\n- Entries: ${form.entries || '—'}\n- Hanmi: ${
-        form.hanmi ?? '—'
-      }\n- Level hint: ${form.levelHint || '—'}`,
-    );
-    detailsParts.push(`\n### Steps\n${stepsMd}`);
-    detailsParts.push(
-      `\n### Uke guidance\n**Role:** ${form.ukeRole || '-'}\n${listMd(form.ukeNotes)}`,
-    );
-    detailsParts.push(`\n### Key points\n${listMd(form.keyPoints)}`);
-    detailsParts.push(`\n### Common mistakes\n${listMd(form.commonMistakes)}`);
-
-    if (form.sources.trim()) {
-      detailsParts.push(`\n### Sources / Attribution\n${form.sources.trim()}`);
-    }
-
-    if (duplicateMatches.length > 0) {
-      const dupList = duplicateMatches
-        .map((tech) => `- ${tech.name.en || tech.name.de} (${tech.slug})`)
-        .join('\n');
-      detailsParts.push(`\n### Possible duplicates\n${dupList}`);
-    }
-
-    const detailsMd = detailsParts.join('\n');
-
-    // Build flattened, bilingual diff JSON
-    const nameBi = toBilingual(form.name);
-    const summaryBi = toBilingual(form.summary);
-    const levelHintBi = toBilingual(form.levelHint);
-    const stepsBi = toBilingualSteps(form.steps);
-    const ukeRoleBi = toBilingual(form.ukeRole);
-    const ukeNotesBi = toBilingualArray(form.ukeNotes);
-    const keyPointsBi = toBilingualArray(form.keyPoints);
-    const mistakesBi = toBilingualArray(form.commonMistakes);
-
-    const flattened = {
-      // Localized text
-      name_en: nameBi.en,
-      name_de: nameBi.de,
-      summary_en: summaryBi.en,
-      summary_de: summaryBi.de,
-      levelHint_en: levelHintBi.en,
-      levelHint_de: levelHintBi.de,
-      steps_en: stepsBi.en,
-      steps_de: stepsBi.de,
-      ukeRole_en: ukeRoleBi.en,
-      ukeRole_de: ukeRoleBi.de,
-      ukeNotes_en: ukeNotesBi.en,
-      ukeNotes_de: ukeNotesBi.de,
-      keyPoints_en: keyPointsBi.en,
-      keyPoints_de: keyPointsBi.de,
-      commonMistakes_en: mistakesBi.en,
-      commonMistakes_de: mistakesBi.de,
-      // Non-localized
-      jpName: form.jpName,
-      taxonomy: {
-        attack: form.attack,
-        category: form.category,
-        weapon: form.weapon,
-        entries: form.entries ? [form.entries] : [],
-        hanmi: form.hanmi,
-      },
-      media: form.media,
-      sources: form.sources,
-      creditName: form.creditName,
-      trainerCredit: form.trainerCredit,
-      markAsBase: form.markAsBase,
-      consent: form.consent,
-    } as const;
-
-    return {
-      name: escapeInline(form.creditName || defaultName),
-      category: 'new-technique',
-      entityType: 'technique',
-      entityId: slugPreview || undefined,
-      locale,
-      summary: summary.length > 120 ? `${summary.slice(0, 117)}…` : summary,
-      detailsMd,
-      diffJson: fillMissing(flattened),
-      media: summarizeMedia(form.media),
-      clientVersion,
-      honeypot: '',
-    };
-  }
-
-  if (selectedType === 'addVariation') {
-    const form = draft.addVariation;
-    const techniqueLabel = findTechniqueName(form.relatedTechniqueId);
-    const directionLabel =
-      form.direction && form.direction in variationDirectionLabels
-        ? variationDirectionLabels[form.direction as VariationDirection]
-        : '—';
-    const stanceLabel = form.stance ? hanmiLabelMap[form.stance] : '—';
-    const tagList = form.categoryTags.length
-      ? form.categoryTags.map((tag) => `- ${tag}`).join('\n')
-      : '-';
-    const stepsMd =
-      form.steps.map((step, index) => `  ${index + 1}. ${step.text || '-'}`).join('\n') || '  -';
-    const keyPointsMd = form.keyPoints.map((item) => `- ${item || '-'}`).join('\n') || '-';
-    const mistakesMd = form.commonMistakes.map((item) => `- ${item || '-'}`).join('\n') || '-';
-
-    const summaryTextParts = [techniqueLabel, directionLabel].filter(
-      (value) => value && value !== '—',
-    );
-    const summary =
-      summaryTextParts.length > 0
-        ? `${summaryTextParts.join(' – ')} variation`
-        : `${techniqueLabel} variation`;
-
-    const detailsSections = [
-      `### Summary\n${form.summary || '-'}`,
-      `\n### Trainer & credit\n- Trainer: ${form.trainer || '—'}\n- Credit name: ${
-        form.creditName || '—'
-      }\n- Trainer credit: ${form.trainerCredit || '—'}\n- Mark as base: ${
-        form.markAsBase ? 'Yes' : 'No'
-      }`,
-      `\n### Direction & stance\n- Direction: ${directionLabel}\n- Stance: ${stanceLabel}\n- Level: ${
-        form.level ? getLevelLabel(locale, form.level) : '—'
-      }`,
-      `\n### Tags\n${tagList}`,
-      `\n### Steps\n${stepsMd}`,
-      `\n### Key points\n${keyPointsMd}`,
-      `\n### Common mistakes\n${mistakesMd}`,
-      `\n### Uke instructions\n${form.ukeInstructions || '-'}`,
-      `\n### Context / notes\n${form.context || '-'}`,
-    ];
-
-    const detailsMd = detailsSections.join('\n');
-
-    // Build flattened, bilingual diff JSON for variation
-    const summaryBi = toBilingual(form.summary);
-    const keyPointsBi = toBilingualArray(form.keyPoints);
-    const mistakesBi = toBilingualArray(form.commonMistakes);
-    const stepsBi = toBilingualSteps(form.steps);
-    const ukeInstructionsBi = toBilingual(form.ukeInstructions);
-    const contextBi = toBilingual(form.context);
-
-    const flattened = {
-      relatedTechniqueId: form.relatedTechniqueId,
-      direction: form.direction,
-      stance: form.stance,
-      trainer: form.trainer,
-      summary_en: summaryBi.en,
-      summary_de: summaryBi.de,
-      steps_en: stepsBi.en,
-      steps_de: stepsBi.de,
-      keyPoints_en: keyPointsBi.en,
-      keyPoints_de: keyPointsBi.de,
-      commonMistakes_en: mistakesBi.en,
-      commonMistakes_de: mistakesBi.de,
-      ukeInstructions_en: ukeInstructionsBi.en,
-      ukeInstructions_de: ukeInstructionsBi.de,
-      context_en: contextBi.en,
-      context_de: contextBi.de,
-      categoryTags: form.categoryTags,
-      level: form.level,
-      media: form.media,
-      creditName: form.creditName,
-      trainerCredit: form.trainerCredit,
-      markAsBase: form.markAsBase,
-      consent: form.consent,
-    } as const;
-
-    return {
-      name: escapeInline(form.creditName || defaultName),
-      category: 'new-variation',
-      entityType: 'technique',
-      entityId: form.relatedTechniqueId || undefined,
-      locale,
-      summary: summary.length > 120 ? `${summary.slice(0, 117)}…` : summary,
-      detailsMd,
-      diffJson: fillMissing(flattened),
-      media: summarizeMedia(form.media),
-      clientVersion,
-      honeypot: '',
-    };
-  }
-
-  if (selectedType === 'improveTechnique') {
-    const { improveTechnique } = draft;
-    const label = findTechniqueName(improveTechnique.techniqueId);
-    const summary = `Improvement for ${label}`;
-    const detailsParts = improveTechnique.sections.map((section) => {
-      if (section === 'steps') {
-        return `### Steps\n${improveTechnique.steps
-          .map((step, index) => `  ${index + 1}. ${step.text || '-'}`)
-          .join('\n')}`;
-      }
-      const text = improveTechnique.textBySection[section as ImproveTextSection] || '';
-      return `### ${section}\n${text || '-'}`;
-    });
-    const detailsMd = detailsParts.join('\n\n');
-    return {
-      name: escapeInline(defaultName),
-      category: 'edit',
-      entityType: 'technique',
-      entityId: improveTechnique.techniqueId || undefined,
-      locale,
-      summary,
-      detailsMd,
-      diffJson: improveTechnique,
-      media: summarizeMedia(improveTechnique.media),
-      clientVersion,
-      honeypot: '',
-    };
-  }
-
-  if (selectedType === 'bugReport') {
-    const bug = draft.bugReport;
-    const fallback = bug.details.split('\n')[0]?.trim() || 'Bug report';
-    const baseTitle = (bug.title ?? '').trim() || fallback;
-    const withLocation = bug.location?.trim() ? `${baseTitle} — ${bug.location.trim()}` : baseTitle;
-    const summary = withLocation.length > 120 ? `${withLocation.slice(0, 117)}…` : withLocation;
-    const detailsMd = `### What happened\n${bug.details}\n\n### Steps to reproduce\n${bug.reproduction}`;
-    return {
-      name: escapeInline(defaultName),
-      category: 'bug',
-      entityType: 'other',
-      summary,
-      detailsMd,
-      diffJson: bug,
-      clientVersion,
-      // userAgent intentionally omitted per privacy settings
-      honeypot: '',
-    };
-  }
-
-  if (selectedType === 'appFeedback') {
-    const feedback = draft.appFeedback;
-    const fallback = feedback.feedback.split('\n')[0]?.trim() || 'App feedback';
-    const baseTitle = (feedback.title ?? '').trim() || fallback;
-    const withArea = feedback.area ? `${baseTitle} — ${feedback.area}` : baseTitle;
-    const summary = withArea.length > 120 ? `${withArea.slice(0, 117)}…` : withArea;
-    const detailsMd = feedback.feedback;
-    return {
-      name: escapeInline(defaultName),
-      category: 'suggestion',
-      entityType: 'exams',
-      summary,
-      detailsMd,
-      diffJson: feedback,
-      media: summarizeMedia(
-        feedback.screenshotUrl
-          ? [
-              {
-                id: createId(),
-                type: 'link',
-                url: feedback.screenshotUrl,
-                title: 'Screenshot',
-              },
-            ]
-          : [],
-      ),
-      clientVersion,
-      honeypot: '',
-    };
-  }
-
-  return null;
-};
-
-const defaultNewTechniqueForm = (): NewTechniqueForm => ({
-  name: '',
-  jpName: '',
-  attack: null,
-  category: null,
-  weapon: null,
-  entries: '',
-  hanmi: null,
-  summary: '',
-  levelHint: '',
-  steps: [{ id: createId(), text: '' }],
-  ukeRole: '',
-  ukeNotes: ['', '', ''],
-  keyPoints: ['', '', ''],
-  commonMistakes: ['', '', ''],
-  media: [],
-  sources: '',
-  creditName: '',
-  trainerCredit: '',
-  markAsBase: true,
-  consent: false,
-});
-
-const defaultImproveTechniqueForm = (): ImproveTechniqueForm => ({
-  techniqueId: null,
-  sections: [],
-  steps: [{ id: createId(), text: '' }],
-  textBySection: {},
-  media: [],
-  source: '',
-  credit: '',
-  consent: false,
-});
-
-const defaultVariationForm = (): VariationForm => ({
-  relatedTechniqueId: null,
-  direction: '',
-  stance: null,
-  trainer: '',
-  summary: '',
-  categoryTags: [],
-  level: null,
-  steps: [{ id: createId(), text: '' }],
-  keyPoints: ['', '', ''],
-  commonMistakes: ['', '', ''],
-  ukeInstructions: '',
-  media: [],
-  context: '',
-  creditName: '',
-  trainerCredit: '',
-  markAsBase: false,
-  consent: false,
-});
-
-const defaultAppFeedbackForm = (): AppFeedbackForm => ({
-  area: null,
-  title: '',
-  feedback: '',
-  screenshotUrl: '',
-});
-
-const defaultBugReportForm = (): BugReportForm => ({
-  title: '',
-  location: '',
-  details: '',
-  reproduction: '',
-});
-
-const defaultDraft = (): FeedbackDraft => ({
-  selectedType: null,
-  improveTechnique: defaultImproveTechniqueForm(),
-  addVariation: defaultVariationForm(),
-  appFeedback: defaultAppFeedbackForm(),
-  bugReport: defaultBugReportForm(),
-  newTechnique: defaultNewTechniqueForm(),
-});
-
-const isBrowser = typeof window !== 'undefined';
-
-const detectMedia = (rawUrl: string): MediaEntry | null => {
-  const url = rawUrl.trim();
-  if (!url) return null;
-
-  const youtubeMatch = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([\w-]{6,})/i);
-  if (youtubeMatch) {
-    const videoId = youtubeMatch[1];
-    return {
-      id: createId(),
-      url,
-      type: 'youtube',
-      embedUrl: `https://www.youtube-nocookie.com/embed/${videoId}`,
-    };
-  }
-
-  const gumletMatch = url.match(/play\.gumlet\.io\/embed\/([\w]+)/);
-  if (gumletMatch) {
-    return {
-      id: createId(),
-      url,
-      type: 'gumlet',
-    };
-  }
-
-  if (/\.(jpe?g|png|gif|webp|avif)$/i.test(url)) {
-    return {
-      id: createId(),
-      url,
-      type: 'image',
-    };
-  }
-
-  return {
-    id: createId(),
-    url,
-    type: 'link',
-  };
-};
-
-const loadDraft = (): FeedbackDraft => {
-  if (!isBrowser) return defaultDraft();
-
-  try {
-    const stored = window.localStorage.getItem(STORAGE_KEY);
-    if (!stored) return defaultDraft();
-
-    // Parse as any to support legacy draft shapes (backwards compatibility)
-    // and avoid strict property checks during migration.
-    const parsed = JSON.parse(stored) as Partial<FeedbackDraft> & Record<string, unknown>;
-
-    const selectedType = feedbackTypeOrder.includes(parsed.selectedType as FeedbackType)
-      ? (parsed.selectedType as FeedbackType)
-      : null;
-
-    const improveTechnique = parsed.improveTechnique ?? defaultImproveTechniqueForm();
-    const addVariation = parsed.addVariation ?? defaultVariationForm();
-    const appFeedback = parsed.appFeedback ?? defaultAppFeedbackForm();
-    const bugReport = parsed.bugReport ?? defaultBugReportForm();
-    const newTechnique = parsed.newTechnique ?? defaultNewTechniqueForm();
-
-    return {
-      selectedType,
-      improveTechnique: {
-        ...defaultImproveTechniqueForm(),
-        ...improveTechnique,
-        steps: (improveTechnique.steps ?? defaultImproveTechniqueForm().steps).map(
-          (step: { id?: string; text?: string }) => ({
-            id: step.id || createId(),
-            text: step.text || '',
-          }),
-        ),
-        media: (improveTechnique.media ?? []).map(
-          (item: {
-            id?: string;
-            url: string;
-            type: string;
-            embedUrl?: string;
-            title?: string;
-          }) => ({
-            id: item.id || createId(),
-            url: item.url,
-            type: item.type as MediaKind,
-            embedUrl: item.embedUrl,
-            title: item.title,
-          }),
-        ),
-        consent: Boolean(improveTechnique.consent),
-      },
-      addVariation: {
-        ...defaultVariationForm(),
-        relatedTechniqueId: addVariation.relatedTechniqueId ?? null,
-        direction: isVariationDirection(addVariation.direction)
-          ? addVariation.direction
-          : isVariationDirection((addVariation as { variationName?: string })?.variationName)
-            ? ((addVariation as { variationName?: string })
-                .variationName as VariationForm['direction'])
-            : '',
-        stance: sanitizeHanmi(addVariation.stance),
-        trainer: ensureString(
-          addVariation.trainer ?? (addVariation as { credit?: string })?.credit,
-        ),
-        summary: ensureString(
-          addVariation.summary ?? (addVariation as { description?: string })?.description ?? '',
-        ),
-        categoryTags: Array.isArray(addVariation.categoryTags)
-          ? addVariation.categoryTags.filter(isCategoryTag)
-          : [],
-        level:
-          addVariation.level && gradeOrder.includes(addVariation.level) ? addVariation.level : null,
-        steps: ensureStepList(addVariation.steps),
-        keyPoints: ensureStringList(addVariation.keyPoints, 3),
-        commonMistakes: ensureStringList(addVariation.commonMistakes, 3),
-        ukeInstructions: ensureString(addVariation.ukeInstructions),
-        media: (addVariation.media ?? [])
-          .map(
-            (item: {
-              id?: string;
-              url?: string;
-              type?: string;
-              embedUrl?: string;
-              title?: string;
-            }) => ({
-              id: item?.id || createId(),
-              url: item?.url || '',
-              type: (item?.type || 'link') as MediaKind,
-              embedUrl: item?.embedUrl,
-              title: item?.title ?? '',
-            }),
-          )
-          .filter((item: { url: string }) => item.url),
-        context: ensureString(addVariation.context),
-        creditName: ensureString(
-          addVariation.creditName ?? (addVariation as { credit?: string })?.credit ?? '',
-        ),
-        trainerCredit: ensureString(addVariation.trainerCredit ?? ''),
-        markAsBase: Boolean(addVariation.markAsBase),
-        consent: Boolean(addVariation.consent),
-      },
-      appFeedback: {
-        ...defaultAppFeedbackForm(),
-        ...appFeedback,
-        area: isAppArea(appFeedback.area) ? appFeedback.area : null,
-      },
-      bugReport: {
-        ...defaultBugReportForm(),
-        ...bugReport,
-      },
-      newTechnique: {
-        ...defaultNewTechniqueForm(),
-        name: ensureString(newTechnique.name),
-        jpName: ensureString(
-          newTechnique.jpName ?? (newTechnique as { jp?: { kanji?: string } })?.jp?.kanji ?? '',
-        ),
-        attack: typeof newTechnique.attack === 'string' ? newTechnique.attack : null,
-        category: typeof newTechnique.category === 'string' ? newTechnique.category : null,
-        weapon: typeof newTechnique.weapon === 'string' ? newTechnique.weapon : null,
-        entries: sanitizeEntries(newTechnique.entries),
-        hanmi: sanitizeHanmi(newTechnique.hanmi),
-        summary: ensureString(newTechnique.summary),
-        levelHint: ensureString(newTechnique.levelHint),
-        steps: ensureStepList(newTechnique.steps),
-        ukeRole: ensureString(newTechnique.ukeRole),
-        ukeNotes: ensureStringList(newTechnique.ukeNotes, 3),
-        keyPoints: ensureStringList(newTechnique.keyPoints, 3),
-        commonMistakes: ensureStringList(newTechnique.commonMistakes, 3),
-        media: (newTechnique.media ?? [])
-          .map(
-            (item: {
-              id?: string;
-              url?: string;
-              type?: string;
-              embedUrl?: string;
-              title?: string;
-            }) => ({
-              id: item?.id || createId(),
-              url: item?.url || '',
-              type: (item?.type || 'link') as MediaKind,
-              embedUrl: item?.embedUrl,
-              title: item?.title ?? '',
-            }),
-          )
-          .filter((item: { url: string }) => item.url),
-        sources: ensureString(newTechnique.sources),
-        creditName: ensureString(
-          newTechnique.creditName ??
-            (newTechnique as { contributor?: { name?: string } })?.contributor?.name ??
-            '',
-        ),
-        trainerCredit: ensureString(
-          newTechnique.trainerCredit ??
-            (newTechnique as { lineage?: { dojoOrTrainer?: string } })?.lineage?.dojoOrTrainer ??
-            '',
-        ),
-        markAsBase:
-          newTechnique.markAsBase ??
-          (newTechnique as { lineage?: { markAsBase?: boolean } })?.lineage?.markAsBase ??
-          true,
-        consent: Boolean(newTechnique.consent),
-      },
-    } satisfies FeedbackDraft;
-  } catch (error) {
-    console.warn('Failed to load feedback draft', error);
-    return defaultDraft();
-  }
-};
-
-type StepBuilderProps = {
-  steps: StepItem[];
-  onChange: (steps: StepItem[]) => void;
-  label?: string;
-  placeholderForIndex: (index: number) => string;
-  helperText: string;
-  addButtonLabel: string;
-  removeButtonAria: (index: number) => string;
-};
-
-const StepBuilder = ({
-  steps,
-  onChange,
-  label,
-  placeholderForIndex,
-  helperText,
-  addButtonLabel,
-  removeButtonAria,
-}: StepBuilderProps): ReactElement => {
-  const { prefersReducedMotion } = useMotionPreferences();
-  const stepTransition = prefersReducedMotion
-    ? { duration: 0.05 }
-    : { duration: 0.18, ease: defaultEase };
-
-  const handleStepChange = (id: string, text: string) => {
-    onChange(steps.map((step) => (step.id === id ? { ...step, text } : step)));
-  };
-
-  const handleAddStep = () => {
-    onChange([...steps, { id: createId(), text: '' }]);
-  };
-
-  const handleRemoveStep = (id: string) => {
-    if (steps.length === 1) {
-      onChange([{ id: createId(), text: '' }]);
-      return;
-    }
-    onChange(steps.filter((step) => step.id !== id));
-  };
-
-  return (
-    <div className="space-y-3">
-      {label && <h3 className="text-sm font-semibold text-[var(--color-text)]">{label}</h3>}
-      <div className="space-y-3">
-        <AnimatePresence initial={false} mode="popLayout">
-          {steps.map((step, index) => (
-            <motion.div
-              key={step.id}
-              layout="position"
-              initial={prefersReducedMotion ? false : { opacity: 0, y: 8 }}
-              animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
-              exit={prefersReducedMotion ? undefined : { opacity: 0, y: -8 }}
-              transition={stepTransition}
-              className="grid grid-cols-[auto,1fr,auto] items-center gap-2 rounded-xl border surface-border bg-[var(--color-surface)] px-3 py-2 transition-soft focus-within:border-[var(--focus-halo-color)] focus-within:ring-2 focus-within:ring-[var(--focus-halo-color)] focus-within:ring-offset-0"
-            >
-              <span className="text-xs font-semibold text-subtle w-6 text-center">{index + 1}</span>
-              <input
-                type="text"
-                value={step.text}
-                onChange={(event) => handleStepChange(step.id, event.target.value)}
-                placeholder={placeholderForIndex(index)}
-                className="w-full bg-transparent text-sm focus:outline-none"
-              />
-              <button
-                type="button"
-                onClick={() => handleRemoveStep(step.id)}
-                aria-label={removeButtonAria(index)}
-                className="text-xs text-subtle hover:text-[var(--color-text)] transition-soft"
-              >
-                ✕
-              </button>
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </div>
-      {helperText && <p className="text-xs text-subtle">{helperText}</p>}
-      <button
-        type="button"
-        onClick={handleAddStep}
-        className="text-sm text-[var(--color-accent, var(--color-text))] hover:underline"
-      >
-        + {addButtonLabel}
-      </button>
-    </div>
-  );
-};
-
-type MediaManagerProps = {
-  media: MediaEntry[];
-  onChange: (media: MediaEntry[]) => void;
-  placeholder: string;
-  triggerLabel: string;
-  addLabel: string;
-  cancelLabel: string;
-  removeLabel: string;
-  allowedKinds?: MediaKind[];
-  disallowMessage?: string;
-};
-
-const getMediaIcon = (type: MediaKind): ReactElement => {
-  switch (type) {
-    case 'youtube':
-    case 'gumlet':
-    case 'gumlet-dab':
-      return (
-        <span aria-hidden className="text-lg">
-          ▶
-        </span>
-      );
-    case 'image':
-      return (
-        <span aria-hidden className="text-lg">
-          🖼️
-        </span>
-      );
-    default:
-      return <Link className="w-5 h-5" />;
-  }
-};
-
-const normalizeUrl = (url: string): string => {
-  if (!url) return url;
-  if (/^https?:\/\//i.test(url)) return url;
-  return `https://${url}`;
-};
-
-const MediaManager = ({
-  media,
-  onChange,
-  placeholder,
-  triggerLabel,
-  addLabel,
-  cancelLabel,
-  removeLabel,
-  allowedKinds,
-  // title editing removed; media entries keep optional title metadata but UI no longer allows editing
-  disallowMessage,
-}: MediaManagerProps): ReactElement => {
-  const [isAdding, setIsAdding] = useState(false);
-  const [inputValue, setInputValue] = useState('');
-  const [error, setError] = useState<string | null>(null);
-  const { prefersReducedMotion } = useMotionPreferences();
-  const mediaTransition = prefersReducedMotion
-    ? { duration: 0.05 }
-    : { duration: 0.2, ease: defaultEase };
-
-  const handleAdd = () => {
-    const entry = detectMedia(inputValue);
-    if (!entry) return;
-    if (allowedKinds && !allowedKinds.includes(entry.type)) {
-      setError(disallowMessage ?? 'Unsupported media type.');
-      return;
-    }
-    // Do not add editable title field from UI; keep media entry as detected
-    onChange([...media, { ...entry }]);
-    setInputValue('');
-    setError(null);
-    setIsAdding(false);
-  };
-
-  const handleRemove = (id: string) => {
-    onChange(media.filter((item) => item.id !== id));
-  };
-
-  // title editing removed
-
-  return (
-    <div className="space-y-3">
-      <div className="flex flex-col gap-3">
-        <AnimatePresence initial={false} mode="popLayout">
-          {media.map((item) => (
-            <motion.div
-              key={item.id}
-              layout="position"
-              initial={prefersReducedMotion ? false : { opacity: 0, y: -6 }}
-              animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
-              exit={prefersReducedMotion ? undefined : { opacity: 0, y: -6 }}
-              transition={mediaTransition}
-              className="flex flex-col gap-2 rounded-xl border surface-border bg-[var(--color-surface)] px-3 py-2 text-sm transition-soft"
-            >
-              <div className="flex items-start gap-3">
-                {getMediaIcon(item.type)}
-                <div className="min-w-0 flex-1">
-                  <a
-                    className="block truncate underline-offset-4 hover:underline"
-                    href={normalizeUrl(item.url)}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                  >
-                    {item.url}
-                  </a>
-                  {/* Title editing removed per design; media entries keep optional title metadata but it's not editable in the form */}
-                </div>
-                <button
-                  type="button"
-                  onClick={() => handleRemove(item.id)}
-                  className="ml-auto text-xs text-subtle hover:text-[var(--color-text)] transition-soft"
-                >
-                  {removeLabel}
-                </button>
-              </div>
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </div>
-
-      <AnimatePresence initial={false} mode="popLayout">
-        {isAdding ? (
-          <motion.div
-            layout="position"
-            initial={prefersReducedMotion ? false : { opacity: 0, y: -6 }}
-            animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
-            exit={prefersReducedMotion ? undefined : { opacity: 0, y: -6 }}
-            transition={mediaTransition}
-            className="flex flex-wrap gap-2"
-          >
-            <input
-              type="url"
-              value={inputValue}
-              onChange={(event) => {
-                setError(null);
-                setInputValue(event.target.value);
-              }}
-              placeholder={placeholder}
-              className="w-full sm:w-96 rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2 text-sm focus-halo focus:outline-none"
-            />
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={handleAdd}
-                className="rounded-xl bg-[var(--color-text)] px-3 py-2 text-sm text-[var(--color-bg)]"
-              >
-                {addLabel}
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setIsAdding(false);
-                  setError(null);
-                  setInputValue('');
-                }}
-                className="rounded-xl border surface-border px-3 py-2 text-sm"
-              >
-                {cancelLabel}
-              </button>
-            </div>
-          </motion.div>
-        ) : (
-          <button
-            type="button"
-            onClick={() => setIsAdding(true)}
-            className="rounded-xl border border-dashed surface-border px-3 py-2 text-sm text-subtle hover:text-[var(--color-text)]"
-          >
-            + {triggerLabel}
-          </button>
-        )}
-      </AnimatePresence>
-      {error && <p className="text-xs text-[var(--color-error, #b91c1c)]">{error}</p>}
-    </div>
-  );
-};
-
-const hasContent = (value: string | null | undefined): boolean =>
-  Boolean(value && value.trim().length > 0);
-
-const useAutosave = (draft: FeedbackDraft): void => {
-  const [isHydrated, setHydrated] = useState(false);
-
-  useEffect(() => {
-    if (isBrowser) {
-      setHydrated(true);
-    }
-  }, []);
-
-  useEffect(() => {
-    if (!isHydrated || !isBrowser) return;
-    try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(draft));
-    } catch (error) {
-      console.warn('Failed to persist feedback draft', error);
-    }
-  }, [draft, isHydrated]);
-};
+import {
+  ArrowLeft,
+  Bug,
+  Check,
+  CheckCircle2,
+  ChevronDown,
+  FilePenLine,
+  Lightbulb,
+  Plus,
+  Send,
+  X,
+} from 'lucide-react';
+import { useCallback, useEffect, useMemo, useState, type ReactElement, type ReactNode } from 'react';
+import { getFeedbackCopy } from './feedbackCopy';
+import { routineCollections } from '../home/routinesData';
+import {
+  applyInitialContext,
+  buildFeedbackSubmission,
+  createFeedbackDraft,
+  FEEDBACK_DRAFT_KEY,
+  LEGACY_FEEDBACK_DRAFT_KEY,
+  parseFeedbackDraft,
+  type ContentDraft,
+  type FeedbackDraftV2,
+} from './feedbackModel';
+
+export type { FeedbackType, FeedbackInitialContext } from '@shared/types/feedback';
 
 type FeedbackPageProps = {
   copy: Copy;
   locale: Locale;
   techniques: Technique[];
+  exercises?: Exercise[];
+  glossaryTerms?: GlossaryTerm[];
   onBack?: () => void;
-  initialType?: FeedbackType | null;
-  onConsumeInitialType?: () => void;
+  initialContext?: FeedbackInitialContext | null;
+  onConsumeInitialContext?: () => void;
+};
+
+type FieldProps = {
+  label: string;
+  children: ReactNode;
+  error?: boolean;
+};
+
+const Field = ({ label, children, error = false }: FieldProps): ReactElement => (
+  <div className="space-y-2">
+    <label className={classNames('text-sm font-medium', error && 'text-red-500')}>{label}</label>
+    {children}
+  </div>
+);
+
+const inputClass = (error = false): string =>
+  classNames(
+    'w-full rounded-xl border bg-[var(--color-surface)] px-4 py-3 text-sm focus-halo focus:outline-none',
+    error ? 'border-red-500' : 'surface-border',
+  );
+
+type ListEditorProps = {
+  label: string;
+  addLabel: string;
+  values: string[];
+  placeholder: string;
+  onChange: (values: string[]) => void;
+};
+
+const ListEditor = ({
+  label,
+  addLabel,
+  values,
+  placeholder,
+  onChange,
+}: ListEditorProps): ReactElement => (
+  <div className="space-y-3">
+    <div className="flex items-center justify-between gap-3">
+      <h3 className="text-sm font-medium">{label}</h3>
+      <button
+        type="button"
+        onClick={() => onChange([...values, ''])}
+        className="inline-flex items-center gap-1.5 rounded-lg border surface-border px-2.5 py-1.5 text-xs surface-hover"
+      >
+        <Plus className="h-3.5 w-3.5" aria-hidden />
+        {addLabel}
+      </button>
+    </div>
+    {values.length > 0 && (
+      <div className="space-y-2">
+        {values.map((value, index) => (
+          <div key={`${label}-${index}`} className="flex items-center gap-2">
+            <span className="w-5 text-right text-xs text-subtle">{index + 1}.</span>
+            <input
+              value={value}
+              onChange={(event) => {
+                const next = [...values];
+                next[index] = event.target.value;
+                onChange(next);
+              }}
+              placeholder={placeholder}
+              className={inputClass()}
+            />
+            <button
+              type="button"
+              onClick={() => onChange(values.filter((_, itemIndex) => itemIndex !== index))}
+              className="rounded-lg p-2 text-subtle surface-hover"
+              aria-label={`Remove ${label.toLowerCase()} ${index + 1}`}
+            >
+              <X className="h-4 w-4" aria-hidden />
+            </button>
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+);
+
+const isValidOptionalUrl = (value: string): boolean => {
+  if (!value.trim()) return true;
+  try {
+    const url = new URL(value.trim());
+    return url.protocol === 'http:' || url.protocol === 'https:';
+  } catch {
+    return false;
+  }
+};
+
+const contentTypes: FeedbackContentType[] = [
+  'technique',
+  'exercise',
+  'routine',
+  'form',
+  'glossary',
+  'exam',
+  'other',
+];
+
+const flowIcons: Record<FeedbackType, typeof FilePenLine> = {
+  content: FilePenLine,
+  idea: Lightbulb,
+  bug: Bug,
+};
+
+const renderFlowIcon = (flow: FeedbackType): ReactElement => {
+  const Icon = flowIcons[flow];
+  return <Icon className="h-5 w-5" aria-hidden />;
 };
 
 export const FeedbackPage = ({
   copy,
   locale,
   techniques,
+  exercises = [],
+  glossaryTerms = [],
   onBack,
-  initialType,
-  onConsumeInitialType,
+  initialContext,
+  onConsumeInitialContext,
 }: FeedbackPageProps): ReactElement => {
-  const t: FeedbackPageCopy = copy.feedbackPage;
-  const { prefersReducedMotion } = useMotionPreferences();
-  const formTransition = prefersReducedMotion
-    ? { duration: 0.05 }
-    : { duration: 0.24, ease: defaultEase };
-  const itemTransition = prefersReducedMotion
-    ? { duration: 0.05 }
-    : { duration: 0.18, ease: defaultEase };
-  const [draft, setDraft] = useState<FeedbackDraft>(() => loadDraft());
-  const [showJsonPreview, setShowJsonPreview] = useState(false);
+  const t = getFeedbackCopy(locale);
+  const [draft, setDraft] = useState<FeedbackDraftV2>(createFeedbackDraft);
+  const [hydrated, setHydrated] = useState(false);
+  const [reviewOpen, setReviewOpen] = useState(false);
+  const [showErrors, setShowErrors] = useState(false);
   const [submissionState, setSubmissionState] = useState<
-    'idle' | 'success' | 'error' | 'submitting'
+    'idle' | 'submitting' | 'success' | 'error'
   >('idle');
-  const [submitResult, setSubmitResult] = useState<{
-    ok: boolean;
-    issueNumber?: number;
-    message?: string;
-    requestId?: string;
-  } | null>(null);
-  const [submitError, setSubmitError] = useState<string | null>(null);
-  const [softWarningShown, setSoftWarningShown] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
-  const techniqueOptions = useMemo(
+  useEffect(() => {
+    try {
+      const current = window.localStorage.getItem(FEEDBACK_DRAFT_KEY);
+      const legacy = window.localStorage.getItem(LEGACY_FEEDBACK_DRAFT_KEY);
+      const stored = current ?? legacy;
+      if (stored) setDraft(parseFeedbackDraft(JSON.parse(stored)));
+      if (!current && legacy) window.localStorage.removeItem(LEGACY_FEEDBACK_DRAFT_KEY);
+    } catch {
+      setDraft(createFeedbackDraft());
+    } finally {
+      setHydrated(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!hydrated || !initialContext) return;
+    setDraft((current) => applyInitialContext(current, initialContext));
+    onConsumeInitialContext?.();
+  }, [hydrated, initialContext, onConsumeInitialContext]);
+
+  useEffect(() => {
+    if (!hydrated || submissionState === 'success') return;
+    window.localStorage.setItem(FEEDBACK_DRAFT_KEY, JSON.stringify(draft));
+  }, [draft, hydrated, submissionState]);
+
+  const updateContent = useCallback(
+    <K extends keyof ContentDraft>(key: K, value: ContentDraft[K]): void => {
+      setDraft((current) => ({
+        ...current,
+        content: { ...current.content, [key]: value },
+      }));
+      setShowErrors(false);
+    },
+    [],
+  );
+
+  const techniqueOptions = useMemo<SelectOption<string>[]>(
     () =>
       techniques
         .map((technique) => ({
           value: technique.slug,
           label: technique.name[locale] || technique.name.en,
         }))
-        .sort((a, b) => a.label.localeCompare(b.label)),
-    [techniques, locale],
+        .sort((a, b) => String(a.label).localeCompare(String(b.label))),
+    [locale, techniques],
+  );
+
+  const exerciseOptions = useMemo<SelectOption<string>[]>(
+    () =>
+      exercises
+        .map((exercise) => ({
+          value: exercise.slug,
+          label: exercise.name[locale] || exercise.name.en,
+        }))
+        .sort((a, b) => String(a.label).localeCompare(String(b.label))),
+    [exercises, locale],
+  );
+
+  const glossaryOptions = useMemo<SelectOption<string>[]>(
+    () =>
+      glossaryTerms
+        .map((term) => ({ value: term.slug, label: term.romaji }))
+        .sort((a, b) => String(a.label).localeCompare(String(b.label))),
+    [glossaryTerms],
+  );
+
+  const routineOptions = useMemo<SelectOption<string>[]>(
+    () =>
+      Object.entries(routineCollections).flatMap(([category, collection]) =>
+        collection.presets.map((preset) => ({
+          value: `${category}/${preset.id}`,
+          label: preset.title[locale] || preset.title.en,
+          group:
+            copy.examsPage.routines.find((item) => item.id === category)?.title ?? category,
+        })),
+      ),
+    [copy.examsPage.routines, locale],
+  );
+
+  const formOptions = useMemo<SelectOption<string>[]>(
+    () =>
+      copy.formsPage.items.map((item) => ({
+        value: item.id,
+        label: item.title,
+      })),
+    [copy.formsPage.items],
   );
 
   const attackOptions = useMemo<SelectOption<string>[]>(
@@ -1464,7 +279,6 @@ export const FeedbackPage = ({
       })),
     [locale],
   );
-
   const categoryOptions = useMemo<SelectOption<string>[]>(
     () =>
       getOrderedTaxonomyValues('category').map((value) => ({
@@ -1473,2021 +287,814 @@ export const FeedbackPage = ({
       })),
     [locale],
   );
-
-  const weaponOptions = useMemo<SelectOption<string>[]>(
-    () =>
-      getOrderedTaxonomyValues('weapon').map((value) => ({
-        value,
-        label: getTaxonomyLabel(locale, 'weapon', value),
-      })),
+  const levelOptions = useMemo<SelectOption<string>[]>(
+    () => gradeOrder.map((value) => ({ value, label: getLevelLabel(locale, value) })),
     [locale],
   );
 
-  const selectedCard = draft.selectedType;
+  const selectedTargetLabel = useMemo(() => {
+    const { contentType, entityId } = draft.content;
+    if (!entityId) return '';
+    if (contentType === 'technique') {
+      const technique = techniques.find((item) => item.slug === entityId);
+      return technique?.name[locale] || technique?.name.en || entityId;
+    }
+    if (contentType === 'exercise') {
+      const exercise = exercises.find((item) => item.slug === entityId);
+      return exercise?.name[locale] || exercise?.name.en || entityId;
+    }
+    if (contentType === 'glossary') {
+      return glossaryTerms.find((item) => item.slug === entityId)?.romaji || entityId;
+    }
+    if (contentType === 'routine') {
+      return String(routineOptions.find((item) => item.value === entityId)?.label ?? entityId);
+    }
+    if (contentType === 'form') {
+      return String(formOptions.find((item) => item.value === entityId)?.label ?? entityId);
+    }
+    return entityId;
+  }, [draft.content, exercises, formOptions, glossaryTerms, locale, routineOptions, techniques]);
 
-  const levelOptions = useMemo<SelectOption<string>[]>(
-    () => [
-      { value: 'none', label: t.options.notSpecified },
-      ...gradeOrder.map((grade) => ({ value: grade, label: getLevelLabel(locale, grade) })),
-    ],
-    [locale, t.options.notSpecified],
-  );
-
-  const cardContent = useMemo<
-    Record<FeedbackType, { icon: ReactElement; title: string; description: string }>
-  >(
-    () => ({
-      improveTechnique: {
-        icon: <Rocket className="w-5 h-5" aria-hidden />,
-        title: t.cards.improve.title,
-        description: t.cards.improve.description,
-      },
-      addVariation: {
-        icon: <BadgePlus className="w-5 h-5" aria-hidden />,
-        title: t.cards.variation.title,
-        description: t.cards.variation.description,
-      },
-      newTechnique: {
-        icon: <PencilLine className="w-5 h-5" aria-hidden />,
-        title: t.cards.newTechnique.title,
-        description: t.cards.newTechnique.description,
-      },
-      appFeedback: {
-        icon: <Lightbulb className="w-5 h-5" aria-hidden />,
-        title: t.cards.app.title,
-        description: t.cards.app.description,
-      },
-      bugReport: {
-        icon: <Bug className="w-5 h-5" aria-hidden />,
-        title: t.cards.bug.title,
-        description: t.cards.bug.description,
-      },
-    }),
-    [t.cards],
-  );
-
-  useEffect(() => {
-    if (!initialType) return;
-    setDraft((current) => {
-      if (current.selectedType === initialType) return current;
+  const validation = useMemo(() => {
+    if (draft.flow === 'content') {
       return {
-        ...current,
-        selectedType: initialType,
+        target:
+          draft.content.mode === 'edit'
+            ? Boolean(draft.content.entityId.trim())
+            : Boolean(draft.content.contentName.trim()),
+        details: Boolean(draft.content.details.trim()),
+        consent: draft.content.consent,
+        url: isValidOptionalUrl(draft.content.mediaUrl),
       };
-    });
-    onConsumeInitialType?.();
-  }, [initialType, onConsumeInitialType]);
+    }
+    if (draft.flow === 'idea') {
+      return {
+        target: true,
+        details: Boolean(draft.idea.details.trim()),
+        consent: true,
+        url: isValidOptionalUrl(draft.idea.mediaUrl),
+      };
+    }
+    if (draft.flow === 'bug') {
+      return {
+        target: true,
+        details: Boolean(draft.bug.details.trim()),
+        consent: true,
+        url: isValidOptionalUrl(draft.bug.mediaUrl),
+      };
+    }
+    return { target: false, details: false, consent: false, url: true };
+  }, [draft]);
 
-  useEffect(() => {
+  const canReview = Object.values(validation).every(Boolean);
+
+  const chooseFlow = (flow: FeedbackType): void => {
+    setDraft((current) => ({ ...current, flow }));
     setSubmissionState('idle');
-    setSubmitResult(null);
-    setSubmitError(null);
-  }, [selectedCard]);
-
-  const categoryTagLabels = t.categoryTags as Record<CategoryTag, string>;
-  const areaLabels = t.appAreas as Record<AppArea, string>;
-  const improveSectionLabels = t.improve.sections as Record<ImproveSection, string>;
-
-  useAutosave(draft);
-
-  const slugPreview = useMemo(
-    () => buildNewTechniqueSlug(draft.newTechnique.name),
-    [draft.newTechnique.name],
-  );
-
-  const duplicateMatches = useMemo(
-    () => computeDuplicateMatches(draft.newTechnique, techniques),
-    [draft.newTechnique, techniques],
-  );
-
-  const unusualCombo = useMemo(
-    () => isUnusualAttackWeapon(draft.newTechnique.attack, draft.newTechnique.weapon),
-    [draft.newTechnique.attack, draft.newTechnique.weapon],
-  );
-
-  const summaryLength = draft.newTechnique.summary.trim().length;
-  const summaryExceeded = summaryLength > SUMMARY_MAX;
-  const summaryRemaining = SUMMARY_MAX - summaryLength;
-  const summaryEmpty = summaryLength === 0;
-
-  useEffect(() => {
-    if (!isBrowser) return;
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'j') {
-        event.preventDefault();
-        setShowJsonPreview((prev) => !prev);
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
-
-  const resetDraft = useCallback(() => {
-    setDraft(defaultDraft());
-    setSubmissionState('idle');
-    setSubmitResult(null);
-    setSubmitError(null);
-  }, []);
-
-  // Clear only the active form fields but keep the selected card.
-  const clearCurrentForm = useCallback((type?: FeedbackType) => {
-    setDraft((current) => {
-      const sel = type ?? current.selectedType;
-      if (!sel) return current;
-      switch (sel) {
-        case 'improveTechnique':
-          return { ...current, improveTechnique: defaultImproveTechniqueForm() };
-        case 'addVariation':
-          return { ...current, addVariation: defaultVariationForm() };
-        case 'newTechnique':
-          return { ...current, newTechnique: defaultNewTechniqueForm() };
-        case 'appFeedback':
-          return { ...current, appFeedback: defaultAppFeedbackForm() };
-        case 'bugReport':
-          return { ...current, bugReport: defaultBugReportForm() };
-        default:
-          return current;
-      }
-    });
-    setSoftWarningShown(false);
-  }, []);
-
-  const handleTypeChange = (feedbackType: FeedbackType) => {
-    setSubmissionState('idle');
-    setSubmitError(null);
-    setSubmitResult(null);
-    setDraft((current) => {
-      if (current.selectedType === feedbackType) return current;
-      return { ...current, selectedType: feedbackType };
-    });
+    setShowErrors(false);
   };
 
-  const updateImprove = <K extends keyof ImproveTechniqueForm>(
-    key: K,
-    value: ImproveTechniqueForm[K],
-  ) => {
-    setDraft((current) => ({
-      ...current,
-      improveTechnique: {
-        ...current.improveTechnique,
-        [key]: value,
-      },
-    }));
+  const handleReview = (): void => {
+    if (!canReview) {
+      setShowErrors(true);
+      return;
+    }
+    setReviewOpen(true);
   };
 
-  const updateVariation = <K extends keyof VariationForm>(key: K, value: VariationForm[K]) => {
-    setDraft((current) => ({
-      ...current,
-      addVariation: {
-        ...current.addVariation,
-        [key]: value,
-      },
-    }));
-  };
-
-  const updateAppFeedback = <K extends keyof AppFeedbackForm>(
-    key: K,
-    value: AppFeedbackForm[K],
-  ) => {
-    setDraft((current) => ({
-      ...current,
-      appFeedback: {
-        ...current.appFeedback,
-        [key]: value,
-      },
-    }));
-  };
-
-  const updateBugReport = <K extends keyof BugReportForm>(key: K, value: BugReportForm[K]) => {
-    setDraft((current) => ({
-      ...current,
-      bugReport: {
-        ...current.bugReport,
-        [key]: value,
-      },
-    }));
-  };
-
-  const setNewTechnique = (updater: (form: NewTechniqueForm) => NewTechniqueForm) => {
-    setDraft((current) => ({
-      ...current,
-      newTechnique: updater(current.newTechnique),
-    }));
-  };
-
-  const updateNewTechnique = <K extends keyof NewTechniqueForm>(
-    key: K,
-    value: NewTechniqueForm[K],
-  ) => {
-    setNewTechnique((form) => ({
-      ...form,
-      [key]: value,
-    }));
-  };
-
-  const techniquePlaceholder =
-    techniqueOptions.length > 0 ? t.options.searchTechniques : t.options.techniquesLoading;
-
-  const isImproveReady = useMemo(() => {
-    const { techniqueId, sections, steps, textBySection } = draft.improveTechnique;
-    if (!hasContent(techniqueId)) return false;
-    if (sections.length === 0) return false;
-
-    const requiresSteps = sections.includes('steps');
-    const hasStepContent = steps.some((step) => hasContent(step.text));
-    if (requiresSteps && !hasStepContent) {
-      return false;
-    }
-
-    const selectedTextSections = sections.filter(
-      (section): section is ImproveTextSection => section !== 'steps',
-    );
-    if (selectedTextSections.length > 0) {
-      const hasTextContent = selectedTextSections.some((section) =>
-        hasContent(textBySection[section]),
-      );
-      if (!hasTextContent) return false;
-    }
-
-    return draft.improveTechnique.consent;
-  }, [draft.improveTechnique]);
-
-  const isVariationReady = useMemo(() => {
-    const {
-      relatedTechniqueId,
-      direction,
-      stance,
-      trainer,
-      summary,
-      steps,
-      keyPoints,
-      commonMistakes,
-      ukeInstructions,
-      consent,
-    } = draft.addVariation;
-    const hasSteps = steps.some((step) => hasContent(step.text));
-    const keyPointsComplete = keyPoints.every((item) => hasContent(item));
-    const mistakesComplete = commonMistakes.every((item) => hasContent(item));
-    return (
-      hasContent(relatedTechniqueId) &&
-      isVariationDirection(direction) &&
-      Boolean(stance) &&
-      hasContent(trainer) &&
-      hasContent(summary) &&
-      hasSteps &&
-      keyPointsComplete &&
-      mistakesComplete &&
-      hasContent(ukeInstructions) &&
-      consent
-    );
-  }, [draft.addVariation]);
-
-  const isAppFeedbackReady = useMemo(() => {
-    return Boolean(draft.appFeedback.area) && hasContent(draft.appFeedback.feedback);
-  }, [draft.appFeedback]);
-
-  const isBugReportReady = useMemo(() => {
-    return (
-      hasContent(draft.bugReport.location) &&
-      hasContent(draft.bugReport.details) &&
-      hasContent(draft.bugReport.reproduction)
-    );
-  }, [draft.bugReport]);
-
-  const isNewTechniqueReady = (() => {
-    const form = draft.newTechnique;
-    const taxonomyComplete =
-      hasContent(form.attack) && hasContent(form.category) && hasContent(form.weapon);
-    const entriesComplete = Boolean(form.entries);
-    const hanmiComplete = Boolean(form.hanmi);
-    const stepsComplete = form.steps.some((step) => hasContent(step.text));
-    const ukeListComplete = form.ukeNotes.every((item) => hasContent(item));
-    const keyPointsComplete = form.keyPoints.every((item) => hasContent(item));
-    const mistakesComplete = form.commonMistakes.every((item) => hasContent(item));
-
-    return (
-      hasContent(form.name) &&
-      taxonomyComplete &&
-      entriesComplete &&
-      hanmiComplete &&
-      hasContent(form.summary) &&
-      !summaryExceeded &&
-      stepsComplete &&
-      hasContent(form.ukeRole) &&
-      ukeListComplete &&
-      keyPointsComplete &&
-      mistakesComplete &&
-      form.consent
-    );
-  })();
-
-  const isSubmitEnabled =
-    selectedCard === 'improveTechnique'
-      ? isImproveReady
-      : selectedCard === 'addVariation'
-        ? isVariationReady
-        : selectedCard === 'newTechnique'
-          ? isNewTechniqueReady
-          : selectedCard === 'appFeedback'
-            ? isAppFeedbackReady
-            : selectedCard === 'bugReport'
-              ? isBugReportReady
-              : false;
-  // Prevent submitting while already submitting or after a successful submit.
-  const canSubmit =
-    isSubmitEnabled && submissionState !== 'submitting' && submissionState !== 'success';
-
-  const formatCount = (count: number, forms: { one: string; many: string }): string =>
-    (count === 1 ? forms.one : forms.many).replace('{count}', String(count));
-
-  const findTechniqueName = useCallback(
-    (slug: string | null) => {
-      if (!slug) return '—';
-      const technique = techniques.find((item) => item.slug === slug);
-      if (!technique) return '—';
-      return technique.name[locale] || technique.name.en;
-    },
-    [locale, techniques],
-  );
-
-  const summaryEntries = useMemo(() => {
-    if (!selectedCard) {
-      return [{ label: t.summary.labels.status, value: t.summary.emptyStatus }];
-    }
-
-    if (selectedCard === 'improveTechnique') {
-      const { techniqueId, sections, steps, textBySection, media, source, credit } =
-        draft.improveTechnique;
-      const populatedSections = sections.map((section) => improveSectionLabels[section]).join(', ');
-      const stepCount = steps.filter((step) => hasContent(step.text)).length;
-      const textCount = sections
-        .filter((section): section is ImproveTextSection => section !== 'steps')
-        .map((section) => textBySection[section])
-        .filter((value) => hasContent(value)).length;
-
-      return [
-        { label: t.summary.labels.type, value: cardContent[selectedCard].title },
-        { label: t.summary.labels.technique, value: findTechniqueName(techniqueId) },
-        { label: t.summary.labels.sections, value: populatedSections || '—' },
-        {
-          label: t.summary.labels.steps,
-          value: stepCount > 0 ? formatCount(stepCount, t.summary.counts.stepsUpdated) : '—',
-        },
-        {
-          label: t.summary.labels.textUpdates,
-          value: textCount > 0 ? formatCount(textCount, t.summary.counts.textSections) : '—',
-        },
-        {
-          label: t.summary.labels.media,
-          value: media.length > 0 ? formatCount(media.length, t.summary.counts.media) : '—',
-        },
-        { label: t.summary.labels.source, value: hasContent(source) ? source : '—' },
-        { label: t.summary.labels.credit, value: hasContent(credit) ? credit : '—' },
-        {
-          label: t.summary.labels.consent,
-          value: draft.improveTechnique.consent ? t.summary.boolean.yes : t.summary.boolean.no,
-        },
-      ];
-    }
-
-    if (selectedCard === 'addVariation') {
-      const form = draft.addVariation;
-      const stepCount = form.steps.filter((step) => hasContent(step.text)).length;
-      const tagLabels = form.categoryTags.map((tag) => categoryTagLabels[tag]);
-      const directionLabel = isVariationDirection(form.direction)
-        ? t.forms.variation.directionOptions[form.direction as VariationDirection]
-        : t.summary.notSpecified;
-      const stanceLabel = form.stance
-        ? t.newTechnique.hanmiOptions[form.stance]
-        : t.summary.notSpecified;
-      const summaryPreview = hasContent(form.summary)
-        ? form.summary.length > 90
-          ? `${form.summary.slice(0, 87)}…`
-          : form.summary
-        : '—';
-
-      return [
-        { label: t.summary.labels.type, value: cardContent[selectedCard].title },
-        { label: t.summary.labels.technique, value: findTechniqueName(form.relatedTechniqueId) },
-        { label: t.summary.labels.direction, value: directionLabel },
-        { label: t.summary.labels.hanmi, value: stanceLabel },
-        { label: t.summary.labels.trainer, value: hasContent(form.trainer) ? form.trainer : '—' },
-        { label: t.summary.labels.summary, value: summaryPreview },
-        { label: t.summary.labels.tags, value: tagLabels.length > 0 ? tagLabels.join(', ') : '—' },
-        {
-          label: t.summary.labels.level,
-          value: form.level ? getLevelLabel(locale, form.level) : t.summary.notSpecified,
-        },
-        {
-          label: t.summary.labels.steps,
-          value: stepCount > 0 ? formatCount(stepCount, t.summary.counts.documentedSteps) : '—',
-        },
-        {
-          label: t.summary.labels.credit,
-          value: hasContent(form.creditName) ? form.creditName : '—',
-        },
-        {
-          label: t.summary.labels.markAsBase,
-          value: form.markAsBase ? t.summary.boolean.yes : t.summary.boolean.no,
-        },
-        {
-          label: t.summary.labels.consent,
-          value: form.consent ? t.summary.boolean.yes : t.summary.boolean.no,
-        },
-      ];
-    }
-
-    if (selectedCard === 'newTechnique') {
-      const form = draft.newTechnique;
-      const entriesLabel = form.entries
-        ? ((t.newTechnique.entryLabels as Record<string, string>)[form.entries] ??
-          String(form.entries))
-        : t.summary.notSpecified;
-      const hanmiLabel = form.hanmi
-        ? t.newTechnique.hanmiOptions[form.hanmi]
-        : t.summary.notSpecified;
-      const attackLabel = form.attack
-        ? getTaxonomyLabel(locale, 'attack', form.attack)
-        : t.summary.notSpecified;
-      const categoryLabel = form.category
-        ? getTaxonomyLabel(locale, 'category', form.category)
-        : t.summary.notSpecified;
-      const weaponLabel = form.weapon
-        ? getTaxonomyLabel(locale, 'weapon', form.weapon)
-        : t.summary.notSpecified;
-      const duplicateLabel = duplicateMatches.length
-        ? formatCount(duplicateMatches.length, t.summary.counts.duplicates)
-        : t.newTechnique.duplicates.none;
-
-      return [
-        { label: t.summary.labels.type, value: cardContent[selectedCard].title },
-        { label: t.summary.labels.name, value: form.name || '—' },
-        { label: t.summary.labels.jpName, value: form.jpName || '—' },
-        { label: t.summary.labels.attack, value: attackLabel },
-        { label: t.summary.labels.category, value: categoryLabel },
-        { label: t.summary.labels.weapon, value: weaponLabel },
-        { label: t.summary.labels.entries, value: entriesLabel },
-        { label: t.summary.labels.hanmi, value: hanmiLabel },
-        { label: t.summary.labels.levelHint, value: form.levelHint || '—' },
-        { label: t.summary.labels.slug, value: slugPreview || '—' },
-        { label: t.summary.labels.summary, value: `${summaryLength}/${SUMMARY_MAX}` },
-        { label: t.summary.labels.credit, value: form.creditName || '—' },
-        { label: t.summary.labels.trainerCredit, value: form.trainerCredit || '—' },
-        {
-          label: t.summary.labels.markAsBase,
-          value: form.markAsBase ? t.summary.boolean.yes : t.summary.boolean.no,
-        },
-        {
-          label: t.summary.labels.consent,
-          value: form.consent ? t.summary.boolean.yes : t.summary.boolean.no,
-        },
-        {
-          label: t.summary.labels.duplicates,
-          value: duplicateLabel,
-        },
-      ];
-    }
-
-    if (selectedCard === 'appFeedback') {
-      const { area, feedback, screenshotUrl } = draft.appFeedback;
-      return [
-        { label: t.summary.labels.type, value: cardContent[selectedCard].title },
-        { label: t.summary.labels.area, value: area ? areaLabels[area] : t.summary.notSpecified },
-        {
-          label: t.summary.labels.feedback,
-          value: hasContent(feedback)
-            ? formatCount(feedback.length, t.summary.counts.characters)
-            : '—',
-        },
-        { label: t.summary.labels.link, value: hasContent(screenshotUrl) ? screenshotUrl : '—' },
-      ];
-    }
-
-    const { location, details, reproduction } = draft.bugReport;
-    const reproductionLines = reproduction
-      .split('\n')
-      .map((line) => line.trim())
-      .filter(Boolean);
-
-    return [
-      { label: t.summary.labels.type, value: cardContent[selectedCard].title },
-      { label: t.summary.labels.location, value: hasContent(location) ? location : '—' },
-      {
-        label: t.summary.labels.details,
-        value: hasContent(details) ? formatCount(details.length, t.summary.counts.characters) : '—',
-      },
-      {
-        label: t.summary.labels.reproduction,
-        value:
-          reproductionLines.length > 0
-            ? formatCount(reproductionLines.length, t.summary.counts.reproduction)
-            : '—',
-      },
-      // includeSystemInfo removed from summary per privacy change
-    ];
-  }, [
-    areaLabels,
-    cardContent,
-    categoryTagLabels,
-    draft,
-    duplicateMatches,
-    findTechniqueName,
-    improveSectionLabels,
-    locale,
-    selectedCard,
-    slugPreview,
-    summaryLength,
-    t.forms,
-    t.newTechnique,
-    t.summary,
-  ]);
-
-  const consentChecked =
-    selectedCard === 'improveTechnique'
-      ? draft.improveTechnique.consent
-      : selectedCard === 'addVariation'
-        ? draft.addVariation.consent
-        : selectedCard === 'newTechnique'
-          ? draft.newTechnique.consent
-          : null;
-
-  const consentWarningText =
-    selectedCard === 'newTechnique'
-      ? t.newTechnique.warnings.consentMissing
-      : (t.shared.validation?.consentMissing ?? t.newTechnique.warnings.consentMissing);
-
-  const handleConsentChange = (checked: boolean) => {
-    if (selectedCard === 'improveTechnique') {
-      updateImprove('consent', checked);
-    } else if (selectedCard === 'addVariation') {
-      updateVariation('consent', checked);
-    } else if (selectedCard === 'newTechnique') {
-      updateNewTechnique('consent', checked);
-    }
-  };
-
-  const handleSubmit = async () => {
-    if (!canSubmit) return;
-    let payload: unknown | null = null;
-    if (selectedCard === 'newTechnique') {
-      const {
-        payload: newTechniquePayload,
-        allTextEmpty,
-        stepsEmpty,
-      } = buildNewTechniqueSubmission(draft.newTechnique, {
-        locale,
-        entityId: slugPreview || undefined,
-      });
-      if (allTextEmpty && stepsEmpty && !softWarningShown) {
-        setSubmitError(
-          'Please add at least one step or a short summary. Click Submit again to proceed.',
-        );
-        setSoftWarningShown(true);
-        setSubmissionState('idle');
-        return;
-      }
-      payload = newTechniquePayload;
-    } else {
-      payload = buildFeedbackPayload(selectedCard, draft, {
-        slugPreview,
-        duplicateMatches,
-        locale,
-        findTechniqueName,
-      });
-    }
-
+  const handleSubmit = async (): Promise<void> => {
+    const payload = buildFeedbackSubmission(draft, locale);
     if (!payload) {
-      setSubmitError(t.newTechnique.errors.generic);
-      setSubmissionState('error');
+      setReviewOpen(false);
+      setShowErrors(true);
       return;
     }
 
-    // details length rule removed — allow shorter submissions
-
     setSubmissionState('submitting');
-    setSubmitError(null);
-    setSubmitResult(null);
-
+    setSubmitError('');
     try {
       const response = await fetch('/api/feedback', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-
-      const result = await response.json().catch(() => ({ ok: false }));
-
-      if (response.ok && result?.ok) {
-        setSubmitResult(result);
-        setSubmissionState('success');
-        // Clear only the active form fields so inputs become empty, but keep the selected card visible.
-        clearCurrentForm(selectedCard ?? undefined);
-      } else {
-        const message = result?.message || 'Feedback submission failed.';
-        setSubmitError(message);
-        setSubmitResult(result);
-        setSubmissionState('error');
-      }
+      const result = (await response.json().catch(() => null)) as
+        | { ok?: boolean; message?: string }
+        | null;
+      if (!response.ok || !result?.ok) throw new Error(result?.message || t.submitError);
+      window.localStorage.removeItem(FEEDBACK_DRAFT_KEY);
+      setReviewOpen(false);
+      setSubmissionState('success');
     } catch (error) {
-      console.error('[feedback-submit]', error);
-      setSubmitError('Network error while sending feedback.');
+      setSubmitError(error instanceof Error ? error.message : t.submitError);
       setSubmissionState('error');
     }
   };
 
-  const buildDownloadPayload = () => {
-    if (selectedCard === 'newTechnique') {
-      const { payload } = buildNewTechniqueSubmission(draft.newTechnique, {
-        locale,
-        entityId: slugPreview || undefined,
-      });
-      return payload;
+  const restart = (): void => {
+    setDraft(createFeedbackDraft());
+    setSubmissionState('idle');
+    setShowErrors(false);
+    setSubmitError('');
+  };
+
+  const renderTargetField = (): ReactElement => {
+    const { contentType, entityId } = draft.content;
+    const placeholder = t.content.existingPlaceholders[contentType];
+    if (
+      contentType === 'technique' ||
+      contentType === 'exercise' ||
+      contentType === 'routine' ||
+      contentType === 'form' ||
+      contentType === 'glossary'
+    ) {
+      const options =
+        contentType === 'technique'
+          ? techniqueOptions
+          : contentType === 'exercise'
+            ? exerciseOptions
+            : contentType === 'routine'
+              ? routineOptions
+              : contentType === 'form'
+                ? formOptions
+                : glossaryOptions;
+      return (
+        <Select
+          options={options}
+          value={entityId}
+          onChange={(value) => updateContent('entityId', value)}
+          placeholder={placeholder}
+          searchable
+          aria-label={t.content.existingLabel}
+        />
+      );
     }
-
-    const payload = buildFeedbackPayload(selectedCard, draft, {
-      slugPreview,
-      duplicateMatches,
-      locale,
-      findTechniqueName,
-    });
-    if (!payload) return null;
-    return payload;
-  };
-
-  const handleDownloadJson = () => {
-    const payload = buildDownloadPayload();
-    if (!payload) return;
-    const typeLabel =
-      selectedCard === 'newTechnique'
-        ? 'new-technique-v1'
-        : selectedCard === 'addVariation'
-          ? 'variation'
-          : selectedCard === 'improveTechnique'
-            ? 'improve'
-            : selectedCard === 'bugReport'
-              ? 'bug'
-              : selectedCard === 'appFeedback'
-                ? 'app'
-                : 'unknown';
-    const ts = new Date();
-    const pad = (n: number) => String(n).padStart(2, '0');
-    const timestamp = `${ts.getFullYear()}${pad(ts.getMonth() + 1)}${pad(ts.getDate())}-${pad(
-      ts.getHours(),
-    )}${pad(ts.getMinutes())}${pad(ts.getSeconds())}`;
-    const filename = `enso-feedback-${typeLabel}-${timestamp}.json`;
-    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-  };
-
-  const stepPlaceholder = (index: number) =>
-    t.placeholders.step.replace('{index}', String(index + 1));
-  const removeStepAria = (index: number) =>
-    t.builder.removeStepAria.replace('{index}', String(index + 1));
-
-  const renderImproveForm = (): ReactElement => {
-    const { techniqueId, sections, textBySection, source, credit, steps, media } =
-      draft.improveTechnique;
-
-    const toggleSection = (section: ImproveSection) => {
-      const isSelected = sections.includes(section);
-      const nextSections = isSelected
-        ? sections.filter((item) => item !== section)
-        : [...sections, section];
-      updateImprove('sections', nextSections);
-    };
-
-    const handleTextChange = (section: ImproveTextSection, value: string) => {
-      updateImprove('textBySection', {
-        ...textBySection,
-        [section]: value,
-      });
-    };
-
     return (
-      <motion.div
-        key="improve"
-        layout="position"
-        initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
-        animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
-        exit={prefersReducedMotion ? undefined : { opacity: 0, y: -16 }}
-        transition={formTransition}
-        className="space-y-6"
-      >
-        <section className="space-y-3">
-          <label className="text-sm font-medium text-[var(--color-text)]">
-            {t.forms.improve.techniqueLabel}
-          </label>
-          <Select
-            options={techniqueOptions}
-            value={techniqueId ?? ''}
-            onChange={(value) => updateImprove('techniqueId', value)}
-            searchable
-            placeholder={techniquePlaceholder}
-            className="w-full"
-          />
-        </section>
-
-        <section className="space-y-3">
-          <span className="text-sm font-semibold text-[var(--color-text)]">
-            {t.forms.improve.sectionsLabel}
-          </span>
-          <div className="flex flex-wrap gap-2">
-            {Object.keys(improveSectionLabels).map((section) => {
-              const typedSection = section as ImproveSection;
-              const isActive = sections.includes(typedSection);
-              return (
-                <label key={section} className="cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={isActive}
-                    onChange={() => toggleSection(typedSection)}
-                    className="sr-only"
-                  />
-                  <Chip
-                    label={improveSectionLabels[typedSection]}
-                    active={isActive}
-                    onClick={() => toggleSection(typedSection)}
-                    aria-pressed={isActive}
-                  />
-                </label>
-              );
-            })}
-          </div>
-        </section>
-
-        <AnimatePresence initial={false} mode="popLayout">
-          {sections.includes('steps') && (
-            <motion.section
-              key="steps"
-              layout="position"
-              initial={prefersReducedMotion ? false : { opacity: 0, y: 8 }}
-              animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
-              exit={prefersReducedMotion ? undefined : { opacity: 0, y: -8 }}
-              transition={itemTransition}
-              className="rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-4"
-            >
-              <StepBuilder
-                label={t.forms.improve.stepsLabel}
-                steps={steps}
-                onChange={(nextSteps) => updateImprove('steps', nextSteps)}
-                placeholderForIndex={stepPlaceholder}
-                helperText={t.hints.stepHelper}
-                addButtonLabel={t.buttons.addStep}
-                removeButtonAria={removeStepAria}
-              />
-            </motion.section>
-          )}
-        </AnimatePresence>
-
-        <AnimatePresence initial={false} mode="popLayout">
-          {sections
-            .filter((section): section is ImproveTextSection => section !== 'steps')
-            .map((section) => (
-              <motion.section
-                key={section}
-                layout="position"
-                initial={prefersReducedMotion ? false : { opacity: 0, y: 8 }}
-                animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
-                exit={prefersReducedMotion ? undefined : { opacity: 0, y: -8 }}
-                transition={itemTransition}
-                className="space-y-3"
-              >
-                <label className="text-sm font-medium text-[var(--color-text)]">
-                  {improveSectionLabels[section]}
-                </label>
-                <textarea
-                  rows={4}
-                  value={textBySection[section] ?? ''}
-                  onChange={(event) => handleTextChange(section, event.target.value)}
-                  placeholder={t.forms.improve.textPlaceholder}
-                  className="w-full rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-3 text-sm focus-halo focus:outline-none"
-                />
-              </motion.section>
-            ))}
-        </AnimatePresence>
-
-        <section className="space-y-3">
-          <span className="text-sm font-semibold text-[var(--color-text)]">
-            {t.forms.improve.mediaLabel}
-          </span>
-          <MediaManager
-            media={media}
-            onChange={(items) => updateImprove('media', items)}
-            placeholder={t.placeholders.mediaUrl}
-            triggerLabel={t.buttons.addMediaTrigger}
-            addLabel={t.buttons.addAction}
-            cancelLabel={t.buttons.cancel}
-            removeLabel={t.buttons.remove}
-          />
-        </section>
-
-        <section className="grid gap-4 sm:grid-cols-2">
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-[var(--color-text)]">
-              {t.forms.improve.sourceLabel}
-            </label>
-            <input
-              type="text"
-              value={source}
-              onChange={(event) => updateImprove('source', event.target.value)}
-              placeholder={t.placeholders.source}
-              className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus-halo focus:outline-none"
-            />
-          </div>
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-[var(--color-text)]">
-              {t.forms.improve.creditLabel}
-            </label>
-            <input
-              type="text"
-              value={credit}
-              onChange={(event) => updateImprove('credit', event.target.value)}
-              placeholder={t.placeholders.credit}
-              className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus-halo focus:outline-none"
-            />
-          </div>
-        </section>
-      </motion.div>
+      <input
+        value={entityId}
+        onChange={(event) => updateContent('entityId', event.target.value)}
+        placeholder={placeholder}
+        className={inputClass(showErrors && !validation.target)}
+      />
     );
   };
 
-  const renderVariationForm = (): ReactElement => {
-    const {
-      relatedTechniqueId,
-      direction,
-      stance,
-      trainer,
-      summary,
-      categoryTags,
-      level,
-      steps,
-      keyPoints,
-      commonMistakes,
-      ukeInstructions,
-      media,
-      context,
-      creditName,
-      trainerCredit,
-      markAsBase,
-    } = draft.addVariation;
-
-    const directionOptions: SelectOption<string>[] = [
-      { value: 'none', label: t.options.selectDirection },
-      { value: 'irimi', label: t.forms.variation.directionOptions.irimi },
-      { value: 'tenkan', label: t.forms.variation.directionOptions.tenkan },
-      { value: 'omote', label: t.forms.variation.directionOptions.omote },
-      { value: 'ura', label: t.forms.variation.directionOptions.ura },
-    ];
-
-    const stanceOptions: SelectOption<string>[] = [
-      { value: 'none', label: t.options.selectHanmi },
-      { value: 'ai-hanmi', label: t.newTechnique.hanmiOptions['ai-hanmi'] },
-      { value: 'gyaku-hanmi', label: t.newTechnique.hanmiOptions['gyaku-hanmi'] },
-    ];
-
-    const toggleTag = (tag: CategoryTag) => {
-      const isActive = categoryTags.includes(tag);
-      const nextTags = isActive
-        ? categoryTags.filter((item) => item !== tag)
-        : [...categoryTags, tag];
-      updateVariation('categoryTags', nextTags);
-    };
-
-    const handleDirectionChange = (value: string) => {
-      updateVariation('direction', value === 'none' ? '' : (value as VariationForm['direction']));
-    };
-
-    const handleStanceChange = (value: string) => {
-      updateVariation('stance', value === 'none' ? null : (value as Hanmi));
-    };
-
-    const handleListItemChange = (
-      field: 'keyPoints' | 'commonMistakes',
-      index: number,
-      value: string,
-    ) => {
-      const source = field === 'keyPoints' ? keyPoints : commonMistakes;
-      const next = [...source];
-      next[index] = value;
-      updateVariation(field, next);
-    };
-
-    const renderBulletList = (
-      field: 'keyPoints' | 'commonMistakes',
-      label: string,
-      placeholder: string,
-    ) => {
-      const items = field === 'keyPoints' ? keyPoints : commonMistakes;
-      return (
-        <div className="space-y-2">
-          <h3 className="text-sm font-semibold text-[var(--color-text)]">{label}</h3>
-          <div className="space-y-2">
-            {items.map((value, index) => (
-              <div key={`${field}-${index}`} className="flex items-center gap-3">
-                <span className="w-6 text-center text-sm text-subtle">{index + 1}.</span>
-                <input
-                  value={value}
-                  onChange={(event) => handleListItemChange(field, index, event.target.value)}
-                  placeholder={placeholder}
-                  className="flex-1 rounded-xl border surface-border bg-[var(--color-surface)] px-3 py-2 text-sm focus-halo focus:outline-none"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-      );
-    };
-
-    const markAsBaseHelp = t.shared.help?.markAsBase;
-
+  const renderVariantFields = (): ReactElement => {
+    const key = draft.content.variantKey;
+    const setVariant = (patch: Partial<typeof key>): void =>
+      updateContent('variantKey', { ...key, ...patch });
     return (
-      <motion.div
-        key="variation"
-        layout="position"
-        initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
-        animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
-        exit={prefersReducedMotion ? undefined : { opacity: 0, y: -16 }}
-        transition={formTransition}
-        className="space-y-8"
-      >
-        <section className="space-y-4">
-          <h2 className="text-sm font-semibold text-[var(--color-text)]">
-            {t.forms.variation.sections.details}
-          </h2>
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-[var(--color-text)]">
-              {t.forms.variation.relatedTechniqueLabel}
-            </label>
+      <div className="rounded-2xl border surface-border bg-[var(--color-surface)] p-4 space-y-4">
+        <h3 className="text-sm font-semibold">{t.content.variantTitle}</h3>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <Field label={t.content.hanmi}>
             <Select
-              options={techniqueOptions}
-              value={relatedTechniqueId ?? ''}
-              onChange={(value) => updateVariation('relatedTechniqueId', value)}
-              searchable
-              placeholder={techniquePlaceholder}
+              value={key.hanmi}
+              onChange={(value) => setVariant({ hanmi: value as typeof key.hanmi })}
+              options={[
+                { value: 'ai-hanmi', label: 'Ai-hanmi' },
+                { value: 'gyaku-hanmi', label: 'Gyaku-hanmi' },
+              ]}
             />
-          </div>
-          <div className="grid gap-4 md:grid-cols-3">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-[var(--color-text)]">
-                {t.forms.variation.directionLabel}
-              </label>
-              <Select
-                options={directionOptions}
-                value={direction || 'none'}
-                onChange={handleDirectionChange}
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-[var(--color-text)]">
-                {t.forms.variation.stanceLabel}
-              </label>
-              <Select
-                options={stanceOptions}
-                value={stance ?? 'none'}
-                onChange={handleStanceChange}
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-[var(--color-text)]">
-                {t.forms.variation.levelLabel}
-              </label>
-              <Select
-                options={levelOptions}
-                value={level ?? 'none'}
-                onChange={(value) =>
-                  updateVariation('level', value === 'none' ? null : (value as Grade))
-                }
-              />
-            </div>
-          </div>
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-[var(--color-text)]">
-              {t.forms.variation.trainerLabel}
-            </label>
+          </Field>
+          <Field label={t.content.direction}>
+            <Select
+              value={key.direction}
+              onChange={(value) => setVariant({ direction: value as typeof key.direction })}
+              options={[
+                { value: 'irimi', label: 'Irimi' },
+                { value: 'tenkan', label: 'Tenkan' },
+                { value: 'omote', label: 'Omote' },
+                { value: 'ura', label: 'Ura' },
+              ]}
+            />
+          </Field>
+          <Field label={t.content.weapon}>
+            <Select
+              value={key.weapon}
+              onChange={(value) => setVariant({ weapon: value as typeof key.weapon })}
+              options={[
+                { value: 'empty', label: getTaxonomyLabel(locale, 'weapon', 'empty-hand') },
+                { value: 'bokken', label: 'Bokken' },
+                { value: 'jo', label: 'Jō' },
+                { value: 'tanto', label: 'Tantō' },
+              ]}
+            />
+          </Field>
+          <Field label={t.content.version}>
             <input
-              type="text"
-              value={trainer}
-              onChange={(event) => updateVariation('trainer', event.target.value)}
-              placeholder={t.placeholders.variationTrainer}
-              className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus-halo focus:outline-none"
+              value={key.versionId ?? ''}
+              onChange={(event) => setVariant({ versionId: event.target.value || null })}
+              className={inputClass()}
             />
-          </div>
-        </section>
-
-        <section className="space-y-4">
-          <h2 className="text-sm font-semibold text-[var(--color-text)]">
-            {t.forms.variation.sections.summary}
-          </h2>
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-[var(--color-text)]">
-              {t.forms.variation.summaryLabel}
-            </label>
-            <textarea
-              rows={4}
-              value={summary}
-              onChange={(event) => updateVariation('summary', event.target.value)}
-              placeholder={t.placeholders.variationSummary}
-              className="w-full rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-3 text-sm focus-halo focus:outline-none"
-            />
-          </div>
-          <div className="space-y-3">
-            <h3 className="text-sm font-medium text-[var(--color-text)]">
-              {t.forms.variation.categoryTagsLabel}
-            </h3>
-            <div className="flex flex-wrap gap-2">
-              {categoryTagOrder.map((tag) => {
-                const isActive = categoryTags.includes(tag);
-                return (
-                  <label key={tag} className="cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={isActive}
-                      onChange={() => toggleTag(tag)}
-                      className="sr-only"
-                    />
-                    <Chip
-                      label={categoryTagLabels[tag]}
-                      active={isActive}
-                      onClick={() => toggleTag(tag)}
-                      aria-pressed={isActive}
-                    />
-                  </label>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-
-        <section className="space-y-4">
-          <h2 className="text-sm font-semibold text-[var(--color-text)]">
-            {t.forms.variation.sections.steps}
-          </h2>
-          <div className="rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-4">
-            <StepBuilder
-              label={t.forms.variation.stepsLabel}
-              steps={steps}
-              onChange={(nextSteps) => updateVariation('steps', nextSteps)}
-              placeholderForIndex={stepPlaceholder}
-              helperText={t.hints.stepHelper}
-              addButtonLabel={t.buttons.addStep}
-              removeButtonAria={removeStepAria}
-            />
-          </div>
-        </section>
-
-        <section className="space-y-4">
-          <h2 className="text-sm font-semibold text-[var(--color-text)]">
-            {t.forms.variation.sections.insights}
-          </h2>
-          <div className="grid gap-6 md:grid-cols-2">
-            {renderBulletList(
-              'keyPoints',
-              t.forms.variation.keyPointsLabel,
-              t.placeholders.variationKeyPoint,
-            )}
-            {renderBulletList(
-              'commonMistakes',
-              t.forms.variation.commonMistakesLabel,
-              t.placeholders.variationMistake,
-            )}
-          </div>
-        </section>
-
-        <section className="space-y-4">
-          <h2 className="text-sm font-semibold text-[var(--color-text)]">
-            {t.forms.variation.sections.uke}
-          </h2>
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-[var(--color-text)]">
-              {t.forms.variation.ukeLabel}
-            </label>
-            <textarea
-              rows={3}
-              value={ukeInstructions}
-              onChange={(event) => updateVariation('ukeInstructions', event.target.value)}
-              placeholder={t.placeholders.variationUke}
-              className="w-full rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-3 text-sm focus-halo focus:outline-none"
-            />
-          </div>
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-[var(--color-text)]">
-              {t.forms.variation.contextLabel}
-            </label>
-            <textarea
-              rows={3}
-              value={context}
-              onChange={(event) => updateVariation('context', event.target.value)}
-              placeholder={t.placeholders.variationContext}
-              className="w-full rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-3 text-sm focus-halo focus:outline-none"
-            />
-          </div>
-        </section>
-
-        <section className="space-y-4">
-          <h2 className="text-sm font-semibold text-[var(--color-text)]">
-            {t.shared.sections.media}
-          </h2>
-          <MediaManager
-            media={media}
-            onChange={(items) => updateVariation('media', items)}
-            placeholder={t.placeholders.mediaUrl}
-            triggerLabel={t.buttons.addMediaTrigger}
-            addLabel={t.buttons.addAction}
-            cancelLabel={t.buttons.cancel}
-            removeLabel={t.buttons.remove}
-          />
-        </section>
-
-        <section className="space-y-4">
-          <h2 className="text-sm font-semibold text-[var(--color-text)]">
-            {t.shared.sections.contributor}
-          </h2>
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-[var(--color-text)]">
-                {t.shared.labels.contributorName}
-              </label>
-              <input
-                type="text"
-                value={creditName}
-                onChange={(event) => updateVariation('creditName', event.target.value)}
-                placeholder={t.placeholders.contributorName}
-                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus-halo focus:outline-none"
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-[var(--color-text)]">
-                {t.shared.labels.trainerCredit}
-              </label>
-              <input
-                type="text"
-                value={trainerCredit}
-                onChange={(event) => updateVariation('trainerCredit', event.target.value)}
-                placeholder={t.placeholders.variationTrainerCredit}
-                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus-halo focus:outline-none"
-              />
-            </div>
-          </div>
-          <label className="flex items-center gap-3 text-sm text-[var(--color-text)]">
-            <input
-              type="checkbox"
-              checked={markAsBase}
-              onChange={(event) => updateVariation('markAsBase', event.target.checked)}
-              className="h-4 w-4 rounded border surface-border"
-            />
-            {t.shared.labels.markAsBase}
-          </label>
-          {markAsBaseHelp && <p className="text-xs text-subtle">{markAsBaseHelp}</p>}
-        </section>
-      </motion.div>
+          </Field>
+        </div>
+      </div>
     );
   };
 
-  const renderNewTechniqueForm = (): ReactElement => {
-    const form = draft.newTechnique;
-
-    const hanmiOptions: SelectOption<string>[] = [
-      { value: 'ai-hanmi', label: t.newTechnique.hanmiOptions['ai-hanmi'] },
-      { value: 'gyaku-hanmi', label: t.newTechnique.hanmiOptions['gyaku-hanmi'] },
-    ];
-
-    const entrySelectOptions: SelectOption<string>[] = [
-      { value: '', label: t.options.notSpecified },
-      { value: 'irimi', label: t.newTechnique.entryLabels.irimi },
-      { value: 'tenkan', label: t.newTechnique.entryLabels.tenkan },
-      { value: 'omote', label: 'Omote' },
-      { value: 'ura', label: 'Ura' },
-    ];
-
-    const handleListItemChange = (
-      field: 'ukeNotes' | 'keyPoints' | 'commonMistakes',
-      index: number,
-      value: string,
-    ) => {
-      const next = [...form[field]];
-      if (index >= 0 && index < next.length) {
-        next[index] = value;
-        updateNewTechnique(field, next);
-      }
-    };
-
-    const renderList = (
-      field: 'ukeNotes' | 'keyPoints' | 'commonMistakes',
-      label: string,
-      placeholder: string,
-    ) => {
-      const items = form[field];
-      return (
-        <div className="space-y-2">
-          <h3 className="text-sm font-semibold text-[var(--color-text)]">{label}</h3>
-          <div className="space-y-2">
-            {items.map((value, index) => (
-              <div key={`${field}-${index}`} className="flex items-center gap-3">
-                <span className="text-sm text-subtle w-6 text-center">{index + 1}.</span>
-                <input
-                  value={value}
-                  onChange={(event) => handleListItemChange(field, index, event.target.value)}
-                  placeholder={placeholder}
-                  className="flex-1 rounded-xl border surface-border bg-[var(--color-surface)] px-3 py-2 text-sm focus-halo focus:outline-none"
+  const renderStructuredContent = (): ReactElement => (
+    <details className="group rounded-2xl border surface-border bg-[var(--color-surface)]">
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-4 sm:p-5">
+        <span>
+          <span className="block text-sm font-semibold">{t.content.moreTitle}</span>
+          <span className="mt-1 block text-xs text-subtle">{t.content.moreDescription}</span>
+        </span>
+        <ChevronDown className="h-5 w-5 text-subtle transition-transform group-open:rotate-180" />
+      </summary>
+      <div className="border-t surface-border p-4 sm:p-5 space-y-6">
+        {draft.content.contentType === 'technique' && draft.content.mode === 'new' && (
+          <div className="space-y-4">
+            <h3 className="text-sm font-semibold">{t.content.taxonomyTitle}</h3>
+            <div className="grid gap-4 sm:grid-cols-3">
+              <Field label={t.content.attack}>
+                <Select
+                  options={attackOptions}
+                  value={draft.content.attack}
+                  onChange={(value) => updateContent('attack', value)}
+                  placeholder="—"
                 />
-              </div>
-            ))}
+              </Field>
+              <Field label={t.content.category}>
+                <Select
+                  options={categoryOptions}
+                  value={draft.content.category}
+                  onChange={(value) => updateContent('category', value)}
+                  placeholder="—"
+                />
+              </Field>
+              <Field label={t.content.level}>
+                <Select
+                  options={levelOptions}
+                  value={draft.content.level}
+                  onChange={(value) => updateContent('level', value as Grade)}
+                  placeholder="—"
+                />
+              </Field>
+            </div>
           </div>
+        )}
+        {draft.content.contentType === 'routine' ? (
+          <div className="space-y-6">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field label={t.content.routineCategory}>
+                <Select
+                  value={draft.content.routineCategory}
+                  onChange={(value) => updateContent('routineCategory', value)}
+                  placeholder="—"
+                  options={(Object.keys(routineCollections) as LibraryRoutine[]).map((value) => ({
+                    value,
+                    label:
+                      copy.examsPage.routines.find((item) => item.id === value)?.title ?? value,
+                  }))}
+                />
+              </Field>
+              <Field label={t.content.estimatedMinutes}>
+                <input
+                  type="number"
+                  min="1"
+                  max="600"
+                  value={draft.content.estimatedMinutes}
+                  onChange={(event) => updateContent('estimatedMinutes', event.target.value)}
+                  className={inputClass()}
+                />
+              </Field>
+            </div>
+            <ListEditor
+              label={t.content.routineExercises}
+              addLabel={t.content.addItem}
+              values={draft.content.routineExercises}
+              placeholder={t.content.routineExercisePlaceholder}
+              onChange={(values) => updateContent('routineExercises', values)}
+            />
+          </div>
+        ) : (
+          <ListEditor
+            label={t.content.steps}
+            addLabel={t.content.addStep}
+            values={draft.content.steps}
+            placeholder={t.content.steps}
+            onChange={(values) => updateContent('steps', values)}
+          />
+        )}
+        {draft.content.contentType === 'technique' && (
+          <Field label={t.content.uke}>
+            <textarea
+              rows={3}
+              value={draft.content.uke}
+              onChange={(event) => updateContent('uke', event.target.value)}
+              className={inputClass()}
+            />
+          </Field>
+        )}
+        {(draft.content.contentType === 'technique' ||
+          draft.content.contentType === 'exercise' ||
+          draft.content.contentType === 'form') && (
+          <div className="grid gap-6 md:grid-cols-2">
+            <ListEditor
+              label={t.content.keyPoints}
+              addLabel={t.content.addItem}
+              values={draft.content.keyPoints}
+              placeholder={t.content.keyPoints}
+              onChange={(values) => updateContent('keyPoints', values)}
+            />
+            <ListEditor
+              label={t.content.mistakes}
+              addLabel={t.content.addItem}
+              values={draft.content.commonMistakes}
+              placeholder={t.content.mistakes}
+              onChange={(values) => updateContent('commonMistakes', values)}
+            />
+          </div>
+        )}
+        <Field label={t.content.context}>
+          <textarea
+            rows={3}
+            value={draft.content.context}
+            onChange={(event) => updateContent('context', event.target.value)}
+            className={inputClass()}
+          />
+        </Field>
+        <div className="grid gap-4 md:grid-cols-2">
+          <Field label={t.content.attribution}>
+            <input
+              value={draft.content.attribution}
+              onChange={(event) => updateContent('attribution', event.target.value)}
+              className={inputClass()}
+            />
+          </Field>
+          <Field label={t.content.media} error={showErrors && !validation.url}>
+            <input
+              type="url"
+              value={draft.content.mediaUrl}
+              onChange={(event) => updateContent('mediaUrl', event.target.value)}
+              placeholder="https://"
+              className={inputClass(showErrors && !validation.url)}
+            />
+            {showErrors && !validation.url && <p className="text-xs text-red-500">{t.invalidUrl}</p>}
+          </Field>
         </div>
-      );
-    };
+        <Field label={t.content.contributor}>
+          <input
+            value={draft.content.contributorName}
+            onChange={(event) => updateContent('contributorName', event.target.value)}
+            className={inputClass()}
+          />
+        </Field>
+      </div>
+    </details>
+  );
 
-    const summaryLabel = summaryExceeded
-      ? t.newTechnique.hints.summaryExceeded.replace(
-          '{remaining}',
-          String(Math.abs(summaryRemaining)),
-        )
-      : t.newTechnique.hints.summaryRemaining.replace('{remaining}', String(summaryRemaining));
-
-    return (
-      <motion.div
-        key="newTechnique"
-        layout="position"
-        initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
-        animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
-        exit={prefersReducedMotion ? undefined : { opacity: 0, y: -16 }}
-        transition={formTransition}
-        className="space-y-8"
-      >
-        <section className="space-y-4">
-          <h2 className="text-sm font-semibold text-[var(--color-text)]">
-            {t.newTechnique.sections.details}
-          </h2>
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-[var(--color-text)]" htmlFor="nt-name">
-                {t.newTechnique.fields.nameSingle}
-              </label>
-              <input
-                id="nt-name"
-                value={form.name}
-                onChange={(event) => updateNewTechnique('name', event.target.value)}
-                placeholder={t.placeholders.newTechniqueName}
-                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus-halo focus:outline-none"
-              />
-              {/* Inline duplicates notice under name */}
-              <div
+  const renderContentFlow = (): ReactElement => (
+    <div className="space-y-6">
+      <Field label={t.content.typeLabel}>
+        <div className="flex flex-wrap gap-2">
+          {contentTypes.map((contentType) => {
+            const selected = draft.content.contentType === contentType;
+            return (
+              <button
+                key={contentType}
+                type="button"
+                onClick={() => {
+                  setDraft((current) => ({
+                    ...current,
+                    content: {
+                      ...current.content,
+                      contentType,
+                      entityId: '',
+                      includeVariant: false,
+                      attack: '',
+                      category: '',
+                      level: '',
+                      routineCategory: '',
+                      estimatedMinutes: '',
+                      routineExercises: [],
+                      steps: [],
+                      uke: '',
+                      keyPoints: [],
+                      commonMistakes: [],
+                    },
+                  }));
+                  setShowErrors(false);
+                }}
+                aria-pressed={selected}
                 className={classNames(
-                  'mt-2 rounded-xl border px-3 py-2 text-xs',
-                  'surface-border bg-[var(--color-surface)]',
+                  'rounded-full border px-3 py-2 text-sm transition-soft',
+                  selected
+                    ? 'border-[var(--color-text)] bg-[var(--color-surface-hover)]'
+                    : 'surface-border bg-[var(--color-surface)] surface-hover',
                 )}
               >
-                {duplicateMatches.length === 0 ? (
-                  <span className="text-subtle">{t.newTechnique.duplicates.noneHint}</span>
-                ) : (
-                  <div className="space-y-2">
-                    <p className="text-[var(--color-text)]">
-                      {t.newTechnique.duplicates.possibleMatches}
-                    </p>
-                    <ul className="space-y-1">
-                      {duplicateMatches.slice(0, 3).map((tech) => (
-                        <li key={`dup-inline-${tech.id}`} className="text-[var(--color-text)]">
-                          <span className="font-medium">{tech.name[locale] || tech.name.en}</span>
-                          <span className="text-subtle"> — {tech.slug}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    {duplicateMatches.length > 3 && (
-                      <p className="text-subtle">+{duplicateMatches.length - 3} more…</p>
-                    )}
-                    <button
-                      type="button"
-                      onClick={() => handleTypeChange('addVariation')}
-                      className="text-[var(--color-accent, var(--color-text))] hover:underline"
-                    >
-                      {t.newTechnique.duplicates.switch}
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-[var(--color-text)]" htmlFor="nt-jp-name">
-                {t.newTechnique.fields.jpName}
-              </label>
-              <input
-                id="nt-jp-name"
-                value={form.jpName}
-                onChange={(event) => updateNewTechnique('jpName', event.target.value)}
-                placeholder={t.placeholders.newTechniqueKanji}
-                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus-halo focus:outline-none"
-              />
-            </div>
-          </div>
-        </section>
+                {t.content.types[contentType]}
+              </button>
+            );
+          })}
+        </div>
+      </Field>
 
-        <section className="space-y-4">
-          <h2 className="text-sm font-semibold text-[var(--color-text)]">
-            {t.newTechnique.sections.taxonomy}
-          </h2>
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-[var(--color-text)]">
-                {t.newTechnique.fields.attack}
-              </label>
-              <Select
-                options={attackOptions}
-                value={form.attack ?? ''}
-                onChange={(value) => updateNewTechnique('attack', value || null)}
-                placeholder={t.placeholders.newTechniqueAttack}
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-[var(--color-text)]">
-                {t.newTechnique.fields.category}
-              </label>
-              <Select
-                options={categoryOptions}
-                value={form.category ?? ''}
-                onChange={(value) => updateNewTechnique('category', value || null)}
-                placeholder={t.placeholders.newTechniqueCategory}
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-[var(--color-text)]">
-                {t.newTechnique.fields.weapon}
-              </label>
-              <Select
-                options={weaponOptions}
-                value={form.weapon ?? ''}
-                onChange={(value) => updateNewTechnique('weapon', value || null)}
-                placeholder={t.placeholders.newTechniqueWeapon}
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-[var(--color-text)]">
-                {t.newTechnique.fields.hanmi}
-              </label>
-              <Select
-                options={hanmiOptions}
-                value={form.hanmi ?? ''}
-                onChange={(value) =>
-                  updateNewTechnique(
-                    'hanmi',
-                    value === 'ai-hanmi' || value === 'gyaku-hanmi' ? (value as Hanmi) : null,
-                  )
-                }
-                placeholder={t.placeholders.newTechniqueHanmi}
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-[var(--color-text)]">
-                {t.newTechnique.fields.entries}
-              </label>
-              <Select
-                options={entrySelectOptions}
-                value={form.entries ?? ''}
-                onChange={(value) => updateNewTechnique('entries', (value as Entry) || '')}
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-[var(--color-text)]">
-                {t.newTechnique.fields.levelHint}
-              </label>
-              <input
-                value={form.levelHint}
-                onChange={(event) => updateNewTechnique('levelHint', event.target.value)}
-                placeholder={t.placeholders.newTechniqueLevel}
-                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus-halo focus:outline-none"
-              />
-            </div>
-          </div>
-          {slugPreview && (
-            <p className="text-xs text-subtle">
-              {t.newTechnique.fields.slugPreview}: <span className="font-mono">{slugPreview}</span>
-            </p>
-          )}
-          {unusualCombo && (
-            <div className="rounded-lg border border-dashed surface-border px-3 py-2 text-xs text-subtle">
-              {t.newTechnique.hints.unusualCombo}
-            </div>
-          )}
-        </section>
-
-        <section className="space-y-3">
-          <label className="text-sm font-medium text-[var(--color-text)]" htmlFor="nt-summary">
-            {t.newTechnique.fields.summarySingle}
-          </label>
-          <textarea
-            id="nt-summary"
-            rows={4}
-            value={form.summary}
-            onChange={(event) => updateNewTechnique('summary', event.target.value)}
-            placeholder={t.placeholders.newTechniqueSummary}
-            className={classNames(
-              'w-full rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-3 text-sm focus-halo focus:outline-none',
-              summaryExceeded && 'border-[var(--color-error, #b91c1c)]',
-            )}
-          />
-          <div className="flex justify-between text-xs">
-            <span
+      <Field label={t.content.modeLabel}>
+        <div className="grid grid-cols-2 rounded-xl border surface-border bg-[var(--color-surface)] p-1">
+          {(['edit', 'new'] as FeedbackContentMode[]).map((mode) => (
+            <button
+              key={mode}
+              type="button"
+              onClick={() => updateContent('mode', mode)}
+              aria-pressed={draft.content.mode === mode}
               className={classNames(
-                summaryExceeded ? 'text-[var(--color-error, #b91c1c)]' : 'text-subtle',
+                'rounded-lg px-3 py-2 text-sm transition-soft',
+                draft.content.mode === mode
+                  ? 'bg-[var(--color-surface-hover)] font-medium shadow-sm'
+                  : 'text-subtle',
               )}
             >
-              {summaryLabel}
-            </span>
-            <span
-              className={classNames(
-                summaryExceeded ? 'text-[var(--color-error, #b91c1c)]' : 'text-subtle',
-              )}
-            >
-              {summaryLength}/{SUMMARY_MAX}
-            </span>
-          </div>
-          {summaryEmpty && (
-            <p className="text-xs text-[var(--color-error, #b91c1c)]">
-              {t.newTechnique.warnings.summaryMissingSingle}
-            </p>
-          )}
-        </section>
+              {t.content.modes[mode]}
+            </button>
+          ))}
+        </div>
+      </Field>
 
-        <section className="space-y-3">
-          <h2 className="text-sm font-semibold text-[var(--color-text)]">
-            {t.newTechnique.sections.steps}
-          </h2>
-          <StepBuilder
-            steps={form.steps}
-            onChange={(nextSteps) => updateNewTechnique('steps', nextSteps)}
-            placeholderForIndex={stepPlaceholder}
-            helperText={t.hints.stepHelper}
-            addButtonLabel={t.buttons.addStep}
-            removeButtonAria={removeStepAria}
-          />
-        </section>
-
-        <section className="space-y-4">
-          <h2 className="text-sm font-semibold text-[var(--color-text)]">
-            {t.newTechnique.sections.uke}
-          </h2>
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-[var(--color-text)]">
-              {t.newTechnique.fields.ukeRoleSingle}
-            </label>
-            <input
-              value={form.ukeRole}
-              onChange={(event) => updateNewTechnique('ukeRole', event.target.value)}
-              placeholder={t.placeholders.newTechniqueUkeRole}
-              className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus-halo focus:outline-none"
-            />
-          </div>
-          {renderList(
-            'ukeNotes',
-            t.newTechnique.fields.ukeNotesSingle,
-            t.placeholders.newTechniqueUkeNote,
-          )}
-        </section>
-
-        <section className="space-y-4">
-          <h2 className="text-sm font-semibold text-[var(--color-text)]">
-            {t.newTechnique.sections.insights}
-          </h2>
-          <div className="grid gap-6 md:grid-cols-2">
-            {renderList(
-              'keyPoints',
-              t.newTechnique.fields.keyPointsSingle,
-              t.placeholders.newTechniqueKeyPoint,
-            )}
-            {renderList(
-              'commonMistakes',
-              t.newTechnique.fields.commonMistakesSingle,
-              t.placeholders.newTechniqueMistake,
-            )}
-          </div>
-        </section>
-
-        <section className="space-y-3">
-          <h2 className="text-sm font-semibold text-[var(--color-text)]">
-            {t.newTechnique.sections.media}
-          </h2>
-          <MediaManager
-            media={form.media}
-            onChange={(items) => updateNewTechnique('media', items)}
-            placeholder={t.placeholders.mediaUrl}
-            triggerLabel={t.buttons.addMediaTrigger}
-            addLabel={t.buttons.addAction}
-            cancelLabel={t.buttons.cancel}
-            removeLabel={t.buttons.remove}
-          />
-        </section>
-
-        <section className="space-y-2">
-          <label className="text-sm font-medium text-[var(--color-text)]">
-            {t.summary.labels.source}
-          </label>
+      {draft.content.mode === 'edit' ? (
+        <Field label={t.content.existingLabel} error={showErrors && !validation.target}>
+          {renderTargetField()}
+        </Field>
+      ) : (
+        <Field label={t.content.nameLabel} error={showErrors && !validation.target}>
           <input
-            value={form.sources}
-            onChange={(event) => updateNewTechnique('sources', event.target.value)}
-            placeholder={t.placeholders.newTechniqueSources}
-            className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus-halo focus:outline-none"
+            value={draft.content.contentName}
+            onChange={(event) => updateContent('contentName', event.target.value)}
+            placeholder={t.content.namePlaceholder}
+            className={inputClass(showErrors && !validation.target)}
           />
-        </section>
+        </Field>
+      )}
 
-        <section className="space-y-4">
-          <h2 className="text-sm font-semibold text-[var(--color-text)]">
-            {t.newTechnique.sections.contributor}
-          </h2>
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-[var(--color-text)]">
-                {t.shared.labels.contributorName}
-              </label>
-              <input
-                value={form.creditName}
-                onChange={(event) => updateNewTechnique('creditName', event.target.value)}
-                placeholder={t.placeholders.contributorName}
-                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus-halo focus:outline-none"
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-[var(--color-text)]">
-                {t.shared.labels.trainerCredit}
-              </label>
-              <input
-                value={form.trainerCredit}
-                onChange={(event) => updateNewTechnique('trainerCredit', event.target.value)}
-                placeholder={t.placeholders.newTechniqueLineage}
-                className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus-halo focus:outline-none"
-              />
-            </div>
-          </div>
-          <label className="flex items-center gap-3 text-sm text-[var(--color-text)]">
+      {draft.content.contentType === 'technique' && draft.content.mode === 'edit' && (
+        <div className="space-y-4">
+          <label className="flex cursor-pointer items-center gap-3 text-sm">
             <input
               type="checkbox"
-              checked={form.markAsBase}
-              onChange={(event) => updateNewTechnique('markAsBase', event.target.checked)}
+              checked={draft.content.includeVariant}
+              onChange={(event) => updateContent('includeVariant', event.target.checked)}
               className="h-4 w-4 rounded border surface-border"
             />
-            {t.shared.labels.markAsBase}
+            {t.content.variantToggle}
           </label>
-          {t.shared.help?.markAsBase && (
-            <p className="text-xs text-subtle">{t.shared.help.markAsBase}</p>
-          )}
-        </section>
+          {draft.content.includeVariant && renderVariantFields()}
+        </div>
+      )}
 
-        {/* Removed bottom duplicates block; now shown inline under name and in Summary */}
-      </motion.div>
-    );
-  };
-
-  const renderAppFeedbackForm = (): ReactElement => {
-    const { area, title, feedback } = draft.appFeedback;
-    const areaOptions = (Object.keys(areaLabels) as AppArea[]).map((value) => ({
-      value,
-      label: areaLabels[value],
-    }));
-
-    return (
-      <motion.div
-        key="app"
-        layout="position"
-        initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
-        animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
-        exit={prefersReducedMotion ? undefined : { opacity: 0, y: -16 }}
-        transition={formTransition}
-        className="space-y-6"
+      <Field
+        label={
+          draft.content.mode === 'new' ? t.content.detailsNewLabel : t.content.detailsLabel
+        }
+        error={showErrors && !validation.details}
       >
-        <section className="space-y-2">
-          <label className="text-sm font-medium text-[var(--color-text)]">
-            {t.forms.app.titleLabel}
-          </label>
-          <input
-            type="text"
-            value={title ?? ''}
-            onChange={(event) => updateAppFeedback('title', event.target.value)}
-            placeholder={t.placeholders.appTitle}
-            className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus-halo focus:outline-none"
-          />
-        </section>
-        <section className="space-y-3">
-          <label className="text-sm font-medium text-[var(--color-text)]">
-            {t.forms.app.areaLabel}
-          </label>
-          <Select
-            options={areaOptions}
-            value={area ?? ''}
-            onChange={(value) => updateAppFeedback('area', value as AppArea)}
-            placeholder={t.options.selectArea}
-          />
-        </section>
+        <textarea
+          rows={6}
+          value={draft.content.details}
+          onChange={(event) => updateContent('details', event.target.value)}
+          placeholder={t.content.detailsPlaceholder}
+          className={inputClass(showErrors && !validation.details)}
+        />
+      </Field>
 
-        <section className="space-y-3">
-          <label className="text-sm font-medium text-[var(--color-text)]">
-            {t.forms.app.feedbackLabel}
-          </label>
-          <textarea
-            rows={5}
-            value={feedback}
-            onChange={(event) => updateAppFeedback('feedback', event.target.value)}
-            placeholder={t.placeholders.appFeedback}
-            className="w-full rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-3 text-sm focus-halo focus:outline-none"
-          />
-        </section>
+      {renderStructuredContent()}
 
-        {/* Screenshot/link input removed as requested */}
-      </motion.div>
-    );
-  };
-
-  const renderBugReportForm = (): ReactElement => {
-    const { title, location, details, reproduction } = draft.bugReport;
-    return (
-      <motion.div
-        key="bug"
-        layout="position"
-        initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
-        animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
-        exit={prefersReducedMotion ? undefined : { opacity: 0, y: -16 }}
-        transition={formTransition}
-        className="space-y-6"
+      <label
+        className={classNames(
+          'flex cursor-pointer items-start gap-3 rounded-xl border p-4 text-sm',
+          showErrors && !validation.consent ? 'border-red-500' : 'surface-border',
+        )}
       >
-        <section className="space-y-2">
-          <label className="text-sm font-medium text-[var(--color-text)]">
-            {t.forms.bug.titleLabel}
-          </label>
-          <input
-            type="text"
-            value={title ?? ''}
-            onChange={(event) => updateBugReport('title', event.target.value)}
-            placeholder={t.placeholders.bugTitle}
-            className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus-halo focus:outline-none"
-          />
-        </section>
-        <section className="space-y-2">
-          <label className="text-sm font-medium text-[var(--color-text)]">
-            {t.forms.bug.locationLabel}
-          </label>
-          <input
-            type="text"
-            value={location}
-            onChange={(event) => updateBugReport('location', event.target.value)}
-            placeholder={t.placeholders.bugLocation}
-            className="w-full rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm focus-halo focus:outline-none"
-          />
-        </section>
+        <input
+          type="checkbox"
+          checked={draft.content.consent}
+          onChange={(event) => updateContent('consent', event.target.checked)}
+          className="mt-0.5 h-4 w-4 rounded border surface-border"
+        />
+        {t.content.consent}
+      </label>
+    </div>
+  );
 
-        <section className="space-y-3">
-          <label className="text-sm font-medium text-[var(--color-text)]">
-            {t.forms.bug.detailsLabel}
-          </label>
-          <textarea
-            rows={4}
-            value={details}
-            onChange={(event) => updateBugReport('details', event.target.value)}
-            placeholder={t.placeholders.bugDetails}
-            className="w-full rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-3 text-sm focus-halo focus:outline-none"
-          />
-        </section>
+  const renderIdeaFlow = (): ReactElement => (
+    <div className="space-y-6">
+      <Field label={t.idea.area}>
+        <input
+          value={draft.idea.area}
+          onChange={(event) =>
+            setDraft((current) => ({
+              ...current,
+              idea: { ...current.idea, area: event.target.value },
+            }))
+          }
+          placeholder={t.idea.areaPlaceholder}
+          className={inputClass()}
+        />
+      </Field>
+      <Field label={t.idea.details} error={showErrors && !validation.details}>
+        <textarea
+          rows={7}
+          value={draft.idea.details}
+          onChange={(event) => {
+            setDraft((current) => ({
+              ...current,
+              idea: { ...current.idea, details: event.target.value },
+            }));
+            setShowErrors(false);
+          }}
+          placeholder={t.idea.detailsPlaceholder}
+          className={inputClass(showErrors && !validation.details)}
+        />
+      </Field>
+      <Field label={t.idea.media} error={showErrors && !validation.url}>
+        <input
+          type="url"
+          value={draft.idea.mediaUrl}
+          onChange={(event) =>
+            setDraft((current) => ({
+              ...current,
+              idea: { ...current.idea, mediaUrl: event.target.value },
+            }))
+          }
+          placeholder="https://"
+          className={inputClass(showErrors && !validation.url)}
+        />
+        {showErrors && !validation.url && <p className="text-xs text-red-500">{t.invalidUrl}</p>}
+      </Field>
+    </div>
+  );
 
-        <section className="space-y-3">
-          <label className="text-sm font-medium text-[var(--color-text)]">
-            {t.forms.bug.reproductionLabel}
-          </label>
-          <textarea
-            rows={4}
-            value={reproduction}
-            onChange={(event) => updateBugReport('reproduction', event.target.value)}
-            placeholder={t.placeholders.bugReproduction}
-            className="w-full rounded-2xl border surface-border bg-[var(--color-surface)] px-4 py-3 text-sm focus-halo focus:outline-none"
-          />
-        </section>
+  const renderBugFlow = (): ReactElement => (
+    <div className="space-y-6">
+      <Field label={t.bug.location}>
+        <input
+          value={draft.bug.location}
+          onChange={(event) =>
+            setDraft((current) => ({
+              ...current,
+              bug: { ...current.bug, location: event.target.value },
+            }))
+          }
+          placeholder={t.bug.locationPlaceholder}
+          className={inputClass()}
+        />
+      </Field>
+      <Field label={t.bug.details} error={showErrors && !validation.details}>
+        <textarea
+          rows={6}
+          value={draft.bug.details}
+          onChange={(event) => {
+            setDraft((current) => ({
+              ...current,
+              bug: { ...current.bug, details: event.target.value },
+            }));
+            setShowErrors(false);
+          }}
+          placeholder={t.bug.detailsPlaceholder}
+          className={inputClass(showErrors && !validation.details)}
+        />
+      </Field>
+      <Field label={t.bug.reproduction}>
+        <textarea
+          rows={4}
+          value={draft.bug.reproduction}
+          onChange={(event) =>
+            setDraft((current) => ({
+              ...current,
+              bug: { ...current.bug, reproduction: event.target.value },
+            }))
+          }
+          placeholder={t.bug.reproductionPlaceholder}
+          className={inputClass()}
+        />
+      </Field>
+      <Field label={t.bug.media} error={showErrors && !validation.url}>
+        <input
+          type="url"
+          value={draft.bug.mediaUrl}
+          onChange={(event) =>
+            setDraft((current) => ({
+              ...current,
+              bug: { ...current.bug, mediaUrl: event.target.value },
+            }))
+          }
+          placeholder="https://"
+          className={inputClass(showErrors && !validation.url)}
+        />
+        {showErrors && !validation.url && <p className="text-xs text-red-500">{t.invalidUrl}</p>}
+      </Field>
+    </div>
+  );
 
-        {/* includeSystemInfo toggle removed per privacy change */}
-      </motion.div>
-    );
-  };
-
-  const renderForm = () => {
-    if (!selectedCard) return null;
-    switch (selectedCard) {
-      case 'improveTechnique':
-        return renderImproveForm();
-      case 'addVariation':
-        return renderVariationForm();
-      case 'newTechnique':
-        return renderNewTechniqueForm();
-      case 'appFeedback':
-        return renderAppFeedbackForm();
-      case 'bugReport':
-        return renderBugReportForm();
-      default:
-        return null;
-    }
-  };
+  const flowCopy = draft.flow ? t.flows[draft.flow] : null;
+  const reviewDescription =
+    draft.flow === 'content'
+      ? draft.content.details
+      : draft.flow === 'idea'
+        ? draft.idea.details
+        : draft.flow === 'bug'
+          ? draft.bug.details
+          : '';
 
   return (
-    <>
-      <main className="pt-0 pb-12">
-        <div className="container max-w-4xl mx-auto px-4 md:px-6 space-y-8">
-          {onBack && (
+    <main className="pb-44 pt-0 sm:pb-12">
+      <div className="container mx-auto max-w-3xl space-y-8 px-4 md:px-6">
+        {onBack && (
+          <button
+            type="button"
+            onClick={onBack}
+            className="inline-flex items-center gap-2 text-sm text-muted surface-hover"
+          >
+            <ArrowLeft className="h-4 w-4" aria-hidden />
+            {t.back || copy.backToLibrary}
+          </button>
+        )}
+
+        <header className="space-y-3">
+          <h1 className="text-3xl font-semibold sm:text-4xl">{t.title}</h1>
+          <p className="max-w-2xl text-sm leading-6 text-muted">{t.subtitle}</p>
+        </header>
+
+        {submissionState === 'success' ? (
+          <section className="rounded-2xl border surface-border bg-[var(--color-surface)] p-6 sm:p-8 space-y-5">
+            <CheckCircle2 className="h-9 w-9" aria-hidden />
+            <div className="space-y-2">
+              <h2 className="text-xl font-semibold">{t.successTitle}</h2>
+              <p className="text-sm text-muted">{t.successBody}</p>
+            </div>
             <button
               type="button"
-              onClick={onBack}
-              className="flex items-center gap-2 text-sm text-muted hover:text-current transition-soft"
+              onClick={restart}
+              className="rounded-xl bg-[var(--color-text)] px-4 py-2.5 text-sm font-medium text-[var(--color-bg)]"
             >
-              <span aria-hidden>‹</span>
-              {copy.backToLibrary}
+              {t.another}
             </button>
-          )}
-
-          <header className="space-y-4">
-            <div className="space-y-2">
-              <h1 className="text-3xl font-semibold flex items-center gap-3">
-                <HeartPulse className="w-7 h-7 text-[var(--color-text)]" aria-hidden />
-                <span>{copy.feedbackTitle}</span>
-              </h1>
-              <p className="max-w-2xl text-sm text-muted">{t.heroSubtitle}</p>
-            </div>
-            <div className="h-px w-full bg-gradient-to-r from-transparent via-surface-border to-transparent" />
-          </header>
-
+          </section>
+        ) : !draft.flow ? (
           <section className="space-y-4">
-            <h2 className="text-xs uppercase tracking-[0.3em] text-subtle">{t.headings.type}</h2>
-            <div className="grid gap-3 md:grid-cols-2">
-              {feedbackTypeOrder.map((value) => {
-                const content = cardContent[value];
-                const isActive = value === selectedCard;
-                return (
-                  <motion.button
-                    key={value}
-                    type="button"
-                    layout="position"
-                    initial={false}
-                    animate={{
-                      backgroundColor: isActive
-                        ? 'var(--color-surface-hover)'
-                        : 'var(--color-surface)',
-                      borderColor: isActive ? 'var(--color-text)' : 'var(--color-border)',
-                    }}
-                    whileHover={
-                      prefersReducedMotion
-                        ? undefined
-                        : { backgroundColor: 'var(--color-surface-hover)' }
-                    }
-                    transition={itemTransition}
-                    onClick={() => handleTypeChange(value)}
-                    aria-pressed={isActive}
-                    className={classNames(
-                      'rounded-2xl border surface surface-border px-4 py-4 transition-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
-                      isActive ? 'shadow-md' : 'shadow-sm surface-hover',
-                    )}
-                  >
-                    <div
-                      className={classNames(
-                        // Center the overall block for the bug card, but keep text left-aligned
-                        value === 'bugReport'
-                          ? 'flex items-center justify-center gap-3'
-                          : 'flex items-center gap-3',
-                      )}
-                    >
-                      <span className="text-subtle" aria-hidden>
-                        {content.icon}
-                      </span>
-                      <div className="space-y-1 text-left">
-                        <p className="font-medium text-[var(--color-text)]">{content.title}</p>
-                        <p className="text-sm text-subtle">{content.description}</p>
-                      </div>
-                    </div>
-                  </motion.button>
-                );
-              })}
-              {/* Email feedback card (opens mailto) placed to the right of Bug card on md screens */}
-              <a
-                href="mailto:enso@kylebrooks.me"
-                className={classNames(
-                  'rounded-2xl border surface surface-border px-4 py-4 transition-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)] shadow-sm surface-hover flex items-center min-h-[88px]',
-                )}
-                aria-label="Email feedback"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="text-subtle" aria-hidden>
-                    <Link className="w-5 h-5" />
+            <h2 className="text-sm font-semibold">{t.choose}</h2>
+            <div className="grid gap-3 sm:grid-cols-3">
+              {(['content', 'idea', 'bug'] as FeedbackType[]).map((flow) => (
+                <button
+                  key={flow}
+                  type="button"
+                  onClick={() => chooseFlow(flow)}
+                  className="rounded-2xl border surface-border bg-[var(--color-surface)] p-5 text-left surface-hover transition-soft"
+                >
+                  <span className="mb-5 block text-subtle">{renderFlowIcon(flow)}</span>
+                  <span className="block text-sm font-semibold">{t.flows[flow].title}</span>
+                  <span className="mt-2 block text-xs leading-5 text-subtle">
+                    {t.flows[flow].description}
                   </span>
-                  <div className="space-y-1 text-left">
-                    <p className="font-medium text-[var(--color-text)]">Email feedback</p>
-                    <p className="text-sm text-subtle">enso@kylebrooks.me</p>
-                  </div>
-                </div>
-              </a>
+                </button>
+              ))}
             </div>
-            <AnimatePresence initial={false} mode="popLayout">
-              {selectedCard && (
-                <motion.div
-                  key="selector-divider"
-                  layout="position"
-                  initial={prefersReducedMotion ? false : { opacity: 0, y: -6 }}
-                  animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
-                  exit={prefersReducedMotion ? undefined : { opacity: 0, y: -6 }}
-                  transition={itemTransition}
-                  className="h-px w-full bg-gradient-to-r from-transparent via-surface-border to-transparent"
-                />
-              )}
-            </AnimatePresence>
+            <p className="text-sm text-subtle">
+              {t.email}{' '}
+              <a href="mailto:enso@kylebrooks.me" className="underline underline-offset-4">
+                enso@kylebrooks.me
+              </a>
+            </p>
           </section>
-
-          <section className="space-y-4">
-            <h2 className="text-xs uppercase tracking-[0.3em] text-subtle">{t.headings.dynamic}</h2>
-            <AnimatePresence initial={false} mode="wait">
-              {selectedCard ? (
-                renderForm()
-              ) : (
-                <motion.div
-                  key="placeholder"
-                  layout="position"
-                  initial={prefersReducedMotion ? false : { opacity: 0, y: 8 }}
-                  animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
-                  exit={prefersReducedMotion ? undefined : { opacity: 0, y: -8 }}
-                  transition={itemTransition}
-                  className="rounded-2xl border border-dashed surface-border bg-[var(--color-surface)] px-4 py-6 text-sm text-subtle"
-                >
-                  {t.prompts.chooseType}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </section>
-
-          <section className="space-y-4">
-            <h2 className="text-xs uppercase tracking-[0.3em] text-subtle">{t.headings.summary}</h2>
-            <div className="rounded-2xl border surface-border bg-[var(--color-surface)] p-6 space-y-4">
-              <div className="space-y-1">
-                <h3 className="text-sm font-semibold text-[var(--color-text)]">
-                  {t.summary.title}
-                </h3>
-                <p className="text-xs text-subtle">{t.summary.subtitle}</p>
+        ) : (
+          <>
+            <section className="flex items-center justify-between gap-4 rounded-2xl border surface-border bg-[var(--color-surface)] p-4">
+              <div className="flex items-center gap-3">
+                <span className="text-subtle">{renderFlowIcon(draft.flow)}</span>
+                <div>
+                  <h2 className="text-sm font-semibold">{flowCopy?.title}</h2>
+                  <p className="hidden text-xs text-subtle sm:block">{flowCopy?.description}</p>
+                </div>
               </div>
-              {/* Duplicates banner at top of summary */}
-              {selectedCard === 'newTechnique' && (
-                <div
-                  className={classNames(
-                    'rounded-xl border px-4 py-3 text-sm',
-                    'surface-border bg-[var(--color-surface)]',
-                  )}
-                >
-                  {duplicateMatches.length === 0 ? (
-                    <span className="text-subtle">{t.newTechnique.duplicates.noneHint}</span>
-                  ) : (
-                    <div className="space-y-2">
-                      <p className="font-medium text-[var(--color-text)]">
-                        {t.newTechnique.duplicates.possibleMatches}
-                      </p>
-                      <ul className="space-y-1">
-                        {duplicateMatches.map((tech) => (
-                          <li
-                            key={`dup-summary-${tech.id}`}
-                            className="flex items-center justify-between gap-2"
-                          >
-                            <span className="text-[var(--color-text)]">
-                              {tech.name[locale] || tech.name.en}
-                            </span>
-                            <span className="text-xs text-subtle">{tech.slug}</span>
-                          </li>
-                        ))}
-                      </ul>
-                      <button
-                        type="button"
-                        onClick={() => handleTypeChange('addVariation')}
-                        className="text-xs text-[var(--color-accent, var(--color-text))] hover:underline"
-                      >
-                        {t.newTechnique.duplicates.switch}
-                      </button>
-                    </div>
-                  )}
-                </div>
-              )}
+              <button
+                type="button"
+                onClick={() => setDraft((current) => ({ ...current, flow: null }))}
+                className="text-sm text-subtle underline underline-offset-4"
+              >
+                {t.changeFlow}
+              </button>
+            </section>
 
-              <dl className="grid gap-3 sm:grid-cols-2">
-                {summaryEntries.map((item) => (
-                  <div key={item.label} className="space-y-1">
-                    <dt className="text-xs font-medium text-subtle">{item.label}</dt>
-                    <dd className="text-sm text-[var(--color-text)]">{item.value}</dd>
+            <section>
+              {draft.flow === 'content'
+                ? renderContentFlow()
+                : draft.flow === 'idea'
+                  ? renderIdeaFlow()
+                  : renderBugFlow()}
+            </section>
+
+            {showErrors && !canReview && (
+              <p role="alert" className="rounded-xl border border-red-500 px-4 py-3 text-sm text-red-500">
+                {t.required}
+              </p>
+            )}
+            {submissionState === 'error' && (
+              <p role="alert" className="rounded-xl border border-red-500 px-4 py-3 text-sm text-red-500">
+                {submitError || t.submitError}
+              </p>
+            )}
+
+            <div className="fixed inset-x-0 bottom-24 z-30 border-y surface-border bg-[var(--color-bg)]/95 p-3 backdrop-blur sm:static sm:border-0 sm:bg-transparent sm:p-0">
+              <div className="mx-auto flex max-w-3xl items-center justify-between gap-4">
+                <span className="hidden items-center gap-1.5 text-xs text-subtle sm:flex">
+                  <Check className="h-3.5 w-3.5" aria-hidden />
+                  {t.saved}
+                </span>
+                <button
+                  type="button"
+                  onClick={handleReview}
+                  className="ml-auto inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--color-text)] px-5 py-3 text-sm font-medium text-[var(--color-bg)] sm:w-auto"
+                >
+                  {t.review}
+                  <Send className="h-4 w-4" aria-hidden />
+                </button>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+
+      {reviewOpen && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/70 p-0 sm:items-center sm:p-6">
+          <section
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="feedback-review-title"
+            className="w-full max-w-lg rounded-t-3xl border surface-border bg-[var(--color-bg)] p-6 shadow-2xl sm:rounded-3xl"
+          >
+            <div className="space-y-5">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <h2 id="feedback-review-title" className="text-xl font-semibold">
+                    {t.reviewTitle}
+                  </h2>
+                  <p className="mt-1 text-sm text-subtle">{t.reviewHint}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setReviewOpen(false)}
+                  className="rounded-lg p-2 surface-hover"
+                  aria-label={t.edit}
+                >
+                  <X className="h-5 w-5" aria-hidden />
+                </button>
+              </div>
+              <dl className="grid gap-4 rounded-2xl border surface-border bg-[var(--color-surface)] p-4 sm:grid-cols-2">
+                <div>
+                  <dt className="text-xs text-subtle">{t.choose}</dt>
+                  <dd className="mt-1 text-sm font-medium">{flowCopy?.title}</dd>
+                </div>
+                {draft.flow === 'content' && (
+                  <div>
+                    <dt className="text-xs text-subtle">{t.content.typeLabel}</dt>
+                    <dd className="mt-1 text-sm font-medium">
+                      {draft.content.mode === 'new'
+                        ? draft.content.contentName
+                        : selectedTargetLabel}
+                    </dd>
                   </div>
-                ))}
-              </dl>
-              {submissionState === 'success' && submitResult?.ok ? (
-                <motion.div
-                  initial={prefersReducedMotion ? false : { opacity: 0, y: 8 }}
-                  animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
-                  transition={itemTransition}
-                  className="rounded-xl border border-transparent bg-[var(--color-surface)] px-4 py-3 text-sm shadow-sm space-y-1"
-                >
-                  <p className="font-medium">{t.hints.successTitle}</p>
-                  {submitResult?.requestId && (
-                    <p className="text-xs text-subtle">
-                      {t.newTechnique.requestIdLabel} {submitResult.requestId}
-                    </p>
-                  )}
-                </motion.div>
-              ) : submissionState === 'error' ? (
-                <motion.div
-                  initial={prefersReducedMotion ? false : { opacity: 0, y: 8 }}
-                  animate={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
-                  transition={itemTransition}
-                  className="rounded-xl border border-[var(--color-error, #b91c1c)] bg-[var(--color-surface)] px-4 py-3 text-xs text-[var(--color-error, #b91c1c)]"
-                >
-                  {submitError || t.newTechnique.errors.generic}
-                  {submitResult?.requestId &&
-                    ` · ${t.newTechnique.requestIdLabel} ${submitResult.requestId}`}
-                </motion.div>
-              ) : submissionState === 'submitting' ? (
-                <p className="text-xs text-subtle">{t.newTechnique.sending}</p>
-              ) : (
-                <p className="text-xs text-subtle">{t.hints.summaryHint}</p>
-              )}
-
-              {consentChecked !== null && (
-                <div className="space-y-1">
-                  <label className="flex items-center gap-3 text-sm text-[var(--color-text)]">
-                    <input
-                      type="checkbox"
-                      checked={consentChecked}
-                      onChange={(event) => handleConsentChange(event.target.checked)}
-                      className="h-4 w-4 rounded border surface-border"
-                    />
-                    {t.globalConsent}
-                  </label>
-                  <p
-                    className={classNames(
-                      'text-xs transition-soft',
-                      consentChecked ? 'text-subtle' : 'text-[var(--color-error, #b91c1c)]',
-                    )}
-                  >
-                    {consentWarningText}
-                  </p>
+                )}
+                <div className="sm:col-span-2">
+                  <dt className="text-xs text-subtle">
+                    {draft.flow === 'bug'
+                      ? t.bug.details
+                      : draft.flow === 'idea'
+                        ? t.idea.details
+                        : t.content.detailsLabel}
+                  </dt>
+                  <dd className="mt-1 whitespace-pre-wrap text-sm leading-6">
+                    {reviewDescription}
+                  </dd>
                 </div>
+              </dl>
+              {submissionState === 'error' && (
+                <p role="alert" className="text-sm text-red-500">
+                  {submitError || t.submitError}
+                </p>
               )}
-
-              <div className="flex flex-wrap gap-3">
+              <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+                <button
+                  type="button"
+                  onClick={() => setReviewOpen(false)}
+                  className="rounded-xl border surface-border px-4 py-2.5 text-sm"
+                >
+                  {t.edit}
+                </button>
                 <button
                   type="button"
                   onClick={handleSubmit}
-                  disabled={!canSubmit}
-                  className={classNames(
-                    'rounded-xl px-4 py-2.5 text-sm font-medium transition-soft focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[var(--color-text)]',
-                    canSubmit
-                      ? 'bg-[var(--color-text)] text-[var(--color-bg)]'
-                      : 'border surface-border bg-[var(--color-surface)] text-subtle cursor-not-allowed',
-                  )}
+                  disabled={submissionState === 'submitting'}
+                  className="inline-flex items-center justify-center gap-2 rounded-xl bg-[var(--color-text)] px-4 py-2.5 text-sm font-medium text-[var(--color-bg)] disabled:opacity-60"
                 >
-                  {submissionState === 'submitting'
-                    ? t.newTechnique.sendingButton
-                    : t.buttons.submit}
+                  {submissionState === 'submitting' ? t.sending : t.submit}
+                  <Send className="h-4 w-4" aria-hidden />
                 </button>
-                <button
-                  type="button"
-                  onClick={handleDownloadJson}
-                  className="rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm"
-                >
-                  {t.buttons.downloadJson}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => clearCurrentForm(selectedCard ?? undefined)}
-                  disabled={!selectedCard}
-                  className="rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm disabled:opacity-60 disabled:cursor-not-allowed"
-                >
-                  {t.buttons.clearForm}
-                </button>
-                {/* Edit again button removed per request */}
-                {submissionState === 'success' && (
-                  <button
-                    type="button"
-                    onClick={resetDraft}
-                    className="rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm"
-                  >
-                    {t.buttons.restart}
-                  </button>
-                )}
               </div>
             </div>
           </section>
-
-          {showJsonPreview && (
-            <section className="space-y-3">
-              <h2 className="text-sm font-semibold text-[var(--color-text)]">
-                {t.headings.jsonPreview}
-              </h2>
-              <pre className="max-h-64 overflow-auto rounded-2xl border surface-border bg-[var(--color-surface)] p-4 text-xs">
-                {JSON.stringify(draft, null, 2)}
-              </pre>
-            </section>
-          )}
         </div>
-      </main>
-    </>
+      )}
+    </main>
   );
 };

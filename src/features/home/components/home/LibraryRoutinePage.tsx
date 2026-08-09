@@ -15,6 +15,7 @@ type LibraryRoutinePageProps = {
   onBackToOverview: () => void;
   onOpenRoutine: (routineSlug: string) => void;
   onOpenExercise: (exerciseSlug: string) => void;
+  onFeedbackClick: (presetId: string | null) => void;
 };
 
 export const LibraryRoutinePage = ({
@@ -26,6 +27,7 @@ export const LibraryRoutinePage = ({
   onBackToOverview,
   onOpenRoutine,
   onOpenExercise,
+  onFeedbackClick,
 }: LibraryRoutinePageProps): ReactElement => {
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [loading, setLoading] = useState(true);
@@ -118,6 +120,14 @@ export const LibraryRoutinePage = ({
           <p className="text-sm text-subtle">{copy.examsPage.routineOverviewLead}</p>
         </header>
 
+        <button
+          type="button"
+          onClick={() => onFeedbackClick(null)}
+          className="inline-flex items-center justify-center rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm hover-border-adaptive transition"
+        >
+          {copy.feedbackAddRoutineCta}
+        </button>
+
         <ul className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           {collection.presets.map((preset) => {
             const title = getLocalized(preset.title, locale);
@@ -174,6 +184,13 @@ export const LibraryRoutinePage = ({
             {copy.examsPage.routineExerciseCountLabel}: {selectedPreset.exercises.length}
           </span>
         </div>
+        <button
+          type="button"
+          onClick={() => onFeedbackClick(selectedPreset.id)}
+          className="inline-flex items-center justify-center rounded-xl border surface-border bg-[var(--color-surface)] px-4 py-2.5 text-sm hover-border-adaptive transition"
+        >
+          {copy.feedbackImproveRoutineCta}
+        </button>
       </header>
 
       <div className="space-y-4">

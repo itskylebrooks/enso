@@ -130,7 +130,7 @@ type TechniquePageProps = {
   onOpenGlossary?: (slug: string) => void;
   onOpenExamsGrade?: (grade: Grade) => void;
   onVariantChange?: (direction: Direction, weapon: WeaponKind, versionId?: string | null) => void;
-  onFeedbackClick?: () => void;
+  onFeedbackClick?: (variantKey: TechniqueVariantKey) => void;
   onCreateCollection?: (name: string) => string | null;
 };
 
@@ -630,7 +630,14 @@ export const TechniquePage = ({
           {onFeedbackClick && (
             <button
               type="button"
-              onClick={onFeedbackClick}
+              onClick={() =>
+                onFeedbackClick({
+                  hanmi: toolbarValue.hanmi,
+                  direction: toolbarValue.direction,
+                  weapon: toolbarValue.weapon,
+                  versionId: toolbarValue.versionId ?? null,
+                })
+              }
               className="w-full rounded-xl border surface-border bg-[var(--color-surface)]/80 p-4 sm:p-5 flex items-center gap-3 surface-hover transition-soft motion-ease"
             >
               <MessageSquarePlus className="shrink-0" />
