@@ -7,6 +7,7 @@ import { validateAllContent } from '../src/lib/content/validate-all';
 import { loadAllExercises } from '../src/lib/content/loaders/exercises';
 import { loadAllTechniques } from '../src/lib/content/loaders/techniques';
 import { loadAllTerms } from '../src/lib/content/loaders/terms';
+import { loadAllChildrenGames } from '../src/lib/content/loaders/childrenGames';
 
 const rootDir = process.cwd();
 const generatedDir = path.join(rootDir, 'src', 'generated', 'content');
@@ -54,10 +55,11 @@ const copyAuthorImage = async () => {
 
 async function run(): Promise<void> {
   const summary = await validateAllContent();
-  const [techniques, terms, exercises, quotesEn, quotesDe] = await Promise.all([
+  const [techniques, terms, exercises, childrenGames, quotesEn, quotesDe] = await Promise.all([
     loadAllTechniques(),
     loadAllTerms(),
     loadAllExercises(),
+    loadAllChildrenGames(),
     readAndParseQuotes('quotes.json'),
     readAndParseQuotes('quotes-de.json'),
   ]);
@@ -68,13 +70,14 @@ async function run(): Promise<void> {
     writeJsonFile('techniques.json', techniques),
     writeJsonFile('terms.json', terms),
     writeJsonFile('exercises.json', exercises),
+    writeJsonFile('children-games.json', childrenGames),
     writeJsonFile('quotes-en.json', quotesEn),
     writeJsonFile('quotes-de.json', quotesDe),
     copyAuthorImage(),
   ]);
 
   console.log(
-    `Validated content: techniques=${summary.techniques}, terms=${summary.terms}, exercises=${summary.exercises}`,
+    `Validated content: techniques=${summary.techniques}, terms=${summary.terms}, exercises=${summary.exercises}, childrenGames=${summary.childrenGames}`,
   );
   console.log(`Generated content artifacts in ${generatedDir}`);
 }

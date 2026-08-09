@@ -12,6 +12,7 @@ import {
   routeToRoutine,
   parseLocation,
   routeToPath,
+  getSectionForRoute,
   routineToLibraryRoute,
 } from '../src/shared/navigation/appRoutes';
 
@@ -68,6 +69,7 @@ describe('app route helpers', () => {
     expect(routeToPath('study')).toBe('/study');
     expect(routeToPath('studyLearn')).toBe('/study/learn');
     expect(routeToPath('teach')).toBe('/teach');
+    expect(routeToPath('teachChildrenGames')).toBe('/teach/children-games');
     expect(routeToPath('sync')).toBe('/sync');
   });
 
@@ -90,7 +92,10 @@ describe('app route helpers', () => {
       route: 'libraryTechniques',
       slug: null,
     });
-    expect(parseLocation('/library/terms/aikido')).toEqual({ route: 'libraryTerms', slug: 'aikido' });
+    expect(parseLocation('/library/terms/aikido')).toEqual({
+      route: 'libraryTerms',
+      slug: 'aikido',
+    });
     expect(parseLocation('/library/exercises/dead-bug')).toEqual({
       route: 'libraryExercises',
       slug: 'dead-bug',
@@ -115,18 +120,29 @@ describe('app route helpers', () => {
     expect(parseLocation('/study')).toEqual({ route: 'study', slug: null });
     expect(parseLocation('/study/learn')).toEqual({ route: 'studyLearn', slug: null });
     expect(parseLocation('/teach')).toEqual({ route: 'teach', slug: null });
+    expect(parseLocation('/teach/children-games')).toEqual({
+      route: 'teachChildrenGames',
+      slug: null,
+    });
+    expect(parseLocation('/teach/children-games/kettenticken')).toEqual({
+      route: 'teachChildrenGames',
+      slug: 'kettenticken',
+    });
+    expect(getSectionForRoute('teachChildrenGames')).toBe('teach');
   });
 
   it('preserves source route state when parsing detail paths', () => {
-    expect(parseLocation('/library/techniques/katate-tori-irimi-nage', { route: 'study' })).toEqual({
-      route: 'study',
-      slug: 'katate-tori-irimi-nage',
-      techniqueParams: {
+    expect(parseLocation('/library/techniques/katate-tori-irimi-nage', { route: 'study' })).toEqual(
+      {
+        route: 'study',
         slug: 'katate-tori-irimi-nage',
-        trainerId: undefined,
-        entry: undefined,
+        techniqueParams: {
+          slug: 'katate-tori-irimi-nage',
+          trainerId: undefined,
+          entry: undefined,
+        },
       },
-    });
+    );
 
     expect(parseLocation('/library/terms/irimi-omote')).toEqual({
       route: 'libraryTerms',

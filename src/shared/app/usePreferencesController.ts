@@ -20,6 +20,8 @@ import {
   saveTheme,
 } from '@shared/services/storageService';
 import type { Filters, Grade, Locale, Theme } from '@shared/types';
+import type { ChildrenGameFilters } from '@shared/types';
+import { defaultChildrenGameFilters } from '@features/childrenGames';
 import type { Dispatch, MutableRefObject, SetStateAction } from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { SyncMetaState, SyncPayloadData } from '../../lib/supabase/types';
@@ -96,6 +98,9 @@ export const usePreferencesController = ({
     categories: [],
     equipment: [],
   });
+  const [childrenGameFilters, setChildrenGameFilters] = useState<ChildrenGameFilters>(
+    defaultChildrenGameFilters,
+  );
   const [showTeachInPrimaryNav, setShowTeachInPrimaryNav] = useState<boolean>(() =>
     loadShowTeachInPrimaryNav(),
   );
@@ -440,6 +445,7 @@ export const usePreferencesController = ({
       filters,
       glossaryFilters,
       practiceFilters,
+      childrenGameFilters,
       showTeachInPrimaryNav,
     },
     homepage: {
@@ -450,6 +456,7 @@ export const usePreferencesController = ({
       setFilters,
       setGlossaryFilters,
       setPracticeFilters,
+      setChildrenGameFilters,
       setShowTeachInPrimaryNav,
       setBeltPromptDismissed,
       handleLocaleChange,

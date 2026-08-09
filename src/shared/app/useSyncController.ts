@@ -2,7 +2,12 @@ import type { Dispatch, MutableRefObject, SetStateAction } from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { authService } from '../../lib/backend/auth';
 import { syncClient } from '../../lib/backend/sync';
-import { applySyncedDBState, mergeSyncPayload, pruneSyncTombstones } from '../../lib/backend/syncMerge';
+import {
+  applySyncedDBState,
+  mergeSyncPayload,
+  pickSyncedDBState,
+  pruneSyncTombstones,
+} from '../../lib/backend/syncMerge';
 import type {
   AuthSession,
   SyncMetaState,
@@ -125,8 +130,8 @@ export const useSyncController = ({
   }, [db, preferencesSyncRef, syncMeta]);
 
   const getCurrentDBSyncSnapshot = useCallback(
-    (): string => stringifyForSyncCompare(buildLocalSyncPayload().db),
-    [buildLocalSyncPayload],
+    (): string => stringifyForSyncCompare(pickSyncedDBState(db)),
+    [db],
   );
 
   const getCurrentHomepageSyncSnapshot = useCallback(
@@ -145,9 +150,8 @@ export const useSyncController = ({
 
       setDB((prev) => applySyncedDBState(prev, payload.db));
 
-      const syncedPreferences = getRequiredPreferencesSync(
-        preferencesSyncRef,
-      ).applySyncedPreferences(payload);
+      const syncedPreferences =
+        getRequiredPreferencesSync(preferencesSyncRef).applySyncedPreferences(payload);
       onboardingSyncRef.current?.applySyncedOnboarding(syncedPreferences);
 
       const now = syncedAt ?? Date.now();
@@ -167,12 +171,7 @@ export const useSyncController = ({
         syncPauseAutoPushRef.current = false;
       }
     },
-    [
-      persistSyncMeta,
-      onboardingSyncRef,
-      preferencesSyncRef,
-      setDB,
-    ],
+    [persistSyncMeta, onboardingSyncRef, preferencesSyncRef, setDB],
   );
 
   const runSyncWithToken = useCallback(

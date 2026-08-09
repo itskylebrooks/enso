@@ -198,6 +198,7 @@ export type AppRoute =
   | 'study'
   | 'studyLearn'
   | 'teach'
+  | 'teachChildrenGames'
   | 'sync'
   | 'about'
   | 'exams'
@@ -215,7 +216,13 @@ export type AppRoute =
   | 'examsDan5'
   | 'feedback';
 
-export type LibraryRoutine = 'warm-up' | 'cooldown' | 'mobility' | 'strength' | 'skill' | 'recovery';
+export type LibraryRoutine =
+  | 'warm-up'
+  | 'cooldown'
+  | 'mobility'
+  | 'strength'
+  | 'skill'
+  | 'recovery';
 
 export type PracticeCategory =
   | 'mobility'
@@ -261,6 +268,43 @@ export type Exercise = {
   aikidoContext?: Localized<string>;
   media?: MediaItem[];
   updatedAt?: string;
+};
+
+export type ChildrenGameMaterial =
+  | 'none'
+  | 'soft-balls'
+  | 'mat-floor'
+  | 'werewolves-game'
+  | 'indiaca'
+  | 'blindfolds'
+  | 'coasters';
+
+export type ChildrenGameSetting = 'outdoor' | 'indoor' | 'evening';
+
+export type ChildrenGame = {
+  id: string;
+  slug: string;
+  name: Localized<string>;
+  participants: {
+    min: number;
+    max: number;
+  };
+  materials: ChildrenGameMaterial[];
+  goal: Localized<string>;
+  rules: Localized<string[]>;
+  sequence: Localized<string[]>;
+  settings: Record<ChildrenGameSetting, boolean>;
+  source: {
+    name: string;
+    url: string;
+    accessedAt: string;
+  };
+};
+
+export type ChildrenGameFilters = {
+  participantCount?: number;
+  settings: ChildrenGameSetting[];
+  materials: ChildrenGameMaterial[];
 };
 
 export type Trainer = {

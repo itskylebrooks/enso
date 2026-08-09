@@ -1,0 +1,531 @@
+[
+  {
+    "id": "children-game-ampelspiel",
+    "slug": "ampelspiel",
+    "name": { "en": "Traffic-light game", "de": "Ampelspiel" },
+    "participants": { "min": 4, "max": 20 },
+    "materials": ["none"],
+    "goal": {
+      "en": "Try to be the last player eliminated.",
+      "de": "Alle versuchen, als letzte Person auszuscheiden."
+    },
+    "rules": {
+      "en": [
+        "Choose the first caller. An additional finish-line judge can also be helpful.",
+        "The caller announces colors.",
+        "On “red,” nobody may move.",
+        "On “yellow,” players may move but may not stand up.",
+        "On “green,” everyone must run to the other side as quickly as possible.",
+        "The slowest player sits at the edge and watches until the round ends."
+      ],
+      "de": [
+        "Die erste rufende Person wird bestimmt. Eine zusätzliche Person als Linienwache ist ebenfalls hilfreich.",
+        "Die rufende Person sagt Farben an.",
+        "Bei „Rot“ darf sich niemand bewegen.",
+        "Bei „Gelb“ darf man sich bewegen, aber nicht aufstehen.",
+        "Bei „Grün“ muss man so schnell wie möglich auf die andere Seite laufen.",
+        "Die langsamste Person setzt sich an den Rand und schaut bis zum Rundenende zu."
+      ]
+    },
+    "sequence": {
+      "en": [
+        "Players lie on their stomachs with their arms stretched forward and fingertips touching a line, such as a row of mats or a rope. The caller and optional line judge stand at a second line a set distance away.",
+        "When “green” is called, everyone races toward the caller. The last person across the finish line is eliminated, and the remaining players return to the starting position.",
+        "When “red” is called, anyone who twitches or otherwise moves is eliminated. The last player wins and may call the colors in the next round.",
+        "Variation: Instead of using a fixed caller, let the player most recently eliminated make the next calls."
+      ],
+      "de": [
+        "Die Teilnehmenden liegen auf dem Bauch und strecken die Arme nach vorne. Ihre Fingerspitzen liegen an einer Linie, etwa einer Mattenreihe oder einem Seil. Die rufende Person und gegebenenfalls die Linienwache befinden sich in festgelegter Entfernung an einer zweiten Linie.",
+        "Beim Ruf „Grün“ laufen alle so schnell wie möglich zur Seite der rufenden Person. Wer die Ziellinie zuletzt passiert, scheidet aus. Danach kehren die übrigen Personen zur Liegeposition zurück.",
+        "Beim Ruf „Rot“ scheiden alle aus, die zucken oder sich auf andere Weise bewegen. Die letzte Person gewinnt und kann in der nächsten Runde die Farben ansagen.",
+        "Variante: Statt einer festen rufenden Person kann immer die zuletzt ausgeschiedene Person die nächsten Ansagen machen."
+      ]
+    },
+    "settings": { "outdoor": true, "indoor": true, "evening": false },
+    "source": {
+      "name": "DAB-Jugend",
+      "url": "https://aikido-jugend.de/spiele.php",
+      "accessedAt": "2026-08-09"
+    }
+  },
+  {
+    "id": "children-game-burger-spiel",
+    "slug": "burger-spiel",
+    "name": { "en": "Burger game", "de": "Burger-Spiel" },
+    "participants": { "min": 8, "max": 120 },
+    "materials": ["mat-floor"],
+    "goal": {
+      "en": "Train the players’ reactions or use the activity as an icebreaker.",
+      "de": "Die Reaktionsfähigkeit wird trainiert. Das Spiel kann auch zum Kennenlernen genutzt werden."
+    },
+    "rules": {
+      "en": [
+        "As in any command game, every command has an assigned action.",
+        "Anyone unable to complete the action performs an agreed extra task, such as five push-ups, squat jumps, or one lap around the mat.",
+        "The commands can vary. This version uses fast-food calls such as milkshake, fries, and Big Mac, as described below."
+      ],
+      "de": [
+        "Wie bei jedem Kommando-Spiel sind zu jedem Kommando bestimmte Tätigkeiten auszuführen.",
+        "Wer eine Tätigkeit nicht ausführen kann, absolviert eine vereinbarte Zusatzaufgabe, zum Beispiel fünf Liegestütze, Hockstrecksprünge oder eine Runde um die Matte.",
+        "Die Kommandos können variieren. Hier sind es Fast-Food-Ansagen wie Milchshake, Pommes oder Big Mac, die im Spielverlauf beschrieben werden."
+      ]
+    },
+    "sequence": {
+      "en": [
+        "Players move freely around the mat.",
+        "When the instructor calls one of the agreed dishes, players gather in groups and form that dish with their bodies.",
+        "Add your own ideas to the following examples as desired.",
+        "Fries: Two players lie side by side and stretch their arms and legs upward.",
+        "Hamburger: Two players lie crosswise on top of one another.",
+        "Cheeseburger: Three players lie crosswise on top of one another.",
+        "Big Mac: Four players lie crosswise on top of one another.",
+        "Milkshake: One player stands in the middle with arms extended sideways. One person at each hand spins like a whisk.",
+        "With small children, keep the stacks low so the person at the bottom does not carry too much weight.",
+        "Anyone who cannot form the requested dish, forms it incorrectly, or is too slow completes the agreed extra task."
+      ],
+      "de": [
+        "Die Teilnehmenden laufen durcheinander über die Matte.",
+        "Ruft die Trainingsleitung eines der vorher vereinbarten Gerichte, sammeln sich die Teilnehmenden in Gruppen und stellen dieses Gericht nach.",
+        "Die folgenden Beispiele können jederzeit durch eigene Ideen ergänzt werden.",
+        "Pommes: Zwei Personen legen sich nebeneinander auf den Boden und strecken Arme und Beine nach oben.",
+        "Hamburger: Zwei Personen legen sich quer übereinander.",
+        "Cheeseburger: Drei Personen legen sich quer übereinander.",
+        "Big Mac: Vier Personen legen sich quer übereinander.",
+        "Milchshake: Eine Person steht mit seitlich ausgestreckten Armen in der Mitte. An jeder Hand dreht sich eine weitere Person wie ein Quirl.",
+        "Bei kleinen Kindern dürfen die gebauten Türme nicht zu hoch werden, da die unterste Person sonst zu viel Gewicht tragen muss.",
+        "Wer das geforderte Gericht nicht, falsch oder zu langsam nachbaut, absolviert die vereinbarte Zusatzaufgabe."
+      ]
+    },
+    "settings": { "outdoor": false, "indoor": true, "evening": false },
+    "source": {
+      "name": "DAB-Jugend",
+      "url": "https://aikido-jugend.de/spiele.php",
+      "accessedAt": "2026-08-09"
+    }
+  },
+  {
+    "id": "children-game-dampfer-im-nebel",
+    "slug": "dampfer-im-nebel",
+    "name": { "en": "Steamer in the fog", "de": "Dampfer im Nebel" },
+    "participants": { "min": 4, "max": 20 },
+    "materials": ["blindfolds"],
+    "goal": {
+      "en": "Guide a group safely across the playing area with their eyes closed.",
+      "de": "Eine Gruppe wird mit geschlossenen Augen sicher über das Spielfeld geleitet."
+    },
+    "rules": {
+      "en": [
+        "Everyone except the last person keeps their eyes closed.",
+        "The last person steers the steamer.",
+        "The steamer is guided by tapping the right or left shoulder of the person in front.",
+        "When the first person receives the signal, they turn 90 degrees to the indicated side."
+      ],
+      "de": [
+        "Alle Personen bis auf die letzte halten die Augen geschlossen.",
+        "Die letzte Person steuert den Dampfer.",
+        "Der Dampfer wird durch einen Klaps auf die rechte oder linke Schulter der vorderen Person gesteuert.",
+        "Erhält die erste Person das Signal, biegt sie um 90 Grad nach rechts oder links ab."
+      ]
+    },
+    "sequence": {
+      "en": [
+        "Form groups of at least four people; larger groups make the game harder. Each group forms a conga line in which everyone except the last person closes their eyes. The last person pilots the steamer through the fog.",
+        "The pilot taps the right or left shoulder of the person ahead. Each player passes the same signal forward until the first person turns the line 90 degrees in that direction."
+      ],
+      "de": [
+        "Es werden Gruppen mit mindestens vier Personen gebildet. Mehr Personen erhöhen den Schwierigkeitsgrad. Jede Gruppe bildet eine Polonaise, bei der alle bis auf die letzte Person die Augen geschlossen haben. Die letzte Person steuert den Dampfer durch den Nebel.",
+        "Dazu klopft sie der Person vor ihr auf die rechte oder linke Schulter. Das Signal wird in derselben Richtung nach vorne weitergegeben. Die erste Person setzt es in eine 90-Grad-Kurve um."
+      ]
+    },
+    "settings": { "outdoor": true, "indoor": true, "evening": false },
+    "source": {
+      "name": "DAB-Jugend",
+      "url": "https://aikido-jugend.de/spiele.php",
+      "accessedAt": "2026-08-09"
+    }
+  },
+  {
+    "id": "children-game-werwoelfe-aus-finsterwald",
+    "slug": "werwoelfe-aus-finsterwald",
+    "name": { "en": "The Werewolves of Miller’s Hollow", "de": "Die Werwölfe aus Finsterwald" },
+    "participants": { "min": 8, "max": 18 },
+    "materials": ["werewolves-game"],
+    "goal": { "en": "See the game instructions.", "de": "Siehe Spielregeln." },
+    "rules": {
+      "en": ["Follow the instructions supplied with the game."],
+      "de": ["Siehe Spielregeln."]
+    },
+    "sequence": {
+      "en": ["Follow the instructions supplied with the game."],
+      "de": ["Siehe Spielregeln."]
+    },
+    "settings": { "outdoor": false, "indoor": false, "evening": true },
+    "source": {
+      "name": "DAB-Jugend",
+      "url": "https://aikido-jugend.de/spiele.php",
+      "accessedAt": "2026-08-09"
+    }
+  },
+  {
+    "id": "children-game-guertelhockey",
+    "slug": "guertelhockey",
+    "name": { "en": "Belt hockey", "de": "Gürtelhockey" },
+    "participants": { "min": 4, "max": 12 },
+    "materials": ["soft-balls", "mat-floor"],
+    "goal": {
+      "en": "Each team tries to score as many goals as possible.",
+      "de": "Jede Mannschaft versucht, so viele Tore wie möglich zu erzielen."
+    },
+    "rules": {
+      "en": [
+        "Each team selects a goalkeeper.",
+        "Draw lots to decide which team starts and which side each team plays on.",
+        "Start play from the center of the field.",
+        "Belts may only be swung toward the soft ball.",
+        "After a goal, restart from the center of the field.",
+        "Optionally define rules for balls played out of bounds. For example, place the ball at the edge of the mat and let the team that did not send it out restart play."
+      ],
+      "de": [
+        "Jede Mannschaft wählt eine Person für das Tor.",
+        "Wer beginnt und auf welcher Seite spielt, kann ausgelost werden.",
+        "Der Anstoß findet in der Mitte des Spielfelds statt.",
+        "Schläge mit dem Gürtel sind nur in Richtung des Softballs erlaubt.",
+        "Nach einem Tor wird das Spiel mit einem Anstoß in der Feldmitte fortgesetzt.",
+        "Optional können Regeln für Bälle im Aus festgelegt werden. Beispielsweise wird der Ball am Mattenrand abgelegt und von der Mannschaft gespielt, die ihn nicht ins Aus befördert hat."
+      ]
+    },
+    "sequence": {
+      "en": [
+        "After the starting signal, each team plays the ball toward the opposing goal as in regular hockey. Passing strategically encourages everyone to work as a team.",
+        "The team with the most goals at the end wins."
+      ],
+      "de": [
+        "Nach dem Startsignal spielt jede Mannschaft den Ball wie beim normalen Hockey in Richtung des gegnerischen Tores. Durch gezieltes Abspielen können alle im Team zusammenwirken.",
+        "Gewonnen hat die Mannschaft, die am Ende mehr Tore erzielt hat."
+      ]
+    },
+    "settings": { "outdoor": false, "indoor": true, "evening": false },
+    "source": {
+      "name": "DAB-Jugend",
+      "url": "https://aikido-jugend.de/spiele.php",
+      "accessedAt": "2026-08-09"
+    }
+  },
+  {
+    "id": "children-game-indiaka",
+    "slug": "indiaka",
+    "name": { "en": "Indiaca", "de": "Indiaka" },
+    "participants": { "min": 2, "max": 16 },
+    "materials": ["indiaca"],
+    "goal": {
+      "en": "Keep the indiaca airborne like a volleyball. Depending on the variation, teams may also compete to score the most points.",
+      "de": "Das Indiaka wird wie ein Volleyball möglichst lange in der Luft gehalten. Je nach Variante kann es außerdem darum gehen, mehr Punkte als die gegnerische Mannschaft zu erzielen."
+    },
+    "rules": {
+      "en": [
+        "Strike the indiaca on its yellow pad.",
+        "In the volleyball variation, serves should reach the opponent above belt level.",
+        "The indiaca may be played with any part of the body.",
+        "Penalty points may be awarded if the indiaca loses feathers while a point is being scored."
+      ],
+      "de": [
+        "Das Indiaka wird an der gelben Seite geschlagen.",
+        "Angaben in der Volleyball-Variante sollten oberhalb der Gürtellinie des Gegenübers ankommen.",
+        "Das Indiaka darf mit allen Körperteilen gespielt werden.",
+        "Wenn beim Punkten Federn verloren gehen, können Strafpunkte vergeben werden."
+      ]
+    },
+    "sequence": {
+      "en": [
+        "The group stands in a circle and passes the indiaca around. A player who could have reached it but misses moves through increasingly difficult positions: squat, sitting, lying on the stomach, and lying on the back. A successful, controlled return lets the player move one position back toward standing.",
+        "Alternatively, form two teams and score as in volleyball. You may also establish a fixed serving order."
+      ],
+      "de": [
+        "Die Gruppe steht im Kreis und spielt sich das Indiaka zu. Wer es hätte erreichen können, aber verfehlt, nimmt nacheinander erschwerte Positionen ein: Hocke, Sitzen, Bauchlage und Rückenlage. Wer aus der aktuellen Position trifft und passend weiterspielt, darf die Positionen rückwärts bis zum Stand durchlaufen.",
+        "Alternativ werden zwei Mannschaften gebildet und wie beim Volleyball Punkte gezählt. Optional kann eine feste Angabenreihenfolge vereinbart werden."
+      ]
+    },
+    "settings": { "outdoor": true, "indoor": true, "evening": true },
+    "source": {
+      "name": "DAB-Jugend",
+      "url": "https://aikido-jugend.de/spiele.php",
+      "accessedAt": "2026-08-09"
+    }
+  },
+  {
+    "id": "children-game-jeder-gegen-jeden",
+    "slug": "jeder-gegen-jeden",
+    "name": { "en": "Everyone against everyone", "de": "Jeder gegen jeden" },
+    "participants": { "min": 4, "max": 40 },
+    "materials": ["none"],
+    "goal": {
+      "en": "Tag the other players as often as possible.",
+      "de": "Andere Personen so oft wie möglich ticken."
+    },
+    "rules": {
+      "en": [
+        "Every player is both a tagger and a runner at the same time.",
+        "Several variations determine what happens to a tagged player, as described below."
+      ],
+      "de": [
+        "Jede Person ist gleichzeitig fangende und laufende Person.",
+        "Für getickte Personen stehen mehrere Varianten zur Auswahl, die im Spielverlauf beschrieben werden."
+      ]
+    },
+    "sequence": {
+      "en": [
+        "Variation 1: A tagged player keeps one hand on the place where they were tagged and may continue tagging others with the other hand.",
+        "A player tagged a second time completes an extra task, such as rolls or fitness exercises, and then resumes normal play.",
+        "Variation 2: A tagged player becomes a kangaroo and may move only by jumping with their feet together.",
+        "A tagged kangaroo becomes a dog and moves on all fours.",
+        "A tagged dog becomes a turtle, keeping forearms and lower legs on the floor.",
+        "A tagged turtle becomes a spider and moves on all fours with the stomach facing upward.",
+        "A tagged spider becomes a snake and crawls on the stomach.",
+        "A tagged snake returns to being a normal runner.",
+        "Add more animals as long as the group can remember their order."
+      ],
+      "de": [
+        "Variante 1: Eine getickte Person hält mit einer Hand die Stelle fest, an der sie getroffen wurde. Mit der anderen Hand darf sie weiterhin andere Personen ticken.",
+        "Wer ein zweites Mal getroffen wird, absolviert eine Zusatzaufgabe, zum Beispiel Rollen oder Fitnessübungen, und spielt danach normal weiter.",
+        "Variante 2: Eine getroffene Person wird zum Känguru und darf nur noch mit geschlossenen Füßen springen.",
+        "Ein geticktes Känguru wird zum Hund und bewegt sich auf allen Vieren.",
+        "Ein getickter Hund wird zur Schildkröte; Unterschenkel und Unterarme berühren den Boden.",
+        "Eine getickte Schildkröte wird zur Spinne und bewegt sich auf allen Vieren mit dem Bauch nach oben.",
+        "Eine getickte Spinne wird zur Schlange und kriecht auf dem Bauch.",
+        "Eine getickte Schlange wird wieder zur normal laufenden Person.",
+        "Weitere Tiere können ergänzt werden, solange sich die Gruppe die Reihenfolge merken kann."
+      ]
+    },
+    "settings": { "outdoor": true, "indoor": true, "evening": true },
+    "source": {
+      "name": "DAB-Jugend",
+      "url": "https://aikido-jugend.de/spiele.php",
+      "accessedAt": "2026-08-09"
+    }
+  },
+  {
+    "id": "children-game-kettenticken",
+    "slug": "kettenticken",
+    "name": { "en": "Chain tag", "de": "Kettenticken" },
+    "participants": { "min": 5, "max": 40 },
+    "materials": ["none"],
+    "goal": {
+      "en": "Tag every player until no more than one remains free.",
+      "de": "Alle Personen werden getickt, bis höchstens eine übrig ist."
+    },
+    "rules": {
+      "en": [
+        "Everyone moves within a defined area, such as the mat.",
+        "A tagged player takes the hand of the last person in the chain and becomes a tagger.",
+        "The chain must not break while tagging.",
+        "With a large group, split the chain in the middle once it reaches about eight people.",
+        "The last free player wins and becomes the new starting tagger."
+      ],
+      "de": [
+        "Alle bewegen sich in einem vorbestimmten Bereich, zum Beispiel auf der Mattenfläche.",
+        "Wer getickt wird, fasst die letzte Person der Kette an der Hand und wird selbst zur tickenden Person.",
+        "Die Kette darf beim Ticken nicht zerreißen.",
+        "Bei einer großen Gruppe sollte die Kette ab etwa acht Personen in der Mitte halbiert werden.",
+        "Die letzte freie Person gewinnt und wird die neue tickende Person."
+      ]
+    },
+    "sequence": {
+      "en": [
+        "Choose the first tagger. Once the game begins, everyone else tries to keep a safe distance from the chain. Only the two people at its ends may tag, so both ends are dangerous.",
+        "A tagged player joins one end of the chain and becomes another tagger.",
+        "When only one free player remains, stop and begin a new round."
+      ],
+      "de": [
+        "Die erste tickende Person wird bestimmt. Sobald das Spiel beginnt, versuchen alle anderen, einen sicheren Abstand zur Kette zu halten. Nur die äußersten Personen der Kette dürfen ticken, daher muss man sich vor beiden Enden in Acht nehmen.",
+        "Wer getickt wird, geht an ein Ende der Kette und wird so ebenfalls zur tickenden Person.",
+        "Ist nur noch eine Person übrig, endet das Ticken und eine neue Runde kann beginnen."
+      ]
+    },
+    "settings": { "outdoor": true, "indoor": true, "evening": false },
+    "source": {
+      "name": "DAB-Jugend",
+      "url": "https://aikido-jugend.de/spiele.php",
+      "accessedAt": "2026-08-09"
+    }
+  },
+  {
+    "id": "children-game-mauerduell",
+    "slug": "mauerduell",
+    "name": { "en": "Wall duel", "de": "Mauerduell" },
+    "participants": { "min": 5, "max": 20 },
+    "materials": ["none"],
+    "goal": {
+      "en": "Tag every runner when defending the wall, or remain free for as long as possible when running.",
+      "de": "Als fangende Person alle Vorbeilaufenden ticken; als freie Person möglichst lange durchkommen."
+    },
+    "rules": {
+      "en": [
+        "The tagger may move only back and forth along the center line.",
+        "Tagged players remain where they were caught and try to tag more runners with their arms extended."
+      ],
+      "de": [
+        "Die fangende Person darf sich nur auf der Mittellinie des Feldes hin und her bewegen.",
+        "Gefangene Personen bleiben an der Stelle stehen, an der sie getickt wurden, und versuchen mit ausgebreiteten Armen, weitere Personen zu ticken."
+      ]
+    },
+    "sequence": {
+      "en": [
+        "Mark a “wall” across the middle of the playing area, such as a row of mats. The tagger may move along this wall. On command, everyone else tries to cross from one side of the area to the other.",
+        "Anyone tagged becomes another tagger but must remain at the spot where they were caught.",
+        "The last free player wins.",
+        "Variation: Allow tagged players to move along the wall as well."
+      ],
+      "de": [
+        "In der Mitte des Spielfeldes wird eine „Mauer“ markiert, zum Beispiel eine Mattenreihe. Die fangende Person darf sich auf dieser Mauer bewegen. Auf Kommando versuchen alle anderen, über die Mauer von einem Spielfeldrand zum anderen zu gelangen.",
+        "Wer von einer fangenden Person getickt wird, wird ebenfalls zur fangenden Person, darf sich aber nicht von der Stelle entfernen, an der er oder sie gefangen wurde.",
+        "Die letzte freie Person gewinnt.",
+        "Variante: Gefangene Personen dürfen sich ebenfalls auf der Mauer bewegen, um weitere Personen zu fangen."
+      ]
+    },
+    "settings": { "outdoor": true, "indoor": true, "evening": false },
+    "source": {
+      "name": "DAB-Jugend",
+      "url": "https://aikido-jugend.de/spiele.php",
+      "accessedAt": "2026-08-09"
+    }
+  },
+  {
+    "id": "children-game-raeuber-und-gendarm",
+    "slug": "raeuber-und-gendarm",
+    "name": { "en": "Cops and robbers", "de": "Räuber und Gendarm" },
+    "participants": { "min": 10, "max": 25 },
+    "materials": ["none"],
+    "goal": {
+      "en": "The guards try to capture every robber while the robbers try to keep everyone free.",
+      "de": "Alle Räuber gefangen nehmen beziehungsweise alle Räuber in Freiheit halten."
+    },
+    "rules": {
+      "en": [
+        "Two or three players are guards and try to tag all the other players, who are the robbers.",
+        "Tagged robbers go to jail. Other robbers can free them with a high five.",
+        "Robbers are safe inside the robbers’ hideout.",
+        "The leader can help the guards by calling “raid.” Until “raid over” is called, the guards may enter the hideout and every robber must flee."
+      ],
+      "de": [
+        "Zwei bis drei Personen sind Gendarmen und versuchen, alle anderen Personen – die Räuber – zu ticken.",
+        "Getickte Räuber begeben sich ins Gefängnis. Andere Räuber können sie durch Abklatschen befreien.",
+        "In der Räuberhöhle sind alle Räuber sicher.",
+        "Die Spielleitung kann den Gendarmen mit dem Ruf „Razzia“ einen Vorteil geben. Bis zum Ruf „Razzia Ende“ dürfen die Gendarmen die Räuberhöhle betreten und alle Räuber müssen fliehen."
+      ]
+    },
+    "sequence": {
+      "en": [
+        "Set up the robbers’ hideout and the jail on opposite sides of the playing area, using crash mats if available.",
+        "Divide the group into guards and robbers.",
+        "The guards try to tag every robber. Tagged robbers must go directly to jail.",
+        "The robbers try to avoid jail and free captured teammates.",
+        "The guards win if they capture every robber.",
+        "The robbers win if at least one remains free when the agreed time expires."
+      ],
+      "de": [
+        "An gegenüberliegenden Seiten der Spielfläche werden die Räuberhöhle und das Gefängnis eingerichtet, zum Beispiel mit Weichböden.",
+        "Die Gruppe wird in Gendarmen und Räuber eingeteilt.",
+        "Die Gendarmen versuchen, alle Räuber zu ticken. Getickte Räuber laufen auf direktem Weg ins Gefängnis.",
+        "Die Räuber versuchen, dem Gefängnis zu entgehen und gefangene Gruppenmitglieder zu befreien.",
+        "Die Gendarmen gewinnen, wenn sie alle Räuber gefangen haben.",
+        "Die Räuber gewinnen, wenn nach Ablauf der vereinbarten Zeit noch jemand frei ist."
+      ]
+    },
+    "settings": { "outdoor": true, "indoor": true, "evening": true },
+    "source": {
+      "name": "DAB-Jugend",
+      "url": "https://aikido-jugend.de/spiele.php",
+      "accessedAt": "2026-08-09"
+    }
+  },
+  {
+    "id": "children-game-reise-nach-tokio",
+    "slug": "reise-nach-tokio",
+    "name": { "en": "Journey to Tokyo", "de": "Reise nach Tokio" },
+    "participants": { "min": 4, "max": 40 },
+    "materials": ["coasters"],
+    "goal": {
+      "en": "Complete as few extra tasks as possible.",
+      "de": "Möglichst wenige Zusatzaufgaben ausführen."
+    },
+    "rules": {
+      "en": [
+        "The instructor calls out a body part.",
+        "Anyone unable to claim a coaster must complete an extra task."
+      ],
+      "de": [
+        "Die Trainingsleitung sagt ein Körperteil an.",
+        "Alle Personen, die keinen Bierdeckel erreichen, müssen eine Zusatzaufgabe ausführen."
+      ]
+    },
+    "sequence": {
+      "en": [
+        "Distribute slightly fewer coasters around the playing area than there are aikidoka. Everyone moves around freely.",
+        "The instructor calls a body part, such as an elbow. Each player tries to place that body part on a coaster as quickly as possible.",
+        "Anyone who cannot find a coaster completes an extra task, such as ukemi, push-ups, or jumping jacks.",
+        "Remove more coasters as the game continues."
+      ],
+      "de": [
+        "Auf der Spielfläche werden etwas weniger Bierdeckel verteilt, als Aikidoka mitspielen. Alle laufen durcheinander.",
+        "Die Trainingsleitung ruft ein Körperteil, zum Beispiel Ellenbogen. Jede Person versucht, dieses Körperteil so schnell wie möglich auf einen Bierdeckel zu legen.",
+        "Wer keinen Bierdeckel findet, absolviert eine Zusatzaufgabe, zum Beispiel Ukemi, Liegestütze oder Hampelmänner.",
+        "Im weiteren Spielverlauf können immer mehr Bierdeckel entfernt werden."
+      ]
+    },
+    "settings": { "outdoor": true, "indoor": true, "evening": true },
+    "source": {
+      "name": "DAB-Jugend",
+      "url": "https://aikido-jugend.de/spiele.php",
+      "accessedAt": "2026-08-09"
+    }
+  },
+  {
+    "id": "children-game-rollenmerkball",
+    "slug": "rollenmerkball",
+    "name": { "en": "Rolling dodgeball", "de": "Rollenmerkball" },
+    "participants": { "min": 3, "max": 40 },
+    "materials": ["soft-balls", "mat-floor"],
+    "goal": {
+      "en": "Hit the other players with the ball as often as possible.",
+      "de": "Andere Personen so häufig wie möglich abwerfen."
+    },
+    "rules": {
+      "en": [
+        "Anyone without a ball may move freely across the mat.",
+        "Before throwing at someone, a player must perform a roll.",
+        "Anyone hit by the ball must perform three rolls.",
+        "Catching a thrown ball makes the thrower perform two rolls.",
+        "Players completing penalty rolls may not hold a ball and may not be hit.",
+        "A player may take no more than three steps on the mat while holding a ball."
+      ],
+      "de": [
+        "Wer keinen Ball hat, darf frei über die Matte laufen.",
+        "Wer jemanden abwerfen will, muss vorher eine Rolle machen.",
+        "Wer vom Ball getroffen wird, muss drei Rollen machen.",
+        "Wer den Abwurfball fängt, zwingt die werfende Person, zwei Rollen zu machen.",
+        "Wer Strafrollen macht, darf keinen Ball halten und nicht abgeworfen werden.",
+        "Auf der Matte dürfen maximal drei Schritte mit dem Ball in der Hand gemacht werden."
+      ]
+    },
+    "sequence": {
+      "en": [
+        "Variation 1: Add a second ball that is visually distinct. Being hit by it while completing penalty rolls doubles the remaining number of rolls. Catching it during the penalty rolls releases the player. The person holding the second ball must also roll before throwing. The penalty may only be doubled once.",
+        "Variation 2: The player throwing the smaller ball may hit the person holding the large ball. That person must drop the ball and perform one roll before trying to retrieve it again.",
+        "Variation 3: Instead of variations 1 and 2, assign forward rolls to one ball and backward rolls to the other.",
+        "For larger groups, add more balls to the game."
+      ],
+      "de": [
+        "Variante 1: Ein zweiter, optisch unterscheidbarer Ball kann dazugegeben werden. Wird man von ihm getroffen, während man Strafrollen macht, verdoppelt sich die Zahl der auszuführenden Rollen. Fängt man ihn während der Strafrollen, ist man erlöst. Die Person mit dem zweiten Ball muss vor dem Wurf ebenfalls eine Rolle ausführen. Die Strafrollen dürfen nur einmal verdoppelt werden.",
+        "Variante 2: Die werfende Person mit dem kleineren Ball darf die Person abwerfen, die den großen Ball hält. Diese muss ihren Ball fallen lassen und eine Rolle ausführen, bevor sie sich wieder um den Ball bemühen darf.",
+        "Variante 3: Statt der Erweiterungen aus Variante 1 und 2 wird festgelegt, bei welchem Ball vorwärts und bei welchem rückwärts gerollt werden muss.",
+        "In größeren Gruppen bietet es sich an, mehr Bälle ins Spiel zu geben."
+      ]
+    },
+    "settings": { "outdoor": false, "indoor": true, "evening": false },
+    "source": {
+      "name": "DAB-Jugend",
+      "url": "https://aikido-jugend.de/spiele.php",
+      "accessedAt": "2026-08-09"
+    }
+  }
+]

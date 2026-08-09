@@ -1,8 +1,10 @@
 import { loadAllExercises } from '@features/exercises';
 import { loadAllTerms } from '@features/terms';
+import { loadAllChildrenGames } from '@features/childrenGames';
 import { getExerciseCategoryLabel } from '@shared/styles/exercises';
 import type {
   AppRoute,
+  ChildrenGame,
   DB,
   Exercise,
   Filters,
@@ -39,10 +41,12 @@ export const useContentController = ({
 }: UseContentControllerParams) => {
   const [glossaryTerms, setGlossaryTerms] = useState<GlossaryTerm[]>([]);
   const [practiceExercises, setPracticeExercises] = useState<Exercise[]>([]);
+  const [childrenGames, setChildrenGames] = useState<ChildrenGame[]>([]);
 
   useEffect(() => {
     loadAllTerms().then(setGlossaryTerms);
     loadAllExercises().then(setPracticeExercises);
+    loadAllChildrenGames().then(setChildrenGames);
   }, []);
 
   const categories = useMemo(
@@ -156,9 +160,19 @@ export const useContentController = ({
     [activeSlug, db.studyStatus, route],
   );
 
+  const currentChildrenGame = useMemo(
+    () =>
+      route === 'teachChildrenGames' && activeSlug
+        ? (childrenGames.find((game) => game.slug === activeSlug) ?? null)
+        : null,
+    [activeSlug, childrenGames, route],
+  );
+
   return {
     glossaryTerms,
     practiceExercises,
+    childrenGames,
+    currentChildrenGame,
     categories,
     attacks,
     stances,

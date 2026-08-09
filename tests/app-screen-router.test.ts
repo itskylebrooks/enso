@@ -43,5 +43,12 @@ describe('AppScreenRouter page keys', () => {
         activeSlug: null,
       }),
     ).toBe('study');
+
+    expect(
+      getAppPageKey({
+        route: 'teachChildrenGames',
+        activeSlug: 'kettenticken',
+      }),
+    ).toBe('teach-children-games-kettenticken');
   });
 });

@@ -37,12 +37,14 @@ export const de = {
     },
     childrenGames: {
       title: 'Kinderspiele',
-      description: 'Spielerische Übungen für Aufmerksamkeit, Bewegung, Sicherheit und Kooperation organisieren.',
-      meta: 'Kommt bald',
+      description:
+        'Spielerische Übungen für Aufmerksamkeit, Bewegung, Sicherheit und Kooperation organisieren.',
+      meta: 'Spiele',
     },
     lessonTemplates: {
       title: 'Stundenvorlagen',
-      description: 'Wiederverwendbare Unterrichtsstrukturen für Gruppen und Trainingsziele speichern.',
+      description:
+        'Wiederverwendbare Unterrichtsstrukturen für Gruppen und Trainingsziele speichern.',
       meta: 'Kommt bald',
     },
     safetyNotes: {
@@ -63,6 +65,32 @@ export const de = {
         'Teilnehmende erfassen und eine einfache Trainingsnotiz führen, ohne daraus Verwaltung zu machen.',
       meta: 'Kommt bald',
     },
+  },
+  childrenGames: {
+    title: 'Kinderspiele',
+    participantCount: 'Gruppengröße',
+    participantPlaceholder: 'Anzahl der Teilnehmenden',
+    participantsShort: 'Pers.',
+    settings: 'Geeignet für',
+    materials: 'Materialien',
+    rules: 'Regeln',
+    sequence: 'Spielverlauf',
+    settingIndoor: 'Drinnen',
+    settingOutdoor: 'Draußen',
+    settingEvening: 'Abends',
+    materialNone: 'Kein Material',
+    materialSoftBalls: 'Weichbälle',
+    materialMatFloor: 'Mattenboden',
+    materialWerewolves: 'Die Werwölfe aus Finsterwald',
+    materialIndiaca: 'Indiaka',
+    materialBlindfolds: 'Augenbinden',
+    materialCoasters: 'Bierdeckel',
+    emptyFiltered: 'Für die ausgewählten Filter wurden keine Kinderspiele gefunden.',
+    backToGames: 'Zurück zu den Kinderspielen',
+    notFound: 'Kinderspiel nicht gefunden.',
+    sourceNote:
+      'Deutscher Quelltext von DAB-Jugend. Die englische Fassung ist eine Enso-Übersetzung.',
+    sourceAccessed: 'Quelle abgerufen am {date}.',
   },
   formsPage: {
     items: [

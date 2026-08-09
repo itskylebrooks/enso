@@ -17,6 +17,8 @@ describe('UI i18n navigation labels', () => {
     expect(copy.teachLanding.classPlanner.title).toBeTruthy();
     expect(copy.teachLanding.safetyNotes.title).toBeTruthy();
     expect(copy.teachLanding.ukemiProgression.title).toBeTruthy();
+    expect(copy.teachLanding.childrenGames.meta).toBe('Games');
+    expect(copy.childrenGames.materialSoftBalls).toBeTruthy();
     expect(copy.formsPage.items).toHaveLength(6);
   });
 
@@ -36,6 +38,8 @@ describe('UI i18n navigation labels', () => {
     expect(copy.teachLanding.safetyNotes.title).toBe('Sicherheitshinweise');
     expect(copy.teachLanding.ukemiProgression.title).toBe('Ukemi-Aufbau');
     expect(copy.teachLanding.attendance.title).toBe('Anwesenheit');
+    expect(copy.teachLanding.childrenGames.meta).toBe('Spiele');
+    expect(copy.childrenGames.backToGames).toBe('Zurück zu den Kinderspielen');
     expect(copy.formsPage.items).toHaveLength(6);
   });
 

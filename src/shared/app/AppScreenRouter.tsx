@@ -15,6 +15,13 @@ import {
 } from '@features/learn';
 import { TechniquePage } from '@features/technique/components/TechniquePage';
 import { TechniquesPage } from '@features/technique/components/TechniquesPage';
+import {
+  ChildrenGameDetailPage,
+  ChildrenGamesFilterPanel,
+  ChildrenGamesPage,
+  getChildrenGameMaterials,
+  MobileChildrenGamesFilters,
+} from '@features/childrenGames';
 import { ContextSidebarLayout } from '@shared/components/ui';
 import { MobileFilters } from '@shared/components/ui/MobileFilters';
 import type { Copy } from '@shared/constants/i18n';
@@ -58,6 +65,8 @@ import {
 import type { AuthSession, SyncMetaState } from '../../lib/supabase/types';
 import type {
   AppRoute,
+  ChildrenGame,
+  ChildrenGameFilters,
   DB,
   EntryMode,
   Exercise,
@@ -123,9 +132,11 @@ type AppScreenData = {
   currentGlossaryProgress: GlossaryProgress | null | undefined;
   currentGlossaryStudyStatus: StudyStatus;
   currentExerciseStudyStatus: StudyStatus;
+  currentChildrenGame: ChildrenGame | null | undefined;
   glossaryCollectionOptions: CollectionOption[];
   glossaryTerms: GlossaryTerm[];
   practiceExercises: Exercise[];
+  childrenGames: ChildrenGame[];
   filteredTechniques: Technique[];
   categories: string[];
   attacks: string[];
@@ -152,6 +163,8 @@ type AppScreenFilters = {
   setGlossaryFilters: Dispatch<SetStateAction<GlossaryFilters>>;
   practiceFilters: ExerciseFilters;
   setPracticeFilters: Dispatch<SetStateAction<ExerciseFilters>>;
+  childrenGameFilters: ChildrenGameFilters;
+  setChildrenGameFilters: Dispatch<SetStateAction<ChildrenGameFilters>>;
 };
 
 type AppScreenNavigation = {
@@ -160,6 +173,8 @@ type AppScreenNavigation = {
   closeTechnique: () => void;
   openGlossaryTerm: (slug: string) => void;
   openPracticeExercise: (slug: string) => void;
+  openChildrenGame: (slug: string) => void;
+  closeChildrenGame: () => void;
   openExamsGrade: (grade: Grade, source?: { route: AppRoute; slug: string }) => void;
   navigateToExamsGrade: (grade: Grade, sourceRoute?: AppRoute) => void;
   navigateToLibraryRoutine: (routine: LibraryRoutine, sourceRoute?: AppRoute) => void;
@@ -249,6 +264,9 @@ export const getAppPageKey = (params: {
   if (params.currentTechnique) return `technique-${params.currentTechnique.id}`;
   if (params.route === 'libraryExercises' && params.activeSlug) {
     return `library-exercises-${params.activeSlug}`;
+  }
+  if (params.route === 'teachChildrenGames' && params.activeSlug) {
+    return `teach-children-games-${params.activeSlug}`;
   }
   if (params.activeSlug) return `terms-${params.activeSlug}`;
   return params.route;
@@ -579,7 +597,11 @@ const LibraryLandingScreen = ({
         <LandingLink
           title={data.copy.exercises}
           description={data.copy.libraryLanding.exercises}
-          meta={formatCategoryCount(data.practiceExercises.length, data.copy.exercises, data.locale)}
+          meta={formatCategoryCount(
+            data.practiceExercises.length,
+            data.copy.exercises,
+            data.locale,
+          )}
           icon={Dumbbell}
           featured
           onClick={() => navigation.navigateTo('libraryExercises')}
@@ -822,7 +844,10 @@ const LibraryRoutinesScreen = ({
   </section>
 );
 
-const TeachLandingScreen = ({ data }: Pick<AppScreenRouterProps, 'data'>): ReactElement => (
+const TeachLandingScreen = ({
+  data,
+  navigation,
+}: Pick<AppScreenRouterProps, 'data' | 'navigation'>): ReactElement => (
   <section className="space-y-5">
     <div className="grid gap-3 md:grid-cols-2">
       <LandingInfo
@@ -832,12 +857,17 @@ const TeachLandingScreen = ({ data }: Pick<AppScreenRouterProps, 'data'>): React
         icon={CalendarDays}
         featured
       />
-      <LandingInfo
+      <LandingLink
         title={data.copy.teachLanding.childrenGames.title}
         description={data.copy.teachLanding.childrenGames.description}
-        meta={data.copy.teachLanding.childrenGames.meta}
+        meta={formatCategoryCount(
+          data.childrenGames.length,
+          data.copy.teachLanding.childrenGames.meta,
+          data.locale,
+        )}
         icon={Gamepad2}
         featured
+        onClick={() => navigation.navigateTo('teachChildrenGames')}
       />
       <LandingInfo
         title={data.copy.teachLanding.lessonTemplates.title}
@@ -871,6 +901,49 @@ const TeachLandingScreen = ({ data }: Pick<AppScreenRouterProps, 'data'>): React
   </section>
 );
 
+const ChildrenGamesScreen = ({
+  data,
+  filters,
+  navigation,
+}: Pick<AppScreenRouterProps, 'data' | 'filters' | 'navigation'>): ReactElement => {
+  const materials = getChildrenGameMaterials(data.childrenGames);
+
+  return (
+    <>
+      <LibraryPageTitle title={data.copy.childrenGames.title} />
+      <div className="lg:hidden">
+        <MobileChildrenGamesFilters
+          copy={data.copy}
+          filters={filters.childrenGameFilters}
+          materials={materials}
+          onChange={filters.setChildrenGameFilters}
+        />
+      </div>
+      <ContextSidebarLayout
+        label={data.copy.filters}
+        sidebar={
+          <ChildrenGamesFilterPanel
+            copy={data.copy}
+            filters={filters.childrenGameFilters}
+            materials={materials}
+            onChange={filters.setChildrenGameFilters}
+          />
+        }
+      >
+        <section>
+          <ChildrenGamesPage
+            games={data.childrenGames}
+            filters={filters.childrenGameFilters}
+            copy={data.copy}
+            locale={data.locale}
+            onOpenGame={navigation.openChildrenGame}
+          />
+        </section>
+      </ContextSidebarLayout>
+    </>
+  );
+};
+
 export const AppScreenRouter = ({
   state,
   data,
@@ -887,11 +960,43 @@ export const AppScreenRouter = ({
     showHomeOnboardingCard,
     skipEntranceAnimations,
   } = state;
-  const { db, copy, locale, currentTechnique, currentProgress, currentGlossaryTerm } = data;
+  const {
+    db,
+    copy,
+    locale,
+    currentTechnique,
+    currentProgress,
+    currentGlossaryTerm,
+    currentChildrenGame,
+  } = data;
 
   let mainContent: ReactElement;
 
-  if (currentTechnique) {
+  if (route === 'teachChildrenGames' && activeSlug && currentChildrenGame) {
+    mainContent = (
+      <ChildrenGameDetailPage
+        game={currentChildrenGame}
+        copy={copy}
+        locale={locale}
+        onBack={navigation.closeChildrenGame}
+      />
+    );
+  } else if (route === 'teachChildrenGames' && activeSlug && data.childrenGames.length === 0) {
+    mainContent = (
+      <div className="py-12 text-center">
+        <p className="text-muted">{copy.loading}</p>
+      </div>
+    );
+  } else if (route === 'teachChildrenGames' && activeSlug) {
+    mainContent = (
+      <div className="mx-auto max-w-5xl space-y-4 px-6 pb-10 pt-0 text-center">
+        <p className="text-lg font-semibold">{copy.childrenGames.notFound}</p>
+        <button type="button" onClick={navigation.closeChildrenGame} className="text-sm underline">
+          {copy.childrenGames.backToGames}
+        </button>
+      </div>
+    );
+  } else if (currentTechnique) {
     mainContent = (
       <motion.div
         initial={skipEntranceAnimations ? { opacity: 1 } : { opacity: 0 }}
@@ -1126,9 +1231,7 @@ export const AppScreenRouter = ({
   } else {
     mainContent = (
       <div className="container max-w-4xl mx-auto px-4 md:px-6 pt-0 pb-4 space-y-4 lg:space-y-0">
-        {route === 'library' && (
-          <LibraryLandingScreen data={data} navigation={navigation} />
-        )}
+        {route === 'library' && <LibraryLandingScreen data={data} navigation={navigation} />}
 
         {route === 'libraryTechniques' && (
           <TechniqueListScreen
@@ -1155,9 +1258,7 @@ export const AppScreenRouter = ({
 
         {route === 'libraryForms' && <LibraryFormsScreen data={data} navigation={navigation} />}
 
-        {route === 'libraryCulture' && (
-          <LibraryCultureScreen data={data} navigation={navigation} />
-        )}
+        {route === 'libraryCulture' && <LibraryCultureScreen data={data} navigation={navigation} />}
 
         {route === 'study' && (
           <BookmarksView
@@ -1215,7 +1316,11 @@ export const AppScreenRouter = ({
           />
         )}
 
-        {route === 'teach' && <TeachLandingScreen data={data} />}
+        {route === 'teach' && <TeachLandingScreen data={data} navigation={navigation} />}
+
+        {route === 'teachChildrenGames' && !activeSlug && (
+          <ChildrenGamesScreen data={data} filters={filters} navigation={navigation} />
+        )}
       </div>
     );
   }

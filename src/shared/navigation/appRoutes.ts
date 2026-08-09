@@ -92,6 +92,8 @@ export const routeToPath = (route: AppRoute): string => {
       return '/study/learn';
     case 'teach':
       return '/teach';
+    case 'teachChildrenGames':
+      return '/teach/children-games';
     default:
       return '/';
   }
@@ -198,7 +200,7 @@ export const getSectionForRoute = (route: AppRoute): AppSection | null => {
   if (isExamsLikeRoute(route)) return 'exams';
   if (route === 'library' || route.startsWith('library')) return 'library';
   if (route === 'study' || route === 'studyLearn') return 'study';
-  if (route === 'teach') return 'teach';
+  if (route === 'teach' || route === 'teachChildrenGames') return 'teach';
   return null;
 };
 
@@ -209,6 +211,11 @@ const getGlossarySlugFromPath = (pathname: string): string | null => {
 
 const getExerciseSlugFromPath = (pathname: string): string | null => {
   const match = /^\/library\/exercises\/([^/?#]+)/.exec(pathname);
+  return match ? decodeURIComponent(match[1]) : null;
+};
+
+const getChildrenGameSlugFromPath = (pathname: string): string | null => {
+  const match = /^\/teach\/children-games\/([^/?#]+)/.exec(pathname);
   return match ? decodeURIComponent(match[1]) : null;
 };
 
@@ -239,6 +246,10 @@ export const parseLocation = (
     return { route: 'libraryExercises', slug };
   }
 
+  if (pathname.startsWith('/teach/children-games/')) {
+    return { route: 'teachChildrenGames', slug: getChildrenGameSlugFromPath(pathname) };
+  }
+
   if (pathname === '/library') return { route: 'library', slug: null };
   if (pathname === '/library/techniques') return { route: 'libraryTechniques', slug: null };
   if (pathname === '/library/terms') return { route: 'libraryTerms', slug: null };
@@ -249,6 +260,9 @@ export const parseLocation = (
   if (pathname === '/study') return { route: 'study', slug: null };
   if (pathname === '/study/learn') return { route: 'studyLearn', slug: null };
   if (pathname === '/teach') return { route: 'teach', slug: null };
+  if (pathname === '/teach/children-games') {
+    return { route: 'teachChildrenGames', slug: null };
+  }
   if (pathname === '/about') return { route: 'about', slug: null };
   if (pathname === '/sync') return { route: 'sync', slug: null };
   if (pathname === '/exams') return { route: 'exams', slug: null };

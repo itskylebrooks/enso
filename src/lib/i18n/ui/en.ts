@@ -23,7 +23,8 @@ export const en = {
     routines:
       'Use curated exercise sequences for warm-up, cooldown, mobility, strength, skill, and recovery.',
     forms: 'Review kata, weapons programs, and structured technical sequences.',
-    culture: 'Explore dojo etiquette, aikido principles, further study links, and video references.',
+    culture:
+      'Explore dojo etiquette, aikido principles, further study links, and video references.',
     cultureScope: '4 sections',
   },
   practice: 'Practice',
@@ -39,7 +40,7 @@ export const en = {
     childrenGames: {
       title: 'Children games',
       description: 'Organize playful drills for attention, movement, safety, and cooperation.',
-      meta: 'Coming soon',
+      meta: 'Games',
     },
     lessonTemplates: {
       title: 'Lesson templates',
@@ -48,19 +49,47 @@ export const en = {
     },
     safetyNotes: {
       title: 'Safety notes',
-      description: 'Check warm-up, falling intensity, space, weapons, and partner limits before class.',
+      description:
+        'Check warm-up, falling intensity, space, weapons, and partner limits before class.',
       meta: 'Coming soon',
     },
     ukemiProgression: {
       title: 'Ukemi progression',
-      description: 'Structure falling practice from low, simple drills toward safer dynamic receiving.',
+      description:
+        'Structure falling practice from low, simple drills toward safer dynamic receiving.',
       meta: 'Coming soon',
     },
     attendance: {
       title: 'Attendance',
-      description: 'Track who is present and keep a simple class record without turning it into admin work.',
+      description:
+        'Track who is present and keep a simple class record without turning it into admin work.',
       meta: 'Coming soon',
     },
+  },
+  childrenGames: {
+    title: 'Children games',
+    participantCount: 'Group size',
+    participantPlaceholder: 'Number of participants',
+    participantsShort: 'players',
+    settings: 'Suitable for',
+    materials: 'Materials',
+    rules: 'Rules',
+    sequence: 'How to play',
+    settingIndoor: 'Indoor',
+    settingOutdoor: 'Outdoor',
+    settingEvening: 'Evening',
+    materialNone: 'No materials',
+    materialSoftBalls: 'Soft balls',
+    materialMatFloor: 'Matted floor',
+    materialWerewolves: 'The Werewolves of Miller’s Hollow',
+    materialIndiaca: 'Indiaca',
+    materialBlindfolds: 'Blindfolds',
+    materialCoasters: 'Coasters',
+    emptyFiltered: 'No children games found for the selected filters.',
+    backToGames: 'Back to children games',
+    notFound: 'Children game not found.',
+    sourceNote: 'German source text by DAB-Jugend. English text is an Enso translation.',
+    sourceAccessed: 'Source accessed {date}.',
   },
   formsPage: {
     items: [
@@ -73,7 +102,8 @@ export const en = {
       {
         id: 'jo-program',
         title: 'Jō program',
-        description: 'Structured jō technique table with attack lines and weapon-hand relationships.',
+        description:
+          'Structured jō technique table with attack lines and weapon-hand relationships.',
         meta: 'Weapons forms',
       },
       {
@@ -114,8 +144,7 @@ export const en = {
   collectionsConfirmDeleteTitle: 'Delete collection?',
   collectionsConfirmDeleteBody: 'Items remain bookmarked but will be ungrouped.',
   collectionsAddTo: 'Add to Collection',
-  collectionsEmptyAll:
-    'No saved items yet. Browse the Library and tap the icon to save items.',
+  collectionsEmptyAll: 'No saved items yet. Browse the Library and tap the icon to save items.',
   collectionsEmptyCollection: 'Nothing here yet. Add items from the menu on each card.',
   collectionsEmptyUngrouped: 'Everything’s filed. Neat.',
   collectionsNone: 'No collections yet.',

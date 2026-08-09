@@ -183,7 +183,10 @@ export default function App({
   });
   const tourTechniqueSlug = db.techniques[0]?.slug ?? null;
   const isTechniqueDetailOpenForOnboarding = Boolean(
-    activeSlug && route !== 'libraryTerms' && route !== 'libraryExercises' && !routeToRoutine(route),
+    activeSlug &&
+    route !== 'libraryTerms' &&
+    route !== 'libraryExercises' &&
+    !routeToRoutine(route),
   );
   const {
     state: {
@@ -231,6 +234,7 @@ export default function App({
       filters,
       glossaryFilters,
       practiceFilters,
+      childrenGameFilters,
       showTeachInPrimaryNav,
     },
     homepage: { pinnedBeltGrade, beltPromptDismissed },
@@ -238,6 +242,7 @@ export default function App({
       setFilters,
       setGlossaryFilters,
       setPracticeFilters,
+      setChildrenGameFilters,
       setShowTeachInPrimaryNav,
       setBeltPromptDismissed,
       handleLocaleChange,
@@ -262,6 +267,8 @@ export default function App({
   const {
     glossaryTerms,
     practiceExercises,
+    childrenGames,
+    currentChildrenGame,
     categories,
     attacks,
     stances,
@@ -785,6 +792,33 @@ export default function App({
     setActiveSlug(slug);
   };
 
+  const openChildrenGame = (slug: string): void => {
+    if (!childrenGames.some((game) => game.slug === slug)) return;
+    rememberScrollPosition();
+    const nextRoute: AppRoute = 'teachChildrenGames';
+    const nextPath = `/teach/children-games/${encodeURIComponent(slug)}`;
+
+    if (typeof window !== 'undefined') {
+      const state: HistoryState = {
+        route: nextRoute,
+        slug,
+        sourceRoute: nextRoute,
+      };
+      if (window.location.pathname !== nextPath) {
+        window.history.pushState(state, '', nextPath);
+      } else {
+        window.history.replaceState(state, '', nextPath);
+      }
+    }
+
+    setRoute(nextRoute);
+    setActiveSlug(slug);
+  };
+
+  const closeChildrenGame = (): void => {
+    navigateTo('teachChildrenGames', { replace: true });
+  };
+
   const handleOpenExamsFromPrompt = useCallback(() => {
     setBeltPromptDismissed(true);
     navigateTo('exams');
@@ -892,6 +926,7 @@ export default function App({
     !currentTechnique &&
     route !== 'libraryTerms' &&
     route !== 'libraryExercises' &&
+    route !== 'teachChildrenGames' &&
     !routeToRoutine(route);
   const flushScrollToTop = useCallback(() => {
     if (typeof window === 'undefined') return;
@@ -1042,6 +1077,8 @@ export default function App({
       glossaryCollectionOptions,
       glossaryTerms,
       practiceExercises,
+      childrenGames,
+      currentChildrenGame,
       filteredTechniques,
       categories,
       attacks,
@@ -1067,6 +1104,8 @@ export default function App({
       setGlossaryFilters,
       practiceFilters,
       setPracticeFilters,
+      childrenGameFilters,
+      setChildrenGameFilters,
     },
     navigation: {
       navigateTo,
@@ -1074,6 +1113,8 @@ export default function App({
       closeTechnique,
       openGlossaryTerm,
       openPracticeExercise,
+      openChildrenGame,
+      closeChildrenGame,
       openExamsGrade,
       navigateToExamsGrade,
       navigateToLibraryRoutine,
