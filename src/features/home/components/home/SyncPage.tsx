@@ -1,5 +1,5 @@
 import type { Copy } from '@shared/constants/i18n';
-import { KeyRound, LogOut, RefreshCw, ShieldCheck, Sparkles, Trash2 } from 'lucide-react';
+import { KeyRound, LogOut, RefreshCw, Sparkles, Trash2 } from 'lucide-react';
 import { useEffect, useMemo, useState, type FormEvent, type ReactElement } from 'react';
 
 type SyncStatus = 'signed-out' | 'idle' | 'syncing' | 'error';
@@ -197,6 +197,9 @@ export const SyncPage = ({
           <div className="space-y-3 text-base md:text-lg text-muted leading-relaxed">
             {renderParagraphs(copy.syncPage.intro)}
           </div>
+          <p className="border-t border-white/10 pt-4 text-base leading-relaxed text-muted md:text-lg">
+            {copy.syncPage.overviewBody}
+          </p>
         </header>
 
         <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(17rem,0.58fr)]">
@@ -311,38 +314,28 @@ export const SyncPage = ({
             )}
           </section>
 
-          <aside className="rounded-xl border surface-border surface p-5 md:p-6 space-y-5">
-            <section className="space-y-4">
-              <div className="flex items-center justify-between gap-3">
-                <h2 className="text-lg font-semibold">{copy.syncPage.statusTitle}</h2>
-                <span className="text-sm text-muted">{statusText}</span>
-              </div>
+          <aside className="rounded-xl border surface-border surface p-5 md:p-6 space-y-4">
+            <div className="flex items-center justify-between gap-3">
+              <h2 className="text-lg font-semibold">{copy.syncPage.statusTitle}</h2>
+              <span className="text-sm text-muted">{statusText}</span>
+            </div>
 
-              <dl className="space-y-4">
-                {statusDetails.map(({ label, value, tone }) => (
-                  <div key={label} className="space-y-1">
-                    <dt className="text-sm text-muted">{label}</dt>
-                    <dd
-                      className={
-                        tone === 'error'
-                          ? 'text-sm break-words text-red-600 dark:text-red-400'
-                          : 'text-sm text-foreground break-words'
-                      }
-                    >
-                      {value}
-                    </dd>
-                  </div>
-                ))}
-              </dl>
-            </section>
-
-            <section className="space-y-2 border-t surface-border pt-4">
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="h-5 w-5 text-subtle" aria-hidden />
-                <h2 className="text-base font-semibold">{copy.syncPage.overviewTitle}</h2>
-              </div>
-              <p className="text-sm text-muted leading-relaxed">{copy.syncPage.overviewBody}</p>
-            </section>
+            <dl className="space-y-4">
+              {statusDetails.map(({ label, value, tone }) => (
+                <div key={label} className="space-y-1">
+                  <dt className="text-sm text-muted">{label}</dt>
+                  <dd
+                    className={
+                      tone === 'error'
+                        ? 'text-sm break-words text-red-600 dark:text-red-400'
+                        : 'text-sm text-foreground break-words'
+                    }
+                  >
+                    {value}
+                  </dd>
+                </div>
+              ))}
+            </dl>
           </aside>
         </div>
       </div>
