@@ -199,69 +199,49 @@ export const SyncPage = ({
           </div>
         </header>
 
-        <div className="grid gap-4 md:grid-cols-3">
-          <section className="rounded-xl border surface-border surface p-5 space-y-4">
-            <div className="flex items-center justify-between gap-3">
-              <h2 className="text-lg font-semibold">{copy.syncPage.statusTitle}</h2>
-              <span className="text-sm text-muted">{statusText}</span>
-            </div>
-
-            <dl className="space-y-4">
-              {statusDetails.map(({ label, value, tone }) => (
-                <div key={label} className="space-y-1">
-                  <dt className="text-sm text-muted">{label}</dt>
-                  <dd
-                    className={
-                      tone === 'error'
-                        ? 'text-sm break-words text-red-600 dark:text-red-400'
-                        : 'text-sm text-foreground break-words'
-                    }
-                  >
-                    {value}
-                  </dd>
-                </div>
-              ))}
-            </dl>
-          </section>
-
-          <section className="rounded-xl border surface-border surface p-5 space-y-4">
+        <div className="grid items-start gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(17rem,0.58fr)]">
+          <section className="rounded-xl border surface-border surface p-5 md:p-6 space-y-5">
             <h2 className="text-lg font-semibold">{isSignedIn ? 'Actions' : 'Sign in'}</h2>
 
             {isSignedIn ? (
-              <div className="space-y-3">
-                <button
-                  type="button"
-                  onClick={() => {
-                    void handleSyncNow();
-                  }}
-                  disabled={isSubmitting || syncStatus === 'syncing'}
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-lg border btn-contrast px-4 py-2 text-sm disabled:opacity-60"
-                >
-                  <RefreshCw className="h-4 w-4" aria-hidden />
-                  Sync now
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    void handleSignOut();
-                  }}
-                  disabled={isSubmitting}
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-lg border btn-tonal surface-hover px-4 py-2 text-sm disabled:opacity-60"
-                >
-                  <LogOut className="h-4 w-4" aria-hidden />
-                  Sign out
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    void handleDeleteAccount();
-                  }}
-                  disabled={isSubmitting}
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-lg border border-red-500/30 px-4 py-2 text-sm text-red-600 transition hover:bg-red-500/5 disabled:opacity-60 dark:text-red-400"
-                >
-                  <Trash2 className="h-4 w-4" aria-hidden />
-                  Delete account
-                </button>
+              <div className="space-y-5">
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      void handleSyncNow();
+                    }}
+                    disabled={isSubmitting || syncStatus === 'syncing'}
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-lg border btn-contrast px-4 py-2 text-sm disabled:opacity-60"
+                  >
+                    <RefreshCw className="h-4 w-4" aria-hidden />
+                    Sync now
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      void handleSignOut();
+                    }}
+                    disabled={isSubmitting}
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-lg border btn-tonal surface-hover px-4 py-2 text-sm disabled:opacity-60"
+                  >
+                    <LogOut className="h-4 w-4" aria-hidden />
+                    Sign out
+                  </button>
+                </div>
+                <div className="border-t surface-border pt-4">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      void handleDeleteAccount();
+                    }}
+                    disabled={isSubmitting}
+                    className="inline-flex items-center gap-2 text-sm text-red-600 transition hover:text-red-700 disabled:opacity-60 dark:text-red-400 dark:hover:text-red-300"
+                  >
+                    <Trash2 className="h-4 w-4" aria-hidden />
+                    Delete account
+                  </button>
+                </div>
               </div>
             ) : isAuthBootstrapping ? (
               <p className="text-sm text-muted">Checking your sign-in session...</p>
@@ -331,13 +311,39 @@ export const SyncPage = ({
             )}
           </section>
 
-          <section className="rounded-xl border surface-border surface p-5 space-y-3">
-            <div className="flex items-center gap-2">
-              <ShieldCheck className="h-5 w-5 text-subtle" aria-hidden />
-              <h2 className="text-lg font-semibold">{copy.syncPage.overviewTitle}</h2>
-            </div>
-            <p className="text-sm text-muted leading-relaxed">{copy.syncPage.overviewBody}</p>
-          </section>
+          <aside className="rounded-xl border surface-border surface p-5 md:p-6 space-y-5">
+            <section className="space-y-4">
+              <div className="flex items-center justify-between gap-3">
+                <h2 className="text-lg font-semibold">{copy.syncPage.statusTitle}</h2>
+                <span className="text-sm text-muted">{statusText}</span>
+              </div>
+
+              <dl className="space-y-4">
+                {statusDetails.map(({ label, value, tone }) => (
+                  <div key={label} className="space-y-1">
+                    <dt className="text-sm text-muted">{label}</dt>
+                    <dd
+                      className={
+                        tone === 'error'
+                          ? 'text-sm break-words text-red-600 dark:text-red-400'
+                          : 'text-sm text-foreground break-words'
+                      }
+                    >
+                      {value}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </section>
+
+            <section className="space-y-2 border-t surface-border pt-4">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="h-5 w-5 text-subtle" aria-hidden />
+                <h2 className="text-base font-semibold">{copy.syncPage.overviewTitle}</h2>
+              </div>
+              <p className="text-sm text-muted leading-relaxed">{copy.syncPage.overviewBody}</p>
+            </section>
+          </aside>
         </div>
       </div>
     </section>
