@@ -241,6 +241,79 @@ export const buildTombstonesForSyncedState = (
   return tombstones;
 };
 
+export const buildTombstonesForSyncedStateReplacement = (
+  previous: SyncedDBState,
+  next: SyncedDBState,
+  deletedAt: number,
+): SyncTombstones => {
+  const timestamp = getNormalizedTimestamp(deletedAt) || Date.now();
+  const tombstones: SyncTombstones = {};
+  const addRemoved = <T>(
+    previousEntries: T[],
+    nextEntries: T[],
+    getKey: (entry: T) => string,
+    getTombstoneKey: (entry: T) => string,
+  ): void => {
+    const nextKeys = new Set(nextEntries.map(getKey));
+    previousEntries.forEach((entry) => {
+      if (!nextKeys.has(getKey(entry))) {
+        tombstones[getTombstoneKey(entry)] = timestamp;
+      }
+    });
+  };
+
+  addRemoved(
+    previous.progress,
+    next.progress,
+    (entry) => entry.techniqueId,
+    (entry) => getProgressTombstoneKey(entry.techniqueId),
+  );
+  addRemoved(
+    previous.glossaryProgress,
+    next.glossaryProgress,
+    (entry) => entry.termId,
+    (entry) => getGlossaryProgressTombstoneKey(entry.termId),
+  );
+  addRemoved(
+    previous.exerciseProgress,
+    next.exerciseProgress,
+    (entry) => entry.exerciseId,
+    (entry) => getExerciseProgressTombstoneKey(entry.exerciseId),
+  );
+  addRemoved(
+    previous.collections,
+    next.collections,
+    (entry) => entry.id,
+    (entry) => getCollectionTombstoneKey(entry.id),
+  );
+  addRemoved(
+    previous.bookmarkCollections,
+    next.bookmarkCollections,
+    (entry) => `${entry.collectionId}:${entry.techniqueId}`,
+    (entry) => getBookmarkCollectionTombstoneKey(entry.collectionId, entry.techniqueId),
+  );
+  addRemoved(
+    previous.glossaryBookmarkCollections,
+    next.glossaryBookmarkCollections,
+    (entry) => `${entry.collectionId}:${entry.termId}`,
+    (entry) => getGlossaryBookmarkCollectionTombstoneKey(entry.collectionId, entry.termId),
+  );
+  addRemoved(
+    previous.exerciseBookmarkCollections,
+    next.exerciseBookmarkCollections,
+    (entry) => `${entry.collectionId}:${entry.exerciseId}`,
+    (entry) => getExerciseBookmarkCollectionTombstoneKey(entry.collectionId, entry.exerciseId),
+  );
+
+  Object.keys(previous.studyStatus).forEach((key) => {
+    if (!(key in next.studyStatus)) {
+      tombstones[getStudyStatusTombstoneKey(key)] = timestamp;
+    }
+  });
+
+  return tombstones;
+};
+
 const stableStringify = (value: unknown): string => {
   if (value === null || typeof value !== 'object') {
     return JSON.stringify(value);

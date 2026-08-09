@@ -3,8 +3,11 @@ import {
   buildHomepageState,
   buildSettingsState,
   buildSyncPayloadData,
+  buildTombstonesForSyncedStateReplacement,
   getBookmarkCollectionTombstoneKey,
   getCollectionTombstoneKey,
+  getGlossaryProgressTombstoneKey,
+  getStudyStatusTombstoneKey,
   mergeSyncPayload,
   pruneSyncTombstones,
 } from '../src/lib/backend/syncMerge';
@@ -211,5 +214,43 @@ describe('mergeSyncPayload', () => {
         now,
       ),
     ).toEqual({ recent });
+  });
+
+  it('creates tombstones for records removed by a DB replacement', () => {
+    const previous = buildPayload({
+      db: {
+        glossaryProgress: [{ termId: 'g1', bookmarked: true, updatedAt: 10 }],
+        studyStatus: { 'term:g1': { status: 'stable', updatedAt: 10 } },
+        collections: [
+          {
+            id: 'c1',
+            name: 'Old collection',
+            icon: null,
+            itemIds: [],
+            sortOrder: 0,
+            createdAt: 10,
+            updatedAt: 10,
+          },
+        ],
+        bookmarkCollections: [
+          { id: 'bc1', techniqueId: 't1', collectionId: 'c1', createdAt: 10 },
+        ],
+      },
+    }).db;
+    const next = buildPayload({
+      db: {
+        glossaryProgress: [],
+        studyStatus: {},
+        collections: [],
+        bookmarkCollections: [],
+      },
+    }).db;
+
+    expect(buildTombstonesForSyncedStateReplacement(previous, next, 50)).toMatchObject({
+      [getGlossaryProgressTombstoneKey('g1')]: 50,
+      [getStudyStatusTombstoneKey('term:g1')]: 50,
+      [getCollectionTombstoneKey('c1')]: 50,
+      [getBookmarkCollectionTombstoneKey('c1', 't1')]: 50,
+    });
   });
 });

@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import techniquesData from '../src/generated/content/techniques.json';
-import { loadDB } from '../src/shared/services/storageService';
+import { importData, loadDB } from '../src/shared/services/storageService';
 import { LOCALE_KEY, STORAGE_KEY } from '../src/shared/constants/storage';
 
 type StorageStub = {
@@ -33,6 +33,7 @@ const setMockWindow = (seed: Record<string, string> = {}) => {
 };
 
 afterEach(() => {
+  vi.restoreAllMocks();
   vi.unstubAllGlobals();
   vi.resetModules();
 });
@@ -112,5 +113,32 @@ describe('local-first persistence defaults', () => {
     ]);
     expect(db.studyStatus[`technique:${techniquesData[0]?.slug}`]?.status).toBe('practice');
     expect(db.studyStatus.bad).toBeUndefined();
+  });
+
+  it('timestamps bookmark removals and imported study status as current changes', () => {
+    vi.spyOn(Date, 'now').mockReturnValue(500);
+    const db = loadDB();
+    const techniqueId = db.progress[0]?.techniqueId as string;
+    const current = {
+      ...db,
+      progress: db.progress.map((entry) =>
+        entry.techniqueId === techniqueId
+          ? { ...entry, bookmarked: true, updatedAt: 100 }
+          : entry,
+      ),
+    };
+
+    const imported = importData(current, {
+      bookmarks: [],
+      studyStatus: {
+        'technique:ikkyo': { status: 'practice', updatedAt: 100 },
+      },
+    });
+
+    expect(imported.progress.find((entry) => entry.techniqueId === techniqueId)).toMatchObject({
+      bookmarked: false,
+      updatedAt: 500,
+    });
+    expect(imported.studyStatus['technique:ikkyo']?.updatedAt).toBe(500);
   });
 });

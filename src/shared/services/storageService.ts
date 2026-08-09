@@ -731,13 +731,15 @@ const generateId = (): string => {
 };
 
 export const importData = (currentDB: DB, importedData: ReturnType<typeof parseIncomingDB>): DB => {
+  const now = Date.now();
+
   // Update progress with imported bookmarks
   const updatedProgress = currentDB.progress.map((progress) => {
     const isBookmarked = importedData.bookmarks?.includes(progress.techniqueId) || false;
     return {
       ...progress,
       bookmarked: isBookmarked,
-      updatedAt: isBookmarked ? Date.now() : progress.updatedAt,
+      updatedAt: isBookmarked !== progress.bookmarked ? now : progress.updatedAt,
     };
   });
 
@@ -748,7 +750,7 @@ export const importData = (currentDB: DB, importedData: ReturnType<typeof parseI
     return {
       ...progress,
       bookmarked: isBookmarked,
-      updatedAt: isBookmarked ? Date.now() : progress.updatedAt,
+      updatedAt: isBookmarked !== progress.bookmarked ? now : progress.updatedAt,
     };
   });
 
@@ -760,7 +762,7 @@ export const importData = (currentDB: DB, importedData: ReturnType<typeof parseI
     .map((progress) => ({
       ...progress,
       bookmarked: true,
-      updatedAt: Date.now(),
+      updatedAt: now,
     }));
 
   const finalGlossaryProgress = [...updatedGlossaryProgress, ...newGlossaryProgressEntries];
@@ -772,7 +774,7 @@ export const importData = (currentDB: DB, importedData: ReturnType<typeof parseI
     return {
       ...progress,
       bookmarked: isBookmarked,
-      updatedAt: isBookmarked ? Date.now() : progress.updatedAt,
+      updatedAt: isBookmarked !== progress.bookmarked ? now : progress.updatedAt,
     };
   });
 
@@ -784,13 +786,12 @@ export const importData = (currentDB: DB, importedData: ReturnType<typeof parseI
     .map((progress) => ({
       ...progress,
       bookmarked: true,
-      updatedAt: Date.now(),
+      updatedAt: now,
     }));
 
   const finalExerciseProgress = [...updatedExerciseProgress, ...newExerciseProgressEntries];
 
   // Import collections and regenerate IDs and timestamps
-  const now = Date.now();
   const collectionNameToId = new Map<string, string>();
 
   const importedCollections = ensureCollections(
@@ -876,7 +877,12 @@ export const importData = (currentDB: DB, importedData: ReturnType<typeof parseI
     exerciseProgress: finalExerciseProgress,
     studyStatus:
       importedData.studyStatus !== undefined
-        ? sanitizeStudyStatusMap(importedData.studyStatus)
+        ? Object.fromEntries(
+            Object.entries(sanitizeStudyStatusMap(importedData.studyStatus)).map(([key, entry]) => [
+              key,
+              { ...entry, updatedAt: now },
+            ]),
+          )
         : currentDB.studyStatus,
     collections: normalizedImportedCollections,
     bookmarkCollections: importedBookmarkCollections,

@@ -1,8 +1,10 @@
 import {
+  buildTombstonesForSyncedStateReplacement,
   getBookmarkCollectionTombstoneKey,
   getCollectionTombstoneKey,
   getExerciseBookmarkCollectionTombstoneKey,
   getGlossaryBookmarkCollectionTombstoneKey,
+  pickSyncedDBState,
 } from '../../lib/backend/syncMerge';
 import type { SyncTombstones } from '../../lib/supabase/types';
 import type {
@@ -306,9 +308,16 @@ export const useUserLibraryController = ({
   const handleDBChange = useCallback(
     (next: DB): void => {
       markSyncMutationPending();
+      addSyncTombstones(
+        buildTombstonesForSyncedStateReplacement(
+          pickSyncedDBState(db),
+          pickSyncedDBState(next),
+          Date.now(),
+        ),
+      );
       setDB(next);
     },
-    [markSyncMutationPending, setDB],
+    [addSyncTombstones, db, markSyncMutationPending, setDB],
   );
 
   const toggleSearchTechniqueBookmark = useCallback(
