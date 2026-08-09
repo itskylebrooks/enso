@@ -12,7 +12,7 @@ const rootDir = process.cwd();
 const generatedDir = path.join(rootDir, 'src', 'generated', 'content');
 const contentDir = path.join(rootDir, 'content');
 const publicImagesDir = path.join(rootDir, 'public', 'images');
-const authorImageName = 'Lehrgang-November-2025.jpeg';
+const authorImageName = 'aikido-exam-wsv-2026-07-02.jpg';
 
 const quoteSchema = z.array(
   z.object({
