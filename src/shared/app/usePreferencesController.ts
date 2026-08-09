@@ -40,6 +40,7 @@ type LastAppliedPreferenceSnapshot = {
 };
 
 export type PreferencesSyncController = {
+  isReady: () => boolean;
   buildSettingsState: () => SyncPayloadData['settings'];
   buildHomepageState: (
     overrides?: Partial<
@@ -161,6 +162,11 @@ export const usePreferencesController = ({
   const getCurrentHomepageSyncSnapshot = useCallback(
     (): string => stringifyForSyncCompare(buildHomepageStateForSync()),
     [buildHomepageStateForSync],
+  );
+
+  const isReadyForSync = useCallback(
+    (): boolean => isLocaleReady && isHomePrefsReady,
+    [isHomePrefsReady, isLocaleReady],
   );
 
   useEffect(() => {
@@ -464,6 +470,7 @@ export const usePreferencesController = ({
       togglePinnedBeltGrade,
     },
     sync: {
+      isReady: isReadyForSync,
       buildSettingsState: buildSettingsStateForSync,
       buildHomepageState: buildHomepageStateForSync,
       getCurrentSettingsSyncSnapshot,

@@ -36,6 +36,7 @@ type LastAppliedSyncSnapshot = {
 type UseSyncControllerParams = {
   db: DB;
   setDB: Dispatch<SetStateAction<DB>>;
+  isDBReady: boolean;
   preferencesSyncRef: MutableRefObject<PreferencesSyncController | null>;
   onboardingSyncRef: MutableRefObject<OnboardingSyncController | null>;
 };
@@ -54,6 +55,7 @@ const getRequiredPreferencesSync = (
 export const useSyncController = ({
   db,
   setDB,
+  isDBReady,
   preferencesSyncRef,
   onboardingSyncRef,
 }: UseSyncControllerParams) => {
@@ -74,8 +76,12 @@ export const useSyncController = ({
   const syncDebounceTimeoutRef = useRef<number | null>(null);
   const authAccessTokenRef = useRef<string | null>(null);
   const lastAuthTriggeredSyncAtRef = useRef(0);
+  const isDBReadyRef = useRef(isDBReady);
+  const pendingHydrationSyncTokenRef = useRef<string | null>(null);
   const runSyncWithTokenRef = useRef<(accessToken: string) => Promise<void>>(async () => {});
   const lastAppliedSyncSnapshotRef = useRef<Partial<LastAppliedSyncSnapshot>>({});
+
+  isDBReadyRef.current = isDBReady;
 
   useEffect(
     () => () => {
@@ -139,6 +145,12 @@ export const useSyncController = ({
     [preferencesSyncRef],
   );
 
+  const isLocalStateReadyForSync = useCallback(
+    (): boolean =>
+      isDBReadyRef.current && Boolean(preferencesSyncRef.current?.isReady()),
+    [preferencesSyncRef],
+  );
+
   const applySyncPayloadToLocalState = useCallback(
     (payload: SyncPayloadData, syncedAt?: number): void => {
       syncPauseAutoPushRef.current = true;
@@ -176,6 +188,11 @@ export const useSyncController = ({
 
   const runSyncWithToken = useCallback(
     async (accessToken: string): Promise<void> => {
+      if (!isLocalStateReadyForSync()) {
+        pendingHydrationSyncTokenRef.current = accessToken;
+        return;
+      }
+
       if (syncInFlightRef.current) {
         syncDirtyRef.current = true;
         syncDirtyDuringFlightRef.current = true;
@@ -229,12 +246,20 @@ export const useSyncController = ({
         syncInFlightRef.current = false;
       }
     },
-    [applySyncPayloadToLocalState, buildLocalSyncPayload],
+    [applySyncPayloadToLocalState, buildLocalSyncPayload, isLocalStateReadyForSync],
   );
 
   useEffect(() => {
     runSyncWithTokenRef.current = runSyncWithToken;
   }, [runSyncWithToken]);
+
+  useEffect(() => {
+    const pendingToken = pendingHydrationSyncTokenRef.current;
+    if (!pendingToken || !isLocalStateReadyForSync()) return;
+
+    pendingHydrationSyncTokenRef.current = null;
+    void runSyncWithTokenRef.current(pendingToken);
+  });
 
   const scheduleAutoSync = useCallback((): void => {
     if (!authAccessTokenRef.current || syncPauseAutoPushRef.current) {

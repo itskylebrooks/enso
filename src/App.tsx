@@ -148,6 +148,7 @@ export default function App({
   const pendingScrollToTopRef = useRef(false);
   const isInitialMountRef = useRef(true);
   const dbPersistedRef = useRef(false);
+  const lastObservedDBSyncSnapshotRef = useRef<string | null>(null);
   const preferencesSyncRef = useRef<PreferencesSyncController | null>(null);
   const onboardingSyncRef = useRef<OnboardingSyncController | null>(null);
   const openTechniqueRef = useRef<OpenTechnique>(() => {});
@@ -178,6 +179,7 @@ export default function App({
   } = useSyncController({
     db,
     setDB,
+    isDBReady,
     preferencesSyncRef,
     onboardingSyncRef,
   });
@@ -490,9 +492,11 @@ export default function App({
   useEffect(() => {
     if (!isDBReady) return;
     saveDB(db);
+    const currentSnapshot = getCurrentDBSyncSnapshot();
 
     if (!dbPersistedRef.current) {
       dbPersistedRef.current = true;
+      lastObservedDBSyncSnapshotRef.current = currentSnapshot;
       return;
     }
 
@@ -500,10 +504,16 @@ export default function App({
       return;
     }
 
-    if (lastAppliedSyncSnapshotRef.current.db === getCurrentDBSyncSnapshot()) {
+    if (lastAppliedSyncSnapshotRef.current.db === currentSnapshot) {
+      lastObservedDBSyncSnapshotRef.current = currentSnapshot;
       return;
     }
 
+    if (lastObservedDBSyncSnapshotRef.current === currentSnapshot) {
+      return;
+    }
+
+    lastObservedDBSyncSnapshotRef.current = currentSnapshot;
     markDBChanged();
   }, [
     db,
